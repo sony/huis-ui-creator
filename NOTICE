@@ -1,0 +1,95 @@
+--------------------------------------------------------------------------------
+NOTICES FOR jQuery
+--------------------------------------------------------------------------------
+
+ - jQuery - ./app/modules/jquery/scripts/jquery.js
+    https://github.com/jquery/jquery
+
+    Released under the MIT Licenses.
+    http://jquery.org/license
+
+--------------------------------------------------------------------------------
+NOTICES FOR RequireJS
+--------------------------------------------------------------------------------
+
+ - RequireJS - ./app/modules/requirejs/scripts/require.js
+    https://github.com/jrburke/requirejs
+
+    Dual licensed under new BSD or MIT Licenses.
+    https://github.com/jrburke/requirejs/blob/master/LICENSE
+
+--------------------------------------------------------------------------------
+NOTICES FOR UNDERSCORE.JS
+--------------------------------------------------------------------------------
+
+ - UNDERSCORE.JS - ./app/modules/underscore/scripts/underscore.js
+    https://github.com/jashkenas/underscore
+
+    Released under the MIT Licenses.
+    https://github.com/jashkenas/underscore/blob/master/LICENSE
+
+
+--------------------------------------------------------------------------------
+NOTICES FOR BACKBONE.JS
+--------------------------------------------------------------------------------
+
+ - BACKBONE.JS - ./app/modules/backbone/scripts/backbone.js
+    https://github.com/jashkenas/backbone
+
+    Released under the MIT Licenses.
+    https://github.com/jashkenas/backbone/blob/master/LICENSE
+
+--------------------------------------------------------------------------------
+NOTICES FOR i18Next
+--------------------------------------------------------------------------------
+
+ - i18Next - ./app/modules/i18next/scripts/i18next.js
+    https://github.com/i18next/i18next
+
+    Released under the MIT Licenses.
+    https://github.com/i18next/i18next/blob/master/license
+
+--------------------------------------------------------------------------------
+NOTICES FOR Hogan.JS
+--------------------------------------------------------------------------------
+
+ - Hogan.JS - ./app/modules/hogan/scripts/hogan.js
+    https://github.com/twitter/hogan.js/
+
+    Released under the Apache License v2.0.
+    https://github.com/twitter/hogan.js/blob/master/LICENSE
+
+--------------------------------------------------------------------------------
+NOTICES FOR jQuery Mobile
+--------------------------------------------------------------------------------
+
+ - jQuery Mobile - ./app/modules/jquery/scripts/jquery.mobile.js
+                 - ./app/modules/jquery/stylesheets/jquery.mobile.css
+    https://github.com/jquery/jquery-mobile
+
+    Released under the MIT Licenses.
+    http://jquery.org/license
+
+--------------------------------------------------------------------------------
+NOTICES FOR Pixi.js
+--------------------------------------------------------------------------------
+
+ - Pixi.js - ./app/modules/pixi/scripts/pixi.js
+    http://www.pixijs.com/
+
+    Released under the MIT Licenses.
+    https://github.com/pixijs/pixi.js/blob/master/LICENSE
+
+--------------------------------------------------------------------------------
+NOTICES FOR Noto Sans CJK JP
+--------------------------------------------------------------------------------
+
+ - Noto Sans CJK JP is - ./app/res/fonts/NotoSansCJKjp-Regular-subset.otf
+                       - ./app/res/fonts/NotoSansCJKjp-Bold-subset.otf
+                       - ./app/res/fonts/NotoSansCJKjp-Light-subset.otf
+
+    https://www.google.com/get/noto/
+
+    Released under the SIL Open Font License
+    https://github.com/googlei18n/noto-cjk/blob/master/LICENSE
+
