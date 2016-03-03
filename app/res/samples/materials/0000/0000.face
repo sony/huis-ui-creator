@@ -1,0 +1,7 @@
+{
+    "name": "Fan1",
+    "category": "Fan",
+    "modules": [
+        "0000_66_power"
+    ]
+}

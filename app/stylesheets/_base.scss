@@ -1,0 +1,88 @@
+@font-face {
+  font-family: 'SST W55';
+  src: url(../res/fonts/regular/8804b8af-432e-44cc-8a34-eda854e2da36.eot); // For IE
+  src: url(../res/fonts/regular/baeafb7d-3786-412a-8937-caa73e0a83cb.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'SST W55';
+  font-weight: bold;
+  src: url(../res/fonts/bold/5a23571a-930f-4cf7-a194-6bdb9afd30d4.eot); // For IE
+  src: url(../res/fonts/bold/5c2400be-9e3e-4820-85e6-c85dce3a9755.ttf) format('opentype');
+}
+
+/*
+ * "Noto Sans CJK JP" licensed under the SIL Open Font License
+ * https://www.google.com/get/noto/
+ */
+@font-face {
+    font-family: "Noto Sans CJK JP";
+    font-weight: lighter;
+    src: url(../res/fonts/NotoSansCJKjp-Light-subset.otf) format('opentype');
+}
+
+@font-face {
+    font-family: "Noto Sans CJK JP";
+    font-weight: normal;
+    src: url(../res/fonts/NotoSansCJKjp-Regular-subset.otf) format('opentype');
+}
+
+@font-face {
+    font-family: "Noto Sans CJK JP";
+    font-weight: bold;
+    src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
+}
+
+body {
+    height: 100%;
+    font-family:"Noto Sans CJK JP",'SST W55',Arial,Helvetica,sans-serif;
+    text-shadow: none;
+    overflow: auto;
+    -webkit-text-size-adjust: 100%;
+       -moz-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+
+    article {
+        .ui-btn, .ui-slider {
+            z-index: 2;
+        }
+        section {
+            &.normal-screen {
+                padding: 0;
+            }
+            &.fullscreen {
+                position: absolute;
+                padding: 0;
+                margin: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+            &.fixed-screen {
+                position: absolute;
+                padding: 0;
+                top: 45px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+        }
+        .ui-content {
+            padding: 0;
+            background-color: rgb(151,152,157);
+        }
+
+        section, div {
+            padding: 0;
+            border: 0;
+            margin: 0;
+        }
+    }
+}

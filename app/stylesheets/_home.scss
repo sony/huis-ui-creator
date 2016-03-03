@@ -1,0 +1,128 @@
+﻿#page-home {
+    text-shadow: none;
+    font-family: "Noto Sans CJK JP",'SST W55';
+
+    #face-list-container {
+        overflow-x: overlay;
+        width: 100%;
+    }
+
+    #face-list {
+        position:relative;
+        //height: 400px; // tentative
+        overflow-y: hidden;
+        background-color: rgb(151,152,157);
+        //box-shadow: 0 0 20px #222;
+        z-index: 1;
+        padding: 0;
+        margin: 0;
+
+        .face {
+            list-style-type: none;
+            float: left;
+            margin: 0 40px;
+            padding: 10px 0;
+            overflow: hidden;
+            width: 200px;
+            //height: 380px;
+
+            .title {
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+            }
+
+            #face-pages-area {
+                margin: 0;
+                font-weight: normal;
+            }
+        }
+
+        .create-new-face {
+            width: 160px;  // tentative
+            margin: 0 100px 0 40px;
+
+            .thumb {
+                background-image: url(../res/icons/plus.png);
+                background-repeat: no-repeat;
+                background-position: center;
+                background-color: white;
+            }
+
+            .overlay-menu {
+                visibility: hidden;
+                position: relative;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0, 0.7);
+
+                span {
+                    font-weight: normal;
+                    color: white;
+                    font-size: 14px;
+                    display: table-cell;
+                    height: 256px;
+                    vertical-align: middle;
+                    text-align: center;
+                }
+
+            }
+            .thumb:hover .overlay-menu {
+                visibility: visible;
+            }
+        }
+    }
+
+    #face-history {
+        position: relative;
+        //height: 200px; // tentative
+        height: 0; // drop になったので height を 0 にしておく
+        overflow-y: hidden;
+        background-color: rgb(151,152,157);
+        box-shadow: 0 12px 24px -12px black inset;
+        z-index:0;
+
+        h3{
+            margin: 0;
+            padding: 10px;
+            font-weight: normal;
+        }
+
+        ul#face-history-list {
+            margin: 0;
+
+            p.title {
+                margin-top: 0;
+            }
+        }
+
+        .face {
+            list-style-type: none;
+            float: left;
+            margin: 0 40px;
+            padding: 0;
+            overflow: hidden;
+            width: 160px;
+            //height: 380px;
+
+            .title {
+                text-align: center;
+                color: white;
+                font-weight: bold;
+                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+            }
+
+            #face-pages-area {
+                margin: 0;
+                font-weight: normal;
+            }
+        }
+    }
+
+    button {
+        font-family: "Noto Sans CJK JP","SST W55";
+    }
+}

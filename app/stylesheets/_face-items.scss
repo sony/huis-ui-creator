@@ -1,0 +1,121 @@
+﻿#face-canvas {
+    position: relative;
+    width: 640px;
+    height: 1120px;
+    background-color: #eee;
+    padding: 40px;
+    box-sizing: border-box;
+
+    #face-pages-area {
+        height: 812px;
+    }
+
+}
+
+#face-canvas-inner {
+    position:relative;
+    background-color: #ddd;
+    //margin: 12px 12px 0 12px;
+    padding: 32px 32px 0 32px;
+}
+
+#face-name-area {
+    position: relative;
+    width: 400px;
+    height: 80px;
+    margin: 0 auto;
+
+    #input-face-name {
+        width: 100%;
+        border: 0;
+        border:solid 1px #ccc;
+        border-radius: 3px;
+        font-size: 32px;
+        text-align:center;
+        font-family: "Noto Sans CJK JP","SST W55";
+        margin: 12px 0;
+        height: 56px;
+        box-sizing: border-box;
+    }
+}
+
+#face-pages-area {
+    position: relative;
+    width: 480px;
+    margin: 0 8px;
+    border: 1px solid #999;
+    overflow-x: hidden;
+    overflow-y: overlay;
+}
+
+.face-page {
+    border-bottom: 4px dotted #888;
+    color: black;
+}
+.face-page:last-child {
+    border: 0;
+}
+
+.module-container {
+    position: relative;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+#page-count {
+    margin: 0 8px;
+    text-align:center;
+    color: #333333;
+    font-size: 20px;
+}
+
+#button-add-page {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    font-size: 28px;
+    font-family: "Noto Sans CJK JP","SST W55";
+}
+
+.button-item {
+    position: absolute;
+    border: 2px solid #bbb;
+}
+
+.label-item,
+.state-label {
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    text-shadow: none;
+}
+
+.image-item,
+.state-image {
+    position: absolute;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.image-cover {
+    background-size: cover;
+}
+
+.image-stretch {
+    background-size:100% 100%;
+}
+
+.button-state {
+    display: none;
+}
+
+.button-state.active {
+    display:block;
+}
+
+.selected-item {
+    box-shadow: 0 0 10px black;
+}

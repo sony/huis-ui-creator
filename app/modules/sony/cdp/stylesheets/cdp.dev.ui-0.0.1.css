@@ -1,0 +1,501 @@
+﻿/*!
+ * cdp.dev.ui.css 0.0.1
+ *
+ * Date: 2015-08-26T14:28:55
+ */
+/* cdp.dev.ui.scss */
+/* line 34, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console {
+  position: fixed;
+  width: 96%;
+  height: 30%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  padding: 10px 10px 10px 10px;
+  opacity: .6;
+  background-color: black;
+  font-size: 14px;
+  color: white;
+  -webkit-text-shadow: 1px 1px 1px black;
+  text-shadow: 1px 1px 1px black;
+  text-align: left;
+  overflow: auto;
+  z-index: 0;
+}
+@media only screen and (min-width: 600px) and (min-height: 600px) {
+  /* line 34, CDP/DevUI/_deviceconsole.scss */
+  #cdp-device-console {
+    top: 58px;
+  }
+}
+@media only screen and (orientation: landscape) and (max-height: 599px) and (orientation: landscape) {
+  /* line 34, CDP/DevUI/_deviceconsole.scss */
+  #cdp-device-console {
+    top: 42px;
+  }
+}
+@media only screen and (orientation: landscape) and (max-height: 599px) and (orientation: portrait) {
+  /* line 34, CDP/DevUI/_deviceconsole.scss */
+  #cdp-device-console {
+    top: 50px;
+  }
+}
+
+@media only screen and (orientation: portrait) and (max-width: 599px) and (orientation: landscape) {
+  /* line 34, CDP/DevUI/_deviceconsole.scss */
+  #cdp-device-console {
+    top: 42px;
+  }
+}
+@media only screen and (orientation: portrait) and (max-width: 599px) and (orientation: portrait) {
+  /* line 34, CDP/DevUI/_deviceconsole.scss */
+  #cdp-device-console {
+    top: 50px;
+  }
+}
+
+/* line 65, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p {
+  margin: 0;
+}
+/* line 67, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p.debug {
+  color: #b6ff00;
+}
+/* line 70, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p.info {
+  color: #00ffff;
+}
+/* line 73, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p.assert {
+  color: #b200ff;
+}
+/* line 76, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p.warn {
+  color: #ffd800;
+}
+/* line 79, CDP/DevUI/_deviceconsole.scss */
+#cdp-device-console > p.error {
+  color: red;
+}
+
+@-webkit-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-moz-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes rotation {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes rotation {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+/* line 15, CDP/DevUI/_commonctrl.scss */
+article .common-radio .ui-checkbox, article .common-radio .ui-radio {
+  margin: 0 0 0 0;
+}
+/* line 18, CDP/DevUI/_commonctrl.scss */
+article .common-radio .ui-radio .ui-btn.ui-radio-on:after {
+  width: 10px;
+  height: 10px;
+  background-color: dodgerblue;
+  border-style: double;
+  border-width: 0.5em;
+}
+/* line 25, CDP/DevUI/_commonctrl.scss */
+article .common-radio input[type=radio] {
+  opacity: 0;
+}
+/* line 29, CDP/DevUI/_commonctrl.scss */
+article .common-radio .ui-btn-icon-left:after, article .common-radio .ui-btn-icon-right:after, article .common-radio .ui-btn-icon-top:after, article .common-radio .ui-btn-icon-bottom:after, article .common-radio .ui-btn-icon-notext:after {
+  width: 20px;
+  height: 20px;
+  border-style: solid;
+  background-color: White;
+  background-position: center center;
+  background-repeat: no-repeat;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  -ms-border-radius: 1em;
+  -o-border-radius: 1em;
+  border-radius: 1em;
+}
+/* line 45, CDP/DevUI/_commonctrl.scss */
+article .selected-item {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.6);
+  width: 100%;
+  height: 100%;
+}
+/* line 53, CDP/DevUI/_commonctrl.scss */
+article .selected-icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  bottom: 2px;
+  right: 2px;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-image: url("./images/commonctrl/thm_selected.png");
+}
+/* line 64, CDP/DevUI/_commonctrl.scss */
+article .spinner {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  top: 50%;
+  margin: 0 auto;
+  margin-top: -21px;
+  display: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("./images/commonctrl/spinner_medium.png");
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+  -webkit-animation: rotation 1.3s linear infinite;
+  -moz-animation: rotation 1.3s linear infinite;
+  -o-animation: rotation 1.3s linear infinite;
+  animation: rotation 1.3s linear infinite;
+}
+/* line 77, CDP/DevUI/_commonctrl.scss */
+article .spinner.show {
+  display: block;
+}
+/* line 80, CDP/DevUI/_commonctrl.scss */
+article .spinner.small {
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  background-image: url("./images/commonctrl/spinner_small.png");
+}
+/* line 86, CDP/DevUI/_commonctrl.scss */
+article .spinner.large {
+  width: 60px;
+  height: 60px;
+  margin-top: -30px;
+  background-image: url("./images/commonctrl/spinner_large.png");
+}
+/* line 95, CDP/DevUI/_commonctrl.scss */
+article .expand-button {
+  width: 48px;
+  height: 48px;
+  opacity: 1.0;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+/* line 100, CDP/DevUI/_commonctrl.scss */
+article .expand-button.to-expand {
+  background-image: url("./images/commonctrl/btn_expand_down.png");
+}
+/* line 103, CDP/DevUI/_commonctrl.scss */
+article .expand-button.to-collapse {
+  background-image: url("./images/commonctrl/btn_expand_up.png");
+}
+/* line 106, CDP/DevUI/_commonctrl.scss */
+article .expand-button.disable {
+  opacity: 0.2;
+}
+
+/* line 5, CDP/DevUI/_dialogs.scss */
+section.common-dialog nav.button.ui-block-b, section.common-dialog nav.button.ui-block-c, section.common-dialog nav.button.ui-block-d, section.common-dialog nav.button.ui-block-e {
+  border-left-width: 1px;
+  border-left-color: #515151;
+}
+
+/* line 12, CDP/DevUI/_dialogs.scss */
+section.common-dialog {
+  width: 320px;
+  max-width: 98%;
+  background-color: #282828;
+  pointer-events: none;
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  border-color: #515151;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+/* line 25, CDP/DevUI/_dialogs.scss */
+section.common-dialog > header {
+  width: auto;
+  height: auto;
+  display: block;
+  pointer-events: none;
+}
+/* line 31, CDP/DevUI/_dialogs.scss */
+section.common-dialog > header.no-title {
+  display: none;
+}
+/* line 35, CDP/DevUI/_dialogs.scss */
+section.common-dialog > header > h1.title {
+  margin: 0;
+  padding: 8px 0 8px 0;
+  text-align: left;
+  vertical-align: middle;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  font-size: 18px;
+  font-weight: normal;
+  text-indent: 12px;
+  color: #33B5E5;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  border-color: #33B5E5;
+}
+/* line 50, CDP/DevUI/_dialogs.scss */
+section.common-dialog p {
+  font-size: 16px;
+  color: white;
+  white-space: pre-wrap;
+}
+/* line 55, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.message {
+  pointer-events: none;
+}
+/* line 58, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.debug {
+  color: #b6ff00;
+}
+/* line 61, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.info {
+  color: #00ffff;
+}
+/* line 64, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.assert {
+  color: #b200ff;
+}
+/* line 67, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.warn {
+  color: #ffd800;
+}
+/* line 70, CDP/DevUI/_dialogs.scss */
+section.common-dialog p.error {
+  color: red;
+}
+/* line 76, CDP/DevUI/_dialogs.scss */
+section.common-dialog nav.button {
+  height: 42px;
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 42px;
+  color: white;
+  pointer-events: all;
+  border-style: solid;
+  border-width: 1px 0 1px 0;
+  border-top-color: #515151;
+  border-bottom-color: transparent;
+}
+/* line 90, CDP/DevUI/_dialogs.scss */
+section.common-dialog nav.button.active {
+  background-color: #0099CC;
+}
+/* line 105, CDP/DevUI/_dialogs.scss */
+section.common-dialog.dialog-list > menu {
+  margin: 0;
+  padding: 0;
+  background-color: #515151;
+}
+/* line 110, CDP/DevUI/_dialogs.scss */
+section.common-dialog.dialog-list > menu > li {
+  height: 40px;
+  margin-top: 1px;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #282828;
+  list-style-type: none;
+  text-align: left;
+  vertical-align: middle;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: normal;
+  text-indent: 8px;
+  white-space: nowrap;
+  color: white;
+  line-height: 40px;
+  pointer-events: all;
+}
+/* line 124, CDP/DevUI/_dialogs.scss */
+section.common-dialog.dialog-list > menu > li:first-child {
+  margin-top: 0;
+}
+/* line 127, CDP/DevUI/_dialogs.scss */
+section.common-dialog.dialog-list > menu > li.active {
+  background-color: #0099CC;
+}
+/* line 135, CDP/DevUI/_dialogs.scss */
+section.common-dialog input {
+  pointer-events: all;
+}
+/* line 139, CDP/DevUI/_dialogs.scss */
+section.common-dialog .list-item-with-radio {
+  width: auto;
+  height: 42px;
+  display: -webkit-box;
+  -webkit-box-align: center;
+}
+/* line 147, CDP/DevUI/_dialogs.scss */
+section.common-dialog .list-item-with-radio .fill-space {
+  -webkit-box-flex: 1;
+}
+/* line 151, CDP/DevUI/_dialogs.scss */
+section.common-dialog .list-item-with-radio .radio-div {
+  width: 20px;
+  padding-right: 16px;
+}
+/* line 156, CDP/DevUI/_dialogs.scss */
+section.common-dialog .list-item-with-radio .radio-ui {
+  margin: auto;
+}
+/* line 161, CDP/DevUI/_dialogs.scss */
+section.common-dialog .spinner-dialog {
+  padding: 10px;
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: center;
+}
+/* line 167, CDP/DevUI/_dialogs.scss */
+section.common-dialog .spinner-dialog > p {
+  font-size: 16px;
+  color: white;
+  margin-left: 20px;
+}
+/* line 174, CDP/DevUI/_dialogs.scss */
+section.common-dialog .spinner-dialog .spinner {
+  width: 42px;
+  height: 42px;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url("./images/commonctrl/spinner_medium.png");
+  -webkit-background-size: 100% 100%;
+  -moz-background-size: 100% 100%;
+  -o-background-size: 100% 100%;
+  background-size: 100% 100%;
+  -webkit-animation: rotation 1.3s linear infinite;
+  -moz-animation: rotation 1.3s linear infinite;
+  -o-animation: rotation 1.3s linear infinite;
+  animation: rotation 1.3s linear infinite;
+}
+/* line 184, CDP/DevUI/_dialogs.scss */
+section.common-dialog .spinner-dialog .spinner.small {
+  width: 14px;
+  height: 14px;
+  background-image: url("./images/commonctrl/spinner_small.png");
+}
+/* line 190, CDP/DevUI/_dialogs.scss */
+section.common-dialog .spinner-dialog .spinner.large {
+  width: 60px;
+  height: 60px;
+  background-image: url("./images/commonctrl/spinner_large.png");
+}
+
+/* line 3, CDP/DevUI/_overflow.scss */
+menu.overflow {
+  position: absolute;
+  left: -8px;
+  background-color: #515151;
+  min-width: 196px;
+  padding: 0;
+  margin: 0;
+}
+/* line 11, CDP/DevUI/_overflow.scss */
+menu.overflow > li {
+  height: 40px;
+  background-color: #282828;
+  margin-top: 1px;
+  cursor: pointer;
+  list-style-type: none;
+  text-align: left;
+  vertical-align: middle;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  font-size: 1em;
+  font-weight: normal;
+  text-indent: 10px;
+  white-space: nowrap;
+  color: white;
+  line-height: 40px;
+  overflow: hidden;
+}
+/* line 24, CDP/DevUI/_overflow.scss */
+menu.overflow > li:first-child {
+  margin-top: 0;
+}
+/* line 27, CDP/DevUI/_overflow.scss */
+menu.overflow > li.active {
+  background-color: #0099CC;
+}

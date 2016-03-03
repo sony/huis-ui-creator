@@ -1,0 +1,58 @@
+﻿<article data-role="page" id="page-face-render-experiment" data-theme="b">
+    <header data-role="header">
+        <h3>Garage Experiment</h3>
+        <a href="#" data-rel="back">Back</a>
+    </header>
+    <section data-role="content">
+        <h3>ここはいろいろな実験をするページです。</h3>
+        <h4>face のレンダリングの実験</h4>
+        <label for="select-face">face ファイルを選択</label>
+        <select id="select-face" name="face">
+            <option data-placement="true">選択してください</option>
+            <!--<option value="ac_0713">ac_0713</option>
+            <option value="audio2_0713">audio2_0713</option>
+            <option value="bd_0713">bd_0713</option>
+            <option value="bd_pana_0713">bd_pana_0713</option>
+            <option value="c1_0713">c1_0713</option>
+            <option value="c2_0713">c2_0713</option>
+            <option value="deka-moji-tv">deka-moji-tv</option>
+            <option value="fan2_0713">fan2_0713</option>
+            <option value="fullcustom">fullcustom</option>
+            <option value="kuma_room_light">kuma_room_light</option>
+            <option value="pf_0713">pf_0713</option>
+            <option value="ring_tv_vol">ring_tv_vol</option>
+            <option value="rl_0713">rl_0713</option>
+            <option value="sb_0713">sb_0713</option>
+            <option value="sb_yamaha_0713">sb_yamaha_0713</option>
+            <option value="subc1_0713">subc1_0713</option>
+            <option value="subc2_0713">subc2_0713</option>
+            <option value="tv_0713">tv_0713</option>-->
+        </select>
+        <section id="face-render-canvas-container"></section>
+        <h4>Pixi.js による画像編集実験</h4>
+        <label for="input-resize-width">Width</label>
+        <input id="input-resize-width" type="number" value="300">
+        <label for="input-resize-height">Height</label>
+        <input id="input-resize-height" type="number" value="200">
+        <label for="check-grayscale">グレースケール</label>
+        <input id="check-grayscale" type="checkbox" checked="checked" data-inline="true" />
+        <label for="check-output-jpeg">JPEG 出力する</label>
+        <input id="check-output-jpeg" type="checkbox" data-inline="true" />
+        <label for="check-force-resize">強制的にリサイズ</label>
+        <input id="check-force-resize" type="checkbox" data-inline="true" />
+        <label for="check-resize-padding">リサイズ時にパディングを入れる</label>
+        <input id="check-resize-padding" type="checkbox" data-inline="true" />
+        <label for="select-resize-mode">リサイズモード</label>
+        <select id="select-resize-mode">
+            <option value="contain">contain (アスペクト比そのまま。指定したサイズの領域に収まるようにリサイズ)</option>
+            <option value="cover">cover (アスペクト比そのまま。指定したサイズの領域を覆うようにリサイズ)</option>
+            <option value="stretch">stretch (指定したサイズの領域で引き延ばすようにリサイズ)</option>
+        </select>
+        <label for="input-dst-filename">出力ファイル名</label>
+        <input id="input-dst-filename" type="text" />
+        <button id="button-edit-image">画像を編集</button>
+        <div id="edited-image-container">
+            <img src="#" id="edited-image" />
+        </div>
+    </section>
+</article>

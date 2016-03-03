@@ -1,0 +1,8 @@
+{
+    "name": "Light1",
+    "category": "Light",
+    "modules": [
+        "0001_power",
+        "0001_level_minus_plus"
+    ]
+}

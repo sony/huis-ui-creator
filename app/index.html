@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <title>HUIS Garage</title>
+
+    <!-- style sheet entry -->
+    <link rel="stylesheet" href="modules/jquery/stylesheets/jquery.mobile.css" />
+    <link rel="stylesheet" href="modules/sony/cdp/stylesheets/cdp.dev.ui.css" />
+    <!-- <ATELIERMARKUP type="load-stylesheet" /> -->
+    <link rel="stylesheet" href="stylesheets/app.css" />
+
+    <!-- <ATELIERMARKUP type="load-library-script" /> -->
+
+    <script defer type="lazy" src="scripts/include/StringEnum.js"></script>
+
+    <!-- application: model entry -->
+    <script defer type="lazy" src="scripts/Model/ButtonItem.js" data-atelier="modelName=ButtonItem"></script>
+    <script defer type="lazy" src="scripts/Model/LabelItem.js" data-atelier="modelName=LabelItem"></script>
+    <script defer type="lazy" src="scripts/Model/ImageItem.js" data-atelier="modelName=ImageItem"></script>
+    <script defer type="lazy" src="scripts/Model/Module.js" data-atelier="modelName=Module"></script>
+    <script defer type="lazy" src="scripts/Model/ButtonState.js" data-atelier="modelName=ButtonState"></script>
+    <!--<script defer type="lazy" src="scripts/Model/OffscreenEditor.js"></script>-->
+    <!-- <ATELIERMARKUP type="load-model-script" /> -->
+
+    <script defer type="lazy" src="scripts/Model/ButtonItemsCollection.js" data-atelier="collectionName=ButtonItemsCollection"></script>
+    <script defer type="lazy" src="scripts/Model/LabelItemsCollection.js" data-atelier="collectionName=LabelItemsCollection"></script>
+    <script defer type="lazy" src="scripts/Model/ImageItemsCollection.js" data-atelier="collectionName=ImageItemsCollection"></script>
+    <script defer type="lazy" src="scripts/Model/ModulesCollection.js" data-atelier="collectionName=ModulesCollection"></script>
+    <script defer type="lazy" src="scripts/Model/ButtonStateCollection.js" data-atelier="collectionName=ButtonStateCollection"></script>
+    <!-- <ATELIERMARKUP type="load-collection-script" /> -->
+
+    <!-- application: view entry -->
+
+    <script defer type="lazy" src="scripts/View/ButtonItem.js" data-atelier="viewName=ButtonItem"></script>
+    <script defer type="lazy" src="scripts/View/LabelItem.js" data-atelier="viewName=LabelItem"></script>
+    <script defer type="lazy" src="scripts/View/ImageItem.js" data-atelier="viewName=ImageItem"></script>
+    <script defer type="lazy" src="scripts/View/Module.js" data-atelier="viewName=Module"></script>
+    <script defer type="lazy" src="scripts/View/FaceRenderer.js" data-atelier="viewName=FaceRenderer"></script>
+    <!-- <ATELIERMARKUP type="load-view-script" /> -->
+
+    <script defer type="lazy" src="scripts/View/Home.js" data-atelier="pageName=Home"></script>
+    <script defer type="lazy" src="scripts/View/FullCustom.js" data-atelier="pageName=Full Custom"></script>
+    <script defer type="lazy" src="scripts/View/FaceRenderExperiment.js" data-atelier="pageName=Face Render Experiment"></script>
+    <!-- <ATELIERMARKUP type="load-page-script" /> -->
+</head>
+<body bgcolor="black" style="background-color:black;">
+    <div data-role="page" id="splash"></div>
+    <!-- foundation script entry -->
+    <script src="scripts/config.js"></script>
+    <script src="modules/requirejs/scripts/require.js" data-main="scripts/init"></script>
+</body>
+</html>

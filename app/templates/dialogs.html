@@ -1,0 +1,84 @@
+﻿<article>
+    <!-- message dialog -->
+    <script type="text/template" id="common-dialog-message">
+        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <header class="{{_header}}">
+                <h1 class="title">{{title}}</h1>
+            </header>
+            <p class="message">{{message}}</p>
+            <div class="ui-grid-a">
+                <nav id="{{idNegative}}" class="button ui-block-a">{{labelNegative}}</nav>
+                <nav id="{{idPositive}}" class="button ui-block-b">{{labelPositive}}</nav>
+            </div>
+        </section>
+    </script>
+
+    <!-- error dialog -->
+    <script type="text/template" id="common-dialog-error">
+        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <header class="{{_header}}">
+                <h1 class="title">{{title}}</h1>
+            </header>
+            <p class="message error">{{message}}</p>
+            <nav id="{{idPositive}}" class="button">{{labelPositive}}</nav>
+        </section>
+    </script>
+
+    <!-- list dialog -->
+    <script type="text/template" id="common-dialog-list">
+        <section class="common-dialog dialog-list" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <header class="{{_header}}">
+                <h1 class="title">{{title}}</h1>
+            </header>
+            <menu>
+                {{#list}}
+                <li id="{{id}}">{{label}}</li>
+                {{/list}}
+            </menu>
+            <nav id="{{idNegative}}" class="button">{{labelNegative}}</nav>
+        </section>
+    </script>
+
+    <!-- list with radiobox dialog-->
+    <script type="text/template" id="page-settings-allsync-dialog-list-with-radiobox">
+        <section class="common-dialog dialog-list" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <header class="{{_header}}">
+                <h1 class="title">{{title}}</h1>
+            </header>
+            <menu>
+                {{#list}}
+                <li class="list-item-with-radio" id="{{id}}">
+                    {{label}}
+                    <div class="fill-space"></div>
+                    <div class="radio-div">
+                        <input id="{{idRadiobox}}" type="radio" name="radio-dialog" class="radio-ui">
+                    </div>
+                </li>
+                {{/list}}
+            </menu>
+            <nav id="{{idNegative}}" class="button">
+                {{labelNegative}}
+            </nav>
+        </section>
+    </script>
+
+    <!-- spinner dialog-->
+    <script type="text/template" id="common-dialog-spinner">
+        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b"> 
+            <div class="spinner-dialog">
+                <div class="spinner large show" id="common-dialog-center-spinner">&nbsp;</div>
+                <p>{{title}}</p>
+            </div>
+        </section>
+    </script>
+
+    <!-- simple dialog-->
+    <script type="text/template" id="common-dialog-simple">
+        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <div class="spinner-dialog">
+                {{title}}
+            </div>
+        </section>
+    </script>
+
+</article>

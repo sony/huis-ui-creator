@@ -1,0 +1,59 @@
+﻿<article>
+    <script type="text/template" id="template-face-canvas">
+        <section id="face-canvas">
+            <section id="face-canvas-inner">
+                <section id="face-name-area">
+                    <input type="text" value="{{name}}" size="64" id="input-face-name" name="face-name" />
+                </section>
+                <section id="face-pages-area"></section>
+                <p id="page-count"><span id="page-index">1</span> / <span id="page-total">1</span></p>
+            </section>
+            <button id="button-add-page">新規ページを追加</button>
+        </section>
+    </script>
+
+    <script type="text/template" id="template-face-plain">
+        <section id="face-pages-area"></section>
+    </script>
+
+    <script type="text/template" id="template-face-page">
+        <section class="face-page" data-page-index="{{index}}" style="width:{{width}}px; height:{{height}}px;"></section>
+    </script>
+
+    <script type="text/template" id="template-module-container">
+        <section class="module-container" data-module-index="{{index}}" data-module-page-index="{{pageIndex}}" data-module-offset-y="{{offsetY}}" data-cid="{{cid}}" style="width:{{width}}px; height:{{height}}px;"></section>
+    </script>
+
+    <script type="text/template" id="template-button-item">
+        <div class="button-item item" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
+            {{#state}}
+            <div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
+                {{#image}}
+                <!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
+                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
+                {{/image}}
+                {{^image}}
+                <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
+                {{/image}}
+                {{#label}}
+                <span class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</span>
+                {{/label}}
+                {{^label}}
+                <span class="state-label"></span>
+                {{/label}}
+            </div>
+            {{/state}}
+        </div>
+    </script>
+
+    <script type="text/template" id="template-label-item">
+        <div class="label-item item" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
+            {{text}}
+        </div>
+    </script>
+
+    <script type="text-template" id="template-image-item">
+        <div class="image-item item{{#pageBackground}} background{{/pageBackground}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}">
+        </div>
+    </script>
+</article>
