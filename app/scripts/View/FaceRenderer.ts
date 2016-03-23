@@ -23,7 +23,7 @@ module Garage {
 			events() {
 				// Please add events
 				return {
-				}
+				};
 			}
 
 			initialize(options?: Backbone.ViewOptions<any>) {
@@ -47,7 +47,7 @@ module Garage {
 							},
 							name: remoteId + "_page_0" // 暫定
 						}]
-					}
+					};
 				}
 				this.type_ = options.attributes["type"];
 			}
@@ -125,7 +125,7 @@ module Garage {
 			 * @param moduleId {string} [in] ボタンを取得する module の ID
 			 * @return {Model.ButtonItem[]} module 内のすべてのボタンの Model。見つからない場合は null。
 			 */
-			getButtons(moduleId: string): Model.ButtonItem[]{
+			getButtons(moduleId: string): Model.ButtonItem[] {
 				return this.moduleView_.getButtons(moduleId);
 			}
 
@@ -237,7 +237,7 @@ module Garage {
 			 * 
 			 * @return {IGModule[]} Module View がもつ module の配列
 			 */
-			getModules(): IGModule[]{
+			getModules(): IGModule[] {
 				return this.moduleView_.getModules();
 			}
 

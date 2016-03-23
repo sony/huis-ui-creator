@@ -1,5 +1,7 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 
+/* tslint:disable:max-line-length no-string-literal */
+
 module Garage {
 	export module View {
 		import Tools = CDP.Tools;
@@ -15,16 +17,6 @@ module Garage {
 			 * constructor
 			 */
 			constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
-				super(options);
-			}
-
-			events() {
-				// Please add events
-				return {
-				}
-			}
-
-			initialize(options?: Backbone.ViewOptions<Model.ButtonItem>) {
 				if (options.attributes) {
 					if (options.attributes["materialsRootPath"]) {
 						this.materialsRootPath_ = options.attributes["materialsRootPath"];
@@ -71,12 +63,20 @@ module Garage {
 
 				var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
 				this.buttonItemTemplate_ = Tools.Template.getJST("#template-button-item", templateFile);
+
+				super(options);
+			}
+
+			events() {
+				// Please add events
+				return {
+				};
 			}
 
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
 					this._modifyModel(model);
-					
+
 					this.$el.append($(this.buttonItemTemplate_(model)));
 				});
 				return this;
@@ -87,7 +87,7 @@ module Garage {
 			 * 
 			 * @return {IGButton[]} ButtonItem View がもつ ButtonItem
 			 */
-			getButtons(): IGButton[]{
+			getButtons(): IGButton[] {
 				// enabled でない model を間引く 
 				var buttonModels = this.collection.models.filter((model) => {
 					return model.enabled;
@@ -113,7 +113,7 @@ module Garage {
 				if (model.state && model.state.length) {
 					var states = model.state;
 					var statesCount = model.state.length;
-					 
+
 					// 現在の state を特定する
 					var currentStateId: number = model.get("currentStateId");
 					if (currentStateId === undefined) {
@@ -144,6 +144,7 @@ module Garage {
 						var state = states[i];
 						if (state.image && this.materialsRootPath_) {
 							if (_.isArray(state.image)) {
+								/* jshint loopfunc: true */
 								state.image.forEach((img, index) => {
 									let imagePath = img.path;
 									// 画像パスを Garage 内のパスに変更する。
@@ -158,6 +159,7 @@ module Garage {
 									let resizeResolvedOriginalPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", resizeOriginal)).replace(/\\/g, "/");
 									img.resizeResolvedOriginalPath = resizeResolvedOriginalPath;
 								});
+								/* jshint loopfunc: false */
 							} else {
 								// 配列ではなく、一つのオブジェクトとして image が格納されていた場合の対応
 								let img: IGImage = <any>state.image;

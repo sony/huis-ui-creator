@@ -16,7 +16,7 @@ module Garage {
 		export interface ElectronSaveFileDialogOptions {
 			title?: string;
 			defaultPath?: string;
-			filters?: string[]
+			filters?: string[];
 		}
 
 		export interface ElectronMessageBoxOptions {
@@ -44,44 +44,44 @@ module Garage {
 		}
 
 		export class ElectronDialog {
-			private dialogOwner_;
-			private dialog_;
+			private _dialogOwner;
+			private _dialog;
 			constructor() {
 				this._resetElectronDialog();
 			}
 
 			showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
 				this._resetElectronDialog();
-				if (this.dialogOwner_ && this.dialog_) {
-					this.dialog_.showOpenDialog(this.dialogOwner_, options, callback);
+				if (this._dialogOwner && this._dialog) {
+					this._dialog.showOpenDialog(this._dialogOwner, options, callback);
 				}
 			}
 
 			showSaveFileDialog(options?: ElectronSaveFileDialogOptions, callback?: (fileName: string) => void): void {
 				this._resetElectronDialog();
-				if (this.dialogOwner_ && this.dialog_) {
-					this.dialog_.showSaveDialog(this.dialogOwner_, options, callback);
+				if (this._dialogOwner && this._dialog) {
+					this._dialog.showSaveDialog(this._dialogOwner, options, callback);
 				}
 			}
 
 			showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
 				this._resetElectronDialog();
-				if (this.dialogOwner_ && this.dialog_) {
+				if (this._dialogOwner && this._dialog) {
 					if (callback) {
-						return this.dialog_.showMessageBox(this.dialogOwner_, options, callback);
+						return this._dialog.showMessageBox(this._dialogOwner, options, callback);
 					} else {
-						return this.dialog_.showMessageBox(this.dialogOwner_, options);
+						return this._dialog.showMessageBox(this._dialogOwner, options);
 					}
 				}
 			}
 
 			private _resetElectronDialog() {
-				if (!this.dialogOwner_) {
+				if (!this._dialogOwner) {
 					var browserWindow = Remote.require("browser-window");
-					this.dialogOwner_ = browserWindow.getFocusedWindow();
+					this._dialogOwner = browserWindow.getFocusedWindow();
 				}
-				if (!this.dialog_) {
-					this.dialog_ = Remote.require("dialog");
+				if (!this._dialog) {
+					this._dialog = Remote.require("dialog");
 				}
 			}
 		}

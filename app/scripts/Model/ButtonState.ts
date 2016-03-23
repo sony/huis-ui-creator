@@ -82,7 +82,7 @@ module Garage {
 						image.resized = imageModel.resized;
 
 						images.push(image);
-					}); 
+					});
 					return images;
 				}
 				return null;
@@ -159,8 +159,6 @@ module Garage {
 			set active(val: boolean) {
 				this.set("active", val);
 			}
-			
-
 		}
 	}
 }

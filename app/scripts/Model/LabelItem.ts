@@ -5,7 +5,7 @@ module Garage {
 		var TAG = "[Garage.Model.LabelItem] ";
 
 		export class LabelItem extends Backbone.Model implements IGLabel, ItemModel {
-			
+
 			constructor(attributes?: any) {
 				super(attributes, null);
 			}

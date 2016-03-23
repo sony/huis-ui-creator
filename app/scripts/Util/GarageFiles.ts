@@ -25,7 +25,7 @@ module Garage {
 			 * @param deviceId {string} ヒストリーを取得したいデバイスの ID
 			 * @return {IRemoteId[]} 最近編集した face のリスト。ヒストリーが存在しない場合は null
 			 */
-			getHistoryOfEditedFaces(deviceId: string): IRemoteId[]{
+			getHistoryOfEditedFaces(deviceId: string): IRemoteId[] {
 				// 編集した face のヒストリー情報を読み込む
 				var editHistoryList = this._getHistoryList();
 				if (!editHistoryList) {
@@ -109,9 +109,7 @@ module Garage {
 				// 指定したデバイスID のヒストリーが存在しない場合は、ヒストリーリストに追加
 				if (targetHistoryList.length < 1) {
 					editHistoryList.push(targetHistory);
-				}
-				// 指定したデバイスID のヒストリーが存在する場合は、該当するヒストリーを更新
-				else {
+				} else { // 指定したデバイスID のヒストリーが存在する場合は、該当するヒストリーを更新
 					editHistoryList.forEach((value) => {
 						if (value.deviceId === deviceId) {
 							value.history = targetHistory.history;
@@ -127,7 +125,7 @@ module Garage {
 			/**
 			 * edithistory.json からヒストリー情報を取得する
 			 */
-			_getHistoryList(): IRemoteHistory[]{
+			_getHistoryList(): IRemoteHistory[] {
 				// 編集した face のヒストリー情報を読み込む
 				var editHistoryListPath = path.join(GARAGE_FILES_ROOT, "edithistory.json");
 				if (!fs.existsSync(editHistoryListPath)) {

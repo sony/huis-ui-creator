@@ -53,7 +53,7 @@
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
-				
+
 				let dirs: string[] = [dirPath];
 				let pathes: string[] = [];
 
@@ -118,7 +118,9 @@
 					for (var i = 0; i < temp.length; i++) {
 						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
 						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
-						if (!dir1Stat && !dir2Stat) continue; // TODO エラー処理が必要
+						if (!dir1Stat && !dir2Stat) {
+							continue; // TODO エラー処理が必要
+						}
 						if ((dir1Stat.size === dir2Stat.size && dir1Stat.mtime.getTime() === dir2Stat.mtime.getTime()) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
@@ -168,7 +170,9 @@
 					for (let i = 0, l = temp.length; i < l; i++) {
 						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
 						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
-						if (!dir1Stat && !dir2Stat) continue; // TODO エラー処理が必要
+						if (!dir1Stat && !dir2Stat) {
+							continue; // TODO エラー処理が必要
+						}
 						if ((dir1Stat.size === dir2Stat.size && dir1Stat.mtime.getTime() === dir2Stat.mtime.getTime()) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
@@ -193,7 +197,7 @@
 
 
 			export class FileSyncTask {
-				static ERROR_TYPE_CANCELED: string = "canceled"
+				static ERROR_TYPE_CANCELED: string = "canceled";
 
 				private _isCanceled: boolean;
 
@@ -216,7 +220,7 @@
 						if (options && options.title) {
 							dialogTitle = options.title;
 						} else {
-							dialogTitle = "同期中です。"
+							dialogTitle = "同期中です。";
 						}
 						dialog = new CDP.UI.Dialog(dialogProps.id, {
 							src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -387,7 +391,7 @@
 					if (options && options.title) {
 						dialogTitle = options.title;
 					} else {
-						dialogTitle = "同期中です。"
+						dialogTitle = "同期中です。";
 					}
 					dialog = new CDP.UI.Dialog(dialogProps.id, {
 						src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -432,7 +436,9 @@
 			export function hasDiff(dir1: string, dir2: string): boolean {
 				try {
 					var info: IDiffInfo = diff(dir1, dir2);
-					if (!info) return false;
+					if (!info) {
+						return false;
+					}
 					return !(info.diff.length === 0 && info.dir1Extra.length === 0 && info.dir2Extra.length === 0);
 				} catch (err) {
 					throw err;
@@ -445,7 +451,9 @@
 			// HUISデバイスが接続されていない場合は、nullを返す
 			export function	getHuisRootPath(vendorId: number, productId: number): string {
 				var	rootPath = usb_dev.getPath(vendorId, productId);
-				if (rootPath === "") return null;
+				if (rootPath === "") {
+					return null;
+				}
 				return rootPath;
 			}
 		}

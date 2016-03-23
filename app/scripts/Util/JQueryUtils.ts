@@ -4,10 +4,10 @@ module Garage {
 	export module Util {
 		export interface IDataOptions {
 			all?: boolean; //! true を指定した場合、すべての要素の deta 属性に値を入れる。それ以外の場合は、先頭の要素の data 属性に値を入れる。
-		};
+		}
 
 		export class JQueryUtils {
-			
+
 			/**
 			 * jQuery オブジェクトで選択された DOM の data 属性を取得する。
 			 * 
@@ -26,7 +26,7 @@ module Garage {
 			 * @pram options {IDataOptions} オプション
 			 * @return {any} 取得した値
 			 */
-			static data($elem: JQuery, key: string, value: string | number, options?: IDataOptions): void; 
+			static data($elem: JQuery, key: string, value: string | number, options?: IDataOptions): void;
 
 			static data($elem: JQuery, key: string, param1?: any | string | number, param2?: IDataOptions): void | any {
 				if (!$elem || $elem.length < 1) {

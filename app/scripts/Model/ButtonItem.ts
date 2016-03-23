@@ -61,10 +61,10 @@ module Garage {
 				this.set("default", val);
 			}
             get currentStateId(): number {
-				return this.get('currentStateId');
+				return this.get("currentStateId");
 			}
             set currentStateId(val: number) {
-				this.set('currentStateId', val);
+				this.set("currentStateId", val);
 			}
             get state(): IGState[] {
 				if (this.stateCollection_ && 0 < this.stateCollection_.length) {
@@ -91,8 +91,8 @@ module Garage {
 
 						statesData.push(stateData);
 					});
-					
-					return statesData; 
+
+					return statesData;
 				}
 				return null;
 			}
@@ -185,53 +185,67 @@ module Garage {
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
             defaults() {
-                var s: IGState[] = [
-                    {
-                        "id": 0,
-						"image": [],
-//                        "img_path": $('#add_button_img').val(),
-                        "label": [{
-                            "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
-                            "text": "",
-                            "color": 0,
-                            "font": "",
-                            "size": 20,
-                            "id": 0,
-                        }],
-                        "translate": [{
-                            "input": "",
-                            "next": 0
-                        }],
-                        "action": [{
-                            "input": "",
-                            "gimmick": "",
-                            "code": "",
-                            "codeDB": {
-                                "CommandType": "",
-                                "brand": "",
-                                "Category": "",
-                                "Model": ""
-                            }
-                        }]
-                    }
-                ];
+//                var s: IGState[] = [
+//                    {
+//                        "id": 0,
+//						"image": [],
+////                        "img_path": $('#add_button_img').val(),
+//                        "label": [{
+//                            "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
+//                            "text": "",
+//                            "color": 0,
+//                            "font": "",
+//                            "size": 20,
+//                            "id": 0,
+//                        }],
+//                        "translate": [{
+//                            "input": "",
+//                            "next": 0
+//                        }],
+//                        "action": [{
+//                            "input": "",
+//                            "gimmick": "",
+//                            "code": "",
+//                            "codeDB": {
+//                                "CommandType": "",
+//                                "brand": "",
+//                                "Category": "",
+//                                "Model": ""
+//                            }
+//                        }]
+//                    }
+//                ];
 
-                var button: IGButton = {
+				let states: IGState[] = [];
+
+                //var button: IGButton = {
+				//	"enabled": true,
+                //    "area": {
+                //        "x": $("#button_x").val(),
+                //        "y": $("#button_x").val(),
+                //        "w": $("#button_width").val(),
+                //        "h": $("#button_height").val()
+                //    },
+                //    "defaultStateId": 0,
+                //    "currentStateId": 0,
+                //    "state": s,
+                //    "seqnum": $("#add_button_id").val(),
+                //    "name": "",
+                //    "imgPath": $("#add_button_img").val(),
+                //};
+
+				let button: IGButton = {
 					"enabled": true,
-                    "area": {
-                        "x": $('#button_x').val(),
-                        "y": $('#button_x').val(),
-                        "w": $('#button_width').val(),
-                        "h": $('#button_height').val()
-                    },
-                    "defaultStateId": 0,
-                    "currentStateId": 0,
-                    "state": s,
-                    "seqnum": $('#add_button_id').val(),
-                    "name": "",
-                    "imgPath": $('#add_button_img').val(),
-                }
-
+					area: {
+						x: 0,
+						y: 0,
+						w: 100,
+						h: 120
+					},
+					default: 0,
+					currentStateId: 0,
+					state: states,
+				};
 
                 return button;
             }
@@ -338,7 +352,7 @@ module Garage {
 							y: buttonArea.y * image.areaRatio.y,
 							w: buttonArea.w * image.areaRatio.w,
 							h: buttonArea.h * image.areaRatio.h
-						}
+						};
 					}
 				});
 			}
@@ -364,7 +378,7 @@ module Garage {
 							y: buttonArea.y * label.areaRatio.y,
 							w: buttonArea.w * label.areaRatio.w,
 							h: buttonArea.h * label.areaRatio.h
-						}
+						};
 					}
 				});
 			}

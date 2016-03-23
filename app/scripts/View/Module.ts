@@ -34,7 +34,7 @@ module Garage {
 			events() {
 				// Please add events
 				return {
-				}
+				};
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.Module>) {
@@ -129,7 +129,7 @@ module Garage {
 					}));
 					this.$facePages_.push($facePage);
 				}
-				
+
 				this.collection.each((item, index) => {
 					let pageIndex: number = item.get("pageIndex");
 					let $targetFacePage = this.$facePages_[pageIndex];
@@ -141,8 +141,7 @@ module Garage {
 						pageIndex: item.pageIndex,
 						cid: item.cid
 					}));
-					
-					
+
 					// 画像をレンダリング
 					this._renderImages(item.image, index, $moduleContainer);
 					// ラベルをレンダリング
@@ -191,7 +190,7 @@ module Garage {
 
 				// Module model の生成
 				var newPageModuleModel = new Model.Module();
-				
+
 				newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
 				newPageModuleModel.remoteId = this.remoteId_;
 				newPageModuleModel.offsetY = 0;
@@ -578,15 +577,13 @@ module Garage {
 						newImage.path = module.remoteId + "/" + path.basename(image);
 					}
 					newImage.pageBackground = true;
-				}
-				// image が文字列でない場合は、model として情報をコピーする
-				else {
+				} else { // image が文字列でない場合は、model として情報をコピーする
 					newArea = $.extend(true, {}, image.area);
 					newArea.y += offsetY;
 					newImage.area = newArea;
 					// 画像の path を出力先の remoteId のディレクトリーになるように指定
 					newImage.path = module.remoteId + "/" + path.basename(image.path);
-					srcImagePath = image.resolvedPath
+					srcImagePath = image.resolvedPath;
 				}
 
 				// 所属する module の要素を取得し、View に set する
@@ -722,7 +719,7 @@ module Garage {
 			 * 
 			 * @return {IGModule[]} Module View がもつ module の配列
 			 */
-			getModules(): IGModule[]{
+			getModules(): IGModule[] {
 				var modules: IGModule[] = $.extend(true, [], this.collection.models);
 				modules.forEach((module: IGModule, index: number) => {
 					let buttonView = this.buttonViews_[index],

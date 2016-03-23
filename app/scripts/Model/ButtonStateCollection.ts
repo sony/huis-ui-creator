@@ -6,8 +6,7 @@ module Garage {
 		var TAG = "[Garage.Model.ButtonStateCollection] ";
 
 		export class ButtonStateCollection extends Backbone.Collection<ButtonState> {
-			parse(response) {
-			}
+			model = ButtonState;
 		}
 	}
 }

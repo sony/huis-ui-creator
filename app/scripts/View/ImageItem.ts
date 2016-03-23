@@ -20,7 +20,7 @@ module Garage {
 			events() {
 				// Please add events
 				return {
-				}
+				};
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.ImageItem>) {
@@ -42,7 +42,7 @@ module Garage {
 							images.push(unknownTypeImage);
 						}
 
-						let imageModels: Model.ImageItem[] = []; 
+						let imageModels: Model.ImageItem[] = [];
 						for (let i = 0, l = images.length; i < l; i++) {
 							let imageModel: Model.ImageItem = new Model.ImageItem({ materialsRootPath: this.materialsRootPath_, remoteId: this.remoteId_ });
 							imageModel.area = $.extend(true, {}, images[i].area);
@@ -86,7 +86,7 @@ module Garage {
 					if (this.remoteId_ === "common") {
 						//let imagePath = image.path;
 						//image.resolvedPath = path.join("app/res/faces/common/images", imagePath).replace(/\\/g, "/");
-						
+
 						//let garageExtensions = image.garageExtensions;
 						//if (garageExtensions) {
 						//	garageExtensions.resolvedOriginalPath = image.resolvedPath;

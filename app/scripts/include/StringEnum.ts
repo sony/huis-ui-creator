@@ -1,7 +1,7 @@
 ﻿class EnumBase<TValue> {
     constructor(private _index: number, private _value: TValue) { }
     public get index(): number { return this._index; }
-    public get value(): TValue { return this._value }
+    public get value(): TValue { return this._value; }
 }
 
 class FaceCategory extends EnumBase<string> {

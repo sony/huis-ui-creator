@@ -1,11 +1,13 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 
+/* tslint:disable:no-string-literal */
+
 module Garage {
 	export module Model {
 		var TAG = "[Garage.Model.Module] ";
 
 		export class Module extends Backbone.Model implements IGModule {
-			
+
 			constructor(attributes?: any) {
 				super(attributes, null);
 			}

@@ -16,16 +16,6 @@ module Garage {
 
 			constructor(models?: ButtonItem[]) {
 				super(models);
-				// モデルが追加されたときに発生する add イベントにハンドラを登録する。
-                this.bind("add", this.onAdd, this);
-            }
-
-			parse(response) {
-			}
-
-            //! model の追加
-            private onAdd(item: ButtonItem) {
-                console.log(TAG + "onAdd()");
             }
 
             //! destroy ハンドラ。

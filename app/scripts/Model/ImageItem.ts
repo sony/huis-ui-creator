@@ -1,5 +1,7 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 
+/* tslint:disable:max-line-length */
+
 module Garage {
 	export module Model {
 		var TAG = "[Garage.Model.ImageItem] ";
@@ -48,8 +50,8 @@ module Garage {
 				if (!path) {
 					// path が指定されていない場合は、resolvedPath も指定しない
 					this.resolvedPath = "";
-				}
-				else if (this.remoteId_ === "common") {
+
+				} else if (this.remoteId_ === "common") {
 					//this.resolvedPath = path.resolve(path.join("app/res/faces/common/images", val)).replace(/\\/g, "/");
 					// common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る
 					let resolvedPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
@@ -58,8 +60,8 @@ module Garage {
 						resolvedPath = resolvedPath.split("file:///")[1];
 					}
 					this.resolvedPath = resolvedPath;
-				}
-				else if (this.resolvedPathDirectory_) {
+
+				} else if (this.resolvedPathDirectory_) {
 					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
 				}
 			}

@@ -9,7 +9,7 @@ module Garage {
 		var TAGS = {
 			HuisFiles: "[Garage.Util.HuisFiles] ",
 			ModuleParser: "[Garage.Util.ModuleParser] "
-		}
+		};
 
 		interface IPlainFace {
 			name: string;
@@ -208,7 +208,7 @@ module Garage {
 			 */
 			getMasterFunctions(brand: string, deviceType: string, modelNumber?: string): string[];
 
-			getMasterFunctions(param1: string, param2?: string, param3?: string): string[]{
+			getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
 				// param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
 				if (param2) {
 					let brand = param1,
@@ -225,9 +225,7 @@ module Garage {
 							}
 						}
 					}
-				}
-				// param2 が指定されていない場合は、param1: remoteId
-				else {
+				} else { // param2 が指定されていない場合は、param1: remoteId
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
 				}
@@ -253,7 +251,7 @@ module Garage {
 						getFunctions_buttons(buttons, functions);
 					});
 
-				}
+				};
 
 				var getFunctions_buttons = function (buttons: IButton[], functions: string[]) {
 					if (!_.isArray(buttons)) {
@@ -557,7 +555,9 @@ module Garage {
 							return false;
 
 						default:
+						/* jshint -W032:true */
 							;
+						/* jshint -W032:false */
 					}
 
 					// remoteList に格納されている remoteId と同名のディレクトリーであるかチェック。
@@ -756,7 +756,7 @@ module Garage {
 			/**
 			 * Button データから module 化に不要なものを間引く
 			 */
-			private _normalizeButtons(buttons: IGButton[], remoteId: string): IButton[]{
+			private _normalizeButtons(buttons: IGButton[], remoteId: string): IButton[] {
 				var normalizedButtons: IButton[] = [];
 
 				for (let i = 0, l = buttons.length; i < l; i++) {
@@ -777,13 +777,13 @@ module Garage {
 			/**
 			 * button.state データから module 化に不要なものを間引く
 			 */
-			private _normalizeButtonStates(states: IGState[], remoteId: string): IState[]{
+			private _normalizeButtonStates(states: IGState[], remoteId: string): IState[] {
 				var normalizedStates: IState[] = [];
 
 				states.forEach((state: IGState) => {
 					let normalizedState: IState = {
 						id: state.id
-					}
+					};
 
 					if (!_.isUndefined(state.active)) {
 						normalizedState.active = state.active;
@@ -810,7 +810,7 @@ module Garage {
 			/**
 			 * button.state.action データから module 化に不要なものを間引く
 			 */
-			private _normalizeButtonStateActions(actions: IAction[]): IAction[]{
+			private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
 				var normalizedActions: IAction[] = [];
 
 				actions.forEach((action: IAction) => {
@@ -825,10 +825,10 @@ module Garage {
 							function: action.code_db.function,
 							brand: action.code_db.brand,
 							device_type: action.code_db.device_type,
-							uei_db_codeset: action.code_db.uei_db_codeset
+							db_codeset: action.code_db.db_codeset
 						};
-						if (!_.isUndefined(action.code_db.uei_db_device_id)) {
-							normalizedAction.code_db.uei_db_device_id = action.code_db.uei_db_device_id;
+						if (!_.isUndefined(action.code_db.db_device_id)) {
+							normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
 						}
 						if (!_.isUndefined(action.code_db.model_number)) {
 							normalizedAction.code_db.model_number = action.code_db.model_number;
@@ -843,7 +843,7 @@ module Garage {
 			/**
 			 * button.state.translate データから module 化に不要なものを間引く
 			 */
-			private _normalizeButtonStateTranaslates(translates: IStateTranslate[]): IStateTranslate[]{
+			private _normalizeButtonStateTranaslates(translates: IStateTranslate[]): IStateTranslate[] {
 				var normalizedTranslates: IStateTranslate[] = [];
 
 				translates.forEach((translate: IStateTranslate) => {
@@ -859,7 +859,7 @@ module Garage {
 			/**
 			 * Image データから module 化に不要な物を間引く
 			 */
-			private _normalizeLabels(labels: ILabel[]): ILabel[]{
+			private _normalizeLabels(labels: ILabel[]): ILabel[] {
 				var normalizedLabels: ILabel[] = [];
 
 				for (let i = 0, l = labels.length; i < l; i++) {
@@ -922,7 +922,7 @@ module Garage {
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
 						let newFileName = parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext;
-						
+
 						let newFileFullPath: string;
 						// original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
 						if (originalPath.indexOf("/") === -1) {
@@ -961,95 +961,12 @@ module Garage {
 					normalizedImage.garage_extensions = {
 						original: garageExtensions.original,
 						resize_mode: garageExtensions.resizeMode
-					}
+					};
 					normalizedImages.push(normalizedImage);
 				});
 
 				return normalizedImages;
 			}
-
-			//private _normalizeImages2(images: IGImage[]): IPromise<IImage[]> {
-			//	let df = $.Deferred<IImage[]>();
-			//	let promise = makePromise(df);
-
-			//	let normalizedImages: IImage[] = [];
-
-			//	let _images = images.slice();
-
-			//	let proc = () => {
-			//		let image: IGImage;
-			//		if (_images.length <= 0) {
-			//			df.resolve(normalizedImages);
-			//		} else {
-			//			image = _images.shift();
-
-			//			let garageExtensions = image.garageExtensions;
-			//			if (garageExtensions) {
-			//				if (!garageExtensions.original) {
-			//					garageExtensions.original = image.path;
-			//					garageExtensions.resolvedOriginalPath = image.resolvedPath;
-			//				}
-			//			} else {
-			//				garageExtensions = {
-			//					resizeMode: "contain",
-			//					original: image.path,
-			//					resolvedOriginalPath: image.resolvedPath
-			//				};
-			//			}
-			//			// garageExtensions をファイル出力用にノーマライズする
-			//			let garage_extensions: IGarageImageExtensions = {
-			//				resize_mode: garageExtensions.resizeMode,
-			//				original: garageExtensions.original
-			//			};
-
-			//			// 編集画面でサイズ変更が行われていたら、リサイズ処理を行う
-			//			if (image.resized) {
-			//				// リサイズ後のファイル名を作る。
-			//				// "image.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
-			//				// 例) "image_w200_h150_stretch.png"
-			//				let parsedPath = path.parse(garageExtensions.resolvedOriginalPath);
-			//				let newFileName = parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext;
-			//				let newFileFullPath = path.join(parsedPath.dir, newFileName).replace(/\\/g, "/");
-			//				Model.OffscreenEditor.editImage(garageExtensions.original,
-			//					{
-			//						resize: {
-			//							width: image.area.w,
-			//							height: image.area.h,
-			//							mode: garageExtensions.resizeMode,
-			//							force: true
-			//						}
-			//					}, newFileFullPath)
-			//					.always((results: Model.IEditImageResults) => {
-			//						// 新しい image.path をリサイズ後のファイルのものにする
-			//						let newPath = path.relative(HUIS_REMOTEIMAGES_ROOT, results.path).replace(/\\/g, "/");
-			//						let normalizedImage: IImage = {
-			//							area: image.area,
-			//							path: newPath,
-			//							garage_extensions: garage_extensions
-			//						};
-
-			//						normalizedImages.push(normalizedImage);
-									
-			//						setTimeout(proc);
-			//					});
-			//			} else {
-			//				let normalizedImage: IImage = {
-			//					area: image.area,
-			//					path: image.path,
-			//					garage_extensions: garage_extensions
-			//				};
-
-			//				normalizedImages.push(normalizedImage);
-
-			//				setTimeout(proc);
-			//			}
-			//		}
-			//	};
-
-			//	setTimeout(proc);
-
-			//	return promise;
-			//}
 
 			private _getMasterFace(remoteId: string): IGFace {
 				if (!_.isArray(this.remoteInfos_)) {
@@ -1100,7 +1017,7 @@ module Garage {
 			/**
 			 * remotelist.json から remoteList を取得する
 			 */
-			private _loadRemoteList(): IRemoteId[]{
+			private _loadRemoteList(): IRemoteId[] {
 				var remoteListIniPath = path.resolve(path.join(this.huisFilesRoot_, "remotelist.ini"));
 				if (!fs.existsSync(remoteListIniPath)) {
 					console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
@@ -1153,10 +1070,10 @@ module Garage {
 			/**
 			 * remoteList に記述された remoteId のすべての remote 情報 (face / masterface) を取得する
 			 */
-			private _fetchRemoteInfos(): IRemoteInfo[]{
+			private _fetchRemoteInfos(): IRemoteInfo[] {
 				if (!this.remoteList_) {
 					console.error(TAGS.HuisFiles + "_fetchRemoteInfos() remoteList is undefined");
-					return null; 
+					return null;
 				}
 
 				var remoteInfos: IRemoteInfo[] = [];
@@ -1194,7 +1111,7 @@ module Garage {
 					return undefined;
 				}
 				var plainFace: IPlainFace = JSON.parse(faceText.replace(/^\uFEFF/, ""));
-				
+
 				// 読み込んだ face のチェック
 				if (!plainFace) {
 					console.warn(TAGS.HuisFiles + "_parseFace() cannot read " + facePath + " as JSON");

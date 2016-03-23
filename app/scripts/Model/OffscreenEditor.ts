@@ -1,5 +1,7 @@
 ﻿/// <reference path="../include/Interfaces.d.ts" />
 
+/* tslint:disable:max-line-length */
+
 module Garage {
 	export module Model {
 
@@ -73,7 +75,7 @@ module Garage {
 				}
 
 				console.log(TAG + "before editImage src: " + imageSrc);
-				
+
 				// 画像のロード
 				OffscreenEditor.loadTexture(imageSrc)
 					.done((texture: PIXI.Texture) => {
@@ -94,9 +96,8 @@ module Garage {
 								dataUrl: imageDataUrl,
 								path: dstPath
 							});
-						}
-						// 編集した画像の dataUrl を返す
-						else {
+
+						} else { // 編集した画像の dataUrl を返す
 							df.resolve(imageDataUrl);
 						}
 					})
@@ -225,7 +226,7 @@ module Garage {
 							// scale は X, Y の小さい方を採用する
 							let scale = scaleX < scaleY ? scaleY : scaleX;
 							sprite.scale.set(scale);
-							
+
 							let scaledW = texture.width * scale,
 								scaledH = texture.height * scale;
 							let anchorX = - (resize.width - scaledW) / scaledW / 2,
@@ -239,11 +240,8 @@ module Garage {
 						{
 							sprite.scale.set(scaleX, scaleY);
 						}
-
 				}
-				
 			}
 		}
-		
 	}
 }

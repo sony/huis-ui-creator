@@ -19,7 +19,7 @@ module Garage {
 			events() {
 				// Please add events
 				return {
-				}
+				};
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.LabelItem>) {

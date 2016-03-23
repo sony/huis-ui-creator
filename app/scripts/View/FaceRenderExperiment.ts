@@ -2,13 +2,13 @@
 
 module Garage {
 	export module View {
-	
+
 		import Framework = CDP.Framework;
 		import UI = CDP.UI;
-		
+
 		var TAG: string = "[Garage.View.FaceRenderExperiment] ";
 		var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
-		
+
 		/**
 		 * @class FaceRenderExperiment
 		 * @brief FaceRenderExperiment View class for Garage.
@@ -16,21 +16,20 @@ module Garage {
 		class FaceRenderExperiment extends UI.PageView<Backbone.Model> {
 
 			private containerBackgroundColorIndex_ = 0;
-		
+
 			/**
 			 * construnctor
 			 */
 			constructor() {
 				super("/templates/face-render-experiment.html", "page-face-render-experiment", { route: "face-render-experiment" });
 			}
-			
+
 			///////////////////////////////////////////////////////////////////////
 			// Override: UI.PageView
 
 			//! page initialization event
 			onInitialize(event: JQueryEventObject): void {
 				super.onInitialize(event);
-				
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
@@ -47,12 +46,11 @@ module Garage {
 				return {
 					"click #button-edit-image": "_onEditImageClick",
 					"click #edited-image-container": "_onEditedImageContainerClick"
-				}
+				};
 			}
 
 			render(): FaceRenderExperiment {
 				// Please add your code
-				
 				return this;
 			}
 
@@ -98,7 +96,6 @@ module Garage {
 				$selectFace.change(() => {
 					this._renderFace($selectFace.val());
 				});
-				
 			}
 
 			private _onEditImageClick() {
@@ -116,7 +113,7 @@ module Garage {
 						},
 						grayscale: $("#check-grayscale").prop("checked") ? 1 : undefined,
 						imageType: $("#check-output-jpeg").prop("checked") ? "image/jpeg" : undefined
-					}
+					};
 					// 出力ファイル名
 					let imageName = $("#input-dst-filename").val();
 					if (!imageName) {
