@@ -3,13 +3,13 @@
 
 module Garage {
 	export module View {
-	
+
 		import Framework = CDP.Framework;
 		import Tools = CDP.Tools;
 		import UI = CDP.UI;
-		
+
 		var TAG: string = "[Garage.View.Home] ";
-		
+
 		/**
 		 * @class Home
 		 * @brief Home View class for Garage.
@@ -27,7 +27,7 @@ module Garage {
 			constructor() {
 				super("/templates/home.html", "page-home", { route: "home" });
 			}
-			
+
 			///////////////////////////////////////////////////////////////////////
 			// Override: UI.PageView
 
@@ -47,14 +47,14 @@ module Garage {
 				$(window).off("resize", this._pageLayout);
 				super.onPageBeforeHide(event, data);
 			}
-			
+
 			events(): any {
 				return {
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #sync-pc-to-huis": "_onSyncPcToHuisClick",
 					// コンテキストメニュー
 					"contextmenu": "_onContextMenu",
-				}
+				};
 			}
 
 			render(): Home {
@@ -86,7 +86,7 @@ module Garage {
 				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
 
 				// HuisFiles から フルカスタムの face を取得
-				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom", "Custom"] });
+				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
 					faceList.push({
@@ -110,7 +110,7 @@ module Garage {
 			private _renderFaceHistory() {
 				var templateFile = Framework.toUrl("/templates/home.html");
 				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
-				
+
 				// deviceId は暫定
 				var deviceId = "dev";
 				var faceHistory = garageFiles.getHistoryOfEditedFaces(deviceId);
@@ -147,7 +147,9 @@ module Garage {
 
 			private _renderFace($face: JQuery): void {
 				var remoteId = $face.attr("data-remoteId");
-				if (!remoteId) return;
+				if (!remoteId) {
+					return;
+				}
 				var face: IGFace = huisFiles.getFace(remoteId);
 				var faceRenderer: FaceRenderer = new FaceRenderer({
 					el: $face.find("a"),
@@ -215,7 +217,7 @@ module Garage {
 				this.rightClickPosition_ = {
 					x: event.pageX,
 					y: event.pageY
-				}
+				};
 
 				// コンテキストメニューを作成する
 				this.contextMenu_.clear();
