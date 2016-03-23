@@ -39,8 +39,8 @@ interface ICodeDB {
     function: string; /* コマンド種別 */
     brand: string; /* メーカー名 */
     device_type: string; /* カテゴリー名 */
-	uei_db_codeset: string; /* 信号の種類 */
-	uei_db_device_id?: number; /* DB に保存されているデバイスのインデックス */
+	db_codeset: string; /* 信号の種類 */
+	db_device_id?: number; /* DB に保存されているデバイスのインデックス */
     model_number?: string; /* 型番 */
 }
 
@@ -119,7 +119,7 @@ interface IGarageImageExtensions {
 	resize_mode: string;
 }
 
-interface IGImage{
+interface IGImage {
 	area?: IArea;
     path: string;
 	resolvedPath?: string;
@@ -225,7 +225,7 @@ declare var HUIS_FACE_PAGE_WIDTH: number;
 declare var HUIS_FACE_PAGE_HEIGHT: number;
 declare var GARAGE_FILES_ROOT: string;
 declare var HUIS_FILES_ROOT: string; //! ローカル上の HUIS ファイルの置き場所 %appdata%
-declare var HUIS_REMOTEIMAGES_ROOT: string //! ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
+declare var HUIS_REMOTEIMAGES_ROOT: string; //! ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
 declare var HUIS_VID: number;
 declare var HUIS_PID: number;
 declare var HUIS_ROOT_PATH: string; //! HUIS のデバイスのルートパス
