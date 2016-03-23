@@ -3,12 +3,12 @@
 
 module Garage {
 	export module View {
-	
+
 		import Framework = CDP.Framework;
 		import UI = CDP.UI;
 		import Tools = CDP.Tools;
 		import JQUtils = Util.JQueryUtils;
-		
+
 		var TAG: string = "[Garage.View.FullCustom] ";
 		var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
@@ -77,7 +77,7 @@ module Garage {
 			constructor() {
 				super("/templates/full-custom.html", "page-full-custom", { route: "full-custom" });
 			}
-			
+
 			///////////////////////////////////////////////////////////////////////
 			// Override: UI.PageView
 
@@ -156,12 +156,11 @@ module Garage {
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
 
-				}
+				};
 			}
 
 			render(): FullCustom {
 				// Please add your code
-				
 				return this;
 			}
 
@@ -179,11 +178,11 @@ module Garage {
 				var windowHeight = innerHeight;
 
 				var mainHeight = innerHeight - $("#main").offset().top;
-				
+
 				let facePalletArea = {
 					width: PALLET_AREA_WIDTH_MIN,
 					height: PALLET_AREA_HEIGHT_MIN < mainHeight ? mainHeight : PALLET_AREA_HEIGHT_MIN
-				}
+				};
 				// パレットエリアの width はウィンドウの width の 40% とするが、
 				// 最大サイズと最小サイズを考慮する
 				let windowWidth40per = Math.round(windowWidth * 0.4);
@@ -688,9 +687,7 @@ module Garage {
 				// リサイザーが選択されている場合は、アイテムのリサイズを行う
 				if (this.selectedResizer_) {
 					this._resizeItem(position, true);
-				}
-				// それ以外の場合は、アイテムの移動
-				else {
+				} else { // それ以外の場合は、アイテムの移動
 					this._moveItem(position);
 				}
 				this.mouseMoving_ = false;
@@ -841,7 +838,7 @@ module Garage {
 				this.rightClickPosition_ = {
 					x: event.pageX,
 					y: event.pageY
-				}
+				};
 
 				// コンテキストメニューを作成する
 				this.contextMenu_.clear();
@@ -914,7 +911,7 @@ module Garage {
 
 				var menuItem_undo = new MenuItem({
 					label: "元に戻す",
-					accelerator: 'CmdOrCtrl+Z',
+					accelerator: "CmdOrCtrl+Z",
 					enabled: this.commandManager_.canUndo() ? true : false,
 					click: () => {
 						UI.Toast.show("元に戻す");
@@ -927,7 +924,7 @@ module Garage {
 
 				var menuItem_redo = new MenuItem({
 					label: "やり直し",
-					accelerator: 'Shift+CmdOrCtrl+Z',
+					accelerator: "Shift+CmdOrCtrl+Z",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
 						UI.Toast.show("やり直し");
@@ -1045,13 +1042,9 @@ module Garage {
 						// ボタン内の state の場合
 						if ($target.hasClass("refer-state-image")) {
 							this._reflectImageToButtonState(remoteId, $target, imageFilePath);
-						}
-						// ページ背景の場合
-						else if ($target.hasClass("page-background-src")) {
+						} else if ($target.hasClass("page-background-src")) { // ページ背景の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath, true);
-						}
-						// 通常の image の場合
-						else {
+						} else { // 通常の image の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath);
 						}
 					}
@@ -1097,7 +1090,7 @@ module Garage {
 				} else {
 					$propImage.find("#propery-image-src>.property-value").val(imageFileName);
 				}
-						
+
 				/* model の更新 */
 
 				// 画像は remoteimages/[remoteId]/ 以下に配置される。
@@ -1117,7 +1110,7 @@ module Garage {
 							// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
 							let editedImageName = path.basename(editedImage.path);
 							let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-							
+
 							this._updateCurrentModelData({
 								"path": editedImagePath,
 								"resizeOriginal": editedImagePath,
@@ -1203,7 +1196,7 @@ module Garage {
 				}
 				var newState: IState = {
 					id: newStateId
-				}
+				};
 
 				if (!this.currentTargetButtonStates_) {
 					this.currentTargetButtonStates_ = [];
@@ -1255,6 +1248,12 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
+				// 直前に選択されていたボタンの状態更新があれば行う
+				this._updateCurrentModelButtonStatesData();
+
+				// 現在のターゲットを外す
+				this._loseTarget();
+
 				var options: Util.ElectronMessageBoxOptions = {
 					type: "question",
 					message: "編集中のリモコンを保存しますか？",
@@ -1318,7 +1317,7 @@ module Garage {
 											Framework.Router.back();
 										}
 									});
-								
+
 								break;
 							case 1: // "保存せずに Home に戻る"
 								// 新規リモコンのために作成されたディレクトリーを削除するために、
@@ -1433,7 +1432,7 @@ module Garage {
 
 					switch (key) {
 						case "text":
-							$target.text(value);
+							$target.find(".label-value").text(value);
 							break;
 
 						case "size":
@@ -1450,6 +1449,9 @@ module Garage {
 
 						case "path":
 							{
+								// 設定された background-image をリセットしておく
+								$target.css("background-image", "");
+
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
 								let resolvedPath = targetModel["resizeResolvedOriginalPath"];
@@ -1472,12 +1474,6 @@ module Garage {
 								};
 								img.src = resolvedPath;
 
-								//let resolvedPath = targetModel["resolvedPath"];
-								//if (resolvedPath) {
-								//	$target.css("background-image", "url(" + resolvedPath + ")");
-								//	// プレビュー部分の更新
-								//	$("#property-image-preview>.property-value").css("background-image", "url(" + resolvedPath + ")");
-								//}
 							}
 							break;
 
@@ -1537,10 +1533,6 @@ module Garage {
 										$("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
 									};
 									img.src = resolvedOriginalPath;
-									
-									//$target.css("background-image", "url(" + resolvedOriginalPath + ")");
-									//// プレビュー部分の更新
-									//$("#property-image-preview>.property-value").css("background-image", "url(" + resolvedOriginalPath + ")");
 								}
 							}
 							break;
@@ -1564,11 +1556,11 @@ module Garage {
 
 				// ボタンにひも付けられている機器の情報を取得
 				var deviceInfo = button.deviceInfo;
-				var brand: string, device_type: string, uei_db_codeset: string, model_number: string;
+				var brand: string, device_type: string, db_codeset: string, model_number: string;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
-					uei_db_codeset = deviceInfo.code_db.uei_db_codeset;
+					db_codeset = deviceInfo.code_db.db_codeset;
 					model_number = deviceInfo.code_db.model_number;
 				}
 				var currentStates: IState[] = $.extend(true, [], button.state);
@@ -1585,6 +1577,9 @@ module Garage {
 						var actions: IAction[] = [];
 						var translates: IStateTranslate[] = [];
 						for (let key in actionList) {
+							if (!key) {
+								continue;
+							}
 							let value: string = actionList[key];
 							if (_.isUndefined(value) || value === "none") {
 								continue;
@@ -1601,7 +1596,7 @@ module Garage {
 									function: value,
 									brand: brand,
 									device_type: device_type,
-									uei_db_codeset: uei_db_codeset,
+									db_codeset: db_codeset,
 									model_number: model_number
 								};
 								let action: IAction = {
@@ -1670,10 +1665,11 @@ module Garage {
 							areaRatio: {
 								x: 0, y: 0, w: 1, h: 1
 							},
-							text: ""
+							text: "",
+							size: 24
 						}];
 					}
-				}
+				};
 
 				/**
 				 * state 内に image が存在しない場合に、補完する
@@ -1687,7 +1683,7 @@ module Garage {
 							path: ""
 						}];
 					}
-				}
+				};
 
 				let props: Object;
 				if (_.isString(param1)) {
@@ -1720,7 +1716,7 @@ module Garage {
 
 				if (!targetStates || targetStates.length < 1) {
 					console.warn(TAG + "_updateCurrentModelStateData() state id is not found");
-					return
+					return;
 				}
 
 				// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
@@ -2245,7 +2241,7 @@ module Garage {
 			 */
 			private _getTargetPageModule(position: IPosition): JQuery {
 				var $modules = $("#face-canvas .module-container");
-				
+
 				for (let i = 0, l = $modules.length; i < l; i++) {
 					let $module = $modules.eq(i);
 					let moduleX = $module.offset().left;
@@ -2705,7 +2701,7 @@ module Garage {
 				}
 
 				var $element = $(".item[data-cid='" + model.cid + "']");
-				
+
 				return 0 < $element.length ? $element : null;
 			}
 
