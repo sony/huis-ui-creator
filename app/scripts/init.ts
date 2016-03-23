@@ -12,7 +12,7 @@ var Patch: any;
             } else {
                 return _require.apply(root, args);
             }
-        }
+        };
     };
 
     Patch.apply = _apply;
@@ -60,7 +60,7 @@ module Garage {
 			},
 			grayscale: 1,
 			imageType: "image/png"
-		}
+		};
 		IMAGE_EDIT_PAGE_BACKGROUND_PARAMS = {
 			resize: {
 				width: HUIS_PAGE_BACKGROUND_AREA.w,
@@ -68,26 +68,26 @@ module Garage {
 			},
 			grayscale: 1,
 			imageType: "image/png"
-		}
+		};
 
 		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
 			id: "#common-dialog-spinner",
 			options: {
 				title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
 			}
-		}
+		};
 		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
 			id: "#common-dialog-spinner",
 			options: {
 				"title": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
 			}
-		}
+		};
 		DIALOG_PROPS_CHECK_DIFF = {
 			id: "#common-dialog-spinner",
 			options: {
 				"title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
 			}
-		}
+		};
 
 		callback();
 	};
@@ -109,7 +109,7 @@ module Garage {
 			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
 			if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
 				syncWithHUIS(callback);
-			} else { 
+			} else {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
@@ -169,8 +169,7 @@ module Garage {
 				// PC 側に HUIS ファイルが保存されていない場合は、強制的に HUIS -> PC で同期を行う
 				doSync(callback);
 			}
-		}
-		catch (err) {
+		} catch (err) {
 			console.error(err);
 			console.error("error occurred in syncWithHUIS");
 			HUIS_ROOT_PATH = null;
