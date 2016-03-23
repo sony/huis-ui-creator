@@ -3,7 +3,7 @@
         <section id="face-canvas">
             <section id="face-canvas-inner">
                 <section id="face-name-area">
-                    <input type="text" value="{{name}}" size="64" id="input-face-name" name="face-name" />
+                    <input type="text" value="{{name}}" size="64" maxlength="50" id="input-face-name" name="face-name" />
                 </section>
                 <section id="face-pages-area"></section>
                 <p id="page-count"><span id="page-index">1</span> / <span id="page-total">1</span></p>
@@ -36,10 +36,10 @@
                 <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
                 {{/image}}
                 {{#label}}
-                <span class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</span>
+                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
                 {{/label}}
                 {{^label}}
-                <span class="state-label"></span>
+                <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>
                 {{/label}}
             </div>
             {{/state}}
@@ -48,7 +48,7 @@
 
     <script type="text/template" id="template-label-item">
         <div class="label-item item" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
-            {{text}}
+            <div class="label-value">{{text}}</div>
         </div>
     </script>
 

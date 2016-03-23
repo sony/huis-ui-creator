@@ -249,7 +249,9 @@
                     text-shadow: none;
                     //text-shadow: -1px -1px 1px rgba(255,255,255,0.7), 1px 1px 1px rgba(255,255,255,0.7), -1px 1px rgba(255,255,255,0.7), 1px -1px 2px rgba(255,255,255,0.7);
                     font-weight: normal;
+                    overflow: hidden;
                     text-overflow: ellipsis;
+                    white-space: nowrap;
                     cursor: pointer;
 
                     &:first-child {

@@ -92,6 +92,13 @@
     text-shadow: none;
 }
 
+.label-value,
+.state-label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 .image-item,
 .state-image {
     position: absolute;
