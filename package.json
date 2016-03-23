@@ -20,10 +20,12 @@
     "grunt-contrib-rename": "0.0.3",
     "grunt-contrib-uglify": "0.11.0",
     "grunt-string-replace": "1.2.1",
-    "grunt-typescript": "0.8.0",
+    "grunt-ts": "5.2.0",
+    "grunt-tslint": "2.5.0",
+    "typescript": "1.6.2",
+    "tslint": "2.5.1",
     "jquery": "2.1.4",
-    "jsdom": "7.2.1",
-    "typescript": "1.6.2"
+    "jsdom": "7.2.1"
   },
   "main": "main.js",
   "dependencies": {
