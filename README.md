@@ -15,6 +15,11 @@ HUIS UI CREATOR は、複数の機器のボタンからあなたがよく使う�
 
 また、HUIS UI CREATOR を使用する際は、HUIS 本体を PC に接続する必要があります。
 
+#### アップデートファイル
+
+HUIS UI CREATOR で作成したリモコンを反映するには HUIS のアップデートを実行する必要があります。
+[こちら (HUIS REMOTE CONTROLLERのアップデート方法)](firmware/howtoupdate.md) を参照してください。
+
 ====
 
 #### アプリケーションを起動する
