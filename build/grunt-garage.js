@@ -13,5 +13,9 @@ module.exports = function (grunt) {
     //__________________________________________________________________________________________________________________________________________________________________________________________//
 
     grunt.registerTask('build',     ['clean', 'dev_debug']);
-    grunt.registerTask('default',   ['clean', 'dev']);
+    grunt.registerTask('default', ['clean', 'dev']);
+
+    grunt.registerTask('ci', ['ci_tests']);
+    grunt.registerTask('jshint', ['ci_tests_jshint']);
+    grunt.registerTask('lint', ['tslint:ci_tests', 'jshint']);
 };

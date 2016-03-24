@@ -110,7 +110,7 @@ module.exports = function (grunt) {
         },
 
         // typescript building
-        typescript: {
+        ts: {
             app_plugins_release: {
                 options: {
                     comments: true,
@@ -256,14 +256,14 @@ module.exports = function (grunt) {
 
             // schedule next tasks.
             if (isTests()) {
-                grunt.task.run('typescript:app_plugins_tests');
+                grunt.task.run('ts:app_plugins_tests');
                 setBanner();
                 grunt.task.run('copy:app_plugins_tests');
             } else if (grunt.config.get('app_plugins_mode_release')) {
-                grunt.task.run('typescript:app_plugins_release');
+                grunt.task.run('ts:app_plugins_release');
                 setBanner();
             } else {
-                grunt.task.run('typescript:app_plugins_debug');
+                grunt.task.run('ts:app_plugins_debug');
             }
             grunt.task.run('app_plugins_build_scripts');
         }

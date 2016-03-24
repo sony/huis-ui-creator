@@ -32,7 +32,7 @@ module.exports = function (grunt) {
         lib_kind_fileter_enable: true,
 
         // typescript building
-        typescript: {
+        ts: {
             lib: {
                 options: {
                     comments: true,
@@ -221,7 +221,7 @@ module.exports = function (grunt) {
             grunt.config.set('lib_module_target', jsModule.name);
             grunt.config.set('lib_module_scripts', jsModule.src);
             // schedule next tasks.
-            grunt.task.run(['typescript:lib']);
+            grunt.task.run(['ts:lib']);
             grunt.task.run(['rename:lib_replace_d_ts']);
             grunt.task.run(['lib_embed_module_imple']);
         }
@@ -325,5 +325,5 @@ module.exports = function (grunt) {
 
     // library build for release build
     grunt.registerTask('lib_build_release', ['lib_update_env', 'lib_build_modules', 'lib_minify', 'copy:lib_release']);
-    grunt.registerTask('lib_build_debug',   ['lib_set_compass_target:debug'                                         ]);  // only scheduled compass target. actual build process is "typescript:build" and "compass".
+    grunt.registerTask('lib_build_debug',   ['lib_set_compass_target:debug'                                         ]);  // only scheduled compass target. actual build process is "ts:build" and "compass".
 };

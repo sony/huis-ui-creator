@@ -13,10 +13,22 @@ module.exports = function (grunt) {
         // config variable: tasks
         typescript_debug_src: ['<%= orgsrc %>/**/*.ts', '!<%= orgsrc %>/<%= modules %>/**/*.ts'],
 
+        // clean
+        clean: {
+            ts: {
+                files: [
+                    {// root/.tscache.
+                        src: ['.tscache'],
+                    },
+                ],
+            },
+        },
+
         // typescript building
-        typescript: {
+        ts: {
             options: {
                 target: 'es5', // or es3/es6
+                comments: true,
                 sourceMap: false,
             },
             release: {
@@ -31,7 +43,6 @@ module.exports = function (grunt) {
             },
             debug: {
                 options: {
-                    comments: true,
                     sourceMap: true,
                 },
                 files: [
@@ -51,7 +62,7 @@ module.exports = function (grunt) {
     });
 
     // load plugin(s).
-    grunt.loadNpmTasks('grunt-typescript');
+    grunt.loadNpmTasks('grunt-ts');
 
 
     //__________________________________________________________________________________________________________________________________________________________________________________________//
@@ -73,13 +84,13 @@ module.exports = function (grunt) {
     grunt.registerMultiTask('typescript_app', 'Build Typescript for app task.', function () {
         switch (this.target) {
             case 'release':
-                grunt.task.run('typescript:release');
+                grunt.task.run('ts:release');
                 if (!!grunt.config.get('app_js_suffix')) {
                     grunt.task.run('app_embed_all_scripts');
                 }
                 break;
             case 'debug':
-                grunt.task.run('typescript:debug');
+                grunt.task.run('ts:debug');
                 break;
             default:
                 throw 'unknown build option: ' + this.target;
