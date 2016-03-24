@@ -110,15 +110,19 @@ HUIS UI CREATOR で作成したリモコンを反映するには HUIS のアッ�
 
   Electron のバージョン`--target`は、適宜変更してください。また、Windows 64bit 向けにビルドを行う場合は、`--arch=x64` に変更してください。
 
-5. 以下のコマンドで TypeScript と　SCSS のビルドが行えます。
+5. 再び、`huis-ui-creator` のルートディレクトリーに移動します。
+
+6. 以下のコマンドで TypeScript と SCSS のビルドを行います。
 
         $ grunt build
 
-6. grunt によるビルドが完了したら、`www/app`以下に TypeScript と SCSS がコンパイルされたものが出力されます。Electron のパッケージングを行うために `www` ディレクトリーに、以下のファイルとディレクトリーをコピーします。
+7. grunt によるビルドが完了したら、`www/app`以下に TypeScript と SCSS がコンパイルされたものが出力されます。Electron のパッケージングを行うために、`www` ディレクトリーに以下のファイルとディレクトリーをコピーします。
 
   - package.json
   - main.js
   - node_modules ディレクトリー
+
+  `node_modules` ディレクトリーのコピー中に「パスが長すぎる」という内容のエラーや警告が出た場合は、無視して進めてください。
 
 #### パッケージ化
 前述の grunt によるビルドのあとのファイルコピーが終わったら、以下のコマンドを実行すると、パッケージングができます。(Windows 32bit 向けの場合)
