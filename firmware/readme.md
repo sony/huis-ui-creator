@@ -2,8 +2,8 @@ HUIS REMOTE CONTROLLERのアップデート方法
 ====
 
 1. HUIS UI CREATOR 用アップデートファイルを入手
-  - 本レポジトリー内に update_{version}.zip が置かれています。
-  - zip 展開して update_{version}.dat ファイルを取得してください。
+  - [HUIS UI CREATOR 用アップデートファイルダウンロードページ](http://huis.jp/update/download_uicreator_fw.html) にアクセスします
+  - 該当ページより update_{version}.dat を取得してください
 1. HUIS本体とパソコンを付属のmicroUSBケーブルで接続する
 1. HUIS本体にアップデートファイルを保存する
   - エクスプローラー(Windows)のコンピューターや、ファインダー(Mac)のデバイスに表示されている「HUIS-100RC」に保存します。
