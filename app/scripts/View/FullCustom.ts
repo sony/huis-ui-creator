@@ -340,12 +340,15 @@ module Garage {
 				// "Air conditioner" のボタンの形式が Garage では扱えないもののため
 				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special", "Air conditioner"] });
 
+				// faces データから face 一覧を作成し、face list に追加する
 				var faceItemTemplate = Tools.Template.getJST("#template-face-item", this.templateFullCustomFile_);
-
 				$("#face-item-list").append($(faceItemTemplate({ faces: faces })));
 
+				// face list の左スクロールボタン
 				var $listScrollLeft = $("#face-item-list-scroll-left");
+				// face list の右スクロールボタン
 				var $listScrollRight = $("#face-item-list-scroll-right");
+
 				$listScrollLeft.addClass("disabled");
 				$listScrollRight.addClass("disabled");
 
@@ -393,6 +396,9 @@ module Garage {
 
 			}
 
+			/**
+			 * face list のレイアウトを行う
+			 */
 			private _layoutFacesList() {
 				// list の width を設定する
 				setTimeout(() => {
@@ -424,7 +430,7 @@ module Garage {
 			}
 
 			/**
-			 * face をパレットにレンダリングする
+			 * 指定した remoteId の face をパレットにレンダリングする
 			 */
 			private _renderFacePallet(remoteId: string) {
 				var $facePallet = $("#face-pallet");
@@ -1051,6 +1057,9 @@ module Garage {
 				);
 			}
 
+			/**
+			 * 詳細編集エリア内の画像削除ボタンを押したときに呼ばれる。
+			 */
 			private onDeleteImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				if ($target.hasClass("delete-state-image")) {
@@ -1082,6 +1091,9 @@ module Garage {
 				}
 			}
 
+			/**
+			 * 画像アイテムに指定した画像を反映させる
+			 */
 			private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
 				let imageFileName = path.basename(imageFilePath);
 				let $propImage = $("#property-image");
@@ -1414,6 +1426,11 @@ module Garage {
 
 			}
 
+			/**
+			 * canvas 上にあるアイテムの要素に対して、表示の更新を行う
+			 * 
+			 * @param targetModel {ItemModel} アイテム要素の表示更新の対象となる model
+			 */
 			private _updateItemElementOnCanvas(targetModel: ItemModel) {
 				let $target = this._getItemElementByModel(targetModel);
 				if (targetModel.enabled) {
@@ -1421,6 +1438,8 @@ module Garage {
 				} else {
 					$target.addClass("disabled");
 				}
+
+				// model の各プロパティーに対して、CSS 設定等で表示を更新する
 				let itemType = targetModel.itemType;
 				let keys = targetModel.properties;
 				keys.forEach((key) => {
@@ -1563,9 +1582,12 @@ module Garage {
 					db_codeset = deviceInfo.code_db.db_codeset;
 					model_number = deviceInfo.code_db.model_number;
 				}
+
 				var currentStates: IState[] = $.extend(true, [], button.state);
+				// 更新後の button states を作成する
 				var newStates: IState[] = [];
 				this.currentTargetButtonStates_.forEach((stateDetail: IStateDetail) => {
+					// 対象となる id の states にフィルタリング
 					let targetState = currentStates.filter((state) => {
 						return state.id === stateDetail.id;
 					});
@@ -2011,6 +2033,11 @@ module Garage {
 				}
 			}
 
+			/**
+			 * 画像の resizeMode を設定する。
+			 * 
+			 * @param $select {JQuery} 
+			 */
 			private _setImageResizeModeBySelect($select: JQuery) {
 				let resizeMode: string = $select.val();
 				if ($select.hasClass("button-state-property")) {
@@ -2021,6 +2048,11 @@ module Garage {
 				}
 			}
 
+			/**
+			 * ページを削除する。
+			 * 
+			 * @param $pageModule {JQuery} 削除するページ
+			 */
 			private _deletePage($pageModule: JQuery) {
 				//let moduleId: string = $pageModule.data("cid");
 				let pageIndex = parseInt(JQUtils.data($pageModule, "modulePageIndex"), 10); // $pageModule.data("module-page-index");
@@ -2338,8 +2370,13 @@ module Garage {
 				return false;
 			}
 
+			/**
+			 * 指定した座標上に、アイテムのリサイザーがあるかどうかをチェックする
+			 */
 			private _checkResizerSelected(position: IPosition): string {
 				var result: string = null;
+				result = "test";
+				result = "t";
 
 				var element = document.elementFromPoint(position.x, position.y);
 				if (element) {
@@ -2693,7 +2730,7 @@ module Garage {
 			/**
 			 * 指定した model にひも付けられた canvas 上の要素を返す。
 			 * 
-			 * @param {}
+			 * @param model {any} 
 			 */
 			private _getItemElementByModel(model): JQuery {
 				if (!model || !model.cid) {

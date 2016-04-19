@@ -604,91 +604,6 @@ module Garage {
 				});
 			}
 
-			//updateRemoteList2(): IPromise<void> {
-			//	let df = $.Deferred<void>();
-			//	let promise = makePromise(df);
-
-			//	/* remotelist.ini の作成 */
-			//	var remoteListIniPath = path.join(this.huisFilesRoot_, "remotelist.ini");
-			//	var remoteListIniFile = "[General]\n";
-			//	var remoteList = this.remoteList;
-			//	var remoteListLength = remoteList.length;
-			//	for (let i = 0; i < remoteListLength; i++) {
-			//		remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";
-			//	}
-			//	remoteListIniFile += remoteListLength + "=end";
-			//	fs.outputFileSync(remoteListIniPath, remoteListIniFile);
-
-			//	/* remoteList に記述のないリモコンのディレクトリーを削除する */
-			//	var files = fs.readdirSync(this.huisFilesRoot_);
-
-			//	var removingRemoteDirectories = files.filter((file) => {
-			//		let fullPath = path.join(this.huisFilesRoot_, file);
-			//		// ディレクトリーであるかチェック
-			//		if (!fs.statSync(fullPath).isDirectory()) {
-			//			return false;
-			//		}
-
-			//		//let directoryName = path.basename(filePath);
-
-			//		// 以下のディレクトリーは削除対象外
-			//		switch (file) {
-			//			case "remoteimages":
-			//			case "lost+found":
-			//			case "9999": // "9999" (special face) の扱いをどうするか要検討
-			//				return false;
-
-			//			default:
-			//				;
-			//		}
-
-			//		// remoteList に格納されている remoteId と同名のディレクトリーであるかチェック。
-			//		// 格納されていない remoteId のディレクトリーは削除対象とする。
-			//		for (let i = 0, l = remoteList.length; i < l; i++) {
-			//			if (file === remoteList[i].remote_id) {
-			//				return false;
-			//			}
-			//		}
-			//		return true;
-			//	});
-
-			//	// remoteList に記述されていない remoteId のディレクトリーを削除する
-			//	removingRemoteDirectories.forEach((directory) => {
-			//		fs.removeSync(path.join(this.huisFilesRoot_, directory));
-			//	});
-
-			//	let remoteimagesRoot = path.join(this.huisFilesRoot_, "remoteimages");
-			//	if (!fs.existsSync(remoteimagesRoot)) {
-			//		return;
-			//	}
-
-			//	/* remoteList に記述のないリモコンの remoteimages ディレクトリー内の画像を削除する */
-			//	let remoteimagesFiles = fs.readdirSync(remoteimagesRoot);
-
-			//	// 削除対象となるディレクトリーを列挙する
-			//	let removingRemoteimagesDirectories = remoteimagesFiles.filter((file) => {
-			//		let fullPath = path.join(remoteimagesRoot, file);
-			//		// ディレクトリーであるかチェック
-			//		if (!fs.statSync(fullPath).isDirectory()) {
-			//			return false;
-			//		}
-
-			//		for (let i = 0, l = remoteList.length; i < l; i++) {
-			//			if (file === remoteList[i].remote_id) {
-			//				return false;
-			//			}
-			//		}
-			//		return true;
-			//	});
-
-			//	// remoteimages の中にある、remoteList に記述されていない remoteId のディレクトリーを削除する
-			//	removingRemoteimagesDirectories.forEach((directory) => {
-			//		fs.removeSync(path.join(remoteimagesRoot, directory));
-			//	});
-
-			//	return promise;
-			//}
-
 			/**
 			 * module ファイルを更新する。
 			 * 指定された module が存在しない場合は、新規作成する。
@@ -717,41 +632,6 @@ module Garage {
 					module: module
 				};
 			}
-
-			//private _updateModule2(remoteId: string, gmodule: IGModule): IPromise<string> {
-			//	let df = $.Deferred<string>();
-			//	let promise = makePromise(df);
-
-			//	// IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
-			//	let module: IModule = {
-			//		area: gmodule.area
-			//	};
-			//	let moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", gmodule.name + ".module");
-
-			//	if (gmodule.button) {
-			//		module.button = this._normalizeButtons(gmodule.button);
-			//	}
-			//	if (gmodule.label) {
-			//		module.label = this._normalizeLabels(gmodule.label);
-			//	}
-
-			//	if (gmodule.image) {
-			//		this._normalizeImages2(gmodule.image)
-			//			.always((images: IImage[]) => {
-			//				module.image = images;
-			//				fs.outputJSONSync(moduleFilePath, module, { spaces: 2 });
-			//				df.resolve(gmodule.name);
-			//			});
-			//		module.image = this._normalizeImages(gmodule.image);
-			//	} else {
-			//		setTimeout(() => {
-			//			fs.outputJSONSync(moduleFilePath, module, { spaces: 2 });
-			//			df.resolve(gmodule.name);
-			//		});
-			//	}
-
-			//	return promise;
-			//}
 
 			/**
 			 * Button データから module 化に不要なものを間引く
@@ -1160,8 +1040,12 @@ module Garage {
 				return face;
 			}
 
-			// IImage を IGImage に変換する。
-			// 主に garage_extensions を garageExtensions に付け替え。
+			/**
+			 * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
+			 * 
+			 * @param images {IImage[]} [in] IGImage[] に変換する IImage[]
+			 * @return {IGImage[]} 変換された IGImage[]
+			 */
 			private _images2gimages(images: IImage[]): IGImage[] {
 				let gimages: IGImage[] = $.extend(true, [], images);
 				gimages.forEach((image) => {
@@ -1179,7 +1063,12 @@ module Garage {
 				return gimages;
 			}
 
-			// 
+			/**
+			 * IButton[] を IGButton[] に変換する。
+			 * 
+			 * @param buttons {IButton[]} IGButton[] に変換する IButton[]
+			 * @return {IGButton[]} 変換された IGButton[]
+			 */
 			private _buttons2gbuttons(buttons: IButton[]): IGButton[] {
 				let gbuttons: IGButton[] = [];
 				buttons.forEach((button) => {
@@ -1198,6 +1087,12 @@ module Garage {
 				return gbuttons;
 			}
 
+			/**
+			 * IState[] を IGState[] に変換する。
+			 * 
+			 * @param buttons {IState[]} IGState[] に変換する IState[]
+			 * @return {IGState[]} 変換された IGState[]
+			 */
 			private _states2gstates(states: IState[]): IGState[] {
 				let gstates: IGState[] = [];
 				states.forEach((state) => {
@@ -1302,6 +1197,9 @@ module Garage {
 				return results;
 			}
 
+			/**
+			 * 指定したモジュール内で使用されている画像のパスを列挙する
+			 */
 			private _getImagePathsReferredInModule(module: IModule): string[] {
 				let results: string[] = [];
 				if (!module || !_.isObject(module)) {
@@ -1318,6 +1216,9 @@ module Garage {
 				return results;
 			}
 
+			/**
+			 * 指定したボタン内で使用されている画像のパスを列挙する
+			 */
 			private _getImagePathsReferredInButtons(buttons: IButton[]): string[] {
 				let results: string[] = [];
 				if (!buttons || !_.isArray(buttons)) {
@@ -1333,6 +1234,9 @@ module Garage {
 				return results;
 			}
 
+			/**
+			 * 指定したボタンの状態で使用されている画像のパスを列挙する
+			 */
 			private _getImagePathsReferredInButtonStates(states: IState[]): string[] {
 				let results: string[] = [];
 				if (!states || !_.isArray(states)) {
@@ -1347,6 +1251,9 @@ module Garage {
 				return results;
 			}
 
+			/**
+			 * 指定した画像アイテム内で使用されている画像のパスを列挙する
+			 */
 			private _getImagePathsReferredInImages(images: IImage[]): string[] {
 				let results: string[] = [];
 				if (!images || !_.isArray(images)) {
@@ -1371,7 +1278,9 @@ module Garage {
 				return results;
 			}
 
-			// face が参照している module 内で使用されていない画像を削除する
+			/**
+			 * face が参照している module 内で使用されていない画像を削除する
+			 */
 			private _removeUnnecessaryImages(remoteId: string, modules: IModule[]) {
 				//let remoteimagesDirectory = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
 				let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, remoteId)).replace(/\\/g, "/");

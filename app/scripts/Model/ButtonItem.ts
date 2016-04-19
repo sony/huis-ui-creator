@@ -42,6 +42,7 @@ module Garage {
 			get area(): IArea {
 				return this.get("area");
 			}
+
 			set area(val: IArea) {
 				this.set("area", val);
 				if (!this.initialArea_) {
@@ -54,18 +55,23 @@ module Garage {
 					});
 				}
 			}
+
 			get default(): number {
 				return this.get("default");
 			}
+
 			set default(val: number) {
 				this.set("default", val);
 			}
+
             get currentStateId(): number {
 				return this.get("currentStateId");
 			}
+
             set currentStateId(val: number) {
 				this.set("currentStateId", val);
 			}
+
             get state(): IGState[] {
 				if (this.stateCollection_ && 0 < this.stateCollection_.length) {
 					let statesData: IGState[] = [];
@@ -96,6 +102,7 @@ module Garage {
 				}
 				return null;
 			}
+
             set state(val: IGState[]) {
 				// stateCollection の初期化 / リセット
 				if (!this.stateCollection_) {
@@ -165,17 +172,27 @@ module Garage {
 				this.set("deviceInfo", val);
 			}
 
+			/**
+			 * 変更可能なプロパティーの一覧
+			 */
 			get properties(): string[]{
 				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo"];
 			}
 
+			/**
+			 * アイテムの種類
+			 */
 			get itemType(): string {
 				return "button";
 			}
 
+			/**
+			 * アイテムが有効かどうか
+			 */
 			get enabled(): boolean {
 				return this.get("enabled");
 			}
+
 			set enabled(val: boolean) {
 				this.set("enabled", val);
 			}
@@ -185,54 +202,7 @@ module Garage {
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
             defaults() {
-//                var s: IGState[] = [
-//                    {
-//                        "id": 0,
-//						"image": [],
-////                        "img_path": $('#add_button_img').val(),
-//                        "label": [{
-//                            "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
-//                            "text": "",
-//                            "color": 0,
-//                            "font": "",
-//                            "size": 20,
-//                            "id": 0,
-//                        }],
-//                        "translate": [{
-//                            "input": "",
-//                            "next": 0
-//                        }],
-//                        "action": [{
-//                            "input": "",
-//                            "gimmick": "",
-//                            "code": "",
-//                            "codeDB": {
-//                                "CommandType": "",
-//                                "brand": "",
-//                                "Category": "",
-//                                "Model": ""
-//                            }
-//                        }]
-//                    }
-//                ];
-
 				let states: IGState[] = [];
-
-                //var button: IGButton = {
-				//	"enabled": true,
-                //    "area": {
-                //        "x": $("#button_x").val(),
-                //        "y": $("#button_x").val(),
-                //        "w": $("#button_width").val(),
-                //        "h": $("#button_height").val()
-                //    },
-                //    "defaultStateId": 0,
-                //    "currentStateId": 0,
-                //    "state": s,
-                //    "seqnum": $("#add_button_id").val(),
-                //    "name": "",
-                //    "imgPath": $("#add_button_img").val(),
-                //};
 
 				let button: IGButton = {
 					"enabled": true,
@@ -315,6 +285,9 @@ module Garage {
 				});
 			}
 
+			/**
+			 * state 内の画像・ラベルアイテムの area の設定
+			 */
 			private _setStateItemsArea(buttonArea: IArea): void {
 				var states = this.state;
 				if (!states) {
@@ -331,6 +304,9 @@ module Garage {
 				});
 			}
 
+			/**
+			 * state 内の画像アイテムの area の設定
+			 */
 			private _setStateImageItemArea(images: IGImage[], buttonArea: IArea) {
 				if (!images || !this.initialArea_) {
 					return;
@@ -357,6 +333,9 @@ module Garage {
 				});
 			}
 
+			/**
+			 * state 内のラベルアイテムの area の設定
+			 */
 			private _setStateLabelItemArea(labels: IGLabel[], buttonArea: IArea) {
 				if (!labels || !this.initialArea_) {
 					return;
@@ -383,6 +362,9 @@ module Garage {
 				});
 			}
 
+			/**
+			 * state 内のアイテムに areaRatio を付加する
+			 */
 			private _setAreaRatioToStateItems(): void {
 				var states = this.state;
 				if (!states) {
@@ -401,6 +383,9 @@ module Garage {
 				this.state = states;
 			}
 
+			/**
+			 * state 内の画像アイテムに areaRatio を付加する
+			 */
 			private _setAreaRatioToStateImageItems(images: IGImage[]) {
 				if (!this.initialArea_) {
 					return;
@@ -420,6 +405,9 @@ module Garage {
 				});
 			}
 
+			/**
+			 * state 内のラベルアイテムに areaRatio を付加する
+			 */
 			private _setAreaRatioToStateLabelItems(labels: IGLabel[]) {
 				if (!this.initialArea_) {
 					return;

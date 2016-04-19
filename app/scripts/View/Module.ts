@@ -417,6 +417,9 @@ module Garage {
 				buttonView.collection.remove(button);
 			}
 
+			/**
+			 * ButtonItem をコピーする
+			 */
 			private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
 				if (!offsetY) {
 					offsetY = 0;

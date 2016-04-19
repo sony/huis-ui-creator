@@ -36,6 +36,7 @@ module Garage {
 				super.onInitialize(event);
 			}
 
+			//! page show event
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
 				super.onPageShow(event, data);
 
@@ -43,11 +44,13 @@ module Garage {
 
 			}
 
+			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
 				$(window).off("resize", this._pageLayout);
 				super.onPageBeforeHide(event, data);
 			}
 
+			//! events binding
 			events(): any {
 				return {
 					"dblclick header .ui-title": "_onHeaderDblClick",
@@ -63,6 +66,9 @@ module Garage {
 				return this;
 			}
 
+			/**
+			 * Home 画面の初期化
+			 */
 			private _initializeHomeView() {
 				// HUIS ファイルを再読み込みする
 				// [TODO] 変更があったときのみ再読み込みすべき

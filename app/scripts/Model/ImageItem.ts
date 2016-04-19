@@ -29,6 +29,7 @@ module Garage {
             get area(): IArea {
 				return this.get("area");
 			}
+
             set area(val: IArea) {
 				if (!this.initialArea_) {
 					this.initialArea_ = $.extend(true, {}, val);
@@ -41,9 +42,11 @@ module Garage {
 				}
 				this.set("area", val);
 			}
+
             get path(): string {
 				return this.get("path");
 			}
+
             set path(val: string) {
 				this.set("path", val);
 				// resolvedPath (PC上のフルパス) を設定する
@@ -65,30 +68,39 @@ module Garage {
 					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
 				}
 			}
+
 			get resolvedPath(): string {
 				return this.get("resolvedPath");
 			}
+
 			set resolvedPath(val: string) {
 				this.set("resolvedPath", val);
 			}
+
 			get properties(): string[]{
 				return ["enabled", "area", "path", "resizeMode"];
 			}
+
 			get itemType(): string {
 				return "image";
 			}
+
 			get enabled(): boolean {
 				return this.get("enabled");
 			}
+
 			set enabled(val: boolean) {
 				this.set("enabled", val);
 			}
+
 			get pageBackground(): boolean {
 				return this.get("pageBackground");
 			}
+
 			set pageBackground(val: boolean) {
 				this.set("pageBackground", val);
 			}
+
 			get areaRatio(): IGAreaRatio {
 				let areaRatio: IGAreaRatio = this.get("areaRatio");
 				if (!areaRatio) {
@@ -102,17 +114,20 @@ module Garage {
 				}
 				return areaRatio;
 			}
+
 			set areaRatio(val: IGAreaRatio) {
 				this.set("areaRatio", val);
 			}
+
 			get garageExtensions(): IGGarageImageExtensions {
 				return this.get("garageExtensions");
 			}
+
 			set garageExtensions(val: IGGarageImageExtensions) {
 				this.set("garageExtensions", val);
 			}
+
 			get resizeMode(): string {
-				//let garageExtentions: IGGarageImageExtensions = this.get("garageExtensions");
 				let garageExtensions = this.garageExtensions;
 				let resizeMode = "contain";
 				if (garageExtensions) {
@@ -122,6 +137,7 @@ module Garage {
 				}
 				return resizeMode;
 			}
+
 			set resizeMode(val: string) {
 				let garageExtensions: IGGarageImageExtensions = this.garageExtensions;
 				if (garageExtensions) {
@@ -135,33 +151,16 @@ module Garage {
 				}
 				this.resized = true;
 				this.garageExtensions = garageExtensions;
-
-				//let garageExtentions: IGGarageImageExtensions = this.get("garageExtensions");
-				//if (garageExtentions) {
-				//	garageExtentions.resizeMode = val;
-				//} else {
-				//	garageExtentions = {
-				//		original: "",
-				//		resolvedOriginalPath: "",
-				//		resizeMode: val
-				//	};
-				//}
-				//this.set("resized", true);
-				//this.set("garageExtensions", garageExtentions);
 			}
+
 			get resizeOriginal(): string {
 				let garageExtensions = this.garageExtensions;
 				if (garageExtensions) {
 					return garageExtensions.original;
 				}
 				return "";
-
-				//let garageExtentions: IGGarageImageExtensions = this.get("garageExtensions");
-				//if (garageExtentions) {
-				//	return garageExtentions.original;
-				//}
-				//return "";
 			}
+
 			set resizeOriginal(val: string) {
 				let garageExtensions = this.garageExtensions;
 				if (garageExtensions) {
@@ -199,20 +198,8 @@ module Garage {
 					}
 				}
 				this.garageExtensions = garageExtensions;
-
-				//let garageExtentions: IGGarageImageExtensions = this.get("garageExtensions");
-				//if (garageExtentions) {
-				//	garageExtentions.original = val;
-				//	garageExtentions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-				//} else {
-				//	garageExtentions = {
-				//		original: val,
-				//		resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
-				//		resizeMode: "contain"
-				//	};
-				//}
-				//this.set("garageExtensions", garageExtentions);
 			}
+
 			get resizeResolvedOriginalPath(): string {
 				let garageExtensions = this.garageExtensions;
 				if (garageExtensions) {
@@ -226,6 +213,7 @@ module Garage {
 				}
 				return "";
 			}
+
 			set resizeResolvedOriginalPath(val: string) {
 				let garageExtensions = this.garageExtensions;
 				if (garageExtensions) {
@@ -234,9 +222,11 @@ module Garage {
 				}
 				this.set("resizeResolvedOriginalPath", val);
 			}
+
 			get resized(): boolean {
 				return this.get("resized");
 			}
+
 			set resized(val: boolean) {
 				this.set("resized", val);
 			}
