@@ -195,7 +195,10 @@
 				return path.join(rootDir, relPath).replace(/\\/g, "/");
 			}
 
-
+			/**
+			 * @class FileSyncTask
+			 * @brief HUIS と PC のファイル同期を行う。同期中のキャンセル対応。
+			 */
 			export class FileSyncTask {
 				static ERROR_TYPE_CANCELED: string = "canceled";
 
@@ -209,6 +212,16 @@
 					this._isCanceled = true;
 				}
 
+				/**
+				 * HUIS と PC のファイル同期を実行する
+				 * 
+				 * @param srcRootDir {string} 同期元となるディレクトリーパス
+				 * @param destRootDir {string} 同期先となるディレクトリーパス
+				 * @param dialogProps {DialogProps} 同期中に表示するダイアログのパラメーター
+				 * @param callback {Function(err)} 成功または失敗したときに呼び出されるコールバック関数
+				 * 
+				 * @return {IProgress}
+				 */
 				exec(srcRootDir: string, destRootDir: string, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
@@ -380,6 +393,14 @@
 
 			}
 
+			/**
+			 * 指定したふたつのディレクトリーに差分があるかチェックする
+			 * 
+			 * @param dir1 {string} 差分チェックするディレクトリー
+			 * @param dir2 {string} 差分チェックの対象となるディレクトリー
+			 * @dialogProps {DialogProps} 差分比較中に表示するダイアログのパラメーター
+			 * @callback {Function} 差分比較完了後に呼び出されるコールバック関数
+			 */
 			export function hasDiffAsync(dir1: string, dir2: string, dialogProps?: DialogProps, callback?: Function) {
 				let dialog: Dialog = null;
 				let result = false;
@@ -433,6 +454,14 @@
 				});
 			}
 
+			/**
+			 * ふたつのディレクトリーに差分があるかチェック
+			 * 
+			 * @param dir1 {string} 差分チェックするディレクトリー
+			 * @param dir2 {string} 差分チェックの対象となるディレクトリー
+			 * 
+			 * @return {boolean} 差分があれば true, 差分がなければ false
+			 */
 			export function hasDiff(dir1: string, dir2: string): boolean {
 				try {
 					var info: IDiffInfo = diff(dir1, dir2);
@@ -447,8 +476,14 @@
 			}
 
 
-			// HUISのルートパスを返す関数
-			// HUISデバイスが接続されていない場合は、nullを返す
+			/**
+			 * 指定したベンダーID, プロダクトIDのデバイスのルートパスを返す
+			 * 
+			 * @param vendorId {number} ベンダーID
+			 * @param productId {number} プロダクトID
+			 * 
+			 * @return {string} vendorId, productId となるデバイするのルートパスを返す。見つからない場合は null
+			 */
 			export function	getHuisRootPath(vendorId: number, productId: number): string {
 				var	rootPath = usb_dev.getPath(vendorId, productId);
 				if (rootPath === "") {

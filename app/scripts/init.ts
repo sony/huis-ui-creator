@@ -30,6 +30,7 @@ module Garage {
 		app = Remote.require("app");
 		Menu = Remote.require("menu");
 		MenuItem = Remote.require("menu-item");
+
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		HUIS_VID = 0x054C;
@@ -61,6 +62,7 @@ module Garage {
 			grayscale: 1,
 			imageType: "image/png"
 		};
+		// 背景画像設定時の画像編集パラメーター
 		IMAGE_EDIT_PAGE_BACKGROUND_PARAMS = {
 			resize: {
 				width: HUIS_PAGE_BACKGROUND_AREA.w,
@@ -70,18 +72,23 @@ module Garage {
 			imageType: "image/png"
 		};
 
+		// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
 		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
 			id: "#common-dialog-spinner",
 			options: {
 				title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
 			}
 		};
+
+		// 同期 (PC -> HUIS) ダイアログのパラメーター (文言は仮のもの)
 		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
 			id: "#common-dialog-spinner",
 			options: {
 				"title": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
 			}
 		};
+
+		// PC と HUIS とのファイル差分チェックダイアログのパラメーター (文言は仮のもの)
 		DIALOG_PROPS_CHECK_DIFF = {
 			id: "#common-dialog-spinner",
 			options: {
@@ -179,8 +186,12 @@ module Garage {
 	// HUIS -> PC の同期処理
 	var doSync = (callback?: Function) => {
 		let syncTask = new Util.HuisDev.FileSyncTask();
+		// 同期処理の開始
 		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, (err) => {
 			if (err) {
+				// エラーダイアログの表示
+				// [TODO] エラー内容に応じて表示を変更するべき
+				// [TODO] 文言は仮のもの
 				electronDialog.showMessageBox({
 					type: "error",
 					message: "HUIS との同期に失敗しました"

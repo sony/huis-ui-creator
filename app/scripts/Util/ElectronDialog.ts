@@ -43,6 +43,10 @@ module Garage {
 			icon?: any;
 		}
 
+		/**
+		 * @class ElectronDialog
+		 * @brief Electron のダイアログを扱うための wrapper クラス
+		 */
 		export class ElectronDialog {
 			private _dialogOwner;
 			private _dialog;
@@ -50,6 +54,12 @@ module Garage {
 				this._resetElectronDialog();
 			}
 
+			/**
+			 * ファイルオープンダイアログを開く
+			 * 
+			 * @param options {ElectronOpenFileDialogOptions} ファイルオープンダイアログのオプション
+			 * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+			 */
 			showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
 				this._resetElectronDialog();
 				if (this._dialogOwner && this._dialog) {
@@ -57,6 +67,12 @@ module Garage {
 				}
 			}
 
+			/**
+			 * ファイル保存ダイアログを開く
+			 * 
+			 * @param options {ElectronSaveFileDialogOptions} ファイル保存ダイアログのオプション
+			 * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+			 */
 			showSaveFileDialog(options?: ElectronSaveFileDialogOptions, callback?: (fileName: string) => void): void {
 				this._resetElectronDialog();
 				if (this._dialogOwner && this._dialog) {
@@ -64,6 +80,12 @@ module Garage {
 				}
 			}
 
+			/**
+			 * メッセージダイアログを開く
+			 * 
+			 * @param options {ElectronSaveFileDialogOptions} ファイル保存ダイアログのオプション
+			 * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+			 */
 			showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
 				this._resetElectronDialog();
 				if (this._dialogOwner && this._dialog) {
@@ -75,6 +97,9 @@ module Garage {
 				}
 			}
 
+			/**
+			 * Electron のダイアログを使用するための初期設定
+			 */
 			private _resetElectronDialog() {
 				if (!this._dialogOwner) {
 					var browserWindow = Remote.require("browser-window");

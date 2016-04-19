@@ -53,6 +53,7 @@ module Garage {
 			}
 
 			render(): FaceRenderer {
+				// face の用途によってレンダリングの仕方を変える
 				switch (this.type_) {
 					case "canvas":
 						this._renderToCanvas();
@@ -251,6 +252,10 @@ module Garage {
 				return this.moduleView_.getModule(moduleId);
 			}
 
+			/**
+			 * face をリモコンキャンバスにレンダリングする。
+			 * (face の外側に HUIS を模した装飾をつける)
+			 */
 			private _renderToCanvas() {
 				var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
 				var template: Tools.JST = Tools.Template.getJST("#template-face-canvas", templateFile);
@@ -277,6 +282,9 @@ module Garage {
 				this.$el.append($faceCanvas);
 			}
 
+			/**
+			 * face を通常レンダリングする。
+			 */
 			private _renderAsPlain() {
 				var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
 				var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);

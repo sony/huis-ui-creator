@@ -80,6 +80,9 @@ module Garage {
 				this.imageItemTemplate_ = Tools.Template.getJST("#template-image-item", templateFile);
 			}
 
+			/**
+			 * ImageItem Collection をレンダリングする
+			 */
 			render(): ImageItem {
 				this.collection.each((item: Model.ImageItem, index: number) => {
 					let image: Model.ImageItem = $.extend(true, {}, item);
@@ -172,6 +175,9 @@ module Garage {
 				return images;
 			}
 
+			/**
+			 * collection に ImageItem が追加されたら、追加されたものをレンダリングする
+			 */
 			private _renderNewModel(model: Model.ImageItem) {
 				var image: IGImage = $.extend(true, {}, model);
 				if (!image.resolvedPath && this.materialsRootPath_) {

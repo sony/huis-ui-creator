@@ -31,6 +31,7 @@ module Garage {
 			get stateId(): number {
 				return this.get("stateId");
 			}
+
 			set stateId(val: number) {
 				this.set("stateId", val);
 			}
@@ -38,6 +39,7 @@ module Garage {
 			get area(): IArea {
 				return this.get("area");
 			}
+
 			set area(val: IArea) {
 				this.set("area", val);
 				// state 内の model の area 更新
@@ -88,6 +90,7 @@ module Garage {
 				return null;
 				//return this.get("image");
 			}
+
 			set image(val: IGImage[]) {
 				let imageModels: ImageItem[] = [];
 
@@ -135,6 +138,7 @@ module Garage {
 			get label(): IGLabel[]{
 				return this.get("label");
 			}
+
 			set label(val: IGLabel[]) {
 				this.set("label", val);
 			}
@@ -142,6 +146,7 @@ module Garage {
 			get action(): IAction[]{
 				return this.get("action");
 			}
+
 			set action(val: IAction[]) {
 				this.set("action", val);
 			}
@@ -149,6 +154,7 @@ module Garage {
 			get translate(): IStateTranslate[] {
 				return this.get("translate");
 			}
+
 			set translate(val: IStateTranslate[]) {
 				this.set("translate", val);
 			}
@@ -156,6 +162,7 @@ module Garage {
 			get active(): boolean {
 				return this.get("active");
 			}
+
 			set active(val: boolean) {
 				this.set("active", val);
 			}

@@ -89,6 +89,9 @@ module Garage {
 				return labels;
 			}
 
+			/**
+			 * collection に LabelItem が追加されたら、追加分をレンダリングする
+			 */
 			private _renderNewModel(model: Model.LabelItem) {
 				var label: IGLabel = $.extend(true, {}, model);
 				label.resolvedColor = model.resolvedColor;

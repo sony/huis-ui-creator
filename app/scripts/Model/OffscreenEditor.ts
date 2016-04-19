@@ -30,10 +30,19 @@ module Garage {
 			path: string; //<! 編集した画像の保存先のパス
 		}
 
+		/**
+		 * @class OffscreenEditor
+		 * @brief pixi.js を使ってリサイズやグレースケール変換等の簡単な画像編集を行う
+		 */
 		export class OffscreenEditor {
 			private imageSrc_: string;
 			private renderer_: PIXI.SystemRenderer;
 
+			/**
+			 * コンストラクター
+			 * 
+			 * @param 
+			 */
 			constructor(imageSrc: string, renderer?: PIXI.SystemRenderer) {
 				this.imageSrc_ = imageSrc;
 
@@ -133,7 +142,12 @@ module Garage {
 
 			// public static methods:
 
-			//! texture のロード
+			/**
+			 * 画像を読み込み、PIXI.js のテクスチャーを取得する
+			 * 
+			 * @param src {string} テクスチャーを取得する画像のパス
+			 * @return {IPromise<PIXI.Texture>} 読み込んだテクスチャーの promise オブジェクト
+			 */
 			public static loadTexture(src: string): IPromise<PIXI.Texture> {
 				let df = $.Deferred();
 				let promise = CDP.makePromise(df);
@@ -156,6 +170,9 @@ module Garage {
 				return promise;
 			}
 
+			/**
+			 * 編集後の画像のData URLを取得する
+			 */
 			private static getDataUrlOfEditedImage(texture: PIXI.Texture, params: IImageEditParams, renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer): string {
 				let stage = new PIXI.Container();
 				let sprite = new PIXI.Sprite(texture);
@@ -192,6 +209,9 @@ module Garage {
 				return imageDataUrl;
 			}
 
+			/**
+			 * 画像のリサイズを行う
+			 */
 			private static _resizeImage(texture: PIXI.Texture, resize: IImageResizeParams, sprite: PIXI.Sprite, renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer) {
 				if (!texture || !resize || !sprite || !renderer) {
 					return;
