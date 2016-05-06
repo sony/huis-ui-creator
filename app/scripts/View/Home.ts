@@ -232,7 +232,7 @@ module Garage {
 				var menuItem_inspectElement = new MenuItem({
 					label: "要素を検証",
 					click: () => {
-						this.currentWindow_.inspectElement(event.pageX, event.pageY);
+						this.currentWindow_.inspectElement(this.rightClickPosition_.x, this.rightClickPosition_.y);
 					}
 				});
 
