@@ -38,42 +38,14 @@
                 margin: 0;
                 font-weight: normal;
             }
+
+            .module-container {
+                overflow: hidden;
+            }
         }
 
-        .create-new-face {
-            width: 160px;  // tentative
-            margin: 0 100px 0 40px;
-
-            .thumb {
-                background-image: url(../res/icons/plus.png);
-                background-repeat: no-repeat;
-                background-position: center;
-                background-color: white;
-            }
-
-            .overlay-menu {
-                visibility: hidden;
-                position: relative;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0, 0.7);
-
-                span {
-                    font-weight: normal;
-                    color: white;
-                    font-size: 14px;
-                    display: table-cell;
-                    height: 256px;
-                    vertical-align: middle;
-                    text-align: center;
-                }
-
-            }
-            .thumb:hover .overlay-menu {
-                visibility: visible;
-            }
+        .face-container {
+            cursor: pointer;
         }
     }
 
