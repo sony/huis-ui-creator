@@ -453,6 +453,51 @@ declare module Garage {
 	 * Util.GarageFiles のインスタンス
 	 */
 	var garageFiles: Util.GarageFiles;
+
+	/**
+	 * face のページの横サイズ
+	 */
+	var HUIS_FACE_PAGE_WIDTH: number;
+	/**
+	 * face のページの縦サイズ
+	 */
+	var HUIS_FACE_PAGE_HEIGHT: number;
+	/**
+	 * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
+	 */
+	var GARAGE_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルの置き場所: (GARAGE_FILES_ROOT/HuisFiles)
+	 */
+	var HUIS_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
+	 */
+	var HUIS_REMOTEIMAGES_ROOT: string;
+	/**
+	 * HUIS の VID
+	 */
+	var HUIS_VID: number;
+	/**
+	 * HUIS の PID
+	 */
+	var HUIS_PID: number;
+	/**
+	 * HUIS のデバイスのルートパス
+	 */
+	var HUIS_ROOT_PATH: string;
+	/**
+	 * HUIS から PC への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps;
+	/**
+	 * PC から HUIS への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps;
+	/**
+	 * HUIS と PC の差分チェック中のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
 	/**
 	 * ページの背景の領域
 	 */
@@ -467,17 +512,6 @@ declare module Garage {
 	var IMAGE_EDIT_PAGE_BACKGROUND_PARAMS: Model.IImageEditParams;
 }
 
-declare var HUIS_FACE_PAGE_WIDTH: number;
-declare var HUIS_FACE_PAGE_HEIGHT: number;
-declare var GARAGE_FILES_ROOT: string;
-declare var HUIS_FILES_ROOT: string; //! ローカル上の HUIS ファイルの置き場所 %appdata%
-declare var HUIS_REMOTEIMAGES_ROOT: string; //! ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
-declare var HUIS_VID: number; //! HUIS の VID
-declare var HUIS_PID: number; //! HUIS の PID
-declare var HUIS_ROOT_PATH: string; //! HUIS のデバイスのルートパス
-declare var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps; //! HUIS から PC への同期のダイアログのパラメーター
-declare var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps; //! PC から HUIS への同期のダイアログのパラメーター
-declare var DIALOG_PROPS_CHECK_DIFF: DialogProps; //! HUIS と PC の差分チェック中のダイアログのパラメーター
 
 declare var Remote: any; //! remote module
 declare var Menu: any; //! menu module
