@@ -2406,23 +2406,25 @@ module Garage {
 					$itemResizer = $(this.itemResizerTemplate_());
 					$item.append($itemResizer);
 				}
+				// リサイザーの位置を設定
+				const RESIZER_SIZE_HALF = 20 / 2;
 				var itemWidth: number = $item.width();
 				var itemHeight: number = $item.height();
 				$item.find(".left-top").css({
-					left: "-20px",
-					top: "-20px"
+					left: "-" + RESIZER_SIZE_HALF + "px",
+					top: "-" + RESIZER_SIZE_HALF + "px"
 				});
 				$item.find(".right-top").css({
-					left: (itemWidth - 20) + "px",
-					top: "-20px"
+					left: (itemWidth - RESIZER_SIZE_HALF) + "px",
+					top: "-" + RESIZER_SIZE_HALF + "px"
 				});
 				$item.find(".right-bottom").css({
-					left: (itemWidth - 20) + "px",
-					top: (itemHeight - 20) + "px"
+					left: (itemWidth - RESIZER_SIZE_HALF) + "px",
+					top: (itemHeight - RESIZER_SIZE_HALF) + "px"
 				});
 				$item.find(".left-bottom").css({
-					left: "-20px",
-					top: (itemHeight - 20) + "px"
+					left: "-" + RESIZER_SIZE_HALF + "px",
+					top: (itemHeight - RESIZER_SIZE_HALF) + "px"
 				});
 			}
 
