@@ -2375,8 +2375,6 @@ module Garage {
 			 */
 			private _checkResizerSelected(position: IPosition): string {
 				var result: string = null;
-				result = "test";
-				result = "t";
 
 				var element = document.elementFromPoint(position.x, position.y);
 				if (element) {
