@@ -91,8 +91,9 @@ module Garage {
 				var templateFile = Framework.toUrl("/templates/home.html");
 				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
 
-				// HuisFiles から フルカスタムの face を取得
-				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
+				// HuisFiles から フルカスタムの face を取得。
+				// face は新しいものから表示するため、取得した facelist を逆順にする。
+				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] }).reverse();
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
 					faceList.push({
