@@ -349,6 +349,20 @@ module Garage {
 			}
 
 			/**
+			 * 新しい face を作成できるかどうか。
+			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+			 * 
+			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 */
+			canCreateNewRemote(): boolean {
+				if (this.remoteList_.length < MAX_HUIS_FILES) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			/**
 			 * 新しい remoteId を作成する。
 			 * 新しい remoteId は remoteList に格納されていないものの中で最小の数字を 4 桁の 0 パディングしたものである。
 			 * (例: "0012", "0345", "8765" など)
