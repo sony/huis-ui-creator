@@ -2619,6 +2619,8 @@ module Garage {
 
 						let $stateDetail = $(templateState(stateData));
 						$statesContainer.append($stateDetail);
+						// 文言あて・ローカライズ
+						$stateDetail.i18n();
 
 						if (resizeMode) {
 							$stateDetail.find(".state-image-resize-mode[data-state-id=\"" + stateData.id + "\"]").val(resizeMode);
