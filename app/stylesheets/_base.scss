@@ -1,3 +1,5 @@
+@import "variable";
+
 @font-face {
   font-family: 'SST W55';
   src: url(../res/fonts/regular/8804b8af-432e-44cc-8a34-eda854e2da36.eot); // For IE
@@ -47,7 +49,8 @@ body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
-
+    
+   
     article {
         .ui-btn, .ui-slider {
             z-index: 2;
@@ -76,7 +79,7 @@ body {
         }
         .ui-content {
             padding: 0;
-            background-color: rgb(151,152,157);
+            background-color: $COLOR_BACKGROUND;
         }
 
         section, div {
