@@ -62,8 +62,8 @@ module Garage {
 			 */
 			showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
 				this._resetElectronDialog();
-				if (this._dialogOwner && this._dialog) {
-					this._dialog.showOpenDialog(this._dialogOwner, options, callback);
+                if (/*this._dialogOwner && */this._dialog) {
+                    this._dialog.showOpenDialog(/*this._dialogOwner,*/ options, callback);
 				}
 			}
 
@@ -75,8 +75,8 @@ module Garage {
 			 */
 			showSaveFileDialog(options?: ElectronSaveFileDialogOptions, callback?: (fileName: string) => void): void {
 				this._resetElectronDialog();
-				if (this._dialogOwner && this._dialog) {
-					this._dialog.showSaveDialog(this._dialogOwner, options, callback);
+                if (/*this._dialogOwner && */this._dialog) {
+					this._dialog.showSaveDialog(/*this._dialogOwner,*/ options, callback);
 				}
 			}
 
@@ -86,13 +86,14 @@ module Garage {
 			 * @param options {ElectronSaveFileDialogOptions} ファイル保存ダイアログのオプション
 			 * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
 			 */
-			showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+            showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+                //debugger;
 				this._resetElectronDialog();
-				if (this._dialogOwner && this._dialog) {
+                if (/*this._dialogOwner && */this._dialog) {
 					if (callback) {
-						return this._dialog.showMessageBox(this._dialogOwner, options, callback);
+                        return this._dialog.showMessageBox(/*this._dialogOwner,*/ options, callback);
 					} else {
-						return this._dialog.showMessageBox(this._dialogOwner, options);
+                        return this._dialog.showMessageBox(/*this._dialogOwner,*/ options);
 					}
 				}
 			}
@@ -100,13 +101,14 @@ module Garage {
 			/**
 			 * Electron のダイアログを使用するための初期設定
 			 */
-			private _resetElectronDialog() {
-				if (!this._dialogOwner) {
-					var browserWindow = Remote.require("browser-window");
-					this._dialogOwner = browserWindow.getFocusedWindow();
-				}
+            private _resetElectronDialog() {
+                //debugger;
+				//if (!this._dialogOwner) {
+                //    var browserWindow = Remote.BrowserWindow;
+                //    this._dialogOwner = browserWindow.getFocusedWindow();
+				//}
 				if (!this._dialog) {
-					this._dialog = Remote.require("dialog");
+					this._dialog = Remote.dialog; // Remote.Dialogだとクラスを返すので正しく動作しない。
 				}
 			}
 		}
