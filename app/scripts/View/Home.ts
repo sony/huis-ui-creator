@@ -81,7 +81,7 @@ module Garage {
 
 				this.currentWindow_ = Remote.getCurrentWindow();
 				// コンテキストメニュー
-                this.contextMenu_ = Menu;
+                this.contextMenu_ = new Menu();
 			}
 
 			/**
