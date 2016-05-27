@@ -22,10 +22,10 @@
     "grunt-string-replace": "1.2.1",
     "grunt-ts": "5.2.0",
     "grunt-tslint": "2.5.0",
-    "typescript": "1.6.2",
-    "tslint": "2.5.1",
     "jquery": "2.1.4",
-    "jsdom": "7.2.1"
+    "jsdom": "7.2.1",
+    "tslint": "2.5.1",
+    "typescript": "1.6.2"
   },
   "main": "main.js",
   "dependencies": {

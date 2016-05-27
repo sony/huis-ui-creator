@@ -25,11 +25,12 @@ module Garage {
 		var global = global || window;
 
 		fs = require("fs-extra");
-		path = require("path");
-		Remote = require("remote");
-		app = Remote.require("app");
-		Menu = Remote.require("menu");
-		MenuItem = Remote.require("menu-item");
+        path = require("path");
+
+        Remote = require("electron").remote;
+        app = require("electron").remote.app;
+        Menu = require("electron").remote.Menu;
+        MenuItem = require("electron").remote.MenuItem;
 
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
@@ -84,7 +85,7 @@ module Garage {
 		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
 			id: "#common-dialog-spinner",
 			options: {
-				"title": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
+				"message": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
 			}
 		};
 
@@ -92,7 +93,7 @@ module Garage {
 		DIALOG_PROPS_CHECK_DIFF = {
 			id: "#common-dialog-spinner",
 			options: {
-				"title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
+                "title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
 			}
 		};
 
@@ -117,7 +118,7 @@ module Garage {
 			if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
 				syncWithHUIS(callback);
 			} else {
-				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
+				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
 				let response = electronDialog.showMessageBox(
 					{
 						type: "info",
@@ -125,7 +126,7 @@ module Garage {
 						+ "HUIS を PC と接続してから [OK] ボタンを押してください。\n"
 						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
 						buttons: ["ok", "cancel"]
-					});
+                    });
 
 				if (response !== 0) {
 					app.exit(0);
