@@ -268,9 +268,9 @@ interface ILabel {
  * @brief IGarageImageExtensions に対して、Garage で使用する情報を付加したもの
  */
 interface IGGarageImageExtensions {
-	original: string; //<! 元画像のパス (remoteimages ディレクトリーからの相対パス)
+	original: string; // <! 元画像のパス (remoteimages ディレクトリーからの相対パス)
 	resolvedOriginalPath: string; //<! 元画像のパス (Garage を使用している PC の絶対パス)
-	resizeMode: string; //<! 拡大・縮小の方法。"contain", "cover", "stretch" のいずれか
+	resizeMode: string; // <! 拡大・縮小の方法。"contain", "cover", "stretch" のいずれか
 }
 
 /**
