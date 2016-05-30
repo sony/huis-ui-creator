@@ -13,7 +13,7 @@
         position:relative;
         //height: 400px; // tentative
         overflow-y: hidden;
-        background-color: $COLOR_BACKGROUND;
+        background-color: $COLOR_BACKGROUND_HOME;
         //box-shadow: 0 0 20px #222;
         z-index: 1;
         padding: 0;
@@ -30,7 +30,7 @@
 
             .title {
                 text-align: center;
-                color: $COLOR_MAIN_TEXT;
+                color: $COLOR_TEXT_MAIN;
                 font-weight: lighter;
             }
 
@@ -111,7 +111,7 @@
 
             .title {
                 text-align: center;
-                color: $COLOR_MAIN_TEXT;
+                color: $COLOR_TEXT_MAIN;
                 font-weight: lighter;
             }
 
