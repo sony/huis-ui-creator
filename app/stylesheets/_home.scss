@@ -1,4 +1,6 @@
-﻿#page-home {
+﻿@import "variable";
+
+#page-home {
     text-shadow: none;
     font-family: "Noto Sans CJK JP",'SST W55';
 
@@ -11,7 +13,7 @@
         position:relative;
         //height: 400px; // tentative
         overflow-y: hidden;
-        background-color: rgb(151,152,157);
+        background-color: $COLOR_BACKGROUND_HOME;
         //box-shadow: 0 0 20px #222;
         z-index: 1;
         padding: 0;
@@ -28,9 +30,8 @@
 
             .title {
                 text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+                color: $COLOR_TEXT_MAIN;
+                font-weight: lighter;
             }
 
             #face-pages-area {
@@ -110,9 +111,8 @@
 
             .title {
                 text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+                color: $COLOR_TEXT_MAIN;
+                font-weight: lighter;
             }
 
             #face-pages-area {

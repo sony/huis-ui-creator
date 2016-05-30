@@ -191,6 +191,7 @@
     </Content>
     <Content Include="app\stylesheets\_face-items.scss" />
     <Content Include="app\stylesheets\_dialog.scss" />
+    <Content Include="app\stylesheets\_variable.scss" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

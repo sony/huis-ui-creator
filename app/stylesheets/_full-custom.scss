@@ -1,4 +1,6 @@
-﻿#page-full-custom {
+﻿@import "variable";
+
+#page-full-custom {
     #main {
         position: relative;
         overflow: overlay;
