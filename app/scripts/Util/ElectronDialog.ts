@@ -62,9 +62,16 @@ module Garage {
 			 */
 			showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
 				this._resetElectronDialog();
-                if (/*this._dialogOwner && */this._dialog) {
-                    this._dialog.showOpenDialog(/*this._dialogOwner,*/ options, callback);
-				}
+                this._resetElectronDialog();
+                if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
+                    if (this._dialog) {
+                        this._dialog.showOpenDialog(options, callback);
+                    }
+                } else { // Focusがこのアプリにある場合→第1引数つきで呼び出し
+                    if (this._dialog) {
+                        this._dialog.showOpenDialog(this._dialogOwner, options, callback);
+                    }
+                }
 			}
 
 			/**
@@ -75,9 +82,15 @@ module Garage {
 			 */
 			showSaveFileDialog(options?: ElectronSaveFileDialogOptions, callback?: (fileName: string) => void): void {
 				this._resetElectronDialog();
-                if (/*this._dialogOwner && */this._dialog) {
-					this._dialog.showSaveDialog(/*this._dialogOwner,*/ options, callback);
-				}
+                if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
+                    if (this._dialog) {
+                        this._dialog.showSaveDialog(options, callback);
+                    }
+                } else { // Focusがこのアプリにある場合→第1引数つきで呼び出し
+                    if (this._dialog) {
+                        this._dialog.showSaveDialog(this._dialogOwner, options, callback);
+                    }
+                }
 			}
 
 			/**
@@ -88,14 +101,24 @@ module Garage {
 			 */
             showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
                 //debugger;
-				this._resetElectronDialog();
-                if (/*this._dialogOwner && */this._dialog) {
-					if (callback) {
-                        return this._dialog.showMessageBox(/*this._dialogOwner,*/ options, callback);
-					} else {
-                        return this._dialog.showMessageBox(/*this._dialogOwner,*/ options);
-					}
-				}
+                this._resetElectronDialog();
+                if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
+                    if (this._dialog) {
+                        if (callback) {
+                            return this._dialog.showMessageBox(options, callback);
+                        } else {
+                            return this._dialog.showMessageBox(options);
+                        }
+                    }
+                } else { // Focusがこのアプリにある場合→第1引数つきで呼び出し
+                    if (this._dialog) { 
+                        if (callback) {
+                            return this._dialog.showMessageBox(this._dialogOwner, options, callback);
+                        } else {
+                            return this._dialog.showMessageBox(this._dialogOwner, options);
+                        }
+                    }
+                } 
 			}
 
 			/**
@@ -103,10 +126,10 @@ module Garage {
 			 */
             private _resetElectronDialog() {
                 //debugger;
-				//if (!this._dialogOwner) {
-                //    var browserWindow = Remote.BrowserWindow;
-                //    this._dialogOwner = browserWindow.getFocusedWindow();
-				//}
+				if (!this._dialogOwner) {
+                    var browserWindow = Remote.BrowserWindow;
+                    this._dialogOwner = browserWindow.getFocusedWindow(); // focusが他のアプリやDebuggerにあるとnullが返る
+				}
 				if (!this._dialog) {
 					this._dialog = Remote.dialog; // Remote.Dialogだとクラスを返すので正しく動作しない。
 				}
