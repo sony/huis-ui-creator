@@ -234,50 +234,51 @@
         #face-item-list-container {
             position: relative;
             overflow: hidden;
-            width:100%;
+            width:$SIZE_FACE_ITEM_LIST_WIDTH;
             height: $SIZE_FACE_ITEM_LIST_HEIGHT;
             line-height: $SIZE_FACE_ITEM_LIST_LINE_HEIGHT;
-            background-color: #68696c;
+            background-color: $COLOR_FACE_ITEM_LIST_BACKGROUND;
+
             //box-shadow: 0 0 2px black;
 
             #face-item-list {
                 height: 100%;
+                display: inline-block;
+
                 transition: transform 0.2s 0s ease-in-out;
                 transform: translateX(0px);
 
                 .face-item {
                     //display: inline-block;
                     position: absolute;
-                    height: 100%;
+                    height: $SIZE_FACE_ITEM_LIST_ITEM_HEIGHT;
+                    padding-left: $SIZE_FACE_ITEM_LIST_ITEM_PADDING_LEFT;
+                    padding-right:$SIZE_FACE_ITEM_LIST_ITEM_PADDING_RIGHT;
+                    margin-top:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_TOP;
+                    margin-left:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_LEFT;
+                    margin-right:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_RIGHT;
+            
+                    color: $COLOR_FACE_ITEM_LIST_TEXT_NORMAL;
+                    font-size:$FONT_SIZE_FACE_ITEM_LIST_ITEM;
+                    font-weight: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
+
                     max-width: 160px;
-                    min-width: 60px;
                     text-align:center;
                     vertical-align: middle;
-                    padding: 0 8px;
-                    color: #cccccc;
-                    text-shadow: none;
                     //text-shadow: -1px -1px 1px rgba(255,255,255,0.7), 1px 1px 1px rgba(255,255,255,0.7), -1px 1px rgba(255,255,255,0.7), 1px -1px 2px rgba(255,255,255,0.7);
-                    font-weight: normal;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     cursor: pointer;
 
-                    &:first-child {
-                        padding-left:40px;
-                    }
-                    &:last-child {
-                        padding-right: 40px;
-                    }
-
+                    
                     &:hover {
-                        color: #ffff88;
-                        text-shadow: 0 0 2px white;
+                        background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
+                        border-radius : $SIZE_FACE_ITEM_LIST_ITEM_RADIUS_HOVER;
                     }
                     &.active {
-                        color: white;
+                        color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
                         text-shadow: none;
-                        font-weight: bold;
                     }
                     
                 }
@@ -294,19 +295,19 @@
             #face-item-list-scroll-right {
                 position: absolute;
                 top:0;
-                width: 30px;
-                height: 40px;
+                width: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
+                height: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_HEIGHT;
                 line-height: 40px;
                 text-align: center;
                 vertical-align: middle;
-                background-color: rgba(0,0,0, 0.5);
-                color: white;
+                background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
+                color: black;
                 font-size: 18px;
                 cursor: pointer;
                 
                 &:hover {
                     text-shadow: 0 0 4px white;
-                    background-color: rgba(128,128,255, 0.7);
+                    background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
                 }
 
                 &.disabled {
@@ -315,7 +316,7 @@
                 }
 
                 &.disabled:hover {
-                    background-color: rgba(0,0,0, 0.5);
+                    background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
                     text-shadow: none;
                 }
             }
