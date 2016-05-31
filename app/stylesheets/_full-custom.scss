@@ -71,7 +71,8 @@
             width: $SIZE_PROPATY_AREA_WIDTH;
             min-height: $SIZE_PROPATY_AREA_HEIGHT;
             top: $SIZE_PROPATY_AREA_MARGIN_TOP;
-            background-color: #eeeeee;
+            background-color: $COLOR_PROPATY_AREA_BACKGROUND;
+            border : $SIZE_PROPATY_AREA_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_BORDER;
             //box-shadow: 0 0 30px rgba(0,0,0,0.8);
 
             &.active {
