@@ -12,10 +12,9 @@
 
         #face-canvas-area {
             position: absolute;
-            width: 320px;
-            height: 560px;
-            top: 40px;
-            background-color: #ffffaa;
+            width: $SIZE_CANVAS_AREA_WIDTH;
+            height: $SIZE_CANVAS_AREA_HEIGHT;
+            top: $SIZE_CANVAS_AREA_MARGIN_TOP;
 
             //box-shadow: 0 0 50px rgba(0,0,0,0.8);
 

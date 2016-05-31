@@ -217,15 +217,11 @@ module Garage {
 				/* キャンバス部分の座標の指定 */
 				const CANVAS_WIDTH = 240;
 				const CANVAS_LEFT_MIN = 320;
-
-				let faceCanvasAreaLeft = faceEditArea.width - CANVAS_WIDTH - (faceEditArea.width / 5 + 10);
-				if (faceCanvasAreaLeft < CANVAS_LEFT_MIN) {
-					faceCanvasAreaLeft = CANVAS_LEFT_MIN;
-				}
-
+                let faceCanvasAreaWidth = $("#face-canvas-area").width();
+                let faceCanvasAreaLeft = (windowWidth/2) - (faceCanvasAreaWidth/2);
 				$("#face-canvas-area").css({
 					left: faceCanvasAreaLeft + "px"
-				});
+                });
 
 				/* 詳細編集部分 */
                 let PROPATY_AREA_MARGIN_RIGHT = 112;
@@ -234,7 +230,6 @@ module Garage {
                 //詳細編集エリアのY座標は、キャンバスエリアから、112px
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
-
                 });
 
 
