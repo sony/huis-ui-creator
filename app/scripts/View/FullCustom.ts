@@ -228,32 +228,15 @@ module Garage {
 				});
 
 				/* 詳細編集部分 */
-				const DETAIL_AREA_MIN_WIDTH = 240;
-				const DETAIL_AREA_MAX_WIDTH = 600;
-				const DETAIL_AREA_MIN_HEIGHT = 560;
-				const DETAIL_AREA_TOP = 40;
-				const DETAIL_AREA_BOTTOM = 40;
+                let PROPATY_AREA_MARGIN_RIGHT = 112;
+                let detailWidth = $("#face-item-detail-area").width();
+                let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
+                //詳細編集エリアのY座標は、キャンバスエリアから、112px
+                $("#face-item-detail-area").css({
+                    left: detailLeft + "px",
 
-				let marginOfDetailAndCanvas = Math.round(faceCanvasAreaLeft / 5);
-				let detailWidth = faceCanvasAreaLeft - (marginOfDetailAndCanvas * 2);
-				if (detailWidth < DETAIL_AREA_MIN_WIDTH) {
-					detailWidth = DETAIL_AREA_MIN_WIDTH;
-				}
-				if (DETAIL_AREA_MAX_WIDTH < detailWidth) {
-					detailWidth = DETAIL_AREA_MAX_WIDTH;
-				}
-				let detailLeft = faceCanvasAreaLeft - (marginOfDetailAndCanvas + detailWidth);
-				let detailHeight = mainHeight - (DETAIL_AREA_TOP + DETAIL_AREA_BOTTOM);
-				if (detailHeight < DETAIL_AREA_MIN_HEIGHT) {
-					detailHeight = DETAIL_AREA_MIN_HEIGHT;
-				}
+                });
 
-				$("#face-item-detail-area").css({
-					left: detailLeft + "px",
-				});
-				//$("#face-item-detail-area").css({
-				//	left: "10px"
-				//});
 
 				/* パレットエリア */
 				$("#face-pallet-area").css({
