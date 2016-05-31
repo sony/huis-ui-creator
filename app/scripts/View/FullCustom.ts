@@ -206,17 +206,7 @@ module Garage {
 					height: mainHeight + "px"
 				});
 
-				/* 編集エリア */
-				$("#face-edit-area").css({
-					left: "0",
-					top: "0",
-					width: faceEditArea.width + "px",
-					height: faceEditArea.height + "px"
-				});
-
 				/* キャンバス部分の座標の指定 */
-				const CANVAS_WIDTH = 240;
-				const CANVAS_LEFT_MIN = 320;
                 let faceCanvasAreaWidth = $("#face-canvas-area").width();
                 let faceCanvasAreaLeft = (windowWidth/2) - (faceCanvasAreaWidth/2);
 				$("#face-canvas-area").css({
@@ -224,44 +214,32 @@ module Garage {
                 });
 
 				/* 詳細編集部分 */
+                //詳細編集エリアのY座標は、キャンバスエリアから、112px
                 let PROPATY_AREA_MARGIN_RIGHT = 112;
                 let detailWidth = $("#face-item-detail-area").width();
                 let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
-                //詳細編集エリアのY座標は、キャンバスエリアから、112px
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
                 });
 
-
+                //パレットエリアのY座標は、キャンバスエリアから、56px
+                let PALLET_AREA_MARGIN_LRFT = 56;
+                let palletAreaLeft = faceCanvasAreaLeft + faceCanvasAreaWidth + PALLET_AREA_MARGIN_LRFT; 
 				/* パレットエリア */
 				$("#face-pallet-area").css({
-					left: faceEditArea.width + "px",
-					top: "0",
-					width: facePalletArea.width + "px",
-					height: facePalletArea.height + "px"
-				});
-
-				// 左右のパディング (ともに 40px) を引いたサイズ
-				this.faceListContainerWidth_ = facePalletArea.width - 40 - 40;
-				$("#face-item-list-container").css({
-					width: this.faceListContainerWidth_ + "px"
+                    left: palletAreaLeft + "px",
 				});
 
 				var facePalletMaxHeight = facePalletArea.height - 120;
-				// pallet 部分の width は 240 固定なので、
-				// パレットエリア内で左右均等に配置できるように left を設定。
-				// また window height を超えないように max-height を指定する。
-				var $facePallet = $("#face-pallet");
+                // pallet部分(pallet areaの中の、参照元のリモコンが表示されるエリア)は
+               // パレットエリア内で左右均等に配置できるように。
+                var $facePallet = $("#face-pallet");
+                let facePalletWidth = $facePallet.width();
+                let facePalletAreaWidth = $("#face-pallet-area").width();
+                let facePalletLeft = (facePalletAreaWidth / 2) - (facePalletWidth / 2);
 				$facePallet.css({
-					left: (facePalletArea.width - 240) / 2,
-					maxHeight: (facePalletMaxHeight - 4) + "px"
-				});
-
-				// pages area の最大 height (window height を超えないように)
-				// ただし、scale(0.5) となるので、max-height は2倍に
-				$facePallet.find("#face-pages-area").css({
-					maxHeight: (facePalletMaxHeight * 2 - 4) + "px"
-				});
+                    left: facePalletLeft
+                });
 
 				// faceList の更新
 				this._layoutFacesList();

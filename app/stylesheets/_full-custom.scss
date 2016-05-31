@@ -225,13 +225,16 @@
 
     #face-pallet-area {
         position: absolute;
+
+        width : $SIZE_PALLET_AREA_WIDTH;
+        height : $SIZE_PALLET_AREA_HEIGHT;
+        margin-top : $SIZE_PALEET_AREA_MARGIN_TOP;
         //background-color: #8888ff;
 
         #face-item-list-container {
-            position: absolute;
+            position: relative;
             overflow: hidden;
-            top: 40px;
-            left: 40px;
+            width:100%;
             height: 40px;
             line-height: 40px;
             background-color: #68696c;
@@ -320,12 +323,19 @@
 
         #face-pallet {
             position: absolute;
-            width: 240px;
-            top: 120px;
+            width: $SIZE_FACE_IN_PALLET_WIDTH;
+            height: $SIZE_FACE_IN_PALLET_HEIGHT;
+            margin-top:$SIZE_FACE_IN_PALLET_MARING_TOP;
+            
 
             #face-pages-area {
                 transform: scale(0.5);
                 transform-origin: left top;
+                width : $SIZE_FACE_PAGE_AREA_WIDTH;
+                max-height : $SIZE_FACE_PAGE_AREA_HEIGHT;
+                padding-left:$SIZE_FACE_PAGE_AREA_PADDING_LEFT;
+                padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
+
                 background-color: #ddd;
 
                 //box-shadow: 0 0 30px rgba(0,0,0,0.6);
@@ -336,7 +346,10 @@
                     }
                 }
             }
+
+            
         }
+
 
     }
 
