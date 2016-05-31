@@ -66,12 +66,11 @@
 
         #face-item-detail-area {
             overflow: auto;
-            opacity: 0.4;
             //visibility: hidden;
             position: absolute;
-            width: 240px;
-            min-height: 320px;
-            top: 40px;
+            width: $SIZE_PROPATY_AREA_WIDTH;
+            min-height: $SIZE_PROPATY_AREA_HEIGHT;
+            top: $SIZE_PROPATY_AREA_MARGIN_TOP;
             background-color: #eeeeee;
             //box-shadow: 0 0 30px rgba(0,0,0,0.8);
 

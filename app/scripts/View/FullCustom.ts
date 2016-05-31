@@ -250,9 +250,6 @@ module Garage {
 
 				$("#face-item-detail-area").css({
 					left: detailLeft + "px",
-					top: DETAIL_AREA_TOP + "px",
-					width: detailWidth + "px",
-					maxHeight: detailHeight + "px",
 				});
 				//$("#face-item-detail-area").css({
 				//	left: "10px"
