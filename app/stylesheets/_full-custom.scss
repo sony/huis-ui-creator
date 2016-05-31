@@ -337,13 +337,20 @@
                 padding-left:$SIZE_FACE_PAGE_AREA_PADDING_LEFT;
                 padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
 
-                background-color: #ddd;
+                background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
+                border : $SIZE_FACE_PAGES_AREA_BORDER_THICKNESS solid $COLOR_FACE_PAGES_AREA_BOARDER;
 
                 //box-shadow: 0 0 30px rgba(0,0,0,0.6);
 
+                .button-item{
+                        border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+                    }
+
                 .item {
+                    
                     &:hover {
-                        background-color: rgba(51,153,255,0.5);
+                        background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
+                        border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
                     }
                 }
             }

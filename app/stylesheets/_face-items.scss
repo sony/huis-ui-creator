@@ -50,7 +50,7 @@
 }
 
 .face-page {
-    border-bottom: 4px dotted #888;
+    border-bottom: $SIZE_FACE_PAGE_SEPARATOR_BOARDER_THICKNESS solid $COLOR_FACE_PAGE_SEPARATOR_BOARDER;
     color: black;
 }
 .face-page:last-child {
