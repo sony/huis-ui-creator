@@ -245,7 +245,7 @@
                     <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
                         <option value="none">何もしない</option>
                         {{#functions}}
-                        <option value="{{.}}">{{.}}</option>
+                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
                         {{/functions}}
                     </select>
                 </div>

@@ -2,21 +2,13 @@
     <header data-role="header">
         <h3>Home</h3>
         <button id="sync-pc-to-huis">変更を HUIS に反映させる</button>
+        <button id="create-new-remote" data-icon="plus">新規作成</button>
         <!--<a href="#face-render-experiment" class="ui-btn-right">FRE</a>-->
     </header>
     <section data-role="content">
         <section id="face-list-container">
             <ul id="face-list">
-                <li class="face create-new-face">
-                    <p class="title">リモコンを新規作成</p>
-                    <div class="thumb">
-                        <a href="#full-custom">
-                            <div class="overlay-menu">
-                                <span>フルカスタムリモコンを新規作成する</span>
-                            </div>
-                        </a>
-                    </div>
-                </li>
+                <li id="face-list-footer"></li>
             </ul>
         </section>
         <section id="face-history">
@@ -29,7 +21,7 @@
                 {{#faceList}}
                 <li class="face" data-remoteid="{{remoteId}}">
                     <p class="title">{{name}}</p>
-                    <a href="#full-custom?remoteId={{remoteId}}"></a>
+                    <section class="face-container" data-remoteid="{{remoteId}}"></section>
                 </li>
                 {{/faceList}}
         </script>

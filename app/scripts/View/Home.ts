@@ -47,6 +47,9 @@ module Garage {
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
 				$(window).off("resize", this._pageLayout);
+				let $faceContainer = $(".face-container");
+				$faceContainer.off("click");
+
 				super.onPageBeforeHide(event, data);
 			}
 
@@ -54,6 +57,7 @@ module Garage {
 			events(): any {
 				return {
 					"dblclick header .ui-title": "_onHeaderDblClick",
+					"click #create-new-remote": "_onCreateNewRemote",
 					"click #sync-pc-to-huis": "_onSyncPcToHuisClick",
 					// コンテキストメニュー
 					"contextmenu": "_onContextMenu",
@@ -91,8 +95,9 @@ module Garage {
 				var templateFile = Framework.toUrl("/templates/home.html");
 				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
 
-				// HuisFiles から フルカスタムの face を取得
-				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
+				// HuisFiles から フルカスタムの face を取得。
+				// face は新しいものから表示するため、取得した facelist を逆順にする。
+				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] }).reverse();
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
 					faceList.push({
@@ -158,7 +163,7 @@ module Garage {
 				}
 				var face: IGFace = huisFiles.getFace(remoteId);
 				var faceRenderer: FaceRenderer = new FaceRenderer({
-					el: $face.find("a"),
+					el: $face.find(".face-container"),
 					attributes: {
 						face: face,
 						materialsRootPath: HUIS_FILES_ROOT
@@ -167,13 +172,26 @@ module Garage {
 				faceRenderer.render();
 
 				// サイズを調整
+				let $faceContainer = $face.find(".face-container");
 				let $faceCanvas = $face.find("#face-pages-area");
-				let adjustedHeightRate = $face.height() / $faceCanvas.innerHeight();
+				//let adjustedHeightRate = $face.height() / $faceCanvas.innerHeight();
 				let adjustedWidthRate = $face.width() / $faceCanvas.innerWidth();
 				$faceCanvas.css({
 					"transform": "scale(" + adjustedWidthRate + ")",
 					"transform-origin": "left top",
 					"background-color": "rgb(240,240,240)"
+				});
+				let adjsutedFaceHeight = $faceCanvas.innerHeight() * adjustedWidthRate;
+				$faceContainer.width($face.width());
+				$faceContainer.height(adjsutedFaceHeight);
+
+				// クリックしたら編集画面への遷移できるようにする
+				$face.on("click", (event) => {
+					let $clickedFace = $(event.currentTarget);
+					let remoteId = $clickedFace.data("remoteid");
+					if (remoteId) {
+						Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
+					}
 				});
 			}
 
@@ -183,6 +201,20 @@ module Garage {
 					Framework.Router.navigate("#face-render-experiment");
 				} else {
 					currentWindow.toggleDevTools();
+				}
+			}
+
+			private _onCreateNewRemote() {
+				if (huisFiles.canCreateNewRemote()) {
+					Framework.Router.navigate("#full-custom");
+				} else {
+					electronDialog.showMessageBox({
+						type: "error",
+						message: "リモコンの上限数に達しているため、リモコンを作成できません。\n"
+						+ "リモコンの上限数は " + MAX_HUIS_FILES + " です。\n"
+						+ "これは機器リモコンやカスタムリモコン等を含めた数です。",
+						buttons: ["ok"]
+					});
 				}
 			}
 
@@ -231,7 +263,7 @@ module Garage {
 				var menuItem_inspectElement = new MenuItem({
 					label: "要素を検証",
 					click: () => {
-						this.currentWindow_.inspectElement(event.pageX, event.pageY);
+						this.currentWindow_.inspectElement(this.rightClickPosition_.x, this.rightClickPosition_.y);
 					}
 				});
 
