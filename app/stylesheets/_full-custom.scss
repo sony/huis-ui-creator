@@ -234,19 +234,15 @@
         #face-item-list-container {
             position: relative;
             overflow: hidden;
-            width:$SIZE_FACE_ITEM_LIST_WIDTH;
-            height: $SIZE_FACE_ITEM_LIST_HEIGHT;
+            width:$SIZE_FACE_ITEM_LIST_CONTAINER_WIDTH;
+            height: $SIZE_FACE_ITEM_LIST_CONTAINER_HEIGHT;
             line-height: $SIZE_FACE_ITEM_LIST_LINE_HEIGHT;
             background-color: $COLOR_FACE_ITEM_LIST_BACKGROUND;
 
-            //box-shadow: 0 0 2px black;
-
             #face-item-list {
                 height: 100%;
-                display: inline-block;
-
                 transition: transform 0.2s 0s ease-in-out;
-                transform: translateX(0px);
+                transform: translateX(16px);
 
                 .face-item {
                     //display: inline-block;
@@ -270,12 +266,12 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     cursor: pointer;
-
                     
                     &:hover {
                         background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
                         border-radius : $SIZE_FACE_ITEM_LIST_ITEM_RADIUS_HOVER;
                     }
+
                     &.active {
                         color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
                         text-shadow: none;
@@ -296,6 +292,7 @@
                     background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_ACTIVE;
                 }
             }
+
             #face-item-list-scroll-right {
                 background-image :$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL;
                 right:0;
@@ -308,6 +305,24 @@
                     background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE;
                 }
 
+            }
+
+            #face-item-list-scroll-margin-right,
+            #face-item-list-scroll-margin-left
+             {
+                background-color : $COLOR_FACE_ITEM_LIST_SCROLL_MARGIN;
+                position: absolute;
+                top:0;
+                width: $SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_WIDTH;
+                height: $SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_HEIGHT;
+            }
+
+            #face-item-list-scroll-margin-right{
+                right : $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
+            }
+
+            #face-item-list-scroll-margin-left{
+                left    :$SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_LEFT;
             }
 
             #face-item-list-scroll-left,
