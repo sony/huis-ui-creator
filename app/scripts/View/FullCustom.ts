@@ -71,6 +71,10 @@ module Garage {
 			private contextMenu_: any;
 			private rightClickPosition_: { x: number; y: number };
 
+            //デフォルトのグリッド仕様の際の特殊仕様
+            private DEFAULT_GRID = 29; //デフォルトのグリッドは29pxとする。
+            private BIAL_X_DEFAULT_GRID_LEFT = 8; //デフォルトグリッドの際は左に8pxのマージンがある
+            private BIAL_X_DEFAULT_GRID_RIGHT = 8;//デフォルトグリッドの際は左に8pxのマージンがある
 			/**
 			 * construnctor
 			 */
@@ -88,7 +92,7 @@ module Garage {
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
-				this.gridSize_ = 29;
+                this.gridSize_ = this.DEFAULT_GRID;
 				requirejs(["pixi"]);
 			}
 
@@ -602,7 +606,8 @@ module Garage {
 			/**
 			 * フルカスタム編集画面での mousemove イベントのハンドリング
 			 */
-			private onMainMouseMove(event: Event) {
+            private onMainMouseMove(event: Event) {
+                
 				if (event.type !== "mousemove") {
 					console.error(TAG + "onMainMouseMove() Invalid event type: " + event.type);
 					return;
@@ -619,8 +624,22 @@ module Garage {
 					var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
 					var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
 
-					var newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-					var newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
+                    var newX;
+                    var newY;
+
+                    //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+                    if (this.gridSize_ === this.DEFAULT_GRID) {
+                        var BIAS_X = this.BIAL_X_DEFAULT_GRID_LEFT;
+                        var BIAS_Y = 0
+
+                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
+                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
+
+                    } else {
+                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
+                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
+
+                    }
 
 					this.$currentTarget_.css({
 						"left": newX + "px",
@@ -655,21 +674,41 @@ module Garage {
 			/**
 			 * アイテムの移動を行う
 			 */
-			private _moveItem(position: IPosition, update?: boolean) {
+            private _moveItem(position: IPosition, update?: boolean) {
+
 				var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
 				var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
 				if (deltaX === 0 && deltaY === 0) {
 					return;
 				}
+                var newX;
+                var newY;
 
-				var newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-				var newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
+                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+                if (this.gridSize_ === this.DEFAULT_GRID) {
+                    var BIAS_X = this.BIAL_X_DEFAULT_GRID_LEFT;
+                    var BIAS_Y = 0
+                    var MAX_X = $(".face-page").width() - this.BIAL_X_DEFAULT_GRID_LEFT;
+
+                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
+
+                    if (newX < BIAS_X) {
+                        newX = BIAS_X;
+                    } else if (newX + this.$currentTarget_.width() > MAX_X) {
+                        newX = MAX_X - this.$currentTarget_.width();
+                    }
+
+                } else {
+                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
+                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
+                }
 
 				this.$currentTarget_.css({
 					"left": newX + "px",
 					"top": newY + "px"
 				});
-
+                
 				// 新しい area の妥当性を検証し、調整済みの area を取得する
 				var newArea = this._validateArea({
 					x: newX,
@@ -715,11 +754,20 @@ module Garage {
 							;
 					}
 
-					// グリッドスナップ用に調整
-					newArea.x = Math.floor(newArea.x / this.gridSize_) * this.gridSize_;
-					newArea.y = Math.floor(newArea.y / this.gridSize_) * this.gridSize_;
-					newArea.w = Math.floor(newArea.w / this.gridSize_) * this.gridSize_;
-					newArea.h = Math.floor(newArea.h / this.gridSize_) * this.gridSize_;
+	                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+                    if (this.gridSize_ === this.DEFAULT_GRID) {
+                        // グリッドスナップ用に調整
+                        newArea.x = this.getGridCordinate(newArea.x) + this.BIAL_X_DEFAULT_GRID_LEFT;
+                        newArea.y = this.getGridCordinate(newArea.y);
+                        newArea.w = this.getGridCordinate(newArea.w);
+                        newArea.h = this.getGridCordinate(newArea.h);
+                    } else {
+                        // グリッドスナップ用に調整
+                        newArea.x = this.getGridCordinate(newArea.x);
+                        newArea.y = this.getGridCordinate(newArea.y);
+                        newArea.w = this.getGridCordinate(newArea.w);
+                        newArea.h = this.getGridCordinate(newArea.h);
+                    }
 
 					return newArea;
 				};
@@ -753,6 +801,16 @@ module Garage {
 					this._setResizer(this.$currentTarget_);
 				}
 			}
+
+
+			/**
+			 * グリッドに沿うように座標を変換.
+             * input:face-page上の座標値　: number
+             * return : グリッドに沿った　face-page上の座標値 : number
+			 */
+            private getGridCordinate (inputCordinate :number):number{
+                return inputCordinate = Math.floor(inputCordinate / this.gridSize_) * this.gridSize_;
+            }
 
 			/**
 			 * button.state にある label. image のリサイズ (canvas 上における表示のリサイズ)
@@ -828,8 +886,8 @@ module Garage {
 								this._setGridSize(16);
 							}
                         }, {
-                            label: "29px", type: "checkbox", checked: this.gridSize_ === 29 ? true : false, click: () => {
-                                this._setGridSize(29);
+                            label: this.DEFAULT_GRID + "px", type: "checkbox", checked: this.gridSize_ === this.DEFAULT_GRID ? true : false, click: () => {
+                                this._setGridSize(this.DEFAULT_GRID);
                             }
                         }, {
 							label: "32px", type: "checkbox", checked: this.gridSize_ === 32 ? true : false, click: () => {
@@ -2420,8 +2478,8 @@ module Garage {
 						$facePages.css("background-image", "url(../res/icons/grid_16.png)");
                         break;
 
-                    case 29:
-                        this.gridSize_ = 29;
+                    case this.DEFAULT_GRID:
+                        this.gridSize_ = this.DEFAULT_GRID;
                         //$facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
                         break;
 
