@@ -285,10 +285,29 @@
             }
 
             #face-item-list-scroll-left {
+                background-image : $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL;
                 left:0;
+
+                &:hover {
+                    background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_HOVER;
+                }
+
+                &:active {
+                    background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_ACTIVE;
+                }
             }
             #face-item-list-scroll-right {
+                background-image :$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL;
                 right:0;
+
+                &:hover {
+                    background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_HOVER;
+                }
+
+                &:active {
+                    background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE;
+                }
+
             }
 
             #face-item-list-scroll-left,
@@ -297,28 +316,15 @@
                 top:0;
                 width: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
                 height: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_HEIGHT;
-                line-height: 40px;
-                text-align: center;
-                vertical-align: middle;
                 background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
-                color: black;
-                font-size: 18px;
                 cursor: pointer;
-                
-                &:hover {
-                    text-shadow: 0 0 4px white;
-                    background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
-                }
 
                 &.disabled {
-                    color: #888888;
+                    background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
+                    background-image: none;
                     cursor: default;
                 }
 
-                &.disabled:hover {
-                    background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
-                    text-shadow: none;
-                }
             }
         }
 

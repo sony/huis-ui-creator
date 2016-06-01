@@ -237,8 +237,6 @@ $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL : $COLOR_LIGHT_GRAY_2;
 $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER :$COLOR_LIGHT_GRAY_3;
 $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER : $COLOR_BLACK;
 
-
-
 //キャンバスエリア(フルカスタム画面の中央)
 $COLOR_CANVAS_SELECTED_ITEM_BACKGROUND : $COLOR_WHITE;
 $COLOR_CANVAS_SELECTED_ITEM_BORDER : $COLOR_BLACK;
@@ -246,8 +244,13 @@ $OPACITY_CANVAS_SELECTED_ITEM_BACKGROUND : 0.6;
 
 $COLOR_CANVAS_GRID_BORDER : $COLOR_GRAY;
 
-
-
-
-
+////////////////////////////////
+//画像path　関連
+////////////////////////////////
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL : url("../res/images/btn_arrow_left_normal.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL : url("../res/images/btn_arrow_right_normal.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_HOVER : url("../res/images/btn_arrow_left_hover.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_HOVER : url("../res/images/btn_arrow_right_hover.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_ACTIVE : url("../res/images/btn_arrow_left_pressed.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE : url("../res/images/btn_arrow_right_pressed.png");
 
