@@ -2424,22 +2424,24 @@ module Garage {
 				// リサイザーの位置を設定
 				const RESIZER_SIZE_HALF = 20 / 2;
 				var itemWidth: number = $item.width();
-				var itemHeight: number = $item.height();
+                var itemHeight: number = $item.height();
+                var itemThicknessHalf: number = ($item.outerWidth() - $item.innerWidth()) / 8;
+
 				$item.find(".left-top").css({
-					left: "-" + RESIZER_SIZE_HALF + "px",
-					top: "-" + RESIZER_SIZE_HALF + "px"
+                    left: "-" + (RESIZER_SIZE_HALF + itemThicknessHalf) + "px",
+                    top: "-" + (RESIZER_SIZE_HALF + itemThicknessHalf) + "px"
 				});
 				$item.find(".right-top").css({
-					left: (itemWidth - RESIZER_SIZE_HALF) + "px",
-					top: "-" + RESIZER_SIZE_HALF + "px"
+                    left: (itemWidth - RESIZER_SIZE_HALF + itemThicknessHalf) + "px",
+                    top: "-" + (RESIZER_SIZE_HALF + itemThicknessHalf) + "px"
 				});
 				$item.find(".right-bottom").css({
-					left: (itemWidth - RESIZER_SIZE_HALF) + "px",
-					top: (itemHeight - RESIZER_SIZE_HALF) + "px"
+                    left: (itemWidth - RESIZER_SIZE_HALF + itemThicknessHalf) + "px",
+                    top: (itemHeight - RESIZER_SIZE_HALF + itemThicknessHalf) + "px"
 				});
 				$item.find(".left-bottom").css({
-					left: "-" + RESIZER_SIZE_HALF + "px",
-					top: (itemHeight - RESIZER_SIZE_HALF) + "px"
+                    left: "-" + (RESIZER_SIZE_HALF + itemThicknessHalf) +"px",
+                    top: (itemHeight - RESIZER_SIZE_HALF + itemThicknessHalf) + "px"
 				});
 			}
 

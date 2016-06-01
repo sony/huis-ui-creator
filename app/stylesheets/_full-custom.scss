@@ -26,8 +26,12 @@
 
                 .item {
                     cursor: move;
+                    border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
+                    margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
+
                     &.selected {
-                        box-shadow: 0 0 12px blue;
+                        border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                        margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
                     }
                     &.disabled {
@@ -40,14 +44,12 @@
 
                 .item-resizer {
                     position: absolute;
-                    //border: 20px solid white;
-                    border: 8px solid white;
-                    //border-radius: 20px;
-                    //box-shadow: 0 0 2px black;
-                    width: 12px;
-                    height: 12px;
-                    border: 4px solid #888;
-                    background-color: white;
+                    box-sizing:border-box;
+                    width: $SIZE_CANVAS_ITEM_RESIZER_WIDTH;
+                    height: $SIZE_CANVAS_ITEM_RESIZER_HEIGHT;
+                    border: $SIZE_CANVAS_ITEM_RESIZER_THICKNESS solid $COLOR_LIGHT_GREEN;
+
+                    background-color: $SIZE_CANVAS_ITEM_BACKGROUND;
 
                     &.left-top {
                         cursor:nw-resize;
