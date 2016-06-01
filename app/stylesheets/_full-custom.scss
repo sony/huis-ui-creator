@@ -11,6 +11,8 @@
         //background-color: #88ff88;
 
         #face-canvas-area {
+            background-image : $PATH_IMG_CANVAS_AREA;
+            background-color :none;
             position: absolute;
             width: $SIZE_CANVAS_AREA_WIDTH;
             height: $SIZE_CANVAS_AREA_HEIGHT;

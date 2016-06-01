@@ -2,29 +2,28 @@
 
 #face-canvas {
     position: relative;
-    width: 640px;
-    height: 1120px;
-    background-color: #eee;
-    padding: 40px;
+    width: $SIZE_CANVAS_WIDTH;
+    height: $SIZE_CANVAS_HEIGHT;
     box-sizing: border-box;
 
     #face-pages-area {
-        height: 812px;
+        width : $SIZE_FACE_PAGES_AREA_WIDTH;
+        height: $SIZE_FACE_PAGES_AREA_HEIGHT;
+        margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
+        background-image :$PATH_IMG_CANVAS_FACE_PAGE;
     }
 
 }
 
 #face-canvas-inner {
     position:relative;
-    background-color: #ddd;
-    //margin: 12px 12px 0 12px;
-    padding: 32px 32px 0 32px;
+    padding: $SIZE_CANVAS_INNER_PADDING_TOP $SIZE_CANVAS_INNER_PADDING_LEFT 0 $SIZE_CANVAS_INNER_PADDING_RIGHT;
 }
 
 #face-name-area {
     position: relative;
-    width: 400px;
-    height: 80px;
+    width: $SIZE_FACE_NAME_AREA_WIDTH;
+    height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
     #input-face-name {
@@ -44,12 +43,15 @@
 #face-pages-area {
     position: relative;
     width: 480px;
-    border: 1px solid #999;
     overflow-x: hidden;
     overflow-y: overlay;
 }
 
 .face-page {
+    margin-left:$SIZE_FACE_PAGE_MARGIN_LEFT;
+    margin-top:$SIZE_FACE_PAGE_MARGIN_TOP;
+    width:$SIZE_FACE_PAGE_WIDTH;
+    height:$SIZE_FACE_PAGE_HEIGHT;
     border-bottom: $SIZE_FACE_PAGE_SEPARATOR_BOARDER_THICKNESS solid $COLOR_FACE_PAGE_SEPARATOR_BOARDER;
     color: black;
 }

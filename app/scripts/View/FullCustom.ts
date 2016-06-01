@@ -88,7 +88,7 @@ module Garage {
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
-				this.gridSize_ = 8;
+				this.gridSize_ = 29;
 				requirejs(["pixi"]);
 			}
 
@@ -827,7 +827,11 @@ module Garage {
 							label: "16px", type: "checkbox", checked: this.gridSize_ === 16 ? true : false, click: () => {
 								this._setGridSize(16);
 							}
-						}, {
+                        }, {
+                            label: "29px", type: "checkbox", checked: this.gridSize_ === 29 ? true : false, click: () => {
+                                this._setGridSize(29);
+                            }
+                        }, {
 							label: "32px", type: "checkbox", checked: this.gridSize_ === 32 ? true : false, click: () => {
 								this._setGridSize(32);
 							}
@@ -2414,7 +2418,12 @@ module Garage {
 					case 16:
 						this.gridSize_ = 16;
 						$facePages.css("background-image", "url(../res/icons/grid_16.png)");
-						break;
+                        break;
+
+                    case 29:
+                        this.gridSize_ = 29;
+                        //$facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
+                        break;
 
 					case 32:
 						this.gridSize_ = 32;
