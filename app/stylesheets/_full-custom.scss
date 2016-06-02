@@ -64,6 +64,14 @@
                         cursor: sw-resize;
                     }
                 }
+
+                .face-page{
+                    margin-left:$SIZE_CANVAS_FACE_PAGE_MARGIN_LEFT;
+                    margin-top:$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP;
+                    margin-bottom:$SIZE_CANVAS_FACE_PAGE_MARGIN_BOTTOM;
+                }
+
+                
             }
         }
 
@@ -378,6 +386,10 @@
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
                     }
                 }
+
+             
+
+
             }
 
             

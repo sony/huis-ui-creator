@@ -2482,7 +2482,7 @@ module Garage {
 
                     case this.DEFAULT_GRID:
                         this.gridSize_ = this.DEFAULT_GRID;
-                        //$facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
+                        $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
                         break;
 
 					case 32:

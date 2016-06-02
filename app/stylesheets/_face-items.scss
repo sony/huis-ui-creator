@@ -10,7 +10,6 @@
         width : $SIZE_FACE_PAGES_AREA_WIDTH;
         height: $SIZE_FACE_PAGES_AREA_HEIGHT;
         margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
-        background-image :$PATH_IMG_CANVAS_FACE_PAGE;
     }
 
 }
@@ -48,13 +47,14 @@
 }
 
 .face-page {
-    margin-left:$SIZE_FACE_PAGE_MARGIN_LEFT;
-    margin-top:$SIZE_FACE_PAGE_MARGIN_TOP;
     width:$SIZE_FACE_PAGE_WIDTH;
     height:$SIZE_FACE_PAGE_HEIGHT;
     border-bottom: $SIZE_FACE_PAGE_SEPARATOR_BOARDER_THICKNESS solid $COLOR_FACE_PAGE_SEPARATOR_BOARDER;
     color: black;
 }
+
+
+
 .face-page:last-child {
     border: 0;
 }
