@@ -2194,8 +2194,8 @@ module Garage {
 					}
 					let buttonArea = button.area;
 					// 当たり判定
-					if (area.x <= buttonArea.x + buttonArea.w && buttonArea.x <= area.x + area.w) {
-						if (area.y <= buttonArea.y + buttonArea.h && buttonArea.y <= area.y + area.h) {
+					if (area.x < buttonArea.x + buttonArea.w && buttonArea.x < area.x + area.w) {
+						if (area.y < buttonArea.y + buttonArea.h && buttonArea.y < area.y + area.h) {
 							return true;
 						}
 					}
