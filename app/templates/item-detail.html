@@ -22,10 +22,15 @@
         <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
 
         {{#area}}
-        <h4>位置</h4>
-        <div class="property-value">x: {{x}}, y: {{y}}</div>
-        <h4>サイズ</h4>
-        <div class="property-value">w: {{w}}, h: {{h}}</div>
+        <section id="detail-item-label-size-layout">
+            <h4>位置</h4>
+            <h4>サイズ</h4>
+        </section>
+        <section id="detail-item-value-size-layout">
+            <div class="property-value">x: {{x}}, y: {{y}}</div>
+            <div class="property-value">w: {{w}}, h: {{h}}</div>
+        </section>
+
         {{/area}}
         {{#deviceInfo}}
         {{#code_db}}
