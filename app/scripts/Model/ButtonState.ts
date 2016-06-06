@@ -16,7 +16,8 @@ module Garage {
 				};
 			}
 
-			constructor(attributes?: any) {
+            constructor(attributes?: any) {
+                super();
 				this.imageCollection_ = new ImageItemsCollection();
 				this.labelCollection_ = new LabelItemsCollection();
 				super(attributes, null);

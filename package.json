@@ -25,7 +25,7 @@
     "jquery": "2.1.4",
     "jsdom": "7.2.1",
     "tslint": "2.5.1",
-    "typescript": "1.6.2"
+    "typescript": "1.8.5"
   },
   "main": "main.js",
   "dependencies": {
