@@ -117,9 +117,6 @@
         <h3>画像 <span class="property-cid"></span></h3>
         <hr />
 
-        <!-- 深野さんの遺産
-        <h4>プレビュー</h4>
-        -->
         <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
 
         {{#area}}
@@ -128,6 +125,7 @@
         <h4>サイズ</h4>
         <div class="property-value">w: {{w}}, h: {{h}}</div>
         {{/area}}
+
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
@@ -182,6 +180,7 @@
         <h4>サイズ</h4>
         <div class="property-value">w: {{w}}, h: {{h}}</div>
         {{/area}}
+
         <h4>テキスト</h4>
         <input class="property-value" data-property="text" type="text" value="{{text}}" />
         <h4>フォントサイズ</h4>
@@ -264,89 +263,88 @@
         <div>
             <h5>状態 {{id}}</h5>
             <div class="state-container">
+
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+
+                <div class ="one-line-label">
+                    <div class="label-button-state">位置</div>
+                    <div class="label-button-state">サイズ</div>
+                </div>
+
+                <div class="one-line-label">
+                    <div id="state-button-x-y" class="property-value label-button-state">x: ,y: </div>
+                    <div id="state-button-w-h" class="property-value label-button-state">w: ,h: </div>
+                </div>
+
+                <div class="property-state-image">
+                    <h4>画像ファイル</h4>
+                    <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
+                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
+                </div>
+
+                        <!-- 深野さんの遺産
+            <h4>リサイズモード</h4>
+            <select class="state-image-resize-mode button-state-property" data-state-id="{{id}}">
+                <option value="contain" selected="selected">contain</option>
+                <option value="cover">cover</option>
+                <option value="stretch">stretch</option>
+            </select>
+                        -->
+
                 <div class="property-state-label">
-                    <h3>ラベル</h3>
-                    <hr />
                     <h4>テキスト</h4>
                     <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
                     <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
                 </div>
 
-                <div class="property-state-image">
-                    <h3>画像</h3>
-                    <hr />
 
+                    <div class="property-state-action">
+                        <h4>アクション</h4>
+                        <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
+                            <option value="touch">タップ</option>
+                            <option value="long_press">長押し</option>
+                            <option value="swipe_up">上スワイプ</option>
+                            <option value="swipe_down">下スワイプ</option>
+                            <option value="swipe_right">右スワイプ</option>
+                            <option value="swipe_left">左スワイプ</option>
+                        </select>
+                        <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
+                            <option value="none">何もしない</option>
+                            {{#functions}}
+                            <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                            {{/functions}}
+                        </select>
+                    </div>
 
-                    <h4>画像ファイル</h4>
-                    <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
-
-
-                    <h4>位置</h4>
-                    <div id="state-button-x-y" class="property-value">aaa</div>
-                    <h4>サイズ</h4>
-                    <div id="state-button-w-h" class="property-value">aaa</div>
-
-
-                            <!-- 深野さんの遺産
-                    <h4>リサイズモード</h4>
-                    <select class="state-image-resize-mode button-state-property" data-state-id="{{id}}">
-                        <option value="contain" selected="selected">contain</option>
-                        <option value="cover">cover</option>
-                        <option value="stretch">stretch</option>
-                    </select>
-                                -->
-                    
-                </div>
-
-
-                <div class="property-state-action">
-                    <h4>アクション</h4>
-                    <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
-                        <option value="touch">タップ</option>
-                        <option value="long_press">長押し</option>
-                        <option value="swipe_up">上スワイプ</option>
-                        <option value="swipe_down">下スワイプ</option>
-                        <option value="swipe_right">右スワイプ</option>
-                        <option value="swipe_left">左スワイプ</option>
-                    </select>
-                    <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
-                        <option value="none">何もしない</option>
-                        {{#functions}}
-                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-                        {{/functions}}
-                    </select>
-                </div>
-
-                <!-- 深野さんの遺産
-                <div class="property-state-action">
-                    <h3>アクション</h3>
-                    <hr />
-                    <h4>入力</h4>
-                    <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
-                        <option value="touch">タッチ</option>
-                        <option value="touch_top">上半分をタッチ</option>
-                        <option value="touch_bottom">下半分をタッチ</option>
-                        <option value="touch_right">右半分をタッチ</option>
-                        <option value="touch_left">左半分をタッチ</option>
-                        <option value="long_press">長押し</option>
-                        <option value="swipe_up">上スワイプ</option>
-                        <option value="swipe_down">下スワイプ</option>
-                        <option value="swipe_right">右スワイプ</option>
-                        <option value="swipe_left">左スワイプ</option>
-                        <option value="ring_right">リング右回転</option>
-                        <option value="ring_left">リング左回転</option>
-                    </select>
-                    <h4>信号</h4>
-                    <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
-                        <option value="none">何もしない</option>
-                        {{#functions}}
-                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-                        {{/functions}}
-                    </select>
-                </div>
-                -->
-            </div>
+                    <!-- 深野さんの遺産
+        <div class="property-state-action">
+            <h3>アクション</h3>
+            <hr />
+            <h4>入力</h4>
+            <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
+                <option value="touch">タッチ</option>
+                <option value="touch_top">上半分をタッチ</option>
+                <option value="touch_bottom">下半分をタッチ</option>
+                <option value="touch_right">右半分をタッチ</option>
+                <option value="touch_left">左半分をタッチ</option>
+                <option value="long_press">長押し</option>
+                <option value="swipe_up">上スワイプ</option>
+                <option value="swipe_down">下スワイプ</option>
+                <option value="swipe_right">右スワイプ</option>
+                <option value="swipe_left">左スワイプ</option>
+                <option value="ring_right">リング右回転</option>
+                <option value="ring_left">リング左回転</option>
+            </select>
+            <h4>信号</h4>
+            <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
+                <option value="none">何もしない</option>
+                {{#functions}}
+                <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                {{/functions}}
+            </select>
+        </div>
+        -->
+                </>
         </div>
     </script>
 </article>
