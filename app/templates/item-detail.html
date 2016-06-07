@@ -8,19 +8,29 @@
 
         <h3>ボタン <span class="property-cid">{{device_type}}  {{brand}}</span></h3>
         <hr />
+
+        <div id="states-container"></div>
+
         
         <!-- 深野さんの遺産
             <h4>ブランド</h4>
             <div class="property-value">{{brand}}</div>
             <h4>カテゴリー</h4>
             <div class="property-value">{{device_type}}</div>
-     -->
+        -->
+
+        <h4>位置</h4>
+        <div id="state-button-x-y" class="property-value">aaa</div>
+
+        <h4>サイズ</h4>
+        <div id="state-button-w-h" class="property-value">aaa</div>
+       
 
         <!-- 深野さんの遺産
         <h4>プレビュー</h4>
         -->
-        <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
-
+       
+        <!---
         {{#area}}
         <section id="detail-item-label-size-layout">
             <h4>位置</h4>
@@ -30,8 +40,9 @@
             <div class="property-value">x: {{x}}, y: {{y}}</div>
             <div class="property-value">w: {{w}}, h: {{h}}</div>
         </section>
-
         {{/area}}
+            -->
+
         {{#deviceInfo}}
         {{#code_db}}
 
@@ -39,30 +50,12 @@
         <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
 
-
         <h4>テキスト</h4>
         <input class="property-value" data-property="text" type="text" value="{{text}}" />
-        <h4>フォントサイズ</h4>
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
 
 
-        <div class="property-state-action">
-            <h4>アクション</h4>
-            <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
-                <option value="touch">タップ</option>
-                <option value="long_press">長押し</option>
-                <option value="swipe_up">上スワイプ</option>
-                <option value="swipe_down">下スワイプ</option>
-                <option value="swipe_right">右スワイプ</option>
-                <option value="swipe_left">左スワイプ</option>
-            </select>
-            <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
-                <option value="none">何もしない</option>
-                {{#functions}}
-                <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-                {{/functions}}
-            </select>
-        </div>
+    
 
        　
         {{#model_number}}
@@ -283,7 +276,6 @@
                     <hr />
                     <h4>テキスト</h4>
                     <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-                    <h4>フォントサイズ</h4>
                     <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
                 </div>
 
@@ -291,9 +283,18 @@
                     <h3>画像</h3>
                     <hr />
 
+
                     <h4>画像ファイル</h4>
                     <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
                     <button class="delete-state-image" data-state-id="{{id}}">削除</button>
+
+
+                    <h4>位置</h4>
+                    <div id="state-button-x-y" class="property-value">aaa</div>
+                    <h4>サイズ</h4>
+                    <div id="state-button-w-h" class="property-value">aaa</div>
+
+
                             <!-- 深野さんの遺産
                     <h4>リサイズモード</h4>
                     <select class="state-image-resize-mode button-state-property" data-state-id="{{id}}">
@@ -304,6 +305,26 @@
                                 -->
                     
                 </div>
+
+
+                <div class="property-state-action">
+                    <h4>アクション</h4>
+                    <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
+                        <option value="touch">タップ</option>
+                        <option value="long_press">長押し</option>
+                        <option value="swipe_up">上スワイプ</option>
+                        <option value="swipe_down">下スワイプ</option>
+                        <option value="swipe_right">右スワイプ</option>
+                        <option value="swipe_left">左スワイプ</option>
+                    </select>
+                    <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
+                        <option value="none">何もしない</option>
+                        {{#functions}}
+                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                        {{/functions}}
+                    </select>
+                </div>
+
                 <!-- 深野さんの遺産
                 <div class="property-state-action">
                     <h3>アクション</h3>

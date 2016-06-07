@@ -716,7 +716,8 @@ module Garage {
 				});
 				this._updateCurrentModelData("area", newArea);
 				this._showDetailItemArea(this.currentTargetModel_);
-			}
+            }
+
 
 			/**
 			 * アイテムのリサイズを行う
@@ -1424,7 +1425,8 @@ module Garage {
 						previousData[key] = model[key];
 						nextData[key] = properties[key];
 					});
-				}
+                }
+
 				var memento: IMemento = {
 					target: model,
 					previousData: previousData,
@@ -1527,7 +1529,9 @@ module Garage {
 
 								// ターゲットがボタンの場合、state 内にある画像・ラベルのリサイズを行う
 								if (itemType === "button") {
-									this._resizeButtonStateItem($target, value);
+                                    this._resizeButtonStateItem($target, value);
+                                    // 深野さんにチェックいただいたほうが良い
+                                    this._updateCurrentModelStateData(0, key, value);
 								}
 							}
 							break;
@@ -1683,7 +1687,8 @@ module Garage {
 			 */
 			private _updateCurrentModelStateData(stateId: number, properties: any);
 
-			private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
+            private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
+
 				if (!this.currentTargetModel_) {
 					console.warn(TAG + "_updateCurrentModelStateData() target model is not found");
 					return;
@@ -1692,6 +1697,8 @@ module Garage {
 					console.warn(TAG + "_updateCurrentModelStateData() target model is not button item");
 					return;
 				}
+
+              
 
 				/**
 				 * state 内に label が存在しない場合に、補完する
@@ -1731,7 +1738,7 @@ module Garage {
 				} else {
 					console.warn(TAG + "_updateCurrentModelStateData() unknown type param");
 					return;
-				}
+                }
 
 				var button = this.currentTargetModel_.button;
 				var states = button.state;
@@ -1765,6 +1772,9 @@ module Garage {
 					console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
 					return;
 				}
+
+
+                
 
 				targetStates.forEach((targetState: IGState) => {
 
@@ -1855,7 +1865,12 @@ module Garage {
 									$input.val(value);
 								}
 								break;
-
+                            case "area":
+                                {
+                                    //エリアを更新
+                                    this.updateAreaInState(param2.x, param2.y, param2.w, param2.h);
+                                }
+                                break;
 							case "resolved-path":
 								{
 									//let image = targetState.image[0];
@@ -1870,10 +1885,10 @@ module Garage {
 
 									// 詳細エリアのプレビュー更新
 									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-									$preview.css("background-image", "url('" + value + "')");
+                                    $preview.css("background-image", "url('" + value + "')");
+
 								}
 								break;
-
 							case "resizeMode":
 								{
 									let $imageElement = $targetStateElem.find(".state-image");
@@ -2614,6 +2629,7 @@ module Garage {
 				var $areaContainer = $buttonDetail.nextAll("#area-container");
 				$areaContainer.append($(templateArea(button)));
 
+
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
 				this.currentTargetButtonStates_ = button.state;
@@ -2660,11 +2676,14 @@ module Garage {
 									alreadyMenuSet = true;
 								}
 							}
-						}
+                        }
 					});
 				}
 
-				$detail.append($buttonDetail);
+                $detail.append($buttonDetail);
+
+                //x,y情報を別途　記入
+                this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
 
 			}
 
@@ -2707,6 +2726,48 @@ module Garage {
 
 				state.actionList = actionList;
 			}
+
+            /**
+            * 詳細編集エリアのステートのエリア情報をアップデート
+            * @param inputX: numer　X座標
+            * @param inputY: numer　Y座標
+            * @param inputW: numer　W座標
+            * @param inputH: numer　H座標
+            **/
+            private updateAreaInState(inputX: number, inputY: number, inputW: number, inputH: number) {
+
+                if (inputX === undefined) {
+                    console.log("updateAreaInState : inputX is undefined");
+                    return;
+                }
+
+                if (inputY === undefined) {
+                    console.log("updateAreaInState : inputY is undefined");
+                    return;
+                }
+
+                if (inputW === undefined) {
+                    console.log("updateAreaInState : inputW is undefined");
+                    return;
+                }
+
+                if (inputH === undefined) {
+                    console.log("updateAreaInState : inputH is undefined");
+                    return;
+                }
+
+                let $paramXY = $("#state-button-x-y");
+                var xStr: string = "x: ";
+                var yStr: string = ", y: ";
+                var paramXYStr: string = xStr + inputX + yStr + inputY;
+                $paramXY.html("written");
+
+                let $paramWH = $("#state-button-w-h");
+                var wStr: string = "w: ";
+                var hStr: string = ", h: ";
+                var paramWHStr: string = wStr + inputW + hStr + inputH;
+                $paramWH.html(paramWHStr);
+            }
 
 			/**
 			 * 指定した要素にひも付けられている model を取得
