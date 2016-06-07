@@ -1530,8 +1530,6 @@ module Garage {
 								// ターゲットがボタンの場合、state 内にある画像・ラベルのリサイズを行う
 								if (itemType === "button") {
                                     this._resizeButtonStateItem($target, value);
-                                    // 深野さんにチェックいただいたほうが良い
-                                    this._updateCurrentModelStateData(0, key, value);
 								}
 							}
 							break;
@@ -1865,12 +1863,6 @@ module Garage {
 									$input.val(value);
 								}
 								break;
-                            case "area":
-                                {
-                                    //エリアを更新
-                                    this.updateAreaInState(param2.x, param2.y, param2.w, param2.h);
-                                }
-                                break;
 							case "resolved-path":
 								{
 									//let image = targetState.image[0];
