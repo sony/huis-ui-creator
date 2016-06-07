@@ -131,7 +131,6 @@
 				} catch (err) {
 					throw err;
 				}
-				return null;
 			}
 
 			function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
@@ -472,7 +471,6 @@
 				} catch (err) {
 					throw err;
 				}
-				return false;
 			}
 
 
