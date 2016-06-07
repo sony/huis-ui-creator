@@ -6,7 +6,13 @@
         <hr />
         -->
 
-        <h3>ボタン <span class="property-cid">{{device_type}}  {{brand}}</span></h3>
+        <h3>ボタン <span class="property-cid">
+                    {{#deviceInfo}}
+                    {{#code_db}}
+                    {{device_type}}  {{brand}}
+                    {{/code_db}}
+                    {{/deviceInfo}}
+            </span></h3>
 
 
 
