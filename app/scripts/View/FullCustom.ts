@@ -220,7 +220,10 @@ module Garage {
 				/* 詳細編集部分 */
                 //詳細編集エリアのY座標は、キャンバスエリアから、112px
                 let PROPATY_AREA_MARGIN_RIGHT = 112;
-                let detailWidth = $("#face-item-detail-area").width();
+                let detailWidth = $("#face-item-detail-area").outerWidth();
+
+                console.log("detailWidth : " + detailWidth);
+
                 let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
@@ -2749,14 +2752,14 @@ module Garage {
                 }
 
                 let $paramXY = $("#state-button-x-y");
-                var xStr: string = "x: ";
-                var yStr: string = ", y: ";
+                var xStr: string = "X:";
+                var yStr: string = "   Y:";
                 var paramXYStr: string = xStr + inputX + yStr + inputY;
                 $paramXY.html(paramXYStr);
 
                 let $paramWH = $("#state-button-w-h");
-                var wStr: string = "w: ";
-                var hStr: string = ", h: ";
+                var wStr: string = "W:";
+                var hStr: string = "   H:";
                 var paramWHStr: string = wStr + inputW + hStr + inputH;
                 $paramWH.html(paramWHStr);
             }

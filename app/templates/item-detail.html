@@ -1,30 +1,25 @@
 ﻿<article>
     <script type="text/template" id="template-button-detail">
         {{! ボタンの詳細情報エリア}}
-        <!-- 深野さんの遺産
-        <h3>ボタン <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
-        -->
-
-        <h3>ボタン <span class="property-cid">
-                    {{#deviceInfo}}
-                    {{#code_db}}
-                    {{device_type}}  {{brand}}
-                    {{/code_db}}
-                    {{/deviceInfo}}
-            </span></h3>
 
 
+        <h3>BUTTON 
+        <span class="button-info-brand-and-type">
+            {{#deviceInfo}}
+            {{#code_db}}
+            {{brand}}  {{device_type}}
+            {{/code_db}}
+            {{/deviceInfo}}
+        </span>
+        </h3>
+      
 
         <div id="states-container"></div>
-       
-       
-      
+
+
 
         {{#deviceInfo}}
         {{#code_db}}
-      
-
 
         {{#model_number}}
         <h4>型番</h4>
@@ -90,7 +85,7 @@
     <script type="text/template" id="template-image-detail">
         {{! 画像アイテムの詳細情報エリア}}
 
-        <h3>画像 <span class="property-cid"></span></h3>
+        <h3>IMAGE <span class="property-cid"></span></h3>
 
 
 
@@ -98,21 +93,36 @@
         <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
 
 
-
+        
         <!-- ボタンのエリア -->
+        <!--
         {{#area}}
         <h4>位置</h4>
         <div class="property-value">x: {{x}}, y: {{y}}</div>
         <h4>サイズ</h4>
         <div class="property-value">w: {{w}}, h: {{h}}</div>
         {{/area}}
+        -->
 
+
+
+        <!-- ボタンのエリア -->
+        <div class="one-line-label">
+            <div class="label-button-state">位置</div>
+            <div class="label-button-state">サイズ</div>
+        </div>
+        {{#area}}
+        <div class="one-line-label">
+            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
+            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
+        </div>
+        {{/area}}
 
 
         <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value refer-state-image" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
+        <button id="delete-background-image" class="delete-state-image">削除</button>
 
 
 
@@ -165,20 +175,35 @@
     <script type="text/template" id="template-label-detail">
         {{! ラベルアイテムの詳細情報エリア}}
      
-        <h3>ラベル <span class="property-cid">(cid: {{cid}})</span></h3>
+        <h3>LABEL <span class="property-cid"></span></h3>
 
 
       
-        {{#area}}
+        <!---
         <h4>位置</h4>
         <div class="property-value">x: {{x}}, y: {{y}}</div>
         <h4>サイズ</h4>
         <div class="property-value">w: {{w}}, h: {{h}}</div>
+            -->
+
+
+
+        <!-- ボタンのエリア -->
+        <div class="one-line-label">
+            <div class="label-button-state">位置</div>
+            <div class="label-button-state">サイズ</div>
+        </div>
+        {{#area}}
+        <div class="one-line-label">
+            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
+            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
+        </div>
         {{/area}}
 
+
+
         <h4>テキスト</h4>
-        <input class="property-value" data-property="text" type="text" value="{{text}}" />
-        <h4>フォントサイズ</h4>
+        <input class="property-value property-text-value" data-property="text" type="text" value="{{text}}" />
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
     </script>
 
@@ -188,7 +213,7 @@
 
     <script type="text/template" id="template-page-background-detail">
       
-        <h3>ページ背景 <span class="property-cid"></span></h3>
+        <h3>BACKGROUND <span class="property-cid"></span></h3>
 
 
 
@@ -199,8 +224,8 @@
 
         <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value page-background-src refer-state-image" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
+        <button id="delete-background-image" class="delete-state-image">削除</button>
 
 
 
@@ -287,8 +312,8 @@
                 </div>
 
                 <div class="one-line-label">
-                    <div id="state-button-x-y" class="property-value label-button-state">x: ,y: </div>
-                    <div id="state-button-w-h" class="property-value label-button-state">w: ,h: </div>
+                    <div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
+                    <div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
                 </div>
 
 
