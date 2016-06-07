@@ -23,15 +23,7 @@
 
         {{#deviceInfo}}
         {{#code_db}}
-        <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
-
-
-
-        <h4>テキスト</h4>
-        <input class="property-value" data-property="text" type="text" value="{{text}}" />
-        <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
+      
 
 
         {{#model_number}}
