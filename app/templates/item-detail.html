@@ -10,62 +10,38 @@
         <hr />
 
         <div id="states-container"></div>
-
-        
-        <!-- 深野さんの遺産
-            <h4>ブランド</h4>
-            <div class="property-value">{{brand}}</div>
-            <h4>カテゴリー</h4>
-            <div class="property-value">{{device_type}}</div>
-        -->
-
-        <!-- 深野さんの遺産
-        <h4>プレビュー</h4>
-        -->
        
-        <!---
-        {{#area}}
-        <section id="detail-item-label-size-layout">
-            <h4>位置</h4>
-            <h4>サイズ</h4>
-        </section>
-        <section id="detail-item-value-size-layout">
-            <div class="property-value">x: {{x}}, y: {{y}}</div>
-            <div class="property-value">w: {{w}}, h: {{h}}</div>
-        </section>
-        {{/area}}
-            -->
+       
+      
 
         {{#deviceInfo}}
         {{#code_db}}
-
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
+
+
 
         <h4>テキスト</h4>
         <input class="property-value" data-property="text" type="text" value="{{text}}" />
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
 
 
-    
-
-       　
         {{#model_number}}
         <h4>型番</h4>
         <div class="property-value">{{model_number}}</div>
         {{/model_number}}
+
         {{/code_db}}
         {{/deviceInfo}}
-
-        <!-- 深野さんの遺産
-        <h4>状態</h4>
-        <div id="states-container"></div>
-            -->
 
         {{! v1.0 では非対応}}
         {{! <button id="add-state">状態を追加</button> }}
     </script>
+
+
+
+
 
     <!--<script type="text/template" id="template-button-detail">
         {{! ボタンの詳細情報エリア}}
@@ -108,17 +84,24 @@
         --}}
     </script>-->
 
+
+
+
+
     <script type="text/template" id="template-image-detail">
         {{! 画像アイテムの詳細情報エリア}}
-        <!-- 深野さんの遺産
-        <h3>画像 <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
-        -->
+
         <h3>画像 <span class="property-cid"></span></h3>
         <hr />
 
+
+
+        <!-- プレビュー -->
         <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
 
+
+
+        <!-- ボタンのエリア -->
         {{#area}}
         <h4>位置</h4>
         <div class="property-value">x: {{x}}, y: {{y}}</div>
@@ -126,9 +109,13 @@
         <div class="property-value">w: {{w}}, h: {{h}}</div>
         {{/area}}
 
+
+
+        <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
+
 
 
         <!-- 深野さんの遺産
@@ -139,8 +126,12 @@
             <option value="stretch">stretch</option>
         </select>
          -->
-        
     </script>
+
+
+
+
+
     <!--<script type="text/template" id="template-image-detail">
         {{! 画像アイテムの詳細情報エリア}}
         <h3>画像</h3>
@@ -168,6 +159,11 @@
             </div>
         </div>
     </script>-->
+
+
+
+
+
     <script type="text/template" id="template-label-detail">
         {{! ラベルアイテムの詳細情報エリア}}
      
@@ -187,24 +183,28 @@
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
     </script>
 
+
+
+
+
     <script type="text/template" id="template-page-background-detail">
-        {{! ページの背景}}
-        <!-- 深野さんの遺産
-        <h3>ページ背景 <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
-        -->
-              
+      
         <h3>ページ背景 <span class="property-cid"></span></h3>
         <hr />  
 
-        <!-- 深野さんの遺産
-        <h4>プレビュー</h4>
-         -->
+
+        <!-- プレビュー -->
         <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
 
+
+
+        <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value page-background-src" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
+
+
+
         <!-- 深野さんの遺産
         <h4>リサイズモード</h4>
         <select class="image-resize-mode" id="select-image-resize-mode">
@@ -235,12 +235,22 @@
         </div>-->
     </script>
 
+
+
+
+
+
     <script type="text/template" id="template-property-cid">
         <div id="property-cid">
             <p class="inline property-title">CID</p>
             <p class="inline property-value small">{{cid}}</p>
         </div>
     </script>
+
+
+
+
+
 
     <script type="text/template" id="template-property-area">
         <div id="property-area">
@@ -259,13 +269,19 @@
         </div>
     </script>
 
+
+
+
+
     <script type="text/template" id="template-property-button-state">
-        <div>
-            <h5>状態 {{id}}</h5>
             <div class="state-container">
 
+                <!-- プレビュー -->
                 <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
 
+
+
+                <!-- ボタンのエリア -->
                 <div class ="one-line-label">
                     <div class="label-button-state">位置</div>
                     <div class="label-button-state">サイズ</div>
@@ -276,11 +292,16 @@
                     <div id="state-button-w-h" class="property-value label-button-state">w: ,h: </div>
                 </div>
 
+
+
+                <!-- 画像ファイル変更 -->
                 <div class="property-state-image">
                     <h4>画像ファイル</h4>
                     <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
                     <button class="delete-state-image" data-state-id="{{id}}">削除</button>
                 </div>
+
+
 
                         <!-- 深野さんの遺産
             <h4>リサイズモード</h4>
@@ -291,13 +312,17 @@
             </select>
                         -->
 
-                <div class="property-state-label">
-                    <h4>テキスト</h4>
-                    <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-                    <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
-                </div>
+
+                <!-- テキスト -->
+                    <div class="property-state-label">
+                        <h4>テキスト</h4>
+                        <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+                        <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
+                    </div>
 
 
+
+                <!-- アクション -->
                     <div class="property-state-action">
                         <h4>アクション</h4>
                         <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
@@ -314,6 +339,8 @@
                             <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
                             {{/functions}}
                         </select>
+
+
                     </div>
 
                     <!-- 深野さんの遺産
@@ -344,7 +371,6 @@
             </select>
         </div>
         -->
-                </>
         </div>
     </script>
 </article>
