@@ -2752,7 +2752,7 @@ module Garage {
                 var xStr: string = "x: ";
                 var yStr: string = ", y: ";
                 var paramXYStr: string = xStr + inputX + yStr + inputY;
-                $paramXY.html("written");
+                $paramXY.html(paramXYStr);
 
                 let $paramWH = $("#state-button-w-h");
                 var wStr: string = "w: ";
