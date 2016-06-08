@@ -50,11 +50,59 @@ body {
         -ms-user-select: none;
             user-select: none;
     
-   
+    .ui-page-theme-b{
+            .ui-bar-inherit,
+            .ui-header{
+                background-color : $COLOR_HEADER_BACKGROUND;
+                border : 0;
+                border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
+                box-sizing:border-box;
+                height:$SIZE_HEADER_HEIGHT;
+                color :$COLOR_HEADER_TEXT;
+                text-shadow:none;
+               
+                .header-button-lline-alingn-right{
+                    position: absolute;
+                    display: flex;
+                    top:0;
+                    right:0;
+                    margin-right:$SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
+                }
+
+                .ui-title{
+                    padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
+                    font-size:$FONT_SIZE_LL;
+                    font-family:$FONT_FAMILY_NORMAL;
+                }
+            }
+
+            #option-pulldown-menu{
+                background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
+                margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
+                margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
+                height:$SIZE_HEADER_OPTION_BTN_HEIGHT;
+                width:$SIZE_HEADER_OPTION_BTN_WIDTH;
+                top:0;
+                padding:0;
+                box-shadow:none;
+                border:none;
+                background-color:transparent;
+
+                &:hover{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_HOVER;
+                }
+
+                &:active{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+                }
+            }
+    }
+
     article {
         .ui-btn, .ui-slider {
             z-index: 2;
         }
+
         section {
             &.normal-screen {
                 padding: 0;
