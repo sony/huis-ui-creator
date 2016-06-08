@@ -100,10 +100,17 @@ $SIZE_HEADER_TITLE_PADDING_TOP:20px;
 
 //HOME
 //HEADER
+//create new remote button
 $SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT:60px;
 $SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH:40px;
 $SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_TOP : 6px;
 $SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_LEFT : 4px;
+
+//sync pc to huis button
+$SIZE_HOME_HEADER_SYNC_BTN_HEIGHT:60px;
+$SIZE_HOME_HEADER_SYNC_BTN_WIDTH:40px;
+$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP : 6px;
+$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT : 4px;
 
 
 //FULL CUSTOM
@@ -360,3 +367,6 @@ $PATH_IMG_CANVAS_FACE_PAGE : url("../res/images/img_huis_remote_area.png");
 $PATH_IMG_CREATE_NEW_REMOTE_NORMAL:url("../res/images/btn_new_normal.png");
 $PATH_IMG_CREATE_NEW_REMOTE_HOVER:url("../res/images/btn_new_hover.png");
 $PATH_IMG_CREATE_NEW_REMOTE_ACTIVE:url("../res/images/btn_new_pressed.png");
+$PATH_IMG_SYNC_BTN_NORMAL:url("../res/images/btn_sync_normal.png");
+$PATH_IMG_SYNC_BTN_HOVER:url("../res/images/btn_sync_hover.png");
+$PATH_IMG_SYNC_BTN_ACTIVE:url("../res/images/btn_sync_pressed.png");
