@@ -68,6 +68,27 @@ body {
             .ui-title{
                padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
             }
+
+            #option-pulldown-menu{
+                background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
+                margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
+                margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
+                height:$SIZE_HEADER_OPTION_BTN_HEIGHT;
+                width:$SIZE_HEADER_OPTION_BTN_WIDTH;
+                top:0;
+                padding:0;
+                box-shadow:none;
+                border:none;
+                background-color:transparent;
+
+                &:hover{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_HOVER;
+                }
+
+                &:active{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+                }
+            }
     }
 
     article {
