@@ -63,10 +63,18 @@ body {
                 text-shadow:none;
                 font-size:$FONT_SIZE_HEADER;
                 font-family:$FONT_FAMILY_HEADER;
-            }
 
-            .ui-title{
-               padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
+                .header-button-lline-alingn-right{
+                    position: absolute;
+                    display: flex;
+                    top:0;
+                    right:0;
+                    margin-right:$SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
+                }
+
+                .ui-title{
+                    padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
+                }
             }
 
             #option-pulldown-menu{
