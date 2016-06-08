@@ -50,11 +50,23 @@ body {
         -ms-user-select: none;
             user-select: none;
     
-   
+    #page-full-custom,
+    #page-home{
+            .ui-bar-inherit,
+            .ui-header{
+                background-color : $COLOR_COMMON_HEADER_BACKGROUND;
+                border : 0;
+                border-bottom:$SIZE_COMMON_HEADER_BOARDER_THICKNESS solid $COLOR_COMMON_HEADER_BORDER;
+                box-sizing:border-box;
+                height:$SIZE_COMMON_HEADER_HEIGHT;
+            }
+    }
+
     article {
         .ui-btn, .ui-slider {
             z-index: 2;
         }
+
         section {
             &.normal-screen {
                 padding: 0;
