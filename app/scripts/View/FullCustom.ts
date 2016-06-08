@@ -2637,51 +2637,61 @@ module Garage {
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
 				this.currentTargetButtonStates_ = button.state;
-				if (this.currentTargetButtonStates_) {
-					let templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
-					this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
-						let stateData: any = {};
-						stateData.id = state.id;
-						let resizeMode: string;
-						if (state.image) {
-							stateData.image = state.image[0];
-							let garageImageExtensions = state.image[0].garageExtensions;
-							if (garageImageExtensions) {
-								resizeMode = garageImageExtensions.resizeMode;
-							}
-						}
-						if (state.label) {
-							stateData.label = state.label[0];
-						}
-						if (button.deviceInfo && button.deviceInfo.functions) {
-							stateData.functions = button.deviceInfo.functions;
-						}
+                if (this.currentTargetButtonStates_) {
+                    let templateState: Tools.JST = null;
+                    if (button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
+                        templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
+                    } else {
+                        templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
+                    }
 
-						this._setActionListToState(state);
-
-						let $stateDetail = $(templateState(stateData));
-						$statesContainer.append($stateDetail);
-						// 文言あて・ローカライズ
-						$stateDetail.i18n();
-
-						if (resizeMode) {
-							$stateDetail.find(".state-image-resize-mode[data-state-id=\"" + stateData.id + "\"]").val(resizeMode);
-						}
-
-						let actionList = state.actionList;
-						let alreadyMenuSet = false;
-						if (actionList) {
-							// 「機能」が割り当てられている「入力」をメニューに表示されるようにする
-							for (let input in actionList) {
-								if (!alreadyMenuSet && actionList.hasOwnProperty(input) && actionList[input]) {
-									var action = actionList[input];
-									$stateDetail.find("#select-state-action-input-" + state.id).val(input);
-									$stateDetail.find("#select-state-action-function-" + state.id).val(action);
-									alreadyMenuSet = true;
-								}
-							}
+                    this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
+                        let stateData: any = {};
+                        if (button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンの場合、default値に一致したパーツのみ表示する
+                            if (state.id != button.default) return;
                         }
-					});
+                        stateData.id = state.id;
+                        let resizeMode: string;
+                        if (state.image) {
+                            stateData.image = state.image[0];
+                            let garageImageExtensions = state.image[0].garageExtensions;
+                            if (garageImageExtensions) {
+                                resizeMode = garageImageExtensions.resizeMode;
+                            }
+                        }
+                        if (state.label) {
+                            stateData.label = state.label[0];
+                        }
+                        if (button.deviceInfo && button.deviceInfo.functions) {
+                            stateData.functions = button.deviceInfo.functions;
+                        }
+
+                        this._setActionListToState(state);
+
+                        let $stateDetail = $(templateState(stateData));
+                        $statesContainer.append($stateDetail);
+                        // 文言あて・ローカライズ
+                        $stateDetail.i18n();
+
+                        if (resizeMode) {
+                            $stateDetail.find(".state-image-resize-mode[data-state-id=\"" + stateData.id + "\"]").val(resizeMode);
+                        }
+
+                        let actionList = state.actionList;
+                        let alreadyMenuSet = false;
+                        if (actionList) {
+                            // 「機能」が割り当てられている「入力」をメニューに表示されるようにする
+                            for (let input in actionList) {
+                                if (!alreadyMenuSet && actionList.hasOwnProperty(input) && actionList[input]) {
+                                    var action = actionList[input];
+                                    $stateDetail.find("#select-state-action-input-" + state.id).val(input);
+                                    $stateDetail.find("#select-state-action-function-" + state.id).val(action);
+                                    alreadyMenuSet = true;
+                                }
+                            }
+                        }
+                    });
+                    
 				}
 
                 $detail.append($buttonDetail);
