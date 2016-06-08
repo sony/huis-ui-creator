@@ -6,6 +6,30 @@
         overflow: overlay;
     }
 
+     .ui-header{
+        #button-edit-done{
+            background-image:$PATH_IMG_SAVE_BTN_NORMAL;
+            margin-top:$SIZE_EDIT_HEADER_SAVEBTN_MARGIN_TOP;
+            margin-left:$SIZE_EDIT_HEADER_SAVEBTN_MARGIN_LEFT;
+            height:$SIZE_EDIT_HEADER_SAVEBTN_HEIGHT;
+            width:$SIZE_EDIT_HEADER_SYNC_BTN_WIDTH;
+            top:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
+
+            &:hover{
+                background-image:$PATH_IMG_SAVE_BTN_HOVER;
+            }
+
+            &:active{
+                background-image:$PATH_IMG_SAVE_BTN_ACTIVE;
+            }
+        }
+
+    }
+
     #face-edit-area {
         position: absolute;
         //background-color: #88ff88;
