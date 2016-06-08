@@ -1,4 +1,4 @@
-﻿<article >
+﻿<article>
     <script type="text/template" id="template-button-detail">
         {{! ボタンの詳細情報エリア}}
 
@@ -122,7 +122,7 @@
         <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image" class="ui-btn">削除</button>
+        <button id="delete-background-image">削除</button>
 
 
 
@@ -225,7 +225,7 @@
         <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value page-background-src" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image" class="ui-btn">削除</button>
+        <button id="delete-background-image">削除</button>
 
 
 
@@ -322,7 +322,7 @@
                 <div class="property-state-image">
                     <h4>画像ファイル</h4>
                     <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-                    <button class="delete-state-image ui-btn" data-state-id="{{id}}" >削除</button>
+                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
                 </div>
 
 
