@@ -397,4 +397,27 @@
         -->
         </div>
     </script>
+
+    <script type="text/template" id="template-property-button-state-ac"> <!-- Air Conditioner button has less items -->
+        <div class="state-container">
+
+            <!-- プレビュー -->
+            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+
+
+
+            <!-- ボタンのエリア -->
+            <div class="one-line-label">
+                <div class="label-button-state">位置</div>
+                <div class="label-button-state">サイズ</div>
+            </div>
+
+            <div class="one-line-label">
+                <div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
+                <div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
+            </div>
+
+
+        </div>
+    </script>
 </article>
