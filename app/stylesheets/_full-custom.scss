@@ -27,6 +27,28 @@
                 background-image:$PATH_IMG_SAVE_BTN_ACTIVE;
             }
         }
+
+         #button-edit-back{
+            background-image:$PATH_IMG_BACK_BTN_NORMAL;
+            margin-top:$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_TOP;
+            margin-left:$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_LEFT;
+            height:$SIZE_EDIT_HEADER_BACK_BTN_HEIGHT;
+            width:$SIZE_EDIT_HEADER_BACK_BTN_WIDTH;
+            top:0;
+            left:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
+
+            &:hover{
+                background-image:$PATH_IMG_BACK_BTN_HOVER;
+            }
+
+            &:active{
+                background-image:$PATH_IMG_BACK_BTN_ACTIVE;
+            }
+        }
     }
 
     #face-edit-area {

@@ -121,11 +121,17 @@ $SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT : 4px;
 
 //FULL CUSTOM
 //HEADER
+//save button
 $SIZE_EDIT_HEADER_SAVE_BTN_HEIGHT:60px;
 $SIZE_EDIT_HEADER_SAVE_BTN_WIDTH:40px;
 $SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_TOP : 6px;
 $SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_LEFT : 4px;
 
+//back button
+$SIZE_EDIT_HEADER_BACK_BTN_HEIGHT:60px;
+$SIZE_EDIT_HEADER_BACK_BTN_WIDTH:60px;
+$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_TOP : 6px;
+$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_LEFT : 4px;
 
 //propaty area
 $SIZE_PROPATY_AREA_WIDTH : 280px;
@@ -389,3 +395,6 @@ $PATH_IMG_OPTION_MENU_BTN_ACTIVE:url("../res/images/btn_option_pressed.png");
 $PATH_IMG_SAVE_BTN_NORMAL:url("../res/images/btn_done_normal.png");
 $PATH_IMG_SAVE_BTN_HOVER:url("../res/images/btn_done_hover.png");
 $PATH_IMG_SAVE_BTN_ACTIVE:url("../res/images/btn_done_pressed.png");
+$PATH_IMG_BACK_BTN_NORMAL:url("../res/images/btn_back_normal.png");
+$PATH_IMG_BACK_BTN_HOVER:url("../res/images/btn_back_hover.png");
+$PATH_IMG_BACK_BTN_ACTIVE:url("../res/images/btn_back_pressed.png");
