@@ -183,6 +183,7 @@
     <Content Include="app\stylesheets\_face-render-experiment.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\templates\splash.html" />
     <Content Include="docs\en\README.md" />
     <Content Include="docs\generator\Garage.dxy" />
     <Content Include="docs\generator\README.md" />
