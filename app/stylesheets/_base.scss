@@ -50,9 +50,44 @@ body {
         -ms-user-select: none;
             user-select: none;
     
+    //Common text button
     .ui-page-theme-b{
-            .ui-bar-inherit,
-            .ui-header{
+
+       .ui-btn{
+            margin:0;
+            padding:0;
+            border:none;
+            height:$SIZE_BUTTON_HEIGHT;   
+            font-size:$FONT_SIZE_TEXT_BUTTON;
+            color:$COLOR_BUTTON_TEXT;
+            font-family:$FONT_FAMILY_TEXT_BUTTON;
+            background-color:$COLOR_BUTTON_NORMAL;
+            box-shadow:none;   
+            border-radius:0;
+
+            &:hover{
+                background-color:$COLOR_BUTTON_HOVER;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                border:none;
+            }
+
+            &:active{
+                background-color:$COLOR_BUTTON_PRESED;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                box-shadow:none;
+                border:none;
+            }
+
+            &:focus{
+                box-shadow:none;
+                border:none;
+            }
+        }
+
+        .ui-bar-inherit,
+        .ui-header{
                 background-color : $COLOR_HEADER_BACKGROUND;
                 border : 0;
                 border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
@@ -74,9 +109,9 @@ body {
                     font-size:$FONT_SIZE_LL;
                     font-family:$FONT_FAMILY_NORMAL;
                 }
-            }
+        }
 
-            #option-pulldown-menu{
+        #option-pulldown-menu{
                 background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
                 margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
                 margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
@@ -95,8 +130,10 @@ body {
                 &:active{
                     background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
                 }
-            }
+        }
     }
+
+    
 
     article {
         .ui-btn, .ui-slider {
