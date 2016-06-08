@@ -154,6 +154,7 @@
     <Content Include="app\res\images\icon_wait.png" />
     <Content Include="app\res\images\img_arrow.png" />
     <Content Include="app\res\images\img_arrow_up.png" />
+    <Content Include="app\res\images\img_huis_remote_area.png" />
     <Content Include="app\res\images\img_huis_tpl.png" />
     <Content Include="app\res\images\img_no_controller.png" />
     <Content Include="app\res\images\mask_bottom_32.png" />

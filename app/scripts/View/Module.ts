@@ -436,7 +436,11 @@ module Garage {
 				newArea.y += offsetY;
 				newButton.area = newArea;
 				if (srcButton.default) {
-					newButton.default = srcButton.default;
+				    newButton.default = srcButton.default;
+				}
+
+				if (srcButton.currentStateId) {
+				    newButton.currentStateId = srcButton.currentStateId;
 				}
 
 				// button.deviceInfo のコピー
