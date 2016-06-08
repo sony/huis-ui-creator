@@ -8,3 +8,10 @@
     bottom: 0;
     background-color: $COLOR_SPLASH_BACKGROUND;
 }
+
+#splash-message {
+    position: absolute;
+    left: 200px;
+    top: 200px;
+    background-color: $COLOR_SPLASH_BACKGROUND;
+}

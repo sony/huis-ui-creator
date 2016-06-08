@@ -117,7 +117,8 @@ module Garage {
 		while (!HUIS_ROOT_PATH) {
 			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
 			if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
-				syncWithHUIS(callback);
+				//syncWithHUIS(callback);
+                callback();
 			} else {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
 				let response = electronDialog.showMessageBox(
