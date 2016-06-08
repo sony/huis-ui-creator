@@ -50,10 +50,12 @@ body {
         -ms-user-select: none;
             user-select: none;
     
-    //‹¤’ÊUI
+    //Common text button
     .ui-page-theme-b
     {
        .ui-btn{
+            margin:0;
+            padding:0;
             border:none;
             height:$SIZE_BUTTON_HEIGHT;   
             font-size:$FONT_SIZE_TEXT_BUTTON;
@@ -74,6 +76,11 @@ body {
                 background-color:$COLOR_BUTTON_PRESED;
                 font-family:$FONT_FAMILY_TEXT_BUTTON;
                 color:$COLOR_BUTTON_TEXT;
+                box-shadow:none;
+                border:none;
+            }
+
+            &:focus{
                 box-shadow:none;
                 border:none;
             }
