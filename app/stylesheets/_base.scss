@@ -54,11 +54,19 @@ body {
     #page-home{
             .ui-bar-inherit,
             .ui-header{
-                background-color : $COLOR_COMMON_HEADER_BACKGROUND;
+                background-color : $COLOR_HEADER_BACKGROUND;
                 border : 0;
-                border-bottom:$SIZE_COMMON_HEADER_BOARDER_THICKNESS solid $COLOR_COMMON_HEADER_BORDER;
+                border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
                 box-sizing:border-box;
-                height:$SIZE_COMMON_HEADER_HEIGHT;
+                height:$SIZE_HEADER_HEIGHT;
+                color :$COLOR_HEADER_TEXT;
+                text-shadow:none;
+                font-size:$FONT_SIZE_HEADER;
+                font-family:$FONT_FAMILY_HEADER;
+            }
+
+            .ui-title{
+               margin-top:$SIZE_HEADER_TITLE_MARGIN_TOP;
             }
     }
 
