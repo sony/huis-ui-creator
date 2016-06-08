@@ -297,8 +297,8 @@ module Garage {
 			 */
 			private _listupFaces() {
 				// fullcustom と "Air conditioner" を除いた face 一覧を取得する
-				// "Air conditioner" のボタンの形式が Garage では扱えないもののため
-				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special", "Air conditioner"] });
+				// "Air conditioner" のボタンの形式が Garage では扱えないもののため 
+				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special"] });
 
 				// faces データから face 一覧を作成し、face list に追加する
 				var faceItemTemplate = Tools.Template.getJST("#template-face-item", this.templateFullCustomFile_);

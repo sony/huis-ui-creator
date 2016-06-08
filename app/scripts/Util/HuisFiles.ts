@@ -1092,7 +1092,7 @@ module Garage {
 						state: gstates,
 						currentStateId: undefined
 					};
-					if (_.isUndefined(button.default)) {
+					if (button.default) {
 						gbutton.default = button.default;
 					}
 					gbuttons.push(gbutton);
