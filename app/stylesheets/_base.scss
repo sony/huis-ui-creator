@@ -50,8 +50,7 @@ body {
         -ms-user-select: none;
             user-select: none;
     
-    #page-full-custom,
-    #page-home{
+    .ui-page-theme-b{
             .ui-bar-inherit,
             .ui-header{
                 background-color : $COLOR_HEADER_BACKGROUND;
