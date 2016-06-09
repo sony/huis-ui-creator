@@ -254,6 +254,10 @@ module Garage {
 				}
             }
 
+            /*
+             * プルダウンメニュー対応
+             */
+
             private _onOptionPullDownMenuClick() {
                 var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
                 var $button1 = this.$page.find("#option-pulldown-menu");
