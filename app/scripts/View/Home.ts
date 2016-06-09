@@ -58,9 +58,13 @@ module Garage {
 				return {
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
-					"click #sync-pc-to-huis": "_onSyncPcToHuisClick",
+                    "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
+                    "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
-					"contextmenu": "_onContextMenu",
+                    "contextmenu": "_onContextMenu",
+                    // プルダウンメニューのリスト
+                    "vclick #command-about-this": "_onCommandAboutThis",
+                    "vclick #command-visit-help": "_onCommandVisitHelp",
 				};
 			}
 
@@ -248,7 +252,41 @@ module Garage {
 						}
 					});
 				}
-			}
+            }
+
+            private _onOptionPullDownMenuClick() {
+                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
+                var $button1 = this.$page.find("#option-pulldown-menu");
+                
+                var options: PopupOptions = {
+                    x: $button1.offset().left,
+                    y: $button1.height(),
+                    positionTo: "origin",
+                    corners: false
+                };
+                $overflow.popup(options).popup("open").on("vclick", () => {
+                    $overflow.popup("close");
+                });
+                return;
+            }
+
+            private _onCommandAboutThis() {
+                var options: Util.ElectronMessageBoxOptions = {
+                    type: "info",
+                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
+                    buttons: [
+                        "OK"
+                    ],
+                };
+                electronDialog.showMessageBox(options);
+                return;
+            }
+
+            private _onCommandVisitHelp() {
+                var shell = require('electron').shell;
+                shell.openExternal("http://www.google.co.jp/"); // URL is temporary
+                return;
+            }
 
 			private _onContextMenu() {
 				event.preventDefault();
