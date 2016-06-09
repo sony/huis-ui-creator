@@ -49,7 +49,8 @@ body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
-    
+  
+
     .ui-page-theme-b{
 
           .ui-btn{
@@ -135,6 +136,25 @@ body {
     article {
         .ui-btn, .ui-slider {
             z-index: 2;
+        }
+
+        input[type="text"]{
+            height:$SIZE_FORM_HEIGHT;
+            background-color:$COLOR_FORM_BACKGROUND;
+            box-sizing:border-box;
+            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
+            border-radius:0;
+            padding-left:12px;
+            padding-right:12px;
+
+            &:hover{
+                 border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            }
+
+            &:focus{
+                outline:none;
+                border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+            }            
         }
 
         section {
