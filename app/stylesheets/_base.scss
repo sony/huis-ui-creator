@@ -50,42 +50,7 @@ body {
         -ms-user-select: none;
             user-select: none;
     
-    //Common text button
-    .ui-page-theme-b
-    {
-       .ui-btn{
-            margin:0;
-            padding:0;
-            border:none;
-            height:$SIZE_BUTTON_HEIGHT;   
-            font-size:$FONT_SIZE_TEXT_BUTTON;
-            color:$COLOR_BUTTON_TEXT;
-            font-family:$FONT_FAMILY_TEXT_BUTTON;
-            background-color:$COLOR_BUTTON_NORMAL;
-            box-shadow:none;   
-            border-radius:0;
-
-            &:hover{
-                background-color:$COLOR_BUTTON_HOVER;
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
-                color:$COLOR_BUTTON_TEXT;
-                border:none;
-            }
-
-            &:active{
-                background-color:$COLOR_BUTTON_PRESED;
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
-                color:$COLOR_BUTTON_TEXT;
-                box-shadow:none;
-                border:none;
-            }
-
-            &:focus{
-                box-shadow:none;
-                border:none;
-            }
-      }
-    }
+    
 
     article {
         .ui-btn, .ui-slider {
@@ -124,5 +89,43 @@ body {
             border: 0;
             margin: 0;
         }
+    }
+
+
+    //Common text button
+    .ui-page-theme-b
+    {
+       .ui-btn{
+            margin:0;
+            padding:0;
+            border:none;
+            height:$SIZE_BUTTON_HEIGHT;   
+            font-size:$FONT_SIZE_TEXT_BUTTON;
+            color:$COLOR_BUTTON_TEXT;
+            font-family:$FONT_FAMILY_TEXT_BUTTON;
+            background-color:$COLOR_BUTTON_NORMAL;
+            box-shadow:none;   
+            border-radius:0;
+
+            &:hover{
+                background-color:$COLOR_BUTTON_HOVER;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                border:none;
+            }
+
+            &:active{
+                background-color:$COLOR_BUTTON_PRESED;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                box-shadow:none;
+                border:none;
+            }
+
+            &:focus{
+                box-shadow:none;
+                border:none;
+            }
+      }
     }
 }
