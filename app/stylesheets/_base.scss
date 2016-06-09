@@ -144,8 +144,8 @@ body {
             box-sizing:border-box;
             border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
             border-radius:0;
-            padding-left:12px;
-            padding-right:12px;
+            padding-left:$SIZE_FORM_PADDING_LEFT;
+            padding-right:$SIZE_FORM_PADDING_RIGHT;
 
             &:hover{
                  border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
