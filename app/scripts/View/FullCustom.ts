@@ -157,10 +157,15 @@ module Garage {
 					"click .remove-state": "onRemoveButtonStateClicked",
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
-                    //戻るボタン
+                    // 戻るボタン
                     "click #button-edit-back": "onBackButtonClicked",
+                    // プルダウンメニュー
+                    "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
+                    // プルダウンメニューのリスト
+                    "vclick #command-about-this": "_onCommandAboutThis",
+                    "vclick #command-visit-help": "_onCommandVisitHelp",
 
 				};
 			}
@@ -2861,7 +2866,45 @@ module Garage {
 				}
 				return moduleId;
 
-			}
+            }
+
+            /*
+             * プルダウンメニュー対応
+             */
+
+            private _onOptionPullDownMenuClick() {
+                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
+                var $button1 = this.$page.find("#option-pulldown-menu");
+
+                var options: PopupOptions = {
+                    x: $button1.offset().left,
+                    y: $button1.height(),
+                    positionTo: "origin",
+                    corners: false
+                };
+                $overflow.popup(options).popup("open").on("vclick", () => {
+                    $overflow.popup("close");
+                });
+                return;
+            }
+
+            private _onCommandAboutThis() {
+                var options: Util.ElectronMessageBoxOptions = {
+                    type: "info",
+                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
+                    buttons: [
+                        "OK"
+                    ],
+                };
+                electronDialog.showMessageBox(options);
+                return;
+            }
+
+            private _onCommandVisitHelp() {
+                var shell = require('electron').shell;
+                shell.openExternal(HELP_SITE_URL);
+                return;
+            }
 
 		}
 

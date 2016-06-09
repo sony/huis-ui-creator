@@ -234,7 +234,7 @@ module Garage {
 			private _getMasterFunctions(remoteId: string): string[] {
 				var masterFace = this._getMasterFace(remoteId);
 				if (!masterFace) {
-					console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
+					//console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
 					return null;
 				}
 
