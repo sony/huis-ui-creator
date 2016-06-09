@@ -152,6 +152,8 @@ body {
             }
 
             &:focus{
+                padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
+                padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
                 outline:none;
                 border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
             }            
