@@ -288,7 +288,7 @@ module Garage {
 
             private _onCommandVisitHelp() {
                 var shell = require('electron').shell;
-                shell.openExternal("http://www.google.co.jp/"); // URL is temporary
+                shell.openExternal(HELP_SITE_URL);
                 return;
             }
 

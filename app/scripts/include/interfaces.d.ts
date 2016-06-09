@@ -513,7 +513,12 @@ declare module Garage {
 	/**
 	 * ページの背景として画像を追加するときの編集パラメーター
 	 */
-	var IMAGE_EDIT_PAGE_BACKGROUND_PARAMS: Model.IImageEditParams;
+    var IMAGE_EDIT_PAGE_BACKGROUND_PARAMS: Model.IImageEditParams;
+	/**
+	 * ヘルプサイトのURL
+	 */
+    var HELP_SITE_URL: string;
+
 }
 
 

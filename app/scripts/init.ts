@@ -96,7 +96,9 @@ module Garage {
 			options: {
                 "title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
 			}
-		};
+        };
+
+        HELP_SITE_URL = "http://www.google.co.jp"; //　仮
 
 		callback();
 	};
