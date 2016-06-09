@@ -156,7 +156,9 @@ module Garage {
 					"click #add-state": "onAddButtonStateClicked",
 					"click .remove-state": "onRemoveButtonStateClicked",
 					// 編集完了ボタン
-					"click #button-edit-done": "onEditDoneButtonClicked",
+                    "click #button-edit-done": "onEditDoneButtonClicked",
+                    //戻るボタン
+                    "click #button-edit-back": "onBackButtonClicked",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
 
@@ -1274,6 +1276,13 @@ module Garage {
 				this._showDetailItemArea(this.currentTargetModel_);
 
 			}
+
+            /**
+            * 戻るボタンが押されたときに呼び出される
+            */
+            private onBackButtonClicked(event: Event) {
+                this.onEditDoneButtonClicked(event);
+            }
 
 			/**
 			 * 編集完了ボタンを押したときに呼び出される
