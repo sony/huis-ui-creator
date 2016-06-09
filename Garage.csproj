@@ -159,6 +159,8 @@
     <Content Include="app\res\images\img_no_controller.png" />
     <Content Include="app\res\images\mask_bottom_32.png" />
     <Content Include="app\res\images\mask_top_32.png" />
+    <Content Include="app\res\images\pulldowmmenu_dowm_icon.png" />
+    <Content Include="app\res\images\pulldowmmenu_up_icon.png" />
     <Content Include="app\res\locales\translation-dev.json" />
     <Content Include="app\res\locales\translation-ja.json" />
     <Content Include="app\stylesheets\app.min.css">
