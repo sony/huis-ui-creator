@@ -147,6 +147,7 @@
     <Content Include="app\res\images\btn_sync_hover.png" />
     <Content Include="app\res\images\btn_sync_normal.png" />
     <Content Include="app\res\images\btn_sync_pressed.png" />
+    <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
     <Content Include="app\res\images\icon_guide_arrow.png" />
     <Content Include="app\res\images\icon_sync_green.png" />
