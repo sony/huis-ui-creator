@@ -140,53 +140,8 @@ module Garage {
 	};
 
 	// HUIS -> PC の同期を行う
-	var syncWithHUIS = (callback?: Function) => {
-		if (!HUIS_ROOT_PATH) {
-			console.warn("HUIS may not be connected.");
-			return;
-		}
-		let needSync: boolean = false; // [TODO]デバッグ用に強制 sync
-
-		//let needSync: boolean = false;
-		try {
-			// 既に PC 側に有効な HUIS ファイルが同期済みかチェック
-			if (huisFiles.init(HUIS_FILES_ROOT)) {
-				// 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
-				Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_CHECK_DIFF, (result: boolean) => {
-					if (result) {
-						// 差分がある場合は、HUIS -> PC で上書き同期をするかを確認する
-						let response = electronDialog.showMessageBox(
-							{
-								type: "info",
-								message: "この PC に以前 HUIS と同期したときのファイルが存在しています。\n"
-								+ "HUIS の内容を PC に同期しますか？\n"
-								+ "同期した場合は、以前同期した HUIS のファイルは上書きされます。",
-								buttons: ["yes", "no"]
-							});
-						// yes を選択した場合 (response: 0) は、同期フラグを立てる
-						if (response === 0) {
-							needSync = true;
-						}
-					}
-					// 同期が必要な場合のみ、同期を実行
-					if (needSync) {
-						doSync(callback);
-					} else {
-						if (callback) {
-							callback();
-						}
-					}
-				});
-			} else {
-				// PC 側に HUIS ファイルが保存されていない場合は、強制的に HUIS -> PC で同期を行う
-				doSync(callback);
-			}
-		} catch (err) {
-			console.error(err);
-			console.error("error occurred in syncWithHUIS");
-			HUIS_ROOT_PATH = null;
-		}
-	};
+    // Splash.tsに移動したのでいらない
+	//var syncWithHUIS = (callback?: Function) => ...
 
 	// HUIS -> PC の同期処理
 	var doSync = (callback?: Function) => {
