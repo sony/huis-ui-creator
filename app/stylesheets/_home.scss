@@ -75,24 +75,22 @@
         .face {
             list-style-type: none;
             float: left;
-            margin: 0 40px;
-            padding: 10px 0;
+            margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+            margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
             overflow: hidden;
+            width: $SIZE_HOME_REMOTE_WIDTH;
 
             .title {
+                margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
                 text-align: center;
                 color: $COLOR_TEXT_MAIN;
-                font-weight: lighter;
-            }
-
-            .face-page{
-                transform: scale(0.5);
-                transform-origin: left top;
-                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                font-size:$FONT_HOME_REMOTE_TITLE;
+                font-weight: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
             }
 
             #face-pages-area {
-                width: $SIZE_HOME_REMOTE_WIDTH;
                 box-sizing: border-box;
                 background-color:$COLOR_HOME_REMOTE_BACKGROUND;
                 border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
