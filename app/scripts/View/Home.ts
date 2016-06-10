@@ -194,7 +194,6 @@ module Garage {
 				$faceCanvas.css({
 					"transform": "scale(" + adjustedWidthRate + ")",
 					"transform-origin": "left top",
-					"background-color": "rgb(240,240,240)"
 				});
 				let adjsutedFaceHeight = $faceCanvas.innerHeight() * adjustedWidthRate;
 				$faceContainer.width($face.width());
