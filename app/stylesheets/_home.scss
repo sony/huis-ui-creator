@@ -78,8 +78,6 @@
             margin: 0 40px;
             padding: 10px 0;
             overflow: hidden;
-            width: 200px;
-            //height: 380px;
 
             .title {
                 text-align: center;
@@ -87,7 +85,14 @@
                 font-weight: lighter;
             }
 
+            .face-page{
+                transform: scale(0.5);
+                transform-origin: left top;
+                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+            }
+
             #face-pages-area {
+                width: $SIZE_HOME_REMOTE_WIDTH;
                 box-sizing: border-box;
                 background-color:$COLOR_HOME_REMOTE_BACKGROUND;
                 border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
