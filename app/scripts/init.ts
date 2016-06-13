@@ -147,7 +147,7 @@ module Garage {
 					{
 						type: "info",
 						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続してから [OK] ボタンを押してください。\n"
+						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
 						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
 						buttons: ["ok", "cancel"]
                     });
