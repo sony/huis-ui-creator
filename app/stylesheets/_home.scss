@@ -54,12 +54,15 @@
 
     #face-list-container {
         overflow-x: overlay;
+        overflow-y: hidden;
         width: 100%;
+        box-sizing: border-box;
 
         #face-list {
             position:relative;
             //height: 400px; // tentative
             overflow-y: hidden;
+           
             //box-shadow: 0 0 20px #222;
             z-index: 1;
             padding: 0;
