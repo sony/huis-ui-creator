@@ -77,10 +77,15 @@ module Garage {
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
 					this._modifyModel(model);
-                    if ( model.state[0].action[0].code == null // Learned code is not defined
-                        && model.state[0].action[0].code_db.brand === " " // No preset code is not defined
-                        && model.state[0].action[0].code_db.db_codeset === " ") { // No signal defined
-                        return this;
+                    if (model.state[0]) {
+                        let s = model.state[0];
+                        let flag = false;
+                        var filtered = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+                            return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
+                        });
+                        if (filtered.length > 0) {
+                            return this;
+                        }
                     }
 					this.$el.append($(this.buttonItemTemplate_(model)));
 				});
