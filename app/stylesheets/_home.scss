@@ -1,17 +1,72 @@
-﻿#page-home {
+﻿@import "variable";
+
+#page-home {
     text-shadow: none;
     font-family: "Noto Sans CJK JP",'SST W55';
+
+    .ui-header{
+        #create-new-remote{
+            background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+            margin-top:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_TOP;
+            margin-left:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_LEFT;
+            height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
+            width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
+            top:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
+
+            &:hover{
+                background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+            }
+
+            &:active{
+                background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
+            }
+        }
+
+        #sync-pc-to-huis{
+            background-image:$PATH_IMG_SYNC_BTN_NORMAL;
+            margin-top:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP;
+            margin-left:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT;
+            height:$SIZE_HOME_HEADER_SYNC_BTN_HEIGHT;
+            width:$SIZE_HOME_HEADER_SYNC_BTN_WIDTH;
+            top:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
+
+            &:hover{
+                background-image:$PATH_IMG_SYNC_BTN_HOVER;
+            }
+
+            &:active{
+                background-image:$PATH_IMG_SYNC_BTN_ACTIVE;
+            }
+        }
+    }
 
     #face-list-container {
         overflow-x: overlay;
         width: 100%;
+
+        #face-list-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 45px;
+            background: linear-gradient(to bottom, rgba(151,152,157, 0) 0%, rgba(151,152,157,1) 80%);
+            z-index: 1;
+        }
     }
 
     #face-list {
         position:relative;
         //height: 400px; // tentative
         overflow-y: hidden;
-        background-color: rgb(151,152,157);
+        background-color: $COLOR_HOME_BACKGROUND;
         //box-shadow: 0 0 20px #222;
         z-index: 1;
         padding: 0;
@@ -28,51 +83,22 @@
 
             .title {
                 text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+                color: $COLOR_TEXT_MAIN;
+                font-weight: lighter;
             }
 
             #face-pages-area {
                 margin: 0;
                 font-weight: normal;
             }
+
+            .module-container {
+                overflow: hidden;
+            }
         }
 
-        .create-new-face {
-            width: 160px;  // tentative
-            margin: 0 100px 0 40px;
-
-            .thumb {
-                background-image: url(../res/icons/plus.png);
-                background-repeat: no-repeat;
-                background-position: center;
-                background-color: white;
-            }
-
-            .overlay-menu {
-                visibility: hidden;
-                position: relative;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0, 0.7);
-
-                span {
-                    font-weight: normal;
-                    color: white;
-                    font-size: 14px;
-                    display: table-cell;
-                    height: 256px;
-                    vertical-align: middle;
-                    text-align: center;
-                }
-
-            }
-            .thumb:hover .overlay-menu {
-                visibility: visible;
-            }
+        .face-container {
+            cursor: pointer;
         }
     }
 
@@ -110,9 +136,8 @@
 
             .title {
                 text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+                color: $COLOR_TEXT_MAIN;
+                font-weight: lighter;
             }
 
             #face-pages-area {

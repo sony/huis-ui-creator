@@ -16,7 +16,8 @@ module Garage {
 			/**
 			 * constructor
 			 */
-			constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
+                super();
 				if (options.attributes) {
 					if (options.attributes["materialsRootPath"]) {
 						this.materialsRootPath_ = options.attributes["materialsRootPath"];

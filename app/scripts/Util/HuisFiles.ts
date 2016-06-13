@@ -234,7 +234,7 @@ module Garage {
 			private _getMasterFunctions(remoteId: string): string[] {
 				var masterFace = this._getMasterFace(remoteId);
 				if (!masterFace) {
-					console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
+					//console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
 					return null;
 				}
 
@@ -346,6 +346,20 @@ module Garage {
 			 */
 			getCommonFace(): IGFace {
 				return this.commonRemoteInfo_.face;
+			}
+
+			/**
+			 * 新しい face を作成できるかどうか。
+			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+			 * 
+			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 */
+			canCreateNewRemote(): boolean {
+				if (this.remoteList_.length < MAX_HUIS_FILES) {
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 			/**
@@ -1078,7 +1092,7 @@ module Garage {
 						state: gstates,
 						currentStateId: undefined
 					};
-					if (_.isUndefined(button.default)) {
+					if (button.default) {
 						gbutton.default = button.default;
 					}
 					gbuttons.push(gbutton);

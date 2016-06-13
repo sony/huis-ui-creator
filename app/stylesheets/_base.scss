@@ -1,3 +1,5 @@
+@import "variable";
+
 @font-face {
   font-family: 'SST W55';
   src: url(../res/fonts/regular/8804b8af-432e-44cc-8a34-eda854e2da36.eot); // For IE
@@ -47,11 +49,172 @@ body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+  
+
+    .ui-page-theme-b{
+
+          .ui-btn{
+                margin:0;
+                padding:0;
+                border:none;
+                height:$SIZE_BUTTON_HEIGHT;   
+                font-size:$FONT_SIZE_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                background-color:$COLOR_BUTTON_NORMAL;
+                box-shadow:none;   
+                border-radius:0;
+
+                &:hover{
+                    background-color:$COLOR_BUTTON_HOVER;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    border:none;
+                }
+
+                &:active{
+                    background-color:$COLOR_BUTTON_PRESED;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    box-shadow:none;
+                    border:none;
+                }
+
+                &:focus{
+                    box-shadow:none;
+                    border:none;
+                }
+            }
+
+            .ui-bar-inherit,
+            .ui-header{
+                background-color : $COLOR_HEADER_BACKGROUND;
+                border : 0;
+                border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
+                box-sizing:border-box;
+                height:$SIZE_HEADER_HEIGHT;
+                color :$COLOR_HEADER_TEXT;
+                text-shadow:none;
+               
+                .header-button-lline-alingn-right{
+                    position: absolute;
+                    display: flex;
+                    top:0;
+                    right:0;
+                    margin-right:$SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
+                }
+
+                .ui-title{
+                    padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
+                    font-size:$FONT_SIZE_LL;
+                    font-family:$FONT_FAMILY_NORMAL;
+                }
+            }
+
+            #option-pulldown-menu{
+                background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
+                margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
+                margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
+                height:$SIZE_HEADER_OPTION_BTN_HEIGHT;
+                width:$SIZE_HEADER_OPTION_BTN_WIDTH;
+                top:0;
+                padding:0;
+                box-shadow:none;
+                border:none;
+                background-color:transparent;
+
+                &:hover{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_HOVER;
+                }
+
+                &:active{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+                }
+
+                .menu-item-text{
+
+                }
+            }
+
+          
+    }
 
     article {
         .ui-btn, .ui-slider {
             z-index: 2;
         }
+
+        input[type="text"]{
+            height:$SIZE_FORM_HEIGHT;
+            background-color:$COLOR_FORM_BACKGROUND;
+            box-sizing:border-box;
+            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
+            border-radius:0;
+            padding-left:$SIZE_FORM_PADDING_LEFT;
+            padding-right:$SIZE_FORM_PADDING_RIGHT;
+
+            &:hover{
+                 border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            }
+
+            &:focus{
+                padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
+                padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
+                outline:none;
+                border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+            }            
+        }
+
+        select{
+           -webkit-appearance: none;
+           font-size:$FONT_SIZE_PULL_DOWM_MENU;
+           font-family:$FONT_FAMILY_PULL_DOWM_MENU;
+           background:$COLOR_PULL_DOWM_BACKGROUMD;
+           padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
+           padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
+           height:$SIZE_PULL_DOWM_HEIGHT_MAIN;
+           background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+           background-repeat: no-repeat;
+           background-position: right top;
+           box-sizing:border-box;
+           border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+
+           &:hover{
+               box-sizing:border-box;
+                 border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
+            }
+
+            &:focus{
+                -webkit-appearance: none;
+                
+                padding-left : 11px;
+                box-sizing:border-box;
+                //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                outline:none;
+                border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
+            }
+
+          
+            option[selected="selected"] { font-weight: normal }
+
+            /*
+            option{
+                
+                color:rgba(0,0,0,0.4);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+                padding-top:$SIZE_PULL_DOWM_SUB_TOP_PADDING;
+                padding-bottom:$SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
+                background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
+                //border:1px solid $COLOR_PULL_DOWN_BORDER;
+                outline:none;
+            }
+                */
+
+            
+        }
+
         section {
             &.normal-screen {
                 padding: 0;
@@ -74,9 +237,10 @@ body {
                 left: 0;
             }
         }
+
         .ui-content {
             padding: 0;
-            background-color: rgb(151,152,157);
+            background-color: $COLOR_FULL_CUSTOM_BACKGROUND;
         }
 
         section, div {
@@ -85,4 +249,5 @@ body {
             margin: 0;
         }
     }
+
 }

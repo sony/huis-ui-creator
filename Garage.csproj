@@ -19,7 +19,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UpgradeBackupLocation />
-    <TypeScriptToolsVersion>1.6</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -126,6 +126,42 @@
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\spinner_medium.png" />
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\spinner_small.png" />
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\thm_selected.png" />
+    <Content Include="app\res\images\btn_arrow_left_hover.png" />
+    <Content Include="app\res\images\btn_arrow_left_normal.png" />
+    <Content Include="app\res\images\btn_arrow_left_pressed.png" />
+    <Content Include="app\res\images\btn_arrow_right_hover.png" />
+    <Content Include="app\res\images\btn_arrow_right_normal.png" />
+    <Content Include="app\res\images\btn_arrow_right_pressed.png" />
+    <Content Include="app\res\images\btn_back_hover.png" />
+    <Content Include="app\res\images\btn_back_normal.png" />
+    <Content Include="app\res\images\btn_back_pressed.png" />
+    <Content Include="app\res\images\btn_done_hover.png" />
+    <Content Include="app\res\images\btn_done_normal.png" />
+    <Content Include="app\res\images\btn_done_pressed.png" />
+    <Content Include="app\res\images\btn_new_hover.png" />
+    <Content Include="app\res\images\btn_new_normal.png" />
+    <Content Include="app\res\images\btn_new_pressed.png" />
+    <Content Include="app\res\images\btn_option_hover.png" />
+    <Content Include="app\res\images\btn_option_normal.png" />
+    <Content Include="app\res\images\btn_option_pressed.png" />
+    <Content Include="app\res\images\btn_sync_hover.png" />
+    <Content Include="app\res\images\btn_sync_normal.png" />
+    <Content Include="app\res\images\btn_sync_pressed.png" />
+    <Content Include="app\res\images\huis_ui_creator_logo.png" />
+    <Content Include="app\res\images\icon_done.png" />
+    <Content Include="app\res\images\icon_guide_arrow.png" />
+    <Content Include="app\res\images\icon_sync_green.png" />
+    <Content Include="app\res\images\icon_sync_white.png" />
+    <Content Include="app\res\images\icon_wait.png" />
+    <Content Include="app\res\images\img_arrow.png" />
+    <Content Include="app\res\images\img_arrow_up.png" />
+    <Content Include="app\res\images\img_huis_remote_area.png" />
+    <Content Include="app\res\images\img_huis_tpl.png" />
+    <Content Include="app\res\images\img_no_controller.png" />
+    <Content Include="app\res\images\mask_bottom_32.png" />
+    <Content Include="app\res\images\mask_top_32.png" />
+    <Content Include="app\res\images\pulldowmmenu_dowm_icon.png" />
+    <Content Include="app\res\images\pulldowmmenu_up_icon.png" />
     <Content Include="app\res\locales\translation-dev.json" />
     <Content Include="app\res\locales\translation-ja.json" />
     <Content Include="app\stylesheets\app.min.css">
@@ -150,6 +186,7 @@
     <Content Include="app\stylesheets\_face-render-experiment.scss" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\templates\splash.html" />
     <Content Include="docs\en\README.md" />
     <Content Include="docs\generator\Garage.dxy" />
     <Content Include="docs\generator\README.md" />
@@ -191,6 +228,7 @@
     </Content>
     <Content Include="app\stylesheets\_face-items.scss" />
     <Content Include="app\stylesheets\_dialog.scss" />
+    <Content Include="app\stylesheets\_variable.scss" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -264,6 +302,7 @@
     <Content Include="app\scripts\Model\ButtonItemsCollection.js.map">
       <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
     <Content Include="tests\jasmine\Model.ButtonItem.js">
       <DependentUpon>Model.ButtonItem.ts</DependentUpon>
