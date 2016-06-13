@@ -995,7 +995,7 @@ module Garage {
 			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
-					console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
+					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
 					return undefined;
 				}
 

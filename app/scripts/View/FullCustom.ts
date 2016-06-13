@@ -2644,7 +2644,7 @@ module Garage {
 				this.currentTargetButtonStates_ = button.state;
                 if (this.currentTargetButtonStates_) {
                     let templateState: Tools.JST = null;
-                    if (button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
+                    if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
                     } else {
                         templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
@@ -2652,7 +2652,7 @@ module Garage {
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
-                        if (button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンの場合、default値に一致したパーツのみ表示する
+                        if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンの場合、default値に一致したパーツのみ表示する
                             if (state.id != button.default) return;
                         }
                         stateData.id = state.id;

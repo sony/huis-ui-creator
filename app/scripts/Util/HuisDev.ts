@@ -25,7 +25,9 @@
 
 			function getRelPathes(dirPath: string): string[] {
 				var dirs = [dirPath];
-				var pathes = [];
+                var pathes = [];
+                //debug
+                console.log("getRelPathes: dirPath " + dirPath);
 				try {
 					while (dirs.length > 0) {
 						var dir = dirs.pop();
@@ -53,6 +55,8 @@
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
+                //debug
+                console.log("getRelPathesAsync: dirPath " + dirPath);
 
 				let dirs: string[] = [dirPath];
 				let pathes: string[] = [];
