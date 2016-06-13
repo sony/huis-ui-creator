@@ -76,14 +76,17 @@ module Garage {
 
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
-					this._modifyModel(model);
+                    this._modifyModel(model);
+                    let filtered_state = null;
+                    let filtered_action = null;
                     if (model.state[0]) {
-                        let s = model.state[0];
-                        let flag = false;
-                        var filtered = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
-                            return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
+                         filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+                           filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+                                return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
+                             });
+                           return filtered_state;
                         });
-                        if (filtered.length > 0) {
+                        if (filtered_action.length > 0) {
                             return this;
                         }
                     }
