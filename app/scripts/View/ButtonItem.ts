@@ -77,7 +77,9 @@ module Garage {
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
 					this._modifyModel(model);
-                    if (model.deviceInfo == null) { // No signal
+                    if ( model.state[0].action[0].code == null // Learned code is not defined
+                        && model.state[0].action[0].code_db.brand === " " // No preset code is not defined
+                        && model.state[0].action[0].code_db.db_codeset === " ") { // No signal defined
                         return this;
                     }
 					this.$el.append($(this.buttonItemTemplate_(model)));
