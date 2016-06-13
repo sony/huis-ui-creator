@@ -5,6 +5,8 @@
     font-family: "Noto Sans CJK JP",'SST W55';
 
     .ui-header{
+
+
         #create-new-remote{
             background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
             margin-top:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_TOP;
@@ -51,6 +53,8 @@
     #face-list-container {
         overflow-x: overlay;
         width: 100%;
+        background-color: $COLOR_HOME_BACKGROUND;
+        min-height:$SIZE_HOME_FACE_LIST_HEIGHT_MIN;
 
         #face-list-footer {
             position: absolute;
@@ -66,7 +70,6 @@
         position:relative;
         //height: 400px; // tentative
         overflow-y: hidden;
-        background-color: $COLOR_HOME_BACKGROUND;
         //box-shadow: 0 0 20px #222;
         z-index: 1;
         padding: 0;

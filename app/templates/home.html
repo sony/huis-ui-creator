@@ -11,8 +11,8 @@
     <section data-role="content">
         <section id="face-list-container">
             <ul id="face-list">
-                <li id="face-list-footer"></li>
             </ul>
+            <div id="face-list-footer"></div>
         </section>
         <section id="face-history">
             <h3>HISTORY</h3>
@@ -20,6 +20,8 @@
                 <ul id="face-history-list"></ul>
             </section>
         </section>
+
+
         <script type="text/template" id="face-list-template">
                 {{#faceList}}
                 <li class="face" data-remoteid="{{remoteId}}">

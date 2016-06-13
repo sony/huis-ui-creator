@@ -348,10 +348,11 @@ module Garage {
 				//var faceHistoryListContainerHeight = 200; // tentative
 				var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
 				var faceListContainerHeight = innerHeight - $("#face-list-container").offset().top - faceHistoryListContainerHeight;
-				if (faceListContainerHeight < 200) {
-					faceListContainerHeight = 200;
-				}
-				$("#face-list").css("height", faceListContainerHeight + "px");
+				//if (faceListContainerHeight < 200) {
+				//	faceListContainerHeight = 200;
+				//}
+                console.log("faceListContainerHeight " + faceListContainerHeight);
+			    $("#face-list").css("height", faceListContainerHeight + "px");
 			}
 
 			/**
