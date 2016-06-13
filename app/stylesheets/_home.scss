@@ -55,65 +55,59 @@
     #face-list-container {
         overflow-x: overlay;
         width: 100%;
-        background-color: $COLOR_HOME_BACKGROUND;
-        min-height:$SIZE_HOME_FACE_LIST_HEIGHT_MIN;
 
-         
-
-    #face-list {
-        position:relative;
-        //height: 400px; // tentative
-        overflow-y: hidden;
-        //box-shadow: 0 0 20px #222;
-        z-index: 1;
-        padding: 0;
-        margin: 0;
-
-        #face-list-footer {
-            position: absolute;
-            bottom: 0;
-            width:100%;
-            height:$SIZE_HOME_FOOTOR_HEIGHT;
-            background: $COLOR_HOME_FOOTOR_BACKGROUND;
+        #face-list {
+            position:relative;
+            //height: 400px; // tentative
+            overflow-y: hidden;
+            //box-shadow: 0 0 20px #222;
             z-index: 1;
+            padding: 0;
+            margin: 0;
+
+            #face-list-footer {
+                position: absolute;
+                bottom: 0;
+                width:100%;
+                height:$SIZE_HOME_FOOTOR_HEIGHT;
+                background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                z-index: 1;
             }    
 
-        .face {
-            list-style-type: none;
-            float: left;
-            margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
-            margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
-            overflow: hidden;
-            width: $SIZE_HOME_REMOTE_WIDTH;
+            .face {
+                list-style-type: none;
+                float: left;
+                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                overflow: hidden;
+                width: $SIZE_HOME_REMOTE_WIDTH;
 
-            .title {
-                margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
-                margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
-                text-align: center;
-                color: $COLOR_TEXT_MAIN;
-                font-size:$FONT_HOME_REMOTE_TITLE;
-                font-weight: $FONT_FAMILY_HOME_REMOTE_TITLE;
-                line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                .title {
+                    margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                    margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                    text-align: center;
+                    color: $COLOR_TEXT_MAIN;
+                    font-size:$FONT_HOME_REMOTE_TITLE;
+                    font-weight: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                    line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                }
+
+                #face-pages-area {
+                    width:inherit;
+                    font-weight: normal;
+                }
+
+                .face-page{
+                    margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                    margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                    margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                    padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+                }
+
+                .module-container {
+                    overflow: visible;
+                }
             }
-
-            #face-pages-area {
-                width:inherit;
-                font-weight: normal;
-            }
-
-           .face-page{
-                margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
-                margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
-                margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
-                padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
-           }
-
-            .module-container {
-                overflow: visible;
-            }
-
-            
-    }
         }
 
         .face-container {
