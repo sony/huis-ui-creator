@@ -360,12 +360,12 @@ module Garage {
 			 */
 			private _calculateFaceListWidth() {
 				let $faceList = $("#face-list");
-				let $items = $faceList.children();
+                let $items = $faceList.find(".face");
 				let listWidth = 0;
-				$items.each((index, item) => {
-					listWidth += $(item).outerWidth(true);
+                $items.each((index, item) => {
+                    listWidth += $(item).outerWidth(true);
 				});
-				$faceList.width(listWidth);
+                $faceList.width(listWidth);
 			}
 
 			private _removeFace(remoteId: string) {
