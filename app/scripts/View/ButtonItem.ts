@@ -77,7 +77,7 @@ module Garage {
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
 					this._modifyModel(model);
-                    if (model.deviceInfo == undefined) { // No signal
+                    if (model.deviceInfo == null) { // No signal
                         return this;
                     }
 					this.$el.append($(this.buttonItemTemplate_(model)));
