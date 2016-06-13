@@ -84,9 +84,9 @@ module Garage {
                            filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
                                 return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
                              });
-                           return filtered_state;
+                           return (filtered_action.length > 0);
                         });
-                        if (filtered_action.length > 0) {
+                        if (filtered_state.length > 0) {
                             return this;
                         }
                     }
