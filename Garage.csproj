@@ -167,9 +167,13 @@
     <Content Include="app\stylesheets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <None Include="app\stylesheets\variables\_image-path.scss" />
     <Content Include="app\stylesheets\_base.scss" />
     <Content Include="app\stylesheets\_splash.scss" />
     <Content Include="app\stylesheets\config.rb" />
+    <None Include="app\stylesheets\variables\_color.scss" />
+    <None Include="app\stylesheets\variables\_font.scss" />
+    <None Include="app\stylesheets\variables\_size.scss" />
     <Content Include="app\templates\dialogs.html" />
     <Content Include="app\templates\face-items.html" />
     <Content Include="app\templates\item-detail.html" />
@@ -228,7 +232,7 @@
     </Content>
     <Content Include="app\stylesheets\_face-items.scss" />
     <Content Include="app\stylesheets\_dialog.scss" />
-    <Content Include="app\stylesheets\_variable.scss" />
+    <Content Include="app\stylesheets\variables\_variable.scss" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
