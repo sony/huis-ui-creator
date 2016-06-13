@@ -186,24 +186,26 @@ module Garage {
 				});
 				faceRenderer.render();
 
+                /*
 				// サイズを調整
 				let $faceContainer = $face.find(".face-container");
 				let $faceCanvas = $face.find("#face-pages-area");
 				//let adjustedHeightRate = $face.height() / $faceCanvas.innerHeight();
+                
 				let adjustedWidthRate = $face.width() / $faceCanvas.innerWidth();
 				$faceCanvas.css({
 					"transform": "scale(" + adjustedWidthRate + ")",
 					"transform-origin": "left top",
-					"background-color": "rgb(240,240,240)"
 				});
 				let adjsutedFaceHeight = $faceCanvas.innerHeight() * adjustedWidthRate;
 				$faceContainer.width($face.width());
 				$faceContainer.height(adjsutedFaceHeight);
+                */
 
 				// クリックしたら編集画面への遷移できるようにする
-				$face.on("click", (event) => {
+                $face.find(".face-container").on("click", (event) => {
 					let $clickedFace = $(event.currentTarget);
-					let remoteId = $clickedFace.data("remoteid");
+                    let remoteId = $clickedFace.data("remoteid");
 					if (remoteId) {
 						Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
 					}
@@ -344,12 +346,13 @@ module Garage {
 				var windowHeight = innerHeight;
 
 				//var faceHistoryListContainerHeight = 200; // tentative
-				var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
-				var faceListContainerHeight = innerHeight - $("#face-list-container").offset().top - faceHistoryListContainerHeight;
-				if (faceListContainerHeight < 200) {
-					faceListContainerHeight = 200;
-				}
-				$("#face-list").css("height", faceListContainerHeight + "px");
+                var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
+                var scrollHeight = windowHeight - $(window).outerHeight(true);
+                var faceListContainerHeight = innerHeight - $("#face-list-container").offset().top - faceHistoryListContainerHeight - scrollHeight;
+				//if (faceListContainerHeight < 200) {s
+				//	faceListContainerHeight = 200;
+				//}
+			    $("#face-list").css("height", faceListContainerHeight + "px");
 			}
 
 			/**
@@ -357,12 +360,12 @@ module Garage {
 			 */
 			private _calculateFaceListWidth() {
 				let $faceList = $("#face-list");
-				let $items = $faceList.children();
+                let $items = $faceList.find(".face");
 				let listWidth = 0;
-				$items.each((index, item) => {
-					listWidth += $(item).outerWidth(true);
+                $items.each((index, item) => {
+                    listWidth += $(item).outerWidth(true);
 				});
-				$faceList.width(listWidth);
+                $faceList.width(listWidth);
 			}
 
 			private _removeFace(remoteId: string) {
