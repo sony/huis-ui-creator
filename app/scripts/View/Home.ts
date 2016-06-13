@@ -186,6 +186,7 @@ module Garage {
 				});
 				faceRenderer.render();
 
+                /*
 				// サイズを調整
 				let $faceContainer = $face.find(".face-container");
 				let $faceCanvas = $face.find("#face-pages-area");
@@ -199,6 +200,7 @@ module Garage {
 				let adjsutedFaceHeight = $faceCanvas.innerHeight() * adjustedWidthRate;
 				$faceContainer.width($face.width());
 				$faceContainer.height(adjsutedFaceHeight);
+                */
 
 				// クリックしたら編集画面への遷移できるようにする
 				$face.on("click", (event) => {

@@ -91,12 +91,16 @@
             }
 
             #face-pages-area {
-                box-sizing: border-box;
-                background-color:$COLOR_HOME_REMOTE_BACKGROUND;
-                border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
-                margin: 0;
+                width:inherit;
                 font-weight: normal;
             }
+
+           .face-page{
+                margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+           }
 
             .module-container {
                 overflow: hidden;
@@ -104,6 +108,12 @@
         }
 
         .face-container {
+            width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+            transform : scale(0.5);
+            transform-origin : left top;
+            box-sizing: border-box;
+            background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+            border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
             cursor: pointer;
         }
     }
