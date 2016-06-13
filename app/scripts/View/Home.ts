@@ -203,9 +203,9 @@ module Garage {
                 */
 
 				// クリックしたら編集画面への遷移できるようにする
-				$face.on("click", (event) => {
+                $face.find(".face-container").on("click", (event) => {
 					let $clickedFace = $(event.currentTarget);
-					let remoteId = $clickedFace.data("remoteid");
+                    let remoteId = $clickedFace.data("remoteid");
 					if (remoteId) {
 						Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
 					}
