@@ -135,8 +135,6 @@ body {
                  
             //オプションメニューのポップアップ
             .ui-popup-container{
-                                top:0;
-                right:0;
 
                 ul{
                     -webkit-appearance: none;
@@ -149,6 +147,7 @@ body {
                 }
 
                 #option-pulldown-menu-popup{
+                    margin-top:$SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
                     width:$SIZE_OPTION_MENU_POPUP_WIDTH;
                     background-color:$COLOR_OPTION_MENU_POPUP_BACKGROUND;
                     border:$SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
