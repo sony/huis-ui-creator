@@ -275,14 +275,7 @@ module Garage {
                 var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
                 var $button1 = this.$page.find("#option-pulldown-menu");
                 var $header = this.$page.find("header");
-                /*
-                var options: PopupOptions = {
-                    x: $button1.offset().left,
-                    y: $button1.height() + $button1.offset().top,
-                    positionTo: "origin",
-                    tolerance: $button1.height() + $button1.offset().top + ",0",
-                    
-                };*/
+              
                 var options: PopupOptions = {
                     x: $button1.offset().left,
                     y: 0,
