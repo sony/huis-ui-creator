@@ -114,6 +114,11 @@
     background-size: contain;
 }
 
+.image-item.item.background {
+    position: absolute;
+    z-index: -10;
+}
+
 .image-cover {
     background-size: cover;
 }
