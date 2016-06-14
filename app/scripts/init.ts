@@ -118,16 +118,36 @@ module Garage {
 		HUIS_ROOT_PATH = null;
 		while (!HUIS_ROOT_PATH) {
 			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-			if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
-				//syncWithHUIS(callback);
-                callback();
+            if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
+                let dirs = null;
+                while (dirs == null) {
+                    try {
+                        dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
+                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった
+                        console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
+                        let response = electronDialog.showMessageBox(
+                            {
+                                type: "info",
+                                message: "HUIS の画面の「パソコンと接続」をクリックしてください。\n"
+                                + "[キャンセル] ボタンを押すとアプリケーションは終了します。",
+                                buttons: ["ok", "cancel"]
+                            });
+
+                        if (response !== 0) {
+                            app.exit(0);
+                        }
+                    }
+                }
+
+                callback(); // 次の処理へ
+
 			} else {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
 				let response = electronDialog.showMessageBox(
 					{
 						type: "info",
 						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続してから [OK] ボタンを押してください。\n"
+						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
 						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
 						buttons: ["ok", "cancel"]
                     });
