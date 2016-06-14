@@ -50,6 +50,13 @@ body {
         -ms-user-select: none;
             user-select: none;
  
+
+     //共通ダイアログ
+    .ui-popup-screen.in{
+        background-color:$COLOR_DIALOG_MASK;
+        opacity:1;
+    }
+
     .common-dialog{
         height:$SIZE_DIALOG_HEIGHT;
         width:$SIZE_DIALOG_WIDTH;
