@@ -1110,8 +1110,8 @@ module Garage {
 					$(".property-state-image .property-state-image-preview .property-value[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
-					$("#propery-page-background-image-src input").val("");
-					$("#property-image-preview .property-value").css("background-image", "");
+                    $(".property-value.page-background-src").val("");
+                    $("#property-image-preview").css("background-image", "none");
 					this._updateCurrentModelData("path", "");
 					this._updateCurrentModelData("enabled", false);
 				}
@@ -1503,7 +1503,7 @@ module Garage {
 						case "path":
 							{
 								// 設定された background-image をリセットしておく
-								$target.css("background-image", "");
+								$target.css("background-image", "none");
 
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
@@ -1523,7 +1523,9 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-									$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    }
 								};
 								img.src = resolvedPath;
 
@@ -1583,7 +1585,9 @@ module Garage {
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
 										// プレビュー部分の更新
-										$("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
+                                        if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                            $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
+                                        }
 									};
 									img.src = resolvedOriginalPath;
 								}
