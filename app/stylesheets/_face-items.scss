@@ -114,7 +114,7 @@
     background-size: contain;
 }
 
-.image-item.item.background {
+.image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
     position: absolute;
     z-index: -10;
 }
