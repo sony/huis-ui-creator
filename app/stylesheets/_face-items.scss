@@ -12,6 +12,11 @@
         margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
     }
 
+    .image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
+        position: absolute;
+        z-index: -10;
+    }
+
 }
 
 #face-canvas-inner {
@@ -112,11 +117,6 @@
     background-position:center;
     background-repeat: no-repeat;
     background-size: contain;
-}
-
-.image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
-    position: absolute;
-    z-index: -10;
 }
 
 .image-cover {
