@@ -49,7 +49,55 @@ body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
-  
+ 
+
+     //共通ダイアログ
+    .ui-popup-screen.in{
+        background-color:$COLOR_DIALOG_MASK;
+        opacity:1;
+    }
+
+    .common-dialog{
+        height:$SIZE_DIALOG_HEIGHT;
+        width:$SIZE_DIALOG_WIDTH;
+        color:$COLOR_DIALOG_TEXT;
+        background:$COLOR_DIALOG_BACKGROUND;
+        border-radius:0;
+        border:none;
+        max-width:none;
+        box-shadow:none;
+        -webkit-box-shadow:none;
+
+        .spinner-dialog{
+            height:$SIZE_DIALOG_HEIGHT;
+            padding:0;
+            -webkit-box-pack:inherit;
+
+            p{
+                word-wrap:break-word;
+                font-size:$FONT_WEIGHT_DIALOG_TEXT;
+                width:$SIZE_DIALOG_TEXT_WIDTH;
+                margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
+                margin-left:0px;
+                margin-top:0px;
+                margin-bottom:0px;
+            }
+        }
+
+        #common-dialog-center-spinner{
+            position:relative;
+            height:$SIZE_DIALOG_ICON_HEIHGT;
+            width:$SIZE_DIALOG_ICON_WIDTH;
+            margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image:$PATH_IMG_DIALOG_SPINNER;
+              background-position:center;
+        background-repeat: no-repeat;
+        background-size: contain;
+
+        }
+    }
 
     .ui-page-theme-b{
 
@@ -111,6 +159,7 @@ body {
                 }
             }
 
+            //オプションメニュー
             #option-pulldown-menu{
                 background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
                 margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
@@ -130,11 +179,58 @@ body {
                 &:active{
                     background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
                 }
+            }
+                 
+            //オプションメニューのポップアップ
+            .ui-popup-container{
 
-                .menu-item-text{
+                ul{
+                    -webkit-appearance: none;
+                    list-style-type: none;
+                    -webkit-margin-before: 0;
+                    -webkit-margin-after: 0;
+                    -webkit-margin-start: 0;
+                    -webkit-margin-end: 0;
+                    -webkit-padding-start: 0;
+                }
+
+                #option-pulldown-menu-popup{
+                    margin-top:$SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
+                    width:$SIZE_OPTION_MENU_POPUP_WIDTH;
+                    background-color:$COLOR_OPTION_MENU_POPUP_BACKGROUND;
+                    border:$SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
+                    color:$COLOR_OPTION_MENU_POPUP_TEXT;
+                    font-size:$FONT_SIZE_OPTION_MENU_POPUP_ITEM;
+                    font-weight:$FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
+                    padding-top:$SIZE_OPTION_MENU_POPUP_PADDING_TOP;
+                    padding-bottom:$SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM;
+                    text-shadow:none;
+                    box-shadow:none;
+
+
+                    .menu-item-text{
+                        padding-left:$SIZE_OPTIOM_MENU_POPUP_ITEM_PAdDING_LEFT;
+                        padding-right:$SIZE_OPTIOM_MENU_POPUP_ITEM_PAdDING_RIGHT;
+                        height:$SIZE_OPTION_MENU_POPUP_ITEM_HEIGHT;
+                        display: flex;
+	                    align-items: center;
+
+                        &:hover{
+                            background-color:$COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
+                        }
+
+                        &:active{
+                            background-color:$COLOR_LIGHT_GREEN;
+                        }
+
+                        &:disabled{
+                            opacity:$COLOR_OPTION_MENU_POPUP_TEXT_DISABLED_OPACITY;
+                        }
+                    }
 
                 }
             }
+           
 
           
     }
