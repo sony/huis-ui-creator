@@ -1588,8 +1588,10 @@ module Garage {
                                         if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                             $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
                                         }
-									};
-									img.src = resolvedOriginalPath;
+                                    };
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
 								}
 							}
 							break;
@@ -1893,12 +1895,12 @@ module Garage {
 										top: "0",
 										width: button.area.w + "px",
 										height: button.area.h + "px",
-										backgroundImage: value ? "url(" + value + ")" : ""
+										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
 
 									// 詳細エリアのプレビュー更新
 									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    $preview.css("background-image", "url('" + value + "')");
+                                    $preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
 								break;
@@ -2004,8 +2006,8 @@ module Garage {
 
 				this._updateItemElementOnCanvas(model);
 
-				//// DOM の削除
-				//this.$currentTarget_.remove();
+				// DOM の削除
+				this.$currentTarget_.remove();
 
 				//// model の削除
 				//var moduleId = this._getCurrentCanvasPageModuleId();
