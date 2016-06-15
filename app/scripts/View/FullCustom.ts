@@ -1122,12 +1122,13 @@ module Garage {
 			 */
 			private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
 				let imageFileName = path.basename(imageFilePath);
-				let $propImage = $("#property-image");
-				if (pageBackground) {
-					$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
-				} else {
-					$propImage.find("#propery-image-src>.property-value").val(imageFileName);
-				}
+				//let $propImage = $("#property-image");
+				//if (pageBackground) {
+				//	$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
+				//} else {
+				//	$propImage.find("#propery-image-src>.property-value").val(imageFileName);
+				//}
+
 
 				/* model の更新 */
 
@@ -1155,7 +1156,10 @@ module Garage {
 								"resized": true
 							});
 						});
-				}
+                }
+
+                $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
+
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
 					this._updateCurrentModelData("enabled", true);
