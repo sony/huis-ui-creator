@@ -218,13 +218,13 @@
 
 
         <!-- プレビュー -->
-        <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
+        <div id="property-image-preview" {{#enabled}}style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}"></div>
 
 
 
         <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
+        <input id="refer-image" class="property-value page-background-src" type="text" {{#enabled}}value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
         <button id="delete-background-image">削除</button>
 
 
