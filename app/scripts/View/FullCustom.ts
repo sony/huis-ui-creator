@@ -2654,7 +2654,7 @@ module Garage {
                     // エアコンの場合、HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
                     // もしレンジ外を指している場合はレンジ内の要素をdefaultとして設定し直す
 
-                    var checkedArray: IStateDetail[] = null;
+                    var checkedArray: IStateDetail[] = [];
 
                     if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") {
                         checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
