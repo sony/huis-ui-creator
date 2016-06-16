@@ -2644,10 +2644,25 @@ module Garage {
 				this.currentTargetButtonStates_ = button.state;
                 if (this.currentTargetButtonStates_) {
                     let templateState: Tools.JST = null;
+                    // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
                     if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
                     } else {
                         templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
+                    }
+
+                    // エアコンの場合、HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
+                    // もしレンジ外を指している場合はレンジ内の要素をdefaultとして設定し直す
+
+                    var checkedArray: IStateDetail[] = null;
+
+                    if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") {
+                        checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
+                            return ((button.default == state.id) && ( (state.image[0] != null) || (state.label[0] != null)) );
+                        });
+                    }
+                    if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
+                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
                     }
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {

@@ -659,7 +659,7 @@ module Garage {
 						area: button.area,
 						state: this._normalizeButtonStates(button.state, remoteId)
 					};
-					if (button.default !== undefined) {
+					if (button.default != null) {
 						normalizedButton.default = button.default;
 					}
 					normalizedButtons.push(normalizedButton);
