@@ -2660,9 +2660,10 @@ module Garage {
                         checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
                             return ((button.default == state.id) && ( (state.image[0] != null) || (state.label[0] != null)) );
                         });
-                    }
-                    if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
+                   
+                        if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
+                            button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
+                        }
                     }
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
