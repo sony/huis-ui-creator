@@ -96,8 +96,11 @@ body {
 
      //共通ダイアログ
     .ui-popup-screen.in{
-        background-color:$COLOR_DIALOG_MASK;
-        opacity:1;
+        opacity: $OPACITY_DIALOG_MASK;
+    }
+
+    .ui-overlay-b{
+        background-color:$COLOR_DIALOG_MASK;   
     }
 
     .common-dialog{
