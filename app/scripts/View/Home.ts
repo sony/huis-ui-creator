@@ -121,7 +121,6 @@ module Garage {
 					});
                 });
 
-
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
@@ -133,7 +132,10 @@ module Garage {
                     }
                     this._calculateFaceListWidth();
                 } else {//リモコン数が0のとき導入画面を表示。
-
+                    console.log("numRemotes : " + numRemotes);
+                    //導入画面は初期状態は非表示なのでここで表示する。
+                    var $indtroductionHome = $("#home-introductions");
+                    $indtroductionHome.css("visibility", "visible");
                 }
 
 				
