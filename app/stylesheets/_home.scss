@@ -10,6 +10,18 @@
         visibility:hidden;
         width:100%;
 
+        #home-introduction-vector{
+            position:absolute;
+            top:0;
+            right:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_MARGIN_RIGHT;
+            background-image:$PATH_IMG_HOME_INTRODUCTION_VECTOR;
+            width:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_WIDTH;
+            height:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_HEIGHT;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
         //中央の画像とテキスト
         .center-contents{
             position:relative;
@@ -39,10 +51,6 @@
                 background-size: contain;
             }
         }
-
-        
-
-
     }
 
     .ui-header{
