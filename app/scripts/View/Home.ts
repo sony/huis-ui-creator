@@ -147,8 +147,16 @@ module Garage {
             */
 
             private _renderIntroduction() {
+                var STR_HOME_INTRODUCTION_TEXT_1: string = "HUISを";
+                var STR_HOME_INTRODUCTION_TEXT_2: string = "あなた好み";
+                var STR_HOME_INTRODUCTION_TEXT_3: string = "のデザインに。<br>フルカスタムリモコンを作成しましょう。";
+
                 var $indtroductionHome = $("#home-introductions");
                 $indtroductionHome.css("visibility", "visible");
+                $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
+                $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
+                $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
+
             }
 
 			/**
