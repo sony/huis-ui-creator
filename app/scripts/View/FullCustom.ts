@@ -1110,8 +1110,8 @@ module Garage {
 					$(".property-state-image .property-state-image-preview .property-value[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
-					$("#propery-page-background-image-src input").val("");
-					$("#property-image-preview .property-value").css("background-image", "");
+                    $(".property-value.page-background-src").val("");
+                    $("#property-image-preview").css("background-image", "none");
 					this._updateCurrentModelData("path", "");
 					this._updateCurrentModelData("enabled", false);
 				}
@@ -1122,12 +1122,13 @@ module Garage {
 			 */
 			private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
 				let imageFileName = path.basename(imageFilePath);
-				let $propImage = $("#property-image");
-				if (pageBackground) {
-					$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
-				} else {
-					$propImage.find("#propery-image-src>.property-value").val(imageFileName);
-				}
+				//let $propImage = $("#property-image");
+				//if (pageBackground) {
+				//	$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
+				//} else {
+				//	$propImage.find("#propery-image-src>.property-value").val(imageFileName);
+				//}
+
 
 				/* model の更新 */
 
@@ -1155,7 +1156,10 @@ module Garage {
 								"resized": true
 							});
 						});
-				}
+                }
+
+                $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
+
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
 					this._updateCurrentModelData("enabled", true);
@@ -1503,7 +1507,7 @@ module Garage {
 						case "path":
 							{
 								// 設定された background-image をリセットしておく
-								$target.css("background-image", "");
+								$target.css("background-image", "none");
 
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
@@ -1523,7 +1527,9 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-									$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    }
 								};
 								img.src = resolvedPath;
 
@@ -1583,9 +1589,13 @@ module Garage {
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
 										// プレビュー部分の更新
-										$("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
-									};
-									img.src = resolvedOriginalPath;
+                                        if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                            $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
+                                        }
+                                    };
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
 								}
 							}
 							break;
@@ -1889,12 +1899,12 @@ module Garage {
 										top: "0",
 										width: button.area.w + "px",
 										height: button.area.h + "px",
-										backgroundImage: value ? "url(" + value + ")" : ""
+										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
 
 									// 詳細エリアのプレビュー更新
 									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    $preview.css("background-image", "url('" + value + "')");
+                                    $preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
 								break;
@@ -2000,8 +2010,8 @@ module Garage {
 
 				this._updateItemElementOnCanvas(model);
 
-				//// DOM の削除
-				//this.$currentTarget_.remove();
+				// DOM の削除
+				this.$currentTarget_.remove();
 
 				//// model の削除
 				//var moduleId = this._getCurrentCanvasPageModuleId();
