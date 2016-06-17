@@ -7,6 +7,23 @@
     #home-introductions{
         position:absolute;
         visibility:hidden;
+        width:100%;
+        margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+
+        #home-introduction-texts{
+            margin:0 auto;
+            width:$SIZE_HOME_INTRODUCTION_TEXT_WIDTH;
+            
+            color:$COLOR_HOME_INTRODUCTION_TEXT;
+            text-align:center;
+            font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
+            font-weight:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
+            line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
+
+            .accent{
+                color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
+            }
+        }
     }
 
     .ui-header{
