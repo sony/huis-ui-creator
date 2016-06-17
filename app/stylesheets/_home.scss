@@ -24,6 +24,7 @@
 
         //中央の画像とテキスト
         .center-contents{
+            z-index:1;
             position:relative;
             margin:0 auto;
             margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
