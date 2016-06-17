@@ -105,6 +105,7 @@ module Garage {
 
 			/**
 			 * face リストのレンダリング
+             * リモコンを削除した際にも呼び出してください。 
 			 */
 			private _renderFaceList() {
 				var templateFile = Framework.toUrl("/templates/home.html");
