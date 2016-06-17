@@ -150,8 +150,11 @@
     <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
     <Content Include="app\res\images\icon_guide_arrow.png" />
+    <Content Include="app\res\images\icon_sync.gif" />
+    <Content Include="app\res\images\icon_sync_green.gif" />
     <Content Include="app\res\images\icon_sync_green.png" />
     <Content Include="app\res\images\icon_sync_white.png" />
+    <Content Include="app\res\images\icon_wait.gif" />
     <Content Include="app\res\images\icon_wait.png" />
     <Content Include="app\res\images\img_arrow.png" />
     <Content Include="app\res\images\img_arrow_up.png" />

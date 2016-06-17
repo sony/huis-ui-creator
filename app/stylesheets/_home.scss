@@ -106,6 +106,10 @@
                     margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
                     margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
                     padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                    .button-item{
+                        border:none;
+                    }
                 }
 
                 .module-container {

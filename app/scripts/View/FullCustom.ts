@@ -225,8 +225,8 @@ module Garage {
                 });
 
 				/* 詳細編集部分 */
-                //詳細編集エリアのY座標は、キャンバスエリアから、112px
-                let PROPATY_AREA_MARGIN_RIGHT = 112;
+                //詳細編集エリアのY座標は、キャンバスエリアから、100px
+                let PROPATY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
                 console.log("detailWidth : " + detailWidth);
@@ -236,8 +236,8 @@ module Garage {
                     left: detailLeft + "px",
                 });
 
-                //パレットエリアのY座標は、キャンバスエリアから、56px
-                let PALLET_AREA_MARGIN_LRFT = 56;
+                //パレットエリアのY座標は、キャンバスエリアから、44px
+                let PALLET_AREA_MARGIN_LRFT = 44;
                 let palletAreaLeft = faceCanvasAreaLeft + faceCanvasAreaWidth + PALLET_AREA_MARGIN_LRFT; 
 				/* パレットエリア */
 				$("#face-pallet-area").css({
