@@ -250,7 +250,7 @@ module Garage {
 				huisFiles.updateRemoteList();
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
-					syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
+					syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
