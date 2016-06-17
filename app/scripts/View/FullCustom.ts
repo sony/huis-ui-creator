@@ -2663,12 +2663,13 @@ module Garage {
                         templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
                     }
 
-                    // エアコンの場合、HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
-                    // もしレンジ外を指している場合はレンジ内の要素をdefaultとして設定し直す
+                    // HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
+                    // もしレンジ外を指している場合はレンジ内の最初に見つかった要素をdefaultとして一時的に設定し直す
+                    // HUIS本体のデータ異常は解消されるわけではないので要注意
 
                     var checkedArray: IStateDetail[] = [];
 
-                    if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") {
+                    if (button.deviceInfo) {
                         checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
                             return ((button.default == state.id) && ( (state.image[0] != null) || (state.label[0] != null)) );
                         });
