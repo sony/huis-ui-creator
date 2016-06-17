@@ -225,26 +225,28 @@
 				 * 
 				 * @return {IProgress}
 				 */
-				exec(srcRootDir: string, destRootDir: string, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
+				exec(srcRootDir: string, destRootDir: string, useDialog : Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
 
-					if (dialogProps) {
-						let id = dialogProps.id;
-						let options = dialogProps.options;
-						let dialogTitle: string;
-						if (options && options.title) {
-							dialogTitle = options.title;
-						} else {
-							dialogTitle = "同期中です。";
-						}
-						dialog = new CDP.UI.Dialog(dialogProps.id, {
-							src: CDP.Framework.toUrl("/templates/dialogs.html"),
-							title: dialogTitle,
-						});
-						console.log("sync.exec dialog.show()");
-						dialog.show().css("color", "white");
-					}
+                    if (useDialog) {
+                        if (dialogProps) {
+                            let id = dialogProps.id;
+                            let options = dialogProps.options;
+                            let dialogTitle: string;
+                            if (options && options.title) {
+                                dialogTitle = options.title;
+                            } else {
+                                dialogTitle = "同期中です。";
+                            }
+                            dialog = new CDP.UI.Dialog(dialogProps.id, {
+                                src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                                title: dialogTitle,
+                            });
+                            console.log("sync.exec dialog.show()");
+                            dialog.show().css("color", "white");
+                        }
+                    }
 
 					setTimeout(() => {
 						this._syncHuisFiles(srcRootDir, destRootDir, (err) => {

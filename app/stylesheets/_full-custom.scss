@@ -78,10 +78,17 @@
                         border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
                         margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
+                        background-color:$COLOR_CANVAS_SELECTED_ITEM_BACKGROUND;
                     }
+
+                    &:hover{
+                        background-color:$COLOR_CANVAS_ITEM_HOVER;
+                    }
+
                     &.disabled {
                         display: none;
                     }
+
                     &.background {
                         cursor: default;
                     }
@@ -434,7 +441,7 @@
                 max-height : $SIZE_FACE_PAGE_AREA_HEIGHT;
                 padding-left:$SIZE_FACE_PAGE_AREA_PADDING_LEFT;
                 padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
-
+                padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
                 background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
                 border : $SIZE_FACE_PAGES_AREA_BORDER_THICKNESS solid $COLOR_FACE_PAGES_AREA_BOARDER;
 
@@ -442,7 +449,12 @@
 
                 .button-item{
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
-                    }
+                }
+
+                .face-page{
+                    padding-top:$SIZE_FACE_PAGE_AREA_PADDING_TOP;
+                    padding-bottom:$SIZE_FACE_PAGE_AREA_PADDING_BOTTOM;
+                }
 
                 .item {
                     
@@ -451,16 +463,8 @@
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
                     }
                 }
-
-             
-
-
             }
-
-            
         }
-
-
     }
 
     input, select, button {

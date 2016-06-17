@@ -105,6 +105,7 @@ module Garage {
 
 			/**
 			 * face リストのレンダリング
+             * リモコンを削除した際にも呼び出してください。 
 			 */
 			private _renderFaceList() {
 				var templateFile = Framework.toUrl("/templates/home.html");
@@ -119,16 +120,44 @@ module Garage {
 						remoteId: face.remoteId,
 						name: face.name
 					});
-				});
+                });
 
-				var $faceList = $("#face-list");
-				$faceList.append($(faceItemTemplate({ faceList: faceList })));
-				var elems: any = $faceList.children();
-				for (let i = 0, l = elems.length; i < l; i++) {
-					this._renderFace($(elems[i]));
-				}
-				this._calculateFaceListWidth();
+                var numRemotes:number = faces.length;//ホームに出現するリモコン数
+
+                if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
+                    var $faceList = $("#face-list");
+                    $faceList.append($(faceItemTemplate({ faceList: faceList })));
+                    var elems: any = $faceList.children();
+                    for (let i = 0, l = elems.length; i < l; i++) {
+                        this._renderFace($(elems[i]));
+                    }
+                    this._calculateFaceListWidth();
+                } else {//リモコン数が0のとき導入画面を表示。
+                    console.log("numRemotes : " + numRemotes);
+                    //導入画面は初期状態は非表示なのでここで表示する。
+                    this._renderIntroduction();
+                }
+
+				
 			}
+
+
+            /*
+            *　導入画面をレンダリング
+            */
+
+            private _renderIntroduction() {
+                var STR_HOME_INTRODUCTION_TEXT_1: string = "HUISを";
+                var STR_HOME_INTRODUCTION_TEXT_2: string = "あなた好み";
+                var STR_HOME_INTRODUCTION_TEXT_3: string = "のデザインに。<br>フルカスタムリモコンを作成しましょう。";
+
+                var $indtroductionHome = $("#home-introductions");
+                $indtroductionHome.css("visibility", "visible");
+                $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
+                $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
+                $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
+
+            }
 
 			/**
 			 * 編集した face のヒストリーをレンダリング
@@ -250,7 +279,7 @@ module Garage {
 				huisFiles.updateRemoteList();
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
-					syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
+					syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({

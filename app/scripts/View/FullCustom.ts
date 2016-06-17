@@ -159,6 +159,8 @@ module Garage {
                     "click #button-edit-done": "onEditDoneButtonClicked",
                     // 戻るボタン
                     "click #button-edit-back": "onBackButtonClicked",
+                    // ショートカットキー
+                    "keydown": "_onKeyDown",
                     // プルダウンメニュー
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
@@ -225,8 +227,8 @@ module Garage {
                 });
 
 				/* 詳細編集部分 */
-                //詳細編集エリアのY座標は、キャンバスエリアから、112px
-                let PROPATY_AREA_MARGIN_RIGHT = 112;
+                //詳細編集エリアのY座標
+                let PROPATY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
                 console.log("detailWidth : " + detailWidth);
@@ -236,8 +238,8 @@ module Garage {
                     left: detailLeft + "px",
                 });
 
-                //パレットエリアのY座標は、キャンバスエリアから、56px
-                let PALLET_AREA_MARGIN_LRFT = 56;
+                //パレットエリアのY座標
+                let PALLET_AREA_MARGIN_LRFT = 44;
                 let palletAreaLeft = faceCanvasAreaLeft + faceCanvasAreaWidth + PALLET_AREA_MARGIN_LRFT; 
 				/* パレットエリア */
 				$("#face-pallet-area").css({
@@ -1110,8 +1112,8 @@ module Garage {
 					$(".property-state-image .property-state-image-preview .property-value[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
-					$("#propery-page-background-image-src input").val("");
-					$("#property-image-preview .property-value").css("background-image", "");
+                    $(".property-value.page-background-src").val("");
+                    $("#property-image-preview").css("background-image", "none");
 					this._updateCurrentModelData("path", "");
 					this._updateCurrentModelData("enabled", false);
 				}
@@ -1122,12 +1124,13 @@ module Garage {
 			 */
 			private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
 				let imageFileName = path.basename(imageFilePath);
-				let $propImage = $("#property-image");
-				if (pageBackground) {
-					$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
-				} else {
-					$propImage.find("#propery-image-src>.property-value").val(imageFileName);
-				}
+				//let $propImage = $("#property-image");
+				//if (pageBackground) {
+				//	$propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
+				//} else {
+				//	$propImage.find("#propery-image-src>.property-value").val(imageFileName);
+				//}
+
 
 				/* model の更新 */
 
@@ -1155,7 +1158,10 @@ module Garage {
 								"resized": true
 							});
 						});
-				}
+                }
+
+                $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
+
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
 					this._updateCurrentModelData("enabled", true);
@@ -1342,7 +1348,7 @@ module Garage {
 										garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
 										if (HUIS_ROOT_PATH) {
 											let syncTask = new Util.HuisDev.FileSyncTask();
-											let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
+											let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
 												if (err) {
 													// [TODO] エラー値のハンドリング
 													electronDialog.showMessageBox({
@@ -1503,7 +1509,7 @@ module Garage {
 						case "path":
 							{
 								// 設定された background-image をリセットしておく
-								$target.css("background-image", "");
+								$target.css("background-image", "none");
 
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
@@ -1523,7 +1529,9 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-									$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
+                                    }
 								};
 								img.src = resolvedPath;
 
@@ -1583,9 +1591,13 @@ module Garage {
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
 										// プレビュー部分の更新
-										$("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
-									};
-									img.src = resolvedOriginalPath;
+                                        if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                            $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
+                                        }
+                                    };
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
 								}
 							}
 							break;
@@ -1889,12 +1901,12 @@ module Garage {
 										top: "0",
 										width: button.area.w + "px",
 										height: button.area.h + "px",
-										backgroundImage: value ? "url(" + value + ")" : ""
+										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
 
 									// 詳細エリアのプレビュー更新
 									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    $preview.css("background-image", "url('" + value + "')");
+                                    $preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
 								break;
@@ -2000,7 +2012,7 @@ module Garage {
 
 				this._updateItemElementOnCanvas(model);
 
-				//// DOM の削除
+				// DOM の削除
 				//this.$currentTarget_.remove();
 
 				//// model の削除
@@ -2925,6 +2937,29 @@ module Garage {
                 var shell = require('electron').shell;
                 shell.openExternal(HELP_SITE_URL);
                 return;
+            }
+
+            private _onKeyDown(event: JQueryEventObject) {
+                console.log("_onKeyDown : " + event.keyCode);
+                console.log("_onKeyDown : " + this.$currentTarget_);
+
+                if (this.$currentTarget_) {
+                    switch (event.keyCode) {
+                        case 8: // BS
+                        case 46: // DEL
+                            this._deleteCurrentTargetItem();
+                            break;
+                        case 90: // z
+                            if (event.ctrlKey) {
+                                var targetModel = this.commandManager_.undo();
+                                this._updateItemElementOnCanvas(targetModel);
+                                // 現在のターゲットを外す
+                                this._loseTarget();
+                            }
+                        default:
+                            break;
+                    }
+                }
             }
 
 		}
