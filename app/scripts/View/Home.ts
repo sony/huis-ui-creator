@@ -119,15 +119,24 @@ module Garage {
 						remoteId: face.remoteId,
 						name: face.name
 					});
-				});
+                });
 
-				var $faceList = $("#face-list");
-				$faceList.append($(faceItemTemplate({ faceList: faceList })));
-				var elems: any = $faceList.children();
-				for (let i = 0, l = elems.length; i < l; i++) {
-					this._renderFace($(elems[i]));
-				}
-				this._calculateFaceListWidth();
+
+                var numRemotes:number = faces.length;//ホームに出現するリモコン数
+
+                if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
+                    var $faceList = $("#face-list");
+                    $faceList.append($(faceItemTemplate({ faceList: faceList })));
+                    var elems: any = $faceList.children();
+                    for (let i = 0, l = elems.length; i < l; i++) {
+                        this._renderFace($(elems[i]));
+                    }
+                    this._calculateFaceListWidth();
+                } else {//リモコン数が0のとき導入画面を表示。
+
+                }
+
+				
 			}
 
 			/**
