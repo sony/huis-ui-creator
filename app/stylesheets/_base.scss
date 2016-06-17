@@ -55,15 +55,28 @@ body {
 
     ::-webkit-scrollbar {
         &:horizontal{
-            height: 20px;
+            height: $SIZE_SCROLL_BAR_WHOLE_HEIGHT;
         }
 
         &:vertical{
-            width:20px;
+            width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH;
         }
         background:none;
     }
-    
+
+    #face-canvas,#face-pallet, #face-list{     
+        ::-webkit-scrollbar{
+            //スケールが1/2なので２倍に
+            width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
+        }
+        ::-webkit-scrollbar-thumb {
+            &:vertical{
+                border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
+            }
+        }
+        //overflow :overlay;
+    }
+
     //矢印ボタンを非表示に。
     ::-webkit-scrollbar-button:no-button{
     }
