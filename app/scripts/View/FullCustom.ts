@@ -225,7 +225,7 @@ module Garage {
                 });
 
 				/* 詳細編集部分 */
-                //詳細編集エリアのY座標は、キャンバスエリアから、100px
+                //詳細編集エリアのY座標
                 let PROPATY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
@@ -236,7 +236,7 @@ module Garage {
                     left: detailLeft + "px",
                 });
 
-                //パレットエリアのY座標は、キャンバスエリアから、44px
+                //パレットエリアのY座標
                 let PALLET_AREA_MARGIN_LRFT = 44;
                 let palletAreaLeft = faceCanvasAreaLeft + faceCanvasAreaWidth + PALLET_AREA_MARGIN_LRFT; 
 				/* パレットエリア */
