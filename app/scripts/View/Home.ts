@@ -134,12 +134,21 @@ module Garage {
                 } else {//リモコン数が0のとき導入画面を表示。
                     console.log("numRemotes : " + numRemotes);
                     //導入画面は初期状態は非表示なのでここで表示する。
-                    var $indtroductionHome = $("#home-introductions");
-                    $indtroductionHome.css("visibility", "visible");
+                    this._renderIntroduction();
                 }
 
 				
 			}
+
+
+            /*
+            *　導入画面をレンダリング
+            */
+
+            private _renderIntroduction() {
+                var $indtroductionHome = $("#home-introductions");
+                $indtroductionHome.css("visibility", "visible");
+            }
 
 			/**
 			 * 編集した face のヒストリーをレンダリング
