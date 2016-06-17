@@ -51,6 +51,49 @@ body {
             user-select: none;
  
 
+    //スクロールバー
+
+    ::-webkit-scrollbar {
+        &:horizontal{
+            height: 20px;
+        }
+
+        &:vertical{
+            width:20px;
+        }
+        background:none;
+    }
+    
+    //矢印ボタンを非表示に。
+    ::-webkit-scrollbar-button:no-button{
+    }
+
+    //スクロールバーのクリック可能エリア
+    ::-webkit-scrollbar-thumb {
+        &:hover{
+            background-color: $COLOR_SCROLL_BAR_HOVER;
+        }
+
+        &:active{
+            background-color: $COLOR_SCROLL_BAR_PRESSED;
+        }
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: $COLOR_SCROLL_BAR_NORMAL;
+        background-clip: padding-box;
+
+        &:horizontal{
+            border-bottom : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_TOP solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-top : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_BOTTOM solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+        }
+
+        &:vertical{
+            border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+        }
+    }
+    
+
      //共通ダイアログ
     .ui-popup-screen.in{
         background-color:$COLOR_DIALOG_MASK;
