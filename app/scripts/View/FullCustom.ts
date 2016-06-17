@@ -159,6 +159,8 @@ module Garage {
                     "click #button-edit-done": "onEditDoneButtonClicked",
                     // 戻るボタン
                     "click #button-edit-back": "onBackButtonClicked",
+                    // ショートカットキー
+                    "keydown": "_onKeyDown",
                     // プルダウンメニュー
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
@@ -2011,7 +2013,7 @@ module Garage {
 				this._updateItemElementOnCanvas(model);
 
 				// DOM の削除
-				this.$currentTarget_.remove();
+				//this.$currentTarget_.remove();
 
 				//// model の削除
 				//var moduleId = this._getCurrentCanvasPageModuleId();
@@ -2919,6 +2921,29 @@ module Garage {
                 var shell = require('electron').shell;
                 shell.openExternal(HELP_SITE_URL);
                 return;
+            }
+
+            private _onKeyDown(event: JQueryEventObject) {
+                console.log("_onKeyDown : " + event.keyCode);
+                console.log("_onKeyDown : " + this.$currentTarget_);
+
+                if (this.$currentTarget_) {
+                    switch (event.keyCode) {
+                        case 8: // BS
+                        case 46: // DEL
+                            this._deleteCurrentTargetItem();
+                            break;
+                        case 90: // z
+                            if (event.ctrlKey) {
+                                var targetModel = this.commandManager_.undo();
+                                this._updateItemElementOnCanvas(targetModel);
+                                // 現在のターゲットを外す
+                                this._loseTarget();
+                            }
+                        default:
+                            break;
+                    }
+                }
             }
 
 		}
