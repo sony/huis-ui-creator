@@ -159,6 +159,8 @@ body {
     }
 
     .ui-page-theme-b{
+
+        //共通のテキストボタン
           .ui-btn{
                 font-family:$FONT_FAMILY_COMMON_CONBINED;
 
@@ -300,6 +302,7 @@ body {
             z-index: 2;
         }
 
+        //共通のテキストフィールド
         input[type="text"]{
             height:$SIZE_FORM_HEIGHT;
             background-color:$COLOR_FORM_BACKGROUND;
@@ -321,6 +324,7 @@ body {
             }            
         }
 
+        //共通のプルダウンメニュー
         select{
            -webkit-appearance: none;
            font-size:$FONT_SIZE_PULL_DOWM_MENU;
