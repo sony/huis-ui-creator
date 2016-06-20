@@ -306,6 +306,8 @@ body {
         //共通のテキストフィールド
         input[type="text"]{
             font-family:$FONT_FAMILY_COMMON_CONBINED;
+            font-weight
+                :$FONT_FAMILY_TEXT_BUTTON;
             height:$SIZE_FORM_HEIGHT;
             background-color:$COLOR_FORM_BACKGROUND;
             box-sizing:border-box;
