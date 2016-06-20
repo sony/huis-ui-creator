@@ -3,7 +3,7 @@
 #page-splash {
     position: relative;
     background-color: $COLOR_SPLASH_BACKGROUND;
-
+    
     #huis-logo-image{
         width:$SIZE_SPLASH_LOGO_WIDHT;
         height:$SIZE_SPLASH_LOGO_HEIHGT;
@@ -30,7 +30,7 @@
     #splash-message {
         text-shadow:none;
         font-size:$FONT_SIZE_SPLASH_MESSAGE;
-        font-family:$FONT_FAMILY_LIGHT;
+        font-weight:$FONT_FAMILY_LIGHT;
         line-height:$TEXT_HEIGHT_DEFAULT;
         text-align:center;
         margin:0 auto;
