@@ -353,6 +353,8 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     cursor: pointer;
+                    text-shadow: none;
+
                     
                     &:hover {
                         background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
