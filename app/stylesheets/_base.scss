@@ -298,12 +298,14 @@ body {
     }
 
     article {
+
         .ui-btn, .ui-slider {
             z-index: 2;
         }
 
         //共通のテキストフィールド
         input[type="text"]{
+            font-family:$FONT_FAMILY_COMMON_CONBINED;
             height:$SIZE_FORM_HEIGHT;
             background-color:$COLOR_FORM_BACKGROUND;
             box-sizing:border-box;
