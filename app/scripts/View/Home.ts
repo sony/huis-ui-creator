@@ -19,7 +19,8 @@ module Garage {
 			private contextMenu_: any;
 			private rightClickPosition_: { x: number; y: number };
 
-			private HISTORY_COUNT = 5;
+            private HISTORY_COUNT = 5;
+            private selectedRemote: any = null;
 
 			/**
 			 * construnctor
@@ -71,6 +72,8 @@ module Garage {
 					"click #create-new-remote": "_onCreateNewRemote",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
+                    // ショートカットキー
+                    "keydown": "_onKeyDown",
 					// コンテキストメニュー
                     "contextmenu": "_onContextMenu",
                     // プルダウンメニューのリスト
@@ -103,7 +106,7 @@ module Garage {
                 this.contextMenu_ = new Menu();
 			}
 
-			/**
+            /**
 			 * face リストのレンダリング
              * リモコンを削除した際にも呼び出してください。 
 			 */
@@ -126,6 +129,7 @@ module Garage {
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
                     var $faceList = $("#face-list");
+                    $faceList.empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
@@ -159,46 +163,6 @@ module Garage {
 
             }
 
-			/**
-			 * 編集した face のヒストリーをレンダリング
-			 */
-			private _renderFaceHistory() {
-				var templateFile = Framework.toUrl("/templates/home.html");
-				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
-
-				// deviceId は暫定
-				var deviceId = "dev";
-				var faceHistory = garageFiles.getHistoryOfEditedFaces(deviceId);
-				if (!faceHistory) {
-					return;
-				}
-
-				var faces: IGFace[] = [];
-				faceHistory.forEach((remoteId, index) => {
-					let face: IGFace = huisFiles.getFace(remoteId.remote_id);
-					if (face && index < this.HISTORY_COUNT) {
-						faces.push(face);
-					}
-				});
-
-				var faceList: { remoteId: string, name: string }[] = [];
-				faces.forEach((face: IGFace) => {
-					faceList.push({
-						remoteId: face.remoteId,
-						name: face.name
-					});
-				});
-
-				var $faceHistoryList = $("#face-history-list");
-				$faceHistoryList.append($(faceItemTemplate({ faceList: faceList })));
-				var elems: JQuery = $faceHistoryList.children();
-				var list_width = 0;
-				for (let i = 0, l = elems.length; i < l && i < this.HISTORY_COUNT; i++) {
-					this._renderFace($(elems[i]));
-					list_width += $(elems[i]).outerWidth(true);
-				}
-				$faceHistoryList.width(list_width);
-			}
 
 			private _renderFace($face: JQuery): void {
 				var remoteId = $face.attr("data-remoteId");
@@ -215,30 +179,23 @@ module Garage {
 				});
 				faceRenderer.render();
 
-                /*
-				// サイズを調整
-				let $faceContainer = $face.find(".face-container");
-				let $faceCanvas = $face.find("#face-pages-area");
-				//let adjustedHeightRate = $face.height() / $faceCanvas.innerHeight();
-                
-				let adjustedWidthRate = $face.width() / $faceCanvas.innerWidth();
-				$faceCanvas.css({
-					"transform": "scale(" + adjustedWidthRate + ")",
-					"transform-origin": "left top",
-				});
-				let adjsutedFaceHeight = $faceCanvas.innerHeight() * adjustedWidthRate;
-				$faceContainer.width($face.width());
-				$faceContainer.height(adjsutedFaceHeight);
-                */
-
-				// クリックしたら編集画面への遷移できるようにする
-                $face.find(".face-container").on("click", (event) => {
+				// ダブルクリックしたら編集画面への遷移できるようにする
+                $face.find(".face-container").on("dblclick", (event) => {
 					let $clickedFace = $(event.currentTarget);
                     let remoteId = $clickedFace.data("remoteid");
 					if (remoteId) {
 						Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
 					}
-				});
+                });
+                // シングルクリックしたら「選択状態」になる
+                $face.find(".face-container").on("click", (event) => {
+                    let $clickedFace = $(event.currentTarget);
+                    $clickedFace.css("border", "solid 10px #ccc");
+                    //let remoteId = $clickedFace.data("remoteid");
+                    //if (remoteId) {
+                    //    Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
+                    //}
+                });
 			}
 
 			private _onHeaderDblClick() {
@@ -363,8 +320,16 @@ module Garage {
 					if (remoteId) {
 						this.contextMenu_.append(new MenuItem({
 							label: "このリモコン (" + remoteId + ") を削除",
-							click: () => {
-								this._removeFace(remoteId);
+                            click: () => {
+                                var response = electronDialog.showMessageBox({
+                                    type: "info",
+                                    message: "リモコンを削除すると元に戻せません。削除しますか？",
+                                    buttons: ["yes", "no"]
+                                });
+                                if (response === 0) {
+                                    this._removeFace(remoteId);
+                                    this._renderFaceList();
+                                }
 							}
 						}));
 					}
@@ -403,11 +368,37 @@ module Garage {
 			}
 
 			private _removeFace(remoteId: string) {
-				huisFiles.removeFace(remoteId);
+                huisFiles.removeFace(remoteId);
+                huisFiles.updateRemoteList()
+                huisFiles.init(HUIS_FILES_ROOT);
 				$(".face[data-remoteid=" + remoteId + "]").remove();
 				this._calculateFaceListWidth();
-			}
+            }
 
+            private _onKeyDown(event: JQueryEventObject) {
+                console.log("_onKeyDown : " + event.keyCode);
+
+                switch (event.keyCode) {
+                    case 8: // BS
+                    case 46: // DEL
+                        var element = document.elementFromPoint(event.pageX, event.pageY);
+                        var $face = $(element).parents("#face-list .face");
+                        if ($face.length) {
+                            let remoteId = $face.data("remoteid");
+                            if (remoteId) {
+                                this.contextMenu_.append(new MenuItem({
+                                    label: "このリモコン (" + remoteId + ") を削除",
+                                    click: () => {
+                                        this._removeFace(remoteId);
+                                    }
+                                }));
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
 		}
 
 		var View = new Home();
