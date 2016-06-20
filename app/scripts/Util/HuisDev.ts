@@ -225,7 +225,7 @@
 				 * 
 				 * @return {IProgress}
 				 */
-				exec(srcRootDir: string, destRootDir: string, useDialog : Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
                     var errorValue: Error= null; 
@@ -257,30 +257,28 @@
                             }
 
                             if (useDialog) { //ダイアログを使う際は,完了ダイアログを表示。
+                                var DURATION_DIALOG: number = 3000;//完了ダイアログの出現時間
+
                                 // ダイアログが閉じられたら、コールバックを呼び出し終了
-                                var $dialog = $(".spinner-dialog");
-                                var $spinner = $("#common-dialog-center-spinner");
-                                var PATH_DONE_IMAGE = 'url("../res/images/icon_done.png")';
-                                var DONE_MESSAGE = "HUISとの同期が完了しました。";
-                                var DURATION_DIALOG_SHOW = 2000; //完了ダイアログの出現期間
-
-                                //アイコンが回転しないようにする。
-                                $spinner.removeClass("spinner");
-                                //アイコンの見た目を変える。
-                                $spinner.css("background-image", PATH_DONE_IMAGE);
-
-                                //メッセージを変える
-                                $dialog.find("p").html(DONE_MESSAGE);
+                                if (dialogProps.options.anotherOption.title && dialogProps.id === "#common-dialog-spinner") {//スピナーダイアログの場合
+                                    var $dialog = $(".spinner-dialog");
+                                    var $spinner = $("#common-dialog-center-spinner");
+                        
+                                    $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                                    if (dialogProps.options.anotherOption.src) {//アイコンの見た目を変える。
+                                        $spinner.css("background-image", dialogProps.options.anotherOption.src);
+                                    }
+                                    if (dialogProps.options.anotherOption.title) {//メッセージを変える
+                                        $dialog.find("p").html(dialogProps.options.anotherOption.title);
+                                    }
+                                }
 
                                 setTimeout(() => {
-
                                     if (dialog) {
                                         dialog.close();
                                     }
-
                                     callback(err)
-
-                                }, DURATION_DIALOG_SHOW);
+                                }, DURATION_DIALOG);
                             } else {//ダイアログを使わない際は、そのまま終了。
                                 if (dialog) {
                                     dialog.close();
