@@ -328,9 +328,10 @@ body {
 
         //共通のプルダウンメニュー
         select{
+           font-family:$FONT_FAMILY_COMMON_CONBINED;
            -webkit-appearance: none;
            font-size:$FONT_SIZE_PULL_DOWM_MENU;
-           font-family:$FONT_FAMILY_PULL_DOWM_MENU;
+           font-weight:$FONT_FAMILY_PULL_DOWM_MENU;
            background:$COLOR_PULL_DOWM_BACKGROUMD;
            padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
            padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
