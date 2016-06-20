@@ -35,9 +35,9 @@
         border: 0;
         border:solid 1px #ccc;
         border-radius: 3px;
-        font-size: 32px;
+        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
+        font-weight:$FONT_WEIGHT_BUTTON_ITEM;
         text-align:center;
-        font-family: "Noto Sans CJK JP","SST W55";
         margin: 12px 0;
         height: 56px;
         box-sizing: border-box;
@@ -85,9 +85,7 @@
     height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
     right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
     bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
-    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;
-    font-family: "Noto Sans CJK JP","SST W55";
-    
+    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
 }
 
 .button-item {
@@ -102,6 +100,14 @@
     vertical-align: middle;
     text-overflow: ellipsis;
     text-shadow: none;
+}
+
+.label-item{
+    font-weight:$FONT_WEIGHT_LABEL_ITEM;
+}
+
+.state-label {
+    font-weight:$FONT_WEIGHT_BUTTON_ITEM;
 }
 
 .label-value,
