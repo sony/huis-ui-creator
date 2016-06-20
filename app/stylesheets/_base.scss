@@ -45,8 +45,11 @@
 
 body {
     height: 100%;
-    font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
+    //font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
+    //font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
     font-weight:$FONT_FAMILY_COMMON;
+    line-height:$FONT_HEIGHT_COMMON;
+    color:$COLOR_TEXT_COMMON;
     text-shadow: none;
     overflow: auto;
     -webkit-text-size-adjust: 100%;
