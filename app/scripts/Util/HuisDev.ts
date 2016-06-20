@@ -228,7 +228,7 @@
 				exec(srcRootDir: string, destRootDir: string, useDialog : Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
-
+                    var errorValue: Error= null; 
                     if (useDialog) {
                         if (dialogProps) {
                             let id = dialogProps.id;
@@ -244,7 +244,13 @@
                                 title: dialogTitle,
                             });
                             console.log("sync.exec dialog.show()");
-                            dialog.show().css("color", "white");
+                            dialog.show().css("color", "white").on("popupafterclose", (event: JQueryEventObject) => {
+                                // ダイアログが閉じられたら、コールバックを呼び出し終了
+                                if (callback) {
+                                    callback(errorValue);
+                                }
+                            });
+
                         }
                     }
 
@@ -255,14 +261,21 @@
 							} else {
 								console.log(TAG + "_syncHuisFiles Complete!!!");
 							}
-							if (dialog) {
-								dialog.close();
-							}
-							callback(err);
+                            if (dialog) {
+                                dialog.close();
+                            }
+                            errorValue = err;
+                            if (!useDialog){//ダイアログを使わないときは、ダイアログを閉じるのを待たずにコールバックを呼び出す。
+                                callback(errorValue)
+                            }
+							//callback(err);
 						});
 					}, 100);
 					return { cancel: this._cancel };
 				}
+
+          
+
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数
 				// TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
@@ -458,6 +471,8 @@
 						});
 				});
 			}
+
+
 
 			/**
 			 * ふたつのディレクトリーに差分があるかチェック
