@@ -134,7 +134,8 @@ body {
 
             p{
                 word-wrap:break-word;
-                font-size:$FONT_WEIGHT_DIALOG_TEXT;
+                font-size:$FONT_SIZE_DIALOG_TEXT;
+                font-weight:$FONT_WEIGHT_DIALOG_TEXT;
                 width:$SIZE_DIALOG_TEXT_WIDTH;
                 margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
                 margin-left:0px;
