@@ -4,22 +4,22 @@
 @font-face {
   font-family: $FONT_FAMILY_COMMON_SST;
   font-weight: $FONT_FAMILY_NORMAL;
-  src: url(../res/fonts/regular/8804b8af-432e-44cc-8a34-eda854e2da36.eot); // For IE
-  src: url(../res/fonts/regular/SSTJpPro-Regular.otf) format('opentype');
+  src: $PATH_FONT_SST_NORMAL_IE; // For IE
+  src: $PATH_FONT_SST_NORMAL;
 }
 
 @font-face {
   font-family: $FONT_FAMILY_COMMON_SST;
   font-weight: $FONT_FAMILY_BOLD;
-  src: url(../res/fonts/bold/5a23571a-930f-4cf7-a194-6bdb9afd30d4.eot); // For IE
-  src: url(../res/fonts/bold/SSTJpPro-Bold.otf) format('opentype');
+  src: $PATH_FONT_SST_BOLD_IE; // For IE
+  src: $PATH_FONT_SST_BOLD;
 }
 
 @font-face {
   font-family: $FONT_FAMILY_COMMON_SST;
   font-weight: $FONT_FAMILY_LIGHT;
-  src: url(../res/fonts/light/5a23571a-930f-4cf7-a194-6bdb9afd30d4.eot); // For IE
-  src: url(../res/fonts/light/SSTJpPro-Light.otf) format('opentype');
+  src: $PATH_FONT_SST_LIGHT_IE; // For IE
+  src: $PATH_FONT_SST_LIGHT;
 }
 
 /*
@@ -29,19 +29,19 @@
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
     font-weight: $FONT_FAMILY_LIGHT;
-    src: url(../res/fonts/NotoSansCJKjp-Light-subset.otf) format('opentype');
+    src: $PATH_FONT_NOTO_LIGHT;
 }
 
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
     font-weight: $FONT_FAMILY_NORMAL;
-    src: url(../res/fonts/NotoSansCJKjp-Regular-subset.otf) format('opentype');
+    src: $PATH_FONT_NOTO_NORMAL;
 }
 
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
     font-weight: $FONT_FAMILY_BOLD;
-    src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
+    src: $PATH_FONT_NOTO_BOLD;
 }
 
 body {
