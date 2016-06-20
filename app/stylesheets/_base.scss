@@ -28,19 +28,19 @@
  */
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: lighter;
+    font-weight: $FONT_FAMILY_LIGHT;
     src: url(../res/fonts/NotoSansCJKjp-Light-subset.otf) format('opentype');
 }
 
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: normal;
+    font-weight: $FONT_FAMILY_NORMAL;
     src: url(../res/fonts/NotoSansCJKjp-Regular-subset.otf) format('opentype');
 }
 
 @font-face {
     font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: bold;
+    font-weight: $FONT_FAMILY_BOLD;
     src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
 }
 
@@ -116,6 +116,7 @@ body {
     }
 
     .common-dialog{
+        font-family:$FONT_FAMILY_COMMON_CONBINED;
         height:$SIZE_DIALOG_HEIGHT;
         width:$SIZE_DIALOG_WIDTH;
         color:$COLOR_DIALOG_TEXT;
