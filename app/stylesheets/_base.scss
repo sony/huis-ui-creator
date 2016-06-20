@@ -61,13 +61,15 @@ body {
         &:vertical{
             width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH;
         }
-        background:none;
+        background:$COLOR_TRANSPARENT;
     }
 
-    #face-canvas,#face-pallet, #face-list{     
+    #face-canvas, #face-pallet, #face-list{     
         ::-webkit-scrollbar{
-            //ÉXÉPÅ[ÉãÇ™1/2Ç»ÇÃÇ≈ÇQî{Ç…
-            width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
+            &:vertical{
+                //ÉXÉPÅ[ÉãÇ™1/2Ç»ÇÃÇ≈ÇQî{Ç…
+                width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
+            }
         }
         ::-webkit-scrollbar-thumb {
             &:vertical{
