@@ -1,5 +1,6 @@
 @import "variables/variable";
 
+
 @font-face {
   font-family: 'SST W55';
   font-weight: $FONT_FAMILY_NORMAL;
@@ -25,6 +26,7 @@
  * "Noto Sans CJK JP" licensed under the SIL Open Font License
  * https://www.google.com/get/noto/
  */
+/*
 @font-face {
     font-family: "Noto Sans CJK JP";
     font-weight: lighter;
@@ -42,11 +44,11 @@
     font-weight: bold;
     src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
 }
-
+*/
 body {
     height: 100%;
     //font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
-    //font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
+    font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
     font-weight:$FONT_FAMILY_COMMON;
     line-height:$FONT_HEIGHT_COMMON;
     color:$COLOR_TEXT_COMMON;
@@ -166,21 +168,21 @@ body {
                 height:$SIZE_BUTTON_HEIGHT;   
                 font-size:$FONT_SIZE_TEXT_BUTTON;
                 color:$COLOR_BUTTON_TEXT;
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                font-weight:$FONT_FAMILY_TEXT_BUTTON;
                 background-color:$COLOR_BUTTON_NORMAL;
                 box-shadow:none;   
                 border-radius:0;
 
                 &:hover{
                     background-color:$COLOR_BUTTON_HOVER;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
                     border:none;
                 }
 
                 &:active{
                     background-color:$COLOR_BUTTON_PRESED;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
                     box-shadow:none;
                     border:none;
