@@ -101,6 +101,14 @@
     text-shadow: none;
 }
 
+.label-item{
+    font-weight:$FONT_WEIGHT_LABEL_ITEM;
+}
+
+.state-label {
+    font-weight:$FONT_WEIGHT_BUTTON_ITEM;
+}
+
 .label-value,
 .state-label {
     text-overflow: ellipsis;
