@@ -183,6 +183,11 @@
                 }
             }
 
+            h4{
+                font-size:$FONT_SIZE_PROPATY_H4;
+                font-weight:$FONT_FAMILY_PROPATY_H3;
+            }
+
             .state-action-input, 
             .state-action-function,
             .property-state-text-value,
@@ -363,7 +368,6 @@
 
                     &.active {
                         color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
-                        text-shadow: none;
                     }
                     
                 }
