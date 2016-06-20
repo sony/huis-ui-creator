@@ -1359,7 +1359,7 @@ module Garage {
 														buttons: ["ok"]
 													});
 												} else {
-													CDP.UI.Toast.show("HUIS との同期が完了しました。");
+													//CDP.UI.Toast.show("HUIS との同期が完了しました。");
 													Framework.Router.back();
 												}
 											});
