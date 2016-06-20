@@ -35,7 +35,8 @@
         border: 0;
         border:solid 1px #ccc;
         border-radius: 3px;
-        font-size: 32px;
+        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
+        font-weight:$FONT_WEIGHT_BUTTON_ITEM;
         text-align:center;
         margin: 12px 0;
         height: 56px;
