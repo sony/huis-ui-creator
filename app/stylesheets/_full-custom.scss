@@ -171,11 +171,14 @@
 
             h3 {
                 font-size:$FONT_SIZE_PROPATY_H3;
+                font-weight: $FONT_FAMILY_NORMAL;
                 margin:0;
 
                 .button-info-brand-and-type{
+                    padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
-                    font-weight: lighter;
+                    font-weight: $FONT_FAMILY_NORMAL;
+                    color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
                 }
             }
