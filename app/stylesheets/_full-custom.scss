@@ -69,6 +69,7 @@
                 transform: scale(0.5);
                 transform-origin: left top;
 
+               
                 .item {
                     cursor: move;
                     border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
@@ -158,6 +159,7 @@
                 line-height:$TEXT_HEIGHT_DEFAULT;
                 margin-bottom:$SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
                 display: flex;
+                font-weight:$FONT_WEIGHT_PROPATY_X_Y_W_H;
             }
 
             .label-button-state{
@@ -179,13 +181,21 @@
 
             h3 {
                 font-size:$FONT_SIZE_PROPATY_H3;
+                font-weight: $FONT_FAMILY_NORMAL;
                 margin:0;
 
                 .button-info-brand-and-type{
+                    padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
-                    font-weight: lighter;
+                    font-weight: $FONT_FAMILY_NORMAL;
+                    color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
                 }
+            }
+
+            h4{
+                font-size:$FONT_SIZE_PROPATY_H4;
+                font-weight:$FONT_FAMILY_PROPATY_H3;
             }
 
             .state-action-input, 
@@ -358,6 +368,8 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     cursor: pointer;
+                    text-shadow: none;
+
                     
                     &:hover {
                         background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
@@ -366,7 +378,6 @@
 
                     &.active {
                         color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
-                        text-shadow: none;
                     }
                     
                 }
@@ -474,9 +485,4 @@
             }
         }
     }
-
-    input, select, button {
-        font-family: "Noto Sans CJK JP","SST W55";
-    }
-
 }

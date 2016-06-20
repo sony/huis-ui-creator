@@ -2,7 +2,6 @@
 
 #page-home {
     text-shadow: none;
-    font-family: "Noto Sans CJK JP",'SST W55';
 
     //リモコン数が0個の時の画面
     #home-introductions{
@@ -219,9 +218,5 @@
                 font-weight: normal;
             }
         }
-    }
-
-    button {
-        font-family: "Noto Sans CJK JP","SST W55";
     }
 }
