@@ -231,7 +231,6 @@
                     var errorValue: Error= null; 
                     if (useDialog) {
                         if (dialogProps) {
-                            let id = dialogProps.id;
                             let options = dialogProps.options;
                             let dialogTitle: string;
                             if (options && options.title) {
@@ -244,12 +243,7 @@
                                 title: dialogTitle,
                             });
                             console.log("sync.exec dialog.show()");
-                            dialog.show().css("color", "white").on("popupafterclose", (event: JQueryEventObject) => {
-                                // ダイアログが閉じられたら、コールバックを呼び出し終了
-                                if (callback) {
-                                    callback(errorValue);
-                                }
-                            });
+                            dialog.show().css("color", "white");
 
                         }
                     }
@@ -260,15 +254,39 @@
 								console.error(TAG + "_syncHuisFiles	Error!!!");
 							} else {
 								console.log(TAG + "_syncHuisFiles Complete!!!");
-							}
-                            if (dialog) {
-                                dialog.close();
                             }
-                            errorValue = err;
-                            if (!useDialog){//ダイアログを使わないときは、ダイアログを閉じるのを待たずにコールバックを呼び出す。
-                                callback(errorValue)
+
+                            if (useDialog) { //ダイアログを使う際は,完了ダイアログを表示。
+                                // ダイアログが閉じられたら、コールバックを呼び出し終了
+                                var $dialog = $(".spinner-dialog");
+                                var $spinner = $("#common-dialog-center-spinner");
+                                var PATH_DONE_IMAGE = 'url("../res/images/icon_done.png")';
+                                var DONE_MESSAGE = "HUISとの同期が完了しました。";
+                                var DURATION_DIALOG_SHOW = 2000; //完了ダイアログの出現期間
+
+                                //アイコンが回転しないようにする。
+                                $spinner.removeClass("spinner");
+                                //アイコンの見た目を変える。
+                                $spinner.css("background-image", PATH_DONE_IMAGE);
+
+                                //メッセージを変える
+                                $dialog.find("p").html(DONE_MESSAGE);
+
+                                setTimeout(() => {
+
+                                    if (dialog) {
+                                        dialog.close();
+                                    }
+
+                                    callback(err)
+
+                                }, DURATION_DIALOG_SHOW);
+                            } else {//ダイアログを使わない際は、そのまま終了。
+                                if (dialog) {
+                                    dialog.close();
+                                }
+                                callback(err);
                             }
-							//callback(err);
 						});
 					}, 100);
 					return { cancel: this._cancel };
