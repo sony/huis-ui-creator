@@ -26,7 +26,6 @@
  * "Noto Sans CJK JP" licensed under the SIL Open Font License
  * https://www.google.com/get/noto/
  */
-/*
 @font-face {
     font-family: "Noto Sans CJK JP";
     font-weight: lighter;
@@ -44,10 +43,9 @@
     font-weight: bold;
     src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
 }
-*/
+
 body {
     height: 100%;
-    //font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
     font-family:'SST W55',"Noto Sans CJK JP",Arial,Helvetica,sans-serif;
     font-weight:$FONT_FAMILY_COMMON;
     line-height:$FONT_HEIGHT_COMMON;
