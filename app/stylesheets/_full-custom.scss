@@ -121,7 +121,15 @@
                     margin-left:$SIZE_CANVAS_FACE_PAGE_MARGIN_LEFT;
                     margin-top:$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP;
                     margin-bottom:$SIZE_CANVAS_FACE_PAGE_MARGIN_BOTTOM;
+                    border:none;       
+                    //グリッドの表示位置がずれて、一番下のグリッドが見えなくなるためずらす。
+                    padding-bottom:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_BOTTOM;
+                    padding-top:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_TOP;
+                    background-position-y:$SIZE_FACE_PAGE_ADJUST_GRID_Y;
+          
                 }
+
+                
 
                 
             }
