@@ -170,7 +170,19 @@ body {
               background-position:center;
             background-repeat: no-repeat;
             background-size: contain;
+        }
 
+        #simple-dialog-image{
+            position:relative;
+            height:$SIZE_DIALOG_ICON_HEIHGT;
+            width:$SIZE_DIALOG_ICON_WIDTH;
+            margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image:$PATH_IMG_DIALOG_DONE_ICON;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
     }
 
