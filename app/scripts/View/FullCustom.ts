@@ -238,8 +238,6 @@ module Garage {
                 let PROPATY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
-                console.log("detailWidth : " + detailWidth);
-
                 let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
