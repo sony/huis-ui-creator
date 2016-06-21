@@ -2711,7 +2711,11 @@ module Garage {
 
                     if (button.deviceInfo) {
                         checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
-                            return ((button.default == state.id) && ( (state.image[0] != null) || (state.label[0] != null)) );
+                            return (
+                                (button.default == state.id) &&
+                                (((state.image != null) && (state.image[0] != null)) ||
+                                 ((state.label != null) && (state.label[0] != null)) )
+                                   );
                         });
                    
                         if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
