@@ -185,9 +185,10 @@
 
             #face-item-detail-title{
                 padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
-                
+                line-height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 font-size:$FONT_SIZE_PROPATY_H3;
                 font-weight: $FONT_FAMILY_NORMAL;
+                height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 margin:0;
 
                 .button-info-brand-and-type{
