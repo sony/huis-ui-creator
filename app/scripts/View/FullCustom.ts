@@ -347,13 +347,10 @@ module Garage {
 					if ($listScrollLeft.hasClass("disabled")) {
 						return;
 					}
-					this.faceListScrollLeft_ -= 200;
-					if (this.faceListScrollLeft_ <= 0) {
-						this.faceListScrollLeft_ = 0;
-						$listScrollLeft.addClass("disabled");
-					}
+                    this.faceListScrollLeft_ -= 200;
+                    this.disableScrollLefttButton();
 					$listScrollRight.removeClass("disabled");
-					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
+                    $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
 				});
 
 				// face list のスクロール (右方向)
@@ -361,18 +358,16 @@ module Garage {
 					if ($listScrollRight.hasClass("disabled")) {
 						return;
 					}
-					this.faceListScrollLeft_ += 200;
-					if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-						this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
-						$listScrollRight.addClass("disabled");
-					}
+                    this.faceListScrollLeft_ += 200;
+                    this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
-					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
+					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
 				});
             }
 
             /**
             * パレットエリアのface-itemが選択された際の処理
+            * @ $clickedFaceItem 選択されたface-item:jQuery
             **/
             private _onFaceItemSelected($clickedFaceItem: JQuery) {
                 var $faceItem = $(".face-item");
@@ -387,11 +382,14 @@ module Garage {
 
             /**
             * 選択したfaceItemがfaceListの中央になるように移動
+            * @ $clickedFaceItem 選択されたface-item:jQuery
             **/
             private _moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem : JQuery) {
                 var $faceItem = $(".face-item");
                 var $faceItemList = $("#face-item-list");
                 var $faceItemListContainer = $("#face-item-list-container");
+                
+                
                 var FaceListWidth = $faceItemListContainer.width();
 
                 //face-itemの現在の位置を取得する。
@@ -399,8 +397,47 @@ module Garage {
                 //face-item-llistの中央の値との差分を算出
                 this.faceListScrollLeft_ = positionLeft - (FaceListWidth / 2) + ($clickedFaceItem.outerWidth()/2);
 
+                this.disableScrollRightButton();
+                this.disableScrollLefttButton();
+
                 //差分分、移動する。
-                $faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
+                $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_) + "px)");
+
+
+                
+            }
+
+            /**
+            * 右スクロールボタンの非表示判定
+            */
+            private disableScrollRightButton() {
+                // face list の右スクロールボタン
+                var $listScrollRight = $("#face-item-list-scroll-right");
+                if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
+                    this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
+                    $listScrollRight.addClass("disabled");
+                } else {
+                    $listScrollRight.removeClass("disabled");
+                }
+            }
+
+
+            /**
+           * 左スクロールボタンの非表示判定
+           */
+            private disableScrollLefttButton() {
+                // face list の左スクロールボタン
+                var faceListWidth = $("#face-item-list-container").width();
+                var faceItemCommonWidth = $('.face-item[data-remote-id="common"]').outerWidth();
+             
+                var MIN_SCROLL_LEFT = -(faceListWidth/2) + (faceItemCommonWidth/2);//左端はCOMMONが中央になる
+                var $listScrollLeft = $("#face-item-list-scroll-left");
+                if (this.faceListScrollLeft_ <= MIN_SCROLL_LEFT) {
+                    this.faceListScrollLeft_ = MIN_SCROLL_LEFT;
+                    $listScrollLeft.addClass("disabled");
+                } else {
+                    $listScrollLeft.removeClass("disabled");
+                }
             }
 
 			/**
