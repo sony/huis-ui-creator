@@ -214,6 +214,10 @@
                 width:$SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
             }
 
+            .property-text-size, .property-state-text-size{
+                width:$SIZE_PROPATY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
+            }
+
             input.priperty-value {
                 width: 100%;
             }
