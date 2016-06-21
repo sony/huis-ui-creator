@@ -1605,6 +1605,38 @@ module Garage {
 				});
 			}
 
+            /**
+            * 詳細設定エリアのプレビューの画像を更新する
+            */
+            private _updatePreviewInDetailArea(imagePath : string, $preview) {
+                if (imagePath === undefined) {
+                    console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
+                }
+
+                if ($preview === undefined) {
+                    console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
+                }
+
+                var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
+
+                
+                if ($preview.css("background-image") !== "none") { // 削除されている場合はそのまま
+                    $preview.css("background-image", "url(" + imagePath + ")");
+                    
+                    var previewWidth = $preview.width();
+                    var img = new Image();
+                    img.src = imagePath;
+                    var imgWidth = img.width;
+                    var imgHeight = img.height;
+                    var previewHeight: number = imgHeight * (previewWidth / imgWidth);
+                    if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
+                        previewHeight = MIN_HEIGHT_PREVIEW;
+                    }
+                    $preview.height(previewHeight);
+                }
+            }
+            
+
 			/**
 			 * データとして持っている state のリストを Button Model に更新する
 			 */
