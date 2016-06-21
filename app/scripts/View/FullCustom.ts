@@ -882,7 +882,7 @@ module Garage {
 
 				var $facePages = $("#face-canvas").find(".face-page");
 
-				var menuItem_gridSize = new MenuItem({
+				var menuItem_gridSize = new MenuItem({   // 当面使わなくなったが将来用に残しておきます
 					label: "グリッドサイズ",
 					type: "submenu",
 					submenu: Menu.buildFromTemplate([
@@ -972,9 +972,11 @@ module Garage {
 				this.contextMenu_.append(menuItem_undo);
 				this.contextMenu_.append(menuItem_redo);
 				this.contextMenu_.append(new MenuItem({ type: "separator" }));
-				this.contextMenu_.append(menuItem_gridSize);
-				this.contextMenu_.append(new MenuItem({ type: "separator" }));
-				this.contextMenu_.append(menuItem_inspectElement);
+				//this.contextMenu_.append(menuItem_gridSize);
+                if (DEBUG_MODE) {
+                    this.contextMenu_.append(new MenuItem({ type: "separator" }));
+                    this.contextMenu_.append(menuItem_inspectElement);
+                }
 
 				this.contextMenu_.popup(this.currentWindow_);
 			}

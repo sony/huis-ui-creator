@@ -140,6 +140,13 @@ module Garage {
 
         HELP_SITE_URL = "http://www.google.co.jp"; //　仮
 
+        if (fs.existsSync("debug")) {
+            DEBUG_MODE = true;
+            console.warn("DEBUG_MODE enabled");
+        } else {
+            DEBUG_MODE = false;
+        }
+
 		callback();
 	};
 

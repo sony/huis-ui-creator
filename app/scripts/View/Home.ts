@@ -349,13 +349,6 @@ module Garage {
 				// コンテキストメニューを作成する
 				this.contextMenu_.clear();
 
-				var menuItem_inspectElement = new MenuItem({
-					label: "要素を検証",
-					click: () => {
-						this.currentWindow_.inspectElement(this.rightClickPosition_.x, this.rightClickPosition_.y);
-					}
-				});
-
 				var element = document.elementFromPoint(event.pageX, event.pageY);
 				var $face = $(element).parents("#face-list .face");
 				if ($face.length) {
@@ -370,7 +363,14 @@ module Garage {
 					}
 				}
 
-				this.contextMenu_.append(menuItem_inspectElement);
+                if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
+                    this.contextMenu_.append(new MenuItem({
+                        label: "要素を検証",
+                        click: () => {
+                            this.currentWindow_.inspectElement(this.rightClickPosition_.x, this.rightClickPosition_.y);
+                        }
+                    }));
+                }
 
 				this.contextMenu_.popup(this.currentWindow_);
 			}
