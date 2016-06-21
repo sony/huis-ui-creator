@@ -20,7 +20,7 @@ module Garage {
 			private rightClickPosition_: { x: number; y: number };
 
             private HISTORY_COUNT = 5;
-            private selectedRemote: any = null;
+            private selectedRemoteId: string = null;
 
 			/**
 			 * construnctor
@@ -177,7 +177,10 @@ module Garage {
 						materialsRootPath: HUIS_FILES_ROOT
 					}
 				});
-				faceRenderer.render();
+                faceRenderer.render();
+                if (remoteId !== this.selectedRemoteId) {
+                    $face.find(".face-container").css("border", "1px solid rgb(221,221,221)");
+                }
 
 				// ダブルクリックしたら編集画面への遷移できるようにする
                 $face.find(".face-container").on("dblclick", (event) => {
@@ -190,6 +193,7 @@ module Garage {
                 // シングルクリックしたら「選択状態」になる
                 $face.find(".face-container").on("click", (event) => {
                     let $clickedFace = $(event.currentTarget);
+                    this.selectedRemoteId = $clickedFace.data("remoteid");
                     $clickedFace.css("border", "solid 10px #ccc");
                     //let remoteId = $clickedFace.data("remoteid");
                     //if (remoteId) {
