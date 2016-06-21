@@ -3,7 +3,7 @@
         {{! ボタンの詳細情報エリア}}
 
 
-        <h3>BUTTON 
+        <h3 id="face-item-detail-title">BUTTON 
         <span class="button-info-brand-and-type">
             {{#deviceInfo}}
             {{#code_db}}
@@ -38,7 +38,7 @@
     <script type="text/template" id="template-image-detail">
         {{! 画像アイテムの詳細情報エリア}}
 
-        <h3>IMAGE <span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">IMAGE <span class="property-cid"></span></h3>
 
 
 
@@ -61,8 +61,8 @@
 
         <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value" type="text" {{#enabled}}value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class="ui-btn inline" id="delete-background-image">削除</button>
 
     </script>
 
@@ -75,7 +75,7 @@
     <script type="text/template" id="template-label-detail">
         {{! ラベルアイテムの詳細情報エリア}}
      
-        <h3>LABEL <span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">LABEL <span class="property-cid"></span></h3>
 
 
         <!-- ボタンのエリア -->
@@ -103,7 +103,7 @@
 
     <script type="text/template" id="template-page-background-detail">
       
-        <h3>BACKGROUND <span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">BACKGROUND <span class="property-cid"></span></h3>
 
 
 
@@ -114,8 +114,8 @@
 
         <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src" type="text" {{#enabled}}value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value page-background-src inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class ="ui-btn inline" id="delete-background-image">削除</button>
 
         
     </script>
@@ -178,8 +178,8 @@
                 <!-- 画像ファイル変更 -->
                 <div class="property-state-image">
                     <h4>画像ファイル</h4>
-                    <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
+                    <input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
+                    <button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
                 </div>
 
 

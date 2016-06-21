@@ -150,7 +150,11 @@
 
         #face-item-detail {
             position: relative;
-            margin:$SIZE_PROPATY_ITEM_DETAIL_MARGIN;
+            width:$SIZE_PROPATY_AREA_INNNER_WIDTH;
+            margin-left:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-right:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-top:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            margin-bottom:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
             text-shadow: none;
             font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
             color: $COLOR_PROPATY_AREA_TEXT;
@@ -179,9 +183,12 @@
                 margin: 4px 0;
             }
 
-            h3 {
+            #face-item-detail-title{
+                padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
+                line-height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 font-size:$FONT_SIZE_PROPATY_H3;
                 font-weight: $FONT_FAMILY_NORMAL;
+                height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 margin:0;
 
                 .button-info-brand-and-type{
@@ -191,6 +198,7 @@
                     color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
                 }
+                
             }
 
             h4{
@@ -258,7 +266,6 @@
 
             #property-image-preview,
             .property-state-image-preview {
-                margin-top:$SIZE_PROPATY_AREA_PREVIEW_MARING_TOP;
                 margin-bottom:$SIZE_PROPATY_AREA_PREVIEW_MARING_BOTTOM;
                 box-sizing:border-box;
                 position:relative;
@@ -301,16 +308,14 @@
             }*/
 
             #states-container {
-                margin-top: 10px;
-
                 > div {
                     margin-bottom: 10px;
                 }
             }
 
-            input.refer-state-image {
-                    width: 158px;
-                }
+            input.refer-state-image, #refer-image {
+                    width: $SIZE_PROPATY_AREA_REFER_IMAGE_WIDTH;
+            }
 
             .state-container {
                 .delete-state-image {
