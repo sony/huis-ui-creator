@@ -81,6 +81,7 @@ declare namespace CDP {
             labelPositive?: string;
             labelNegative?: string;
             [x: string]: any;
+            anotherOption?: DialogOptions;
         }
         /**
          * @class Dialog
