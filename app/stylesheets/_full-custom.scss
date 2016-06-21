@@ -313,9 +313,9 @@
                 }
             }
 
-            input.refer-state-image {
-                    width: 158px;
-                }
+            input.refer-state-image, #refer-image {
+                    width: $SIZE_PROPATY_AREA_REFER_IMAGE_WIDTH;
+            }
 
             .state-container {
                 .delete-state-image {

@@ -61,8 +61,8 @@
 
         <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value" type="text" {{#enabled}}value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class="ui-btn inline" id="delete-background-image">削除</button>
 
     </script>
 
@@ -114,8 +114,8 @@
 
         <!-- 画像ファイルのエリア -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src" type="text" {{#enabled}}value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
+        <input id="refer-image" class="property-value page-background-src inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class ="ui-btn inline" id="delete-background-image">削除</button>
 
         
     </script>
@@ -178,8 +178,8 @@
                 <!-- 画像ファイル変更 -->
                 <div class="property-state-image">
                     <h4>画像ファイル</h4>
-                    <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
+                    <input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
+                    <button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
                 </div>
 
 
