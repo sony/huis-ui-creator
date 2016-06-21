@@ -2763,8 +2763,30 @@ module Garage {
 
                 //x,y情報を別途　記入
                 this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
+                //previewの情報を別途更新。
+                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                //
+                //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
+    
 
 			}
+
+
+            /*
+            * url("***");から、***を抽出する
+            */
+            private _extractUrlFunction(urlFunctionString:string):string {
+                if (urlFunctionString === undefined) {
+                    console.log("FullCustom.ts:urlFunctionString urlFunctionString is undefined");
+                    return;
+                }
+                var result:string =  urlFunctionString.substring(5, urlFunctionString.length - 2)//最初の5文字と　最後の２文字を取り除く。
+                return result;
+
+            }
+
 
 			/**
 			 * フルカスタムリモコン編集画面で扱いやすくするために、button.state 内の action と translate を
