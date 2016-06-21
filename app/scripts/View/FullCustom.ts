@@ -1160,7 +1160,8 @@ module Garage {
 						});
                 }
 
-                $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
+                this._updatePreviewInDetailArea(resolvedPath,$("#property-image-preview"));
+                //$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
 
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
@@ -1529,9 +1530,7 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                        $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
-                                    }
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
 								};
 								img.src = resolvedPath;
 
@@ -1591,9 +1590,7 @@ module Garage {
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
 										// プレビュー部分の更新
-                                        if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                            $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
-                                        }
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
                                     };
                                     if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                         img.src = resolvedOriginalPath;
@@ -1937,8 +1934,10 @@ module Garage {
 									});
 
 									// 詳細エリアのプレビュー更新
-									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    $preview.css("background-image", value ? "url('" + value + "')": "none");
+                                    let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+                                    this._updatePreviewInDetailArea(value, $preview);
+
+                                    //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
 								break;
