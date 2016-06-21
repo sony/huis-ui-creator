@@ -489,7 +489,19 @@ declare module Garage {
 	/**
 	 * HUIS のデバイスのルートパス
 	 */
-	var HUIS_ROOT_PATH: string;
+    var HUIS_ROOT_PATH: string;
+    /**
+	 * PC から HUIS への同期時のダイアログのパラメーター完了時のダイアログつき
+	 */
+    var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE: DialogProps;
+    /**
+     * 新規リモコンが追加されたときのダイアログパラメーター
+    */
+    var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
+    /**
+     * リモコンを削除した際のダイアログパラメーター
+    */
+    var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
 	/**
 	 * HUIS から PC への同期時のダイアログのパラメーター
 	 */

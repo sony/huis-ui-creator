@@ -253,7 +253,7 @@ module Garage {
 				huisFiles.updateRemoteList();
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
-					syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
@@ -264,7 +264,7 @@ module Garage {
 								buttons: ["ok"]
 							});
 						} else {
-							CDP.UI.Toast.show("HUIS との同期が完了しました。");
+							//CDP.UI.Toast.show("HUIS との同期が完了しました。");
 						}
 					});
 				}

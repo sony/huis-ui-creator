@@ -72,7 +72,47 @@ module Garage {
 			},
 			grayscale: 1,
 			imageType: "image/png"
-		};
+        };
+
+
+        //完了時のダイアログのアイコンのパス
+        var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
+
+        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+        DIALOG_PROPS_CREATE_NEW_REMOTE = {
+            id: "#common-dialog-spinner",
+            options: {
+                title: "同期中です。",
+                anotherOption: {
+                    title: "リモコン登録が完了しました。",
+                    src: PATH_IMG_DIALOG_DONE_ICON,
+                }
+            }
+        }
+
+        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+        DIALOG_PROPS_DELTE_REMOTE = {
+            id: "#common-dialog-spinner",
+            options: {
+                title: "同期中です。",
+                anotherOption: {
+                    title: "リモコンを削除しました。",
+                    src: PATH_IMG_DIALOG_DONE_ICON,
+                }
+            }
+        }
+
+        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+        DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
+            id: "#common-dialog-spinner",
+            options: {
+                title: "同期中です。",
+                anotherOption: {
+                    title: " HUISとの同期を完了しました。",
+                    src: PATH_IMG_DIALOG_DONE_ICON,
+                }
+            }
+        }
 
 		// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
 		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {

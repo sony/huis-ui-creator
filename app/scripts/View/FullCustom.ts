@@ -69,7 +69,8 @@ module Garage {
 			private mouseMoving_: boolean;
 			private gridSize_: number;
 			private contextMenu_: any;
-			private rightClickPosition_: { x: number; y: number };
+            private rightClickPosition_: { x: number; y: number };
+            private isTextBoxFocued: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
             private DEFAULT_GRID = 29; //デフォルトのグリッドは29pxとする。
@@ -124,7 +125,9 @@ module Garage {
 						this.commandManager_.reset();
 					} else {
 						this.commandManager_ = new CommandManager();
-					}
+                    }
+
+                    this.isTextBoxFocued = false;
 				});
 			}
 
@@ -168,6 +171,10 @@ module Garage {
                     // プルダウンメニューのリスト
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
+                    // テキストボックスへのfocusin/out
+                    "focusin .property-value.property-state-text-value": "_onTextBoxFocusIn",
+                    "focusout .property-value.property-state-text-value": "_onTextBoxFocusOut",
+
 
 				};
 			}
@@ -1348,7 +1355,7 @@ module Garage {
 										garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
 										if (HUIS_ROOT_PATH) {
 											let syncTask = new Util.HuisDev.FileSyncTask();
-											let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS, (err) => {
+                                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, (err) => {
 												if (err) {
 													// [TODO] エラー値のハンドリング
 													electronDialog.showMessageBox({
@@ -1359,7 +1366,7 @@ module Garage {
 														buttons: ["ok"]
 													});
 												} else {
-													CDP.UI.Toast.show("HUIS との同期が完了しました。");
+													//CDP.UI.Toast.show("HUIS との同期が完了しました。");
 													Framework.Router.back();
 												}
 											});
@@ -2942,11 +2949,19 @@ module Garage {
                 return;
             }
 
+            private _onTextBoxFocusIn() {
+                this.isTextBoxFocued = true;
+            }
+
+            private _onTextBoxFocusOut() {
+                this.isTextBoxFocued = false;
+            }
+
             private _onKeyDown(event: JQueryEventObject) {
                 console.log("_onKeyDown : " + event.keyCode);
                 console.log("_onKeyDown : " + this.$currentTarget_);
 
-                if (this.$currentTarget_) {
+                if (this.$currentTarget_ && !this.isTextBoxFocued) {
                     switch (event.keyCode) {
                         case 8: // BS
                         case 46: // DEL
