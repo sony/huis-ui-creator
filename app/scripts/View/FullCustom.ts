@@ -338,13 +338,7 @@ module Garage {
                 var $faceItemList = $("#face-item-list");
 
                 $faceItem.on("click", (event: JQueryEventObject) => {
-                    let $clickedFaceItem = $(event.currentTarget);
-                    //選択したfaceItemを移動。
-                    this._moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem);
-					let remoteId: string = "" + JQUtils.data($clickedFaceItem, "remoteId"); //$clickedFaceItem.data("remoteId");
-					$faceItem.removeClass("active");
-					$clickedFaceItem.addClass("active");
-					this._renderFacePallet(remoteId);
+                    this._onFaceItemSelected($(event.currentTarget));
 				});
 
 
@@ -375,6 +369,20 @@ module Garage {
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 				});
+            }
+
+            /**
+            * パレットエリアのface-itemが選択された際の処理
+            **/
+            private _onFaceItemSelected($clickedFaceItem: JQuery) {
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+                //選択したfaceItemを移動。
+                this._moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem);
+                let remoteId: string = "" + JQUtils.data($clickedFaceItem, "remoteId"); //$clickedFaceItem.data("remoteId");
+                $faceItem.removeClass("active");
+                $clickedFaceItem.addClass("active");
+                this._renderFacePallet(remoteId);
             }
 
             /**
