@@ -530,6 +530,10 @@ declare module Garage {
 	 * ヘルプサイトのURL
 	 */
     var HELP_SITE_URL: string;
+    /**
+     * Debug Modeかどうかのフラグ
+     */
+    var DEBUG_MODE: Boolean;
 
 }
 
