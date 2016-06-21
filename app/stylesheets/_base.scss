@@ -293,6 +293,7 @@ body {
 
         //共通のプルダウンメニュー
         select{
+           margin-top:$SIZE_PULL_DOWM_MARGIN_TOP;
            font-family:$FONT_FAMILY_COMMON_CONBINED;
            -webkit-appearance: none;
            font-size:$FONT_SIZE_PULL_DOWM_MENU;

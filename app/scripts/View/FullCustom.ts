@@ -889,7 +889,7 @@ module Garage {
 
 				var $facePages = $("#face-canvas").find(".face-page");
 
-				var menuItem_gridSize = new MenuItem({
+				var menuItem_gridSize = new MenuItem({   // 当面使わなくなったが将来用に残しておきます
 					label: "グリッドサイズ",
 					type: "submenu",
 					submenu: Menu.buildFromTemplate([
@@ -979,9 +979,11 @@ module Garage {
 				this.contextMenu_.append(menuItem_undo);
 				this.contextMenu_.append(menuItem_redo);
 				this.contextMenu_.append(new MenuItem({ type: "separator" }));
-				this.contextMenu_.append(menuItem_gridSize);
-				this.contextMenu_.append(new MenuItem({ type: "separator" }));
-				this.contextMenu_.append(menuItem_inspectElement);
+				//this.contextMenu_.append(menuItem_gridSize);
+                if (DEBUG_MODE) {
+                    this.contextMenu_.append(new MenuItem({ type: "separator" }));
+                    this.contextMenu_.append(menuItem_inspectElement);
+                }
 
 				this.contextMenu_.popup(this.currentWindow_);
 			}
@@ -1167,7 +1169,8 @@ module Garage {
 						});
                 }
 
-                $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
+                this._updatePreviewInDetailArea(resolvedPath,$("#property-image-preview"));
+                //$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
 
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
@@ -1536,9 +1539,7 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                        $("#property-image-preview").css("background-image", "url(" + resolvedPath + ")");
-                                    }
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
 								};
 								img.src = resolvedPath;
 
@@ -1600,9 +1601,7 @@ module Garage {
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
 										// プレビュー部分の更新
-                                        if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                            $("#property-image-preview").css("background-image", "url(" + resolvedOriginalPath + ")");
-                                        }
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
                                     };
                                     if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                         img.src = resolvedOriginalPath;
@@ -1613,6 +1612,38 @@ module Garage {
 					}
 				});
 			}
+
+            /**
+            * 詳細設定エリアのプレビューの画像を更新する
+            */
+            private _updatePreviewInDetailArea(imagePath : string, $preview) {
+                if (imagePath === undefined) {
+                    console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
+                }
+
+                if ($preview === undefined) {
+                    console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
+                }
+
+                var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
+
+                
+                if ($preview.css("background-image") !== "none") { // 削除されている場合はそのまま
+                    $preview.css("background-image", "url(" + imagePath + ")");
+                    
+                    var previewWidth = $preview.width();
+                    var img = new Image();
+                    img.src = imagePath;
+                    var imgWidth = img.width;
+                    var imgHeight = img.height;
+                    var previewHeight: number = imgHeight * (previewWidth / imgWidth);
+                    if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
+                        previewHeight = MIN_HEIGHT_PREVIEW;
+                    }
+                    $preview.height(previewHeight);
+                }
+            }
+            
 
 			/**
 			 * データとして持っている state のリストを Button Model に更新する
@@ -1914,8 +1945,10 @@ module Garage {
 									});
 
 									// 詳細エリアのプレビュー更新
-									let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    $preview.css("background-image", value ? "url('" + value + "')": "none");
+                                    let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+                                    this._updatePreviewInDetailArea(value, $preview);
+
+                                    //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
 								break;
@@ -2680,7 +2713,11 @@ module Garage {
 
                     if (button.deviceInfo) {
                         checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
-                            return ((button.default == state.id) && ( (state.image[0] != null) || (state.label[0] != null)) );
+                            return (
+                                (button.default == state.id) &&
+                                (((state.image != null) && (state.image[0] != null)) ||
+                                 ((state.label != null) && (state.label[0] != null)) )
+                                   );
                         });
                    
                         if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
@@ -2741,8 +2778,30 @@ module Garage {
 
                 //x,y情報を別途　記入
                 this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
+                //previewの情報を別途更新。
+                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                //
+                //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
+    
 
 			}
+
+
+            /*
+            * url("***");から、***を抽出する
+            */
+            private _extractUrlFunction(urlFunctionString:string):string {
+                if (urlFunctionString === undefined) {
+                    console.log("FullCustom.ts:urlFunctionString urlFunctionString is undefined");
+                    return;
+                }
+                var result:string =  urlFunctionString.substring(5, urlFunctionString.length - 2)//最初の5文字と　最後の２文字を取り除く。
+                return result;
+
+            }
+
 
 			/**
 			 * フルカスタムリモコン編集画面で扱いやすくするために、button.state 内の action と translate を
