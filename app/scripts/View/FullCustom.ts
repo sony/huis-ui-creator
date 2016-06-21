@@ -94,7 +94,12 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = this.DEFAULT_GRID;
-				requirejs(["pixi"]);
+                requirejs(["pixi"]);
+
+                $(document).on("mobileinit", function () {
+                    $.mobile.selectmenu.prototype.options.nativeMenu = false;
+                });
+
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -329,16 +334,19 @@ module Garage {
 				this._layoutFacesList();
 
 				// face list から face を選択すると、選択した face をパレットにをレンダリングする
-				var $faceItem = $(".face-item");
-				$faceItem.on("click", (event: JQueryEventObject) => {
-					let $clickedFaceItem = $(event.currentTarget);
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+
+                $faceItem.on("click", (event: JQueryEventObject) => {
+                    let $clickedFaceItem = $(event.currentTarget);
+                    //選択したfaceItemを移動。
+                    this._moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem);
 					let remoteId: string = "" + JQUtils.data($clickedFaceItem, "remoteId"); //$clickedFaceItem.data("remoteId");
 					$faceItem.removeClass("active");
 					$clickedFaceItem.addClass("active");
 					this._renderFacePallet(remoteId);
 				});
 
-				var $faceItemList = $("#face-item-list");
 
 				// face list のスクロール (左方向)
 				$listScrollLeft.click(() => {
@@ -367,8 +375,25 @@ module Garage {
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 				});
+            }
 
-			}
+            /**
+            * 選択したfaceItemがfaceListの中央になるように移動
+            **/
+            private _moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem : JQuery) {
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+                var $faceItemListContainer = $("#face-item-list-container");
+                var FaceListWidth = $faceItemListContainer.width();
+
+                //face-itemの現在の位置を取得する。
+                var positionLeft: any = $clickedFaceItem.css("left").replace('px', '');
+                //face-item-llistの中央の値との差分を算出
+                this.faceListScrollLeft_ = positionLeft - (FaceListWidth / 2) + ($clickedFaceItem.outerWidth()/2);
+
+                //差分分、移動する。
+                $faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
+            }
 
 			/**
 			 * face list のレイアウトを行う
