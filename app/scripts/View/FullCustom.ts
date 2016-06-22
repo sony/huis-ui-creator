@@ -146,7 +146,9 @@ module Garage {
 					"mouseup #main": "onMainMouseUp",
 
 					// キャンバスのページスクロール
-					"scroll #face-pages-area": "onCanvasPageScrolled",
+                    "scroll #face-canvas #face-pages-area": "onCanvasPageScrolled",
+                    "scroll #face-pallet #face-pages-area": "onPalletPageScrolled",
+
 					// キャンバス内のページ追加ボタン
 					"click #button-add-page": "onAddPageButtonClicked",
 					// 詳細編集エリアのイベント
@@ -303,9 +305,11 @@ module Garage {
 				this.currentTargetPageIndex_ = 0;
 
 				// [TODO] Canvas 内の page scroll
-				$("#face-pages-area").scroll((event: JQueryEventObject) => {
+                $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
 					this.onCanvasPageScrolled(event);
-				});
+                });
+
+              
 			}
 
 			/**
@@ -427,7 +431,11 @@ module Garage {
 					}
 				});
 				this.faceRenderer_pallet_.render();
-				this._pageLayout();
+                this._pageLayout();
+                //スクロールイベント
+                $facePallet.find("#face-pages-area").scroll((event: JQueryEventObject) => {
+                    this.onPalletPageScrolled(event);
+                });
 			}
 
 			/**
@@ -1012,7 +1020,22 @@ module Garage {
 						$("#page-index").text((this.currentTargetPageIndex_ + 1) + "");
 					}
 				});
-			}
+            }
+
+            /**
+			 * パレット内のスクロールイベントのハンドリング
+			 */
+            private onPalletPageScrolled(event: Event) {
+                console.log("onPalletPageScrolled:pallet scrolled");
+                var $target: JQuery = $(event.currentTarget);
+                var scrollTop: number = $target.scrollTop();
+                console.log("onPalletPageScrolled:scrollTop: " + scrollTop);
+
+                var $children = $target.children();
+
+                var scaledFaceHeight = HUIS_FACE_PAGE_HEIGHT / 2;
+              
+            }
 
 			/**
 			 * キャンバス内のページ追加ボタンのハンドリング
