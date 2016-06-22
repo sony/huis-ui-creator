@@ -410,7 +410,7 @@ module Garage {
 			 */
 			private _renderFacePallet(remoteId: string) {
 				var $facePallet = $("#face-pallet");
-				$facePallet.children().remove();
+                $facePallet.find("#face-pages-area").remove();
 
 				var face: IGFace;
 				if (remoteId === "common") {
@@ -427,7 +427,6 @@ module Garage {
 					}
 				});
 				this.faceRenderer_pallet_.render();
-
 				this._pageLayout();
 			}
 
