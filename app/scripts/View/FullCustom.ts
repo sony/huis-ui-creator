@@ -348,7 +348,7 @@ module Garage {
 						return;
 					}
                     this.faceListScrollLeft_ -= 200;
-                    this.disableScrollLefttButton();
+                    this.disableScrollLeftButton();
 					$listScrollRight.removeClass("disabled");
                     $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
 				});
@@ -399,13 +399,10 @@ module Garage {
                 var fineTuneLeft = $("#face-item-list-scroll-margin-left").width(); 
                 this.faceListScrollLeft_ += fineTuneLeft;//face-listで隠れてる部分があるため、そのぶんずらす必要がある。
                 this.disableScrollRightButton();
-                this.disableScrollLefttButton();
+                this.disableScrollLeftButton();
 
                 //差分分、移動する。
                 $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_) + "px)");
-
-
-                
             }
 
             /**
@@ -426,7 +423,7 @@ module Garage {
             /**
            * 左スクロールボタンの非表示判定
            */
-            private disableScrollLefttButton() {
+            private disableScrollLeftButton() {
                 // face list の左スクロールボタン
                 var faceListWidth = $("#face-item-list-container").width();
                 var faceItemCommonWidth = $('.face-item[data-remote-id="common"]').outerWidth();
@@ -469,9 +466,11 @@ module Garage {
 								}
 								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 							}
-
 						}
-					});
+                    }
+
+
+                    );
 				}, 0);
 			}
 
