@@ -339,6 +339,7 @@
         //background-color: #8888ff;
 
         #face-item-list-container {
+ 
             position: relative;
             overflow: hidden;
             width:$SIZE_FACE_ITEM_LIST_CONTAINER_WIDTH;
@@ -349,7 +350,9 @@
             #face-item-list {
                 height: 100%;
                 transition: transform 0.2s 0s ease-in-out;
+                transition-duration : 0.2s;
                 transform: translateX(16px);
+
 
                 .face-item {
                     //display: inline-block;

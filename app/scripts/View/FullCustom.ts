@@ -331,7 +331,6 @@ module Garage {
 				$listScrollLeft.addClass("disabled");
 				$listScrollRight.addClass("disabled");
 
-				this._layoutFacesList();
 
 				// face list から face を選択すると、選択した face をパレットにをレンダリングする
                 var $faceItem = $(".face-item");
@@ -362,7 +361,29 @@ module Garage {
                     this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
-				});
+                });
+
+                this._layoutFacesList();
+
+            }
+
+            /*
+            * パレットエリアの初期選択リモコンを設定
+            */
+            private selectFirstRemtoeInFaceList() {
+                let $faceItems = $(".face-item");
+                if (!$faceItems.hasClass("active")) {
+                    //アニメの秒数を一度0にする
+                    var animeValueTmp = $("#face-item-list").css("transition-duration");
+                    $("#face-item-list").css("transition-duration", "0s");
+                    if ($faceItems.length !== 1) {//初期状態で、一番左のリモコンを選択。
+                        this._onFaceItemSelected($($faceItems[1]));
+                    } else {//リモコンが一つもない場合はcommonを選択。
+                        this._onFaceItemSelected($($faceItems[0]));
+                    }
+                    //アニメの秒数を戻す。
+                    $("#face-item-list").css("transition-duration", animeValueTmp);
+                }
             }
 
             /**
@@ -468,9 +489,8 @@ module Garage {
 							}
 						}
                     }
-
-
                     );
+                    this.selectFirstRemtoeInFaceList();
 				}, 0);
 			}
 
