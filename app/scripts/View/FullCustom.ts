@@ -396,7 +396,7 @@ module Garage {
                 var positionLeft: any = $clickedFaceItem.css("left").replace('px', '');
                 //face-item-llistの中央の値との差分を算出
                 this.faceListScrollLeft_ = positionLeft - (FaceListWidth / 2) + ($clickedFaceItem.outerWidth() / 2);
-                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width(); 
+                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width()/2; 
                 this.faceListScrollLeft_ += fineTuneLeft;//face-listで隠れてる部分があるため、そのぶんずらす必要がある。
                 this.disableScrollRightButton();
                 this.disableScrollLeftButton();
@@ -427,7 +427,7 @@ module Garage {
                 // face list の左スクロールボタン
                 var faceListWidth = $("#face-item-list-container").width();
                 var faceItemCommonWidth = $('.face-item[data-remote-id="common"]').outerWidth();
-                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width(); //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width()/2; //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
 
                 var MIN_SCROLL_LEFT = -(faceListWidth / 2) + (faceItemCommonWidth / 2) + fineTuneLeft;//左端はCOMMONが中央になる
                 var $listScrollLeft = $("#face-item-list-scroll-left");
