@@ -27,20 +27,24 @@
 #face-name-area {
     position: relative;
     width: $SIZE_FACE_NAME_AREA_WIDTH;
-    height: $SIZE_FACE_NAME_AREA_HEIGHT;
+    //height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
     #input-face-name {
         width: 100%;
+        /*
         border: 0;
         border:solid 1px #ccc;
         border-radius: 3px;
-        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
-        font-weight:$FONT_WEIGHT_BUTTON_ITEM;
-        text-align:center;
+        
         margin: 12px 0;
         height: 56px;
         box-sizing: border-box;
+            */
+        text-align:center;
+        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
+        font-weight:$FONT_WEIGHT_BUTTON_ITEM;
+        
     }
 }
 
