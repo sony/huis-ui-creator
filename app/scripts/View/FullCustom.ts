@@ -96,10 +96,6 @@ module Garage {
                 this.gridSize_ = this.DEFAULT_GRID;
                 requirejs(["pixi"]);
 
-                $(document).on("mobileinit", function () {
-                    $.mobile.selectmenu.prototype.options.nativeMenu = false;
-                });
-
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
