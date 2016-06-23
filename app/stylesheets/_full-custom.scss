@@ -181,13 +181,6 @@
                 width : $SIZE_PROPATY_AREA_LAYOUT_INFO_WIDTH;
             }
 
-            div {
-                margin: 0;
-            }
-
-            p {
-                margin: 4px 0;
-            }
 
             #face-item-detail-title{
                 padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
@@ -220,7 +213,7 @@
                 width:$SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
             }
 
-            .property-text-size, .property-state-text-size{
+            .text-size-pulldown{
                 width:$SIZE_PROPATY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
             }
 
@@ -253,10 +246,6 @@
 
             hr {
                 margin-bottom: 1em;
-            }
-
-            select {
-                max-width: calc(95% - 10px);
             }
 
             .inline {
