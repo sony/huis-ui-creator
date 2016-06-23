@@ -2775,7 +2775,13 @@ module Garage {
 						break;
 					default:
 						console.warn(TAG + "_showDetailItemArea() unknown type item");
-				}
+                }
+
+                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                $('.custom-select').trigger('create');
+
+               
+
 			}
 
 			/**
