@@ -1,173 +1,152 @@
 ﻿<article>
     <script type="text/template" id="template-button-detail">
         {{! ボタンの詳細情報エリア}}
-        <h3>ボタン <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
-        {{#area}}
-        <h4>位置</h4>
-        <div class="property-value">x: {{x}}, y: {{y}}</div>
-        <h4>サイズ</h4>
-        <div class="property-value">w: {{w}}, h: {{h}}</div>
-        {{/area}}
+
+
+        <h3 id="face-item-detail-title">BUTTON 
+        <span class="button-info-brand-and-type">
+            {{#deviceInfo}}
+            {{#code_db}}
+            {{brand}}  {{device_type}}
+            {{/code_db}}
+            {{/deviceInfo}}
+        </span>
+        </h3>
+      
+
+        <div id="states-container"></div>
+
+
+
         {{#deviceInfo}}
         {{#code_db}}
-        <h4>ブランド</h4>
-        <div class="property-value">{{brand}}</div>
-        <h4>カテゴリー</h4>
-        <div class="property-value">{{device_type}}</div>
+
         {{#model_number}}
         <h4>型番</h4>
         <div class="property-value">{{model_number}}</div>
         {{/model_number}}
+
         {{/code_db}}
         {{/deviceInfo}}
 
-        <h4>状態</h4>
-        <div id="states-container"></div>
         {{! v1.0 では非対応}}
         {{! <button id="add-state">状態を追加</button> }}
     </script>
 
-    <!--<script type="text/template" id="template-button-detail">
-        {{! ボタンの詳細情報エリア}}
-        <h3>ボタン</h3>
-        <hr />
-        <div id="property-cid">
-            <span class="property-title">CID</span>
-            <input class="property-value small" type="text" value="{{cid}}" readonly="readonly" />
-        </div>
-        <div id="area-container"></div>
-        <div id="device-info-container">
-            {{#deviceInfo}}
-            {{#code_db}}
-            <div>
-                <span class="property-title">ブランド</span>
-                <input class="property-value small" type="text" value="{{brand}}" readonly="readonly" />
-            </div>
-            <div>
-                <span class="property-title">カテゴリー</span>
-                <input class="property-value small" type="text" value="{{device_type}}" readonly="readonly" />
-            </div>
 
-            <div>
-                <span class="property-title">信号の種類</span>
-                <input class="property-value small" type="text" value="{{db_codeset}}" readonly="readonly" />
-            </div>
-
-            {{#model_number}}
-            <div>
-                <span class="property-title">型番</span>
-                <input class="property-value small" type="text" value="{{.}}" readonly="readonly" />
-            </div>
-            {{/model_number}}
-            {{/code_db}}
-            {{/deviceInfo}}
-        </div>
-        <div id="states-container"></div>
-        {{!-- v1.0 では非対応
-        <button id="add-state">状態を追加</button>
-        --}}
-    </script>-->
 
     <script type="text/template" id="template-image-detail">
         {{! 画像アイテムの詳細情報エリア}}
-        <h3>画像 <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
+
+        <h3 id="face-item-detail-title">IMAGE <span class="property-cid"></span></h3>
+
+
+
+        <!-- プレビュー -->
+        <div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}"></div>
+
+
+        <!-- ボタンのエリア -->
+        <div class="one-line-label">
+            <div class="label-button-state">位置</div>
+            <div class="label-button-state">サイズ</div>
+        </div>
         {{#area}}
-        <h4>位置</h4>
-        <div class="property-value">x: {{x}}, y: {{y}}</div>
-        <h4>サイズ</h4>
-        <div class="property-value">w: {{w}}, h: {{h}}</div>
+        <div class="one-line-label">
+            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
+            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
+        </div>
         {{/area}}
+
+
+        <!-- 画像ファイル -->
         <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <h4>リサイズモード</h4>
-        <select class="image-resize-mode" id="select-image-resize-mode">
-            <option value="contain" selected="selected">contain</option>
-            <option value="cover">cover</option>
-            <option value="stretch">stretch</option>
-        </select>
-        <h4>プレビュー</h4>
-        <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
+        <input id="refer-image" class="property-value inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class="ui-btn inline" id="delete-background-image">削除</button>
+
     </script>
-    <!--<script type="text/template" id="template-image-detail">
-        {{! 画像アイテムの詳細情報エリア}}
-        <h3>画像</h3>
-        <hr />
-        <div id="property-cid">
-            <span class="property-title">CID</span>
-            <input class="property-value small" type="text" value="{{cid}}" readonly="readonly" />
-        </div>
-        <div id="area-container"></div>
-        <div id="property-image">
-            <div id="propery-image-src">
-                <span class="property-title">ファイル</span>
-                <input class="property-value middle" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" />
-                <button id="refer-image">参照</button>
-                <span class="property-title">リサイズモード</span>
-                <select class="image-resize-mode" id="select-image-resize-mode">
-                    <option value="contain" selected="selected">contain</option>
-                    <option value="cover">cover</option>
-                    <option value="stretch">stretch</option>
-                </select>
-            </div>
-            <div id="property-image-preview">
-                <span class="property-title">PREVIEW</span>
-                <div class="property-value" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');" />
-            </div>
-        </div>
-    </script>-->
+
+
+
+
+
+
+
     <script type="text/template" id="template-label-detail">
         {{! ラベルアイテムの詳細情報エリア}}
-        <h3>ラベル <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
+     
+        <h3 id="face-item-detail-title">LABEL <span class="property-cid"></span></h3>
+
+
+        <!-- ボタンのエリア -->
+        <div class="one-line-label">
+            <div class="label-button-state">位置</div>
+            <div class="label-button-state">サイズ</div>
+        </div>
         {{#area}}
-        <h4>位置</h4>
-        <div class="property-value">x: {{x}}, y: {{y}}</div>
-        <h4>サイズ</h4>
-        <div class="property-value">w: {{w}}, h: {{h}}</div>
+        <div class="one-line-label">
+            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
+            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
+        </div>
         {{/area}}
+
+
+
         <h4>テキスト</h4>
-        <input class="property-value" data-property="text" type="text" value="{{text}}" />
-        <h4>フォントサイズ</h4>
+        <input class="property-value property-text-value" data-property="text" type="text" value="{{text}}" />
+        <!--
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
+          -->  
+        
+        <select class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}">
+            <option value="12">12px</option>
+            <option value="14">14px</option>
+            <option value="16">16px</option>
+            <option value="18">18px</option>
+            <option selected value="20">20px</option>
+            <option value="24">24px</option>
+            <option value="28">28px</option>
+            <option value="30">30px</option>
+            <option value="32">32px</option>
+            <option value="36">36px</option>
+            <option value="40">40px</option>
+            <option value="44">44px</option>
+            <option value="48">48px</option>
+            <option value="54">54px</option>
+            <option value="60">60px</option>
+            <option value="72">72px</option>
+            <option value="80">80px</option>
+            <option value="88">88px</option>
+            <option value="96">96px</option>
+        </select>
+            
     </script>
+
+
+
+
 
     <script type="text/template" id="template-page-background-detail">
-        {{! ページの背景}}
-        <h3>ページ背景 <span class="property-cid">(cid: {{cid}})</span></h3>
-        <hr />
-        <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" readonly="readonly" />
-        <button id="delete-background-image">削除</button>
-        <h4>リサイズモード</h4>
-        <select class="image-resize-mode" id="select-image-resize-mode">
-            <option value="contain" selected="selected">contain</option>
-            <option value="cover">cover</option>
-            <option value="stretch">stretch</option>
-        </select>
-        <h4>プレビュー</h4>
-        <div id="property-image-preview" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');"></div>
+      
+        <h3 id="face-item-detail-title">BACKGROUND <span class="property-cid"></span></h3>
 
-        <!--<div id="property-image">
-            <div id="propery-page-background-image-src">
-                <span class="property-title">ファイル</span>
-                <input class="property-value middle" type="text" value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}" />
-                <button id="refer-image">参照</button>
-                <button id="delete-background-image">削除</button>
-                <span class="property-title">リサイズモード</span>
-                <select class="image-resize-mode" id="select-image-resize-mode">
-                    <option value="contain" selected="selected">contain</option>
-                    <option value="cover">cover</option>
-                    <option value="stretch">stretch</option>
-                </select>
-            </div>
-            <div id="property-image-preview">
-                <span class="property-title">PREVIEW</span>
-                <div class="property-value" style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');" />
-            </div>
-        </div>-->
+
+
+        <!-- プレビュー -->
+        <div id="property-image-preview" {{#enabled}}style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}"></div>
+
+
+
+        <!-- 画像ファイルのエリア -->
+        <h4>画像ファイル</h4>
+        <input id="refer-image" class="property-value page-background-src inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
+        <button class ="ui-btn inline" id="delete-background-image">削除</button>
+
+        
     </script>
+
+
+
 
     <script type="text/template" id="template-property-cid">
         <div id="property-cid">
@@ -175,6 +154,9 @@
             <p class="inline property-value small">{{cid}}</p>
         </div>
     </script>
+
+
+
 
     <script type="text/template" id="template-property-area">
         <div id="property-area">
@@ -193,63 +175,116 @@
         </div>
     </script>
 
+
+
+
+
     <script type="text/template" id="template-property-button-state">
-        <div>
-            <h5>状態 {{id}}</h5>
             <div class="state-container">
-                <div class="property-state-label">
-                    <h3>ラベル</h3>
-                    <hr />
-                    <h4>テキスト</h4>
-                    <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-                    <h4>フォントサイズ</h4>
-                    <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
+
+                <!-- プレビュー -->
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+
+
+
+                <!-- ボタンのエリア -->
+                <div class ="one-line-label">
+                    <div class="label-button-state">位置</div>
+                    <div class="label-button-state">サイズ</div>
                 </div>
 
+                <div class="one-line-label">
+                    <div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
+                    <div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
+                </div>
+
+
+
+                <!-- 画像ファイル変更 -->
                 <div class="property-state-image">
-                    <h3>画像</h3>
-                    <hr />
-
                     <h4>画像ファイル</h4>
-                    <input class="property-value refer-state-image" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-                    <button class="delete-state-image" data-state-id="{{id}}">削除</button>
-                    <h4>リサイズモード</h4>
-                    <select class="state-image-resize-mode button-state-property" data-state-id="{{id}}">
-                        <option value="contain" selected="selected">contain</option>
-                        <option value="cover">cover</option>
-                        <option value="stretch">stretch</option>
-                    </select>
-                    <h4>プレビュー</h4>
-                    <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+                    <input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
+                    <button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
                 </div>
 
-                <div class="property-state-action">
-                    <h3>アクション</h3>
-                    <hr />
-                    <h4>入力</h4>
-                    <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
-                        <option value="touch">タッチ</option>
-                        <option value="touch_top">上半分をタッチ</option>
-                        <option value="touch_bottom">下半分をタッチ</option>
-                        <option value="touch_right">右半分をタッチ</option>
-                        <option value="touch_left">左半分をタッチ</option>
-                        <option value="long_press">長押し</option>
-                        <option value="swipe_up">上スワイプ</option>
-                        <option value="swipe_down">下スワイプ</option>
-                        <option value="swipe_right">右スワイプ</option>
-                        <option value="swipe_left">左スワイプ</option>
-                        <option value="ring_right">リング右回転</option>
-                        <option value="ring_left">リング左回転</option>
-                    </select>
-                    <h4>信号</h4>
-                    <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
-                        <option value="none">何もしない</option>
-                        {{#functions}}
-                        <option value="{{.}}">{{.}}</option>
-                        {{/functions}}
-                    </select>
-                </div>
+
+                <!-- テキスト -->
+                    <div class="property-state-label">
+                        <h4>テキスト</h4>
+                        <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+                        <!--
+                        <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
+                            -->
+
+                        <select class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" >
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="24">24px</option>
+                            <option value="28">28px</option>
+                            <option selected value="30">30px</option>
+                            <option value="32">32px</option>
+                            <option value="36">36px</option>
+                            <option value="40">40px</option>
+                            <option value="44">44px</option>
+                            <option value="48">48px</option>
+                            <option value="54">54px</option>
+                            <option value="60">60px</option>
+                            <option value="72">72px</option>
+                            <option value="80">80px</option>
+                            <option value="88">88px</option>
+                            <option value="96">96px</option>
+                        </select>
+
+                    </div>
+
+
+
+                <!-- アクション -->
+                    <div class="property-state-action">
+                        <h4>アクション</h4>
+                        <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}">
+                            <option value="touch">タップ</option>
+                            <option value="long_press">長押し</option>
+                            <option value="swipe_up">上スワイプ</option>
+                            <option value="swipe_down">下スワイプ</option>
+                            <option value="swipe_right">右スワイプ</option>
+                            <option value="swipe_left">左スワイプ</option>
+                        </select>
+                        <select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}">
+                            <option value="none">何もしない</option>
+                            {{#functions}}
+                            <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                            {{/functions}}
+                        </select>
+
+
+                    </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="template-property-button-state-ac"> <!-- Air Conditioner button has less items -->
+        <div class="state-container">
+
+            <!-- プレビュー -->
+            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+
+
+
+            <!-- ボタンのエリア -->
+            <div class="one-line-label">
+                <div class="label-button-state">位置</div>
+                <div class="label-button-state">サイズ</div>
             </div>
+
+            <div class="one-line-label">
+                <div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
+                <div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
+            </div>
+
+
         </div>
     </script>
 </article>

@@ -1,8 +1,11 @@
 ﻿<article data-role="page" id="page-full-custom" data-title="Garage" data-theme="b">
     <header data-role="header" data-title="Garage">
-        <h3>フルカスタムリモコン編集</h3>
-        <!--<a href="#" data-rel="back" data-role="button">戻る</a>-->
-        <button id="button-edit-done">完了</button>
+        <h3>EDIT</h3>
+        <button id="button-edit-back" data-rel="back" data-role="button"></button>
+        <div class="header-button-lline-alingn-right">
+            <button id="button-edit-done"></button>
+            <button id="option-pulldown-menu"></button>
+        </div>
     </header>
     <section data-role="content">
         <section id="main">
@@ -15,6 +18,7 @@
                         <div class="item-resizer right-bottom"></div>
                         <div class="item-resizer left-bottom"></div>
                     </script>
+                    <button id="button-add-page">新規ページ</button>
                 </section>
                 <section id="face-item-detail-area">
                     <section id="face-item-detail"></section>
@@ -28,13 +32,25 @@
                         {{#faces}}
                         <div class="face-item" data-remote-id="{{remoteId}}">{{name}}</div>
                         {{/faces}}
+                        
                         </script>
                     </div>
-                    <div id="face-item-list-scroll-left">&lt;</div>
-                    <div id="face-item-list-scroll-right">&gt;</div>
+                    <div id="face-item-list-scroll-left"></div>
+                    <div id="face-item-list-scroll-right"></div>
+                    <div id="face-item-list-scroll-margin-left"></div>
+                    <div id="face-item-list-scroll-margin-right"></div>
                 </section>
-                <section id="face-pallet"></section>
+                <section id="face-pallet">
+                    <div id="pallet-area-gradation-top"></div>
+                    <div id="pallet-area-gradation-bottom"></div>
+                </section>
             </section>
         </section>
+    </section>
+    <section id="option-pulldown-menu-popup" data-role="popup">
+        <ul id="option-pulldown-menu-list">
+            <li id="command-about-this" class="menu-item-text">このアプリについて</li>
+            <li id="command-visit-help" class="menu-item-text">ヘルプサイトを開く</li>
+        </ul>
     </section>
 </article>

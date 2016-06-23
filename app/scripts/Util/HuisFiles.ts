@@ -234,7 +234,7 @@ module Garage {
 			private _getMasterFunctions(remoteId: string): string[] {
 				var masterFace = this._getMasterFace(remoteId);
 				if (!masterFace) {
-					console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
+					//console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
 					return null;
 				}
 
@@ -349,6 +349,20 @@ module Garage {
 			}
 
 			/**
+			 * 新しい face を作成できるかどうか。
+			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+			 * 
+			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 */
+			canCreateNewRemote(): boolean {
+				if (this.remoteList_.length < MAX_HUIS_FILES) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+			/**
 			 * 新しい remoteId を作成する。
 			 * 新しい remoteId は remoteList に格納されていないものの中で最小の数字を 4 桁の 0 パディングしたものである。
 			 * (例: "0012", "0345", "8765" など)
@@ -430,12 +444,6 @@ module Garage {
 				if (removedRemoteListCount < remoteListCount) {
 					// remoteList の更新
 					this.remoteList_ = removedRemoteList;
-
-					//// 削除される removeId の remote のディレクトリーを削除
-					//var removingRemoteDirectory = path.join(this.huisFilesRoot_, remoteId);
-					//if (fs.existsSync(removingRemoteDirectory)) {
-					//	fs.rmdirSync(removingRemoteDirectory);
-					//}
 				}
 			}
 
@@ -498,24 +506,6 @@ module Garage {
 
 				return promise;
 
-				//// 不要な画像を削除
-				//this._removeUnnecessaryImages(remoteId, gmodules);
-
-				///* remotelist.ini ファイルを更新 */
-
-				//// remoteList 内に、remoteId が含まれているかをチェック。
-				//// 含まれていない場合はリストに追加する。
-				//// 含まれているかどうかのチェックは、filter メソッドで追加しようとする remoteId である配列を抽出し、
-				//// その配列の length が 1以上であるかで行う。
-				//var count = this.remoteList_.filter((val: IRemoteId) => {
-				//	return val.remote_id === remoteId;
-				//}).length;
-
-				//if (count <= 0) {
-				//	this.remoteList_.push({ remote_id: remoteId });
-				//}
-
-				//this.updateRemoteList();
 			}
 
 			/**
@@ -645,7 +635,7 @@ module Garage {
 						area: button.area,
 						state: this._normalizeButtonStates(button.state, remoteId)
 					};
-					if (button.default !== undefined) {
+					if (button.default != null) {
 						normalizedButton.default = button.default;
 					}
 					normalizedButtons.push(normalizedButton);
@@ -981,7 +971,7 @@ module Garage {
 			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
-					console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
+					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
 					return undefined;
 				}
 
@@ -1078,7 +1068,7 @@ module Garage {
 						state: gstates,
 						currentStateId: undefined
 					};
-					if (_.isUndefined(button.default)) {
+					if (button.default) {
 						gbutton.default = button.default;
 					}
 					gbuttons.push(gbutton);

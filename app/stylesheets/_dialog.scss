@@ -1,9 +1,73 @@
-﻿.common-dialog {
-    text-shadow: none;
+﻿@import "variables/variable";
+
+body{
+
+
+//共通ダイアログ
+.ui-popup-screen.in{
+    opacity: $OPACITY_DIALOG_MASK;
 }
 
-.spinner-dialog {
-    > p {
-        margin: 10px 20px;
+.ui-overlay-b{
+    background-color:$COLOR_DIALOG_MASK;   
+}
+
+.common-dialog{
+    text-shadow: none;
+    font-family:$FONT_FAMILY_COMMON_CONBINED;
+    height:$SIZE_DIALOG_HEIGHT;
+    width:$SIZE_DIALOG_WIDTH;
+    color:$COLOR_DIALOG_TEXT;
+    background:$COLOR_DIALOG_BACKGROUND;
+    border-radius:0;
+    border:none;
+    max-width:none;
+    box-shadow:none;
+    -webkit-box-shadow:none;
+
+    .spinner-dialog{
+        height:$SIZE_DIALOG_HEIGHT;
+        padding:0;
+        -webkit-box-pack:inherit;
+
+        p{
+            word-wrap:break-word;
+            font-size:$FONT_SIZE_DIALOG_TEXT;
+            font-weight:$FONT_WEIGHT_DIALOG_TEXT;
+            width:$SIZE_DIALOG_TEXT_WIDTH;
+            margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
+            margin-left:0px;
+            margin-top:0px;
+            margin-bottom:0px;
+        }
     }
+
+    #common-dialog-center-spinner{
+        position:relative;
+        height:$SIZE_DIALOG_ICON_HEIHGT;
+        width:$SIZE_DIALOG_ICON_WIDTH;
+        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
+        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
+        -webkit-box-align: center;
+        background-image:$PATH_IMG_DIALOG_SPINNER;
+        background-position:center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    #simple-dialog-image{
+        position:relative;
+        height:$SIZE_DIALOG_ICON_HEIHGT;
+        width:$SIZE_DIALOG_ICON_WIDTH;
+        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
+        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
+        -webkit-box-align: center;
+        background-image:$PATH_IMG_DIALOG_DONE_ICON;
+        background-position:center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+}
+
 }
