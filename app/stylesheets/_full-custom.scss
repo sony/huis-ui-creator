@@ -340,6 +340,28 @@
         margin-top : $SIZE_PALEET_AREA_MARGIN_TOP;
         //background-color: #8888ff;
 
+
+
+        #pallet-area-gradation-top{
+            visibility:hidden;
+            position:absolute;
+            top:0;
+            width:$SIZE_FACE_PALLET_GRADATION_TOP_WIDTH;
+            height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+            background:$COLOR_PALLET_GRADATION_TOP;
+            z-index:1;
+        }
+
+        #pallet-area-gradation-bottom{
+            visibility:visible;
+            position:absolute;
+            bottom:0;
+            width:$SIZE_FACE_PALLET_GRADATION_BOTTOM_WIDTH;
+            height:$SIZE_FACE_PALLET_GRADATION_BOTTOM_HEIGHT;
+            background:$COLOR_PALLET_GRADATION_BOTTOM;
+            z-index:1;
+        }
+
         #face-item-list-container {
             position: relative;
             overflow: hidden;
@@ -386,7 +408,6 @@
                     &.active {
                         color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
                     }
-                    
                 }
             }
 

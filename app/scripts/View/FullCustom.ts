@@ -146,7 +146,9 @@ module Garage {
 					"mouseup #main": "onMainMouseUp",
 
 					// キャンバスのページスクロール
-					"scroll #face-pages-area": "onCanvasPageScrolled",
+                    "scroll #face-canvas #face-pages-area": "onCanvasPageScrolled",
+                    "scroll #face-pallet #face-pages-area": "onPalletPageScrolled",
+
 					// キャンバス内のページ追加ボタン
 					"click #button-add-page": "onAddPageButtonClicked",
 					// 詳細編集エリアのイベント
@@ -303,9 +305,11 @@ module Garage {
 				this.currentTargetPageIndex_ = 0;
 
 				// [TODO] Canvas 内の page scroll
-				$("#face-pages-area").scroll((event: JQueryEventObject) => {
+                $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
 					this.onCanvasPageScrolled(event);
-				});
+                });
+
+              
 			}
 
 			/**
@@ -410,7 +414,7 @@ module Garage {
 			 */
 			private _renderFacePallet(remoteId: string) {
 				var $facePallet = $("#face-pallet");
-				$facePallet.children().remove();
+                $facePallet.find("#face-pages-area").remove();
 
 				var face: IGFace;
 				if (remoteId === "common") {
@@ -427,8 +431,13 @@ module Garage {
 					}
 				});
 				this.faceRenderer_pallet_.render();
-
-				this._pageLayout();
+                this._pageLayout();
+                //スクロールイベント
+                $facePallet.find("#face-pages-area").scroll((event: JQueryEventObject) => {
+                    this.onPalletPageScrolled(event);
+                });
+                
+                this.displayGradationInPalletArea(0, $facePallet.find("#face-pages-area"));
 			}
 
 			/**
@@ -1013,7 +1022,60 @@ module Garage {
 						$("#page-index").text((this.currentTargetPageIndex_ + 1) + "");
 					}
 				});
-			}
+            }
+
+            /**
+			 * パレット内のスクロールイベントのハンドリング
+			 */
+            private onPalletPageScrolled(event: Event) {
+                console.log("onPalletPageScrolled:pallet scrolled");
+                var $target: JQuery = $(event.currentTarget);
+                var scrollTop: number = $target.scrollTop();
+                console.log("onPalletPageScrolled:scrollTop: " + scrollTop);
+                this.displayGradationInPalletArea(scrollTop, $target);
+
+                var $children = $target.children();
+                var scaledFaceHeight = HUIS_FACE_PAGE_HEIGHT / 2;
+              
+            }
+
+
+            private displayGradationInPalletArea(scrollTop: number, $target :JQuery) {
+
+                //最上段の場合、グラデーションを非表示に。それ以外は表示
+                if (scrollTop === 0) {
+                    $("#pallet-area-gradation-top").css("visibility", "hidden");
+                } else {
+                    $("#pallet-area-gradation-top").css("visibility", "visible");
+                }
+
+                var height: number = $target.height();
+
+                var totalHeight: number = 0;
+
+                $target.children().each((index, elem) => {
+                    totalHeight += $(elem).outerHeight();
+                }
+                );
+
+                if (height < totalHeight) {
+                    height = totalHeight;
+                }
+
+                var palletHeight = $("#face-pallet").outerHeight();
+               
+                if (scrollTop > height - palletHeight*2) {
+                    $("#pallet-area-gradation-bottom").css("visibility", "hidden");
+                } else {
+                    $("#pallet-area-gradation-bottom").css("visibility", "visible");
+                }
+
+                var maxHeightTargetPx:any = $target.css("max-height");
+                var maxHeightTarget:any = maxHeightTargetPx.replace("px", "");
+                if (height < maxHeightTarget) {//長さがpalletarea 以下なら、非表示
+                    $("#pallet-area-gradation-bottom").css("visibility", "hidden");
+                }
+            }
 
 			/**
 			 * キャンバス内のページ追加ボタンのハンドリング
