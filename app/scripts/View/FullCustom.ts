@@ -171,9 +171,10 @@ module Garage {
                     // プルダウンメニューのリスト
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
-                    // 詳細編集画面のテキストボックスへのfocusin/out ここにfocusされている場合はBS/DELキーによる削除を抑制
-                    "focusin .property-value": "_onTextBoxFocusIn",
-                    "focusout .property-value": "_onTextBoxFocusOut",
+                    // テキストボックスへのfocusin/out
+                    "focusin .property-value.property-state-text-value": "_onTextBoxFocusIn",
+                    "focusout .property-value.property-state-text-value": "_onTextBoxFocusOut",
+
 
 				};
 			}
