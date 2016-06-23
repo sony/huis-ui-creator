@@ -444,12 +444,6 @@ module Garage {
 				if (removedRemoteListCount < remoteListCount) {
 					// remoteList の更新
 					this.remoteList_ = removedRemoteList;
-
-					//// 削除される removeId の remote のディレクトリーを削除
-					//var removingRemoteDirectory = path.join(this.huisFilesRoot_, remoteId);
-					//if (fs.existsSync(removingRemoteDirectory)) {
-					//	fs.rmdirSync(removingRemoteDirectory);
-					//}
 				}
 			}
 
@@ -512,24 +506,6 @@ module Garage {
 
 				return promise;
 
-				//// 不要な画像を削除
-				//this._removeUnnecessaryImages(remoteId, gmodules);
-
-				///* remotelist.ini ファイルを更新 */
-
-				//// remoteList 内に、remoteId が含まれているかをチェック。
-				//// 含まれていない場合はリストに追加する。
-				//// 含まれているかどうかのチェックは、filter メソッドで追加しようとする remoteId である配列を抽出し、
-				//// その配列の length が 1以上であるかで行う。
-				//var count = this.remoteList_.filter((val: IRemoteId) => {
-				//	return val.remote_id === remoteId;
-				//}).length;
-
-				//if (count <= 0) {
-				//	this.remoteList_.push({ remote_id: remoteId });
-				//}
-
-				//this.updateRemoteList();
 			}
 
 			/**

@@ -1567,29 +1567,31 @@ module Garage {
 							}
 							break;
 
-						case "resizeMode":
-							{
-								switch (value) {
-									case "contain":
-										$target.removeClass("image-stretch")
-										       .removeClass("image-cover");
-										break;
+                        case "resizeMode":
+                            {
+                                switch (value) {
+                                    case "contain":
+                                        $target.removeClass("image-stretch")
+                                            .removeClass("image-cover");
+                                        break;
 
-									case "cover":
-										$target.addClass("image-cover")
-										       .removeClass("image-stretch");
-										break;
+                                    case "cover":
+                                        $target.addClass("image-cover")
+                                            .removeClass("image-stretch");
+                                        break;
 
-									case "stretch":
-										$target.addClass("image-stretch")
-											   .removeClass("image-cover");
-										break;
+                                    case "stretch":
+                                        $target.addClass("image-stretch")
+                                            .removeClass("image-cover");
+                                        break;
 
-									default:
-										$target.removeClass("image-stretch")
-											   .removeClass("image-cover");
-								}
-							}
+                                    default:
+                                        $target.removeClass("image-stretch")
+                                            .removeClass("image-cover");
+                                }
+                            }
+                            break;
+
 						case "resizeOriginal":
 							{
 								let resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
