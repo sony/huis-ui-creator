@@ -94,7 +94,8 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = this.DEFAULT_GRID;
-				requirejs(["pixi"]);
+                requirejs(["pixi"]);
+
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -240,8 +241,6 @@ module Garage {
                 let PROPATY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
-                console.log("detailWidth : " + detailWidth);
-
                 let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
@@ -332,32 +331,25 @@ module Garage {
 				$listScrollLeft.addClass("disabled");
 				$listScrollRight.addClass("disabled");
 
-				this._layoutFacesList();
 
 				// face list から face を選択すると、選択した face をパレットにをレンダリングする
-				var $faceItem = $(".face-item");
-				$faceItem.on("click", (event: JQueryEventObject) => {
-					let $clickedFaceItem = $(event.currentTarget);
-					let remoteId: string = "" + JQUtils.data($clickedFaceItem, "remoteId"); //$clickedFaceItem.data("remoteId");
-					$faceItem.removeClass("active");
-					$clickedFaceItem.addClass("active");
-					this._renderFacePallet(remoteId);
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+
+                $faceItem.on("click", (event: JQueryEventObject) => {
+                    this._onFaceItemSelected($(event.currentTarget));
 				});
 
-				var $faceItemList = $("#face-item-list");
 
 				// face list のスクロール (左方向)
 				$listScrollLeft.click(() => {
 					if ($listScrollLeft.hasClass("disabled")) {
 						return;
 					}
-					this.faceListScrollLeft_ -= 200;
-					if (this.faceListScrollLeft_ <= 0) {
-						this.faceListScrollLeft_ = 0;
-						$listScrollLeft.addClass("disabled");
-					}
+                    this.faceListScrollLeft_ -= 200;
+                    this.disableScrollLeftButton();
 					$listScrollRight.removeClass("disabled");
-					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
+                    $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
 				});
 
 				// face list のスクロール (右方向)
@@ -365,16 +357,108 @@ module Garage {
 					if ($listScrollRight.hasClass("disabled")) {
 						return;
 					}
-					this.faceListScrollLeft_ += 200;
-					if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-						this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
-						$listScrollRight.addClass("disabled");
-					}
+                    this.faceListScrollLeft_ += 200;
+                    this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
-					$faceItemList.css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
-				});
+					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
+                });
 
-			}
+                this._layoutFacesList();
+
+            }
+
+            /*
+            * パレットエリアの初期選択リモコンを設定
+            */
+            private selectFirstRemtoeInFaceList() {
+                let $faceItems = $(".face-item");
+                if (!$faceItems.hasClass("active")) {
+                    //アニメの秒数を一度0にする
+                    var animeValueTmp = $("#face-item-list").css("transition-duration");
+                    $("#face-item-list").css("transition-duration", "0s");
+                    if ($faceItems.length !== 1) {//初期状態で、一番左のリモコンを選択。
+                        this._onFaceItemSelected($($faceItems[1]));
+                    } else {//リモコンが一つもない場合はcommonを選択。
+                        this._onFaceItemSelected($($faceItems[0]));
+                    }
+                    //アニメの秒数を戻す。
+                    $("#face-item-list").css("transition-duration", animeValueTmp);
+                }
+            }
+
+            /**
+            * パレットエリアのface-itemが選択された際の処理
+            * @ $clickedFaceItem 選択されたface-item:jQuery
+            **/
+            private _onFaceItemSelected($clickedFaceItem: JQuery) {
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+                //選択したfaceItemを移動。
+                this._moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem);
+                let remoteId: string = "" + JQUtils.data($clickedFaceItem, "remoteId"); //$clickedFaceItem.data("remoteId");
+                $faceItem.removeClass("active");
+                $clickedFaceItem.addClass("active");
+                this._renderFacePallet(remoteId);
+            }
+
+            /**
+            * 選択したfaceItemがfaceListの中央になるように移動
+            * @ $clickedFaceItem 選択されたface-item:jQuery
+            **/
+            private _moveSelectedFaceItemToCenterOfFaceList($clickedFaceItem : JQuery) {
+                var $faceItem = $(".face-item");
+                var $faceItemList = $("#face-item-list");
+                var $faceItemListContainer = $("#face-item-list-container");
+                
+                
+                var FaceListWidth = $faceItemListContainer.width();
+
+                //face-itemの現在の位置を取得する。
+                var positionLeft: any = $clickedFaceItem.css("left").replace('px', '');
+                //face-item-llistの中央の値との差分を算出
+                this.faceListScrollLeft_ = positionLeft - (FaceListWidth / 2) + ($clickedFaceItem.outerWidth() / 2);
+                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width()/2; 
+                this.faceListScrollLeft_ += fineTuneLeft;//face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+                this.disableScrollRightButton();
+                this.disableScrollLeftButton();
+
+                //差分分、移動する。
+                $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_) + "px)");
+            }
+
+            /**
+            * 右スクロールボタンの非表示判定
+            */
+            private disableScrollRightButton() {
+                // face list の右スクロールボタン
+                var $listScrollRight = $("#face-item-list-scroll-right");
+                if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
+                    this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
+                    $listScrollRight.addClass("disabled");
+                } else {
+                    $listScrollRight.removeClass("disabled");
+                }
+            }
+
+
+            /**
+           * 左スクロールボタンの非表示判定
+           */
+            private disableScrollLeftButton() {
+                // face list の左スクロールボタン
+                var faceListWidth = $("#face-item-list-container").width();
+                var faceItemCommonWidth = $('.face-item[data-remote-id="common"]').outerWidth();
+                var fineTuneLeft = $("#face-item-list-scroll-margin-left").width()/2; //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+
+                var MIN_SCROLL_LEFT = -(faceListWidth / 2) + (faceItemCommonWidth / 2) + fineTuneLeft;//左端はCOMMONが中央になる
+                var $listScrollLeft = $("#face-item-list-scroll-left");
+                if (this.faceListScrollLeft_ <= MIN_SCROLL_LEFT) {
+                    this.faceListScrollLeft_ = MIN_SCROLL_LEFT;
+                    $listScrollLeft.addClass("disabled");
+                } else {
+                    $listScrollLeft.removeClass("disabled");
+                }
+            }
 
 			/**
 			 * face list のレイアウトを行う
@@ -403,9 +487,10 @@ module Garage {
 								}
 								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 							}
-
 						}
-					});
+                    }
+                    );
+                    this.selectFirstRemtoeInFaceList();
 				}, 0);
 			}
 
