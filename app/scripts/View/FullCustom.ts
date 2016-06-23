@@ -1198,11 +1198,13 @@ module Garage {
 			 */
 			private onItemPropertySelectChanged(event: Event) {
 				var $target = $(event.currentTarget);
-				if ($target.hasClass("state-action-input") || $target.hasClass("state-action-function")) {
-					this._setButtonStateActionsBySelect($target);
-				} else if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
-					this._setImageResizeModeBySelect($target);
-				}
+                if ($target.hasClass("state-action-input") || $target.hasClass("state-action-function")) {
+                    this._setButtonStateActionsBySelect($target);
+                } else if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
+                    this._setImageResizeModeBySelect($target);
+                } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
+                    this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
+                }
 			}
 
 			/**

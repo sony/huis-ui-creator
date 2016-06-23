@@ -94,7 +94,32 @@
 
         <h4>テキスト</h4>
         <input class="property-value property-text-value" data-property="text" type="text" value="{{text}}" />
+        <!--
         <input class="property-value" data-property="size" type="range" min="8" max="64" step="1" value="{{#size}}{{size}}{{/size}}{{^size}}24{{/size}}" />
+          -->  
+        
+        <select class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}">
+            <option value="12">12px</option>
+            <option value="14">14px</option>
+            <option value="16">16px</option>
+            <option value="18">18px</option>
+            <option selected value="20">20px</option>
+            <option value="24">24px</option>
+            <option value="28">28px</option>
+            <option value="30">30px</option>
+            <option value="32">32px</option>
+            <option value="36">36px</option>
+            <option value="40">40px</option>
+            <option value="44">44px</option>
+            <option value="48">48px</option>
+            <option value="54">54px</option>
+            <option value="60">60px</option>
+            <option value="72">72px</option>
+            <option value="80">80px</option>
+            <option value="88">88px</option>
+            <option value="96">96px</option>
+        </select>
+            
     </script>
 
 
@@ -187,7 +212,32 @@
                     <div class="property-state-label">
                         <h4>テキスト</h4>
                         <input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+                        <!--
                         <input class="property-value property-state-text-size" data-property="state-size" type="range" min="8" max="64" step="1" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}{{/label}}{{^label}}20{{/label}}" data-state-id="{{id}}" />
+                            -->
+
+                        <select class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" >
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="24">24px</option>
+                            <option value="28">28px</option>
+                            <option selected value="30">30px</option>
+                            <option value="32">32px</option>
+                            <option value="36">36px</option>
+                            <option value="40">40px</option>
+                            <option value="44">44px</option>
+                            <option value="48">48px</option>
+                            <option value="54">54px</option>
+                            <option value="60">60px</option>
+                            <option value="72">72px</option>
+                            <option value="80">80px</option>
+                            <option value="88">88px</option>
+                            <option value="96">96px</option>
+                        </select>
+
                     </div>
 
 
