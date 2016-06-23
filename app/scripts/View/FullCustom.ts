@@ -126,7 +126,7 @@ module Garage {
 					} else {
 						this.commandManager_ = new CommandManager();
                     }
-
+                    $("#input-face-name").focus();
                     this.isTextBoxFocued = false;
 				});
 			}

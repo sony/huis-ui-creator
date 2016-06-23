@@ -66,9 +66,11 @@
             //box-shadow: 0 0 50px rgba(0,0,0,0.8);
 
             #face-canvas {
-                transform: scale(0.5);
+                
+                #face-pages-area{
+                    transform: scale(0.5);
                 transform-origin: left top;
-
+                }
                
                 .item {
                     cursor: move;

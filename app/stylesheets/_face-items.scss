@@ -27,20 +27,31 @@
 #face-name-area {
     position: relative;
     width: $SIZE_FACE_NAME_AREA_WIDTH;
-    height: $SIZE_FACE_NAME_AREA_HEIGHT;
+    //height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
     #input-face-name {
+        background-clip: padding-box;
+        background : none;
+        border-color :$COLOR_NAME_AREA_BORDER;
+
         width: 100%;
-        border: 0;
-        border:solid 1px #ccc;
-        border-radius: 3px;
+        text-align:center;
         font-size: $FONT_SIZE_CANVAS_NAME_AREA;
         font-weight:$FONT_WEIGHT_BUTTON_ITEM;
-        text-align:center;
-        margin: 12px 0;
-        height: 56px;
-        box-sizing: border-box;
+
+        &:hover{
+            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            background-color:$COLOR_FORM_BACKGROUND;
+        }
+
+        &:focus{
+            background-color:$COLOR_FORM_BACKGROUND;
+            padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
+            padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
+            outline:none;
+            border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+        }      
     }
 }
 
