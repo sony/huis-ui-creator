@@ -1,57 +1,76 @@
-﻿#face-canvas {
+﻿@import "variables/variable";
+
+#face-canvas {
     position: relative;
-    width: 640px;
-    height: 1120px;
-    background-color: #eee;
-    padding: 40px;
+    width: $SIZE_CANVAS_WIDTH;
+    height: $SIZE_CANVAS_HEIGHT;
     box-sizing: border-box;
 
     #face-pages-area {
-        height: 812px;
+        width : $SIZE_FACE_PAGES_AREA_WIDTH;
+        height: $SIZE_FACE_PAGES_AREA_HEIGHT;
+        margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
+    }
+
+    .image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
+        position: absolute;
+        z-index: -10;
     }
 
 }
 
 #face-canvas-inner {
     position:relative;
-    background-color: #ddd;
-    //margin: 12px 12px 0 12px;
-    padding: 32px 32px 0 32px;
+    padding: $SIZE_CANVAS_INNER_PADDING_TOP $SIZE_CANVAS_INNER_PADDING_LEFT 0 $SIZE_CANVAS_INNER_PADDING_RIGHT;
 }
 
 #face-name-area {
     position: relative;
-    width: 400px;
-    height: 80px;
+    width: $SIZE_FACE_NAME_AREA_WIDTH;
+    //height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
     #input-face-name {
+        background-clip: padding-box;
+        background : none;
+        border-color :$COLOR_NAME_AREA_BORDER;
+
         width: 100%;
-        border: 0;
-        border:solid 1px #ccc;
-        border-radius: 3px;
-        font-size: 32px;
         text-align:center;
-        font-family: "Noto Sans CJK JP","SST W55";
-        margin: 12px 0;
-        height: 56px;
-        box-sizing: border-box;
+        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
+        font-weight:$FONT_WEIGHT_BUTTON_ITEM;
+
+        &:hover{
+            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            background-color:$COLOR_FORM_BACKGROUND;
+        }
+
+        &:focus{
+            background-color:$COLOR_FORM_BACKGROUND;
+            padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
+            padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
+            outline:none;
+            border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+        }      
     }
 }
 
 #face-pages-area {
     position: relative;
     width: 480px;
-    margin: 0 8px;
-    border: 1px solid #999;
     overflow-x: hidden;
     overflow-y: overlay;
 }
 
 .face-page {
-    border-bottom: 4px dotted #888;
+    width:$SIZE_FACE_PAGE_WIDTH;
+    height:$SIZE_FACE_PAGE_HEIGHT;
+    border-bottom: $SIZE_FACE_PAGE_SEPARATOR_BOARDER_THICKNESS solid $COLOR_FACE_PAGE_SEPARATOR_BOARDER;
     color: black;
 }
+
+
+
 .face-page:last-child {
     border: 0;
 }
@@ -68,14 +87,16 @@
     text-align:center;
     color: #333333;
     font-size: 20px;
+    visibility:hidden;
 }
 
 #button-add-page {
-    position: relative;
-    width: 100%;
-    height: 80px;
-    font-size: 28px;
-    font-family: "Noto Sans CJK JP","SST W55";
+    position: absolute;
+    width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
+    height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
+    right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
+    bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
+    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
 }
 
 .button-item {
@@ -90,6 +111,14 @@
     vertical-align: middle;
     text-overflow: ellipsis;
     text-shadow: none;
+}
+
+.label-item{
+    font-weight:$FONT_WEIGHT_LABEL_ITEM;
+}
+
+.state-label {
+    font-weight:$FONT_WEIGHT_BUTTON_ITEM;
 }
 
 .label-value,

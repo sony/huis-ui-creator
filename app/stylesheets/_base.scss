@@ -1,14 +1,25 @@
+@import "variables/variable";
+
+
 @font-face {
-  font-family: 'SST W55';
-  src: url(../res/fonts/regular/8804b8af-432e-44cc-8a34-eda854e2da36.eot); // For IE
-  src: url(../res/fonts/regular/baeafb7d-3786-412a-8937-caa73e0a83cb.ttf) format('opentype');
+  font-family: $FONT_FAMILY_COMMON_SST;
+  font-weight: $FONT_FAMILY_NORMAL;
+  src: $PATH_FONT_SST_NORMAL_IE; // For IE
+  src: $PATH_FONT_SST_NORMAL;
 }
 
 @font-face {
-  font-family: 'SST W55';
-  font-weight: bold;
-  src: url(../res/fonts/bold/5a23571a-930f-4cf7-a194-6bdb9afd30d4.eot); // For IE
-  src: url(../res/fonts/bold/5c2400be-9e3e-4820-85e6-c85dce3a9755.ttf) format('opentype');
+  font-family: $FONT_FAMILY_COMMON_SST;
+  font-weight: $FONT_FAMILY_BOLD;
+  src: $PATH_FONT_SST_BOLD_IE; // For IE
+  src: $PATH_FONT_SST_BOLD;
+}
+
+@font-face {
+  font-family: $FONT_FAMILY_COMMON_SST;
+  font-weight: $FONT_FAMILY_LIGHT;
+  src: $PATH_FONT_SST_LIGHT_IE; // For IE
+  src: $PATH_FONT_SST_LIGHT;
 }
 
 /*
@@ -16,26 +27,29 @@
  * https://www.google.com/get/noto/
  */
 @font-face {
-    font-family: "Noto Sans CJK JP";
-    font-weight: lighter;
-    src: url(../res/fonts/NotoSansCJKjp-Light-subset.otf) format('opentype');
+    font-family: $FONT_FAMILY_COMMON_NOTO;
+    font-weight: $FONT_FAMILY_LIGHT;
+    src: $PATH_FONT_NOTO_LIGHT;
 }
 
 @font-face {
-    font-family: "Noto Sans CJK JP";
-    font-weight: normal;
-    src: url(../res/fonts/NotoSansCJKjp-Regular-subset.otf) format('opentype');
+    font-family: $FONT_FAMILY_COMMON_NOTO;
+    font-weight: $FONT_FAMILY_NORMAL;
+    src: $PATH_FONT_NOTO_NORMAL;
 }
 
 @font-face {
-    font-family: "Noto Sans CJK JP";
-    font-weight: bold;
-    src: url(../res/fonts/NotoSansCJKjp-Bold-subset.otf) format('opentype');
+    font-family: $FONT_FAMILY_COMMON_NOTO;
+    font-weight: $FONT_FAMILY_BOLD;
+    src: $PATH_FONT_NOTO_BOLD;
 }
 
 body {
     height: 100%;
-    font-family:"Noto Sans CJK JP",'SST W55',Arial,Helvetica,sans-serif;
+    font-family:$FONT_FAMILY_COMMON_CONBINED;
+    font-weight:$FONT_FAMILY_COMMON;
+    line-height:$FONT_HEIGHT_COMMON;
+    color:$COLOR_TEXT_COMMON;
     text-shadow: none;
     overflow: auto;
     -webkit-text-size-adjust: 100%;
@@ -47,11 +61,289 @@ body {
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+ 
+
+    //スクロールバー
+
+    ::-webkit-scrollbar {
+        &:horizontal{
+            height: $SIZE_SCROLL_BAR_WHOLE_HEIGHT;
+        }
+
+        &:vertical{
+            width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH;
+        }
+        background:$COLOR_TRANSPARENT;
+    }
+
+    #face-canvas, #face-pallet, #face-list{     
+        ::-webkit-scrollbar{
+            &:vertical{
+                //スケールが1/2なので２倍に
+                width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
+            }
+        }
+        ::-webkit-scrollbar-thumb {
+            &:vertical{
+                border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
+            }
+        }
+        //overflow :overlay;
+    }
+
+    //矢印ボタンを非表示に。
+    ::-webkit-scrollbar-button:no-button{
+    }
+
+    //スクロールバーのクリック可能エリア
+    ::-webkit-scrollbar-thumb {
+        &:hover{
+            background-color: $COLOR_SCROLL_BAR_HOVER;
+        }
+
+        &:active{
+            background-color: $COLOR_SCROLL_BAR_PRESSED;
+        }
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background-color: $COLOR_SCROLL_BAR_NORMAL;
+        background-clip: padding-box;
+
+        &:horizontal{
+            border-bottom : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_TOP solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-top : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_BOTTOM solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+        }
+
+        &:vertical{
+            border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+        }
+    }
+   
+
+    .ui-page-theme-b{
+
+        //共通のテキストボタン
+          .ui-btn{
+                font-family:$FONT_FAMILY_COMMON_CONBINED;
+
+                margin:0;
+                padding:0;
+                border:none;
+                height:$SIZE_BUTTON_HEIGHT;   
+                font-size:$FONT_SIZE_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                font-weight:$FONT_FAMILY_TEXT_BUTTON;
+                background-color:$COLOR_BUTTON_NORMAL;
+                box-shadow:none;   
+                border-radius:0;
+
+                &:hover{
+                    background-color:$COLOR_BUTTON_HOVER;
+                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    border:none;
+                }
+
+                &:active{
+                    background-color:$COLOR_BUTTON_PRESED;
+                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    box-shadow:none;
+                    border:none;
+                }
+
+                &:focus{
+                    box-shadow:none;
+                    border:none;
+                }
+            }
+
+            .ui-bar-inherit,
+            .ui-header{
+                background-color : $COLOR_HEADER_BACKGROUND;
+                border : 0;
+                border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
+                box-sizing:border-box;
+                height:$SIZE_HEADER_HEIGHT;
+                color :$COLOR_HEADER_TEXT;
+                text-shadow:none;
+               
+                .header-button-lline-alingn-right{
+                    position: absolute;
+                    display: flex;
+                    top:0;
+                    right:0;
+                    margin-right:$SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
+                }
+
+                .ui-title{
+                    padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
+                    font-size:$FONT_SIZE_TITLE;
+                    font-weight:$FONT_FAMILY_TITLE;
+                }
+            }
+
+            //オプションメニュー
+            #option-pulldown-menu{
+                background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
+                margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
+                margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
+                height:$SIZE_HEADER_OPTION_BTN_HEIGHT;
+                width:$SIZE_HEADER_OPTION_BTN_WIDTH;
+                top:0;
+                padding:0;
+                box-shadow:none;
+                border:none;
+                background-color:transparent;
+
+                &:hover{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_HOVER;
+                }
+
+                &:active{
+                    background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+                }
+            }
+                 
+            //オプションメニューのポップアップ
+            .ui-popup-container{
+
+                ul{
+                    -webkit-appearance: none;
+                    list-style-type: none;
+                    -webkit-margin-before: 0;
+                    -webkit-margin-after: 0;
+                    -webkit-margin-start: 0;
+                    -webkit-margin-end: 0;
+                    -webkit-padding-start: 0;
+                }
+
+                #option-pulldown-menu-popup{
+                    margin-top:$SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
+                    width:$SIZE_OPTION_MENU_POPUP_WIDTH;
+                    background-color:$COLOR_OPTION_MENU_POPUP_BACKGROUND;
+                    border:$SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
+                    color:$COLOR_OPTION_MENU_POPUP_TEXT;
+                    font-size:$FONT_SIZE_OPTION_MENU_POPUP_ITEM;
+                    font-weight:$FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
+                    padding-top:$SIZE_OPTION_MENU_POPUP_PADDING_TOP;
+                    padding-bottom:$SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM;
+                    text-shadow:none;
+                    box-shadow:none;
+
+
+                    .menu-item-text{
+                        padding-left:$SIZE_OPTIOM_MENU_POPUP_ITEM_PAdDING_LEFT;
+                        padding-right:$SIZE_OPTIOM_MENU_POPUP_ITEM_PAdDING_RIGHT;
+                        height:$SIZE_OPTION_MENU_POPUP_ITEM_HEIGHT;
+                        display: flex;
+	                    align-items: center;
+
+                        &:hover{
+                            background-color:$COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
+                        }
+
+                        &:active{
+                            background-color:$COLOR_LIGHT_GREEN;
+                        }
+
+                        &:disabled{
+                            opacity:$COLOR_OPTION_MENU_POPUP_TEXT_DISABLED_OPACITY;
+                        }
+                    }
+
+                }
+            }
+           
+
+          
+    }
 
     article {
+
         .ui-btn, .ui-slider {
             z-index: 2;
         }
+
+        //共通のテキストフィールド
+        input[type="text"]{
+            font-family:$FONT_FAMILY_COMMON_CONBINED;
+            font-weight
+                :$FONT_FAMILY_TEXT_BUTTON;
+            height:$SIZE_FORM_HEIGHT;
+            background-color:$COLOR_FORM_BACKGROUND;
+            box-sizing:border-box;
+            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
+            border-radius:0;
+            padding-left:$SIZE_FORM_PADDING_LEFT;
+            padding-right:$SIZE_FORM_PADDING_RIGHT;
+
+            &:hover{
+                 border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            }
+
+            &:focus{
+                padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
+                padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
+                outline:none;
+                border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+            }            
+        }
+
+        //共通のプルダウンメニュー
+        select{
+           margin-top:$SIZE_PULL_DOWM_MARGIN_TOP;
+           font-family:$FONT_FAMILY_COMMON_CONBINED;
+           -webkit-appearance: none;
+           font-size:$FONT_SIZE_PULL_DOWM_MENU;
+           font-weight:$FONT_FAMILY_PULL_DOWM_MENU;
+           background:$COLOR_PULL_DOWM_BACKGROUMD;
+           padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
+           padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
+           height:$SIZE_PULL_DOWM_HEIGHT_MAIN;
+           background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+           background-repeat: no-repeat;
+           background-position: right top;
+           box-sizing:border-box;
+           border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+
+           &:hover{
+               box-sizing:border-box;
+                 border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
+            }
+
+            &:focus{
+                -webkit-appearance: none;
+                
+                padding-left : 11px;
+                box-sizing:border-box;
+                //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                outline:none;
+                border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
+            }
+
+          
+            option[selected="selected"] { font-weight: normal }
+
+            /*
+            option{
+                
+                color:rgba(0,0,0,0.4);
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+                padding-top:$SIZE_PULL_DOWM_SUB_TOP_PADDING;
+                padding-bottom:$SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
+                background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
+                //border:1px solid $COLOR_PULL_DOWN_BORDER;
+                outline:none;
+            }
+                */
+
+            
+        }
+
         section {
             &.normal-screen {
                 padding: 0;
@@ -74,9 +366,10 @@ body {
                 left: 0;
             }
         }
+
         .ui-content {
             padding: 0;
-            background-color: rgb(151,152,157);
+            background-color: $COLOR_FULL_CUSTOM_BACKGROUND;
         }
 
         section, div {
@@ -85,4 +378,5 @@ body {
             margin: 0;
         }
     }
+
 }

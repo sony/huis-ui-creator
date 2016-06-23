@@ -1,78 +1,177 @@
-﻿#page-home {
+﻿@import "variables/variable";
+
+#page-home {
     text-shadow: none;
-    font-family: "Noto Sans CJK JP",'SST W55';
 
-    #face-list-container {
-        overflow-x: overlay;
-        width: 100%;
-    }
+    //リモコン数が0個の時の画面
+    #home-introductions{
+        position:absolute;
+        visibility:hidden;
+        width:100%;
 
-    #face-list {
-        position:relative;
-        //height: 400px; // tentative
-        overflow-y: hidden;
-        background-color: rgb(151,152,157);
-        //box-shadow: 0 0 20px #222;
-        z-index: 1;
-        padding: 0;
-        margin: 0;
+        #home-introduction-vector{
+            position:absolute;
+            top:0;
+            right:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_MARGIN_RIGHT;
+            background-image:$PATH_IMG_HOME_INTRODUCTION_VECTOR;
+            width:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_WIDTH;
+            height:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_HEIGHT;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
 
-        .face {
-            list-style-type: none;
-            float: left;
-            margin: 0 40px;
-            padding: 10px 0;
-            overflow: hidden;
-            width: 200px;
-            //height: 380px;
+        //中央の画像とテキスト
+        .center-contents{
+            z-index:1;
+            position:relative;
+            margin:0 auto;
+            margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+            width:$SIZE_HOME_INTRODUCTION_CENTER_CONTANTS;
 
-            .title {
-                text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+            #home-introduction-texts{
+                color:$COLOR_HOME_INTRODUCTION_TEXT;
+                text-align:center;
+                font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
+                font-weight:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
+                line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
+
+                .accent{
+                    color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
+                }
             }
 
-            #face-pages-area {
-                margin: 0;
-                font-weight: normal;
+            #home-introduction-image-remotes{
+                background-image:$PATH_IMG_HOME_INTRODUCTION_REMOTES;
+                width:$SIZE_HOME_INTRODUCTION_IMAGE_WIDTH;
+                height:$SIZE_HOME_INTRODUCTION_IMAGE_HEIGHT;
+                margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+                background-position:center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+
+    .ui-header{
+        #create-new-remote{
+            background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+            margin-top:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_TOP;
+            margin-left:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_LEFT;
+            height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
+            width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
+            top:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
+
+            &:hover{
+                background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+            }
+
+            &:active{
+                background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
             }
         }
 
-        .create-new-face {
-            width: 160px;  // tentative
-            margin: 0 100px 0 40px;
+        #sync-pc-to-huis{
+            background-image:$PATH_IMG_SYNC_BTN_NORMAL;
+            margin-top:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP;
+            margin-left:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT;
+            height:$SIZE_HOME_HEADER_SYNC_BTN_HEIGHT;
+            width:$SIZE_HOME_HEADER_SYNC_BTN_WIDTH;
+            top:0;
+            padding:0;
+            box-shadow:none;
+            border:none;
+            background-color:transparent;
 
-            .thumb {
-                background-image: url(../res/icons/plus.png);
-                background-repeat: no-repeat;
-                background-position: center;
-                background-color: white;
+            &:hover{
+                background-image:$PATH_IMG_SYNC_BTN_HOVER;
             }
 
-            .overlay-menu {
-                visibility: hidden;
-                position: relative;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0, 0.7);
+            &:active{
+                background-image:$PATH_IMG_SYNC_BTN_ACTIVE;
+            }
+        }
+    }
 
-                span {
-                    font-weight: normal;
-                    color: white;
-                    font-size: 14px;
-                    display: table-cell;
-                    height: 256px;
-                    vertical-align: middle;
+   
+
+    #face-list-container {
+        overflow-x: overlay;
+        overflow-y: hidden;
+        width: 100%;
+        box-sizing: border-box;
+
+        #face-list {
+            position:relative;
+            //height: 400px; // tentative
+            overflow-y: hidden;
+           
+            //box-shadow: 0 0 20px #222;
+            z-index: 1;
+            padding: 0;
+            margin: 0;
+
+            #face-list-footer {
+                position: absolute;
+                bottom: 0;
+                width:100%;
+                height:$SIZE_HOME_FOOTOR_HEIGHT;
+                background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                z-index: 1;
+            }    
+
+            .face {
+                list-style-type: none;
+                float: left;
+                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                overflow: hidden;
+                width: $SIZE_HOME_REMOTE_WIDTH;
+
+                .title {
+                    margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                    margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
                     text-align: center;
+                    color: $COLOR_TEXT_MAIN;
+                    font-size:$FONT_HOME_REMOTE_TITLE;
+                    font-weight: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                    line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
                 }
 
+                #face-pages-area {
+                    width:inherit;
+                    font-weight: normal;
+                }
+
+                .face-page{
+                    margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                    margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                    margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                    padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                    .button-item{
+                        border:none;
+                    }
+                }
+
+                .module-container {
+                    overflow: visible;
+                }
             }
-            .thumb:hover .overlay-menu {
-                visibility: visible;
-            }
+        }
+
+        .face-container {
+            width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+            transform : scale(0.5);
+            transform-origin : left top;
+            box-sizing: border-box;
+            background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+            border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+            cursor: pointer;
         }
     }
 
@@ -110,9 +209,8 @@
 
             .title {
                 text-align: center;
-                color: white;
-                font-weight: bold;
-                text-shadow: 0 0 4px rgba(0,0,0,0.3);
+                color: $COLOR_TEXT_MAIN;
+                font-weight: lighter;
             }
 
             #face-pages-area {
@@ -120,9 +218,5 @@
                 font-weight: normal;
             }
         }
-    }
-
-    button {
-        font-family: "Noto Sans CJK JP","SST W55";
     }
 }

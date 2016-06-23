@@ -268,9 +268,9 @@ interface ILabel {
  * @brief IGarageImageExtensions に対して、Garage で使用する情報を付加したもの
  */
 interface IGGarageImageExtensions {
-	original: string; //<! 元画像のパス (remoteimages ディレクトリーからの相対パス)
+	original: string; // <! 元画像のパス (remoteimages ディレクトリーからの相対パス)
 	resolvedOriginalPath: string; //<! 元画像のパス (Garage を使用している PC の絶対パス)
-	resizeMode: string; //<! 拡大・縮小の方法。"contain", "cover", "stretch" のいずれか
+	resizeMode: string; // <! 拡大・縮小の方法。"contain", "cover", "stretch" のいずれか
 }
 
 /**
@@ -332,7 +332,7 @@ interface IGModule {
 	offsetY: number; //!< ページ内のモジュールの y 座標
 	pageIndex: number; //!< ページ番号 (最初のページが 0
 	remoteId: string; //!< モジュールが属する face の ID
-	name: string; //!< モジュールの名前
+    name: string; //!< モジュールの名前
 }
 
 /**
@@ -453,6 +453,67 @@ declare module Garage {
 	 * Util.GarageFiles のインスタンス
 	 */
 	var garageFiles: Util.GarageFiles;
+
+	/**
+	 * face のページの横サイズ
+	 */
+	var HUIS_FACE_PAGE_WIDTH: number;
+	/**
+	 * face のページの縦サイズ
+	 */
+	var HUIS_FACE_PAGE_HEIGHT: number;
+	/**
+	 * HUIS が扱える face の最大数
+	 */
+	var MAX_HUIS_FILES: number;
+	/**
+	 * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
+	 */
+	var GARAGE_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルの置き場所: (GARAGE_FILES_ROOT/HuisFiles)
+	 */
+	var HUIS_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
+	 */
+	var HUIS_REMOTEIMAGES_ROOT: string;
+	/**
+	 * HUIS の VID
+	 */
+	var HUIS_VID: number;
+	/**
+	 * HUIS の PID
+	 */
+	var HUIS_PID: number;
+	/**
+	 * HUIS のデバイスのルートパス
+	 */
+    var HUIS_ROOT_PATH: string;
+    /**
+	 * PC から HUIS への同期時のダイアログのパラメーター完了時のダイアログつき
+	 */
+    var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE: DialogProps;
+    /**
+     * 新規リモコンが追加されたときのダイアログパラメーター
+    */
+    var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
+    /**
+     * リモコンを削除した際のダイアログパラメーター
+    */
+    var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
+	/**
+	 * HUIS から PC への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps;
+	/**
+	 * PC から HUIS への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps;
+	/**
+	 * HUIS と PC の差分チェック中のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
 	/**
 	 * ページの背景の領域
 	 */
@@ -464,20 +525,18 @@ declare module Garage {
 	/**
 	 * ページの背景として画像を追加するときの編集パラメーター
 	 */
-	var IMAGE_EDIT_PAGE_BACKGROUND_PARAMS: Model.IImageEditParams;
+    var IMAGE_EDIT_PAGE_BACKGROUND_PARAMS: Model.IImageEditParams;
+	/**
+	 * ヘルプサイトのURL
+	 */
+    var HELP_SITE_URL: string;
+    /**
+     * Debug Modeかどうかのフラグ
+     */
+    var DEBUG_MODE: Boolean;
+
 }
 
-declare var HUIS_FACE_PAGE_WIDTH: number;
-declare var HUIS_FACE_PAGE_HEIGHT: number;
-declare var GARAGE_FILES_ROOT: string;
-declare var HUIS_FILES_ROOT: string; //! ローカル上の HUIS ファイルの置き場所 %appdata%
-declare var HUIS_REMOTEIMAGES_ROOT: string; //! ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
-declare var HUIS_VID: number; //! HUIS の VID
-declare var HUIS_PID: number; //! HUIS の PID
-declare var HUIS_ROOT_PATH: string; //! HUIS のデバイスのルートパス
-declare var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps; //! HUIS から PC への同期のダイアログのパラメーター
-declare var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps; //! PC から HUIS への同期のダイアログのパラメーター
-declare var DIALOG_PROPS_CHECK_DIFF: DialogProps; //! HUIS と PC の差分チェック中のダイアログのパラメーター
 
 declare var Remote: any; //! remote module
 declare var Menu: any; //! menu module

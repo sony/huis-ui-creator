@@ -11,7 +11,7 @@ module Garage {
 	function onStart(): void {
 		var router = CDP.Framework.Router;
 		// set first page.
-		router.register("", "/templates/home.html", true);//pageName=Home
+		router.register("", "/templates/splash.html", true);//pageName=Home
 		/* <ATELIERMARKUP type="router" /> */
 		// start Router.
 		router.start();
