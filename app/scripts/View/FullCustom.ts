@@ -154,7 +154,9 @@ module Garage {
 					"click #button-add-page": "onAddPageButtonClicked",
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
-					"change #face-item-detail select": "onItemPropertySelectChanged",
+                    "change #face-item-detail select": "onItemPropertySelectChanged",
+                    "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
+
 					"click #refer-image": "onReferImageClicked",
 					"click .refer-state-image": "onReferImageClicked",
 					"click #delete-background-image": "onDeleteImageClicked",
@@ -1205,7 +1207,43 @@ module Garage {
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
                 }
-			}
+            }
+
+            /**
+			 * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
+			 */
+            private onItemPropertySelectClicked(event: Event) {
+                var $target = $(event.currentTarget);
+                var $customSelect = $("#face-item-detail-area").find(".custom-select");
+                var $selectMenu = $(".ui-selectmenu");
+
+                var targetWidth = $target.width();
+                var targeHeight = $target.height()
+                var popupMenuWidth = $selectMenu.outerWidth(true);
+                var popupMenuHeight = $selectMenu.outerHeight(true);
+
+                var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
+
+                $selectMenu.outerWidth(targetWidth);
+
+                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
+                    var maringBottom :any= $selectMenu.css("margin-bottom").replace("px", "");
+                    popupMenuY = $target.offset().top - popupMenuHeight;
+                }
+
+                var options: PopupOptions = {
+                    x:0,
+                    y:0,
+                    tolerance: popupMenuY + ",0,0,"+$target.offset().left,
+                    corners: false
+                };
+
+                console.log("options.x options.y : " + options.x + ", " + options.y);
+
+                $selectMenu.popup(options).popup("open").on("vclick", () => {
+                    $selectMenu.popup("close");
+                });
+            }
 
 			/**
 			 * 画像参照ボタンをクリックしたときに呼び出される。

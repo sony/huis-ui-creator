@@ -239,7 +239,9 @@ body {
             .ui-selectmenu{
                 margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
                 margin-bottom:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+                min-width:100px;
                 max-height:$SIZE_PULL_DOWM_MAX_HEIGHT;
+                width : $SIZE_PULL_DOWM_DEFAULT_WIDTH;
                 overflow-y:overlay;
                 box-shadow:none;
                 -webkit-box-shadow: none;
