@@ -53,11 +53,6 @@ module Garage {
             //! events binding
             events(): any {
                 return {
-                    "dblclick header .ui-title": "_onHeaderDblClick",
-                    "click #create-new-remote": "_onCreateNewRemote",
-                    "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
-                    // コンテキストメニュー
-                    "contextmenu": "_onContextMenu",
                 };
             }
 

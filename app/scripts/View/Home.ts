@@ -339,9 +339,10 @@ module Garage {
                                 if (response === 0) {
                                     this._removeFace(remoteId);
                                     this._renderFaceList();
-                                }
+                                    this._onSyncPcToHuisClick();
+                               }
 							}
-						}));
+                        }));
 					}
 				}
 
