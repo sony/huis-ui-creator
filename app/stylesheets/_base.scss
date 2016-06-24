@@ -185,7 +185,6 @@ body {
 
             //共通のプルダウンメニュー
         .ui-select {
-            
             -webkit-appearance: none;
             margin-top:$SIZE_PULL_DOWM_MARGIN_TOP;
             margin-bottom:0;
@@ -212,7 +211,7 @@ body {
                 
                 background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
                 background-repeat: no-repeat;
-                background-position: right top;
+                background-position:right top;
                 box-sizing:border-box;
                 border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
 
@@ -221,11 +220,12 @@ body {
                     border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
                 }
 
-                &:focus{
+                &:focus{                   
                     -webkit-appearance: none;
-                
-                    padding-left : 11px;
-                    box-sizing:border-box;
+                    padding-left : $SIZE_PULL_DOWN_FOCUS_PADDING_LEFT;
+                    padding-right : $SIZE_PULL_DOWM_PADDING_RIGHT;
+                    background-position: right $SIZE_PULL_DOWN_IMG_POSITION_X_FOCUS top $SIZE_PULL_DOWN_IMG_POSITION_Y_FOCUS;
+                    box-sizing : border-box;
                     //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
                     outline:none;
                     border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
