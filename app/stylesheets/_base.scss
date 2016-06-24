@@ -1,25 +1,22 @@
 @import "variables/variable";
 
+@font-face {
+  font-family: $FONT_FAMILY_COMMON_SST_LIGHT;
+  src: $PATH_FONT_SST_LIGHT_IE; // For IE
+  src: $PATH_FONT_SST_LIGHT;
+}
+
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_NORMAL;
+  font-family: $FONT_FAMILY_COMMON_SST_REGULAR;
   src: $PATH_FONT_SST_NORMAL_IE; // For IE
   src: $PATH_FONT_SST_NORMAL;
 }
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_BOLD;
+  font-family: $FONT_FAMILY_COMMON_SST_BOLD;
   src: $PATH_FONT_SST_BOLD_IE; // For IE
   src: $PATH_FONT_SST_BOLD;
-}
-
-@font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_LIGHT;
-  src: $PATH_FONT_SST_LIGHT_IE; // For IE
-  src: $PATH_FONT_SST_LIGHT;
 }
 
 /*
@@ -27,27 +24,23 @@
  * https://www.google.com/get/noto/
  */
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_LIGHT;
+    font-family: $FONT_FAMILY_COMMON_NOTO_LIGHT;
     src: $PATH_FONT_NOTO_LIGHT;
 }
 
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_NORMAL;
+    font-family: $FONT_FAMILY_COMMON_NOTO_REGULAR;
     src: $PATH_FONT_NOTO_NORMAL;
 }
 
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_BOLD;
+    font-family: $FONT_FAMILY_COMMON_NOTO_BOLD;
     src: $PATH_FONT_NOTO_BOLD;
 }
 
 body {
     height: 100%;
-    font-family:$FONT_FAMILY_COMMON_CONBINED;
-    font-weight:$FONT_FAMILY_COMMON;
+    font-family:$FONT_FAMILY_LIGHT;
     line-height:$FONT_HEIGHT_COMMON;
     color:$COLOR_TEXT_COMMON;
     text-shadow: none;
