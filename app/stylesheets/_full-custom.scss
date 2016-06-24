@@ -72,6 +72,10 @@
                 transform-origin: left top;
                 }
                
+                #face-canvas-inner{
+                    height:$SIZE_CANVAS_INNER_HEIGHT;
+                }
+
                 .item {
                     cursor: move;
                     border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
