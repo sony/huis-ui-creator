@@ -44,7 +44,6 @@ module Garage {
 		 * @brief FullCustom View class for Garage.
 		 */
 		class FullCustom extends BasePage {
-			private currentWindow_: any;
 			private faceRenderer_pallet_: FaceRenderer;
 			private faceRenderer_canvas_: FaceRenderer;
 
@@ -69,8 +68,6 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-			private contextMenu_: any;
-            private rightClickPosition_: { x: number; y: number };
             private isTextBoxFocued: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
@@ -138,8 +135,11 @@ module Garage {
 				super.onPageBeforeHide(event, data);
 			}
 
-			events(): any {
-				return {
+            events(): any {
+                var ret: any = {};
+                ret = super.events();
+
+				return $.extend(ret,{
 					// パレット内のアイテムのダブルクリック
 					"dblclick #face-pallet .item": "onPalletItemDblClick",
 					// 画面内のマウスイベント
@@ -172,15 +172,10 @@ module Garage {
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
-                    // プルダウンメニューのリスト
-                    "vclick #command-about-this": "_onCommandAboutThis",
-                    "vclick #command-visit-help": "_onCommandVisitHelp",
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin .property-value": "_onTextBoxFocusIn",
                     "focusout .property-value": "_onTextBoxFocusOut",
-
-
-				};
+				});
 			}
 
 			render(): FullCustom {

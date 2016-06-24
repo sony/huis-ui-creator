@@ -16,11 +16,6 @@ module Garage {
 		 * @brief Home View class for Garage.
 		 */
 		class Home extends BasePage {
-			private currentWindow_: any;
-			private contextMenu_: any;
-			private rightClickPosition_: { x: number; y: number };
-
-            private HISTORY_COUNT = 5;
             private selectedRemoteId: string = null;
 
 			/**
@@ -67,8 +62,10 @@ module Garage {
 			}
 
 			//! events binding
-			events(): any {
-				return {
+            events(): any {
+                var ret:any = {};
+                ret = super.events();
+				return $.extend(ret,{
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
@@ -77,15 +74,11 @@ module Garage {
                     //"keydown": "_onKeyDown",
 					// コンテキストメニュー
                     "contextmenu": "_onContextMenu",
-                    // プルダウンメニューのリスト
-                    "vclick #command-about-this": "_onCommandAboutThis",
-                    "vclick #command-visit-help": "_onCommandVisitHelp",
-				};
+				});
 			}
 
 			render(): Home {
 				this._renderFaceList();
-				//this._renderFaceHistory();
 				return this;
 			}
 
