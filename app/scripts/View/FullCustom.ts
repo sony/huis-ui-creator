@@ -129,6 +129,14 @@ module Garage {
                     }
                     $("#input-face-name").focus();
                     this.isTextBoxFocued = false;
+
+                    // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
+                    // 「このリモコンを削除」とセパレータを削除する
+                    if (remoteId == undefined) {
+                        $("li#command-delete-remote").remove();
+                        $("li.menu-item-separator").remove();
+                    }
+
 				});
 			}
 
@@ -172,6 +180,7 @@ module Garage {
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
                     // プルダウンメニューのリスト
+                    "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
@@ -3114,6 +3123,40 @@ module Garage {
 
             }
 
+            private _syncPcToHuisAndBack() {
+                let response = electronDialog.showMessageBox({
+                    type: "info",
+                    message: "変更内容を HUIS に反映しますか？\n"
+                    + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
+                    + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
+                    buttons: ["yes", "no"]
+                });
+                if (response !== 0) {
+                    huisFiles.updateRemoteList(); // Remoteのリストを更新
+                    Framework.Router.back(); // HUISにセーブしないままHOME画面に戻る
+                    return;
+                }
+
+                huisFiles.updateRemoteList();
+                if (HUIS_ROOT_PATH) {
+                    let syncTask = new Util.HuisDev.FileSyncTask();
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, (err) => {
+                        if (err) {
+                            // [TODO] エラー値のハンドリング
+                            electronDialog.showMessageBox({
+                                type: "error",
+                                message: "HUIS と同期できませんでした。\n"
+                                + "HUIS が PC と接続されていない可能性があります。\n"
+                                + "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
+                                buttons: ["ok"]
+                            });
+                        } else {
+                            Framework.Router.back();
+                        }
+                    });
+                }
+            }
+
 
             /*
              * プルダウンメニュー対応
@@ -3137,6 +3180,21 @@ module Garage {
                 });
 
                 return;
+            }
+
+            /**
+             * このリモコンを削除する
+             */
+            private _onCommandDeleteRemote() {
+                var response = electronDialog.showMessageBox({
+                    type: "info",
+                    message: "リモコンを削除すると元に戻せません。削除しますか？",
+                    buttons: ["yes", "no"]
+                }); 
+                if (response === 0) {
+                    huisFiles.removeFace(this._getUrlQueryParameter("remoteId"));
+                    this._syncPcToHuisAndBack();
+                }
             }
 
             private _onCommandAboutThis() {
