@@ -231,26 +231,53 @@ body {
                     border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
                 }
 
-         
-            /*
-            option{
-                
-                color:rgba(0,0,0,0.4);
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+       
+                }
+            }
+
+            //pull down menuの選択肢
+           .ui-selectmenu{
+               box-shadow:none;
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                box-shadow: none; 
+                border:$SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+           .ui-selectmenu-list{
+                //margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
                 padding-top:$SIZE_PULL_DOWM_SUB_TOP_PADDING;
                 padding-bottom:$SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
                 background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
                 //border:1px solid $COLOR_PULL_DOWN_BORDER;
                 outline:none;
-            }
-                */
+                border-radius:0;
+                
 
-            
+                li{
+                    height:$SIZE_PULL_DOWM_HEIGHT_SUB;
+                    .ui-btn, ui-btn-active{
+                        font-size:$FONT_SIZE_PULL_DOWM_MENU;
+                        font-weight:$FONT_FAMILY_PULL_DOWM_MENU;
+                        //縦中央揃え
+                        display: flex;
+                        align-items: center;
+                        color:$COLOR_PULL_DOWM_TEXT;
+                        text-shadow:none;
+                        background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
+                        border:none;
+                        padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
+                        padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
+                        &:hover, &:active{
+                            background-color:$COLOR_PULL_DOWN_BACKGROUND_HOVER;
+                        }
+                    }
+
+                    .ui-btn-active{
+                        background-color:$COLOR_LIGHT_GREEN;
+                    }
+                    
                 }
             }
-
+           }
             //オプションメニュー
             #option-pulldown-menu{
                 background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
