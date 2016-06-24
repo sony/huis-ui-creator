@@ -129,8 +129,8 @@ module Garage {
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
-                    var $faceList = $("#face-list");
-                    $faceList.empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
+                    var $faceList = $("#face-list")
+                    $faceList.find(".face").empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
