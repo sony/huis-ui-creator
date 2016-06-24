@@ -246,7 +246,8 @@ module Garage {
 					+ "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
 					buttons: ["yes", "no"]
 				});
-				if (response !== 0) {
+                if (response !== 0) {
+                    huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
 					return;
 				}
 
