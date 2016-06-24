@@ -1,5 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
+/// <reference path="BasePage.ts" />
 
 module Garage {
     export module View {
@@ -14,7 +15,7 @@ module Garage {
          * @class Splash
          * @brief Splash screen class
          */
-        class Splash extends UI.PageView<Backbone.Model> {
+        class Splash extends BasePage {
             private currentWindow_: any;
             private contextMenu_: any;
 

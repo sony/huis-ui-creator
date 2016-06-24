@@ -1,5 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
+/// <reference path="BasePage.ts" />
 
 module Garage {
 	export module View {
@@ -14,7 +15,7 @@ module Garage {
 		 * @class Home
 		 * @brief Home View class for Garage.
 		 */
-		class Home extends UI.PageView<Backbone.Model> {
+		class Home extends BasePage {
 			private currentWindow_: any;
 			private contextMenu_: any;
 			private rightClickPosition_: { x: number; y: number };
@@ -270,48 +271,6 @@ module Garage {
 				}
             }
 
-            /*
-             * プルダウンメニュー対応
-             */
-
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
-                var $button1 = this.$page.find("#option-pulldown-menu");
-                var $header = this.$page.find("header");
-              
-                var options: PopupOptions = {
-                    x: $button1.offset().left,
-                    y: 0,
-                    tolerance: $header.height() + ",0",
-                    corners: false
-                };
-
-                console.log("options.x options.y : " + options.x + ", " + options.y);
-
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
-                });
-
-                return;
-            }
-
-            private _onCommandAboutThis() {
-                var options: Util.ElectronMessageBoxOptions = {
-                    type: "info",
-                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
-                    buttons: [
-                        "OK"
-                    ],
-                };
-                electronDialog.showMessageBox(options);
-                return;
-            }
-
-            private _onCommandVisitHelp() {
-                var shell = require('electron').shell;
-                shell.openExternal(HELP_SITE_URL);
-                return;
-            }
 
 			private _onContextMenu() {
 				event.preventDefault();
