@@ -225,7 +225,7 @@
 				 * 
 				 * @return {IProgress}
 				 */
-                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
                     var errorValue: Error= null; 
@@ -247,6 +247,7 @@
 
                         }
                     }
+
 
 					setTimeout(() => {
 						this._syncHuisFiles(srcRootDir, destRootDir, (err) => {
@@ -272,6 +273,12 @@
                                         $dialog.find("p").html(dialogProps.options.anotherOption.title);
                                     }
                                 }
+
+                                setTimeout(() => {
+                                    if (actionBeforeComplete) {
+                                        actionBeforeComplete();
+                                    }
+                                });
 
                                 setTimeout(() => {
                                     if (dialog) {
