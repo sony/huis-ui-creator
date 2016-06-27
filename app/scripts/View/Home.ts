@@ -21,12 +21,14 @@ module Garage {
 
             private HISTORY_COUNT = 5;
             private selectedRemoteId: string = null;
+            private remoteIdToDelete;
 
 			/**
 			 * construnctor
 			 */
 			constructor() {
-				super("/templates/home.html", "page-home", { route: "home" });
+                super("/templates/home.html", "page-home", { route: "home" });
+                this.remoteIdToDelete = null;
 			}
 
 			///////////////////////////////////////////////////////////////////////
@@ -180,7 +182,6 @@ module Garage {
 				});
                 faceRenderer.render();
 
-				// ダブルクリックしたら編集画面への遷移できるようにする
                 $face.find(".face-container").on("click", (event) => {
 					let $clickedFace = $(event.currentTarget);
                     let remoteId = $clickedFace.data("remoteid");
@@ -238,23 +239,28 @@ module Garage {
 				}
 			}
 
-			private _onSyncPcToHuisClick() {
-				let response = electronDialog.showMessageBox({
-					type: "info",
-					message: "変更内容を HUIS に反映しますか？\n"
-					+ "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
-					+ "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
-					buttons: ["yes", "no"]
-				});
-                if (response !== 0) {
-                    huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
-					return;
-				}
+            private _onSyncPcToHuisClick(noWarn?: Boolean) {
+                if (!noWarn) {
+                    let response = electronDialog.showMessageBox({
+                        type: "info",
+                        message: "変更内容を HUIS に反映しますか？\n"
+                        + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
+                        + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
+                        buttons: ["yes", "no"]
+                    });
+                    if (response !== 0) {
+                        huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
+                        return;
+                    }
+                }
 
-				huisFiles.updateRemoteList();
+				//huisFiles.updateRemoteList();
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
-                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, (err) => {
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, () => {
+                        this._removeFace(this.remoteIdToDelete);
+                        this._renderFaceList();
+                    }, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
@@ -327,10 +333,10 @@ module Garage {
 				var element = document.elementFromPoint(event.pageX, event.pageY);
 				var $face = $(element).parents("#face-list .face");
 				if ($face.length) {
-					let remoteId = $face.data("remoteid");
-					if (remoteId) {
+					this.remoteIdToDelete = $face.data("remoteid");
+                    if (this.remoteIdToDelete) {
 						this.contextMenu_.append(new MenuItem({
-							label: "このリモコン (" + remoteId + ") を削除",
+                            label: "このリモコン (" + this.remoteIdToDelete + ") を削除",
                             click: () => {
                                 var response = electronDialog.showMessageBox({
                                     type: "info",
@@ -338,9 +344,9 @@ module Garage {
                                     buttons: ["yes", "no"]
                                 });
                                 if (response === 0) {
-                                    this._removeFace(remoteId);
-                                    this._renderFaceList();
-                                    this._onSyncPcToHuisClick();
+                                    //this._removeFace(remoteId);
+                                    //this._renderFaceList();
+                                    this._onSyncPcToHuisClick(true); // true で警告なし
                                }
 							}
                         }));

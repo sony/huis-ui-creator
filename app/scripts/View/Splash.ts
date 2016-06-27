@@ -152,7 +152,7 @@ module Garage {
             private doSync(callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 // 同期処理の開始
-                let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, (err) => {
+                let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         // エラーダイアログの表示
                         // [TODO] エラー内容に応じて表示を変更するべき
