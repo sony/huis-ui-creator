@@ -346,6 +346,60 @@
         }
     }
 
+    //画像編集ボタンのpopup
+    #edit-image-popup{
+        position:relative;
+        box-shadow:none;
+        text-shadow:none;
+        background-color:$COLOR_TRANSPARENT;
+        border:none;
+        
+
+        #popup-arrow{
+            margin-left:auto;
+            margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARGIN_RIGHT;
+        }
+
+        .popup-list{
+            border:none;
+            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+            padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
+            padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
+            color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+            font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
+            font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+            background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+
+            .popup-menu-item-text-black{
+                display: flex;
+                align-items: center;
+                height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
+
+                #popup-icon-image-image-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
+                }
+
+                #popup-icon-image-text-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                }
+
+                #popup-icon-image-image-button, #popup-icon-image-text-button{
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
+                    margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
+                }
+
+                &:hover, &:active{
+                    background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+                }
+            }
+        }
+    }
+
     #face-pallet-area {
         position: absolute;
 

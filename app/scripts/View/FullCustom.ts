@@ -163,7 +163,9 @@ module Garage {
 					"click #delete-background-image": "onDeleteImageClicked",
 					"click .delete-state-image": "onDeleteImageClicked",
 					"click #add-state": "onAddButtonStateClicked",
-					"click .remove-state": "onRemoveButtonStateClicked",
+                    "click .remove-state": "onRemoveButtonStateClicked",
+                    "click #edit-image-or-text": "onEditImageButtonClicked",
+
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
                     // 戻るボタン
@@ -1203,6 +1205,45 @@ module Garage {
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
                 }
+            }
+
+            /**
+			 * 詳細編集エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+            private onEditImageButtonClicked(event: Event) {
+                //popupメニューのテキスト 今後別のファイルにすべき。
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE = "画像ボタン";
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT = "テキストボタン";
+
+                //押下されたボタンのJquery
+                var $target = $(event.currentTarget);
+
+                //popのJquery
+                var $overflow = this.$page.find("#edit-image-popup"); // ポップアップのjQuery DOMを取得
+                var previewBorderWidth :number = +(this.$page.find(".property-state-image-preview").css("border-width").replace("px",""));
+                var $editImageBtn = $overflow.find("#command-change-button-image");
+                var $editTextBtn = $overflow.find("#command-change-button-text");
+
+                //popupのテキストを更新
+                $editImageBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE);
+                $editTextBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT);
+
+                var overFlowWidth = $overflow.find(".popup-list").width();
+
+                var popupY = $target.offset().top + $target.height();
+                var popupX = $target.offset().left - overFlowWidth + $target.outerWidth()+ previewBorderWidth;
+
+                var options: PopupOptions = {
+                    x: 0,
+                    y: 0,
+                    tolerance: popupY + ",0,0," + popupX,
+                    corners: false
+                };
+
+
+                $overflow.popup(options).popup("open").on("vclick", () => {
+                    $overflow.popup("close");
+                });
             }
 
             /**

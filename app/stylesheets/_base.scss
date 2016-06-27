@@ -115,6 +115,18 @@ body {
    
 
     .ui-page-theme-b{
+
+        //共通の吹き出し
+        #popup-arrow{
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-image:$PATH_IMG_POPUP_ARROW;
+            width:$SIZE_POPUP_ARROW_WIDTH;
+            height:$SIZE_POPUP_ARROW_HEIGHT;
+            margin-top:$SIZE_POPUP_ARROW_MINUS_MARGIN;
+        }
+
         //共通のテキストボタン
           .ui-btn{
                 font-family:$FONT_FAMILY_TEXT_BUTTON;
