@@ -274,10 +274,27 @@
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
+
+                #edit-image-or-text{
+                    position:absolute;
+                    z-index:1;
+                    bottom:0;
+                    right:0;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_HEIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL;
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+
+                    &:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
+                    }
+                }
             }
 
             .property-state-image{
-                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;    
+                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
             }
 
             /*.property-value {
