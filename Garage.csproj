@@ -158,6 +158,12 @@
     <Content Include="app\res\images\icon_wait.png" />
     <Content Include="app\res\images\img_arrow.png" />
     <Content Include="app\res\images\img_arrow_up.png" />
+    <Content Include="app\res\images\img_edit_delete_background_image.png" />
+    <Content Include="app\res\images\img_edit_image.png" />
+    <Content Include="app\res\images\img_edit_image_popup_image.png" />
+    <Content Include="app\res\images\img_edit_image_popup_text.png" />
+    <Content Include="app\res\images\img_edit_image_pressed.png" />
+    <Content Include="app\res\images\img_edit_text.png" />
     <Content Include="app\res\images\img_huis_remote_area.png" />
     <Content Include="app\res\images\img_huis_tpl.png" />
     <Content Include="app\res\images\img_no_controller.png" />
