@@ -147,6 +147,8 @@ module Garage {
             DEBUG_MODE = false;
         }
 
+        isHUISRemoved = true;
+
 		callback();
 	};
 
@@ -185,7 +187,7 @@ module Garage {
                         }
                     }
                 }
-
+                isHUISRemoved = false; // HUISが接続されている(抜かれていない)
                 callback(); // 次の処理へ
 
 			} else {
