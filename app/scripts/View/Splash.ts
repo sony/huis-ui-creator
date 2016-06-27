@@ -43,7 +43,7 @@ module Garage {
                             message: "HUISが切断されました。アプリを終了します。",
                             buttons: ["ok"]
                         });
-                        isHUISRemoved = true;
+                        isHUISConnected = false;
                         app.quit();
                     }
                 })();
@@ -92,7 +92,7 @@ module Garage {
 
 
             private _closeWarning() {
-                if (!isHUISRemoved) { // HUISが抜かれてない場合
+                if (isHUISConnected) { // HUISが抜かれてない場合
                     console.log("Do not close");
                     let response = electronDialog.showMessageBox(
                         {
