@@ -225,6 +225,7 @@ interface IGLabel {
     color?: number;
     font?: string;
     size?: number;
+    font_weight?: FontWeight;//normal | bold
 	/**
 	 * 親要素の area に対してのこのアイテムの area の比率
 	 */
@@ -261,7 +262,12 @@ interface ILabel {
 	 * テキストのフォントサイズ
 	 */
     size?: number;
+    /**
+	 * テキストの太さ
+	 */
+    fontWeight?: FontWeight;
 }
+
 
 /**
  * @interface IGGarageImageExtensions

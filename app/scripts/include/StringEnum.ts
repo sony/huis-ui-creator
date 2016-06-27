@@ -20,3 +20,9 @@ class FaceCategory extends EnumBase<string> {
 	static FullCustom = new FaceCategory(0, "fullcustom");
 	static Unknown = new FaceCategory(0, "unknown");
 }
+
+class FontWeight extends EnumBase<string>{
+    static FONT_BOLD: FontWeight = new FaceCategory(0, "bold");
+    static FONT_NORMAL: FontWeight = new FaceCategory(0, "normal");
+
+}
