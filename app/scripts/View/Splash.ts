@@ -36,6 +36,17 @@ module Garage {
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
                 super.onPageShow(event, data);
                 this._initializeSplashView();
+                (function loop() {
+                    setTimeout(loop, 5000);
+                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
+                        electronDialog.showMessageBox({
+                            type: "error",
+                            message: "HUISが切断されました。アプリを終了します。",
+                            buttons: ["ok"]
+                        });
+                        app.quit();
+                    }
+                })();
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
                 }); // 同期が完了したらHomeに遷移する
