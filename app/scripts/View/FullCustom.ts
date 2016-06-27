@@ -2031,6 +2031,7 @@ module Garage {
                             },
                             text: "",
                             size: defaltTextSize,
+                            font_weight:FontWeight.FONT_BOLD
                         }];
                     }
                 };
