@@ -1,25 +1,22 @@
 @import "variables/variable";
 
+@font-face {
+  font-family: $FONT_FAMILY_COMMON_SST_LIGHT;
+  src: $PATH_FONT_SST_LIGHT_IE; // For IE
+  src: $PATH_FONT_SST_LIGHT;
+}
+
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_NORMAL;
+  font-family: $FONT_FAMILY_COMMON_SST_REGULAR;
   src: $PATH_FONT_SST_NORMAL_IE; // For IE
   src: $PATH_FONT_SST_NORMAL;
 }
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_BOLD;
+  font-family: $FONT_FAMILY_COMMON_SST_BOLD;
   src: $PATH_FONT_SST_BOLD_IE; // For IE
   src: $PATH_FONT_SST_BOLD;
-}
-
-@font-face {
-  font-family: $FONT_FAMILY_COMMON_SST;
-  font-weight: $FONT_FAMILY_LIGHT;
-  src: $PATH_FONT_SST_LIGHT_IE; // For IE
-  src: $PATH_FONT_SST_LIGHT;
 }
 
 /*
@@ -27,27 +24,23 @@
  * https://www.google.com/get/noto/
  */
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_LIGHT;
+    font-family: $FONT_FAMILY_COMMON_NOTO_LIGHT;
     src: $PATH_FONT_NOTO_LIGHT;
 }
 
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_NORMAL;
+    font-family: $FONT_FAMILY_COMMON_NOTO_REGULAR;
     src: $PATH_FONT_NOTO_NORMAL;
 }
 
 @font-face {
-    font-family: $FONT_FAMILY_COMMON_NOTO;
-    font-weight: $FONT_FAMILY_BOLD;
+    font-family: $FONT_FAMILY_COMMON_NOTO_BOLD;
     src: $PATH_FONT_NOTO_BOLD;
 }
 
 body {
     height: 100%;
-    font-family:$FONT_FAMILY_COMMON_CONBINED;
-    font-weight:$FONT_FAMILY_COMMON;
+    font-family:$FONT_FAMILY_LIGHT;
     line-height:$FONT_HEIGHT_COMMON;
     color:$COLOR_TEXT_COMMON;
     text-shadow: none;
@@ -124,35 +117,37 @@ body {
     .ui-page-theme-b{
         //共通のテキストボタン
           .ui-btn{
-                font-family:$FONT_FAMILY_COMMON_CONBINED;
-
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                text-shadow:none;
                 margin:0;
                 padding:0;
                 border:none;
                 height:$SIZE_BUTTON_HEIGHT;   
                 font-size:$FONT_SIZE_TEXT_BUTTON;
                 color:$COLOR_BUTTON_TEXT;
-                font-weight:$FONT_FAMILY_TEXT_BUTTON;
                 background-color:$COLOR_BUTTON_NORMAL;
                 box-shadow:none;   
                 border-radius:0;
 
                 &:hover{
+                    text-shadow:none;
                     background-color:$COLOR_BUTTON_HOVER;
-                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
                     border:none;
                 }
 
                 &:active{
+                    text-shadow:none;
                     background-color:$COLOR_BUTTON_PRESED;
-                    font-weight:$FONT_FAMILY_TEXT_BUTTON;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
                     box-shadow:none;
                     border:none;
                 }
 
                 &:focus{
+                    text-shadow:none;
                     box-shadow:none;
                     border:none;
                 }
@@ -179,7 +174,7 @@ body {
                 .ui-title{
                     padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
                     font-size:$FONT_SIZE_TITLE;
-                    font-weight:$FONT_FAMILY_TITLE;
+                    font-family:$FONT_FAMILY_TITLE;
                 }
             }
 
@@ -199,9 +194,8 @@ body {
                 align-items: center;
                 padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
                 padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
-                font-family:$FONT_FAMILY_COMMON_CONBINED;
+                font-family:$FONT_FAMILY_PULL_DOWM_MENU;
                 font-size:$FONT_SIZE_PULL_DOWM_MENU;
-                font-weight:$FONT_FAMILY_PULL_DOWM_MENU;
                 span{
                     
                     text-align:left;
@@ -268,7 +262,7 @@ body {
                             align-items: center;
 
                             font-size:$FONT_SIZE_PULL_DOWM_MENU;
-                            font-weight:$FONT_FAMILY_PULL_DOWM_MENU;
+                            font-family:$FONT_FAMILY_PULL_DOWM_MENU;
                             color:$COLOR_PULL_DOWM_TEXT;
                             text-shadow:none;
                             background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
@@ -330,7 +324,7 @@ body {
                     border:$SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
                     color:$COLOR_OPTION_MENU_POPUP_TEXT;
                     font-size:$FONT_SIZE_OPTION_MENU_POPUP_ITEM;
-                    font-weight:$FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
+                    font-family:$FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
                     padding-top:$SIZE_OPTION_MENU_POPUP_PADDING_TOP;
                     padding-bottom:$SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM;
                     text-shadow:none;
@@ -379,9 +373,7 @@ body {
 
         //共通のテキストフィールド
         input[type="text"]{
-            font-family:$FONT_FAMILY_COMMON_CONBINED;
-            font-weight
-                :$FONT_FAMILY_TEXT_BUTTON;
+            font-family:$FONT_FAMILY_TEXT_BUTTON;
             height:$SIZE_FORM_HEIGHT;
             background-color:$COLOR_FORM_BACKGROUND;
             box-sizing:border-box;

@@ -1,5 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="FullCustomCommand.ts" />
+/// <reference path="BasePage.ts" />
 
 module Garage {
 	export module View {
@@ -42,8 +43,7 @@ module Garage {
 		 * @class FullCustom
 		 * @brief FullCustom View class for Garage.
 		 */
-		class FullCustom extends UI.PageView<Backbone.Model> {
-			private currentWindow_: any;
+		class FullCustom extends BasePage {
 			private faceRenderer_pallet_: FaceRenderer;
 			private faceRenderer_canvas_: FaceRenderer;
 
@@ -68,8 +68,6 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-			private contextMenu_: any;
-            private rightClickPosition_: { x: number; y: number };
             private isTextBoxFocued: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
@@ -145,8 +143,11 @@ module Garage {
 				super.onPageBeforeHide(event, data);
 			}
 
-			events(): any {
-				return {
+            events(): any {
+                var ret: any = {};
+                ret = super.events();
+
+				return $.extend(ret,{
 					// パレット内のアイテムのダブルクリック
 					"dblclick #face-pallet .item": "onPalletItemDblClick",
 					// 画面内のマウスイベント
@@ -181,16 +182,16 @@ module Garage {
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
+
                     // プルダウンメニューのリスト
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
+
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin .property-value": "_onTextBoxFocusIn",
                     "focusout .property-value": "_onTextBoxFocusOut",
-
-
-				};
+				});
 			}
 
 			render(): FullCustom {
@@ -1554,7 +1555,7 @@ module Garage {
 										garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
 										if (HUIS_ROOT_PATH) {
 											let syncTask = new Util.HuisDev.FileSyncTask();
-                                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, (err) => {
+                                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, null, (err) => {
 												if (err) {
 													// [TODO] エラー値のハンドリング
 													electronDialog.showMessageBox({
@@ -3186,7 +3187,7 @@ module Garage {
                 huisFiles.updateRemoteList();
                 if (HUIS_ROOT_PATH) {
                     let syncTask = new Util.HuisDev.FileSyncTask();
-                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, (err) => {
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, null, (err) => {
                         if (err) {
                             // [TODO] エラー値のハンドリング
                             electronDialog.showMessageBox({
@@ -3204,30 +3205,6 @@ module Garage {
             }
 
 
-            /*
-             * プルダウンメニュー対応
-             */
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
-                var $button1 = this.$page.find("#option-pulldown-menu");
-                var $header = this.$page.find("header");
-
-                var options: PopupOptions = {
-                    x: $button1.offset().left,
-                    y: 0,
-                    tolerance: $header.height() + ",0",
-                    corners: false
-                };
-
-                console.log("options.x options.y : " + options.x + ", " + options.y);
-
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
-                });
-
-                return;
-            }
-
             /**
              * このリモコンを削除する
              */
@@ -3243,24 +3220,6 @@ module Garage {
                 }
             }
 
-            private _onCommandAboutThis() {
-                var options: Util.ElectronMessageBoxOptions = {
-                    type: "info",
-                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
-                    buttons: [
-                        "OK"
-                    ],
-                };
-                electronDialog.showMessageBox(options);
-                return;
-            }
-
-            private _onCommandVisitHelp() {
-                var shell = require('electron').shell;
-                shell.openExternal(HELP_SITE_URL);
-                return;
-            }
-
             private _onTextBoxFocusIn() {
                 this.isTextBoxFocued = true;
             }
@@ -3270,8 +3229,8 @@ module Garage {
             }
 
             private _onKeyDown(event: JQueryEventObject) {
-                console.log("_onKeyDown : " + event.keyCode);
-                console.log("_onKeyDown : " + this.$currentTarget_);
+                //console.log("_onKeyDown : " + event.keyCode);
+                //console.log("_onKeyDown : " + this.$currentTarget_);
 
                 if (this.$currentTarget_ && !this.isTextBoxFocued) {
                     switch (event.keyCode) {

@@ -1,5 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
+/// <reference path="BasePage.ts" />
 
 module Garage {
 	export module View {
@@ -14,19 +15,16 @@ module Garage {
 		 * @class Home
 		 * @brief Home View class for Garage.
 		 */
-		class Home extends UI.PageView<Backbone.Model> {
-			private currentWindow_: any;
-			private contextMenu_: any;
-			private rightClickPosition_: { x: number; y: number };
-
-            private HISTORY_COUNT = 5;
+		class Home extends BasePage {
             private selectedRemoteId: string = null;
+            private remoteIdToDelete;
 
 			/**
 			 * construnctor
 			 */
 			constructor() {
-				super("/templates/home.html", "page-home", { route: "home" });
+                super("/templates/home.html", "page-home", { route: "home" });
+                this.remoteIdToDelete = null;
 			}
 
 			///////////////////////////////////////////////////////////////////////
@@ -40,20 +38,7 @@ module Garage {
 			//! page show event
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
 				super.onPageShow(event, data);
-
                 this._initializeHomeView();
-                (function loop() {
-                    setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
-                        electronDialog.showMessageBox({
-                            type: "error",
-                            message: "HUISが切断されました。アプリを終了します。",
-                            buttons: ["ok"]
-                        });
-                        app.quit();
-                    }
-                })();
-
 			}
 
 			//! page before hide event
@@ -66,8 +51,10 @@ module Garage {
 			}
 
 			//! events binding
-			events(): any {
-				return {
+            events(): any {
+                var ret:any = {};
+                ret = super.events();
+				return $.extend(ret,{
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
@@ -76,15 +63,11 @@ module Garage {
                     //"keydown": "_onKeyDown",
 					// コンテキストメニュー
                     "contextmenu": "_onContextMenu",
-                    // プルダウンメニューのリスト
-                    "vclick #command-about-this": "_onCommandAboutThis",
-                    "vclick #command-visit-help": "_onCommandVisitHelp",
-				};
+				});
 			}
 
 			render(): Home {
 				this._renderFaceList();
-				//this._renderFaceHistory();
 				return this;
 			}
 
@@ -129,8 +112,8 @@ module Garage {
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
-                    var $faceList = $("#face-list");
-                    $faceList.empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
+                    var $faceList = $("#face-list")
+                    $faceList.find(".face").empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
@@ -180,7 +163,6 @@ module Garage {
 				});
                 faceRenderer.render();
 
-				// ダブルクリックしたら編集画面への遷移できるようにする
                 $face.find(".face-container").on("click", (event) => {
 					let $clickedFace = $(event.currentTarget);
                     let remoteId = $clickedFace.data("remoteid");
@@ -238,22 +220,28 @@ module Garage {
 				}
 			}
 
-			private _onSyncPcToHuisClick() {
-				let response = electronDialog.showMessageBox({
-					type: "info",
-					message: "変更内容を HUIS に反映しますか？\n"
-					+ "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
-					+ "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
-					buttons: ["yes", "no"]
-				});
-				if (response !== 0) {
-					return;
-				}
+            private _onSyncPcToHuisClick(noWarn?: Boolean) {
+                if (!noWarn) {
+                    let response = electronDialog.showMessageBox({
+                        type: "info",
+                        message: "変更内容を HUIS に反映しますか？\n"
+                        + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
+                        + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
+                        buttons: ["yes", "no"]
+                    });
+                    if (response !== 0) {
+                        huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
+                        return;
+                    }
+                }
 
-				huisFiles.updateRemoteList();
+				//huisFiles.updateRemoteList();
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
-                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, (err) => {
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, () => {
+                        this._removeFace(this.remoteIdToDelete);
+                        this._renderFaceList();
+                    }, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
@@ -270,48 +258,6 @@ module Garage {
 				}
             }
 
-            /*
-             * プルダウンメニュー対応
-             */
-
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
-                var $button1 = this.$page.find("#option-pulldown-menu");
-                var $header = this.$page.find("header");
-              
-                var options: PopupOptions = {
-                    x: $button1.offset().left,
-                    y: 0,
-                    tolerance: $header.height() + ",0",
-                    corners: false
-                };
-
-                console.log("options.x options.y : " + options.x + ", " + options.y);
-
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
-                });
-
-                return;
-            }
-
-            private _onCommandAboutThis() {
-                var options: Util.ElectronMessageBoxOptions = {
-                    type: "info",
-                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
-                    buttons: [
-                        "OK"
-                    ],
-                };
-                electronDialog.showMessageBox(options);
-                return;
-            }
-
-            private _onCommandVisitHelp() {
-                var shell = require('electron').shell;
-                shell.openExternal(HELP_SITE_URL);
-                return;
-            }
 
 			private _onContextMenu() {
 				event.preventDefault();
@@ -326,10 +272,10 @@ module Garage {
 				var element = document.elementFromPoint(event.pageX, event.pageY);
 				var $face = $(element).parents("#face-list .face");
 				if ($face.length) {
-					let remoteId = $face.data("remoteid");
-					if (remoteId) {
+					this.remoteIdToDelete = $face.data("remoteid");
+                    if (this.remoteIdToDelete) {
 						this.contextMenu_.append(new MenuItem({
-							label: "このリモコン (" + remoteId + ") を削除",
+                            label: "このリモコン (" + this.remoteIdToDelete + ") を削除",
                             click: () => {
                                 var response = electronDialog.showMessageBox({
                                     type: "info",
@@ -337,11 +283,12 @@ module Garage {
                                     buttons: ["yes", "no"]
                                 });
                                 if (response === 0) {
-                                    this._removeFace(remoteId);
-                                    this._renderFaceList();
-                                }
+                                    //this._removeFace(remoteId);
+                                    //this._renderFaceList();
+                                    this._onSyncPcToHuisClick(true); // true で警告なし
+                               }
 							}
-						}));
+                        }));
 					}
 				}
 
