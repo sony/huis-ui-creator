@@ -140,12 +140,12 @@ module Garage {
 						offsetY: item.offsetY,
 						pageIndex: item.pageIndex,
 						cid: item.cid
-					}));
+                    }));
 
+                    // ラベルをレンダリング
+                    this._renderLabels(item.label, index, $moduleContainer);
 					// 画像をレンダリング
 					this._renderImages(item.image, index, $moduleContainer);
-					// ラベルをレンダリング
-					this._renderLabels(item.label, index, $moduleContainer);
 					// ボタンをレンダリング
 					this._renderButtons(item.button, index, $moduleContainer);
 
