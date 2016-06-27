@@ -1,5 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="FullCustomCommand.ts" />
+/// <reference path="BasePage.ts" />
 
 module Garage {
 	export module View {
@@ -42,8 +43,7 @@ module Garage {
 		 * @class FullCustom
 		 * @brief FullCustom View class for Garage.
 		 */
-		class FullCustom extends UI.PageView<Backbone.Model> {
-			private currentWindow_: any;
+		class FullCustom extends BasePage {
 			private faceRenderer_pallet_: FaceRenderer;
 			private faceRenderer_canvas_: FaceRenderer;
 
@@ -68,8 +68,6 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-			private contextMenu_: any;
-            private rightClickPosition_: { x: number; y: number };
             private isTextBoxFocued: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
@@ -137,8 +135,11 @@ module Garage {
 				super.onPageBeforeHide(event, data);
 			}
 
-			events(): any {
-				return {
+            events(): any {
+                var ret: any = {};
+                ret = super.events();
+
+				return $.extend(ret,{
 					// パレット内のアイテムのダブルクリック
 					"dblclick #face-pallet .item": "onPalletItemDblClick",
 					// 画面内のマウスイベント
@@ -154,7 +155,9 @@ module Garage {
 					"click #button-add-page": "onAddPageButtonClicked",
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
-					"change #face-item-detail select": "onItemPropertySelectChanged",
+                    "change #face-item-detail select": "onItemPropertySelectChanged",
+                    "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
+
 					"click #refer-image": "onReferImageClicked",
 					"click .refer-state-image": "onReferImageClicked",
 					"click #delete-background-image": "onDeleteImageClicked",
@@ -171,15 +174,10 @@ module Garage {
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
-                    // プルダウンメニューのリスト
-                    "vclick #command-about-this": "_onCommandAboutThis",
-                    "vclick #command-visit-help": "_onCommandVisitHelp",
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin .property-value": "_onTextBoxFocusIn",
                     "focusout .property-value": "_onTextBoxFocusOut",
-
-
-				};
+				});
 			}
 
 			render(): FullCustom {
@@ -1205,7 +1203,43 @@ module Garage {
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
                 }
-			}
+            }
+
+            /**
+			 * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
+			 */
+            private onItemPropertySelectClicked(event: Event) {
+                var $target = $(event.currentTarget);
+                var $customSelect = $("#face-item-detail-area").find(".custom-select");
+                var $selectMenu = $(".ui-selectmenu");
+
+                var targetWidth = $target.width();
+                var targeHeight = $target.height()
+                var popupMenuWidth = $selectMenu.outerWidth(true);
+                var popupMenuHeight = $selectMenu.outerHeight(true);
+
+                var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
+
+                $selectMenu.outerWidth(targetWidth);
+
+                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
+                    var maringBottom :any= $selectMenu.css("margin-bottom").replace("px", "");
+                    popupMenuY = $target.offset().top - popupMenuHeight;
+                }
+
+                var options: PopupOptions = {
+                    x:0,
+                    y:0,
+                    tolerance: popupMenuY + ",0,0,"+$target.offset().left,
+                    corners: false
+                };
+
+                console.log("options.x options.y : " + options.x + ", " + options.y);
+
+                $selectMenu.popup(options).popup("open").on("vclick", () => {
+                    $selectMenu.popup("close");
+                });
+            }
 
 			/**
 			 * 画像参照ボタンをクリックしたときに呼び出される。
@@ -2775,7 +2809,13 @@ module Garage {
 						break;
 					default:
 						console.warn(TAG + "_showDetailItemArea() unknown type item");
-				}
+                }
+
+                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                $('.custom-select').trigger('create');
+
+               
+
 			}
 
 			/**
@@ -3115,49 +3155,7 @@ module Garage {
             }
 
 
-            /*
-             * プルダウンメニュー対応
-             */
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
-                var $button1 = this.$page.find("#option-pulldown-menu");
-                var $header = this.$page.find("header");
-
-                var options: PopupOptions = {
-                    x: $button1.offset().left,
-                    y: 0,
-                    tolerance: $header.height() + ",0",
-                    corners: false
-                };
-
-                console.log("options.x options.y : " + options.x + ", " + options.y);
-
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
-                });
-
-                return;
-            }
-
-            private _onCommandAboutThis() {
-                var options: Util.ElectronMessageBoxOptions = {
-                    type: "info",
-                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
-                    buttons: [
-                        "OK"
-                    ],
-                };
-                electronDialog.showMessageBox(options);
-                return;
-            }
-
-            private _onCommandVisitHelp() {
-                var shell = require('electron').shell;
-                shell.openExternal(HELP_SITE_URL);
-                return;
-            }
-
-            private _onTextBoxFocusIn() {
+           private _onTextBoxFocusIn() {
                 this.isTextBoxFocued = true;
             }
 
@@ -3166,8 +3164,8 @@ module Garage {
             }
 
             private _onKeyDown(event: JQueryEventObject) {
-                console.log("_onKeyDown : " + event.keyCode);
-                console.log("_onKeyDown : " + this.$currentTarget_);
+                //console.log("_onKeyDown : " + event.keyCode);
+                //console.log("_onKeyDown : " + this.$currentTarget_);
 
                 if (this.$currentTarget_ && !this.isTextBoxFocued) {
                     switch (event.keyCode) {
