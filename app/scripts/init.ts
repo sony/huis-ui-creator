@@ -185,7 +185,7 @@ module Garage {
                         }
                     }
                 }
-
+                isHUISConnected = true; // HUISが接続されている
                 callback(); // 次の処理へ
 
 			} else {

@@ -36,20 +36,7 @@ module Garage {
 			//! page show event
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
 				super.onPageShow(event, data);
-
                 this._initializeHomeView();
-                (function loop() {
-                    setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
-                        electronDialog.showMessageBox({
-                            type: "error",
-                            message: "HUISが切断されました。アプリを終了します。",
-                            buttons: ["ok"]
-                        });
-                        app.quit();
-                    }
-                })();
-
 			}
 
 			//! page before hide event
