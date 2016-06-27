@@ -729,7 +729,7 @@ module Garage {
 			/**
 			 * Image データから module 化に不要な物を間引く
 			 */
-			private _normalizeLabels(labels: ILabel[]): ILabel[] {
+			private _normalizeLabels(labels: IGLabel[]): ILabel[] {
 				var normalizedLabels: ILabel[] = [];
 
 				for (let i = 0, l = labels.length; i < l; i++) {
@@ -746,7 +746,12 @@ module Garage {
 					}
 					if (label.size !== undefined) {
 						normalizedLabel.size = label.size;
-					}
+                    }
+                    if (label.font_weight !== undefined) {
+                        normalizedLabel.font_weight = label.font_weight;
+                    }
+
+                    //fontWeightをFontWeight >> stringに
 					normalizedLabels.push(normalizedLabel);
 				}
 
