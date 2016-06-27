@@ -37,6 +37,10 @@ module Garage {
                 return this.get("font_weight");
             }
 
+            set font_weight(val: FontWeight) {
+                this.set("font_weight", val);
+            }
+
             set color(val: number) {
 				this.set("color", val);
 			}
