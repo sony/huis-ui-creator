@@ -43,7 +43,10 @@ module Garage {
 							}
 							if (_.isString(labels[i].font)) {
 								labelModel.font = labels[i].font;
-							}
+                            }
+                            if (_.isString(labels[i].font_weight)) {
+                                labelModel.font_weight = labels[i].font_weight;
+                            }
 							if (_.isNumber(labels[i].size)) {
 								labelModel.size = labels[i].size;
 							}
