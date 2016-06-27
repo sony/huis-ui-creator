@@ -16,9 +16,7 @@ module Garage {
          * @brief Splash screen class
          */
         class Splash extends BasePage {
-            private currentWindow_: any;
-            private contextMenu_: any;
-
+          
 			/**
 			 * construnctor
 			 */
