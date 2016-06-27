@@ -125,7 +125,7 @@ body {
         //共通のテキストボタン
           .ui-btn{
                 font-family:$FONT_FAMILY_COMMON_CONBINED;
-
+                text-shadow:none;
                 margin:0;
                 padding:0;
                 border:none;
@@ -138,6 +138,7 @@ body {
                 border-radius:0;
 
                 &:hover{
+                    text-shadow:none;
                     background-color:$COLOR_BUTTON_HOVER;
                     font-weight:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
@@ -145,6 +146,7 @@ body {
                 }
 
                 &:active{
+                    text-shadow:none;
                     background-color:$COLOR_BUTTON_PRESED;
                     font-weight:$FONT_FAMILY_TEXT_BUTTON;
                     color:$COLOR_BUTTON_TEXT;
@@ -153,6 +155,7 @@ body {
                 }
 
                 &:focus{
+                    text-shadow:none;
                     box-shadow:none;
                     border:none;
                 }
