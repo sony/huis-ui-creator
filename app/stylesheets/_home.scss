@@ -33,7 +33,7 @@
                 color:$COLOR_HOME_INTRODUCTION_TEXT;
                 text-align:center;
                 font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
-                font-weight:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
+                font-family:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
                 line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
 
                 .accent{
@@ -138,13 +138,13 @@
                     text-align: center;
                     color: $COLOR_TEXT_MAIN;
                     font-size:$FONT_HOME_REMOTE_TITLE;
-                    font-weight: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                    font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
                     line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
                 }
 
                 #face-pages-area {
                     width:inherit;
-                    font-weight: normal;
+                    font-family: $FONT_FAMILY_NORMAL;
                 }
 
                 .face-page{
@@ -187,7 +187,7 @@
         h3{
             margin: 0;
             padding: 10px;
-            font-weight: normal;
+            font-family: $FONT_FAMILY_NORMAL;
         }
 
         ul#face-history-list {
@@ -210,12 +210,12 @@
             .title {
                 text-align: center;
                 color: $COLOR_TEXT_MAIN;
-                font-weight: lighter;
+                font-family: $FONT_FAMILY_LIGHT;
             }
 
             #face-pages-area {
                 margin: 0;
-                font-weight: normal;
+                font-family: $FONT_FAMILY_NORMAL;
             }
         }
     }
