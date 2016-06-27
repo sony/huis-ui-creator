@@ -3167,18 +3167,20 @@ module Garage {
 
             }
 
-            private _syncPcToHuisAndBack() {
-                let response = electronDialog.showMessageBox({
-                    type: "info",
-                    message: "変更内容を HUIS に反映しますか？\n"
-                    + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
-                    + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
-                    buttons: ["yes", "no"]
-                });
-                if (response !== 0) {
-                    huisFiles.updateRemoteList(); // Remoteのリストを更新
-                    Framework.Router.back(); // HUISにセーブしないままHOME画面に戻る
-                    return;
+            private _syncPcToHuisAndBack(noWarn?: Boolean) {
+                if (!noWarn) {
+                    let response = electronDialog.showMessageBox({
+                        type: "info",
+                        message: "変更内容を HUIS に反映しますか？\n"
+                        + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
+                        + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
+                        buttons: ["yes", "no"]
+                    });
+                    if (response !== 0) {
+                        huisFiles.updateRemoteList(); // Remoteのリストを更新
+                        Framework.Router.back(); // HUISにセーブしないままHOME画面に戻る
+                        return;
+                    }
                 }
 
                 huisFiles.updateRemoteList();
@@ -3237,7 +3239,7 @@ module Garage {
                 }); 
                 if (response === 0) {
                     huisFiles.removeFace(this._getUrlQueryParameter("remoteId"));
-                    this._syncPcToHuisAndBack();
+                    this._syncPcToHuisAndBack(true); // 警告なしに
                 }
             }
 
