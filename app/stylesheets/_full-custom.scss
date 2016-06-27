@@ -505,6 +505,8 @@
 
                 .item {
                     
+                    border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+
                     &:hover {
                         background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
@@ -512,5 +514,12 @@
                 }
             }
         }
+
+        //Commonのアイテム
+        .common-parts .item{
+                    position:relative;
+                    margin-bottom:$SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
+        }
+
     }
 }
