@@ -169,7 +169,7 @@
                 line-height:$TEXT_HEIGHT_DEFAULT;
                 margin-bottom:$SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
                 display: flex;
-                font-weight:$FONT_WEIGHT_PROPATY_X_Y_W_H;
+                font-family:$FONT_WEIGHT_PROPATY_X_Y_W_H;
             }
 
             .label-button-state{
@@ -186,14 +186,14 @@
                 padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
                 line-height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 font-size:$FONT_SIZE_PROPATY_H3;
-                font-weight: $FONT_FAMILY_NORMAL;
+                font-family: $FONT_FAMILY_NORMAL;
                 height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 margin:0;
 
                 .button-info-brand-and-type{
                     padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
-                    font-weight: $FONT_FAMILY_NORMAL;
+                    font-family: $FONT_FAMILY_NORMAL;
                     color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
                 }
@@ -202,7 +202,7 @@
 
             h4{
                 font-size:$FONT_SIZE_PROPATY_H4;
-                font-weight:$FONT_FAMILY_PROPATY_H3;
+                font-family:$FONT_FAMILY_PROPATY_H3;
             }
 
             .state-action-input, 
@@ -240,7 +240,7 @@
 
             h5 {
                 font-size: $FONT_SIZE_PROPATY_H5;
-                font-weight: lighter;
+                font-family: $FONT_FAMILY_LIGHT;
                 margin:0;
             }
 
@@ -254,7 +254,7 @@
 
             .property-title {
                 display: inline-block;
-                font-weight: bold;
+                font-family: $FONT_FAMILY_BOLD;
                 width: 80px;
             }
 
@@ -387,7 +387,7 @@
             
                     color: $COLOR_FACE_ITEM_LIST_TEXT_NORMAL;
                     font-size:$FONT_SIZE_FACE_ITEM_LIST_ITEM;
-                    font-weight: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
+                    font-family: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
 
                     max-width: 160px;
                     text-align:center;

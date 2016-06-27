@@ -14,7 +14,7 @@ body{
 
 .common-dialog{
     text-shadow: none;
-    font-family:$FONT_FAMILY_COMMON_CONBINED;
+    font-family:$FONT_WEIGHT_DIALOG_TEXT;
     height:$SIZE_DIALOG_HEIGHT;
     width:$SIZE_DIALOG_WIDTH;
     color:$COLOR_DIALOG_TEXT;
@@ -33,7 +33,7 @@ body{
         p{
             word-wrap:break-word;
             font-size:$FONT_SIZE_DIALOG_TEXT;
-            font-weight:$FONT_WEIGHT_DIALOG_TEXT;
+            font-family:$FONT_WEIGHT_DIALOG_TEXT;
             width:$SIZE_DIALOG_TEXT_WIDTH;
             margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
             margin-left:0px;
