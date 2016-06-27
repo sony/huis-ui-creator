@@ -26,7 +26,7 @@ module Garage {
 				if (options.attributes) {
 					let unknownTypeLabel = options.attributes["labels"];
 					if (unknownTypeLabel) {
-						let labels: IGLabel[] = [];
+						let labels: ILabel[] = [];
 						if (_.isArray(unknownTypeLabel)) {
 							labels = unknownTypeLabel;
 						} else {
@@ -45,7 +45,7 @@ module Garage {
 								labelModel.font = labels[i].font;
                             }
                             if (_.isString(labels[i].font_weight)) {
-                                labelModel.font_weight = labels[i].font_weight;
+                                labelModel.font_weight = FontWeight.exchangeStringToFontWeight(labels[i].font_weight);
                             }
 							if (_.isNumber(labels[i].size)) {
 								labelModel.size = labels[i].size;

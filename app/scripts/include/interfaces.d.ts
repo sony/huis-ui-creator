@@ -265,7 +265,7 @@ interface ILabel {
     /**
 	 * テキストの太さ
 	 */
-    fontWeight?: FontWeight;
+    font_weight?: FontWeight;
 }
 
 
