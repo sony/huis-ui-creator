@@ -1,28 +1,29 @@
 {
     "area": {
-        "x": 0,
+        "x": 8,
         "y": 0,
-        "w": 480,
+        "w": 464,
         "h": 812
     },
     "label": [{
         "area": {
-            "x": 24,
-            "y": 24,
-            "w": 240,
-            "h": 64
+            "x": 0,
+            "y": 0,
+            "w": 464,
+            "h": 87
         },
-        "text": "Label",
+        "text": "TEXT LABEL",
         "color": 0,
+	"font-weight" : "normal",
         "font": "SST",
-        "size": 32
+        "size": 20
     }],
     "image": [{
         "area": {
-            "x": 24,
-            "y": 128,
-            "w": 160,
-            "h": 120
+            "x": 0,
+            "y": 0,
+            "w": 464,
+            "h": 232
         },
         "path": "default_image.png"
     }]
