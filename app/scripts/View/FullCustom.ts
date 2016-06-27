@@ -1950,20 +1950,7 @@ module Garage {
 
               
 
-				/**
-				 * state 内に label が存在しない場合に、補完する
-				 */
-				var solveLabel = function (state: IGState) {
-					if (!state.label || !state.label.length) {
-						state.label = [{
-							areaRatio: {
-								x: 0, y: 0, w: 1, h: 1
-							},
-							text: "",
-							size: 24
-						}];
-					}
-				};
+				
 
 				/**
 				 * state 内に image が存在しない場合に、補完する
@@ -2024,7 +2011,29 @@ module Garage {
 				}
 
 
-                
+                /**
+				 * state 内に label が存在しない場合に、補完する
+				 */
+                var solveLabel = function (state: IGState) {
+                    var defaltTextSize = 30;
+
+                    var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
+
+                    if ($targetTextSizePullDown) {
+                        defaltTextSize = $targetTextSizePullDown.val();
+                    }
+                    defaltTextSize
+
+                    if (!state.label || !state.label.length) {
+                        state.label = [{
+                            areaRatio: {
+                                x: 0, y: 0, w: 1, h: 1
+                            },
+                            text: "",
+                            size: defaltTextSize,
+                        }];
+                    }
+                };
 
 				targetStates.forEach((targetState: IGState) => {
 
