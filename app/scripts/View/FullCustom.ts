@@ -1350,15 +1350,23 @@ module Garage {
 			 */
 			private onReferImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
+				var ImageType: IMAGE_TYPE= null;
 
-				this.startEditButtonImage($target);
+				if ($target.hasClass("refer-state-image")) {// ボタン内の state の場合
+					ImageType = IMAGE_TYPE.BUTTON_IMAGE;
+				} else if ($target.hasClass("page-background-src")) { // ページ背景の場合
+					ImageType = IMAGE_TYPE.BACKGROUND_IMAGE;
+				} else { // 通常の image の場合
+					ImageType = IMAGE_TYPE.NON_BUTTON_IMAGE;
+				}
+				this.startEditButtonImage($target, ImageType);
 			}
 
 			/*
 			* アイテムの画像変更処理
-			* @param $target 呼び出した側のJquery
+			* @param $target:Jquery 呼び出した側のJquery
 			*/
-			private startEditButtonImage($target :JQuery) {
+			private startEditButtonImage($target :JQuery, imageType:IMAGE_TYPE) {
 				var options: Util.ElectronOpenFileDialogOptions = {
 					properties: ["openFile"],
 					filters: [
@@ -1377,10 +1385,10 @@ module Garage {
 						let imageFilePath = imageFiles[0];
 						let remoteId = this.faceRenderer_canvas_.getRemoteId();
 
-						// ボタン内の state の場合
-						if ($target.hasClass("refer-state-image")) {
+						
+						if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
 							this._reflectImageToButtonState(remoteId, $target, imageFilePath);
-						} else if ($target.hasClass("page-background-src")) { // ページ背景の場合
+						} else if (imageType === IMAGE_TYPE.BACKGROUND_IMAGE) { // ページ背景の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath, true);
 						} else { // 通常の image の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath);
