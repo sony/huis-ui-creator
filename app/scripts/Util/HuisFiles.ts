@@ -729,7 +729,7 @@ module Garage {
 			/**
 			 * Image データから module 化に不要な物を間引く
 			 */
-			private _normalizeLabels(labels: IGLabel[]): ILabel[] {
+			private _normalizeLabels(labels: ILabel[]): ILabel[] {
 				var normalizedLabels: ILabel[] = [];
 
 				for (let i = 0, l = labels.length; i < l; i++) {
