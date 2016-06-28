@@ -245,7 +245,7 @@ body {
             .ui-selectmenu{
                 margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
                 margin-bottom:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
-                min-width:100px;
+                min-width:50px;
                 max-height:$SIZE_PULL_DOWM_MAX_HEIGHT;
                 width : $SIZE_PULL_DOWM_DEFAULT_WIDTH;
                 overflow-y:overlay;
@@ -404,7 +404,18 @@ body {
                 outline:none;
                 border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
             }            
-        }
+
+		}
+
+		input[type="text"].text-field-type2{
+			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+			border-top:none;
+			border-left:none;
+			border-right:none;
+			text-align:center;
+			border-color:$COLOR_FORM_BORDER_FOCUS_TYPE2;
+			border-width:$SIZE_FORM_BORDER_THICKNESS;
+		}
 
         section {
             &.normal-screen {

@@ -275,6 +275,7 @@
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
 
+				//画像編集ボタン
                 #edit-image-or-text,
 				#edit-image-background,
 				#edit-image-non-button-image{
@@ -293,6 +294,44 @@
                         background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
                     }
                 }
+
+				//テキストエリア
+				.text-field-in-preview{
+					margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+
+					.title-edit-label{
+						height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
+						display: flex;
+                        align-items: center;
+						justify-content:center;
+
+						#icon-title-edit-label{
+							background-position:center;
+							background-repeat: no-repeat;
+							background-size: contain;
+							background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
+							width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
+							height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
+						}
+
+						.text-title-edit-label{
+							font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
+							font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
+							
+						}	
+					}
+
+					.text-size-pulldown{
+							margin:0 auto;
+							width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+					}
+
+					.property-text-value{
+						display:flex;
+						margin : 0 auto;
+						width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
+					}
+				}
             }
 
             .property-state-image{
