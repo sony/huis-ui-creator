@@ -501,11 +501,11 @@ module Garage {
 
 				var face: IGFace;
 				if (remoteId === "common") {
-                    face = huisFiles.getCommonFace();
-                    $facePallet.addClass("common-parts");
+					face = huisFiles.getCommonFace();
+					$facePallet.addClass("common-parts");
 				} else {
                     face = huisFiles.getFace(remoteId);
-                    $facePallet.removeClass("common-parts");
+					$facePallet.removeClass("common-parts");
 				}
 
 				this.faceRenderer_pallet_ = new FaceRenderer({
