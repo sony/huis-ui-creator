@@ -1327,6 +1327,14 @@ module Garage {
 			private onReferImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
 
+				this.startEditButtonImage($target);
+			}
+
+			/*
+			* アイテムの画像変更処理
+			* @param $target 呼び出した側のJquery
+			*/
+			private startEditButtonImage($target :JQuery) {
 				var options: Util.ElectronOpenFileDialogOptions = {
 					properties: ["openFile"],
 					filters: [
@@ -1356,6 +1364,7 @@ module Garage {
 					}
 				);
 			}
+
 
 			/**
 			 * 詳細編集エリア内の画像削除ボタンを押したときに呼ばれる。
