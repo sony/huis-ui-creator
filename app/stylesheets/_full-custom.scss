@@ -275,7 +275,9 @@
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
 
-                #edit-image-or-text{
+                #edit-image-or-text,
+				#edit-image-background,
+				#edit-image-non-button-image{
                     position:absolute;
                     z-index:1;
                     bottom:0;
