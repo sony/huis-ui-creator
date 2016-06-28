@@ -113,7 +113,7 @@ module Garage {
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
                     var $faceList = $("#face-list")
-                    $faceList.find(".face").empty(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
+                    $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
@@ -235,13 +235,17 @@ module Garage {
                     }
                 }
 
-				//huisFiles.updateRemoteList();
+                huisFiles.removeFace(this.remoteIdToDelete);
+                huisFiles.updateRemoteList();
+                huisFiles.init(HUIS_FILES_ROOT);
+                
 				if (HUIS_ROOT_PATH) {
 					let syncTask = new Util.HuisDev.FileSyncTask();
                     syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, () => {
-                        this._removeFace(this.remoteIdToDelete);
+                        $(".face[data-remoteid=" + this.remoteIdToDelete + "]").remove();
+                        this._calculateFaceListWidth();
                         this._renderFaceList();
-                    }, (err) => {
+                  }, (err) => {
 						if (err) {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
@@ -330,14 +334,6 @@ module Garage {
 				});
                 $faceList.width(listWidth);
 			}
-
-			private _removeFace(remoteId: string) {
-                huisFiles.removeFace(remoteId);
-                huisFiles.updateRemoteList()
-                huisFiles.init(HUIS_FILES_ROOT);
-				$(".face[data-remoteid=" + remoteId + "]").remove();
-				this._calculateFaceListWidth();
-            }
 
             //private _onKeyDown(event: JQueryEventObject) {
             //    console.log("_onKeyDown : " + event.keyCode);
