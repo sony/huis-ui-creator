@@ -127,6 +127,14 @@ module Garage {
                     }
                     $("#input-face-name").focus();
                     this.isTextBoxFocued = false;
+
+                    // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
+                    // 「このリモコンを削除」とセパレータを削除する
+                    if (remoteId == undefined) {
+                        $("li#command-delete-remote").remove();
+                        $("li.menu-item-separator").remove();
+                    }
+
 				});
 			}
 
@@ -176,6 +184,12 @@ module Garage {
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
+
+                    // プルダウンメニューのリスト
+                    "vclick #command-delete-remote": "_onCommandDeleteRemote",
+                    "vclick #command-about-this": "_onCommandAboutThis",
+                    "vclick #command-visit-help": "_onCommandVisitHelp",
+
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin .property-value": "_onTextBoxFocusIn",
                     "focusout .property-value": "_onTextBoxFocusOut",
@@ -504,8 +518,10 @@ module Garage {
 				var face: IGFace;
 				if (remoteId === "common") {
 					face = huisFiles.getCommonFace();
+					$facePallet.addClass("common-parts");
 				} else {
 					face = huisFiles.getFace(remoteId);
+					$facePallet.removeClass("common-parts");
 				}
 
 				this.faceRenderer_pallet_ = new FaceRenderer({
@@ -1989,22 +2005,28 @@ module Garage {
 					return;
 				}
 
-              
-
 				/**
 				 * state 内に label が存在しない場合に、補完する
 				 */
 				var solveLabel = function (state: IGState) {
+					var defaltTextSize = 30;
+					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
+
+					if ($targetTextSizePullDown) {
+						defaltTextSize = $targetTextSizePullDown.val();
+					}
+
 					if (!state.label || !state.label.length) {
 						state.label = [{
 							areaRatio: {
 								x: 0, y: 0, w: 1, h: 1
 							},
 							text: "",
-							size: 24
+							size: defaltTextSize,
+							font_weight: FontWeight.FONT_BOLD
 						}];
 					}
-				};
+				};	
 
 				/**
 				 * state 内に image が存在しない場合に、補完する
@@ -2063,9 +2085,6 @@ module Garage {
 					console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
 					return;
 				}
-
-
-                
 
 				targetStates.forEach((targetState: IGState) => {
 
@@ -3195,8 +3214,59 @@ module Garage {
 
             }
 
+            private _syncPcToHuisAndBack(noWarn?: Boolean) {
+                if (!noWarn) {
+                    let response = electronDialog.showMessageBox({
+                        type: "info",
+                        message: "変更内容を HUIS に反映しますか？\n"
+                        + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
+                        + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
+                        buttons: ["yes", "no"]
+                    });
+                    if (response !== 0) {
+                        huisFiles.updateRemoteList(); // Remoteのリストを更新
+                        Framework.Router.back(); // HUISにセーブしないままHOME画面に戻る
+                        return;
+                    }
+                }
 
-           private _onTextBoxFocusIn() {
+                huisFiles.updateRemoteList();
+                if (HUIS_ROOT_PATH) {
+                    let syncTask = new Util.HuisDev.FileSyncTask();
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, null, (err) => {
+                        if (err) {
+                            // [TODO] エラー値のハンドリング
+                            electronDialog.showMessageBox({
+                                type: "error",
+                                message: "HUIS と同期できませんでした。\n"
+                                + "HUIS が PC と接続されていない可能性があります。\n"
+                                + "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
+                                buttons: ["ok"]
+                            });
+                        } else {
+                            Framework.Router.back();
+                        }
+                    });
+                }
+            }
+
+
+            /**
+             * このリモコンを削除する
+             */
+            private _onCommandDeleteRemote() {
+                var response = electronDialog.showMessageBox({
+                    type: "info",
+                    message: "リモコンを削除すると元に戻せません。削除しますか？",
+                    buttons: ["yes", "no"]
+                }); 
+                if (response === 0) {
+                    huisFiles.removeFace(this._getUrlQueryParameter("remoteId"));
+                    this._syncPcToHuisAndBack(true); // 警告なしに
+                }
+            }
+
+            private _onTextBoxFocusIn() {
                 this.isTextBoxFocued = true;
             }
 

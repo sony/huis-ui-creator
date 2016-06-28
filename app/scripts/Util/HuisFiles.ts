@@ -746,7 +746,12 @@ module Garage {
 					}
 					if (label.size !== undefined) {
 						normalizedLabel.size = label.size;
-					}
+                    }
+                    if (label.font_weight !== undefined) {
+                        normalizedLabel.font_weight = label.font_weight;
+                    }
+
+                    //fontWeightをFontWeight >> stringに
 					normalizedLabels.push(normalizedLabel);
 				}
 
