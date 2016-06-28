@@ -172,8 +172,11 @@ module Garage {
 					"click .delete-state-image": "onDeleteImageClicked",
 					"click #add-state": "onAddButtonStateClicked",
                     "click .remove-state": "onRemoveButtonStateClicked",
+
 					//画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
+					"click #edit-image-background": "onEditImageBackgroundClicked",
+                    "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
 					"click #command-change-button-image": "onEditImageButtonInPopupClicked",
 					"click #command-change-button-text": "onEditTextButtonInPopupClicked",
 					
@@ -1228,7 +1231,7 @@ module Garage {
             }
 
             /**
-			 * 詳細編集エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+			 * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
             private onEditImageButtonClicked(event: Event) {
                 //popupメニューのテキスト 今後別のファイルにすべき。
@@ -1267,12 +1270,33 @@ module Garage {
             }
 
 			/**
-			 * 詳細編集エリア内の プレビュー内の画像編集ボタンで、
+			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageBackgroundClicked(event: Event) {
+				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
+				this.startEditButtonImage($target, imageType);
+			}
+
+			/**
+			 * 詳細編集(画像)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageNonButtonImageClicked(event: Event) {
+				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.NON_BUTTON_IMAGE;
+				this.startEditButtonImage($target, imageType);
+			}
+
+			/**
+			 * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
 			 * 出現したポップアップの中の画像編集ボタンがクリックされたときに呼び出される
              **/
 			private onEditImageButtonInPopupClicked(event: Event) {
 				var FUNCTION_NAME = "onEditImageButtonInPopupClicked";
 				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.BUTTON_IMAGE;
+
+				this.startEditButtonImage($target, imageType);
 			}
 
 			/**
