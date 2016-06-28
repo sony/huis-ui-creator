@@ -2011,9 +2011,7 @@ module Garage {
 				}
 
 
-                /**
-				 * state 内に label が存在しない場合に、補完する
-				 */
+               
                 var solveLabel = function (state: IGState) {
                     var defaltTextSize = 30;
 
@@ -2036,6 +2034,9 @@ module Garage {
                     }
                 };
 
+				 /**
+				 * state 内に label が存在しない場合に、補完する
+				 */
 				targetStates.forEach((targetState: IGState) => {
 
 					let keys = Object.keys(props);
