@@ -22,6 +22,16 @@ module Garage {
             }
 
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
+				// Drag and Dropで反応するのを抑制する
+				document.addEventListener('dragover', function (event) {
+					event.preventDefault();
+					return false;
+				}, false);
+
+				document.addEventListener('drop', function (event) {
+					event.preventDefault();
+					return false;
+				}, false);
 
             }
 
