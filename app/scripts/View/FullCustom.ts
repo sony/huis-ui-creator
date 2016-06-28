@@ -2029,9 +2029,6 @@ module Garage {
 					return;
 				}
 
-				 /**
-				 * state 内に label が存在しない場合に、補完する
-				 */
 				targetStates.forEach((targetState: IGState) => {
 
 					let keys = Object.keys(props);
