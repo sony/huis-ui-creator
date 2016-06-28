@@ -326,7 +326,8 @@
 							width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
 					}
 
-					.property-text-value{
+					.property-text-value,
+					.property-state-text-value{
 						display:flex;
 						margin : 0 auto;
 						width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;

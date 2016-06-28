@@ -1309,6 +1309,11 @@ module Garage {
 			private onEditTextButtonInPopupClicked(event: Event) {
 				var FUNCTION_NAME = "onEditTextButtonInPopupClicked";
 				var $target = $(event.currentTarget);
+				var $editButton = this.$page.find("#edit-image-or-text");
+				let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+				this.procDeleteImage($editButton);
+				this._updateCurrentModelStateData(stateId, "text", "");
+			
 			}
 
 
@@ -1406,7 +1411,16 @@ module Garage {
 			 */
 			private onDeleteImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
-				if ($target.hasClass("delete-state-image")) {
+				this.procDeleteImage($target);
+				
+			}
+
+			/*
+			* 画像の削除処理
+			*/
+			private procDeleteImage($target: JQuery) {
+
+				if ($target.hasClass("delete-state-image") || $target.hasClass("property-state-value")) {
 					let stateId = parseInt(JQUtils.data($target, "stateId"), 10);
 					if (_.isUndefined(stateId)) {
 						return;
@@ -1425,7 +1439,7 @@ module Garage {
 					//this._updateCurrentModelStateData(stateId, "path", null);
 					//this._updateCurrentModelStateData(stateId, "resolved-path", null);
 					$(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
-					$(".property-state-image .property-state-image-preview .property-value[data-state-id=\"" + stateId + "\"]").css("background-image", "");
+					$(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
                     $(".property-value.page-background-src").val("");
@@ -2295,6 +2309,10 @@ module Garage {
 					});
 				});
 
+				//画像が存在するとき、テキストEdit機能を非表示にする
+				this.toggleImagePreview(stateId)
+
+
 				var memento: IMemento = {
 					target: button,
 					previousData: { "state": currentStates },
@@ -2303,6 +2321,28 @@ module Garage {
 				var mementoCommand = new MementoCommand(memento);
 				this.commandManager_.invoke(mementoCommand);
 
+			}
+
+
+			/*
+			* ボタン画像がある場合、テキストエリアを表示に。する
+			*/
+			private toggleImagePreview(stateId: number) {
+				
+				var $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+				var $textFieldInPreview = $preview.find(".text-field-in-preview");
+
+				//cssのbackgroundImage要素から、画像名を抽出
+				var backgroundImageCssArray = $preview.css("background-image").split("/");
+				var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
+				var path = pathArray[0];
+
+				//なぜか、background-imageにfull-custom.htmlが紛れることがある。
+				if (path != "null" && path != "full-custom.html") {
+					$textFieldInPreview.css("visibility", "hidden");
+				} else {//画像が存在しないとき、テキストEdit機能を表示する。
+					$textFieldInPreview.css("visibility", "visible");
+				}
 			}
 
 			/**
@@ -3105,7 +3145,9 @@ module Garage {
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
                 var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
                 this._updatePreviewInDetailArea(resolvedPath, $preview);
-                //
+                //テキストボタン、あるいは画像のどちらかを表示する。
+				this.toggleImagePreview(button.default);
+
                 //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
     
 
