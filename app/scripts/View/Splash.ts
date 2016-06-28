@@ -15,8 +15,7 @@ module Garage {
          * @class Splash
          * @brief Splash screen class
          */
-        class Splash extends BasePage {
-          
+        class Splash extends BasePage {          
 			/**
 			 * construnctor
 			 */
@@ -36,6 +35,18 @@ module Garage {
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
                 super.onPageShow(event, data);
                 this._initializeSplashView();
+                (function loop() {
+                    setTimeout(loop, 5000);
+                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
+                        electronDialog.showMessageBox({
+                            type: "error",
+                            message: "HUISが切断されました。アプリを終了します。",
+                            buttons: ["ok"]
+                        });
+                        isHUISConnected = false;
+                        app.quit();
+                    }
+                })();
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
                 }); // 同期が完了したらHomeに遷移する
@@ -52,11 +63,6 @@ module Garage {
             //! events binding
             events(): any {
                 return {
-                    "dblclick header .ui-title": "_onHeaderDblClick",
-                    "click #create-new-remote": "_onCreateNewRemote",
-                    "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
-                    // コンテキストメニュー
-                    "contextmenu": "_onContextMenu",
                 };
             }
 
@@ -77,23 +83,22 @@ module Garage {
 
                 this.currentWindow_ = Remote.getCurrentWindow();
                 this.currentWindow_.setMenuBarVisibility(false);
-                //this.currentWindow_.setClosable(false);
-               
-                //debugger;
             }
 
 
             private _closeWarning() {
-                console.log("Do not close");
-                let response = electronDialog.showMessageBox(
-                    {
-                        type: "info",
-                        message: "同期中にアプリを終了するとデータが破損する恐れがあります。\n"
-                        + "それでも終了しますか？\n",
-                        buttons: ["yes", "no"]
-                    });
-                if (response !== 0) {
-                    return null;
+                if (isHUISConnected) { // HUISが抜かれてない場合
+                    console.log("Do not close");
+                    let response = electronDialog.showMessageBox(
+                        {
+                            type: "info",
+                            message: "同期中にアプリを終了するとデータが破損する恐れがあります。\n"
+                            + "それでも終了しますか？\n",
+                            buttons: ["yes", "no"]
+                        });
+                    if (response !== 0) {
+                        return null;
+                    }
                 }
             }
 
@@ -114,7 +119,6 @@ module Garage {
                 try {
                     // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
                     if (huisFiles.init(HUIS_FILES_ROOT)) {
-                        //debugger;
                         // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                         //Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_CHECK_DIFF, (result: boolean) => {
                         Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
@@ -156,7 +160,7 @@ module Garage {
             private doSync(callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 // 同期処理の開始
-                let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, (err) => {
+                let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         // エラーダイアログの表示
                         // [TODO] エラー内容に応じて表示を変更するべき

@@ -534,6 +534,7 @@ declare module Garage {
      * Debug Modeかどうかのフラグ
      */
     var DEBUG_MODE: Boolean;
+    var isHUISConnected: Boolean;
 
 }
 

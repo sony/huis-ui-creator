@@ -90,7 +90,7 @@ module Garage {
             }
         }
 
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
         DIALOG_PROPS_DELTE_REMOTE = {
             id: "#common-dialog-spinner",
             options: {
@@ -102,7 +102,7 @@ module Garage {
             }
         }
 
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
         DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
             id: "#common-dialog-spinner",
             options: {
@@ -185,7 +185,7 @@ module Garage {
                         }
                     }
                 }
-
+                isHUISConnected = true; // HUISが接続されている
                 callback(); // 次の処理へ
 
 			} else {
@@ -214,7 +214,7 @@ module Garage {
 	var doSync = (callback?: Function) => {
 		let syncTask = new Util.HuisDev.FileSyncTask();
 		// 同期処理の開始
-		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, null, (err) => {
+		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, null, null, (err) => {
 			if (err) {
 				// エラーダイアログの表示
 				// [TODO] エラー内容に応じて表示を変更するべき
