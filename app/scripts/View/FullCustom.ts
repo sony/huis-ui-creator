@@ -1529,9 +1529,11 @@ module Garage {
 							});
 
 							//ボタンのテキストを削除する
-							// テキストエリアの文字表示はアップデートしない。（表示を削除予定なので）
 							this._updateCurrentModelStateData(stateId ,"text","");
-							
+
+							// テキストエリアの文字表示をアップデート
+							$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
 							//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
 							//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
 						});
