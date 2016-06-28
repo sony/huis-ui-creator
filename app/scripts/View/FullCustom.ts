@@ -1527,6 +1527,11 @@ module Garage {
 								"resolved-path": editedImage.path.replace(/\\/g, "/"),
 								"resizeOriginal": editedImagePath
 							});
+
+							//ボタンのテキストを削除する
+							// テキストエリアの文字表示はアップデートしない。（表示を削除予定なので）
+							this._updateCurrentModelStateData(stateId ,"text","");
+							
 							//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
 							//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
 						});
