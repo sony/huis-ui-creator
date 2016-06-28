@@ -295,6 +295,24 @@
                     }
                 }
 
+				//背景画像削除ボタン
+				#delete-background-image{
+					position:absolute;
+                    z-index:1;
+                    top:0;
+                    right:0;
+					background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+					background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+					width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+
+					&:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                    }
+				}
+
 				//テキストエリア
 				.text-field-in-preview{
 					margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
