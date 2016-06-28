@@ -689,7 +689,8 @@ module Garage {
 				newLabel.text = label.text;
 				newLabel.color = label.color;
 				newLabel.font = label.font;
-				newLabel.size = label.size;
+                newLabel.size = label.size;
+                newLabel.font_weight = label.font_weight;
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
