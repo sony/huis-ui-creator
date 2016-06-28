@@ -48,7 +48,7 @@
         </div>
 
 
-        <!-- ボタンのエリア -->
+        <!-- ボタンのエリア 
         <div class="one-line-label">
             <div class="label-button-state">位置</div>
             <div class="label-button-state">サイズ</div>
@@ -59,13 +59,13 @@
             <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
         </div>
         {{/area}}
+			-->
 
-
-        <!-- 画像ファイル -->
+        <!-- 画像ファイル 
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
         <button class="ui-btn inline" id="delete-background-image">削除</button>
-
+			-->
     </script>
 
 
@@ -110,7 +110,8 @@
 			</div>
 		</div>
 
-        <!-- ボタンのエリア -->
+		
+        <!-- ボタンのエリア
         <div class="one-line-label">
             <div class="label-button-state">位置</div>
             <div class="label-button-state">サイズ</div>
@@ -121,8 +122,9 @@
             <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
         </div>
         {{/area}}
+		-->
 
-
+		<!--
         <h4>テキスト</h4>
         <input class="property-value property-text-value" data-property="text" type="text" value="{{text}}" />
         <div class="custom-select text-size-pulldown">
@@ -148,7 +150,8 @@
                 <option value="96">96px</option>
             </select>
         </div>
-				
+		-->
+
     </script>
 
 
@@ -168,11 +171,11 @@
 
 
 
-        <!-- 画像ファイルのエリア -->
+        <!-- 画像ファイルのエリア
         <h4>画像ファイル</h4>
         <input id="refer-image" class="property-value page-background-src inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
         <button class ="ui-btn inline" id="delete-background-image">削除</button>
-
+		-->
         
     </script>
 
@@ -247,7 +250,7 @@
 				</div>
 
 
-						<!-- ボタンのエリア -->
+						<!-- ボタンのエリア 
 						<div class="one-line-label">
 							<div class="label-button-state">位置</div>
 							<div class="label-button-state">サイズ</div>
@@ -257,18 +260,18 @@
 							<div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
 							<div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
 						</div>
+						-->
 
 
-
-						<!-- 画像ファイル変更 -->
+						<!-- 画像ファイル変更
 						<div class="property-state-image">
 							<h4>画像ファイル</h4>
 							<input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
 							<button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
 						</div>
+						-->
 
-
-						<!-- テキスト-->
+						<!-- テキスト
 			<div class="property-state-label">
 				<h4>テキスト</h4>
 				<input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
@@ -296,7 +299,7 @@
 						<option value="96">96px</option>
 					</select>
 				</div>
-			</div>
+			</div>-->
 						<!-- アクション -->
 						<div class="property-state-action">
 							<h4>アクション</h4>
