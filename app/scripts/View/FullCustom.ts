@@ -172,7 +172,11 @@ module Garage {
 					"click .delete-state-image": "onDeleteImageClicked",
 					"click #add-state": "onAddButtonStateClicked",
                     "click .remove-state": "onRemoveButtonStateClicked",
+					//画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
+					"click #command-change-button-image": "onEditImageButtonInPopupClicked",
+					"click #command-change-button-text": "onEditTextButtonInPopupClicked",
+					
 
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
@@ -1261,6 +1265,25 @@ module Garage {
                     $overflow.popup("close");
                 });
             }
+
+			/**
+			 * 詳細編集エリア内の プレビュー内の画像編集ボタンで、
+			 * 出現したポップアップの中の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageButtonInPopupClicked(event: Event) {
+				var FUNCTION_NAME = "onEditImageButtonInPopupClicked";
+				var $target = $(event.currentTarget);
+			}
+
+			/**
+			 * 詳細編集エリア内の プレビュー内の画像編集ボタンで、
+			 * 出現したポップアップの中のテキスト編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditTextButtonInPopupClicked(event: Event) {
+				var FUNCTION_NAME = "onEditTextButtonInPopupClicked";
+				var $target = $(event.currentTarget);
+			}
+
 
             /**
 			 * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
