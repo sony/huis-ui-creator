@@ -1296,7 +1296,10 @@ module Garage {
 				var $target = $(event.currentTarget);
 				var imageType: IMAGE_TYPE = IMAGE_TYPE.BUTTON_IMAGE;
 
-				this.startEditButtonImage($target, imageType);
+				//stateID付きのJQueryObjectをわたす
+				var $editButton = this.$page.find("#edit-image-or-text");
+
+				this.startEditButtonImage($editButton, imageType);
 			}
 
 			/**
