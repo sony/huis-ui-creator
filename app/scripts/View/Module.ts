@@ -140,7 +140,7 @@ module Garage {
 						offsetY: item.offsetY,
 						pageIndex: item.pageIndex,
 						cid: item.cid
-				}));
+					}));
 
 					// ラベルをレンダリング
 					this._renderLabels(item.label, index, $moduleContainer);

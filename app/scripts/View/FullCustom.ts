@@ -504,7 +504,7 @@ module Garage {
 					face = huisFiles.getCommonFace();
 					$facePallet.addClass("common-parts");
 				} else {
-                    face = huisFiles.getFace(remoteId);
+					face = huisFiles.getFace(remoteId);
 					$facePallet.removeClass("common-parts");
 				}
 
