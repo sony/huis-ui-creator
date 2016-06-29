@@ -73,6 +73,11 @@
             &:active{
                 background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
             }
+
+			.tooltip-text{
+				margin-right:20px;
+				bottom:$SIZE_PLUS_TN_TOOLTIP_MAGIN_BOTTOM;
+			}
         }
 
         #sync-pc-to-huis{

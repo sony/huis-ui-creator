@@ -57,6 +57,7 @@ module Garage {
 				return $.extend(ret,{
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
+					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
                     // ショートカットキー
@@ -218,6 +219,49 @@ module Garage {
 						buttons: ["ok"]
 					});
 				}
+			}
+
+			/*
+			* +ボタンにmouseOverしたときに呼び出される
+			*/
+			private _onCreateNewRemoteHover(event: Event) {
+
+				var $target = $(event.currentTarget);//＋ボタンのJquery
+				this.centeringTooltip($target);
+			}
+
+
+			/*
+			* //tooltipを中央揃えにする。
+			* @param $target : JQuery toolTipで説明されるDOMのJQuery要素
+			*/
+			private centeringTooltip($target: JQuery) {
+				//tooltipを中央揃えにする。
+				var $tooltip = $target.find(".tooltip-text");
+				var widthButton = $target.width();
+				var widthToolTip = $tooltip.outerWidth(true);
+				var centeredLeft = (widthButton - widthToolTip) / 2;
+				$tooltip.css("left", centeredLeft + "px");
+				this.deterOverWindow($tooltip);
+			}
+
+
+			/*
+			* 画面からはみだる場合、端にそろえる
+			* @param $target:JQuery これから表示するJQuery要素
+			*/
+			private deterOverWindow($target: JQuery) {
+				var left = $target.offset().left;
+				var width = $target.outerWidth(true);
+
+				if (left + width > innerWidth) {//windowからはみ出るとき
+					var tmpObj = {
+						top: $target.offset().top,
+						left: innerWidth - width,
+					}
+					$target.offset(tmpObj);
+				}
+
 			}
 
             private _onSyncPcToHuisClick(noWarn?: Boolean) {

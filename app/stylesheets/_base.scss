@@ -56,8 +56,46 @@ body {
             user-select: none;
  
 
-    //スクロールバー
+			
+	.tooltip{
+		overflow:initial;
+		
+		.tooltip-text{
+			display: none;	
 
+			&:before{
+			content:''; 
+			display:block; 
+			position:absolute;                         /* relativeからの絶対位置 */
+			height:0; 
+			width:0; 
+			z-index:100;
+			}
+		}
+
+		&:hover{
+			position: relative;
+
+			.tooltip-text{
+				display: flex;
+				align-items: center;
+				vertical-align:central;
+				position: absolute;            /* relativeからの絶対位置 */
+				bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM;
+				height:$SIZE_TOOLTIP_HEIGHT;
+				font-size: $FONT_SIZE_SSS;
+				color: $COLOR_TOOLTIP_TEXT;
+				background-color: $COLOR_TOOLTIP_BACKGROUND;
+				border : 1px solid $COLOR_BLACK;
+				padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
+				box-shadow:$COLOR_TOOLTIP_SHADOW;
+				z-index:100;
+			}
+		}
+	}
+
+		
+    //スクロールバー
     ::-webkit-scrollbar {
         &:horizontal{
             height: $SIZE_SCROLL_BAR_WHOLE_HEIGHT;
