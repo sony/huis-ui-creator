@@ -1251,7 +1251,7 @@ module Garage {
                 $editImageBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE);
                 $editTextBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT);
 
-                var overFlowWidth = $overflow.find(".popup-list").width();
+                var overFlowWidth = $overflow.find(".popup-list").outerWidth(true);
 
                 var popupY = $target.offset().top + $target.height();
                 var popupX = $target.offset().left - overFlowWidth + $target.outerWidth()+ previewBorderWidth;

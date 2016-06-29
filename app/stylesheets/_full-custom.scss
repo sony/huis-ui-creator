@@ -416,12 +416,11 @@
         
 
         #popup-arrow{
-            margin-left:auto;
-            margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARGIN_RIGHT;
+            margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
+			margin-right:auto;
         }
 
         .popup-list{
-            border:none;
             width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
             padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
             padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
@@ -429,19 +428,30 @@
             font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
             font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
             background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+			box-sizing:border-box;
+			position:absolute;
+			z-index:-1;
+
+			
+
 
             .popup-menu-item-text-black{
                 display: flex;
                 align-items: center;
                 height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
 
-                #popup-icon-image-image-button{
-                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
-                }
+				&:hover, &:active{
+				background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+				color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+					#popup-icon-image-image-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+					}
 
-                #popup-icon-image-text-button{
-                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
-                }
+					#popup-icon-image-text-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;	
+					}
+				}
 
                 #popup-icon-image-image-button, #popup-icon-image-text-button{
                     background-position:center;
@@ -453,9 +463,17 @@
                     height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
                 }
 
-                &:hover, &:active{
-                    background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+				#popup-icon-image-image-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
                 }
+
+                #popup-icon-image-text-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                }
+
+
+
+
             }
         }
     }
