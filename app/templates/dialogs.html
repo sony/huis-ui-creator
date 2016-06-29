@@ -84,14 +84,18 @@
 
 	<!-- about dialog -->
 	<script type="text/template" id="common-dialog-about">
-		<section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
-			<div class="about-dialog">
-				<header class="{{_header}}">
-					<h1 class="title">{{title}}</h1>
-				</header>
-				<p class="message">{{message}}</p>
-			</div>
-		</section>
+		<div id="about-dialog-area">
+			<section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+				<div class="about-dialog">
+						<header class="{{_header}}">
+							<h3 class="title">{{title}}</h3>
+						</header>
+					<div class="text-area">
+						<p class="message">{{message}}</p>
+					</div>
+				</div>
+			</section>
+		</div>
 	</script>
 
 </article>

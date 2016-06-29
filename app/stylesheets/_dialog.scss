@@ -68,19 +68,43 @@ body{
         background-size: contain;
     }
 
-	.about-dialog{
-		height:$SIZE_DIALOG_HEIGHT*3;
-		overflow-y: scroll;
-		word-wrap: break-word;
-		overflow-y: scroll;
-		p{
-			line-height: 1.5em;
-			word-wrap:break-word;
-			font-size:8px;
-			font-family:$FONT_WEIGHT_DIALOG_TEXT;
-			overflow-y: scroll;
+	
+}
+
+#about-dialog-area{
+		overflow-y:auto;
+		overflow-x:hidden;
+		text-shadow: none;
+		font-family:$FONT_WEIGHT_DIALOG_TEXT;
+		width:$SIZE_DIALOG_WIDTH;
+		box-shadow:none;
+		-webkit-box-shadow:none;
+		text-shadow: none;
+		border-radius:0;
+		background:$COLOR_ABOUT_DIALOG_BACKGROUND;
+		height:$SIZE_ABOUT_DIALOG_HEIGHT;
+		border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+
+		padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
+		padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
+		padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
+		padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+		
+		.common-dialog{
+			background:none;
+			
+			.about-dialog{
+				color:$COLOR_ABOUT_DIALOG_TXET;
+
+				.text-area{
+					p{
+						color:$COLOR_ABOUT_DIALOG_TXET;
+					}
+				}
+
+			}	
 		}
-    }
+	
 }
 
 }
