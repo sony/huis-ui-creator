@@ -2338,7 +2338,7 @@ module Garage {
 				var path = pathArray[0];
 
 				//なぜか、background-imageにfull-custom.htmlが紛れることがある。
-				if (path != "null" && path != "full-custom.html") {
+				if (path != "null" && path != "full-custom.html" && path != "none") {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					$textFieldInPreview.css("visibility", "visible");
