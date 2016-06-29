@@ -352,10 +352,8 @@ body {
                     }
 
                     .menu-item-separator{
-                        font-size: 1px;
-                        border-top: solid 1px;
-                        padding: 0;
-                        margin: 5px 0;
+                        border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid  $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
+						margin: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM 0;
                     }
 
                 }
