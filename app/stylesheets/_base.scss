@@ -414,8 +414,16 @@ body {
 			border-left:none;
 			border-right:none;
 			text-align:center;
-			border-color:$COLOR_FORM_BORDER_FOCUS_TYPE2;
+			border-color:$COLOR_FORM_BORDER_NORMAL_TYPE2;
 			border-width:$SIZE_FORM_BORDER_THICKNESS;
+
+			&:hover{
+                 border-color : $COLOR_FORM_BORDER_HOVER_TYPE2;
+            }
+
+			&:focus{
+                border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
+            }       
 		}
 
         section {
