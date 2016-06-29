@@ -338,12 +338,9 @@ body {
                         display: flex;
 	                    align-items: center;
 
-                        &:hover{
+                        &:hover,&:active{
+							color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
                             background-color:$COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
-                        }
-
-                        &:active{
-                            background-color:$COLOR_LIGHT_GREEN;
                         }
 
                         &:disabled{
