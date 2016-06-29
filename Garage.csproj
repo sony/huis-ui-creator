@@ -177,7 +177,6 @@
     <None Include="app\stylesheets\variables\_color.scss" />
     <None Include="app\stylesheets\variables\_font.scss" />
     <None Include="app\stylesheets\variables\_size.scss" />
-    <Content Include="app\templates\about.html" />
     <Content Include="app\templates\dialogs.html" />
     <Content Include="app\templates\face-items.html" />
     <Content Include="app\templates\item-detail.html" />

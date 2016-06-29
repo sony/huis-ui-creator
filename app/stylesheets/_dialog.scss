@@ -68,6 +68,19 @@ body{
         background-size: contain;
     }
 
+	.about-dialog{
+		height:$SIZE_DIALOG_HEIGHT*3;
+		overflow-y: scroll;
+		word-wrap: break-word;
+		overflow-y: scroll;
+		p{
+			line-height: 1.5em;
+			word-wrap:break-word;
+			font-size:8px;
+			font-family:$FONT_WEIGHT_DIALOG_TEXT;
+			overflow-y: scroll;
+		}
+    }
 }
 
 }
