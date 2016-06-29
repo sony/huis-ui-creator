@@ -2979,6 +2979,7 @@ module Garage {
 							let $areaContainer = $labelDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.label)));
 							$detail.append($labelDetail);
+							$labelDetail.find(".property-text-value").focus();
 						}
 						break;
 					default:
