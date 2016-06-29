@@ -2189,6 +2189,11 @@ module Garage {
 
 							case "size":
 								solveLabel(targetState);
+								
+								if (isFinite(value)) {//numberでない場合、numberに変換。
+									value =+ (value);
+								}
+
 								targetState.label[0].size = value;
 								//$targetStateElem.find(".state-label").css("font-size", value + "pt");
 								break;
