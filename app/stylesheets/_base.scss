@@ -346,7 +346,18 @@ body {
                         &:disabled{
                             opacity:$COLOR_OPTION_MENU_POPUP_TEXT_DISABLED_OPACITY;
                         }
+
+						
                     }
+
+					#command-delete-remote{
+							color:$COLOR_OPTIOM_MENU_POPUP_ITEM_DELETE_TEXT;
+
+							&:hover, &:active{
+								color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+							}
+
+						}
 
                     .menu-item-separator{
                         border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid  $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
