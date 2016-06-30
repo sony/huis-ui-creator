@@ -138,7 +138,7 @@ module Garage {
 			}
         };
 
-        HELP_SITE_URL = "http://www.google.co.jp"; //　仮
+        HELP_SITE_URL = "http://rd1.sony.net/help/remote/ui_creator/ja/";
 
         if (fs.existsSync("debug")) {
             DEBUG_MODE = true;
@@ -189,7 +189,7 @@ module Garage {
                 callback(); // 次の処理へ
 
 			} else {
-				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
+				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
 						type: "info",
