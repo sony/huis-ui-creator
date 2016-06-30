@@ -1399,7 +1399,7 @@ module Garage {
 				var options: Util.ElectronOpenFileDialogOptions = {
 					properties: ["openFile"],
 					filters: [
-						{ name: "画像", extensions: ["jpg", "png", "gif"] },
+						{ name: "画像", extensions: ["jpg", "png", "jpeg"] },
 					],
 				};
 
@@ -2998,6 +2998,7 @@ module Garage {
 							let $areaContainer = $imageDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.image)));
 							$detail.append($imageDetail);
+
 							// リサイズモードの反映
 							let resizeMode = targetModel.image.resizeMode;
 							if (resizeMode) {
@@ -3013,6 +3014,8 @@ module Garage {
 							let $areaContainer = $labelDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.label)));
 							$detail.append($labelDetail);
+							var $labelTextSize = $labelDetail.find(".property-text-size");
+							$labelTextSize.val(targetModel.label.size.toString());
 						}
 						break;
 					default:
@@ -3167,6 +3170,14 @@ module Garage {
                                 }
                             }
                         }
+
+						//テキストラベルの大きさの設定値を反映する。
+						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+						if (!_.isUndefined(stateData.label)) {
+							var textSizeString: string = stateData.label.size;
+							$textSize.val(textSizeString);
+						}
+
                     });
                     
 				}
