@@ -3148,7 +3148,10 @@ module Garage {
 
 						//テキストラベルの大きさの設定値を反映する。
 						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
-						$textSize.val(stateData.label.size);
+						if (!_.isUndefined(stateData.label)) {
+							var textSizeString: string = stateData.label.size;
+							$textSize.val(textSizeString);
+						}
 
                     });
                     
