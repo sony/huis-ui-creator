@@ -109,7 +109,9 @@ body {
         }
 
         &:vertical{
-            border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+			//ÉXÉPÅ[ÉãÇ™1/2Ç»ÇÃÇ≈ÇQî{Ç…
+            border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
+			border-right : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
         }
     }
    
