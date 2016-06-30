@@ -34,9 +34,3 @@ class FontWeight{
         return;
     }
 }
-
-class IMAGE_TYPE {
-	public static BUTTON_IMAGE: string = "button";
-	public static NON_BUTTON_IMAGE: string = "image";
-	public static BACKGROUND_IMAGE: string = "background-image";
-};

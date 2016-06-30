@@ -7,9 +7,6 @@ module Garage {
         import Framework = CDP.Framework;
         import Tools = CDP.Tools;
         import UI = CDP.UI;
-		import Dialog = CDP.UI.Dialog;
-		import DialogOptions = CDP.UI.DialogOptions;
-
         /**
          * @class Home
          * @brief Home View class for Garage.
@@ -48,21 +45,14 @@ module Garage {
 
             // ドロップダウンメニューから起動される共通の関数
             private _onCommandAboutThis() {
-				var dialog: Dialog = null;
-				var props: DialogProps = null;
-				var text: string = null;
-
-				text = fs.readFileSync('./sample.txt', 'utf8');
-
-
-				dialog = new CDP.UI.Dialog("#common-dialog-about", {
-					src: CDP.Framework.toUrl("/templates/dialogs.html"),
-					title: "このアプリについて",
-					message: text,
-					dismissible: true,
-				});
-				//dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
-				dialog.show();
+                var options: Util.ElectronMessageBoxOptions = {
+                    type: "info",
+                    message: "HUIS UI Creator (c) 2016 Sony Corporation",
+                    buttons: [
+                        "OK"
+                    ],
+                };
+                electronDialog.showMessageBox(options);
                 return;
 }
 
