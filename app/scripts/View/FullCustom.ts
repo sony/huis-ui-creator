@@ -530,6 +530,10 @@ module Garage {
 					}
 				});
 				this.faceRenderer_pallet_.render();
+
+				//それぞれのボタンにtitleを追加
+				this.addTitleToEachItemInPallet();
+
                 this._pageLayout();
                 //スクロールイベント
                 $facePallet.find("#face-pages-area").scroll((event: JQueryEventObject) => {
@@ -538,6 +542,23 @@ module Garage {
                 
                 this.displayGradationInPalletArea(0, $facePallet.find("#face-pages-area"));
 			}
+
+
+			/**
+			 * PalletArea内のitemに、title要素を追加する。
+			 * 
+			 */
+			private addTitleToEachItemInPallet() {
+				var $itemsInPallet = $("#face-pallet").find(".face-page").find(".item");
+				var STR_TOOLTIP_IN_PALLET = "ダブルクリックで追加";
+				$itemsInPallet.each((index: number, element: Element) => {
+					var $element = $(element);
+					$element.attr("title", STR_TOOLTIP_IN_PALLET);
+				});
+				
+
+			}
+
 
 			/**
 			 * URL クエリーパラメーターを取得する
