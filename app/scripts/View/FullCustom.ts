@@ -1399,7 +1399,7 @@ module Garage {
 				var options: Util.ElectronOpenFileDialogOptions = {
 					properties: ["openFile"],
 					filters: [
-						{ name: "画像", extensions: ["jpg", "png", "gif"] },
+						{ name: "画像", extensions: ["jpg", "png", "jpeg"] },
 					],
 				};
 
