@@ -171,7 +171,16 @@ module Garage {
 					"click #delete-background-image": "onDeleteImageClicked",
 					"click .delete-state-image": "onDeleteImageClicked",
 					"click #add-state": "onAddButtonStateClicked",
-					"click .remove-state": "onRemoveButtonStateClicked",
+                    "click .remove-state": "onRemoveButtonStateClicked",
+
+					//画像変更用popup
+                    "click #edit-image-or-text": "onEditImageButtonClicked",
+					"click #edit-image-background": "onEditImageBackgroundClicked",
+                    "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
+					"click #command-change-button-image": "onEditImageButtonInPopupClicked",
+					"click #command-change-button-text": "onEditTextButtonInPopupClicked",
+					
+
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
                     // 戻るボタン
@@ -1243,6 +1252,93 @@ module Garage {
             }
 
             /**
+			 * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+            private onEditImageButtonClicked(event: Event) {
+                //popupメニューのテキスト 今後別のファイルにすべき。
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE = "画像ボタン";
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT = "テキストボタン";
+
+                //押下されたボタンのJquery
+                var $target = $(event.currentTarget);
+
+                //popのJquery
+                var $overflow = this.$page.find("#edit-image-popup"); // ポップアップのjQuery DOMを取得
+                var previewBorderWidth :number = +(this.$page.find(".property-state-image-preview").css("border-width").replace("px",""));
+                var $editImageBtn = $overflow.find("#command-change-button-image");
+                var $editTextBtn = $overflow.find("#command-change-button-text");
+
+                //popupのテキストを更新
+                $editImageBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE);
+                $editTextBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT);
+
+                var overFlowWidth = $overflow.find(".popup-list").outerWidth(true);
+
+                var popupY = $target.offset().top + $target.height();
+                var popupX = $target.offset().left - overFlowWidth + $target.outerWidth()+ previewBorderWidth;
+
+                var options: PopupOptions = {
+                    x: 0,
+                    y: 0,
+                    tolerance: popupY + ",0,0," + popupX,
+                    corners: false
+                };
+
+
+                $overflow.popup(options).popup("open").on("vclick", () => {
+                    $overflow.popup("close");
+                });
+            }
+
+			/**
+			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageBackgroundClicked(event: Event) {
+				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
+				this.startEditButtonImage($target, imageType);
+			}
+
+			/**
+			 * 詳細編集(画像)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageNonButtonImageClicked(event: Event) {
+				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.NON_BUTTON_IMAGE;
+				this.startEditButtonImage($target, imageType);
+			}
+
+			/**
+			 * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
+			 * 出現したポップアップの中の画像編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditImageButtonInPopupClicked(event: Event) {
+				var FUNCTION_NAME = "onEditImageButtonInPopupClicked";
+				var $target = $(event.currentTarget);
+				var imageType: IMAGE_TYPE = IMAGE_TYPE.BUTTON_IMAGE;
+
+				//stateID付きのJQueryObjectをわたす
+				var $editButton = this.$page.find("#edit-image-or-text");
+
+				this.startEditButtonImage($editButton, imageType);
+			}
+
+			/**
+			 * 詳細編集エリア内の プレビュー内の画像編集ボタンで、
+			 * 出現したポップアップの中のテキスト編集ボタンがクリックされたときに呼び出される
+             **/
+			private onEditTextButtonInPopupClicked(event: Event) {
+				var FUNCTION_NAME = "onEditTextButtonInPopupClicked";
+				var $target = $(event.currentTarget);
+				var $editButton = this.$page.find("#edit-image-or-text");
+				let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+				this.procDeleteImage($editButton);
+				this._updateCurrentModelStateData(stateId, "text", "");
+			
+			}
+
+
+            /**
 			 * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
 			 */
             private onItemPropertySelectClicked(event: Event) {
@@ -1283,7 +1379,23 @@ module Garage {
 			 */
 			private onReferImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
+				var ImageType: IMAGE_TYPE= null;
 
+				if ($target.hasClass("refer-state-image")) {// ボタン内の state の場合
+					ImageType = IMAGE_TYPE.BUTTON_IMAGE;
+				} else if ($target.hasClass("page-background-src")) { // ページ背景の場合
+					ImageType = IMAGE_TYPE.BACKGROUND_IMAGE;
+				} else { // 通常の image の場合
+					ImageType = IMAGE_TYPE.NON_BUTTON_IMAGE;
+				}
+				this.startEditButtonImage($target, ImageType);
+			}
+
+			/*
+			* アイテムの画像変更処理
+			* @param $target:Jquery 呼び出した側のJquery
+			*/
+			private startEditButtonImage($target :JQuery, imageType:IMAGE_TYPE) {
 				var options: Util.ElectronOpenFileDialogOptions = {
 					properties: ["openFile"],
 					filters: [
@@ -1302,10 +1414,10 @@ module Garage {
 						let imageFilePath = imageFiles[0];
 						let remoteId = this.faceRenderer_canvas_.getRemoteId();
 
-						// ボタン内の state の場合
-						if ($target.hasClass("refer-state-image")) {
+						
+						if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
 							this._reflectImageToButtonState(remoteId, $target, imageFilePath);
-						} else if ($target.hasClass("page-background-src")) { // ページ背景の場合
+						} else if (imageType === IMAGE_TYPE.BACKGROUND_IMAGE) { // ページ背景の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath, true);
 						} else { // 通常の image の場合
 							this._reflectImageToImageItem(remoteId, imageFilePath);
@@ -1314,12 +1426,22 @@ module Garage {
 				);
 			}
 
+
 			/**
 			 * 詳細編集エリア内の画像削除ボタンを押したときに呼ばれる。
 			 */
 			private onDeleteImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
-				if ($target.hasClass("delete-state-image")) {
+				this.procDeleteImage($target);
+				
+			}
+
+			/*
+			* 画像の削除処理
+			*/
+			private procDeleteImage($target: JQuery) {
+
+				if ($target.hasClass("delete-state-image") || $target.hasClass("property-state-value")) {
 					let stateId = parseInt(JQUtils.data($target, "stateId"), 10);
 					if (_.isUndefined(stateId)) {
 						return;
@@ -1338,7 +1460,7 @@ module Garage {
 					//this._updateCurrentModelStateData(stateId, "path", null);
 					//this._updateCurrentModelStateData(stateId, "resolved-path", null);
 					$(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
-					$(".property-state-image .property-state-image-preview .property-value[data-state-id=\"" + stateId + "\"]").css("background-image", "");
+					$(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
                     $(".property-value.page-background-src").val("");
@@ -1440,6 +1562,13 @@ module Garage {
 								"resolved-path": editedImage.path.replace(/\\/g, "/"),
 								"resizeOriginal": editedImagePath
 							});
+
+							//ボタンのテキストを削除する
+							this._updateCurrentModelStateData(stateId ,"text","");
+
+							// テキストエリアの文字表示をアップデート
+							$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
 							//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
 							//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
 						});
@@ -2206,6 +2335,10 @@ module Garage {
 					});
 				});
 
+				//画像が存在するとき、テキストEdit機能を非表示にする
+				this.toggleImagePreview(stateId)
+
+
 				var memento: IMemento = {
 					target: button,
 					previousData: { "state": currentStates },
@@ -2214,6 +2347,31 @@ module Garage {
 				var mementoCommand = new MementoCommand(memento);
 				this.commandManager_.invoke(mementoCommand);
 
+			}
+
+
+			/*
+			* ボタン画像がある場合、テキストエリアを表示に。する
+			*/
+			private toggleImagePreview(stateId: number) {
+				
+				var $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+				var $textFieldInPreview = $preview.find(".text-field-in-preview");
+
+				//cssのbackgroundImage要素から、画像名を抽出
+				var backgroundImageCssArray = $preview.css("background-image").split("/");
+				var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
+				var path = pathArray[0];
+
+				//なぜか、background-imageにfull-custom.htmlが紛れることがある。
+				if (path != "null" && path != "full-custom.html" && path != "none") {
+					$textFieldInPreview.css("visibility", "hidden");
+				} else {//画像が存在しないとき、テキストEdit機能を表示する。
+					$textFieldInPreview.css("visibility", "visible");
+					setTimeout(function () {
+						$textFieldInPreview.find(".property-state-text-value").focus();
+					}, 0);
+				}
 			}
 
 			/**
@@ -2850,6 +3008,7 @@ module Garage {
 							let $areaContainer = $labelDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.label)));
 							$detail.append($labelDetail);
+							$labelDetail.find(".property-text-value").focus();
 						}
 						break;
 					default:
@@ -3016,7 +3175,9 @@ module Garage {
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
                 var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
                 this._updatePreviewInDetailArea(resolvedPath, $preview);
-                //
+                //テキストボタン、あるいは画像のどちらかを表示する。
+				this.toggleImagePreview(button.default);
+
                 //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
     
 
