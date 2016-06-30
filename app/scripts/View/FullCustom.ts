@@ -701,6 +701,7 @@ module Garage {
 					// マウスポインター位置にアイテムがあれば取得する
 					let $target = this._getTarget(mousePosition);
 					if ($target) {
+						$target.focus();
 						console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
 						this.$currentTarget_ = $target;
 						// target に紐付くモデルを取得
