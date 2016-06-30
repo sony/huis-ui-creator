@@ -2368,9 +2368,6 @@ module Garage {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					$textFieldInPreview.css("visibility", "visible");
-					setTimeout(function () {
-						$textFieldInPreview.find(".property-state-text-value").focus();
-					}, 0);
 				}
 			}
 
@@ -3008,7 +3005,6 @@ module Garage {
 							let $areaContainer = $labelDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.label)));
 							$detail.append($labelDetail);
-							$labelDetail.find(".property-text-value").focus();
 						}
 						break;
 					default:
