@@ -14,7 +14,7 @@
         },
         "text": "TEXT LABEL",
         "color": 0,
-	"font-weight" : "normal",
+	"font_weight" : "normal",
         "font": "SST",
         "size": 20
     }],
