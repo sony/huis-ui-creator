@@ -2993,6 +2993,7 @@ module Garage {
 							let $areaContainer = $imageDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.image)));
 							$detail.append($imageDetail);
+
 							// リサイズモードの反映
 							let resizeMode = targetModel.image.resizeMode;
 							if (resizeMode) {
@@ -3008,6 +3009,8 @@ module Garage {
 							let $areaContainer = $labelDetail.nextAll("#area-container");
 							$areaContainer.append($(templateArea(targetModel.label)));
 							$detail.append($labelDetail);
+							var $labelTextSize = $labelDetail.find(".property-text-size");
+							$labelTextSize.val(targetModel.label.size.toString());
 							$labelDetail.find(".property-text-value").focus();
 						}
 						break;
@@ -3163,6 +3166,14 @@ module Garage {
                                 }
                             }
                         }
+
+						//テキストラベルの大きさの設定値を反映する。
+						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+						if (!_.isUndefined(stateData.label)) {
+							var textSizeString: string = stateData.label.size;
+							$textSize.val(textSizeString);
+						}
+
                     });
                     
 				}
