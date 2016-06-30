@@ -76,6 +76,7 @@ module Garage {
 			public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
 				var df = $.Deferred();
 				var promise = CDP.makePromise(df);
+				var encodedDstPath = null;
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
@@ -100,7 +101,7 @@ module Garage {
 
 							// imageType と指定したパスの拡張子が合わない場合は補正する。
 							dstPath = OffscreenEditor.getEditResultPath(dstPath, params.imageType);
-							dstPath = OffscreenEditor.getEncodedPath(dstPath);
+							encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
 							fs.outputFileSync(dstPath, buffer);
 							console.log(TAG + "after editImage dst: " + dstPath);
 							df.resolve({
@@ -152,6 +153,8 @@ module Garage {
 			 * @return {string} 補正したパス
 			 */
 			public static getEncodedPath(dstPath: string): string {
+				console.log("[getEncodedPath] dstPath = " + dstPath);
+
 				let basename = path.basename(dstPath);
 				let extname = path.extname(dstPath);
 				let dirname = path.dirname(dstPath);
