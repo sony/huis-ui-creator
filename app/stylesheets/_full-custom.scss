@@ -274,10 +274,87 @@
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
+
+				//画像編集ボタン
+                #edit-image-or-text,
+				#edit-image-background,
+				#edit-image-non-button-image{
+                    position:absolute;
+                    z-index:1;
+                    bottom:0;
+                    right:0;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_HEIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL;
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+
+                    &:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
+                    }
+                }
+
+				//背景画像削除ボタン
+				#delete-background-image{
+					position:absolute;
+                    z-index:1;
+                    top:0;
+                    right:0;
+					background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+					background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+					width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+
+					&:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                    }
+				}
+
+				//テキストエリア
+				.text-field-in-preview{
+					margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+
+					.title-edit-label{
+						height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
+						display: flex;
+                        align-items: center;
+						justify-content:center;
+
+						#icon-title-edit-label{
+							background-position:center;
+							background-repeat: no-repeat;
+							background-size: contain;
+							background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
+							width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
+							height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
+						}
+
+						.text-title-edit-label{
+							font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
+							font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
+							
+						}	
+					}
+
+					.text-size-pulldown{
+							margin:0 auto;
+							width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+					}
+
+					.property-text-value,
+					.property-state-text-value{
+						display:flex;
+						margin : 0 auto;
+						width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
+					}
+				}
             }
 
             .property-state-image{
-                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;    
+                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
             }
 
             /*.property-value {
@@ -325,6 +402,78 @@
                 .property-title, .property-value, label {
                     font-size: 0.95em;
                 }
+            }
+        }
+    }
+
+    //画像編集ボタンのpopup
+    #edit-image-popup{
+        position:relative;
+        box-shadow:none;
+        text-shadow:none;
+        background-color:$COLOR_TRANSPARENT;
+        border:none;
+        
+
+        #popup-arrow{
+            margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
+			margin-right:auto;
+        }
+
+        .popup-list{
+            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+            padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
+            padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
+            color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+            font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
+            font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+            background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+			box-sizing:border-box;
+			position:absolute;
+			z-index:-1;
+
+			
+
+
+            .popup-menu-item-text-black{
+                display: flex;
+                align-items: center;
+                height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
+
+				&:hover, &:active{
+				background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+				color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+					#popup-icon-image-image-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+					}
+
+					#popup-icon-image-text-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;	
+					}
+				}
+
+                #popup-icon-image-image-button, #popup-icon-image-text-button{
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
+                    margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
+                }
+
+				#popup-icon-image-image-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
+                }
+
+                #popup-icon-image-text-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                }
+
+
+
+
             }
         }
     }
