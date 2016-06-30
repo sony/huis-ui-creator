@@ -796,7 +796,8 @@ module Garage {
 							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
-						let newFileName = parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext;
+						let newFileName = OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode) + parsedPath.ext;
+						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
 						let newFileFullPath: string;
 						// original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
