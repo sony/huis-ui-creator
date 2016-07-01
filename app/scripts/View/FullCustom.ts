@@ -44,6 +44,7 @@ module Garage {
 		 * @brief FullCustom View class for Garage.
 		 */
 		class FullCustom extends BasePage {
+			private FILE_NAME = "FullCustom.ts";
 			private faceRenderer_pallet_: FaceRenderer;
 			private faceRenderer_canvas_: FaceRenderer;
 
@@ -1225,7 +1226,62 @@ module Garage {
 			 */
 			private onHoverButtonItemInCanvas(event : Event) {
 				var $target = $(event.currentTarget);//Jquery
+
+				var functions: string[] = this.getFunctions($target);
+
+				if (functions.length == 0) {
+					return;
+				}
+
+				var outputFunctionName = functions[0];
+				var $functionName = $target.find(".function-name");
+				
+				$functionName.html(outputFunctionName);
+
+				//ローカライズ
+				$target.i18n();
+
+				var outputString = $functionName.html();
+
+				if (functions.length > 1) {
+					outputString + "etc";
+				}
+				$functionName.html(outputString);
+
 				this.centeringTooltip($target);
+			}
+
+			/*
+			* ボタンのファンクションを取得
+			* $button : buttonItemのJQuery要素
+			*/
+			private getFunctions($button: JQuery) : string[]{
+				var FUNCTION_NAME = this.FILE_NAME + " getFunctions :";
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$button is Undefined");
+					return;
+				}
+
+				var buttonModel:TargetModel = this._getItemModel($button, "canvas");
+
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$buttonModel is Undefined");
+					return;
+				}
+				var functionNum = 0;
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;	
+				}
+
+				var stateNum = buttonModel.button.state.length;
+				var fucntions: string[] = [];
+				for (var i = 0; i < buttonModel.button.state.length; i++){
+					fucntions.push(buttonModel.button.state[i].action[0].code_db.function.toString());
+				}
+
+				return fucntions;
+
 			}
 
 			/**
