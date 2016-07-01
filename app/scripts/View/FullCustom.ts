@@ -1244,7 +1244,7 @@ module Garage {
 				var outputString = $functionName.html();
 
 				if (functions.length > 1) {
-					outputString + "etc";
+					outputString = outputString + " etc";
 				}
 				$functionName.html(outputString);
 
