@@ -125,7 +125,11 @@ module Garage {
 					} else {
 						this.commandManager_ = new CommandManager();
                     }
-                    $("#input-face-name").focus();
+
+					//テキストフィールドにフォーカス
+					var $remoteName: JQuery = $("#input-face-name");
+					this.setFocusAndMoveCursorToEnd($remoteName);
+
                     this.isTextBoxFocued = false;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
@@ -207,6 +211,30 @@ module Garage {
 				// Please add your code
 				return this;
 			}
+
+
+			/*
+			* テキストエリアにフォーカスを移し、カーソルを末尾に移動する。
+			*/
+			private setFocusAndMoveCursorToEnd($target) {
+				var FUNCTION_NAME = "setFocusAndMoveCursorToEnd";
+
+				if (_.isUndefined($target)) {
+					console.log(FUNCTION_NAME + ": $target is Undefined");
+					return;
+				}
+
+				if ($target.attr('type') !== "text") {
+					console.log(FUNCTION_NAME + ": $target is not input[text]");
+					return;
+				}
+
+				var remoteName: string = $target.val();
+				$target.val("");
+				$target.focus();
+				$target.val(remoteName);
+			}
+
 
 			/**
 			 * 画面のレイアウト。
