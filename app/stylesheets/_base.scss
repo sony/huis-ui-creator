@@ -114,9 +114,26 @@ body {
 			border-right : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
         }
     }
-   
+
+
+	.ui-loader{
+			position:absolute;
+			text-align:center;
+			font-size:$FONT_SIZE_TOAST;
+			font-family : $FONT_FAMILY_TOAST;
+			width :$SIZE_TOAST_WIDTH;
+			height:$SIZE_TOAST_HEIGHT;
+			line-height:$SIZE_TOAST_HEIGHT;
+			margin-top : $SIZE_TOAST_MINUS_MARGIN_TOP;
+			border-radius:0;
+			box-shadow:none;
+			text-shadow:none;
+			color:$COLOR_TOAST_TEXT;
+			background-color:$COLOR_TOAST_BACKGROUND;
+	}
 
     .ui-page-theme-b{
+	
 
         //ã§í ÇÃêÅÇ´èoÇµ
         #popup-arrow{
