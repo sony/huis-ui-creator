@@ -1,7 +1,6 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="FullCustomCommand.ts" />
 /// <reference path="BasePage.ts" />
-
 module Garage {
 	export module View {
 
@@ -1238,10 +1237,11 @@ module Garage {
 				
 				$functionName.html(outputFunctionName);
 
+				
 				//ローカライズ
 				$target.i18n();
-
-				var outputString = $functionName.html();
+				var localizedString = $.i18n.t("button.function." + outputFunctionName);
+				var outputString = localizedString;
 
 				if (functions.length > 1) {
 					outputString = outputString + " etc";
