@@ -1223,7 +1223,7 @@ module Garage {
 			/**
 			 * キャンバス内のボタンアイテムがHoverされたときのハンドリング
 			 */
-			private onHoverBItemInCanvas(event : Event) {
+			private onHoverButtonItemInCanvas(event : Event) {
 				var $target = $(event.currentTarget);//Jquery
 				this.centeringTooltip($target);
 			}
