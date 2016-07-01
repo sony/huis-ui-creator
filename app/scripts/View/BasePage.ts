@@ -10,12 +10,64 @@ module Garage {
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
 
+
+		/**
+         * @class StyleBuilderDefault
+         * @brief スタイル変更時に使用する既定の構造体オブジェクト
+         */
+		 class StyleBuilderDefault implements UI.Toast.StyleBuilder {
+
+			//! class attribute に設定する文字列を取得
+			getClass(): string {
+				return "ui-loader ui-overlay-shadow ui-corner-all ui-body-b";
+			}
+
+			//! style attribute に設定する JSON オブジェクトを取得
+			getStyle(): any {
+				let style = {
+					"display": "block",
+					"opacity": 1
+				};
+				return style;
+			}
+
+			//! オフセットの基準位置を取得
+			getOffsetPoint(): number {
+				//! @enum オフセットの基準
+				enum OffsetX {
+					LEFT = 0x0001,
+					RIGHT = 0x0002,
+					CENTER = 0x0004,
+				}
+
+				//! @enum オフセットの基準
+				enum OffsetY {
+					TOP = 0x0010,
+					BOTTOM = 0x0020,
+					CENTER = 0x0040,
+				}
+
+				return OffsetX.CENTER | OffsetY.TOP;
+			}
+
+			//! X 座標のオフセット値を取得
+			getOffsetX(): number {
+				return 0;
+			}
+
+			//! Y 座標のオフセット値を取得
+			getOffsetY(): number {
+				return 87;
+			}
+		}
+
         /**
          * @class Home
          * @brief Home View class for Garage.
         */
         export class BasePage extends UI.PageView<Backbone.Model> {
 
+			private FILE_NAME : string = "BasePage";
             protected currentWindow_: any;
             protected contextMenu_: any;
             protected rightClickPosition_: { x: number; y: number };
@@ -96,6 +148,21 @@ module Garage {
 
                 return;
             }
+
+
+			/*
+             * Garageのデザインで、Toastを標示する。
+             */
+			protected showGarageToast(message: string) {
+				var FUNCTION_NAME = this.FILE_NAME + " showGarageToast : ";
+				if (_.isUndefined(message)) {
+					console.log(FUNCTION_NAME + "message is undefined");
+				}
+
+				var style : UI.Toast.StyleBuilderDefault = new StyleBuilderDefault();
+				UI.Toast.show(message, 1500, style);
+			}
+
 
         }
     }
