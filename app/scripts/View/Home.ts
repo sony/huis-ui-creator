@@ -99,8 +99,8 @@ module Garage {
 				var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
 
 				// HuisFiles から フルカスタムの face を取得。
-				// face は新しいものから表示するため、取得した facelist を逆順にする。
-				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] }).reverse();
+				// face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで既に逆順にするようにしたので.reverse()不要に
+				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
 					faceList.push({
