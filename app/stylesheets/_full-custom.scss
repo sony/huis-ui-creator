@@ -73,7 +73,8 @@
 
 					.tooltip{
 						overflow:initial;
-					
+						text-shadow:none;
+
 						.tooltip-text{
 							display: flex;	
 							visibility:hidden;
@@ -93,7 +94,6 @@
 								visibility:visible;
 								display: flex;
 								align-items: center;
-								vertical-align:central;
 								position: absolute;            /* relativeからの絶対位置 */
 
 								//　0.5スケールなので倍に

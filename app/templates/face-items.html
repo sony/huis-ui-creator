@@ -27,12 +27,7 @@
 
     <script type="text/template" id="template-button-item">
 		<div class="button-item item  tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
-			<span class="tooltip-text">{{#deviceInfo}}
-            {{#code_db}}
-            {{brand}}
-			 : <span class="function-name" ></span>
-			{{/code_db}}
-			{{/deviceInfo}}</span>
+			<span class="tooltip-text">{{#deviceInfo}}{{#code_db}}{{device_type}} : <span class="function-name" ></span>{{/code_db}}{{/deviceInfo}}</span>
 			{{#state}}
 			<div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
 				{{#image}}
