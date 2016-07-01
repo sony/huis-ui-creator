@@ -2338,6 +2338,14 @@ module Garage {
 				//画像が存在するとき、テキストEdit機能を非表示にする
 				this.toggleImagePreview(stateId)
 
+				//テキストエリアが表示されたとき、フォーカスを移す。
+				var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
+				if ($textFieldInPreview.css("visibility") === "visible"){
+					setTimeout(function () {
+						$textFieldInPreview.focus();
+					}, 0);
+				}
+				
 
 				var memento: IMemento = {
 					target: button,
@@ -2368,9 +2376,6 @@ module Garage {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					$textFieldInPreview.css("visibility", "visible");
-					setTimeout(function () {
-						$textFieldInPreview.find(".property-state-text-value").focus();
-					}, 0);
 				}
 			}
 
@@ -3011,7 +3016,6 @@ module Garage {
 							$detail.append($labelDetail);
 							var $labelTextSize = $labelDetail.find(".property-text-size");
 							$labelTextSize.val(targetModel.label.size.toString());
-							$labelDetail.find(".property-text-value").focus();
 						}
 						break;
 					default:
