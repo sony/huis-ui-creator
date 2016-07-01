@@ -191,11 +191,28 @@
                 margin:0;
 
                 .button-info-brand-and-type{
+					display:inline-flex;
+					align-items:baseline;
+					text-shadow:none;
                     padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
                     font-family: $FONT_FAMILY_NORMAL;
                     color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+
+					.slash{
+						text-align:center;
+						width:$SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
+					}
+
+					.brand_name{
+
+						max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
+					}
+
                 }
                 
             }
