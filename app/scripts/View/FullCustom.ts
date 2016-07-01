@@ -161,6 +161,10 @@ module Garage {
 
 					// キャンバス内のページ追加ボタン
 					"click #button-add-page": "onAddPageButtonClicked",
+
+					//キャンバスないのボタンアイテムをhover
+					"mouseover #face-canvas #face-pages-area .button-item ": "onHoverButtonItemInCanvas",
+
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
                     "change #face-item-detail select": "onItemPropertySelectChanged",
@@ -1214,6 +1218,14 @@ module Garage {
 				this.faceRenderer_canvas_.addPage();
 
 				this._setGridSize(this.gridSize_);
+			}
+
+			/**
+			 * キャンバス内のボタンアイテムがHoverされたときのハンドリング
+			 */
+			private onHoverBItemInCanvas(event : Event) {
+				var $target = $(event.currentTarget);//Jquery
+				this.centeringTooltip($target);
 			}
 
 			/**
