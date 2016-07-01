@@ -199,9 +199,7 @@
                     font-family: $FONT_FAMILY_NORMAL;
                     color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
-					overflow: hidden;
-					white-space: nowrap;
-					text-overflow: ellipsis;
+					
 
 					.slash{
 						text-align:center;
@@ -209,7 +207,9 @@
 					}
 
 					.brand_name{
-
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 						max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
 					}
 
