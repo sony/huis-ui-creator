@@ -55,9 +55,11 @@ body {
         -ms-user-select: none;
             user-select: none;
  
-
+	.tooltip-text{
+			display: none;	
+	}
+				
     //スクロールバー
-
     ::-webkit-scrollbar {
         &:horizontal{
             height: $SIZE_SCROLL_BAR_WHOLE_HEIGHT;

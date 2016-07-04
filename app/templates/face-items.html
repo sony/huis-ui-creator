@@ -26,31 +26,32 @@
     </script>
 
     <script type="text/template" id="template-button-item">
-        <div class="button-item item" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
-            {{#state}}
-            <div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
-                {{#image}}
-                <!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
-                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
-                {{/image}}
-                {{^image}}
-                <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
-                {{/image}}
-                {{#label}}
-                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
-                {{/label}}
-                {{^label}}
-                <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>
-                {{/label}}
-            </div>
-            {{/state}}
-        </div>
+		<div class="button-item item  tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
+			<span class="tooltip-text">{{#deviceInfo}}{{#code_db}}{{device_type}} : <span class="function-name" ></span>{{/code_db}}{{/deviceInfo}}</span>
+			{{#state}}
+			<div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
+				{{#image}}
+				<!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
+				<div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
+				{{/image}}
+				{{^image}}
+				<div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
+				{{/image}}
+				{{#label}}
+				<div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
+				{{/label}}
+				{{^label}}
+				<div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>
+				{{/label}}
+			</div>
+			{{/state}}
+		</div>
     </script>
 
     <script type="text/template" id="template-label-item">
-        <div class="label-item item" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
-            <div class="label-value">{{text}}</div>
-        </div>
+		<div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
+			<div class="label-value">{{text}}</div>
+		</div>
     </script>
 
     <script type="text-template" id="template-image-item">

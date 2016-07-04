@@ -57,6 +57,7 @@ module Garage {
 				return $.extend(ret,{
 					"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
+					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
                     // ショートカットキー
@@ -219,6 +220,18 @@ module Garage {
 					});
 				}
 			}
+
+			/*
+			* +ボタンにmouseOverしたときに呼び出される
+			*/
+			private _onCreateNewRemoteHover(event: Event) {
+
+				var $target = $(event.currentTarget);//＋ボタンのJquery
+				this.centeringTooltip($target);
+			}
+
+
+			
 
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
                 if (!noWarn) {
