@@ -1293,11 +1293,13 @@ module Garage {
 
 				var buttonModel:TargetModel = this._getItemModel($button, "canvas");
 
-				if (_.isUndefined($button)) {
-					console.warn(FUNCTION_NAME + "$buttonModel is Undefined");
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
 					return;
 				}
+
 				var functionNum = 0;
+
 				if (buttonModel.type !== "button") {
 					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
 					return;	
