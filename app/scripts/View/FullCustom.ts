@@ -2533,6 +2533,11 @@ module Garage {
 						return;
 				}
 
+				if (model == null) {
+					console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
+					return;
+				}
+
 				// model 状態を無効にする
 				var memento: IMemento = {
 					target: model,
