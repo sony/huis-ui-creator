@@ -113,6 +113,18 @@
 							}
 						}
 				}
+				
+				.selected.tooltip{
+					.tooltip-text{
+						content:''; 
+						display:block; 
+						position:absolute;
+						height:0; 
+						width:0; 
+						z-index:100;
+						visibility:hidden;
+					}
+				}
 			}
                
                 #face-canvas-inner{
