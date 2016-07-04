@@ -2129,9 +2129,10 @@ module Garage {
 						targetState = null;
 					}
 					var actionList = stateDetail.actionList;
+					var translates: IStateTranslate[] = [];
+
 					if (actionList) {
 						var actions: IAction[] = [];
-						var translates: IStateTranslate[] = [];
 						for (let key in actionList) {
 							if (!key) {
 								continue;
