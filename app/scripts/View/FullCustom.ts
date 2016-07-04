@@ -2063,12 +2063,14 @@ module Garage {
             * 詳細設定エリアのプレビューの画像を更新する
             */
             private _updatePreviewInDetailArea(imagePath : string, $preview) {
-                if (imagePath === undefined) {
+                if (imagePath == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
+					return;
                 }
 
-                if ($preview === undefined) {
+                if ($preview == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
+					return;
                 }
 
                 var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
@@ -2127,9 +2129,10 @@ module Garage {
 						targetState = null;
 					}
 					var actionList = stateDetail.actionList;
+					var translates: IStateTranslate[] = [];
+
 					if (actionList) {
 						var actions: IAction[] = [];
-						var translates: IStateTranslate[] = [];
 						for (let key in actionList) {
 							if (!key) {
 								continue;
@@ -2505,7 +2508,7 @@ module Garage {
 					return;
 				}
 
-				var model: ItemModel;
+				var model: ItemModel = null;
 				//var moduleId = this._getCurrentCanvasPageModuleId();
 				switch (this.currentTargetModel_.type) {
 					case "button":
@@ -2525,6 +2528,7 @@ module Garage {
 						break;
 					default:
 						console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
+						return;
 				}
 
 				// model 状態を無効にする
