@@ -38,7 +38,7 @@ module Garage {
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.Module>) {
-				var modulesData: IGModule[];
+				var modulesData: IGModule[] = [];
 				if (options && options.attributes) {
 					if (options.attributes["modules"]) {
 						modulesData = options.attributes["modules"];
