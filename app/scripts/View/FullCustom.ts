@@ -2063,12 +2063,12 @@ module Garage {
             * 詳細設定エリアのプレビューの画像を更新する
             */
             private _updatePreviewInDetailArea(imagePath : string, $preview) {
-                if (imagePath === undefined) {
+                if (imagePath == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
 					return;
                 }
 
-                if ($preview === undefined) {
+                if ($preview == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
 					return;
                 }
