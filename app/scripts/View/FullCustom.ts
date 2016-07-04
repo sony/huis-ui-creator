@@ -2065,10 +2065,12 @@ module Garage {
             private _updatePreviewInDetailArea(imagePath : string, $preview) {
                 if (imagePath === undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
+					return;
                 }
 
                 if ($preview === undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
+					return;
                 }
 
                 var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
