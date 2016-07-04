@@ -2505,7 +2505,7 @@ module Garage {
 					return;
 				}
 
-				var model: ItemModel;
+				var model: ItemModel = null;
 				//var moduleId = this._getCurrentCanvasPageModuleId();
 				switch (this.currentTargetModel_.type) {
 					case "button":
@@ -2525,6 +2525,7 @@ module Garage {
 						break;
 					default:
 						console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
+						return;
 				}
 
 				// model 状態を無効にする
