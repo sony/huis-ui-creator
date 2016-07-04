@@ -519,7 +519,10 @@ module Garage {
 				var remoteListIniFile = "[General]\n";
 				var remoteList = this.remoteList;
 				var remoteListLength = remoteList.length;
-				for (let i = remoteListLength-1; i>=0; i--) {
+				//for (let i = remoteListLength - 1; i >= 0; i--) {
+				//	remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";	 // 逆順に ∵ HUISでの表示順序は上から新しい順なので
+				//}
+				for (let i = 0; i < remoteListLength; i++) {
 					remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";	 // 逆順に ∵ HUISでの表示順序は上から新しい順なので
 				}
 				remoteListIniFile += remoteListLength + "=end";
