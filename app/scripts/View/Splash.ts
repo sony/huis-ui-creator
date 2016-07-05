@@ -120,7 +120,6 @@ module Garage {
                     // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
                     if (huisFiles.init(HUIS_FILES_ROOT)) {
                         // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
-                        //Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_CHECK_DIFF, (result: boolean) => {
                         Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
 							let direction = true; // HUIS->PC
                             if (result) {

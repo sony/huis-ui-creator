@@ -176,7 +176,11 @@
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
-						if ((dir1Stat.size === dir2Stat.size && dir1Stat.mtime.getTime() === dir2Stat.mtime.getTime()) ||
+						// ファイル更新日時が±10秒までは同じファイルとして扱う
+						// 以下の点に注意
+						// 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
+						// 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
+						if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10*1000 ) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
 						}
