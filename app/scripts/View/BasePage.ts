@@ -12,10 +12,10 @@ module Garage {
 
 
 		/**
-         * @class StyleBuilderDefault
-         * @brief スタイル変更時に使用する既定の構造体オブジェクト
-         */
-		 class StyleBuilderDefault implements UI.Toast.StyleBuilder {
+		 * @class StyleBuilderDefault
+		 * @brief スタイル変更時に使用する既定の構造体オブジェクト
+		 */
+		class StyleBuilderDefault implements UI.Toast.StyleBuilder {
 
 			//! class attribute に設定する文字列を取得
 			getClass(): string {
