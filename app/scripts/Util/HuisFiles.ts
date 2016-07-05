@@ -1080,6 +1080,9 @@ module Garage {
 					if (button.default) {
 						gbutton.default = button.default;
 					}
+					if (button.name) {
+						gbutton.name = button.name;
+					}
 					gbuttons.push(gbutton);
 				});
 
