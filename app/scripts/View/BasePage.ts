@@ -67,8 +67,7 @@ module Garage {
         */
         export class BasePage extends UI.PageView<Backbone.Model> {
 
-			private FILE_NAME : string = "BasePage";
-            protected currentWindow_: any;
+			protected currentWindow_: any;
             protected contextMenu_: any;
             protected rightClickPosition_: { x: number; y: number };
 
@@ -154,7 +153,7 @@ module Garage {
              * Garageのデザインで、Toastを標示する。
              */
 			protected showGarageToast(message: string) {
-				var FUNCTION_NAME = this.FILE_NAME + " showGarageToast : ";
+				var FUNCTION_NAME ="BasePage.ts : showGarageToast : ";
 				if (_.isUndefined(message)) {
 					console.log(FUNCTION_NAME + "message is undefined");
 				}
