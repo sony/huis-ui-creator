@@ -1,6 +1,7 @@
 ﻿/// <reference path="../include/Interfaces.d.ts" />
 
 /* tslint:disable:max-line-length */
+var node_crypt = Remote.require('crypto');
 
 module Garage {
 	export module Model {
@@ -75,6 +76,7 @@ module Garage {
 			public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
 				var df = $.Deferred();
 				var promise = CDP.makePromise(df);
+				var encodedDstPath = null;
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
@@ -99,6 +101,7 @@ module Garage {
 
 							// imageType と指定したパスの拡張子が合わない場合は補正する。
 							dstPath = OffscreenEditor.getEditResultPath(dstPath, params.imageType);
+							encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
 							fs.outputFileSync(dstPath, buffer);
 							console.log(TAG + "after editImage dst: " + dstPath);
 							df.resolve({
@@ -140,7 +143,31 @@ module Garage {
 				return dstPath;
 			}
 
-			// public static methods:
+			/**
+			 * 指定したパスをSHA1ハッシュ値の名前に変更する。
+			 * 変更するのはディレクトリ名ではなくファイル名の拡張子を除いた部分(basename)。
+			 * 日本語ファイル名がWindowsではShiftJIS、HUISではUTF-8で不整合が生じるため。
+			 * 
+			 * @param dstPath {string} 編集後のパスの候補。
+			 * 
+			 * @return {string} 補正したパス
+			 */
+			public static getEncodedPath(dstPath: string): string {
+				console.log("[getEncodedPath] dstPath = " + dstPath);
+
+				let basename = path.basename(dstPath);
+				let extname = path.extname(dstPath);
+				let dirname = path.dirname(dstPath);
+
+				const hash = node_crypt.createHash('sha1');
+				hash.update(basename);
+				basename = hash.digest('hex');
+				console.log("SHA1 basename = " + basename);
+				dstPath = dirname + '/' + basename + extname;
+				console.log("SHA1 path = " + dstPath);
+
+				return dstPath;
+			}
 
 			/**
 			 * 画像を読み込み、PIXI.js のテクスチャーを取得する
