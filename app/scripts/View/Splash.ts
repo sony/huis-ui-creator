@@ -122,6 +122,7 @@ module Garage {
                         // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                         //Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, DIALOG_PROPS_CHECK_DIFF, (result: boolean) => {
                         Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
+							let direction = true; // HUIS->PC
                             if (result) {
                                 // 差分がある場合は、HUIS -> PC で上書き同期をするかを確認する
                                 let response = electronDialog.showMessageBox(
@@ -134,21 +135,19 @@ module Garage {
                                     });
                                 // yes を選択した場合 (response: 0) は、同期フラグを立てる
                                 if (response === 0) {
-                                    needSync = true;
-                                }
+                                    direction = true;
+                                } else {
+									direction = false;
+								}
                             }
-                            // 同期が必要な場合のみ、同期を実行
-                            if (needSync) {
-                                this.doSync(callback);
-                            } else {
-                                if (callback) {
-                                    callback();
-                                }
-                            }
+                            // 同期を実行
+                            
+                            this.doSync(direction, callback);
+                            
                         });
                     } else {
                         // PC 側に HUIS ファイルが保存されていない場合は、強制的に HUIS -> PC で同期を行う
-                        this.doSync(callback);
+                        this.doSync(true, callback);
                     }
                 } catch (err) {
                     console.error(err);
@@ -157,10 +156,16 @@ module Garage {
                 }
             };
 
-            private doSync(callback?: Function) {
+            private doSync(direction: Boolean, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 // 同期処理の開始
-                let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
+				// 実際は一方向の上書きである
+				// direction === true -> HUIS->PC
+				// direction === false -> PC->HUIS
+				let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
+				let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
+
+                let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         // エラーダイアログの表示
                         // [TODO] エラー内容に応じて表示を変更するべき
