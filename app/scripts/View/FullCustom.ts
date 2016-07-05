@@ -2534,7 +2534,7 @@ module Garage {
 				}
 
 				if (model == null) {
-					console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
+					console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] mode is null.");
 					return;
 				}
 
