@@ -68,7 +68,7 @@ module Garage {
 				return this.get("name");
 			}
 
-            set name(val: string) {
+			set name(val: string) {
 				this.set("name", val);
 			}
 
