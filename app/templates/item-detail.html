@@ -314,12 +314,14 @@
 									<option value="swipe_right">右スワイプ</option>
 									<option value="swipe_left">左スワイプ</option>
 								</select>
-								<select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false">
-									<option value="none">何もしない</option>
-									{{#functions}}
-									<option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-									{{/functions}}
-								</select>
+							</div>
+							<div class="custom-select">
+									<select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false">
+										<option value="none">何もしない</option>
+										{{#functions}}
+										<option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+										{{/functions}}
+									</select>
 							</div>
 
 						</div>
