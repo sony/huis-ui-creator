@@ -1431,10 +1431,14 @@ module Garage {
 				var FUNCTION_NAME = "onEditTextButtonInPopupClicked";
 				var $target = $(event.currentTarget);
 				var $editButton = this.$page.find("#edit-image-or-text");
-				let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+				let stateId = parseInt(JQUtils.data($editButton, "stateId"), 10); //$target.data("state-id");
 				this.procDeleteImage($editButton);
-				this._updateCurrentModelStateData(stateId, "text", "");
-			
+
+				let $textField: JQuery = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
+				let textInTextFiled: string = $textField.val();
+
+				this._updateCurrentModelStateData(stateId, "text", textInTextFiled);
+				this.setFocusAndMoveCursorToEnd($textField);
 			}
 
 
