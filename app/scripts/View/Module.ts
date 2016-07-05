@@ -439,6 +439,10 @@ module Garage {
 				    newButton.default = srcButton.default;
 				}
 
+				if (srcButton.name) {
+					newButton.name = srcButton.name;
+				}
+
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}

@@ -641,6 +641,9 @@ module Garage {
 					if (button.default != null) {
 						normalizedButton.default = button.default;
 					}
+					if (button.name != null) {
+						normalizedButton.name = button.name;
+					}
 					normalizedButtons.push(normalizedButton);
 				}
 
