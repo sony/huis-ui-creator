@@ -417,8 +417,8 @@ module Garage {
 				if (0 <= newRemoteId) {
 					// 4 桁の 0 パディングで返却
 					let newRemoteIdStr = ("000" + newRemoteId).slice(-4);
-					// remoteId リストに追加
-					this.remoteList_.push({
+					// remoteId リストに追加。HUISの表示都合でリスト末尾に追加(push)→先頭に追加(unshift)に変更('16/7/1)
+					this.remoteList_.unshift({
 						remote_id: newRemoteIdStr
 					});
 
@@ -519,8 +519,11 @@ module Garage {
 				var remoteListIniFile = "[General]\n";
 				var remoteList = this.remoteList;
 				var remoteListLength = remoteList.length;
+				//for (let i = remoteListLength - 1; i >= 0; i--) {
+				//	remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";	 // 逆順に ∵ HUISでの表示順序は上から新しい順なので
+				//}
 				for (let i = 0; i < remoteListLength; i++) {
-					remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";
+					remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";	 // 逆順に ∵ HUISでの表示順序は上から新しい順なので
 				}
 				remoteListIniFile += remoteListLength + "=end";
 				fs.outputFileSync(remoteListIniPath, remoteListIniFile);
