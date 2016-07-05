@@ -38,6 +38,7 @@ module Garage {
 			actionList?: IActionList;
 		}
 
+
 		/**
 		 * @class FullCustom
 		 * @brief FullCustom View class for Garage.
@@ -1126,7 +1127,7 @@ module Garage {
 					accelerator: "CmdOrCtrl+Z",
 					enabled: this.commandManager_.canUndo() ? true : false,
 					click: () => {
-						UI.Toast.show("元に戻す");
+						this.showGarageToast("元に戻す");
 						var targetModel = this.commandManager_.undo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
@@ -1139,7 +1140,7 @@ module Garage {
 					accelerator: "Shift+CmdOrCtrl+Z",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
-						UI.Toast.show("やり直し");
+						this.showGarageToast("やり直し");
 						var targetModel = this.commandManager_.redo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
@@ -1817,12 +1818,12 @@ module Garage {
 														buttons: ["ok"]
 													});
 												} else {
-													//CDP.UI.Toast.show("HUIS との同期が完了しました。");
+													//CDP.this.showGarageToast"HUIS との同期が完了しました。");
 													Framework.Router.back();
 												}
 											});
 										} else {
-											CDP.UI.Toast.show("リモコンを保存しました。");
+											this.showGarageToast("リモコンを保存しました。");
 											Framework.Router.back();
 										}
 									});
