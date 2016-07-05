@@ -32,7 +32,7 @@ app.on('ready', function() {
 	mainWindow = new BrowserWindow({
 		width: 1280,
 		height: 800,
-		icon:  __dirname + '/huis-favicon.png'
+		icon:  __dirname + '/app/huis-favicon.png'
 	});
 
   // アプリの index.html をロードする
