@@ -43,9 +43,11 @@ declare module "fs-extra" {
 	//extended methods
 	export function copy(src: string, dest: string, callback?: (err: Error) => void): void;
 	export function copy(src: string, dest: string, filter: (src: string) => boolean, callback?: (err: Error) => void): void;
+	export function copy(src: string, dest: string, options: CopyOptions, callback?: (err: Error) => void): void;
 
 	export function copySync(src: string, dest: string): void;
 	export function copySync(src: string, dest: string, filter: (src: string) => boolean): void;
+	export function copySync(src: string, dest: string, options: CopyOptions): void;
 
 	export function createFile(file: string, callback?: (err: Error) => void): void;
 	export function createFileSync(file: string): void;
@@ -168,6 +170,19 @@ declare module "fs-extra" {
 	export function existsSync(path: string): boolean;
     export function ensureDir(path: string, cb: (err: Error) => void): void;
 
+    export interface CopyFilterFunction {
+		(src: string): boolean
+	}
+
+	export type CopyFilter = CopyFilterFunction | RegExp;
+
+	export interface CopyOptions {
+		clobber?: boolean
+		preserveTimestamps?: boolean
+        dereference?: boolean
+		filter?: CopyFilter
+	}
+
 	export interface OpenOptions {
 		encoding?: string;
 		flag?: string;
@@ -198,9 +213,11 @@ interface FSE {
 	//extended methods
 	copy(src: string, dest: string, callback?: (err: Error) => void): void;
 	copy(src: string, dest: string, filter: (src: string) => boolean, callback?: (err: Error) => void): void;
+	copy(src: string, dest: string, options: CopyOptions, callback?: (err: Error) => void): void;
 
 	copySync(src: string, dest: string): void;
 	copySync(src: string, dest: string, filter: (src: string) => boolean): void;
+	copySync(src: string, dest: string, options: CopyOptions): void;
 
 	createFile(file: string, callback?: (err: Error) => void): void;
 	createFileSync(file: string): void;
@@ -322,6 +339,19 @@ interface FSE {
 	ensureDir(path: string, cb: (err: Error) => void): void;
 	move(src: string, dest: string, callback?: (err: Error) => void): void;
 	
+}
+
+interface CopyFilterFunction {
+	(src: string): boolean
+}
+
+type CopyFilter = CopyFilterFunction | RegExp;
+
+interface CopyOptions {
+	clobber?: boolean
+	preserveTimestamps?: boolean
+	dereference?: boolean
+	filter?: CopyFilter
 }
 
 interface Stats {

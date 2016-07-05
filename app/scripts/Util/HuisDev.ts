@@ -356,7 +356,10 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file));
+								let option: CopyOptions = {
+									preserveTimestamps: true
+								}
+								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
 								df.reject(err);
