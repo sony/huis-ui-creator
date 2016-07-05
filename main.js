@@ -27,8 +27,13 @@ app.on('window-all-closed', function() {
 
 // Electron の初期化が終わってブラウザウィンドウを作る準備ができたら呼ばれる
 app.on('ready', function() {
-  // ブラウザウィンドウを作る
-  mainWindow = new BrowserWindow({width: 1280, height: 800});
+	// ブラウザウィンドウを作る
+
+	mainWindow = new BrowserWindow({
+		width: 1280,
+		height: 800,
+		icon:  __dirname + '/huis-favicon.png'
+	});
 
   // アプリの index.html をロードする
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');
