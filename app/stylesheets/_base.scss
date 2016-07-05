@@ -304,11 +304,13 @@ body {
                             padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
                             &:hover, &:active{
                                 background-color:$COLOR_PULL_DOWN_BACKGROUND_HOVER;
+								color : $COLOR_PULL_DOWN_TEXT_HOVER;
                             }
                         }
 
                         .ui-btn-active{
-                            background-color:$COLOR_LIGHT_GREEN;
+                            background-color:$COLOR_PULL_DOWN_BACKGROUND_SELECTED;
+							color : $COLOR_PULL_DOWN_TEXT_SELECTED;
                         }
                     }
                 }
