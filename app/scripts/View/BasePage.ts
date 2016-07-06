@@ -108,7 +108,7 @@ module Garage {
 
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
-					title: "このアプリについて",
+					title: "HUIS UI CREATOR のバージョン情報",
 					message: text,
 					dismissible: true,
 				});
