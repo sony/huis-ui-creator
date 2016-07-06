@@ -24,6 +24,8 @@ module Garage {
 		Patch.apply();
 		var global = global || window;
 
+		APP_VERSION = "1.0.0_0706";
+
 		fs = require("fs-extra");
         path = require("path");
 

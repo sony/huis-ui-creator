@@ -105,7 +105,7 @@ module Garage {
 
 				text = fs.readFileSync('./sample.txt', 'utf8');
 
-
+				
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
 					title: "HUIS UI CREATOR のバージョン情報",
@@ -114,6 +114,9 @@ module Garage {
 				});
 				//dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
 				dialog.show();
+				
+				$("#about-version-number").html(APP_VERSION);
+
                 return;
 }
 
