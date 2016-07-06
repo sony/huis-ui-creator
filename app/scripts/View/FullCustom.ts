@@ -1780,76 +1780,55 @@ module Garage {
 
 				};
 
-				electronDialog.showMessageBox(
-					options,
-					(response: any) => {
-						switch (response) {
-							case 0: // "保存して Home に戻る"
-								let gmodules = this.faceRenderer_canvas_.getModules();
-								let remoteId = this.faceRenderer_canvas_.getRemoteId();
-								let faceName: string = $("#input-face-name").val();
-								if (!faceName) {
+				let gmodules = this.faceRenderer_canvas_.getModules();
+				let remoteId = this.faceRenderer_canvas_.getRemoteId();
+				let faceName: string = $("#input-face-name").val();
+				if (!faceName) {
+					electronDialog.showMessageBox({
+						type: "error",
+						message: "リモコンの名前を入力してください。",
+						buttons: ["ok"]
+					});
+					return;
+				}
+				let overlapButtonError = this._overlapButtonsExist();
+				if (overlapButtonError) {
+					electronDialog.showMessageBox({
+						type: "error",
+						message: "重なり合っているボタンがあります。\n"
+						+ "ボタン同士を重なり合うように配置することはできません。\n"
+						+ overlapButtonError,
+						buttons: ["ok"]
+					});
+					return;
+				}
+				huisFiles.updateFace(remoteId, faceName, gmodules)
+					.always(() => {
+						garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
+						if (HUIS_ROOT_PATH) {
+							let syncTask = new Util.HuisDev.FileSyncTask();
+							let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, null, (err) => {
+								if (err) {
+									// [TODO] エラー値のハンドリング
 									electronDialog.showMessageBox({
 										type: "error",
-										message: "リモコンの名前を入力してください。",
+										message: "HUIS と同期できませんでした。\n"
+										+ "HUIS が PC と接続されていない可能性があります。\n"
+										+ "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
 										buttons: ["ok"]
 									});
-									return;
+								} else {
+									//CDP.this.showGarageToast"HUIS との同期が完了しました。");
+									Framework.Router.back();
 								}
-								let overlapButtonError = this._overlapButtonsExist();
-								if (overlapButtonError) {
-									electronDialog.showMessageBox({
-										type: "error",
-										message: "重なり合っているボタンがあります。\n"
-										+ "ボタン同士を重なり合うように配置することはできません。\n"
-										+ overlapButtonError,
-										buttons: ["ok"]
-									});
-									return;
-								}
-								huisFiles.updateFace(remoteId, faceName, gmodules)
-									.always(() => {
-										garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
-										if (HUIS_ROOT_PATH) {
-											let syncTask = new Util.HuisDev.FileSyncTask();
-                                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, null, (err) => {
-												if (err) {
-													// [TODO] エラー値のハンドリング
-													electronDialog.showMessageBox({
-														type: "error",
-														message: "HUIS と同期できませんでした。\n"
-														+ "HUIS が PC と接続されていない可能性があります。\n"
-														+ "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
-														buttons: ["ok"]
-													});
-												} else {
-													//CDP.this.showGarageToast"HUIS との同期が完了しました。");
-													Framework.Router.back();
-												}
-											});
-										} else {
-											this.showGarageToast("リモコンを保存しました。");
-											Framework.Router.back();
-										}
-									});
-
-								break;
-							case 1: // "保存せずに Home に戻る"
-								// 新規リモコンのために作成されたディレクトリーを削除するために、
-								// remotelist の更新を行う
-								if (this.newRemote_) {
-									huisFiles.removeFace(this.faceRenderer_canvas_.getRemoteId());
-									huisFiles.updateRemoteList();
-								}
-								Framework.Router.back();
-								break;
-
-							default:
-								;
-						}
+							});
+						} else {
+							this.showGarageToast("リモコンを保存しました。");
+							Framework.Router.back();
 					}
-				);
+				});
 			}
+
 
 			/**
 			 * 現在のターゲットとなるモデルに対して、データをセットする。
