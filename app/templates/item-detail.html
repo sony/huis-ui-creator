@@ -85,7 +85,7 @@
 				<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">ラベルを編集</div></div>
 				<input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
 				<div class="custom-select text-size-pulldown">
-					<select class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
+					<select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
 						<option value="12">12px</option>
 						<option value="14">14px</option>
 						<option value="16">16px</option>
@@ -225,7 +225,7 @@
 						<input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
 
 						<div class="custom-select text-size-pulldown">
-							<select class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
+							<select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
 								<option value="12">12px</option>
 								<option value="14">14px</option>
 								<option value="16">16px</option>
