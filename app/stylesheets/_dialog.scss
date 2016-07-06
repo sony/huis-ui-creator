@@ -81,8 +81,8 @@ body{
 
 	#about-info-box{
 		display:flex;
-		margin-top:12px;
-		margin-bottom:12px;
+		margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
+		margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
 
 		#about-logo{
 			background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
