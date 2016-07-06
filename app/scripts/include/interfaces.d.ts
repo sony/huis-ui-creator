@@ -176,6 +176,7 @@ interface IGButton {
 	area: IArea;
 	default?: number;
 	state: IGState[];
+	name?: string;
 	/**
 	 * 現在の state.id
 	 */
@@ -204,6 +205,10 @@ interface IButton {
 	 * 状態
 	 */
     state: IState[];
+	/**
+	 * ボタンの名前
+	 */
+	name?: string;
 }
 
 /**

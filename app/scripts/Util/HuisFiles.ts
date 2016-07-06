@@ -641,6 +641,9 @@ module Garage {
 					if (button.default != null) {
 						normalizedButton.default = button.default;
 					}
+					if (button.name != null) {
+						normalizedButton.name = button.name;
+					}
 					normalizedButtons.push(normalizedButton);
 				}
 
@@ -1079,6 +1082,9 @@ module Garage {
 					};
 					if (button.default) {
 						gbutton.default = button.default;
+					}
+					if (button.name) {
+						gbutton.name = button.name;
 					}
 					gbuttons.push(gbutton);
 				});

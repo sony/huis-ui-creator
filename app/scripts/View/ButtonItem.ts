@@ -41,6 +41,11 @@ module Garage {
 								remoteId: this.remoteId_,
 								materialsRootPath: this.materialsRootPath_
 							});
+
+							if (buttonData.name){
+								buttonModel.name = buttonData.name;
+							}
+							
 							//buttonModel.set("area", buttonData.area);
 							buttonModel.area = buttonData.area;
 							var states = buttonData.state;
