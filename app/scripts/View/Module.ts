@@ -706,6 +706,11 @@ module Garage {
                 newLabel.size = label.size;
                 newLabel.font_weight = label.font_weight;
 
+				//バージョン情報がある場合、コピーする
+				if (label.version) {
+					newLabel.version = label.version;
+				}
+
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
 				labelView.setElement($module);

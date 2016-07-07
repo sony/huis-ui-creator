@@ -29,6 +29,14 @@ module Garage {
 				this.set("text", val);
 			}
 
+			get version(): string {
+				return this.get("version");
+			}
+
+            set version(val: string) {
+				this.set("version", val);
+			}
+
             get color(): number {
 				return this.get("color");
             }

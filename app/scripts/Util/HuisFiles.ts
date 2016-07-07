@@ -1039,6 +1039,7 @@ module Garage {
 						}
 						if (module.label) {
 							gmodule.label = $.extend(true, [], module.label);
+							this.setVersionInfoToIGLabel(module, gmodule.label);
 						}
 						face.modules.push(gmodule);
 					}
@@ -1099,6 +1100,31 @@ module Garage {
 				}
 			}
 
+
+			/*
+			* モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+			* @param module :IModule 参照元のモジュール
+			* @param gLabel :IGLabel[] 代入先のモジュール
+			*/
+			private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
+				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGLabel : ";
+
+				if (iModule == null) {
+					console.warn(FUNCTION_NAME + "iModule is null");
+				}
+
+				if (gLabel == null) {
+					console.warn(FUNCTION_NAME + "gLabel is null");
+				}
+
+				if (!iModule.version) {
+					return;//バージョン情報が存在しない場合、なにもしない。
+				}
+
+				for (let i = 0; i < gLabel.length; i++) {
+					gLabel[i].version = iModule.version;
+				}
+			}
 
 			/**
 			 * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。

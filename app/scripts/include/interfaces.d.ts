@@ -227,6 +227,7 @@ interface IButtonDeviceInfo {
  */
 interface IGLabel {
 	area?: IArea;
+	version?: string;
     text: string;
     color?: number;
     font?: string;
