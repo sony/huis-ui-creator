@@ -57,15 +57,15 @@ module Garage {
 				} else if (this.remoteId_ === "common") {
 					//this.resolvedPath = path.resolve(path.join("app/res/faces/common/images", val)).replace(/\\/g, "/");
 					// common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る
-					let resolvedPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
-					// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-					if (resolvedPath.indexOf("file:///") === 0) {
-						resolvedPath = resolvedPath.split("file:///")[1];
-					}
+					let resolvedPath = miscUtil.getAppropreatePath(CDP.Framework.toUrl(path.join("/res/faces/common/images", val)), true);
+					//// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
+					//if (resolvedPath.indexOf("file:///") === 0) {
+					//	resolvedPath = resolvedPath.split("file:///")[1];
+					//}
 					this.resolvedPath = resolvedPath;
 
 				} else if (this.resolvedPathDirectory_) {
-					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+					this.resolvedPath = miscUtil.getAppropreatePath(path.resolve(path.join(this.resolvedPathDirectory_, val)), true);
 				}
 			}
 
