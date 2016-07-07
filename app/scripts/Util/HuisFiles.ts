@@ -1058,11 +1058,13 @@ module Garage {
 				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
 
 				if (iModule == null) {
-					console.warn(FUNCTION_NAME +  "iModule is null");
+					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
 				}
 
 				if (gImages == null) {
 					console.warn(FUNCTION_NAME + "gImages is null");
+					return;
 				}
 
 				if (!iModule.version) {
@@ -1085,10 +1087,12 @@ module Garage {
 
 				if (iModule == null) {
 					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
 				}
 
 				if (gButtons == null) {
 					console.warn(FUNCTION_NAME + "gButtons is null");
+					return;
 				}
 
 				if (!iModule.version) {
@@ -1111,10 +1115,12 @@ module Garage {
 
 				if (iModule == null) {
 					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
 				}
 
 				if (gLabel == null) {
 					console.warn(FUNCTION_NAME + "gLabel is null");
+					return;
 				}
 
 				if (!iModule.version) {
