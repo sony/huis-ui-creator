@@ -173,6 +173,7 @@ interface IState {
  * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
  */
 interface IGButton {
+	version?: string;
 	area: IArea;
 	default?: number;
 	state: IGState[];

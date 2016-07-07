@@ -443,6 +443,10 @@ module Garage {
 					newButton.name = srcButton.name;
 				}
 
+				if (srcButton.version) {
+					newButton.version = srcButton.version;
+				}
+
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}

@@ -1031,6 +1031,7 @@ module Garage {
 							// [TODO] button.state.image.garage_extensions 対応
 							//gmodule.button = $.extend(true, [], module.button);
 							gmodule.button = this._buttons2gbuttons(module.button);
+							this.setVersionInfoToIGButton(module, gmodule.button);
 						}
 						if (module.image) {
 							gmodule.image = this._images2gimages(module.image);
@@ -1071,6 +1072,33 @@ module Garage {
 					gImages[i].version = iModule.version;
 				}
 			}
+
+
+			/*
+			* モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+			* @param module :IModule 参照元のモジュール
+			* @param gModule :IGModule 代入先のモジュール
+			*/
+			private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
+				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
+
+				if (iModule == null) {
+					console.warn(FUNCTION_NAME + "iModule is null");
+				}
+
+				if (gButtons == null) {
+					console.warn(FUNCTION_NAME + "gButtons is null");
+				}
+
+				if (!iModule.version) {
+					return;//バージョン情報が存在しない場合、なにもしない。
+				}
+
+				for (let i = 0; i < gButtons.length; i++) {
+					gButtons[i].version = iModule.version;
+				}
+			}
+
 
 			/**
 			 * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
