@@ -304,6 +304,7 @@ interface IGarageImageExtensions {
  * @brief IImage に Garage で使用する情報を付加したもの
  */
 interface IGImage {
+	version?: string;
 	area?: IArea;
     path: string;
 	resolvedPath?: string; //<!image.path を絶対パスに変換したもの

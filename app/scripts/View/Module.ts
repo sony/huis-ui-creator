@@ -597,6 +597,12 @@ module Garage {
 					srcImagePath = image.resolvedPath;
 				}
 
+				//バージョン情報をもっている場合、引き継ぐ
+				if (image.version != null) {
+					newImage.version = image.version;
+				}
+
+
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
 				imageView.setElement($module);
