@@ -155,6 +155,7 @@ module Garage {
 				return $.extend(ret,{
 					// パレット内のアイテムのダブルクリック
 					"dblclick #face-pallet .item": "onPalletItemDblClick",
+
 					// 画面内のマウスイベント
 					"mousedown #main": "onMainMouseDown",
 					"mousemove #main": "onMainMouseMove",
@@ -172,6 +173,7 @@ module Garage {
 
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
+					'change #input-face-name ': "onRemoteNameTextFieldChanged",
                     "change #face-item-detail select": "onItemPropertySelectChanged",
                     "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
 
@@ -1313,6 +1315,19 @@ module Garage {
 
 				return fucntions;
 
+			}
+
+			/*
+			* リモコン名のテキストフィールドの値が変わったときに呼び出される
+			*/
+			private onRemoteNameTextFieldChanged(event: Event) {
+				var $target = $(event.currentTarget);
+				var value: any = $target.val();
+				//禁則文字がある場合、表示を取り消す。
+				if (this.isInhibitionWords(value)) {
+					$target.val("");
+					value = "";
+				}
 			}
 
 			/**
