@@ -1034,7 +1034,7 @@ module Garage {
 						}
 						if (module.image) {
 							gmodule.image = this._images2gimages(module.image);
-							this.setVersionInfoToIGIMage(module, gmodule.image);
+							this.setVersionInfoToIGImage(module, gmodule.image);
 						}
 						if (module.label) {
 							gmodule.label = $.extend(true, [], module.label);
@@ -1048,11 +1048,11 @@ module Garage {
 
 
 			/*
-			* モジュールにバージョン情報がある場合、Button,Image,Labelにその情報を引き継がせる
+			* モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
 			* @param module :IModule 参照元のモジュール
 			* @param gModule :IGModule 代入先のモジュール
 			*/
-			private setVersionInfoToIGIMage(iModule: IModule, gImages: IGImage[]) {
+			private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
 				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
 
 				if (iModule == null) {
