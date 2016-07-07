@@ -337,6 +337,7 @@ interface IGOutput {
  */
 interface IGModule {
 	area: IArea;
+	version?: string;
 	button?: IGButton[];
 	label?: IGLabel[];
 	image?: IGImage[];
@@ -352,6 +353,7 @@ interface IGModule {
  */
 interface IModule {
     area: IArea;
+	version?: string;
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];
