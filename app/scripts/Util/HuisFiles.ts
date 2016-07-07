@@ -697,11 +697,19 @@ module Garage {
 			 */
 			private _updateModule(remoteId: string, gmodule: IGModule): {module: IModule, name: string} {
 				// IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
+
+				
 				var module: IModule = {
 					area: gmodule.area
 				};
 
-				this.setModuleVersion(module, gmodule);
+				let versionString: string = this.getModuleVersion(gmodule);
+				if(versionString != null){
+					module = {
+						version: versionString,
+						area: gmodule.area,
+					};
+				}
 
 				if (gmodule.button) {
 					module.button = this._normalizeButtons(gmodule.button, remoteId);
@@ -723,15 +731,12 @@ module Garage {
 			}
 
 			/*
-			* gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを算出し、IModuleのバージョンとする。バージョン値がない場合、なにもセットしない。
-			* @param iModule : IModule バージョン情報を代入される、モジュール
+			* gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
 			* @param gModule : IGModule バージョン情報を内在した構成要素をもつGarageないで使われていたモジュール
+			* @return oldestVersionString : string gModule内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
 			*/
-			private setModuleVersion(iModule: IModule, gModule: IGModule) {
-				let FUNCTION_NAME: string = TAGS.HuisFiles + " : setModuleVersion : ";
-				if (iModule == undefined) {
-					console.warn(FUNCTION_NAME + "iModule is undefined");
-				}
+			private getModuleVersion(gModule: IGModule) :string{
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getModuleVersion : ";
 
 				if (gModule == undefined) {
 					console.warn(FUNCTION_NAME + "gModule is undefined");
@@ -740,11 +745,17 @@ module Garage {
 				let versions: ModuleVersion[] = this.getVersions(gModule.button, gModule.image, gModule.label);
 				let oldestVersion :ModuleVersion= this.getOldestVersionOf(versions);
 
-				let oldestVersionString: string = oldestVersion.getVersionString();
-
-				if (oldestVersionString != null) {
-					iModule.version = oldestVersionString;
+				if (oldestVersion != null) {
+					let oldestVersionString: string = oldestVersion.getVersionString();
+					return oldestVersionString;
+				} else {
+					return null;
 				}
+
+				
+
+				
+
 
 			}
 

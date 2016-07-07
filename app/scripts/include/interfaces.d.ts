@@ -226,8 +226,8 @@ interface IButtonDeviceInfo {
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
 interface IGLabel {
-	area?: IArea;
 	version?: string;
+	area?: IArea;
     text: string;
     color?: number;
     font?: string;
@@ -339,8 +339,8 @@ interface IGOutput {
  * @brief IModule に対して Garage で使用する情報を付加したもの
  */
 interface IGModule {
-	area: IArea;
 	version?: string;
+	area: IArea;
 	button?: IGButton[];
 	label?: IGLabel[];
 	image?: IGImage[];
