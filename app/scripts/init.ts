@@ -206,36 +206,6 @@ module Garage {
 		}
 	};
 
-	// HUIS -> PC の同期を行う
-    // Splash.tsに移動したのでいらない
-	//var syncWithHUIS = (callback?: Function) => ...
-
-	// HUIS -> PC の同期処理
-	var doSync = (callback?: Function) => {
-		let syncTask = new Util.HuisDev.FileSyncTask();
-		// 同期処理の開始
-		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, null, null, (err) => {
-			if (err) {
-				// エラーダイアログの表示
-				// [TODO] エラー内容に応じて表示を変更するべき
-				// [TODO] 文言は仮のもの
-				electronDialog.showMessageBox({
-					type: "error",
-					message: "HUIS との同期に失敗しました"
-				});
-
-				app.exit(0);
-			} else {
-				// 同期後に改めて、HUIS ファイルの parse を行う
-				huisFiles.init(HUIS_FILES_ROOT);
-				console.log("Complete!!!");
-				if (callback) {
-					callback();
-				}
-			}
-		});
-	};
-
 	setup(() => {
 		requirejs(["cdp.framework.jqm"], () => {
 			CDP.Framework.initialize().done(() => {
