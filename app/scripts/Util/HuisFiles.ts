@@ -1051,7 +1051,7 @@ module Garage {
 			/*
 			* モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
 			* @param module :IModule 参照元のモジュール
-			* @param gModule :IGModule 代入先のモジュール
+			* @param gImages :IGImage[] 代入先のモジュール
 			*/
 			private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
 				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
@@ -1077,7 +1077,7 @@ module Garage {
 			/*
 			* モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
 			* @param module :IModule 参照元のモジュール
-			* @param gModule :IGModule 代入先のモジュール
+			* @param gButtons :IGButton[] 代入先のモジュール
 			*/
 			private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
 				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
