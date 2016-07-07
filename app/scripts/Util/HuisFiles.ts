@@ -607,6 +607,9 @@ module Garage {
 				var module: IModule = {
 					area: gmodule.area
 				};
+				if (gmodule.version) {
+					module.version = gmodule.version;
+				}
 				if (gmodule.button) {
 					module.button = this._normalizeButtons(gmodule.button, remoteId);
 				}
