@@ -1097,6 +1097,7 @@ module Garage {
 				if (this.$currentTarget_) {
 					let menuItem_deleteItem = new MenuItem({
 						label: "アイテムを削除",
+						accelerator: "Delete",
 						click: () => {
 							// 現在のターゲットとなっているアイテムを削除する
 							this._deleteCurrentTargetItem();
