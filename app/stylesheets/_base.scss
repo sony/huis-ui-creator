@@ -128,7 +128,8 @@ body {
 			text-align:center;
 			font-size:$FONT_SIZE_TOAST;
 			font-family : $FONT_FAMILY_TOAST;
-			width :$SIZE_TOAST_WIDTH;
+			padding-left:$SIZE_TOAST_PADDING_LEFT;
+			padding-right:$SIZE_TOAST_PADDING_RIGHT;
 			height:$SIZE_TOAST_HEIGHT;
 			line-height:$SIZE_TOAST_HEIGHT;
 			border-radius:0;
