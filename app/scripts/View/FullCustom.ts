@@ -1328,6 +1328,12 @@ module Garage {
 				}
 				var value: any = $target.val();
 
+				//禁則文字がある場合、表示を取り消す。
+				if (this.isInhibitionWords(value)){
+					$target.val("");
+					value = "";
+				}
+
 				if (key.indexOf("state-") === 0) {
 					let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
 					this._updateCurrentModelStateData(stateId, key.slice("state-".length), value);
