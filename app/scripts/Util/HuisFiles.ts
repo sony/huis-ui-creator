@@ -29,6 +29,99 @@ module Garage {
 			params: Model.IImageResizeParams;
 		}
 
+		class ModuleVersion {
+			private CLASS_NAME = TAGS.HuisFiles + " : ModuleVersion : "; 
+			private majorVersion: number;
+			private minorVersion: number;
+
+
+			constructor(stringVersion: string) {
+				let FUNCTION_NAME = this.CLASS_NAME + ": constructor : ";
+			
+				if (!stringVersion) {
+					console.warn(FUNCTION_NAME + "stringVersion is undefined");
+					return;
+				}
+
+				let separateString: string[] = stringVersion.split(".");
+				let majorVersionInput: number = parseInt(separateString[0]);
+				let minorVersionInput: number = parseInt(separateString[1]);
+				let otherInfo: number = parseInt(separateString[2]);
+
+				if (otherInfo) {
+					console.warn(FUNCTION_NAME + "there is otherInfo");
+				}
+
+				this.majorVersion = majorVersionInput;
+				this.minorVersion = minorVersionInput;
+			}
+
+			/*
+			* 入力の ModelVersionより古いバージョンのとき、trueを返す。
+			* @param counterPart : ModuleVersion 　比較対象のModelVersion
+			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse
+			*/
+			public isOlderThan(counterPart: ModuleVersion) {
+
+				let FUNCTION_NAME = this.CLASS_NAME + ": isOlderThan() : ";
+
+				if(!counterPart) {
+					console.warn(FUNCTION_NAME + "counterPart is undefined");
+					return;
+				}
+
+				//majorバージョンが同じとき、minorバージョンで比べる。
+				if (this.majorVersion === counterPart.getMajorVersion()) {
+
+					//minorバージョンで比べる。
+					if (this.minorVersion < counterPart.getMinorVersion()) {//minorVersion値が少ない　＝＝　古い
+						return true;
+					} else {
+						return false;
+					}
+
+				} else {
+
+					//majorバージョンで比べる。
+					if (this.majorVersion < counterPart.getMajorVersion()) {//majorVersion値が少ない　＝＝　古い
+						return true;
+					} else {
+						return false;
+					}
+
+				}
+			}
+
+			/*
+			* X.Yの形で、ModuleVersionの値を返す　ex) 1.2
+			*/
+			public getVersionString(): string {
+				let FUNCTION_NAME = this.CLASS_NAME + ": getVersionString : ";
+
+				if (this.majorVersion == null) {
+					console.warn(FUNCTION_NAME + "majorVersion is null ");
+					return null;
+				}
+
+				if (this.minorVersion == null) {
+					console.log(FUNCTION_NAME + "minorVersion is null");
+					return null;
+				}
+
+				return this.majorVersion + "." + this.minorVersion;
+			}
+
+			public getMajorVersion(): number {
+				return this.majorVersion;
+			}
+
+			public getMinorVersion(): number {
+				return this.minorVersion;
+			}
+
+		}
+
+
 		/**
 		 * @class HuisFiles
 		 * @brief HUIS 内のファイルの parse 等を行うユーティリティークラス
@@ -604,9 +697,20 @@ module Garage {
 			 */
 			private _updateModule(remoteId: string, gmodule: IGModule): {module: IModule, name: string} {
 				// IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
+
+				
 				var module: IModule = {
 					area: gmodule.area
 				};
+
+				let versionString: string = this.getModuleVersion(gmodule);
+				if(versionString != null){
+					module = {
+						version: versionString,
+						area: gmodule.area,
+					};
+				}
+
 				if (gmodule.button) {
 					module.button = this._normalizeButtons(gmodule.button, remoteId);
 				}
@@ -625,6 +729,135 @@ module Garage {
 					module: module
 				};
 			}
+
+			/*
+			* gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
+			* @param gModule : IGModule バージョン情報を内在した構成要素をもつGarageないで使われていたモジュール
+			* @return oldestVersionString : string gModule内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
+			*/
+			private getModuleVersion(gModule: IGModule) :string{
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getModuleVersion : ";
+
+				if (gModule == undefined) {
+					console.warn(FUNCTION_NAME + "gModule is undefined");
+				}
+
+				let versions: ModuleVersion[] = this.getVersions(gModule.button, gModule.image, gModule.label);
+				let oldestVersion :ModuleVersion= this.getOldestVersionOf(versions);
+
+				if (oldestVersion != null) {
+					let oldestVersionString: string = oldestVersion.getVersionString();
+					return oldestVersionString;
+				} else {
+					return null;
+				}
+
+				
+
+				
+
+
+			}
+
+			/*
+			* 入力された　最も古いバージョン情報値:string を返す
+			* @param versions : string[]
+			* return :string 最古のボタンバージョン
+			*/
+			private getOldestVersionOf(versions: ModuleVersion[]):ModuleVersion {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOldestVersionOfGButton : ";
+
+				if (versions == undefined) {
+					console.warn(FUNCTION_NAME + "versions is undefined");
+					return;
+				}
+
+				let oldestVersion :ModuleVersion= null;
+
+				for (let i = 0; i < versions.length; i++){
+					oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
+				}
+
+				return oldestVersion;
+			}
+
+			/*
+			* IGButton, IGLabel, IGImageからバージョン情報を抽出する。
+			* @param buttons ? : IGButtons
+			* @param imagess ? : IGImages
+			* @param labels ? : IGLabels
+			* return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
+			*/
+			private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): ModuleVersion[] {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getVersions : ";
+				if (!buttons && !images && !labels) {
+					console.warn(FUNCTION_NAME + "no inputs");
+					return;
+				}
+				let result: ModuleVersion[] = [];
+
+				if (buttons) {
+					for (let i = 0; i < buttons.length; i++){
+						if (buttons[i].version) {
+							result.push(new ModuleVersion(buttons[i].version));
+						}
+					}
+				}
+
+				if (images) {
+					for (let i = 0; i < images.length; i++) {
+						if (images[i].version) {
+							result.push(new ModuleVersion(images[i].version));
+						}
+					}
+				}
+
+				if (labels) {
+					for (let i = 0; i < labels.length; i++) {
+						if (labels[i].version) {
+							result.push(new ModuleVersion(labels[i].version));
+						}
+					}
+				}
+
+				
+				return result;
+			}
+
+			/*
+			* ２つのバージョン情報から、より番号が若い方を返す。
+			* @param version1 :string 比較対象のバージョン情報１ 
+			* @param version2 :string 比較対象のバージョン情報２
+			* return より番号が若い方のバージョン情報 : string
+			*/
+			private getOlderVersionOf(version1: ModuleVersion, version2: ModuleVersion): ModuleVersion {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOlderVersion : ";
+
+				if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
+					return null;
+				}
+
+				if (version1 == null) {//片方がNULLの場合、　もう片方を返す。
+					if (version2) {
+						return version2;
+					}
+					return null;
+				}
+
+				if (version2 == null) {//片方がNULLの場合、　もう片方を返す。
+					if (version1) {
+						return version1;
+					}
+					return null;
+				}
+
+				if (version1.isOlderThan(version2)) {
+					return version1;
+				} else {
+					return version2;
+				}
+			}
+
 
 			/**
 			 * Button データから module 化に不要なものを間引く
@@ -1028,18 +1261,105 @@ module Garage {
 							// [TODO] button.state.image.garage_extensions 対応
 							//gmodule.button = $.extend(true, [], module.button);
 							gmodule.button = this._buttons2gbuttons(module.button);
+							this.setVersionInfoToIGButton(module, gmodule.button);
 						}
 						if (module.image) {
 							gmodule.image = this._images2gimages(module.image);
+							this.setVersionInfoToIGImage(module, gmodule.image);
 						}
 						if (module.label) {
 							gmodule.label = $.extend(true, [], module.label);
+							this.setVersionInfoToIGLabel(module, gmodule.label);
 						}
 						face.modules.push(gmodule);
 					}
 				}
 
 				return face;
+			}
+
+
+			/*
+			* モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
+			* @param module :IModule 参照元のモジュール
+			* @param gImages :IGImage[] 代入先のモジュール
+			*/
+			private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
+				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
+
+				if (iModule == null) {
+					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
+				}
+
+				if (gImages == null) {
+					console.warn(FUNCTION_NAME + "gImages is null");
+					return;
+				}
+
+				if (!iModule.version) {
+					return;//バージョン情報が存在しない場合、なにもしない。
+				}
+			
+				for (let i = 0; i < gImages.length; i++){
+					gImages[i].version = iModule.version;
+				}
+			}
+
+
+			/*
+			* モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+			* @param module :IModule 参照元のモジュール
+			* @param gButtons :IGButton[] 代入先のモジュール
+			*/
+			private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
+				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
+
+				if (iModule == null) {
+					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
+				}
+
+				if (gButtons == null) {
+					console.warn(FUNCTION_NAME + "gButtons is null");
+					return;
+				}
+
+				if (!iModule.version) {
+					return;//バージョン情報が存在しない場合、なにもしない。
+				}
+
+				for (let i = 0; i < gButtons.length; i++) {
+					gButtons[i].version = iModule.version;
+				}
+			}
+
+
+			/*
+			* モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+			* @param module :IModule 参照元のモジュール
+			* @param gLabel :IGLabel[] 代入先のモジュール
+			*/
+			private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
+				let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGLabel : ";
+
+				if (iModule == null) {
+					console.warn(FUNCTION_NAME + "iModule is null");
+					return;
+				}
+
+				if (gLabel == null) {
+					console.warn(FUNCTION_NAME + "gLabel is null");
+					return;
+				}
+
+				if (!iModule.version) {
+					return;//バージョン情報が存在しない場合、なにもしない。
+				}
+
+				for (let i = 0; i < gLabel.length; i++) {
+					gLabel[i].version = iModule.version;
+				}
 			}
 
 			/**

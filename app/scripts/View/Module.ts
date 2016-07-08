@@ -443,6 +443,10 @@ module Garage {
 					newButton.name = srcButton.name;
 				}
 
+				if (srcButton.version) {
+					newButton.version = srcButton.version;
+				}
+
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
@@ -597,6 +601,12 @@ module Garage {
 					srcImagePath = image.resolvedPath;
 				}
 
+				//バージョン情報をもっている場合、引き継ぐ
+				if (image.version != null) {
+					newImage.version = image.version;
+				}
+
+
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
 				imageView.setElement($module);
@@ -695,6 +705,11 @@ module Garage {
 				newLabel.font = label.font;
                 newLabel.size = label.size;
                 newLabel.font_weight = label.font_weight;
+
+				//バージョン情報がある場合、コピーする
+				if (label.version) {
+					newLabel.version = label.version;
+				}
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");

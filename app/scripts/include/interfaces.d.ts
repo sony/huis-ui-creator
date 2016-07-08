@@ -173,6 +173,7 @@ interface IState {
  * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
  */
 interface IGButton {
+	version?: string;
 	area: IArea;
 	default?: number;
 	state: IGState[];
@@ -225,6 +226,7 @@ interface IButtonDeviceInfo {
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
 interface IGLabel {
+	version?: string;
 	area?: IArea;
     text: string;
     color?: number;
@@ -304,6 +306,7 @@ interface IGarageImageExtensions {
  * @brief IImage に Garage で使用する情報を付加したもの
  */
 interface IGImage {
+	version?: string;
 	area?: IArea;
     path: string;
 	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
@@ -336,6 +339,7 @@ interface IGOutput {
  * @brief IModule に対して Garage で使用する情報を付加したもの
  */
 interface IGModule {
+	version?: string;
 	area: IArea;
 	button?: IGButton[];
 	label?: IGLabel[];
@@ -352,6 +356,7 @@ interface IGModule {
  */
 interface IModule {
     area: IArea;
+	version?: string;
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];

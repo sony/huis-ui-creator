@@ -72,6 +72,14 @@ module Garage {
 				this.set("name", val);
 			}
 
+			get version(): string {
+				return this.get("version");
+			}
+
+			set version(val: string) {
+				this.set("version", val);
+			}
+
             get currentStateId(): number {
 				return this.get("currentStateId");
 			}
@@ -184,7 +192,7 @@ module Garage {
 			 * 変更可能なプロパティーの一覧
 			 */
 			get properties(): string[]{
-				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo","name"];
+				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version"];
 			}
 
 			/**
