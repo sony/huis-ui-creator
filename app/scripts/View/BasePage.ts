@@ -197,6 +197,74 @@ module Garage {
 				UI.Toast.show(message, 1500, style);
 			}
 
+			/*
+			* 禁則文字が入力された場合、含まれた禁則文字の文字列を返す。
+			*/
+			protected getInhibitionWords(inputKey: string):string[] {
+				let FUNCTION_NAME = "BasePage.ts : isInhibitionWord : "
+
+				let result: string[] = [];
+				let BLACK_LIST_INPUT_KEY: string[] =
+					[	'/' ,
+						":" ,
+						";" ,
+						"*" ,
+						"?" ,
+						"<" ,
+						">",
+						'"',
+						"|",
+						'\\' ];
+
+				for (let i = 0; i < BLACK_LIST_INPUT_KEY.length; i++){
+					if (inputKey.indexOf(BLACK_LIST_INPUT_KEY[i]) != -1) {
+						 result.push(BLACK_LIST_INPUT_KEY[i]);
+					}
+				}
+
+				if (result.length === 0) {
+					return null;
+				}
+
+				return result;
+
+			}
+
+
+			/*
+			* 禁則文字が入力された場合、トーストを出力し、禁則文字をぬいた文字列を返す。。
+			*/
+			protected getRemovedInhibitionWords(inputValue: string): string{
+				//入力した文字に禁則文字が含まれていた場合、トーストで表示。文字内容も削除。
+				let inhibitWords: string[] = this.getInhibitionWords(inputValue);
+				let resultString: string = inputValue;
+				if (inhibitWords != null) {
+					let outputString: string = "";
+					for (let i = 0; i < inhibitWords.length; i++) {
+						if (i > 0) {
+							outputString += ", "
+						}
+						outputString += inhibitWords[i] + " ";
+						if (inhibitWords[i] == "\\" ){
+							inhibitWords[i] = "\\\\";//正規表現では \\ はうけつけない。
+						}
+						if (inhibitWords[i] == "*") {
+							inhibitWords[i] = "\\*";//正規表現では * はうけつけない。
+						}
+						if (inhibitWords[i] == "|") {
+							inhibitWords[i] = "\\|";//正規表現では | はうけつけない。
+						}
+
+						var regExp = new RegExp(inhibitWords[i], "g");
+						resultString = resultString.replace(regExp, "");
+					}
+					outputString += "は使えません";
+					this.showGarageToast(outputString);
+				}
+				
+				return resultString;
+			}
+
 
         }
     }
