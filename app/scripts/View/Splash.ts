@@ -115,37 +115,16 @@ module Garage {
                 }
                 let needSync: boolean = false; // [TODO]デバッグ用に強制 sync
 
-                //let needSync: boolean = false;
                 try {
                     // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
                     if (huisFiles.init(HUIS_FILES_ROOT)) {
                         // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                         Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
-							let direction = true; // HUIS->PC
-                            if (result) {
-                                // 差分がある場合は、HUIS -> PC で上書き同期をするかを確認する
-                                let response = electronDialog.showMessageBox(
-                                    {
-                                        type: "info",
-                                        message: "この PC に以前 HUIS と同期したときのファイルが存在しています。\n"
-                                        + "HUIS の内容を PC に同期しますか？\n"
-                                        + "同期した場合は、以前同期した HUIS のファイルは上書きされます。",
-                                        buttons: ["yes", "no"]
-                                    });
-                                // yes を選択した場合 (response: 0) は、同期フラグを立てる
-                                if (response === 0) {
-                                    direction = true;
-                                } else {
-									direction = false;
-								}
-                            }
-                            // 同期を実行
-                            
-                            this.doSync(direction, callback);
-                            
+                            // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
+                            this.doSync(true, callback);                          
                         });
                     } else {
-                        // PC 側に HUIS ファイルが保存されていない場合は、強制的に HUIS -> PC で同期を行う
+                        // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
                         this.doSync(true, callback);
                     }
                 } catch (err) {
