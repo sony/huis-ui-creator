@@ -24,9 +24,6 @@ module Garage {
 		Patch.apply();
 		var global = global || window;
 
-		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
-		APP_VERSION = "1.0.0.07060";
-
 		fs = require("fs-extra");
         path = require("path");
 
@@ -34,6 +31,9 @@ module Garage {
         app = require("electron").remote.app;
         Menu = require("electron").remote.Menu;
         MenuItem = require("electron").remote.MenuItem;
+
+		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
+		APP_VERSION = fs.readFileSync('app/version.txt', 'utf8');
 
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
