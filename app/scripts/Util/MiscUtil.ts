@@ -32,6 +32,7 @@ module Garage {
 			 */
 
 			getAppropriatePath(path: string, en?: Boolean): string {
+				console.log("MiscUtil::getAppropriatePath path=" + path);
 				path = decodeURIComponent(path);
 				if (path.indexOf('file:///') === 0) {
 					path = path.split('file:///')[1];
