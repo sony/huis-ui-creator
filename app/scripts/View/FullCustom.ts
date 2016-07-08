@@ -1098,6 +1098,7 @@ module Garage {
 				if (this.$currentTarget_) {
 					let menuItem_deleteItem = new MenuItem({
 						label: "アイテムを削除",
+						accelerator: "Delete",
 						click: () => {
 							// 現在のターゲットとなっているアイテムを削除する
 							this._deleteCurrentTargetItem();
@@ -1150,7 +1151,7 @@ module Garage {
 
 				this.contextMenu_.append(menuItem_undo);
 				this.contextMenu_.append(menuItem_redo);
-				this.contextMenu_.append(new MenuItem({ type: "separator" }));
+				//this.contextMenu_.append(new MenuItem({ type: "separator" }));
 				//this.contextMenu_.append(menuItem_gridSize);
                 if (DEBUG_MODE) {
                     this.contextMenu_.append(new MenuItem({ type: "separator" }));
