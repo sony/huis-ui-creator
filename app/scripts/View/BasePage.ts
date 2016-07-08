@@ -229,12 +229,12 @@ module Garage {
 
 
 			/*
-			* 禁則文字が入力された場合、トーストを出力し、trueを返す。
+			* 禁則文字が入力された場合、トーストを出力し、禁則文字をぬいた文字列を返す。。
 			*/
-			protected isInhibitionWords(inputValue: string): boolean{
+			protected getRemovedInhibitionWords(inputValue: string): string{
 				//入力した文字に禁則文字が含まれていた場合、トーストで表示。文字内容も削除。
 				let inhibitWords: string[] = this.getInhibitionWords(inputValue);
-
+				let resultString: string = inputValue;
 				if (inhibitWords != null) {
 					let outputString: string = "";
 					for (let i = 0; i < inhibitWords.length; i++) {
@@ -242,13 +242,24 @@ module Garage {
 							outputString += ", "
 						}
 						outputString += inhibitWords[i] + " ";
+						if (inhibitWords[i] == "\\" ){
+							inhibitWords[i] = "\\\\";//正規表現では \\ はうけつけない。
+						}
+						if (inhibitWords[i] == "*") {
+							inhibitWords[i] = "\\*";//正規表現では * はうけつけない。
+						}
+						if (inhibitWords[i] == "|") {
+							inhibitWords[i] = "\\|";//正規表現では | はうけつけない。
+						}
+
+						var regExp = new RegExp(inhibitWords[i], "g");
+						resultString = resultString.replace(regExp, "");
 					}
-					outputString += "は利用できません。";
+					outputString += "は使えません";
 					this.showGarageToast(outputString);
-					return true;
 				}
 				
-				return false;
+				return resultString;
 			}
 
 
