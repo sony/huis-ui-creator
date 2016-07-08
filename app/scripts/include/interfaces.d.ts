@@ -457,6 +457,10 @@ interface DialogProps {
 //}
 
 declare module Garage {
+	/*
+	* HUIS UI CREATOR のバージョン
+	*/
+	var APP_VERSION:string;
 	/**
 	 * Util.ElectronDialog のインスタンス
 	 */

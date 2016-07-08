@@ -105,15 +105,18 @@ module Garage {
 
 				text = fs.readFileSync('app/licenses.txt', 'utf8');
 
-
+				
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
-					title: "このアプリについて",
+					title: "HUIS UI CREATOR のバージョン情報",
 					message: text,
 					dismissible: true,
 				});
 				//dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
 				dialog.show();
+				
+				$("#about-version-number").html(APP_VERSION);
+
                 return;
 }
 

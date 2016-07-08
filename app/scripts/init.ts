@@ -24,6 +24,9 @@ module Garage {
 		Patch.apply();
 		var global = global || window;
 
+		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
+		APP_VERSION = "1.0.0.07060";
+
 		fs = require("fs-extra");
         path = require("path");
 
