@@ -151,7 +151,7 @@ module Garage {
 			/**
 			 * 初期化
 			 * 
-			 * @pram huisFilesRoot {string} [in] HUIS のファイルが置かれているパス。HUIS 本体から一時的にコピーされた PC 上のディレクトリーを指定する。
+			 * @param huisFilesRoot {string} [in] HUIS のファイルが置かれているパス。HUIS 本体から一時的にコピーされた PC 上のディレクトリーを指定する。
 			 * @return {boolean} true: 成功 / false: 失敗
 			 */
 			init(huisFilesRoot: string): boolean {
@@ -182,16 +182,14 @@ module Garage {
 
 				// Common のリモコンを読み込む
 				if (!this.commonRemoteInfo_) {
+					console.log("setting commonRemoteInfo_");
 					let remoteId = "common";
-					let facePath = CDP.Framework.toUrl("/res/faces/common/common.face");
-					// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-					if (facePath.indexOf("file:///") === 0) {
-						facePath = facePath.split("file:///")[1];
-					}
-					let rootDirectory = CDP.Framework.toUrl("/res/faces");
-					if (rootDirectory.indexOf("file:///") === 0) {
-						rootDirectory = rootDirectory.split("file:///")[1];
-					}
+					let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+					console.log("facePath=" + facePath);
+
+					//// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
+					let rootDirectory = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
+					console.log("rootDirectory=" + rootDirectory);
 
 					let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
 					this.commonRemoteInfo_ = {
