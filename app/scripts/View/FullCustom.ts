@@ -1050,6 +1050,7 @@ module Garage {
 
 				// コンテキストメニューを作成する
 				this.contextMenu_.clear();
+				this.contextMenu_.items = [];
 
 				var menuItem_inspectElement = new MenuItem({
 					label: "要素を検証",
@@ -1156,7 +1157,9 @@ module Garage {
                     this.contextMenu_.append(menuItem_inspectElement);
                 }
 
-				this.contextMenu_.popup(this.currentWindow_);
+				if (this.contextMenu_.items.length != 0) {
+					this.contextMenu_.popup(this.currentWindow_);
+				}
 			}
 
 			/**

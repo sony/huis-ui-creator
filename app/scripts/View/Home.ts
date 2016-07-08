@@ -285,6 +285,7 @@ module Garage {
 
 				// コンテキストメニューを作成する
 				this.contextMenu_.clear();
+				this.contextMenu_.items = [];
 
 				var element = document.elementFromPoint(event.pageX, event.pageY);
 				var $face = $(element).parents("#face-list .face");
@@ -308,7 +309,7 @@ module Garage {
                         }));
 					}
 				}
-
+				
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
                     this.contextMenu_.append(new MenuItem({
                         label: "要素を検証",
@@ -318,7 +319,10 @@ module Garage {
                     }));
                 }
 
-				this.contextMenu_.popup(this.currentWindow_);
+				if (this.contextMenu_.items.length != 0) {
+					this.contextMenu_.popup(this.currentWindow_);
+				}
+				
 			}
 
 			private _pageLayout() {
