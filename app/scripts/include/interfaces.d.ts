@@ -5,7 +5,6 @@
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
-/// <reference path="../Util/MiscUtil.ts" />
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
@@ -474,10 +473,6 @@ declare module Garage {
 	 * Util.GarageFiles のインスタンス
 	 */
 	var garageFiles: Util.GarageFiles;
-	/**
-	 * Util.MiscUtilのインスタンス
-	 */
-	var miscUtil: Util.MiscUtil;
 
 	/**
 	 * face のページの横サイズ
