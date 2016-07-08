@@ -24,13 +24,14 @@ module Garage {
 			
 			/**
 			 * ファイルパスの file:/// スキームを除去、ファイルパス内のパーセントエンコーディングをデコード、\→/の変換を行う
+			 * プログラム内部でパスの解決にURLを使っている箇所で利用される
 			 * 
 			 * @param path {string} [in] 入力となるパス。
 			 * @param en {Boolean} [in] \記号の変換を行うかどうか(trueで行う)。
 			 * @return {string} 変換後のパス
 			 */
 
-			getAppropreatePath(path: string, en?: Boolean): string {
+			getAppropriatePath(path: string, en?: Boolean): string {
 				path = decodeURIComponent(path);
 				if (path.indexOf('file:///') === 0) {
 					path = path.split('file:///')[1];

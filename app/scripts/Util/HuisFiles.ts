@@ -91,23 +91,12 @@ module Garage {
 				if (!this.commonRemoteInfo_) {
 					console.log("setting commonRemoteInfo_");
 					let remoteId = "common";
-					let facePath = miscUtil.getAppropreatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+					let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
 					console.log("facePath=" + facePath);
-					//facePath = decodeURIComponent(facePath);
-					//console.log("facePath=" + facePath);
 
 					//// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-					//if (facePath.indexOf("file:///") === 0) {
-					//	facePath = facePath.split("file:///")[1];
-					//}
-
-					let rootDirectory = miscUtil.getAppropreatePath(CDP.Framework.toUrl("/res/faces"));
+					let rootDirectory = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
 					console.log("rootDirectory=" + rootDirectory);
-					//rootDirectory = decodeURIComponent(rootDirectory);
-					//if (rootDirectory.indexOf("file:///") === 0) {
-					//	rootDirectory = rootDirectory.split("file:///")[1];
-					//}
-					//console.log("facePath="+facePath);
 
 					let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
 					this.commonRemoteInfo_ = {
