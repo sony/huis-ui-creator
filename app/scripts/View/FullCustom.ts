@@ -1755,7 +1755,23 @@ module Garage {
             * 戻るボタンが押されたときに呼び出される
             */
             private onBackButtonClicked(event: Event) {
-                this.onEditDoneButtonClicked(event);
+				let response = electronDialog.showMessageBox(
+					{
+						type: "question",
+						message: "編集中のリモコンを保存しますか？",
+						buttons: [
+							"保存して Home に戻る",
+							"保存せずに Home に戻る",
+							"キャンセル"
+						],
+					});
+
+				if (response === 0) {// positiveなボタンの場合,Saveと同じ処理
+					this.onEditDoneButtonClicked(event);
+				} else if (response === 1) {
+					Framework.Router.back();//negative なボタンの場合、homeに戻る
+				} else {//キャンセル処理の場合、なにもしない。
+				}
             }
 
 			/**
@@ -1769,14 +1785,7 @@ module Garage {
 				this._loseTarget();
 
 				var options: Util.ElectronMessageBoxOptions = {
-					type: "question",
-					message: "編集中のリモコンを保存しますか？",
-					buttons: [
-						"保存して Home に戻る",
-						"保存せずに Home に戻る",
-						"キャンセル"
-					],
-
+				
 				};
 
 				let gmodules = this.faceRenderer_canvas_.getModules();
