@@ -738,6 +738,7 @@ module Garage {
 
 				if (gModule == undefined) {
 					console.warn(FUNCTION_NAME + "gModule is undefined");
+					return null;
 				}
 
 				let versions: ModuleVersion[] = this.getVersions(gModule.button, gModule.image, gModule.label);
@@ -749,11 +750,6 @@ module Garage {
 				} else {
 					return null;
 				}
-
-				
-
-				
-
 
 			}
 
