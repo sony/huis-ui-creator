@@ -29,14 +29,14 @@
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
             "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING": "リモコンと同期中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うには\nUSBケーブルを抜いてください。",
-            "STR_DIALOG_GARAGE_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
+            "STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
             "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "同期に失敗しました。\nHUIS REMOTE CONTROLLERとパソコンが正常に接続されていません。\nHUIS REMOTE CONTRLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていません。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTRLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC": "同期中にアプリを終了すると、データが破損する恐れがあります。\n本当に終了しますか？",
             "STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていない可能性があります。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTRLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_WARN_NONSAVE": "リモコンの変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。",
             "STR_DIALOG_MESSAGE_WARN_OVERLAP": "重なって配置されているボタンがあるため編集を終了できません。\nボタンを再配置してください。",
-            "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1": "ページ ",
+            "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1": "\nページ ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2": " に重なり合っているボタンが ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3": " 個あります。",
             "STR_DIALOG_MESSAGE_ALERT_DISCONNECT": "HUIS REMOTE CONTROLLERとの接続が解除されました。\nアプリを終了します。",
@@ -64,7 +64,8 @@
             "STR_EDIT_PROPATY_TITLE_BUTTON": "Button",
             "STR_EDIT_PROPATY_LABEL_ACTION": "アクション",
             "STR_EDIT_PROPATY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
-            "STR_EDIT_PROPATY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン"
+            "STR_EDIT_PROPATY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
+            "STR_EDIT_PROPATY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集"
         },
         "canvas": { 
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"

@@ -334,7 +334,7 @@ module Garage {
 						var regExp = new RegExp(inhibitWords[i], "g");
 						resultString = resultString.replace(regExp, "");
 					}
-					outputString += "は使えません";
+					outputString += $.i18n.t("toast.STR_TOAST_INPUT_INHIBITION_WORD");
 					this.showGarageToast(outputString);
 				}
 				

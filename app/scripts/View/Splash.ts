@@ -153,7 +153,7 @@ module Garage {
                         // [TODO] 文言は仮のもの
                         electronDialog.showMessageBox({
                             type: "error",
-                            message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
+                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
 							title: PRODUCT_NAME,
                         });
 
