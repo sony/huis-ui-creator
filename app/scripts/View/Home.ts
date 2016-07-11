@@ -272,7 +272,6 @@ module Garage {
 								title: PRODUCT_NAME,
 							});
 						} else {
-							//CDP.this.showGarageToast"HUIS との同期が完了しました。");
 						}
 					});
 				}

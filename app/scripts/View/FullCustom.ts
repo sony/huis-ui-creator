@@ -1130,7 +1130,6 @@ module Garage {
 					accelerator: "CmdOrCtrl+Z",
 					enabled: this.commandManager_.canUndo() ? true : false,
 					click: () => {
-						this.showGarageToast("元に戻す");
 						var targetModel = this.commandManager_.undo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
@@ -1143,7 +1142,6 @@ module Garage {
 					accelerator: "Shift+CmdOrCtrl+Z",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
-						this.showGarageToast("やり直し");
 						var targetModel = this.commandManager_.redo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
