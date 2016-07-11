@@ -139,6 +139,8 @@ body{
 
 			.text-area{
 				p{
+					line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+					font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
 					color:$COLOR_ABOUT_DIALOG_TXET;
 				}
 			}
