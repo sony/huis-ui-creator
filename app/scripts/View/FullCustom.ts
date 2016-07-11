@@ -1793,6 +1793,7 @@ module Garage {
 							"保存せずに Home に戻る",
 							"キャンセル"
 						],
+						cancelId: 2,
 						title: PRODUCT_NAME,
 					});
 
