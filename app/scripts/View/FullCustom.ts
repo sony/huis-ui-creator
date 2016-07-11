@@ -1382,8 +1382,8 @@ module Garage {
              **/
             private onEditImageButtonClicked(event: Event) {
                 //popupメニューのテキスト 今後別のファイルにすべき。
-                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE = $.i18n.t("edit.propaty.STR_EDIT_PROPATY_ITEM_TYPE_IMAGE_BUTTON");
-                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT = $.i18n.t("edit.propaty.STR_EDIT_PROPATY_ITEM_TYPE_TEXT_BUTTON");
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE = $.i18n.t("edit.property.STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON");
+                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT = $.i18n.t("edit.property.STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON");
 
                 //押下されたボタンのJquery
                 var $target = $(event.currentTarget);
@@ -3126,9 +3126,9 @@ module Garage {
 						// ボタンアイテムの詳細エリアを表示
 						this._renderButtonItemDetailArea(targetModel.button, $detail);
 						//テキストをローカライズ
-						$("#face-item-detail-title").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_TITLE_BUTTON"));
-						$("#button-state-label-action").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_LABEL_ACTION"));
-						$("#text-title-edit-label").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_LABEL_EDIT_TEXT_LABEL"));
+						$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
+						$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
+						$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 						break;
 					case "image":
 						// 画像アイテムの詳細エリアを表示
@@ -3145,7 +3145,7 @@ module Garage {
 								$(".image-resize-mode").val(resizeMode);
 							}
 							//テキストをローカライズ
-							$("#face-item-detail-title").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_TITLE_IMAGE"));
+							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
 						break;
 					case "label":
@@ -3160,8 +3160,8 @@ module Garage {
 							$labelTextSize.val(targetModel.label.size.toString());
 
 							//テキストをローカライズ
-							$("#face-item-detail-title").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_TITLE_LABEL"));
-							$("#text-title-edit-label").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_LABEL_EDIT_TEXT_LABEL"));
+							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
+							$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 						}
 						break;
 					default:
@@ -3209,7 +3209,7 @@ module Garage {
 					$detail.append($pageBackgroundDetail);
 				}
 
-				$("#face-item-detail-title").html($.i18n.t("edit.propaty.STR_EDIT_PROPATY_TITLE_BACKGROUND"));
+				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
 			}
 
 			/**

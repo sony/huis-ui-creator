@@ -57,15 +57,15 @@
     },
     "edit": {
         "STR_EDIT_TITLE": "EDIT",
-        "propaty": {
-            "STR_EDIT_PROPATY_TITLE_BACKGROUND": "Background",
-            "STR_EDIT_PROPATY_TITLE_IMAGE": "Image",
-            "STR_EDIT_PROPATY_TITLE_LABEL": "Label",
-            "STR_EDIT_PROPATY_TITLE_BUTTON": "Button",
-            "STR_EDIT_PROPATY_LABEL_ACTION": "アクション",
-            "STR_EDIT_PROPATY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
-            "STR_EDIT_PROPATY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
-            "STR_EDIT_PROPATY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集"
+        "property": {
+            "STR_EDIT_PROPERTY_TITLE_BACKGROUND": "Background",
+            "STR_EDIT_PROPERTY_TITLE_IMAGE": "Image",
+            "STR_EDIT_PROPERTY_TITLE_LABEL": "Label",
+            "STR_EDIT_PROPERTY_TITLE_BUTTON": "Button",
+            "STR_EDIT_PROPERTY_LABEL_ACTION": "アクション",
+            "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
+            "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
+            "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集"
         },
         "canvas": { 
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
