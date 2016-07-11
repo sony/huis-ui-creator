@@ -300,7 +300,7 @@ module Garage {
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
                                 var response = electronDialog.showMessageBox({
-                                    type: "info",
+                                    type: "warning",
                                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
                                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 									title: PRODUCT_NAME,

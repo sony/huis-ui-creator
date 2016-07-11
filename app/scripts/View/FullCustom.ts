@@ -3567,9 +3567,9 @@ module Garage {
              */
             private _onCommandDeleteRemote() {
                 var response = electronDialog.showMessageBox({
-                    type: "info",
-                    message: "リモコンを削除すると元に戻せません。削除しますか？",
-                    buttons: ["yes", "no"],
+                    type: "warning",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 					title: PRODUCT_NAME,
                 }); 
                 if (response === 0) {
