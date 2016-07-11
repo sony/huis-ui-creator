@@ -39,7 +39,6 @@ module Garage {
 			APP_VERSION = fs.readFileSync('app/version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
-			console.error("init.ts  : setup  : error occurr when call fs.readFileSync('app/version.txt', 'utf8')");
 		}
 		
 
