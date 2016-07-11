@@ -40,6 +40,10 @@ module Garage {
 			 * Extra information of the message.
 			 */
 			detail?: string;
+			/*
+			 * return velue when no button cliecked but thr dialog window closed
+			 */
+			cancelId?: number;
 			icon?: any;
 		}
 
