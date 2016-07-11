@@ -33,7 +33,15 @@ module Garage {
         MenuItem = require("electron").remote.MenuItem;
 
 		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
-		APP_VERSION = fs.readFileSync('app/version.txt', 'utf8');
+		
+		APP_VERSION = "";
+		try{
+			APP_VERSION = fs.readFileSync('app/version.txt', 'utf8');
+		} catch (err) {
+			console.error(err);
+			console.error("init.ts  : setup  : error occurr when call fs.readFileSync('app/version.txt', 'utf8')");
+		}
+		
 
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
