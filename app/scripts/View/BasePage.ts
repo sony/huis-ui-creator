@@ -330,6 +330,10 @@ module Garage {
 						if (inhibitWords[i] == "|") {
 							inhibitWords[i] = "\\|";//正規表現では | はうけつけない。
 						}
+						if (inhibitWords[i] == "?") {
+							inhibitWords[i] = "\\?";//正規表現では | はうけつけない。
+						}
+
 
 						var regExp = new RegExp(inhibitWords[i], "g");
 						resultString = resultString.replace(regExp, "");
