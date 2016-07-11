@@ -1130,7 +1130,6 @@ module Garage {
 					accelerator: "CmdOrCtrl+Z",
 					enabled: this.commandManager_.canUndo() ? true : false,
 					click: () => {
-						this.showGarageToast("元に戻す");
 						var targetModel = this.commandManager_.undo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
@@ -1143,7 +1142,6 @@ module Garage {
 					accelerator: "Shift+CmdOrCtrl+Z",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
-						this.showGarageToast("やり直し");
 						var targetModel = this.commandManager_.redo();
 						this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
@@ -1533,6 +1531,7 @@ module Garage {
 					filters: [
 						{ name: "画像", extensions: ["jpg", "png", "jpeg"] },
 					],
+					title: PRODUCT_NAME, // Electron uses Appname as the default title
 				};
 
 				// 画像ファイルを開く
@@ -1792,6 +1791,8 @@ module Garage {
 							"保存せずに Home に戻る",
 							"キャンセル"
 						],
+						cancelId: 2,
+						title: PRODUCT_NAME,
 					});
 
 				if (response === 0) {// positiveなボタンの場合,Saveと同じ処理
@@ -1823,7 +1824,8 @@ module Garage {
 					electronDialog.showMessageBox({
 						type: "error",
 						message: "リモコンの名前を入力してください。",
-						buttons: ["ok"]
+						buttons: ["ok"],
+						title: PRODUCT_NAME,
 					});
 					return;
 				}
@@ -1834,7 +1836,8 @@ module Garage {
 						message: "重なり合っているボタンがあります。\n"
 						+ "ボタン同士を重なり合うように配置することはできません。\n"
 						+ overlapButtonError,
-						buttons: ["ok"]
+						buttons: ["ok"],
+						title: PRODUCT_NAME,
 					});
 					return;
 				}
@@ -1851,7 +1854,8 @@ module Garage {
 										message: "HUIS と同期できませんでした。\n"
 										+ "HUIS が PC と接続されていない可能性があります。\n"
 										+ "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
-										buttons: ["ok"]
+										buttons: ["ok"],
+										title: PRODUCT_NAME,
 									});
 								} else {
 									//CDP.this.showGarageToast"HUIS との同期が完了しました。");
@@ -3512,7 +3516,8 @@ module Garage {
                         message: "変更内容を HUIS に反映しますか？\n"
                         + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
-                        buttons: ["yes", "no"]
+                        buttons: ["yes", "no"],
+						title: PRODUCT_NAME,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // Remoteのリストを更新
@@ -3532,7 +3537,8 @@ module Garage {
                                 message: "HUIS と同期できませんでした。\n"
                                 + "HUIS が PC と接続されていない可能性があります。\n"
                                 + "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
-                                buttons: ["ok"]
+                                buttons: ["ok"],
+								title: PRODUCT_NAME,
                             });
                         } else {
                             Framework.Router.back();
@@ -3549,7 +3555,8 @@ module Garage {
                 var response = electronDialog.showMessageBox({
                     type: "info",
                     message: "リモコンを削除すると元に戻せません。削除しますか？",
-                    buttons: ["yes", "no"]
+                    buttons: ["yes", "no"],
+					title: PRODUCT_NAME,
                 }); 
                 if (response === 0) {
                     huisFiles.removeFace(this._getUrlQueryParameter("remoteId"));

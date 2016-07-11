@@ -24,9 +24,6 @@ module Garage {
 		Patch.apply();
 		var global = global || window;
 
-		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
-		APP_VERSION = "1.0.0.07060";
-
 		fs = require("fs-extra");
         path = require("path");
 
@@ -35,11 +32,25 @@ module Garage {
         Menu = require("electron").remote.Menu;
         MenuItem = require("electron").remote.MenuItem;
 
+		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
+		
+		APP_VERSION = "";
+		try{
+			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
+		} catch (err) {
+			console.error(err);
+		}
+		
+
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
 		HUIS_VID = 0x054C;
 		HUIS_PID = 0x0B94;
+
+		// 製品名の設定
+		PRODUCT_NAME = "HUIS UI CREATOR";
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
@@ -117,7 +128,8 @@ module Garage {
                                 type: "info",
                                 message: "HUIS の画面の「パソコンと接続」をクリックしてください。\n"
                                 + "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-                                buttons: ["ok", "cancel"]
+                                buttons: ["ok", "cancel"],
+								title: PRODUCT_NAME,
                             });
 
                         if (response !== 0) {
@@ -136,7 +148,8 @@ module Garage {
 						message: "HUIS が PC に接続されていません。\n"
 						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
 						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-						buttons: ["ok", "cancel"]
+						buttons: ["ok", "cancel"],
+						title: PRODUCT_NAME,
                     });
 
 				if (response !== 0) {
