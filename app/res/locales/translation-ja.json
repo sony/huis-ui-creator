@@ -75,6 +75,9 @@
         "STR_HOME_INTRODUCTION_2": "あなた好み",
         "STR_HOME_INTRODUCTION_3": "のデザインに。"
     },
+    "splash": { 
+        "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
+    },
     "about": {
         "STR_ABOUT_TITLE": "HUIS UI CREATOR のバージョン情報",
         "STR_ABOUT_TEXT_COPYRIGHT": "Copyright 2016 Sony Corporation",
