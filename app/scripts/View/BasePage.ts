@@ -251,6 +251,11 @@ module Garage {
                     $overflow.popup("close");
                 });
 
+				//オプションのテキストのローカライズ
+				$("#command-delete-remote").html($.i18n.t("option_menu.STR_OPTION_MENU_DELTE_REMOTE"));
+				$("#command-visit-help").html($.i18n.t("option_menu.STR_OPTION_MENU_HELP"));
+				$("#command-about-this").html($.i18n.t("app.name") + $.i18n.t("option_menu.STR_OPTION_MENU_ABOUT"));
+
                 return;
             }
 
