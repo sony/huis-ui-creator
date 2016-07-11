@@ -95,9 +95,7 @@ module Garage {
                 this.gridSize_ = this.DEFAULT_GRID;
                 requirejs(["pixi"]);
 
-				//html上の文言をローカライズ
-				$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
-				$("#button-add-page").html($.i18n.t("edit.canvas.STR_EDIT_CANVAS_NEW_PAGE_BTN"));
+				
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -142,6 +140,10 @@ module Garage {
                         $("li#command-delete-remote").remove();
                         $("li.menu-item-separator").remove();
                     }
+
+					//html上の文言をローカライズ
+					$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
+					$("#button-add-page").html($.i18n.t("edit.canvas.STR_EDIT_CANVAS_NEW_PAGE_BTN"));
 
 				});
 			}
