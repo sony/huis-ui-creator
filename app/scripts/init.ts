@@ -36,7 +36,7 @@ module Garage {
 		
 		APP_VERSION = "";
 		try{
-			APP_VERSION = fs.readFileSync('app/version.txt', 'utf8');
+			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
 		}

@@ -101,10 +101,13 @@ module Garage {
             private _onCommandAboutThis() {
 				var dialog: Dialog = null;
 				var props: DialogProps = null;
-				var text: string = null;
+				var text: string = "";
 
-				text = fs.readFileSync('app/licenses.txt', 'utf8');
-
+				try {
+					text = fs.readFileSync('licenses.txt', 'utf8');
+				} catch (err) {
+					console.error(err);
+				}
 				
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
