@@ -216,7 +216,8 @@ module Garage {
 						message: "リモコンの上限数に達しているため、リモコンを作成できません。\n"
 						+ "リモコンの上限数は " + MAX_HUIS_FILES + " です。\n"
 						+ "これは機器リモコンやカスタムリモコン等を含めた数です。",
-						buttons: ["ok"]
+						buttons: ["ok"],
+						title: PRODUCT_NAME,
 					});
 				}
 			}
@@ -240,7 +241,8 @@ module Garage {
                         message: "変更内容を HUIS に反映しますか？\n"
                         + "最初に接続した HUIS と異なる HUIS を接続している場合、\n"
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
-                        buttons: ["yes", "no"]
+                        buttons: ["yes", "no"],
+						title: PRODUCT_NAME,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
@@ -266,7 +268,8 @@ module Garage {
 								message: "HUIS と同期できませんでした。\n"
 								+ "HUIS が PC と接続されていない可能性があります。\n"
 								+ "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
-								buttons: ["ok"]
+								buttons: ["ok"],
+								title: PRODUCT_NAME,
 							});
 						} else {
 							//CDP.this.showGarageToast"HUIS との同期が完了しました。");
@@ -298,7 +301,8 @@ module Garage {
                                 var response = electronDialog.showMessageBox({
                                     type: "info",
                                     message: "リモコンを削除すると元に戻せません。削除しますか？",
-                                    buttons: ["yes", "no"]
+                                    buttons: ["yes", "no"],
+									title: PRODUCT_NAME,
                                 });
                                 if (response === 0) {
                                     //this._removeFace(remoteId);
