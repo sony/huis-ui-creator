@@ -28,7 +28,7 @@
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
             "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING": "リモコンと同期中です。\nUSBケーブルを抜かないでください。",
-            "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うにはUSBケーブルを抜いてください。",
+            "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うには\nUSBケーブルを抜いてください。",
             "STR_DIALOG_GARAGE_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
             "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "同期に失敗しました。\nHUIS REMOTE CONTROLLERとパソコンが正常に接続されていません。\nHUIS REMOTE CONTRLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていません。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTRLLER画面の「パソコンと接続」ボタンをタップしてください。",
