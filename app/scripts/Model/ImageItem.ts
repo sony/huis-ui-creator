@@ -75,11 +75,9 @@ module Garage {
 					//	resolvedPath = resolvedPath.split("file:///")[1];
 					//}
 					this.resolvedPath = resolvedPath;
-					console.log("ImageItem.ts::path  resolvedPath=" + resolvedPath);
 
 				} else if (this.resolvedPathDirectory_) {
 					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-					console.log("ImageItem.ts::path  this.resolvedPath=" + this.resolvedPath);
 				}
 			}
 
