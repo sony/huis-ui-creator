@@ -89,6 +89,10 @@ module Garage {
 				this.currentWindow_ = Remote.getCurrentWindow();
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
+
+				//テキストのローカライズ
+				$("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
+				$("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
 			}
 
             /**
@@ -136,9 +140,9 @@ module Garage {
             */
 
             private _renderIntroduction() {
-                var STR_HOME_INTRODUCTION_TEXT_1: string = "HUISを";
-                var STR_HOME_INTRODUCTION_TEXT_2: string = "あなた好み";
-                var STR_HOME_INTRODUCTION_TEXT_3: string = "のデザインに。<br>フルカスタムリモコンを作成しましょう。";
+                var STR_HOME_INTRODUCTION_TEXT_1: string = $.i18n.t("home.STR_HOME_INTRODUCTION_1");
+                var STR_HOME_INTRODUCTION_TEXT_2: string = $.i18n.t("home.STR_HOME_INTRODUCTION_2");
+                var STR_HOME_INTRODUCTION_TEXT_3: string = $.i18n.t("home.STR_HOME_INTRODUCTION_3");
 
                 var $indtroductionHome = $("#home-introductions");
                 $indtroductionHome.css("visibility", "visible");
@@ -213,10 +217,8 @@ module Garage {
 				} else {
 					electronDialog.showMessageBox({
 						type: "error",
-						message: "リモコンの上限数に達しているため、リモコンを作成できません。\n"
-						+ "リモコンの上限数は " + MAX_HUIS_FILES + " です。\n"
-						+ "これは機器リモコンやカスタムリモコン等を含めた数です。",
-						buttons: ["ok"],
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 						title: PRODUCT_NAME,
 					});
 				}
@@ -235,7 +237,9 @@ module Garage {
 			
 
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
+				
                 if (!noWarn) {
+					//もう使われてない？
                     let response = electronDialog.showMessageBox({
                         type: "info",
                         message: "変更内容を HUIS に反映しますか？\n"
@@ -265,10 +269,8 @@ module Garage {
 							// [TODO] エラー値のハンドリング
 							electronDialog.showMessageBox({
 								type: "error",
-								message: "HUIS と同期できませんでした。\n"
-								+ "HUIS が PC と接続されていない可能性があります。\n"
-								+ "HUIS が PC に接続されていることを確認して、再度同期をお試しください。",
-								buttons: ["ok"],
+								message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
+								buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 								title: PRODUCT_NAME,
 							});
 						} else {
@@ -295,12 +297,12 @@ module Garage {
 					this.remoteIdToDelete = $face.data("remoteid");
                     if (this.remoteIdToDelete) {
 						this.contextMenu_.append(new MenuItem({
-                            label: "このリモコン (" + this.remoteIdToDelete + ") を削除",
+                            label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
                                 var response = electronDialog.showMessageBox({
                                     type: "info",
-                                    message: "リモコンを削除すると元に戻せません。削除しますか？",
-                                    buttons: ["yes", "no"],
+                                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
+                                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 									title: PRODUCT_NAME,
                                 });
                                 if (response === 0) {
@@ -315,7 +317,7 @@ module Garage {
 				
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
                     this.contextMenu_.append(new MenuItem({
-                        label: "要素を検証",
+                        label: $.i18n.t("context_menu.STR_CONTEXT_VALIDATE_ELEMENTS"),
                         click: () => {
                             this.currentWindow_.inspectElement(this.rightClickPosition_.x, this.rightClickPosition_.y);
                         }

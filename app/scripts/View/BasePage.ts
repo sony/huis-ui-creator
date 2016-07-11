@@ -73,6 +73,71 @@ module Garage {
 
             constructor(html, name, options) {
                 super(html, name, options);
+
+				//完了時のダイアログのアイコンのパス
+				var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
+				let dialogMessageStr :string= "dialog.message.";
+
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了
+				DIALOG_PROPS_CREATE_NEW_REMOTE = {
+					id: "#common-dialog-spinner",
+					options: {
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
+						anotherOption: {
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE"),
+							src: PATH_IMG_DIALOG_DONE_ICON,
+						}
+					}
+				}
+
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言
+				DIALOG_PROPS_DELTE_REMOTE = {
+					id: "#common-dialog-spinner",
+					options: {
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING"),
+						anotherOption: {
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE"),
+							src: PATH_IMG_DIALOG_DONE_ICON,
+						}
+					}
+				}
+
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言
+				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
+					id: "#common-dialog-spinner",
+					options: {
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
+						anotherOption: {
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE"),
+							src: PATH_IMG_DIALOG_DONE_ICON,
+						}
+					}
+				}
+
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 
+				DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
+					id: "#common-dialog-spinner",
+					options: {
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
+					}
+				};
+
+				// 同期 (PC -> HUIS) ダイアログのパラメーター 
+				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
+					id: "#common-dialog-spinner",
+					options: {
+						"message": $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING")
+					}
+				};
+
+				// PC と HUIS とのファイル差分チェックダイアログのパラメーター (現在は使われていない)
+				DIALOG_PROPS_CHECK_DIFF = {
+					id: "#common-dialog-spinner",
+					options: {
+						"title": "★PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
+					}
+				};
+
             }
 
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
@@ -111,15 +176,18 @@ module Garage {
 				
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
-					title: "HUIS UI CREATOR のバージョン情報",
+					title: $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
 					message: text,
 					dismissible: true,
 				});
 				//dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
 				dialog.show();
-				
-				$("#about-version-number").html(APP_VERSION);
 
+				//ダイアログの中身のテキストをローカライズ
+				$("#about-app-name").text($.i18n.t("app.name"));
+				$("#about-version-info").find(".label").text($.i18n.t("about.STR_ABOUT_TEXT_VERSION"));
+				$("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
+				$("#about-version-number").text(APP_VERSION);
                 return;
 }
 
@@ -182,6 +250,11 @@ module Garage {
                 $overflow.popup(options).popup("open").on("vclick", () => {
                     $overflow.popup("close");
                 });
+
+				//オプションのテキストのローカライズ
+				$("#command-delete-remote").html($.i18n.t("option_menu.STR_OPTION_MENU_DELTE_REMOTE"));
+				$("#command-visit-help").html($.i18n.t("option_menu.STR_OPTION_MENU_HELP"));
+				$("#command-about-this").html($.i18n.t("app.name") + $.i18n.t("option_menu.STR_OPTION_MENU_ABOUT"));
 
                 return;
             }
@@ -261,7 +334,7 @@ module Garage {
 						var regExp = new RegExp(inhibitWords[i], "g");
 						resultString = resultString.replace(regExp, "");
 					}
-					outputString += "は使えません";
+					outputString += $.i18n.t("toast.STR_TOAST_INPUT_INHIBITION_WORD");
 					this.showGarageToast(outputString);
 				}
 				

@@ -88,70 +88,6 @@ module Garage {
 			imageType: "image/png"
         };
 
-
-        //完了時のダイアログのアイコンのパス
-        var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
-
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
-        DIALOG_PROPS_CREATE_NEW_REMOTE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: "リモコン登録が完了しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
-        DIALOG_PROPS_DELTE_REMOTE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: "リモコンを削除しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
-        DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: " HUISとの同期を完了しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-		// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
-			id: "#common-dialog-spinner",
-			options: {
-				title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
-			}
-		};
-
-		// 同期 (PC -> HUIS) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
-			id: "#common-dialog-spinner",
-			options: {
-				"message": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
-			}
-		};
-
-		// PC と HUIS とのファイル差分チェックダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_CHECK_DIFF = {
-			id: "#common-dialog-spinner",
-			options: {
-                "title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
-			}
-        };
-
         HELP_SITE_URL = "http://rd1.sony.net/help/remote/ui_creator/ja/";
 
         if (fs.existsSync("debug")) {
@@ -189,10 +125,9 @@ module Garage {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
-                                type: "info",
-                                message: "HUIS の画面の「パソコンと接続」をクリックしてください。\n"
-                                + "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-                                buttons: ["ok", "cancel"],
+                                type: "error",
+                                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
+                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 								title: PRODUCT_NAME,
                             });
 
@@ -208,11 +143,9 @@ module Garage {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
-						type: "info",
-						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
-						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-						buttons: ["ok", "cancel"],
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 						title: PRODUCT_NAME,
                     });
 

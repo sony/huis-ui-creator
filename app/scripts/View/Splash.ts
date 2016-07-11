@@ -40,8 +40,8 @@ module Garage {
                     if (!fs.existsSync(HUIS_ROOT_PATH)) {
                         electronDialog.showMessageBox({
                             type: "error",
-                            message: "HUISが切断されました。アプリを終了します。",
-                            buttons: ["ok"],
+                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
+                            buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 							title: PRODUCT_NAME,
                         });
                         isHUISConnected = false;
@@ -84,6 +84,8 @@ module Garage {
 
                 this.currentWindow_ = Remote.getCurrentWindow();
                 this.currentWindow_.setMenuBarVisibility(false);
+
+				$("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
             }
 
 
@@ -93,9 +95,8 @@ module Garage {
                     let response = electronDialog.showMessageBox(
                         {
                             type: "info",
-                            message: "同期中にアプリを終了するとデータが破損する恐れがあります。\n"
-                            + "それでも終了しますか？\n",
-                            buttons: ["yes", "no"],
+                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC"),
+                            buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 							title: PRODUCT_NAME,
                         });
                     if (response !== 0) {
@@ -152,7 +153,7 @@ module Garage {
                         // [TODO] 文言は仮のもの
                         electronDialog.showMessageBox({
                             type: "error",
-                            message: "HUIS との同期に失敗しました",
+                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
 							title: PRODUCT_NAME,
                         });
 
