@@ -76,14 +76,15 @@ module Garage {
 
 				//完了時のダイアログのアイコンのパス
 				var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
+				let dialogMessageStr :string= "dialog.message.";
 
 				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
 				DIALOG_PROPS_CREATE_NEW_REMOTE = {
 					id: "#common-dialog-spinner",
 					options: {
-						title: "同期中です。",
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
 						anotherOption: {
-							title: "リモコン登録が完了しました。",
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE"),
 							src: PATH_IMG_DIALOG_DONE_ICON,
 						}
 					}
@@ -93,9 +94,9 @@ module Garage {
 				DIALOG_PROPS_DELTE_REMOTE = {
 					id: "#common-dialog-spinner",
 					options: {
-						title: "同期中です。",
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING"),
 						anotherOption: {
-							title: "リモコンを削除しました。",
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE"),
 							src: PATH_IMG_DIALOG_DONE_ICON,
 						}
 					}
@@ -105,9 +106,9 @@ module Garage {
 				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
 					id: "#common-dialog-spinner",
 					options: {
-						title: "同期中です。",
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
 						anotherOption: {
-							title: " HUISとの同期を完了しました。",
+							title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE"),
 							src: PATH_IMG_DIALOG_DONE_ICON,
 						}
 					}
@@ -117,7 +118,7 @@ module Garage {
 				DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
 					id: "#common-dialog-spinner",
 					options: {
-						title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
+						title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING"),
 					}
 				};
 
@@ -125,15 +126,15 @@ module Garage {
 				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
 					id: "#common-dialog-spinner",
 					options: {
-						"message": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
+						"message": $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING")
 					}
 				};
 
-				// PC と HUIS とのファイル差分チェックダイアログのパラメーター (文言は仮のもの)
+				// PC と HUIS とのファイル差分チェックダイアログのパラメーター (現在は使われていない)
 				DIALOG_PROPS_CHECK_DIFF = {
 					id: "#common-dialog-spinner",
 					options: {
-						"title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
+						"title": "★PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
 					}
 				};
 
