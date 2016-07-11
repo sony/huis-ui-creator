@@ -125,10 +125,9 @@ module Garage {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
-                                type: "info",
-                                message: "HUIS の画面の「パソコンと接続」をクリックしてください。\n"
-                                + "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-                                buttons: ["ok", "cancel"],
+                                type: "error",
+                                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
+                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 								title: PRODUCT_NAME,
                             });
 
@@ -144,11 +143,9 @@ module Garage {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
-						type: "info",
-						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
-						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-						buttons: ["ok", "cancel"],
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 						title: PRODUCT_NAME,
                     });
 
