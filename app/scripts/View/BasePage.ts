@@ -78,7 +78,7 @@ module Garage {
 				var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
 				let dialogMessageStr :string= "dialog.message.";
 
-				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了
 				DIALOG_PROPS_CREATE_NEW_REMOTE = {
 					id: "#common-dialog-spinner",
 					options: {
@@ -90,7 +90,7 @@ module Garage {
 					}
 				}
 
-				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言
 				DIALOG_PROPS_DELTE_REMOTE = {
 					id: "#common-dialog-spinner",
 					options: {
@@ -102,7 +102,7 @@ module Garage {
 					}
 				}
 
-				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言(文言は仮のもの)
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言
 				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
 					id: "#common-dialog-spinner",
 					options: {
@@ -114,7 +114,7 @@ module Garage {
 					}
 				}
 
-				// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
+				// 同期 (HUIS -> PC) ダイアログのパラメーター 
 				DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
 					id: "#common-dialog-spinner",
 					options: {
@@ -122,7 +122,7 @@ module Garage {
 					}
 				};
 
-				// 同期 (PC -> HUIS) ダイアログのパラメーター (文言は仮のもの)
+				// 同期 (PC -> HUIS) ダイアログのパラメーター 
 				DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
 					id: "#common-dialog-spinner",
 					options: {
