@@ -90,9 +90,7 @@ module Garage {
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
 
-				//テキストのローカライズ
-				$("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
-				$("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
+				
 			}
 
             /**
@@ -131,6 +129,9 @@ module Garage {
                     this._renderIntroduction();
                 }
 
+				//テキストのローカライズ
+				$("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
+				$("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
 				
 			}
 
