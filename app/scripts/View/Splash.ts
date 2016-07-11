@@ -41,7 +41,8 @@ module Garage {
                         electronDialog.showMessageBox({
                             type: "error",
                             message: "HUISが切断されました。アプリを終了します。",
-                            buttons: ["ok"]
+                            buttons: ["ok"],
+							title: PRODUCT_NAME,
                         });
                         isHUISConnected = false;
                         app.quit();
@@ -94,7 +95,8 @@ module Garage {
                             type: "info",
                             message: "同期中にアプリを終了するとデータが破損する恐れがあります。\n"
                             + "それでも終了しますか？\n",
-                            buttons: ["yes", "no"]
+                            buttons: ["yes", "no"],
+							title: PRODUCT_NAME,
                         });
                     if (response !== 0) {
                         return null;
@@ -150,7 +152,8 @@ module Garage {
                         // [TODO] 文言は仮のもの
                         electronDialog.showMessageBox({
                             type: "error",
-                            message: "HUIS との同期に失敗しました"
+                            message: "HUIS との同期に失敗しました",
+							title: PRODUCT_NAME,
                         });
 
                         app.exit(0);
