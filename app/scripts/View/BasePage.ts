@@ -176,15 +176,18 @@ module Garage {
 				
 				dialog = new CDP.UI.Dialog("#common-dialog-about", {
 					src: CDP.Framework.toUrl("/templates/dialogs.html"),
-					title: "HUIS UI CREATOR のバージョン情報",
+					title: $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
 					message: text,
 					dismissible: true,
 				});
 				//dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
 				dialog.show();
-				
-				$("#about-version-number").html(APP_VERSION);
 
+				//ダイアログの中身のテキストをローカライズ
+				$("#about-app-name").text($.i18n.t("app.name"));
+				$("#about-version-info").find(".label").text($.i18n.t("about.STR_ABOUT_TEXT_VERSION"));
+				$("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
+				$("#about-version-number").text(APP_VERSION);
                 return;
 }
 

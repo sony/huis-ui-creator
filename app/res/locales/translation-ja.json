@@ -9,7 +9,7 @@
         }
     },
     "app": {
-        "name": "★HUIS UI CREATOR"
+        "name": "HUIS UI CREATOR"
     },
     "settings": {
         "title": "★TODO"
@@ -79,9 +79,9 @@
         "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
     },
     "about": {
-        "STR_ABOUT_TITLE": "HUIS UI CREATOR のバージョン情報",
+        "STR_ABOUT_TITLE": " のバージョン情報",
         "STR_ABOUT_TEXT_COPYRIGHT": "Copyright 2016 Sony Corporation",
-        "STR_ABOUT_TEXT_VERSION": "Version"
+        "STR_ABOUT_TEXT_VERSION": "Version "
     },
     "context_menu": {
         "STR_CONTEXT_VALIDATE_ELEMENTS": "要素を検証",
