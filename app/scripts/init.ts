@@ -40,8 +40,9 @@ module Garage {
 		} catch (err) {
 			console.error(err);
 		}
-		
 
+		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.75;
+		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.65;
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
