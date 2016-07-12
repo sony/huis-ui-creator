@@ -38,7 +38,7 @@ module Garage {
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.Module>) {
-				var modulesData: IGModule[];
+				var modulesData: IGModule[] = [];
 				if (options && options.attributes) {
 					if (options.attributes["modules"]) {
 						modulesData = options.attributes["modules"];
@@ -142,10 +142,10 @@ module Garage {
 						cid: item.cid
 					}));
 
-					// 画像をレンダリング
-					this._renderImages(item.image, index, $moduleContainer);
 					// ラベルをレンダリング
 					this._renderLabels(item.label, index, $moduleContainer);
+					// 画像をレンダリング
+					this._renderImages(item.image, index, $moduleContainer);
 					// ボタンをレンダリング
 					this._renderButtons(item.button, index, $moduleContainer);
 
@@ -439,6 +439,14 @@ module Garage {
 				    newButton.default = srcButton.default;
 				}
 
+				if (srcButton.name) {
+					newButton.name = srcButton.name;
+				}
+
+				if (srcButton.version) {
+					newButton.version = srcButton.version;
+				}
+
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
@@ -593,6 +601,12 @@ module Garage {
 					srcImagePath = image.resolvedPath;
 				}
 
+				//バージョン情報をもっている場合、引き継ぐ
+				if (image.version != null) {
+					newImage.version = image.version;
+				}
+
+
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
 				imageView.setElement($module);
@@ -689,7 +703,13 @@ module Garage {
 				newLabel.text = label.text;
 				newLabel.color = label.color;
 				newLabel.font = label.font;
-				newLabel.size = label.size;
+                newLabel.size = label.size;
+                newLabel.font_weight = label.font_weight;
+
+				//バージョン情報がある場合、コピーする
+				if (label.version) {
+					newLabel.version = label.version;
+				}
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");

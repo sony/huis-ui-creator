@@ -41,6 +41,15 @@ module Garage {
 								remoteId: this.remoteId_,
 								materialsRootPath: this.materialsRootPath_
 							});
+
+							if (buttonData.name){
+								buttonModel.name = buttonData.name;
+							}
+
+							if (buttonData.version) {
+								buttonModel.version = buttonData.version;
+							}
+							
 							//buttonModel.set("area", buttonData.area);
 							buttonModel.area = buttonData.area;
 							var states = buttonData.state;
@@ -76,8 +85,20 @@ module Garage {
 
 			render(): ButtonItem {
 				this.collection.each((model: Model.ButtonItem) => {
-					this._modifyModel(model);
-
+                    this._modifyModel(model);
+                    let filtered_state = null;
+                    let filtered_action = null;
+                    if (_.isArray(model.state)) {
+                         filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+                           filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+                                return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
+                             });
+                           return (filtered_action.length > 0);
+                        });
+                        if (filtered_state.length > 0) {
+                            return this;
+                        }
+                    }
 					this.$el.append($(this.buttonItemTemplate_(model)));
 				});
 				return this;

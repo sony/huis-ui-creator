@@ -1,9 +1,9 @@
-﻿@import "variable";
+﻿@import "variables/variable";
 
 #page-splash {
     position: relative;
     background-color: $COLOR_SPLASH_BACKGROUND;
-
+    
     #huis-logo-image{
         width:$SIZE_SPLASH_LOGO_WIDHT;
         height:$SIZE_SPLASH_LOGO_HEIHGT;
@@ -30,8 +30,9 @@
     #splash-message {
         text-shadow:none;
         font-size:$FONT_SIZE_SPLASH_MESSAGE;
-        font-family:$FONT_FAMILY_LIGHT;
+        font-family:$FONT_FAMILY_SPLASH_MESSAGE;
         line-height:$TEXT_HEIGHT_DEFAULT;
+        color:$COLOR_SPLASH_TEXT;
         text-align:center;
         margin:0 auto;
         margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;

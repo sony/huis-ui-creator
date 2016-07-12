@@ -29,9 +29,25 @@ module Garage {
 				this.set("text", val);
 			}
 
+			get version(): string {
+				return this.get("version");
+			}
+
+            set version(val: string) {
+				this.set("version", val);
+			}
+
             get color(): number {
 				return this.get("color");
-			}
+            }
+
+            get font_weight(): FontWeight {
+                return this.get("font_weight");
+            }
+
+            set font_weight(val: FontWeight) {
+                this.set("font_weight", val);
+            }
 
             set color(val: number) {
 				this.set("color", val);
@@ -65,7 +81,7 @@ module Garage {
 			 * 変更可能なプロパティーの一覧
 			 */
 			get properties(): string[]{
-				return ["enabled", "area", "text", "color", "font", "size"];
+				return ["enabled", "area", "text", "color", "font", "size","font_weight"];
 			}
 
 			/**
@@ -100,7 +116,8 @@ module Garage {
                     "color": 0,
 					"resolvedColor": "rgb(0,0,0)",
                     "font": "",
-                    "size": 32,
+                    "size": 30,
+                    "font_weight" : FontWeight.FONT_BOLD,
                 };
 
                 return label;

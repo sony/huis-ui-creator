@@ -1,4 +1,4 @@
-﻿@import "variable";
+﻿@import "variables/variable";
 
 #face-canvas {
     position: relative;
@@ -12,6 +12,11 @@
         margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
     }
 
+    .image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
+        position: absolute;
+        z-index: -10;
+    }
+
 }
 
 #face-canvas-inner {
@@ -19,23 +24,32 @@
     padding: $SIZE_CANVAS_INNER_PADDING_TOP $SIZE_CANVAS_INNER_PADDING_LEFT 0 $SIZE_CANVAS_INNER_PADDING_RIGHT;
 }
 
-#face-name-area {
+#face-name-area{
     position: relative;
     width: $SIZE_FACE_NAME_AREA_WIDTH;
-    height: $SIZE_FACE_NAME_AREA_HEIGHT;
+    //height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
-    #input-face-name {
+    #input-face-name{
+        background-clip: padding-box;
+        background : none;
+        border-color :$COLOR_NAME_AREA_BORDER;
+
         width: 100%;
-        border: 0;
-        border:solid 1px #ccc;
-        border-radius: 3px;
-        font-size: 32px;
         text-align:center;
-        font-family: "Noto Sans CJK JP","SST W55";
-        margin: 12px 0;
-        height: 56px;
-        box-sizing: border-box;
+        font-size: $FONT_SIZE_CANVAS_NAME_AREA;
+        font-family:$FONT_WEIGHT_BUTTON_ITEM;
+		
+        &:hover{
+			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
+        }
+
+        &:focus{
+			outline:none;
+			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
+        }     
     }
 }
 
@@ -80,9 +94,7 @@
     height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
     right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
     bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
-    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;
-    font-family: "Noto Sans CJK JP","SST W55";
-    
+    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
 }
 
 .button-item {
@@ -97,6 +109,14 @@
     vertical-align: middle;
     text-overflow: ellipsis;
     text-shadow: none;
+}
+
+.label-item{
+    font-family:$FONT_WEIGHT_LABEL_ITEM;
+}
+
+.state-label {
+    font-family:$FONT_WEIGHT_BUTTON_ITEM;
 }
 
 .label-value,

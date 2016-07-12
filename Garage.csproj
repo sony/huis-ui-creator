@@ -138,6 +138,7 @@
     <Content Include="app\res\images\btn_done_hover.png" />
     <Content Include="app\res\images\btn_done_normal.png" />
     <Content Include="app\res\images\btn_done_pressed.png" />
+    <Content Include="app\res\images\btn_image_label.png" />
     <Content Include="app\res\images\btn_new_hover.png" />
     <Content Include="app\res\images\btn_new_normal.png" />
     <Content Include="app\res\images\btn_new_pressed.png" />
@@ -147,11 +148,26 @@
     <Content Include="app\res\images\btn_sync_hover.png" />
     <Content Include="app\res\images\btn_sync_normal.png" />
     <Content Include="app\res\images\btn_sync_pressed.png" />
+    <Content Include="app\res\images\button_delete_image_hover.png" />
+    <Content Include="app\res\images\button_delete_image_normal.png" />
+    <Content Include="app\res\images\button_delete_image_pressed.png" />
+    <Content Include="app\res\images\button_edit_button_hover.png" />
+    <Content Include="app\res\images\button_edit_button_normal.png" />
+    <Content Include="app\res\images\button_edit_button_pressed.png" />
+    <Content Include="app\res\images\button_edit_image_hover.png" />
+    <Content Include="app\res\images\button_edit_image_normal.png" />
+    <Content Include="app\res\images\button_edit_image_pressed.png" />
+    <Content Include="app\res\images\button_edit_text_hover.png" />
+    <Content Include="app\res\images\button_edit_text_normal.png" />
+    <Content Include="app\res\images\button_edit_text_pressed.png" />
     <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
-    <Content Include="app\res\images\icon_guide_arrow.png" />
+    <Content Include="app\res\images\icon_guide_arrow_gray.png" />
+    <Content Include="app\res\images\icon_sync.gif" />
+    <Content Include="app\res\images\icon_sync_green.gif" />
     <Content Include="app\res\images\icon_sync_green.png" />
     <Content Include="app\res\images\icon_sync_white.png" />
+    <Content Include="app\res\images\icon_wait.gif" />
     <Content Include="app\res\images\icon_wait.png" />
     <Content Include="app\res\images\img_arrow.png" />
     <Content Include="app\res\images\img_arrow_up.png" />
@@ -167,9 +183,13 @@
     <Content Include="app\stylesheets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <None Include="app\stylesheets\variables\_image-path.scss" />
     <Content Include="app\stylesheets\_base.scss" />
     <Content Include="app\stylesheets\_splash.scss" />
     <Content Include="app\stylesheets\config.rb" />
+    <None Include="app\stylesheets\variables\_color.scss" />
+    <None Include="app\stylesheets\variables\_font.scss" />
+    <None Include="app\stylesheets\variables\_size.scss" />
     <Content Include="app\templates\dialogs.html" />
     <Content Include="app\templates\face-items.html" />
     <Content Include="app\templates\item-detail.html" />
@@ -228,7 +248,7 @@
     </Content>
     <Content Include="app\stylesheets\_face-items.scss" />
     <Content Include="app\stylesheets\_dialog.scss" />
-    <Content Include="app\stylesheets\_variable.scss" />
+    <Content Include="app\stylesheets\variables\_variable.scss" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -266,6 +286,8 @@
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
+    <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
     <Content Include="app\scripts\View\Home.js">

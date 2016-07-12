@@ -32,11 +32,25 @@ module Garage {
         Menu = require("electron").remote.Menu;
         MenuItem = require("electron").remote.MenuItem;
 
+		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
+		
+		APP_VERSION = "";
+		try{
+			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
+		} catch (err) {
+			console.error(err);
+		}
+		
+
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
 		HUIS_VID = 0x054C;
 		HUIS_PID = 0x0B94;
+
+		// 製品名の設定
+		PRODUCT_NAME = "HUIS UI CREATOR";
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
@@ -72,43 +86,27 @@ module Garage {
 			},
 			grayscale: 1,
 			imageType: "image/png"
-		};
-
-		// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
-			id: "#common-dialog-spinner",
-			options: {
-				title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
-			}
-		};
-
-		// 同期 (PC -> HUIS) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
-			id: "#common-dialog-spinner",
-			options: {
-				"message": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
-			}
-		};
-
-		// PC と HUIS とのファイル差分チェックダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_CHECK_DIFF = {
-			id: "#common-dialog-spinner",
-			options: {
-                "title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
-			}
         };
 
-        HELP_SITE_URL = "http://www.google.co.jp"; //　仮
+        HELP_SITE_URL = "http://rd1.sony.net/help/remote/ui_creator/ja/";
+
+        if (fs.existsSync("debug")) {
+            DEBUG_MODE = true;
+            console.warn("DEBUG_MODE enabled");
+        } else {
+            DEBUG_MODE = false;
+        }
 
 		callback();
 	};
 
 	var loadUtils = (callback: Function): void => {
 		// Util のロードと初期化
-		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.garagefiles", "garage.util.jqutils"], () => {
+		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.miscutil", "garage.util.garagefiles", "garage.util.jqutils"], () => {
 			electronDialog = new Util.ElectronDialog();
 			huisFiles = new Util.HuisFiles();
 			garageFiles = new Util.GarageFiles();
+			miscUtil = new Util.MiscUtil();
 			callback();
 		});
 	};
@@ -118,18 +116,37 @@ module Garage {
 		HUIS_ROOT_PATH = null;
 		while (!HUIS_ROOT_PATH) {
 			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-			if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
-				//syncWithHUIS(callback);
-                callback();
+            if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
+                let dirs = null;
+                while (dirs == null) {
+                    try {
+                        dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
+                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった
+                        console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
+                        let response = electronDialog.showMessageBox(
+                            {
+                                type: "error",
+                                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
+                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+								title: PRODUCT_NAME,
+                            });
+
+                        if (response !== 0) {
+                            app.exit(0);
+                        }
+                    }
+                }
+                isHUISConnected = true; // HUISが接続されている
+                callback(); // 次の処理へ
+
 			} else {
-				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
+				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
-						type: "info",
-						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続してから [OK] ボタンを押してください。\n"
-						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-						buttons: ["ok", "cancel"]
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+						title: PRODUCT_NAME,
                     });
 
 				if (response !== 0) {
@@ -137,36 +154,6 @@ module Garage {
 				}
 			}
 		}
-	};
-
-	// HUIS -> PC の同期を行う
-    // Splash.tsに移動したのでいらない
-	//var syncWithHUIS = (callback?: Function) => ...
-
-	// HUIS -> PC の同期処理
-	var doSync = (callback?: Function) => {
-		let syncTask = new Util.HuisDev.FileSyncTask();
-		// 同期処理の開始
-		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, (err) => {
-			if (err) {
-				// エラーダイアログの表示
-				// [TODO] エラー内容に応じて表示を変更するべき
-				// [TODO] 文言は仮のもの
-				electronDialog.showMessageBox({
-					type: "error",
-					message: "HUIS との同期に失敗しました"
-				});
-
-				app.exit(0);
-			} else {
-				// 同期後に改めて、HUIS ファイルの parse を行う
-				huisFiles.init(HUIS_FILES_ROOT);
-				console.log("Complete!!!");
-				if (callback) {
-					callback();
-				}
-			}
-		});
 	};
 
 	setup(() => {

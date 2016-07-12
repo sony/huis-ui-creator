@@ -5,6 +5,7 @@
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
+/// <reference path="../Util/MiscUtil.ts" />
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
@@ -173,9 +174,11 @@ interface IState {
  * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
  */
 interface IGButton {
+	version?: string;
 	area: IArea;
 	default?: number;
 	state: IGState[];
+	name?: string;
 	/**
 	 * 現在の state.id
 	 */
@@ -204,6 +207,10 @@ interface IButton {
 	 * 状態
 	 */
     state: IState[];
+	/**
+	 * ボタンの名前
+	 */
+	name?: string;
 }
 
 /**
@@ -220,11 +227,13 @@ interface IButtonDeviceInfo {
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
 interface IGLabel {
+	version?: string;
 	area?: IArea;
     text: string;
     color?: number;
     font?: string;
     size?: number;
+    font_weight?: FontWeight;//normal | bold
 	/**
 	 * 親要素の area に対してのこのアイテムの area の比率
 	 */
@@ -261,7 +270,12 @@ interface ILabel {
 	 * テキストのフォントサイズ
 	 */
     size?: number;
+    /**
+	 * テキストの太さ
+	 */
+    font_weight?: FontWeight;
 }
+
 
 /**
  * @interface IGGarageImageExtensions
@@ -293,6 +307,7 @@ interface IGarageImageExtensions {
  * @brief IImage に Garage で使用する情報を付加したもの
  */
 interface IGImage {
+	version?: string;
 	area?: IArea;
     path: string;
 	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
@@ -325,6 +340,7 @@ interface IGOutput {
  * @brief IModule に対して Garage で使用する情報を付加したもの
  */
 interface IGModule {
+	version?: string;
 	area: IArea;
 	button?: IGButton[];
 	label?: IGLabel[];
@@ -341,6 +357,7 @@ interface IGModule {
  */
 interface IModule {
     area: IArea;
+	version?: string;
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];
@@ -441,6 +458,10 @@ interface DialogProps {
 //}
 
 declare module Garage {
+	/*
+	* HUIS UI CREATOR のバージョン
+	*/
+	var APP_VERSION:string;
 	/**
 	 * Util.ElectronDialog のインスタンス
 	 */
@@ -453,6 +474,10 @@ declare module Garage {
 	 * Util.GarageFiles のインスタンス
 	 */
 	var garageFiles: Util.GarageFiles;
+	/**
+	 * Util.MiscUtilのインスタンス
+	 */
+	var miscUtil: Util.MiscUtil;
 
 	/**
 	 * face のページの横サイズ
@@ -489,7 +514,19 @@ declare module Garage {
 	/**
 	 * HUIS のデバイスのルートパス
 	 */
-	var HUIS_ROOT_PATH: string;
+    var HUIS_ROOT_PATH: string;
+    /**
+	 * PC から HUIS への同期時のダイアログのパラメーター完了時のダイアログつき
+	 */
+    var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE: DialogProps;
+    /**
+     * 新規リモコンが追加されたときのダイアログパラメーター
+    */
+    var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
+    /**
+     * リモコンを削除した際のダイアログパラメーター
+    */
+    var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
 	/**
 	 * HUIS から PC への同期時のダイアログのパラメーター
 	 */
@@ -518,6 +555,18 @@ declare module Garage {
 	 * ヘルプサイトのURL
 	 */
     var HELP_SITE_URL: string;
+    /**
+     * Debug Modeかどうかのフラグ
+     */
+    var DEBUG_MODE: Boolean;
+	/**
+	 * HUISが接続されているかどうかのフラグ
+	 */
+    var isHUISConnected: Boolean;
+	/**
+	 * アプリの名称
+	 */
+	var PRODUCT_NAME: string;
 
 }
 

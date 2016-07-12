@@ -25,7 +25,9 @@
 
 			function getRelPathes(dirPath: string): string[] {
 				var dirs = [dirPath];
-				var pathes = [];
+                var pathes = [];
+                //debug
+                console.log("getRelPathes: dirPath " + dirPath);
 				try {
 					while (dirs.length > 0) {
 						var dir = dirs.pop();
@@ -53,6 +55,8 @@
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
+                //debug
+                console.log("getRelPathesAsync: dirPath " + dirPath);
 
 				let dirs: string[] = [dirPath];
 				let pathes: string[] = [];
@@ -172,7 +176,11 @@
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
-						if ((dir1Stat.size === dir2Stat.size && dir1Stat.mtime.getTime() === dir2Stat.mtime.getTime()) ||
+						// ファイル更新日時が±10秒までは同じファイルとして扱う
+						// 以下の点に注意
+						// 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
+						// 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
+						if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10*1000 ) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
 						}
@@ -221,26 +229,29 @@
 				 * 
 				 * @return {IProgress}
 				 */
-				exec(srcRootDir: string, destRootDir: string, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
+                    var errorValue: Error= null; 
+                    if (useDialog) {
+                        if (dialogProps) {
+                            let options = dialogProps.options;
+                            let dialogTitle: string;
+                            if (options && options.title) {
+                                dialogTitle = options.title;
+                            } else {
+                                dialogTitle = "同期中です。";
+                            }
+                            dialog = new CDP.UI.Dialog(dialogProps.id, {
+                                src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                                title: dialogTitle,
+                            });
+                            console.log("sync.exec dialog.show()");
+                            dialog.show().css("color", "white");
 
-					if (dialogProps) {
-						let id = dialogProps.id;
-						let options = dialogProps.options;
-						let dialogTitle: string;
-						if (options && options.title) {
-							dialogTitle = options.title;
-						} else {
-							dialogTitle = "同期中です。";
-						}
-						dialog = new CDP.UI.Dialog(dialogProps.id, {
-							src: CDP.Framework.toUrl("/templates/dialogs.html"),
-							title: dialogTitle,
-						});
-						console.log("sync.exec dialog.show()");
-						dialog.show().css("color", "white");
-					}
+                        }
+                    }
+
 
 					setTimeout(() => {
 						this._syncHuisFiles(srcRootDir, destRootDir, (err) => {
@@ -248,15 +259,50 @@
 								console.error(TAG + "_syncHuisFiles	Error!!!");
 							} else {
 								console.log(TAG + "_syncHuisFiles Complete!!!");
-							}
-							if (dialog) {
-								dialog.close();
-							}
-							callback(err);
+                            }
+
+                            if (useDialog) { //ダイアログを使う際は,完了ダイアログを表示。
+                                var DURATION_DIALOG: number = 3000;//完了ダイアログの出現時間
+
+                                // ダイアログが閉じられたら、コールバックを呼び出し終了
+                                if (dialogProps.options.anotherOption.title && dialogProps.id === "#common-dialog-spinner") {//スピナーダイアログの場合
+                                    var $dialog = $(".spinner-dialog");
+                                    var $spinner = $("#common-dialog-center-spinner");
+                        
+                                    $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                                    if (dialogProps.options.anotherOption.src) {//アイコンの見た目を変える。
+                                        $spinner.css("background-image", dialogProps.options.anotherOption.src);
+                                    }
+                                    if (dialogProps.options.anotherOption.title) {//メッセージを変える
+                                        $dialog.find("p").html(dialogProps.options.anotherOption.title);
+                                    }
+                                }
+
+                                setTimeout(() => {
+                                    if (actionBeforeComplete) {
+                                        actionBeforeComplete();
+                                    }
+                                });
+
+                                setTimeout(() => {
+                                    if (dialog) {
+                                        dialog.close();
+                                    }
+                                    callback(err)
+                                }, DURATION_DIALOG);
+                            } else {//ダイアログを使わない際は、そのまま終了。
+                                if (dialog) {
+                                    dialog.close();
+                                }
+                                callback(err);
+                            }
 						});
 					}, 100);
 					return { cancel: this._cancel };
 				}
+
+          
+
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数
 				// TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
@@ -310,7 +356,10 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file));
+								let option: CopyOptions = {
+									preserveTimestamps: true
+								}
+								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
 								df.reject(err);
@@ -452,6 +501,8 @@
 						});
 				});
 			}
+
+
 
 			/**
 			 * ふたつのディレクトリーに差分があるかチェック

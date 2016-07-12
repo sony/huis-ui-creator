@@ -1,8 +1,57 @@
-﻿@import "variable";
+﻿@import "variables/variable";
 
 #page-home {
     text-shadow: none;
-    font-family: "Noto Sans CJK JP",'SST W55';
+
+    //リモコン数が0個の時の画面
+    #home-introductions{
+        position:absolute;
+        visibility:hidden;
+        width:100%;
+
+        #home-introduction-vector{
+            position:absolute;
+            top:0;
+            right:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_MARGIN_RIGHT;
+            background-image:$PATH_IMG_HOME_INTRODUCTION_VECTOR;
+            width:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_WIDTH;
+            height:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_HEIGHT;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        //中央の画像とテキスト
+        .center-contents{
+            z-index:1;
+            position:relative;
+            margin:0 auto;
+            margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+            width:$SIZE_HOME_INTRODUCTION_CENTER_CONTANTS;
+
+            #home-introduction-texts{
+                color:$COLOR_HOME_INTRODUCTION_TEXT;
+                text-align:center;
+                font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
+                font-family:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
+                line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
+
+                .accent{
+                    color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
+                }
+            }
+
+            #home-introduction-image-remotes{
+                background-image:$PATH_IMG_HOME_INTRODUCTION_REMOTES;
+                width:$SIZE_HOME_INTRODUCTION_IMAGE_WIDTH;
+                height:$SIZE_HOME_INTRODUCTION_IMAGE_HEIGHT;
+                margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+                background-position:center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+        }
+    }
 
     .ui-header{
         #create-new-remote{
@@ -24,6 +73,11 @@
             &:active{
                 background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
             }
+
+			.tooltip-text{
+				margin-right:20px;
+				bottom:$SIZE_PLUS_TN_TOOLTIP_MAGIN_BOTTOM;
+			}
         }
 
         #sync-pc-to-huis{
@@ -48,56 +102,80 @@
         }
     }
 
+   
+
     #face-list-container {
         overflow-x: overlay;
-        width: 100%;
-
-        #face-list-footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 45px;
-            background: linear-gradient(to bottom, rgba(151,152,157, 0) 0%, rgba(151,152,157,1) 80%);
-            z-index: 1;
-        }
-    }
-
-    #face-list {
-        position:relative;
-        //height: 400px; // tentative
         overflow-y: hidden;
-        background-color: $COLOR_HOME_BACKGROUND;
-        //box-shadow: 0 0 20px #222;
-        z-index: 1;
-        padding: 0;
-        margin: 0;
+        width: 100%;
+        box-sizing: border-box;
 
-        .face {
-            list-style-type: none;
-            float: left;
-            margin: 0 40px;
-            padding: 10px 0;
-            overflow: hidden;
-            width: 200px;
-            //height: 380px;
+        #face-list {
+            position:relative;
+            //height: 400px; // tentative
+            overflow-y: hidden;
+           
+            //box-shadow: 0 0 20px #222;
+            z-index: 1;
+            padding: 0;
+            margin: 0;
 
-            .title {
-                text-align: center;
-                color: $COLOR_TEXT_MAIN;
-                font-weight: lighter;
-            }
+            #face-list-footer {
+                position: absolute;
+                bottom: 0;
+                width:100%;
+                height:$SIZE_HOME_FOOTOR_HEIGHT;
+                background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                z-index: 1;
+            }    
 
-            #face-pages-area {
-                margin: 0;
-                font-weight: normal;
-            }
-
-            .module-container {
+            .face {
+                list-style-type: none;
+                float: left;
+                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
                 overflow: hidden;
+                width: $SIZE_HOME_REMOTE_WIDTH;
+
+                .title {
+                    margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                    margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                    text-align: center;
+                    color: $COLOR_TEXT_MAIN;
+                    font-size:$FONT_HOME_REMOTE_TITLE;
+                    font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                    line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                }
+
+                #face-pages-area {
+                    width:inherit;
+                    font-family: $FONT_FAMILY_NORMAL;
+                }
+
+                .face-page{
+                    margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                    margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                    margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                    padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                    .button-item{
+                        border:none;
+                    }
+                }
+
+                .module-container {
+                    overflow: visible;
+                }
             }
         }
 
         .face-container {
+            width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+            transform : scale(0.5);
+            transform-origin : left top;
+            box-sizing: border-box;
+            background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+            border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
             cursor: pointer;
         }
     }
@@ -114,7 +192,7 @@
         h3{
             margin: 0;
             padding: 10px;
-            font-weight: normal;
+            font-family: $FONT_FAMILY_NORMAL;
         }
 
         ul#face-history-list {
@@ -137,17 +215,13 @@
             .title {
                 text-align: center;
                 color: $COLOR_TEXT_MAIN;
-                font-weight: lighter;
+                font-family: $FONT_FAMILY_LIGHT;
             }
 
             #face-pages-area {
                 margin: 0;
-                font-weight: normal;
+                font-family: $FONT_FAMILY_NORMAL;
             }
         }
-    }
-
-    button {
-        font-family: "Noto Sans CJK JP","SST W55";
     }
 }

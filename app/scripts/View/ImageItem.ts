@@ -53,6 +53,12 @@ module Garage {
 							if (!imageModel.resizeOriginal) {
 								imageModel.resizeOriginal = images[i].path;
 							}
+
+							//バージョンの情報がある場合は、代入
+							if (images[i].version !== null) {
+								imageModel.version = images[i].version;
+							}
+
 							// 先頭の画像、かつサイズがページサイズと同じ場合は背景画像として扱う
 							if (i === 0) {
 								let area = imageModel.area;

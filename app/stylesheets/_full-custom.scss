@@ -1,4 +1,4 @@
-﻿@import "variable";
+﻿@import "variables/variable";
 
 #page-full-custom {
     #main {
@@ -66,8 +66,70 @@
             //box-shadow: 0 0 50px rgba(0,0,0,0.8);
 
             #face-canvas {
-                transform: scale(0.5);
-                transform-origin: left top;
+                
+                #face-pages-area{
+                    transform: scale(0.5);
+					transform-origin: left top;
+
+					.tooltip{
+						overflow:initial;
+						text-shadow:none;
+
+						.tooltip-text{
+							white-space: nowrap;
+							display: flex;	
+							visibility:hidden;
+							&:before{
+								content:''; 
+								display:block; 
+								position:absolute;
+								height:0; 
+								width:0; 
+								z-index:100;
+							}
+						}
+					
+						&:hover{
+							
+							.tooltip-text{
+								visibility:visible;
+								display: flex;
+								align-items: center;
+								position: absolute;            /* relativeからの絶対位置 */
+
+								//　0.5スケールなので倍に
+								bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM*2;
+								height:$SIZE_TOOLTIP_HEIGHT*2;
+								width:initial;
+								font-size: $FONT_SIZE_SSS*2;
+								font-family:$FONT_FAMILY_TOOL_TIP;
+								color: $COLOR_TOOLTIP_TEXT;
+								background-color: $COLOR_TOOLTIP_BACKGROUND;
+								border : $SIZE_TOOLTIP_BORDER_THICKNESS*2 solid $COLOR_BLACK;
+								padding: 0 $SIZE_TOOLTIP_PADDING_SIDE*2;
+								box-shadow:$COLOR_TOOLTIP_SHADOW;
+								z-index:100;
+								
+							}
+						}
+				}
+				
+				.selected.tooltip{
+					.tooltip-text{
+						content:''; 
+						display:block; 
+						position:absolute;
+						height:0; 
+						width:0; 
+						z-index:100;
+						visibility:hidden;
+					}
+				}
+			}
+               
+                #face-canvas-inner{
+                    height:$SIZE_CANVAS_INNER_HEIGHT;
+                }
 
                 .item {
                     cursor: move;
@@ -78,10 +140,17 @@
                         border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
                         margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
+                        background-color:$COLOR_CANVAS_SELECTED_ITEM_BACKGROUND;
                     }
+
+                    &:hover{
+                        background-color:$COLOR_CANVAS_ITEM_HOVER;
+                    }
+
                     &.disabled {
                         display: none;
                     }
+
                     &.background {
                         cursor: default;
                     }
@@ -114,7 +183,15 @@
                     margin-left:$SIZE_CANVAS_FACE_PAGE_MARGIN_LEFT;
                     margin-top:$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP;
                     margin-bottom:$SIZE_CANVAS_FACE_PAGE_MARGIN_BOTTOM;
+                    border:none;       
+                    //グリッドの表示位置がずれて、一番下のグリッドが見えなくなるためずらす。
+                    padding-bottom:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_BOTTOM;
+                    padding-top:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_TOP;
+                    background-position-y:$SIZE_FACE_PAGE_ADJUST_GRID_Y;
+          
                 }
+
+                
 
                 
             }
@@ -134,7 +211,11 @@
 
         #face-item-detail {
             position: relative;
-            margin:$SIZE_PROPATY_ITEM_DETAIL_MARGIN;
+            width:$SIZE_PROPATY_AREA_INNNER_WIDTH;
+            margin-left:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-right:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-top:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            margin-bottom:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
             text-shadow: none;
             font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
             color: $COLOR_PROPATY_AREA_TEXT;
@@ -143,6 +224,7 @@
                 line-height:$TEXT_HEIGHT_DEFAULT;
                 margin-bottom:$SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
                 display: flex;
+                font-family:$FONT_WEIGHT_PROPATY_X_Y_W_H;
             }
 
             .label-button-state{
@@ -154,23 +236,45 @@
                 width : $SIZE_PROPATY_AREA_LAYOUT_INFO_WIDTH;
             }
 
-            div {
-                margin: 0;
-            }
 
-            p {
-                margin: 4px 0;
-            }
-
-            h3 {
+            #face-item-detail-title{
+                padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
+                line-height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 font-size:$FONT_SIZE_PROPATY_H3;
+                font-family: $FONT_FAMILY_NORMAL;
+                height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
                 margin:0;
 
                 .button-info-brand-and-type{
+					display:inline-flex;
+					align-items:baseline;
+					text-shadow:none;
+                    padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
-                    font-weight: lighter;
+                    font-family: $FONT_FAMILY_NORMAL;
+                    color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
+					
+
+					.slash{
+						text-align:center;
+						width:$SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
+					}
+
+					.brand_name{
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+						max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
+					}
+
                 }
+                
+            }
+
+            h4{
+                font-size:$FONT_SIZE_PROPATY_H4;
+                font-family:$FONT_FAMILY_PROPATY_H3;
             }
 
             .state-action-input, 
@@ -179,6 +283,10 @@
             .property-text-value{
                 max-width : $SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
                 width:$SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
+            }
+
+            .text-size-pulldown{
+                width:$SIZE_PROPATY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
             }
 
             input.priperty-value {
@@ -204,16 +312,12 @@
 
             h5 {
                 font-size: $FONT_SIZE_PROPATY_H5;
-                font-weight: lighter;
+                font-family: $FONT_FAMILY_LIGHT;
                 margin:0;
             }
 
             hr {
                 margin-bottom: 1em;
-            }
-
-            select {
-                max-width: calc(95% - 10px);
             }
 
             .inline {
@@ -222,7 +326,7 @@
 
             .property-title {
                 display: inline-block;
-                font-weight: bold;
+                font-family: $FONT_FAMILY_BOLD;
                 width: 80px;
             }
 
@@ -233,7 +337,6 @@
 
             #property-image-preview,
             .property-state-image-preview {
-                margin-top:$SIZE_PROPATY_AREA_PREVIEW_MARING_TOP;
                 margin-bottom:$SIZE_PROPATY_AREA_PREVIEW_MARING_BOTTOM;
                 box-sizing:border-box;
                 position:relative;
@@ -243,10 +346,87 @@
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
+
+				//画像編集ボタン
+                #edit-image-or-text,
+				#edit-image-background,
+				#edit-image-non-button-image{
+                    position:absolute;
+                    z-index:1;
+                    bottom:0;
+                    right:0;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_HEIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL;
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+
+                    &:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
+                    }
+                }
+
+				//背景画像削除ボタン
+				#delete-background-image{
+					position:absolute;
+                    z-index:1;
+                    top:0;
+                    right:0;
+					background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+					background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+					width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+
+					&:hover, &:active{
+                        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                    }
+				}
+
+				//テキストエリア
+				.text-field-in-preview{
+					margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+
+					.title-edit-label{
+						height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
+						display: flex;
+                        align-items: center;
+						justify-content:center;
+
+						#icon-title-edit-label{
+							background-position:center;
+							background-repeat: no-repeat;
+							background-size: contain;
+							background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
+							width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
+							height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
+						}
+
+						.text-title-edit-label{
+							font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
+							font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
+							
+						}	
+					}
+
+					.text-size-pulldown{
+							margin:0 auto;
+							width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+					}
+
+					.property-text-value,
+					.property-state-text-value{
+						display:flex;
+						margin : 0 auto;
+						width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
+					}
+				}
             }
 
             .property-state-image{
-                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;    
+                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
             }
 
             /*.property-value {
@@ -276,16 +456,14 @@
             }*/
 
             #states-container {
-                margin-top: 10px;
-
                 > div {
                     margin-bottom: 10px;
                 }
             }
 
-            input.refer-state-image {
-                    width: 158px;
-                }
+            input.refer-state-image, #refer-image {
+                    width: $SIZE_PROPATY_AREA_REFER_IMAGE_WIDTH;
+            }
 
             .state-container {
                 .delete-state-image {
@@ -300,6 +478,78 @@
         }
     }
 
+    //画像編集ボタンのpopup
+    #edit-image-popup{
+        position:relative;
+        box-shadow:none;
+        text-shadow:none;
+        background-color:$COLOR_TRANSPARENT;
+        border:none;
+        
+
+        #popup-arrow{
+            margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
+			margin-right:auto;
+        }
+
+        .popup-list{
+            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+            padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
+            padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
+            color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+            font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
+            font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+            background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+			box-sizing:border-box;
+			position:absolute;
+			z-index:-1;
+
+			
+
+
+            .popup-menu-item-text-black{
+                display: flex;
+                align-items: center;
+                height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
+
+				&:hover, &:active{
+				background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+				color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+					#popup-icon-image-image-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+					}
+
+					#popup-icon-image-text-button{
+						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;	
+					}
+				}
+
+                #popup-icon-image-image-button, #popup-icon-image-text-button{
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
+                    margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
+                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
+                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
+                }
+
+				#popup-icon-image-image-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
+                }
+
+                #popup-icon-image-text-button{
+                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                }
+
+
+
+
+            }
+        }
+    }
+
     #face-pallet-area {
         position: absolute;
 
@@ -308,7 +558,30 @@
         margin-top : $SIZE_PALEET_AREA_MARGIN_TOP;
         //background-color: #8888ff;
 
+
+
+        #pallet-area-gradation-top{
+            visibility:hidden;
+            position:absolute;
+            top:0;
+            width:$SIZE_FACE_PALLET_GRADATION_TOP_WIDTH;
+            height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+            background:$COLOR_PALLET_GRADATION_TOP;
+            z-index:1;
+        }
+
+        #pallet-area-gradation-bottom{
+            visibility:visible;
+            position:absolute;
+            bottom:0;
+            width:$SIZE_FACE_PALLET_GRADATION_BOTTOM_WIDTH;
+            height:$SIZE_FACE_PALLET_GRADATION_BOTTOM_HEIGHT;
+            background:$COLOR_PALLET_GRADATION_BOTTOM;
+            z-index:1;
+        }
+
         #face-item-list-container {
+ 
             position: relative;
             overflow: hidden;
             width:$SIZE_FACE_ITEM_LIST_CONTAINER_WIDTH;
@@ -319,7 +592,9 @@
             #face-item-list {
                 height: 100%;
                 transition: transform 0.2s 0s ease-in-out;
+                transition-duration : 0.2s;
                 transform: translateX(16px);
+
 
                 .face-item {
                     //display: inline-block;
@@ -333,7 +608,7 @@
             
                     color: $COLOR_FACE_ITEM_LIST_TEXT_NORMAL;
                     font-size:$FONT_SIZE_FACE_ITEM_LIST_ITEM;
-                    font-weight: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
+                    font-family: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
 
                     max-width: 160px;
                     text-align:center;
@@ -343,6 +618,8 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     cursor: pointer;
+                    text-shadow: none;
+
                     
                     &:hover {
                         background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
@@ -351,9 +628,7 @@
 
                     &.active {
                         color: $COLOR_FACE_ITEM_LIST_TEXT_FOCUS;
-                        text-shadow: none;
                     }
-                    
                 }
             }
 
@@ -434,7 +709,7 @@
                 max-height : $SIZE_FACE_PAGE_AREA_HEIGHT;
                 padding-left:$SIZE_FACE_PAGE_AREA_PADDING_LEFT;
                 padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
-
+                padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
                 background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
                 border : $SIZE_FACE_PAGES_AREA_BORDER_THICKNESS solid $COLOR_FACE_PAGES_AREA_BOARDER;
 
@@ -442,29 +717,30 @@
 
                 .button-item{
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
-                    }
+                }
+
+                .face-page{
+                    padding-top:$SIZE_FACE_PAGE_AREA_PADDING_TOP;
+                    padding-bottom:$SIZE_FACE_PAGE_AREA_PADDING_BOTTOM;
+                }
 
                 .item {
                     
+                    border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+
                     &:hover {
                         background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
                     }
                 }
-
-             
-
-
             }
-
-            
         }
 
+        //Commonのアイテム
+        .common-parts .item{
+                    position:relative;
+                    margin-bottom:$SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
+        }
 
     }
-
-    input, select, button {
-        font-family: "Noto Sans CJK JP","SST W55";
-    }
-
 }
