@@ -1983,6 +1983,13 @@ module Garage {
 							break;
 
 						case "size":
+							//HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
+							if (itemType == "button") {
+								value = Math.round(value * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+							} else if (itemType == "label") {
+								value = Math.round(value * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+							}
+							
 							$target.css("font-size", value + "pt");
 							break;
 
@@ -2409,7 +2416,7 @@ module Garage {
 										height: button.area.h + "px",
 										lineHeight: button.area.h + "px",
 										color: "rgb(0,0,0)",
-										fontSize: label.size + "pt"
+										fontSize: Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
 									});
 								}
 								break;

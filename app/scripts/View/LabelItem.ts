@@ -75,9 +75,10 @@ module Garage {
 					let label: IGLabel = $.extend(true, {}, item);
 					//label.resolvedColor = this._getResolvedColor(label.color);
 					//HUISに表示すると、75%分の大きさになるため、表示上あわせる。
-					label.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
-					label.resolvedColor = item.resolvedColor;
-					this.$el.append($(this.labelItemTemplate_(label)));
+					let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
+					modelForDisplay.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+					modelForDisplay.resolvedColor = item.resolvedColor;
+					this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
 				});
 				return this;
 			}
@@ -103,9 +104,10 @@ module Garage {
 			private _renderNewModel(model: Model.LabelItem) {
 				var label: IGLabel = $.extend(true, {}, model);
 				label.resolvedColor = model.resolvedColor;
+				let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
 				//HUISに表示すると、75%分の大きさになるため、表示用あわせる。
-				label.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
-				this.$el.append($(this.labelItemTemplate_(label)));
+				modelForDisplay.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+				this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
 			}
 		}
 	}
