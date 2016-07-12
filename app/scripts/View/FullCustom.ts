@@ -2254,7 +2254,7 @@ module Garage {
 					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
 
 					if ($targetTextSizePullDown) {
-						defaltTextSize = $targetTextSizePullDown.val();
+						defaltTextSize = +($targetTextSizePullDown.val());
 					}
 
 					if (!state.label || !state.label.length) {
