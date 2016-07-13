@@ -501,7 +501,9 @@ module Garage {
 					// 適切な remoteId が見つからず。remoteList の終端に達したら、
 					// リストの最後の remoteId + 1 を新しい remoteId とする
 					if (newRemoteId < 0) {
-						newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
+						if (sortedRemoteId.length != 0) {
+							newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
+						}
 					}
 				}
 
