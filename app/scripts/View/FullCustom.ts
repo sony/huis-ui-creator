@@ -532,7 +532,7 @@ module Garage {
 					let $listScrollRight = $("#face-item-list-scroll-right");
 					$faceItems.each((index: number, elem: Element) => {
 						$(elem).css("left", totalWidth + "px");
-						totalWidth += $(elem).outerWidth() + 1;
+						totalWidth += $(elem).outerWidth();
 						if ($faceItems.length - 1 <= index) {
 							$("#face-item-list").width(totalWidth);
 							this.faceListTotalWidth_ = totalWidth;
