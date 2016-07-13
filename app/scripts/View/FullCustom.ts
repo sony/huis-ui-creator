@@ -406,7 +406,9 @@ module Garage {
 					if ($listScrollLeft.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ -= 200;
+					let faceItemListContainerWidth: number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ -= faceItemListContainerWidth / 2;
                     this.disableScrollLeftButton();
 					$listScrollRight.removeClass("disabled");
                     $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
@@ -417,7 +419,10 @@ module Garage {
 					if ($listScrollRight.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ += 200;
+
+					let faceItemListContainerWidth:number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ += faceItemListContainerWidth/2;
                     this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
