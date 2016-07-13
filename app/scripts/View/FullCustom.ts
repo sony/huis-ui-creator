@@ -491,9 +491,18 @@ module Garage {
             */
             private disableScrollRightButton() {
                 // face list の右スクロールボタン
-                var $listScrollRight = $("#face-item-list-scroll-right");
-                if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-                    this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
+                let $listScrollRight = $("#face-item-list-scroll-right");
+				let faceListWidth = $("#face-item-list-container").width();
+				let fineTuneLeft = $("#face-item-list-scroll-margin-left").width() / 2; //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+				
+
+				let $faceItems : JQuery= $("#face-item-list").find(".face-item");
+				let $lastFaceItem : JQuery = $($faceItems[$faceItems.length - 1]);
+				let lastFaceItemWidth = $lastFaceItem.outerWidth();
+
+				let MAX_SCROLL_RIGHT = this.faceListTotalWidth_ - (faceListWidth / 2) + fineTuneLeft - (lastFaceItemWidth/2);//右端は最後のfacelist要素のが中央になる
+                if (this.faceListScrollLeft_ >= MAX_SCROLL_RIGHT){
+                    this.faceListScrollLeft_ = MAX_SCROLL_RIGHT;
                     $listScrollRight.addClass("disabled");
                 } else {
                     $listScrollRight.removeClass("disabled");
