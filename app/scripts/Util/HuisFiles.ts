@@ -503,7 +503,7 @@ module Garage {
 					if (newRemoteId < 0) {
 						if (sortedRemoteId.length != 0) {
 							newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
-						} else {//リモコンがひとつもないときは、1にする。
+						} else if (sortedRemoteId.length == 0){//リモコンがひとつもないときは、1にする。
 							newRemoteId = 1;
 						}
 					}
