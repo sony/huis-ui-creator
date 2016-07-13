@@ -559,6 +559,8 @@ module Garage {
 								if (this.faceListScrollLeft_ < 0) {
 									this.faceListScrollLeft_ = 0;
 								}
+								this.disableScrollRightButton();
+								this.disableScrollLeftButton();
 								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 							}
 						}
