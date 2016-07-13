@@ -550,7 +550,10 @@ module Garage {
 						if ($faceItems.length - 1 <= index) {
 							$("#face-item-list").width(totalWidth);
 							this.faceListTotalWidth_ = totalWidth;
-							if (this.faceListContainerWidth_ < this.faceListTotalWidth_) {
+							this.faceListContainerWidth_ = $("#face-item-list-container").width();
+							if (this.faceListContainerWidth_ < this.faceListTotalWidth_
+								&& this.faceListContainerWidth_ != undefined
+									&& this.faceListTotalWidth_ != undefined ) {
 								$listScrollRight.removeClass("disabled");
 							}
 							// スクロール位置の調整
