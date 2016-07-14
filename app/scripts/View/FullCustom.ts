@@ -1645,9 +1645,6 @@ module Garage {
 						});
                 }
 
-                this._updatePreviewInDetailArea(resolvedPath,$("#property-image-preview"));
-                //$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
-
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
 					this._updateCurrentModelData("enabled", true);
