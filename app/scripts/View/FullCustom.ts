@@ -406,7 +406,9 @@ module Garage {
 					if ($listScrollLeft.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ -= 200;
+					let faceItemListContainerWidth: number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ -= faceItemListContainerWidth / 2;
                     this.disableScrollLeftButton();
 					$listScrollRight.removeClass("disabled");
                     $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
@@ -417,7 +419,10 @@ module Garage {
 					if ($listScrollRight.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ += 200;
+
+					let faceItemListContainerWidth:number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ += faceItemListContainerWidth/2;
                     this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
@@ -491,9 +496,18 @@ module Garage {
             */
             private disableScrollRightButton() {
                 // face list の右スクロールボタン
-                var $listScrollRight = $("#face-item-list-scroll-right");
-                if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-                    this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
+                let $listScrollRight = $("#face-item-list-scroll-right");
+				let faceListWidth = $("#face-item-list-container").width();
+				let fineTuneLeft = $("#face-item-list-scroll-margin-left").width() / 2; //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+				
+
+				let $faceItems : JQuery= $("#face-item-list").find(".face-item");
+				let $lastFaceItem : JQuery = $($faceItems[$faceItems.length - 1]);
+				let lastFaceItemWidth = $lastFaceItem.outerWidth();
+
+				let MAX_SCROLL_RIGHT = this.faceListTotalWidth_ - (faceListWidth / 2) + fineTuneLeft - (lastFaceItemWidth/2);//右端は最後のfacelist要素のが中央になる
+                if (this.faceListScrollLeft_ >= MAX_SCROLL_RIGHT){
+                    this.faceListScrollLeft_ = MAX_SCROLL_RIGHT;
                     $listScrollRight.addClass("disabled");
                 } else {
                     $listScrollRight.removeClass("disabled");
@@ -532,11 +546,14 @@ module Garage {
 					let $listScrollRight = $("#face-item-list-scroll-right");
 					$faceItems.each((index: number, elem: Element) => {
 						$(elem).css("left", totalWidth + "px");
-						totalWidth += $(elem).outerWidth() + 1;
+						totalWidth += $(elem).outerWidth();
 						if ($faceItems.length - 1 <= index) {
 							$("#face-item-list").width(totalWidth);
 							this.faceListTotalWidth_ = totalWidth;
-							if (this.faceListContainerWidth_ < this.faceListTotalWidth_) {
+							this.faceListContainerWidth_ = $("#face-item-list-container").width();
+							if (this.faceListContainerWidth_ < this.faceListTotalWidth_
+								&& this.faceListContainerWidth_ != undefined
+									&& this.faceListTotalWidth_ != undefined ) {
 								$listScrollRight.removeClass("disabled");
 							}
 							// スクロール位置の調整
@@ -545,6 +562,8 @@ module Garage {
 								if (this.faceListScrollLeft_ < 0) {
 									this.faceListScrollLeft_ = 0;
 								}
+								this.disableScrollRightButton();
+								this.disableScrollLeftButton();
 								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 							}
 						}
