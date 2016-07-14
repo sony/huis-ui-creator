@@ -12,6 +12,11 @@ module Garage {
 		 * @brief その他のユーティリティーを集めたクラス
 		 */
 		export class MiscUtil {
+			public static ERROR_TYPE_NOERROR: number = 1;
+			public static ERROR_TYPE_JPEG2000: number = -1;
+			public static ERROR_TYPE_JPEGLOSSLESS: number = -2;
+			public static ERROR_TYPE_NOT_JPEG: number = -3;
+
 
 			constructor() {
 				if (!fs) {
@@ -42,6 +47,36 @@ module Garage {
 				}
 
 				return (path);
+			}
+
+			/**
+			 * JPEGの種別を判定し、HUISが取り扱えるものならtrueを返す
+			 * @param path {string} [in] チェックしたいJPEGファイル
+			 */
+
+			checkJPEG(path: string): number {
+				let b = new Buffer(8);
+				let fd = fs.openSync(path, 'r');
+
+				fs.readSync(fd, b, 0, 8, 0);
+				fs.closeSync(fd);
+				// JPEG2000か
+				if ((b[0] === 0) && (b[1] === 0)) {
+					//console.log(b);
+					return (MiscUtil.ERROR_TYPE_JPEG2000);
+				}
+				// JPEGか
+				if ((b[0] !== 255) || (b[1] !== 216)) { // JPEGは0xFFD8から始まる。それ以外はJPEGではないのでエラー。
+					//console.log(b);
+					return (MiscUtil.ERROR_TYPE_NOT_JPEG);
+				}  
+				// JPEG losslessか
+				if (b[3] === 238) {	 // JPEGは4バイトめが0xE0(JFIF)か0xE1(Exif)
+					//console.log(b);
+					return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS); 
+				}
+
+				return (MiscUtil.ERROR_TYPE_NOERROR);
 			}
 
 		}
