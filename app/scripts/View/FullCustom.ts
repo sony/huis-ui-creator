@@ -2538,6 +2538,7 @@ module Garage {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					$textFieldInPreview.css("visibility", "visible");
+					this._updatePreviewInDetailArea("none", $preview);
 				}
 			}
 
