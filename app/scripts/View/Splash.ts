@@ -37,7 +37,7 @@ module Garage {
                 this._initializeSplashView();
                 (function loop() {
                     setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
+                    if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
                         electronDialog.showMessageBox({
                             type: "error",
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
@@ -90,7 +90,7 @@ module Garage {
 
 
             private _closeWarning() {
-                if (isHUISConnected) { // HUISが抜かれてない場合
+                if (Garage.isHUISConnected) { // HUISが抜かれてない場合
                     console.log("Do not close");
                     let response = electronDialog.showMessageBox(
                         {
@@ -104,7 +104,7 @@ module Garage {
                         return null;
                     }
                 }
-				isHUISConnected = false;
+				Garage.isHUISConnected = false;
             }
 
             private _pageLayout() {
