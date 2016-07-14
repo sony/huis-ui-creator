@@ -2103,20 +2103,24 @@ module Garage {
                 }
 
                 let MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
-				
-                $preview.css("background-image", "url(" + imagePath + ")");
-                    
-                let previewWidth = $preview.width();
-				let img = new Image();
-				img.src = imagePath;
-                let imgWidth = img.width;
-                let imgHeight = img.height;
-				let previewHeight: number = imgHeight * (previewWidth / imgWidth);
-				if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
-					previewHeight = MIN_HEIGHT_PREVIEW;
+				let previewHeight: number = MIN_HEIGHT_PREVIEW;
+
+				let DEFAULT_IMAGE_PATH = "C:/Users/0000140046/AppData/Roaming/Garage/HuisFiles/remoteimages";
+				if (imagePath != DEFAULT_IMAGE_PATH
+					&& imagePath != "") {
+					$preview.css("background-image", "url(" + imagePath + ")");
+					let previewWidth = $preview.width();
+					let img = new Image();
+					img.src = imagePath;
+					let imgWidth = img.width;
+					let imgHeight = img.height;
+					previewHeight = imgHeight * (previewWidth / imgWidth);
+					if (!(MIN_HEIGHT_PREVIEW < previewHeight)) {
+						previewHeight = MIN_HEIGHT_PREVIEW;
+					}
 				}
-				$preview.height(previewHeight);
-                
+
+                $preview.height(previewHeight);
             }
             
 
