@@ -3605,8 +3605,8 @@ module Garage {
                                 // 現在のターゲットを外す
                                 this._loseTarget();
                             }
-							break;
-						case 89: // y Redo
+                            break;
+                        case 89: // y Redo
                             if (event.ctrlKey) {
                                 var targetModel = this.commandManager_.redo();
                                 this._updateItemElementOnCanvas(targetModel);
