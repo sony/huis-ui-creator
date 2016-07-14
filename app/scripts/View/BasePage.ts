@@ -204,11 +204,13 @@ module Garage {
 			protected centeringTooltip($target: JQuery) {
 				//tooltipを中央揃えにする。
 				var $tooltip = $target.find(".tooltip-text");
-				var widthButton = $target.width();
-				var widthToolTip = $tooltip.outerWidth(true);
-				var centeredLeft = (widthButton - widthToolTip) / 2;
-				$tooltip.css("left", centeredLeft + "px");
-				this.deterOverWindow($tooltip);
+				if ($tooltip != undefined) {
+					var widthButton = $target.width();
+					var widthToolTip = $tooltip.outerWidth(true);
+					var centeredLeft = (widthButton - widthToolTip) / 2;
+					$tooltip.css("left", centeredLeft + "px");
+					this.deterOverWindow($tooltip);
+				}
 			}
 
 			/*
@@ -216,6 +218,16 @@ module Garage {
 			* @param $target:JQuery これから表示するJQuery要素
 			*/
 			protected deterOverWindow($target: JQuery) {
+				let FUNCTION_NAME = "BasePage.ts : deterOverWindow : ";
+				if ($target == undefined) {
+					console.error(FUNCTION_NAME + " $target is undefined");
+					return;
+				}
+
+				if ($target.offset() == undefined) {
+					return;
+				}
+
 				var left = $target.offset().left;
 				var width = $target.outerWidth(true);
 
