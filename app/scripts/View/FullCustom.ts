@@ -2608,7 +2608,8 @@ module Garage {
 				this.commandManager_.invoke(mementoCommand);
 
 				this._updateItemElementOnCanvas(model);
-
+				var $detail = $("#face-item-detail");
+				$detail.children().remove();
 				// DOM の削除
 				//this.$currentTarget_.remove();
 
