@@ -90,7 +90,7 @@ module Garage {
 
 
             private _closeWarning() {
-                if (Garage.isHUISConnected) { // HUISが抜かれてない場合
+                if (isHUISConnected) { // HUISが抜かれてない場合
                     console.log("Do not close");
                     let response = electronDialog.showMessageBox(
                         {
@@ -104,7 +104,7 @@ module Garage {
                         return null;
                     }
                 }
-				Garage.isHUISConnected = false;
+				isHUISConnected = false;
             }
 
             private _pageLayout() {
