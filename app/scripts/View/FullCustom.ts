@@ -2120,7 +2120,7 @@ module Garage {
 					}
 				}
 
-                $preview.height(previewHeight);
+                $preview.outerHeight(previewHeight);
             }
             
 
