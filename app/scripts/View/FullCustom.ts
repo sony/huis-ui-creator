@@ -2132,7 +2132,6 @@ module Garage {
                 
 				let MIN_HEIGHT_PREVIEW: number = 156;//プレビューの最小の高さ
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
-
 				let DEFAULT_IMAGE_PATH = "C:/Users/0000140046/AppData/Roaming/Garage/HuisFiles/remoteimages";
 				if (imagePath != DEFAULT_IMAGE_PATH
 					&& imagePath != "") {
@@ -2459,14 +2458,15 @@ module Garage {
 										height: button.area.h + "px",
 										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
-
-									// 詳細エリアのプレビュー更新
-                                    //this._updatePreviewInDetailArea(value, $preview);
-									setTimeout(()=>{
+									// 画像のロードが完了してから表示を更新する
+									let img = new Image();
+									img.onload = () => {
+										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
 										this._updatePreviewInDetailArea(value, $preview);
-										//$preview.css("background-image", value ? "url('" + value + "')" : "none");
-									}, 5);
+									};
+									img.src = value;
+									
                                     //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
