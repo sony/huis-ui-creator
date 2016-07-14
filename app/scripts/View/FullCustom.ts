@@ -2664,7 +2664,7 @@ module Garage {
 						{
 							let actionName = actionList[value];
 							if (!_.isUndefined(actionName)) {
-								$("#select-state-action-function-" + stateId).val(actionName);
+								$("#select-state-action-function-" + stateId).val(actionName).selectmenu('refresh');
 							}
 						}
 						break;
