@@ -567,6 +567,13 @@ declare module Garage {
 	 * アプリの名称
 	 */
 	var PRODUCT_NAME: string;
+	/**
+	* Garageで表示するテキストの表示上の減衰率
+	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
+	* RATIO_TEXT_SIZE_HUIS_GARAGE = HUISで表示するのと同じにみえる text_size / 実際のtext size(ex 23px / 30px
+	*/
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
 
 }
 

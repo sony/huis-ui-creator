@@ -89,17 +89,25 @@ module Garage {
                     let filtered_state = null;
                     let filtered_action = null;
                     if (_.isArray(model.state)) {
-                         filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
-                           filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+						filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+							filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
                                 return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
-                             });
-                           return (filtered_action.length > 0);
+							});
+							return (filtered_action.length > 0);
                         });
                         if (filtered_state.length > 0) {
                             return this;
                         }
                     }
-					this.$el.append($(this.buttonItemTemplate_(model)));
+
+					//表示用のmodelはラベルの大きさを実際より小さくする。減衰率はRATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON
+					let modelForDisplay: Model.ButtonItem= jQuery.extend(true, {}, model);
+					for (let i = 0; i < modelForDisplay.state.length; i++){
+						for (let j = 0; j < modelForDisplay.state[i].label.length; j++){
+							modelForDisplay.state[i].label[j].size = Math.round(modelForDisplay.state[i].label[j].size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+						}
+					}
+					this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
 				});
 				return this;
 			}
@@ -124,7 +132,14 @@ module Garage {
 			 */
 			private _renderNewModel(model: Model.ButtonItem) {
 				this._modifyModel(model);
-				this.$el.append($(this.buttonItemTemplate_(model)));
+				//表示用のmodelはラベルの大きさを実際より小さくする。減衰率はRATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON
+				let modelForDisplay: Model.ButtonItem = jQuery.extend(true, {}, model);
+				for (let i = 0; i < modelForDisplay.state.length; i++) {
+					for (let j = 0; j < modelForDisplay.state[i].label.length; j++) {
+						modelForDisplay.state[i].label[j].size = Math.round(modelForDisplay.state[i].label[j].size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+					}
+				}
+				this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
 			}
 
 			/**
