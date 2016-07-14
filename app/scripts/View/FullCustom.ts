@@ -2437,18 +2437,6 @@ module Garage {
 										color: "rgb(0,0,0)",
 										fontSize: Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
 									});
-
-									//画像が存在するとき、テキストEdit機能を非表示にする
-									this.toggleImagePreview(stateId);
-
-									//テキストエリアが表示されたとき、フォーカスを移す。
-									var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-									if ($textFieldInPreview.css("visibility") === "visible") {
-										setTimeout(function () {
-											$textFieldInPreview.focus();
-										}, 0);
-									}
-
 								}
 								break;
 
@@ -2476,11 +2464,6 @@ module Garage {
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
 										this._updatePreviewInDetailArea(value, $preview);
-
-
-										//画像が存在するとき、テキストEdit機能を非表示にする
-										this.toggleImagePreview(stateId);
-
 									};
 									img.src = value;
 									
@@ -2514,6 +2497,16 @@ module Garage {
 					});
 				});
 
+				//画像が存在するとき、テキストEdit機能を非表示にする
+				this.toggleImagePreview(stateId)
+
+				//テキストエリアが表示されたとき、フォーカスを移す。
+				var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
+				if ($textFieldInPreview.css("visibility") === "visible"){
+					setTimeout(function () {
+						$textFieldInPreview.focus();
+					}, 0);
+				}
 				
 
 				var memento: IMemento = {
@@ -2544,17 +2537,8 @@ module Garage {
 				if (path != "null" && path != "full-custom.html" && path != "none") {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
+					$textFieldInPreview.css("visibility", "visible");
 					this._updatePreviewInDetailArea("none", $preview);
-					$textFieldInPreview.css("visibility", "visible").load(() => {
-						//テキストエリアが表示されたとき、フォーカスを移す。
-						var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-						if ($textFieldInPreview.css("visibility") === "visible") {
-							setTimeout(function () {
-								$textFieldInPreview.focus();
-							}, 0);
-						}
-					});
-					
 				}
 			}
 
