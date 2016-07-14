@@ -2460,9 +2460,12 @@ module Garage {
 									});
 
 									// 詳細エリアのプレビュー更新
-                                    let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    this._updatePreviewInDetailArea(value, $preview);
-
+                                    //this._updatePreviewInDetailArea(value, $preview);
+									setTimeout(()=>{
+										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+										this._updatePreviewInDetailArea(value, $preview);
+										//$preview.css("background-image", value ? "url('" + value + "')" : "none");
+									}, 0);
                                     //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
