@@ -2105,23 +2105,21 @@ module Garage {
 					return;
                 }
 
-                var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
-
-                
-                if ($preview.css("background-image") !== "none") { // 削除されている場合はそのまま
-                    $preview.css("background-image", "url(" + imagePath + ")");
+                let MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
+				
+                $preview.css("background-image", "url(" + imagePath + ")");
                     
-                    var previewWidth = $preview.width();
-                    var img = new Image();
-                    img.src = imagePath;
-                    var imgWidth = img.width;
-                    var imgHeight = img.height;
-                    var previewHeight: number = imgHeight * (previewWidth / imgWidth);
-                    if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
-                        previewHeight = MIN_HEIGHT_PREVIEW;
-                    }
-                    $preview.height(previewHeight);
-                }
+                let previewWidth = $preview.width();
+				let img = new Image();
+				img.src = imagePath;
+                let imgWidth = img.width;
+                let imgHeight = img.height;
+				let previewHeight: number = imgHeight * (previewWidth / imgWidth);
+				if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
+					previewHeight = MIN_HEIGHT_PREVIEW;
+				}
+				$preview.height(previewHeight);
+                
             }
             
 
