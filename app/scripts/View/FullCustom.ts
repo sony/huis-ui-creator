@@ -3128,7 +3128,7 @@ module Garage {
 						// ボタンアイテムの詳細エリアを表示
 						this._renderButtonItemDetailArea(targetModel.button, $detail);
 						//テキストをローカライズ
-						$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
+						$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
 						$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
 						$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 						break;
