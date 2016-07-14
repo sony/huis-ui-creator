@@ -3141,6 +3141,7 @@ module Garage {
 							if (resizeMode) {
 								$(".image-resize-mode").val(resizeMode);
 							}
+							this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
 							//テキストをローカライズ
 							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
@@ -3205,7 +3206,7 @@ module Garage {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
 				}
-
+				this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"));
 				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
 			}
 
