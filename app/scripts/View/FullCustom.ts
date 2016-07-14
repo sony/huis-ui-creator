@@ -2545,15 +2545,7 @@ module Garage {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					this._updatePreviewInDetailArea("none", $preview);
-					$textFieldInPreview.css("visibility", "visible").load(() => {
-						//テキストエリアが表示されたとき、フォーカスを移す。
-						var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-						if ($textFieldInPreview.css("visibility") === "visible") {
-							setTimeout(function () {
-								$textFieldInPreview.focus();
-							}, 0);
-						}
-					});
+					$textFieldInPreview.css("visibility", "visible");
 					
 				}
 			}
