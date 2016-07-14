@@ -69,7 +69,7 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-            private isTextBoxFocued: Boolean;
+            private isTextBoxFocused: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
             private DEFAULT_GRID = 29; //デフォルトのグリッドは29pxとする。
@@ -132,7 +132,7 @@ module Garage {
 					var $remoteName: JQuery = $("#input-face-name");
 					this.setFocusAndMoveCursorToEnd($remoteName);
 
-                    this.isTextBoxFocued = false;
+                    this.isTextBoxFocused = false;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -3581,26 +3581,34 @@ module Garage {
             }
 
             private _onTextBoxFocusIn() {
-                this.isTextBoxFocued = true;
+                this.isTextBoxFocused = true;
             }
 
             private _onTextBoxFocusOut() {
-                this.isTextBoxFocued = false;
+                this.isTextBoxFocused = false;
             }
 
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
 
-                if (this.$currentTarget_ && !this.isTextBoxFocued) {
+                if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
                         case 8: // BS
                         case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
-                        case 90: // z
+                        case 90: // z Undo
                             if (event.ctrlKey) {
                                 var targetModel = this.commandManager_.undo();
+                                this._updateItemElementOnCanvas(targetModel);
+                                // 現在のターゲットを外す
+                                this._loseTarget();
+                            }
+							break;
+						case 89: // y Redo
+                            if (event.ctrlKey) {
+                                var targetModel = this.commandManager_.redo();
                                 this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
