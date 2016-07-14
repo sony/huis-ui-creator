@@ -321,16 +321,10 @@ module Garage {
 							outputString += ", "
 						}
 						outputString += inhibitWords[i] + " ";
-						if (inhibitWords[i] == "\\" ){
-							inhibitWords[i] = "\\\\";//正規表現では \\ はうけつけない。
-						}
-						if (inhibitWords[i] == "*") {
-							inhibitWords[i] = "\\*";//正規表現では * はうけつけない。
-						}
-						if (inhibitWords[i] == "|") {
-							inhibitWords[i] = "\\|";//正規表現では | はうけつけない。
-						}
 
+						//GegExp(正規表現)を利用するために、頭に\\をつける。
+						inhibitWords[i] = "\\" + inhibitWords[i];
+ 						
 						var regExp = new RegExp(inhibitWords[i], "g");
 						resultString = resultString.replace(regExp, "");
 					}

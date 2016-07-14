@@ -480,7 +480,7 @@ module Garage {
 					} else {
 						newRemoteId = 0;
 					}
-				} else {
+				} else if (sortedRemoteId.length > 1){
 					// 新しい remoteId として使える数字を探す
 					let l = sortedRemoteId.length;
 					for (let i = 0; i < l - 1; i++) {
@@ -503,6 +503,8 @@ module Garage {
 					if (newRemoteId < 0) {
 						newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
 					}
+				} else if (sortedRemoteId.length <= 0) {
+					newRemoteId = 0;
 				}
 
 				if (0 <= newRemoteId) {

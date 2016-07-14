@@ -69,7 +69,7 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-            private isTextBoxFocued: Boolean;
+            private isTextBoxFocused: Boolean;
 
             //デフォルトのグリッド仕様の際の特殊仕様
             private DEFAULT_GRID = 29; //デフォルトのグリッドは29pxとする。
@@ -132,7 +132,7 @@ module Garage {
 					var $remoteName: JQuery = $("#input-face-name");
 					this.setFocusAndMoveCursorToEnd($remoteName);
 
-                    this.isTextBoxFocued = false;
+                    this.isTextBoxFocused = false;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -406,7 +406,9 @@ module Garage {
 					if ($listScrollLeft.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ -= 200;
+					let faceItemListContainerWidth: number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ -= faceItemListContainerWidth / 2;
                     this.disableScrollLeftButton();
 					$listScrollRight.removeClass("disabled");
                     $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
@@ -417,7 +419,10 @@ module Garage {
 					if ($listScrollRight.hasClass("disabled")) {
 						return;
 					}
-                    this.faceListScrollLeft_ += 200;
+
+					let faceItemListContainerWidth:number = $("#face-item-list-container").outerWidth();
+					//ヘッダー幅の半分移動する。
+                    this.faceListScrollLeft_ += faceItemListContainerWidth/2;
                     this.disableScrollRightButton();					
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
@@ -491,9 +496,18 @@ module Garage {
             */
             private disableScrollRightButton() {
                 // face list の右スクロールボタン
-                var $listScrollRight = $("#face-item-list-scroll-right");
-                if (this.faceListTotalWidth_ <= this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-                    this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
+                let $listScrollRight = $("#face-item-list-scroll-right");
+				let faceListWidth = $("#face-item-list-container").width();
+				let fineTuneLeft = $("#face-item-list-scroll-margin-left").width() / 2; //face-listで隠れてる部分があるため、そのぶんずらす必要がある。
+				
+
+				let $faceItems : JQuery= $("#face-item-list").find(".face-item");
+				let $lastFaceItem : JQuery = $($faceItems[$faceItems.length - 1]);
+				let lastFaceItemWidth = $lastFaceItem.outerWidth();
+
+				let MAX_SCROLL_RIGHT = this.faceListTotalWidth_ - (faceListWidth / 2) + fineTuneLeft - (lastFaceItemWidth/2);//右端は最後のfacelist要素のが中央になる
+                if (this.faceListScrollLeft_ >= MAX_SCROLL_RIGHT){
+                    this.faceListScrollLeft_ = MAX_SCROLL_RIGHT;
                     $listScrollRight.addClass("disabled");
                 } else {
                     $listScrollRight.removeClass("disabled");
@@ -532,11 +546,14 @@ module Garage {
 					let $listScrollRight = $("#face-item-list-scroll-right");
 					$faceItems.each((index: number, elem: Element) => {
 						$(elem).css("left", totalWidth + "px");
-						totalWidth += $(elem).outerWidth() + 1;
+						totalWidth += $(elem).outerWidth();
 						if ($faceItems.length - 1 <= index) {
 							$("#face-item-list").width(totalWidth);
 							this.faceListTotalWidth_ = totalWidth;
-							if (this.faceListContainerWidth_ < this.faceListTotalWidth_) {
+							this.faceListContainerWidth_ = $("#face-item-list-container").width();
+							if (this.faceListContainerWidth_ < this.faceListTotalWidth_
+								&& this.faceListContainerWidth_ != undefined
+									&& this.faceListTotalWidth_ != undefined ) {
 								$listScrollRight.removeClass("disabled");
 							}
 							// スクロール位置の調整
@@ -545,6 +562,8 @@ module Garage {
 								if (this.faceListScrollLeft_ < 0) {
 									this.faceListScrollLeft_ = 0;
 								}
+								this.disableScrollRightButton();
+								this.disableScrollLeftButton();
 								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
 							}
 						}
@@ -1980,6 +1999,13 @@ module Garage {
 							break;
 
 						case "size":
+							//HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
+							if (itemType == "button") {
+								value = Math.round(value * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+							} else if (itemType == "label") {
+								value = Math.round(value * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+							}
+							
 							$target.css("font-size", value + "pt");
 							break;
 
@@ -2253,7 +2279,7 @@ module Garage {
 					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
 
 					if ($targetTextSizePullDown) {
-						defaltTextSize = $targetTextSizePullDown.val();
+						defaltTextSize = +($targetTextSizePullDown.val());
 					}
 
 					if (!state.label || !state.label.length) {
@@ -2408,7 +2434,7 @@ module Garage {
 										height: button.area.h + "px",
 										lineHeight: button.area.h + "px",
 										color: "rgb(0,0,0)",
-										fontSize: label.size + "pt"
+										fontSize: Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
 									});
 								}
 								break;
@@ -2637,7 +2663,7 @@ module Garage {
 						{
 							let actionName = actionList[value];
 							if (!_.isUndefined(actionName)) {
-								$("#select-state-action-function-" + stateId).val(actionName);
+								$("#select-state-action-function-" + stateId).val(actionName).selectmenu('refresh');
 							}
 						}
 						break;
@@ -3127,7 +3153,7 @@ module Garage {
 						// ボタンアイテムの詳細エリアを表示
 						this._renderButtonItemDetailArea(targetModel.button, $detail);
 						//テキストをローカライズ
-						$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
+						$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
 						$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
 						$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 						break;
@@ -3581,26 +3607,34 @@ module Garage {
             }
 
             private _onTextBoxFocusIn() {
-                this.isTextBoxFocued = true;
+                this.isTextBoxFocused = true;
             }
 
             private _onTextBoxFocusOut() {
-                this.isTextBoxFocued = false;
+                this.isTextBoxFocused = false;
             }
 
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
 
-                if (this.$currentTarget_ && !this.isTextBoxFocued) {
+                if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
                         case 8: // BS
                         case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
-                        case 90: // z
+                        case 90: // z Undo
                             if (event.ctrlKey) {
                                 var targetModel = this.commandManager_.undo();
+                                this._updateItemElementOnCanvas(targetModel);
+                                // 現在のターゲットを外す
+                                this._loseTarget();
+                            }
+                            break;
+                        case 89: // y Redo
+                            if (event.ctrlKey) {
+                                var targetModel = this.commandManager_.redo();
                                 this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
