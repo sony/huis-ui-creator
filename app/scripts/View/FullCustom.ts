@@ -2466,7 +2466,7 @@ module Garage {
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
 										this._updatePreviewInDetailArea(value, $preview);
 										//$preview.css("background-image", value ? "url('" + value + "')" : "none");
-									}, 0);
+									}, 5);
                                     //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
