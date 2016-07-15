@@ -2129,11 +2129,8 @@ module Garage {
 					return;
                 }
 
-                
-				
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
-				let DEFAULT_IMAGE_PATH = HUIS_REMOTEIMAGES_ROOT;
-				if (imagePath != DEFAULT_IMAGE_PATH
+				if (imagePath != HUIS_REMOTEIMAGES_ROOT
 					&& imagePath != "") {
 					$preview.css("background-image", "url(" + imagePath + ")");
 					let previewWidth = $preview.width();
