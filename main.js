@@ -17,7 +17,7 @@ var {app, BrowserWindow, crashReporter} = require('electron');
 var mainWindow = null;
 
 var shouldQuit = app.makeSingleInstance(function(argv, workingDirectory) {
-	if(mainWindow.isMinimized()) mainWindow.require();
+	if(mainWindow.isMinimized()) mainWindow.restore();
 	mainWindow.focus();
 });
 
