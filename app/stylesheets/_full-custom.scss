@@ -354,8 +354,8 @@
                 background-size: contain;
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
-                border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
-
+                border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
+			
 				//画像編集ボタン
                 #edit-image-or-text,
 				#edit-image-background,

@@ -1586,7 +1586,7 @@ module Garage {
 			private onDeleteImageClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				this.procDeleteImage($target);
-				
+				this._updatePreviewInDetailArea("none", $("#property-image-preview"));
 			}
 
 			/*
@@ -1617,10 +1617,11 @@ module Garage {
 				} else if ($target.attr("id") === "delete-background-image") {
 					// 背景画像の削除
                     $(".property-value.page-background-src").val("");
-                    $("#property-image-preview").css("background-image", "none");
+					$("#property-image-preview").css("background-image", "none");
 					this._updateCurrentModelData("path", "");
 					this._updateCurrentModelData("enabled", false);
 				}
+				
 			}
 
 			/**
@@ -1663,9 +1664,6 @@ module Garage {
 							});
 						});
                 }
-
-                this._updatePreviewInDetailArea(resolvedPath,$("#property-image-preview"));
-                //$("#property-image-preview").css("background-image", "url(" + resolvedPath + ")"); // プレビュー画面のIMAGEを更新する
 
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
@@ -2131,23 +2129,22 @@ module Garage {
 					return;
                 }
 
-                var MIN_HEIGHT_PREVIEW = 160;//プレビューの最小の高さ
+				let previewHeight: number = MIN_HEIGHT_PREVIEW;
+				if (imagePath != HUIS_REMOTEIMAGES_ROOT
+					&& imagePath != "") {
+					$preview.css("background-image", "url(" + imagePath + ")");
+					let previewWidth = $preview.width();
+					let img = new Image();
+					img.src = imagePath;
+					let imgWidth = img.width;
+					let imgHeight = img.height;
+					previewHeight = imgHeight * (previewWidth / imgWidth);
+					if (!(MIN_HEIGHT_PREVIEW < previewHeight)) {
+						previewHeight = MIN_HEIGHT_PREVIEW;
+					}
+				}
 
-                
-                if ($preview.css("background-image") !== "none") { // 削除されている場合はそのまま
-                    $preview.css("background-image", "url(" + imagePath + ")");
-                    
-                    var previewWidth = $preview.width();
-                    var img = new Image();
-                    img.src = imagePath;
-                    var imgWidth = img.width;
-                    var imgHeight = img.height;
-                    var previewHeight: number = imgHeight * (previewWidth / imgWidth);
-                    if (!(MIN_HEIGHT_PREVIEW 　< previewHeight)){
-                        previewHeight = MIN_HEIGHT_PREVIEW;
-                    }
-                    $preview.height(previewHeight);
-                }
+                $preview.height(previewHeight);
             }
             
 
@@ -2437,6 +2434,18 @@ module Garage {
 										color: "rgb(0,0,0)",
 										fontSize: Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
 									});
+
+									//画像が存在するとき、テキストEdit機能を非表示にする
+									this.toggleImagePreview(stateId);
+
+									//テキストエリアが表示されたとき、フォーカスを移す。
+									var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
+									if ($textFieldInPreview.css("visibility") === "visible") {
+										setTimeout(function () {
+											$textFieldInPreview.focus();
+										}, 0);
+									}
+
 								}
 								break;
 
@@ -2458,11 +2467,20 @@ module Garage {
 										height: button.area.h + "px",
 										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
+									// 画像のロードが完了してから表示を更新する
+									let img = new Image();
+									img.onload = () => {
+										// 詳細エリアのプレビュー更新
+										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+										this._updatePreviewInDetailArea(value, $preview);
 
-									// 詳細エリアのプレビュー更新
-                                    let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                    this._updatePreviewInDetailArea(value, $preview);
 
+										//画像が存在するとき、テキストEdit機能を非表示にする
+										this.toggleImagePreview(stateId);
+
+									};
+									img.src = value;
+									
                                     //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
 								}
@@ -2493,16 +2511,6 @@ module Garage {
 					});
 				});
 
-				//画像が存在するとき、テキストEdit機能を非表示にする
-				this.toggleImagePreview(stateId)
-
-				//テキストエリアが表示されたとき、フォーカスを移す。
-				var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-				if ($textFieldInPreview.css("visibility") === "visible"){
-					setTimeout(function () {
-						$textFieldInPreview.focus();
-					}, 0);
-				}
 				
 
 				var memento: IMemento = {
@@ -2533,7 +2541,9 @@ module Garage {
 				if (path != "null" && path != "full-custom.html" && path != "none") {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
+					this._updatePreviewInDetailArea("none", $preview);
 					$textFieldInPreview.css("visibility", "visible");
+					
 				}
 			}
 
@@ -3173,6 +3183,7 @@ module Garage {
 							if (resizeMode) {
 								$(".image-resize-mode").val(resizeMode);
 							}
+							this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
 							//テキストをローカライズ
 							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
@@ -3237,7 +3248,7 @@ module Garage {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
 				}
-
+				this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"));
 				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
 			}
 

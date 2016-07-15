@@ -61,7 +61,7 @@ module Garage {
 		}
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
 		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
-
+		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 		// ページの背景の起点座標とサイズ
 		HUIS_PAGE_BACKGROUND_AREA = {
 			x: -30,
