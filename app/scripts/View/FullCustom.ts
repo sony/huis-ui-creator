@@ -3257,6 +3257,8 @@ module Garage {
 			 * ページの背景の詳細編集エリアの表示
 			 */
 			private _showDetailItemAreaOfPage($pageModule: JQuery) {
+				let FUNCTION_NAME = TAG + " : _showDetailItemAreaOfPage : ";
+
 				let $detail = $("#face-item-detail");
 				$detail.children().remove();
 				if (!$pageModule) {
@@ -3287,7 +3289,13 @@ module Garage {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
 				}
-				this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"));
+
+				if (backgroundModel != null) {
+					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"));
+				} else {
+					console.warn(FUNCTION_NAME + "backgroundModel is null");
+				}
+
 				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
 			}
 
