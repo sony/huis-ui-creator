@@ -1566,7 +1566,46 @@ module Garage {
 
 						let imageFilePath = imageFiles[0];
 						let remoteId = this.faceRenderer_canvas_.getRemoteId();
-
+						let imageFileExt = path.extname(imageFilePath).toLowerCase();
+						if (!((imageFileExt === ".jpg") || (imageFileExt === ".png") || (imageFileExt === ".jpeg"))) {
+							// 警告を出す
+							console.warn("ONLY jpg, png, jpeg are supported"); 
+							let response = electronDialog.showMessageBox({
+								type: "error",
+								message: "JPEG または PNG のみサポートしています",
+								buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+								title: PRODUCT_NAME,
+							});
+							return;
+						}
+						if ((imageFileExt === ".jpg") || (imageFileExt === ".jpeg")) {
+							let result = miscUtil.checkJPEG(imageFilePath);
+							if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
+								// JPEG2000及びJPEG Losslessはサポートしていない警告を出す
+								let response = electronDialog.showMessageBox({
+									type: "error",
+									message: "JPEG2000, JPEG Losslessはサポートしていません",
+									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+									title: PRODUCT_NAME,
+								});
+								console.warn("JPEG lossless or JPEG2000 are not supported");
+								return;
+							}
+							else if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
+								let response = electronDialog.showMessageBox({
+									type: "error",
+									message: "サポートしているJPEGファイルではありません",
+									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+									title: PRODUCT_NAME,
+								});
+								console.warn("This type of JPEG is not supported");
+								return;
+							}
+							else if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない								
+								console.warn("Imega file not found"); // 普通はこないので特にダイアログは出さないで、編集画面にも何も起きない状態に
+								return;
+							}
+						}
 						
 						if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
 							this._reflectImageToButtonState(remoteId, $target, imageFilePath);
