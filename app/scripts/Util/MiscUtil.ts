@@ -13,6 +13,7 @@ module Garage {
 		 */
 		export class MiscUtil {
 			public static ERROR_TYPE_NOERROR: number = 1;
+			public static ERROR_FILE_ACCESS: number = 0;
 			public static ERROR_TYPE_JPEG2000: number = -1;
 			public static ERROR_TYPE_JPEGLOSSLESS: number = -2;
 			public static ERROR_TYPE_NOT_JPEG: number = -3;
@@ -55,11 +56,17 @@ module Garage {
 			 */
 
 			checkJPEG(path: string): number {
-				let b = new Buffer(8);
-				let fd = fs.openSync(path, 'r');
+				try {
+					let b = new Buffer(8);
 
-				fs.readSync(fd, b, 0, 8, 0);
-				fs.closeSync(fd);
+					let fd = fs.openSync(path, 'r');
+
+					fs.readSync(fd, b, 0, 8, 0);
+					fs.closeSync(fd);
+				} catch (e) {
+					console.error("checkJPEG: " + e);
+					return 
+				}
 				// JPEG2000か
 				if ((b[0] === 0) && (b[1] === 0)) {
 					//console.log(b);

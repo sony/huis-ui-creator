@@ -1601,6 +1601,10 @@ module Garage {
 								console.warn("This type of JPEG is not supported");
 								return;
 							}
+							else if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない								
+								console.warn("Imega file not found"); // 普通はこないので特にダイアログは出さないで、編集画面にも何も起きない状態に
+								return;
+							}
 						}
 						
 						if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
