@@ -16,6 +16,15 @@ var {app, BrowserWindow, crashReporter} = require('electron');
 // JavaScript のオブジェクトが GC されたときにウィンドウが閉じてしまうため
 var mainWindow = null;
 
+var shouldQuit = app.makeSingleInstance(function(argv, workingDirectory) {
+	if(mainWindow.isMinimized()) mainWindow.require();
+	mainWindow.focus();
+});
+
+if (shouldQuit) {
+	app.quit();
+}
+
 // すべてのウィンドウが閉じられたら終了
 app.on('window-all-closed', function() {
   // OSX だと、ユーザーが Cmd + Q で明示的に終了するまで
