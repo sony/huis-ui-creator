@@ -127,6 +127,7 @@ module Garage {
                     console.log("numRemotes : " + numRemotes);
                     //導入画面は初期状態は非表示なのでここで表示する。
                     this._renderIntroduction();
+					$("#face-list").hide();
                 }
 
 				//テキストのローカライズ
