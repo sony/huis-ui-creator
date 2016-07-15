@@ -567,6 +567,11 @@ declare module Garage {
 	 * アプリの名称
 	 */
 	var PRODUCT_NAME: string;
+
+	/*
+	* EDITの詳細編集エリア プレビューの高さの最小
+	*/
+	var MIN_HEIGHT_PREVIEW: number;
 	/**
 	* Garageで表示するテキストの表示上の減衰率
 	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。

@@ -2130,9 +2130,9 @@ module Garage {
                 }
 
                 
-				let MIN_HEIGHT_PREVIEW: number = 156;//プレビューの最小の高さ
+				
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
-				let DEFAULT_IMAGE_PATH = "C:/Users/0000140046/AppData/Roaming/Garage/HuisFiles/remoteimages";
+				let DEFAULT_IMAGE_PATH = HUIS_REMOTEIMAGES_ROOT;
 				if (imagePath != DEFAULT_IMAGE_PATH
 					&& imagePath != "") {
 					$preview.css("background-image", "url(" + imagePath + ")");
