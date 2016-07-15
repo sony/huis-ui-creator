@@ -342,7 +342,8 @@ module Garage {
 				//if (faceListContainerHeight < 200) {s
 				//	faceListContainerHeight = 200;
 				//}
-			    $("#face-list").css("height", faceListContainerHeight + "px");
+				$("#face-list").css("height", faceListContainerHeight + "px");
+				$("#home-introductions").css("height", faceListContainerHeight + "px");
 			}
 
 			/**
