@@ -409,7 +409,7 @@ module Garage {
 					let faceItemListContainerWidth: number = $("#face-item-list-container").outerWidth();
 					//ヘッダー幅の半分移動する。
                     this.faceListScrollLeft_ -= faceItemListContainerWidth / 2;
-                    this.disableScrollLeftButton();
+                    this.limitMinScrolllValueAndShowLeftButton();
 					$listScrollRight.removeClass("disabled");
                     $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_)+ "px)");
 				});
@@ -423,7 +423,7 @@ module Garage {
 					let faceItemListContainerWidth:number = $("#face-item-list-container").outerWidth();
 					//ヘッダー幅の半分移動する。
                     this.faceListScrollLeft_ += faceItemListContainerWidth/2;
-                    this.disableScrollRightButton();					
+                    this.limitMaxScrolllValueAndShowRightButton();					
 					$listScrollLeft.removeClass("disabled");
 					$faceItemList.css("transform", "translateX(" + ((-1)*this.faceListScrollLeft_) + "px)");
                 });
@@ -484,8 +484,8 @@ module Garage {
                 this.faceListScrollLeft_ = positionLeft - (FaceListWidth / 2) + ($clickedFaceItem.outerWidth() / 2);
                 var fineTuneLeft = $("#face-item-list-scroll-margin-left").width()/2; 
                 this.faceListScrollLeft_ += fineTuneLeft;//face-listで隠れてる部分があるため、そのぶんずらす必要がある。
-                this.disableScrollRightButton();
-                this.disableScrollLeftButton();
+                this.limitMaxScrolllValueAndShowRightButton();
+                this.limitMinScrolllValueAndShowLeftButton();
 
                 //差分分、移動する。
                 $faceItemList.css("transform", "translateX(" + ((-1) * this.faceListScrollLeft_) + "px)");
@@ -494,7 +494,7 @@ module Garage {
             /**
             * 右スクロールボタンの非表示判定
             */
-            private disableScrollRightButton() {
+            private limitMaxScrolllValueAndShowRightButton() {
                 // face list の右スクロールボタン
                 let $listScrollRight = $("#face-item-list-scroll-right");
 				let faceListWidth = $("#face-item-list-container").width();
@@ -518,7 +518,7 @@ module Garage {
             /**
            * 左スクロールボタンの非表示判定
            */
-            private disableScrollLeftButton() {
+            private limitMinScrolllValueAndShowLeftButton() {
                 // face list の左スクロールボタン
                 var faceListWidth = $("#face-item-list-container").width();
                 var faceItemCommonWidth = $('.face-item[data-remote-id="common"]').outerWidth();
@@ -556,16 +556,11 @@ module Garage {
 									&& this.faceListTotalWidth_ != undefined ) {
 								$listScrollRight.removeClass("disabled");
 							}
-							// スクロール位置の調整
-							if (this.faceListTotalWidth_ < this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-								this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
-								if (this.faceListScrollLeft_ < 0) {
-									this.faceListScrollLeft_ = 0;
-								}
-								this.disableScrollRightButton();
-								this.disableScrollLeftButton();
-								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
-							}
+								
+							this.limitMinScrolllValueAndShowLeftButton();
+							this.limitMaxScrolllValueAndShowRightButton();
+							$("#face-item-list").css("transform", "translateX(" +((-1)* this.faceListScrollLeft_ )+ "px)");
+							
 						}
                     }
                     );
