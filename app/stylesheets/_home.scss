@@ -150,6 +150,7 @@
                 #face-pages-area {
                     width:inherit;
                     font-family: $FONT_FAMILY_NORMAL;
+					overflow-y : hidden;
                 }
 
                 .face-page{
