@@ -747,7 +747,7 @@ module Garage {
 
 				// マウスポインター位置が、選択中のターゲット上でも詳細編集エリア上でもない場合は、
 				// ターゲットを外す
-				if (!remainsTarget && !selectedResizer && !overDetailArea) {
+				if (!remainsTarget && !selectedResizer && !overDetailArea && this.isOnCanvasFacePagesArea(mousePosition)) {
 					// 直前に選択されていたボタンの状態更新があれば行う
 					this._updateCurrentModelButtonStatesData();
 
@@ -797,7 +797,7 @@ module Garage {
 					this.selectedResizer_ = selectedResizer;
 					console.log(this.selectedResizer_);
 				}
-				if (this.$currentTarget_) {
+				if (this.$currentTarget_ && this.isOnCanvasFacePagesArea(mousePosition)) {
 					this.mouseMoveStartPosition_ = mousePosition;
 					this.mouseMoveStartTargetPosition_ = {
 						x: parseInt(this.$currentTarget_.css("left"), 10),
@@ -815,6 +815,39 @@ module Garage {
 						event.preventDefault();
 					}
 				}
+			}
+
+			/*
+			* 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
+			* @param mousePosition : IPosition マウスポインター
+			* @return result : boolean  CanvasAreaのFacePagesAreaの上の場合true, 違う場合false
+			*/
+			private isOnCanvasFacePagesArea(mousePosition: IPosition):boolean {
+				let FUNCTION_NAME: string = TAG + " : isOnCanvasFacePagesArea :";
+				if (mousePosition == undefined) {
+					console.warn(FUNCTION_NAME + "mousePosition is undefined");
+					return false;
+				}
+
+				let $facePagesAreaOnCanvas: JQuery = $("#face-canvas").find("#face-pages-area");
+
+				if ($facePagesAreaOnCanvas == undefined) {
+					console.warn(FUNCTION_NAME + "$facePagesAreaOnCanvas is undefined");
+					return false;
+				}
+
+				let facePagesAreaLeft:number = $facePagesAreaOnCanvas.offset().left;
+				let facePagesAreaRight:number = $facePagesAreaOnCanvas.offset().left + $facePagesAreaOnCanvas.width();
+				let facePagesAreaTop :number= $facePagesAreaOnCanvas.offset().top;
+				let facePagesAreaBottom :number= $facePagesAreaOnCanvas.offset().top + $facePagesAreaOnCanvas.height();
+
+				if (mousePosition.x > facePagesAreaLeft && mousePosition.x < facePagesAreaRight
+					&& mousePosition.y > facePagesAreaTop && mousePosition.y < facePagesAreaBottom) {
+					return true;
+				} else {
+					return false;
+				}
+
 			}
 
 			/**
