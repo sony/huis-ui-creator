@@ -56,8 +56,8 @@ module Garage {
 			 */
 
 			checkJPEG(path: string): number {
+				let b = new Buffer(8);
 				try {
-					let b = new Buffer(8);
 
 					let fd = fs.openSync(path, 'r');
 
