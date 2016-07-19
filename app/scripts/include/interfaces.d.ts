@@ -580,6 +580,19 @@ declare module Garage {
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
 
+	var DEVICE_TYPE_TV: string; 
+	var DEVICE_TYPE_AC: string;
+	var DEVICE_TYPE_LIGHT: string;
+	var DEVICE_TYPE_AUDIO: string;
+	var DEVICE_TYPE_PLAYER: string;
+	var DEVICE_TYPE_RECORDER: string;
+	var DEVICE_TYPE_PROJECTOR: string;
+	var DEVICE_TYPE_STB: string;
+	var DEVICE_TYPE_FAN: string;
+	var DEVICE_TYPE_AIR_CLEANER: string;
+	var DEVICE_TYPE_CUSOM: string;
+	var DEVICE_TYPE_FULL_CUSTOM: string;
+	var DEVICE_TYPE_BT: string;
 }
 
 
