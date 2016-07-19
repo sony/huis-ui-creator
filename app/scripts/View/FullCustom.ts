@@ -2780,12 +2780,27 @@ module Garage {
 			 * @param $pageModule {JQuery} 削除するページ
 			 */
 			private _deletePage($pageModule: JQuery) {
-				//let moduleId: string = $pageModule.data("cid");
-				let pageIndex = parseInt(JQUtils.data($pageModule, "modulePageIndex"), 10); // $pageModule.data("module-page-index");
-				//this.faceRenderer_canvas_.deletePage(moduleId);
-				this.faceRenderer_canvas_.deletePage(pageIndex);
-				let $pageContainer = $pageModule.parent();
-				$pageContainer.remove();
+				
+				let response = electronDialog.showMessageBox({
+					type: "warning",
+					message: $.i18n.t("dialog.message.STR_DAIALOG_ALERT_DELTE_PAGE"),
+					buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
+					title: PRODUCT_NAME,
+					cancelId: 1,
+				});
+				if (response == 0) {//
+					//let moduleId: string = $pageModule.data("cid");
+					let pageIndex = parseInt(JQUtils.data($pageModule, "modulePageIndex"), 10); // $pageModule.data("module-page-index");
+					//this.faceRenderer_canvas_.deletePage(moduleId);
+					this.faceRenderer_canvas_.deletePage(pageIndex);
+					let $pageContainer = $pageModule.parent();
+					$pageContainer.remove();
+					return;
+				} else {
+					return;
+				}
+
+				
 			}
 
 			/**
