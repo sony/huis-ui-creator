@@ -556,16 +556,11 @@ module Garage {
 									&& this.faceListTotalWidth_ != undefined ) {
 								$listScrollRight.removeClass("disabled");
 							}
-							// スクロール位置の調整
-							if (this.faceListTotalWidth_ < this.faceListScrollLeft_ + this.faceListContainerWidth_) {
-								this.faceListScrollLeft_ = this.faceListTotalWidth_ - this.faceListContainerWidth_;
-								if (this.faceListScrollLeft_ < 0) {
-									this.faceListScrollLeft_ = 0;
-								}
-								this.disableScrollRightButton();
-								this.disableScrollLeftButton();
-								$("#face-item-list").css("transform", "translateX(-" + this.faceListScrollLeft_ + "px)");
-							}
+								
+							this.disableScrollLeftButton();
+							this.disableScrollRightButton();
+							$("#face-item-list").css("transform", "translateX(" +((-1)* this.faceListScrollLeft_ )+ "px)");
+							
 						}
                     }
                     );
