@@ -67,6 +67,8 @@ module Garage {
 		DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
 		DEVICE_TYPE_BT = "Bluetooth";
 
+		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)

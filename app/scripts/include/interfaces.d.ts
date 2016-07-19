@@ -596,6 +596,11 @@ declare module Garage {
 	var DEVICE_TYPE_CUSOM: string;
 	var DEVICE_TYPE_FULL_CUSTOM: string;
 	var DEVICE_TYPE_BT: string;
+
+	/**
+	* PalletAreaで表示されないデバイスタイプ
+	*/
+	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
 }
 
 
