@@ -1600,7 +1600,7 @@ module Garage {
 							console.warn("ONLY jpg, png, jpeg are supported"); 
 							let response = electronDialog.showMessageBox({
 								type: "error",
-								message: "JPEG または PNG のみサポートしています",
+								message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE"),
 								buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 								title: PRODUCT_NAME,
 							});
@@ -1612,7 +1612,7 @@ module Garage {
 								// JPEG2000及びJPEG Losslessはサポートしていない警告を出す
 								let response = electronDialog.showMessageBox({
 									type: "error",
-									message: "JPEG2000, JPEG Losslessはサポートしていません",
+									message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE"),
 									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 									title: PRODUCT_NAME,
 								});
@@ -1622,7 +1622,7 @@ module Garage {
 							else if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
 								let response = electronDialog.showMessageBox({
 									type: "error",
-									message: "サポートしているJPEGファイルではありません",
+									message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE"),
 									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 									title: PRODUCT_NAME,
 								});
