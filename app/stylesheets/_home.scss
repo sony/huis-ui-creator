@@ -2,12 +2,14 @@
 
 #page-home {
     text-shadow: none;
-
+	overflow-y:hidden;
+	background-color: $COLOR_HOME_BACKGROUND;
     //リモコン数が0個の時の画面
     #home-introductions{
         position:absolute;
         visibility:hidden;
         width:100%;
+		overflow-x:auto;
 
         #home-introduction-vector{
             position:absolute;
