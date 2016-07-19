@@ -43,7 +43,8 @@
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_1": "リモコンを作成できません。\nHUIS REMOTE CONTROLLERに登録できるリモコンは",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_2": "個までです。\n不要なリモコンを削除してください。",
             "STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE": "リモコンを削除すると元に戻せません。削除しますか？",
-            "STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME": "リモコンの名前がないため編集を終了できません。\n名前を入力してください。"
+            "STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME": "リモコンの名前がないため編集を終了できません。\n名前を入力してください。",
+            "STR_DIALOG_MESSAGE_ERROR_NO_REMOTE_IN_HUIS": "リモコンを新規作成できません。\nさきにHUIS REMOTECONTROLLERでリモコンを登録してください。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
