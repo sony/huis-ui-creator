@@ -580,6 +580,9 @@ declare module Garage {
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
 
+	/**
+	* HUISで利用されているデバイスタイプ
+	*/
 	var DEVICE_TYPE_TV: string; 
 	var DEVICE_TYPE_AC: string;
 	var DEVICE_TYPE_LIGHT: string;
