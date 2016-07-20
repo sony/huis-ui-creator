@@ -441,17 +441,21 @@ module Garage {
 
 			/**
 			 * 新しい face を作成できるかどうか。
-			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
-			 * HUIS内にPalletAreaに参照できるリモコンがあるか否かで判定する。
-			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 * @return 正常にリモコンを作れる場合 0, 異常時は0以下の値を返す。
 			 */
-			canCreateNewRemote(): boolean {
-
-				if (this.remoteList_.length < MAX_HUIS_FILES && this.getNumVariableRemote() > 0) {
-					return true;
-				} else {
-					return false;
+			canCreateNewRemote(): number {
+				//現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+				if (this.remoteList_.length >= MAX_HUIS_FILES) {
+					return -1;
 				}
+
+				//HUIS内にPalletAreaに参照できるリモコンがあるか否かで判定する。
+				if (this.getNumVariableRemote() <= 0) {
+					return -2;
+				}
+				
+				return 0;
+				
 			}
 
 
