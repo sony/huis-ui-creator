@@ -37,6 +37,7 @@
                 font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
                 font-family:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
                 line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
+				margin:0;
 
                 .accent{
                     color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
@@ -47,7 +48,7 @@
                 background-image:$PATH_IMG_HOME_INTRODUCTION_REMOTES;
                 width:$SIZE_HOME_INTRODUCTION_IMAGE_WIDTH;
                 height:$SIZE_HOME_INTRODUCTION_IMAGE_HEIGHT;
-                margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
+                margin-top:$SIZE_HOME_INTRODUCTION_IMAGE_MARGIN_TOP;
                 background-position:center;
                 background-repeat: no-repeat;
                 background-size: contain;
