@@ -1716,21 +1716,19 @@ module Garage {
 				// face ディレクトリ内に配置されるべき画像のパスを取得
 				let resolvedPath = model.resolvedPath;
 				// 画像を face ディレクトリ内にコピー
-				if (!fs.existsSync(resolvedPath)) {
-					// 画像のリサイズとグレースケール化
-					Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
-						.done((editedImage) => {
-							// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-							let editedImageName = path.basename(editedImage.path);
-							let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
+				// 画像のリサイズとグレースケール化
+				Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
+					.done((editedImage) => {
+						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
+						let editedImageName = path.basename(editedImage.path);
+						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
 
-							this._updateCurrentModelData({
-								"path": editedImagePath,
-								"resizeOriginal": editedImagePath,
-								"resized": true
-							});
+						this._updateCurrentModelData({
+							"path": editedImagePath,
+							"resizeOriginal": editedImagePath,
+							"resized": true
 						});
-                }
+					});
 
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
