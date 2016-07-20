@@ -52,6 +52,23 @@ module Garage {
 		// 製品名の設定
 		PRODUCT_NAME = "HUIS UI CREATOR";
 
+		// デバイスタイプ
+		DEVICE_TYPE_TV = "TV";
+		DEVICE_TYPE_AC = "Air conditioner";
+		DEVICE_TYPE_LIGHT = "Light";
+		DEVICE_TYPE_AUDIO = "Audio";
+		DEVICE_TYPE_PLAYER = "Player";
+		DEVICE_TYPE_RECORDER = "Recorder";
+		DEVICE_TYPE_PROJECTOR = "Projector";
+		DEVICE_TYPE_STB = "Set top box";
+		DEVICE_TYPE_FAN = "Fan";
+		DEVICE_TYPE_AIR_CLEANER = "Air cleaner";
+		DEVICE_TYPE_CUSOM = "Custom";
+		DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
+		DEVICE_TYPE_BT = "Bluetooth";
+
+		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)

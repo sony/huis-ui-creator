@@ -214,15 +214,25 @@ module Garage {
 			}
 
 			private _onCreateNewRemote() {
-				if (huisFiles.canCreateNewRemote()) {
+				let canCreateResult = huisFiles.canCreateNewRemote();
+				if (canCreateResult == 0) {
 					Framework.Router.navigate("#full-custom");
-				} else {
+				} else if (canCreateResult == -2) {
+					electronDialog.showMessageBox({
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_NO_REMOTE_IN_HUIS"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+						title: PRODUCT_NAME,
+					});
+				} else if (canCreateResult == -1) {
 					electronDialog.showMessageBox({
 						type: "error",
 						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
 						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 						title: PRODUCT_NAME,
 					});
+				} else {
+					console.warn("no alert dialog in _onCreateNewRemote()");
 				}
 			}
 

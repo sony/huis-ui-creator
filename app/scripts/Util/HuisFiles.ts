@@ -441,16 +441,49 @@ module Garage {
 
 			/**
 			 * 新しい face を作成できるかどうか。
-			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
-			 * 
-			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 * @return 正常にリモコンを作れる場合 0, 異常時は0以下の値を返す。
 			 */
-			canCreateNewRemote(): boolean {
-				if (this.remoteList_.length < MAX_HUIS_FILES) {
-					return true;
-				} else {
-					return false;
+			canCreateNewRemote(): number {
+				//現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+				if (this.remoteList_.length >= MAX_HUIS_FILES) {
+					return -1;
 				}
+
+				//HUIS内にPalletAreaに参照できるリモコンがあるか否かで判定する。
+				if (this.getNumVariableRemote() <= 0) {
+					return -2;
+				}
+				
+				return 0;
+				
+			}
+
+
+			/**
+			 * PalletAreaに出現するリモコンの数を取得する
+			 * @return PalletAreaに出現するリモコンの数 : number
+			 */
+			getNumVariableRemote(): number{
+				let FUNCTION_NAME = TAGS + " : getNumVariableRmote : ";
+				if (this.remoteInfos_ == undefined) {
+					console.warn(FUNCTION_NAME + "remoteInfos_ is undefined");
+					return 0;
+				}
+
+				if (this.remoteInfos_.length == 0) {
+					return 0;
+				}
+
+				let result = 0;
+
+				for (let i: number = 0; i < this.remoteInfos_.length; i++){
+					//サポートされているdevice_type場合、result + 1
+					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+						result ++;
+					}
+				}
+
+				return result;
 			}
 
 			/**
