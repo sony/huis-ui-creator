@@ -446,7 +446,8 @@ module Garage {
 			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
 			 */
 			canCreateNewRemote(): boolean {
-				if (this.remoteList_.length < MAX_HUIS_FILES && this.getNumVariableRmote() != 0) {
+
+				if (this.remoteList_.length < MAX_HUIS_FILES && this.getNumVariableRmote() > 0) {
 					return true;
 				} else {
 					return false;
