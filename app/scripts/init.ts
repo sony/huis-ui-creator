@@ -72,6 +72,9 @@ module Garage {
 
 		GRID_AREA_WIDTH = 464;
 		GRID_AREA_HEIGHT = 812;
+		BIAS_X_DEFAULT_GRID_LEFT = 8;
+		BIAS_X_DEFAULT_GRID_RIGHT = 8;
+		DEFAULT_GRID = 29;
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

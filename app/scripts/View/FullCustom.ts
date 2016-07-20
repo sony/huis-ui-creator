@@ -71,10 +71,8 @@ module Garage {
 			private gridSize_: number;
             private isTextBoxFocused: Boolean;
 
-            //デフォルトのグリッド仕様の際の特殊仕様
-            private DEFAULT_GRID = 29; //デフォルトのグリッドは29pxとする。
-            private BIAL_X_DEFAULT_GRID_LEFT = 8; //デフォルトグリッドの際は左に8pxのマージンがある
-            private BIAL_X_DEFAULT_GRID_RIGHT = 8;//デフォルトグリッドの際は左に8pxのマージンがある
+            
+            
 			/**
 			 * construnctor
 			 */
@@ -92,7 +90,7 @@ module Garage {
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
-                this.gridSize_ = this.DEFAULT_GRID;
+                this.gridSize_ = DEFAULT_GRID;
                 requirejs(["pixi"]);
 
 				
@@ -870,8 +868,8 @@ module Garage {
                     var newY;
 
                     //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                    if (this.gridSize_ === this.DEFAULT_GRID) {
-                        var BIAS_X = this.BIAL_X_DEFAULT_GRID_LEFT;
+                    if (this.gridSize_ === DEFAULT_GRID) {
+                        var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
                         var BIAS_Y = 0
 
                         newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
@@ -927,10 +925,10 @@ module Garage {
                 var newY;
 
                 //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                if (this.gridSize_ === this.DEFAULT_GRID) {
-                    var BIAS_X = this.BIAL_X_DEFAULT_GRID_LEFT;
+                if (this.gridSize_ === DEFAULT_GRID) {
+                    var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
                     var BIAS_Y = 0
-                    var MAX_X = $(".face-page").width() - this.BIAL_X_DEFAULT_GRID_LEFT;
+                    var MAX_X = $(".face-page").width() - BIAS_X_DEFAULT_GRID_LEFT;
 
                     newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
                     newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
@@ -998,9 +996,9 @@ module Garage {
 					}
 
 	                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                    if (this.gridSize_ === this.DEFAULT_GRID) {
+                    if (this.gridSize_ === DEFAULT_GRID) {
                         // グリッドスナップ用に調整
-                        newArea.x = this.getGridCordinate(newArea.x) + this.BIAL_X_DEFAULT_GRID_LEFT;
+                        newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
                         newArea.y = this.getGridCordinate(newArea.y);
                         newArea.w = this.getGridCordinate(newArea.w);
                         newArea.h = this.getGridCordinate(newArea.h);
@@ -1023,9 +1021,7 @@ module Garage {
 
 				var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX, deltaY);
 
-				
-
-
+			
 
 				this.$currentTarget_.css({
 					left: newArea.x + "px",
@@ -1135,8 +1131,8 @@ module Garage {
 								this._setGridSize(16);
 							}
                         }, {
-                            label: this.DEFAULT_GRID + "px", type: "checkbox", checked: this.gridSize_ === this.DEFAULT_GRID ? true : false, click: () => {
-                                this._setGridSize(this.DEFAULT_GRID);
+                            label: DEFAULT_GRID + "px", type: "checkbox", checked: this.gridSize_ === DEFAULT_GRID ? true : false, click: () => {
+                                this._setGridSize(DEFAULT_GRID);
                             }
                         }, {
 							label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_32PX"), type: "checkbox", checked: this.gridSize_ === 32 ? true : false, click: () => {
@@ -3211,8 +3207,8 @@ module Garage {
 						$facePages.css("background-image", "url(../res/icons/grid_16.png)");
                         break;
 
-                    case this.DEFAULT_GRID:
-                        this.gridSize_ = this.DEFAULT_GRID;
+                    case DEFAULT_GRID:
+                        this.gridSize_ = DEFAULT_GRID;
                         $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
                         break;
 
