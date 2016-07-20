@@ -307,8 +307,8 @@
 							<!--jQueryMobileを動的に追加されたDOMに使用するためには、trigger("create")を呼び出す範囲指定が必要-->
 							<div class="custom-select">
 								<select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
-									<option value="touch">タップ</option>
-									<option value="long_press">長押し</option>
+									<option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
+									<option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
 								</select>
 							</div>
 							<div class="custom-select">
