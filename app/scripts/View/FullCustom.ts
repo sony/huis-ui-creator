@@ -1767,30 +1767,27 @@ module Garage {
 				// resolvedPath ( [HUIS_FILES_ROOT]/[remoteId]/imageName)
 				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", image.path)).replace(/\\/g, "/");
 				image.resolvedPath = resolvedPath;
-				// 画像を face ディレクトリ内にコピー
-				if (!fs.existsSync(resolvedPath)) {
-					// 画像のリサイズとグレースケール化
-					Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
-						.done((editedImage) => {
-							// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-							let editedImageName = path.basename(editedImage.path);
-							let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-							this._updateCurrentModelStateData(stateId, {
-								"path": editedImagePath,
-								"resolved-path": editedImage.path.replace(/\\/g, "/"),
-								"resizeOriginal": editedImagePath
-							});
-
-							//ボタンのテキストを削除する
-							this._updateCurrentModelStateData(stateId ,"text","");
-
-							// テキストエリアの文字表示をアップデート
-							$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
-
-							//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
-							//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
+				// 画像のリサイズとグレースケール化
+				Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
+					.done((editedImage) => {
+						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
+						let editedImageName = path.basename(editedImage.path);
+						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
+						this._updateCurrentModelStateData(stateId, {
+							"path": editedImagePath,
+							"resolved-path": editedImage.path.replace(/\\/g, "/"),
+							"resizeOriginal": editedImagePath
 						});
-				}
+
+						//ボタンのテキストを削除する
+						this._updateCurrentModelStateData(stateId ,"text","");
+
+						// テキストエリアの文字表示をアップデート
+						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
+						//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
+						//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
+					});
 			}
 
 			/**
