@@ -118,11 +118,11 @@
 					.tooltip-text{
 						content:''; 
 						display:block; 
-						position:absolute;
+						position:fixed;
 						height:0; 
 						width:0; 
 						z-index:100;
-						visibility:hidden;
+						display:none;
 					}
 				}
 			}
