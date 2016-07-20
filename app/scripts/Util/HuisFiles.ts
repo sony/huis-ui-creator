@@ -447,7 +447,7 @@ module Garage {
 			 */
 			canCreateNewRemote(): boolean {
 
-				if (this.remoteList_.length < MAX_HUIS_FILES && this.getNumVariableRmote() > 0) {
+				if (this.remoteList_.length < MAX_HUIS_FILES && this.getNumVariableRemote() > 0) {
 					return true;
 				} else {
 					return false;
@@ -459,7 +459,7 @@ module Garage {
 			 * PalletAreaに出現するリモコンの数を取得する
 			 * @return PalletAreaに出現するリモコンの数 : number
 			 */
-			getNumVariableRmote(): number{
+			getNumVariableRemote(): number{
 				let FUNCTION_NAME = TAGS + " : getNumVariableRmote : ";
 				if (this.remoteInfos_ == undefined) {
 					console.warn(FUNCTION_NAME + "remoteInfos_ is undefined");
