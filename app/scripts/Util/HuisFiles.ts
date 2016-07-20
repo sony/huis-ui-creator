@@ -473,7 +473,7 @@ module Garage {
 				let result = 0;
 
 				for (let i: number = 0; i < this.remoteInfos_.length; i++){
-					//[サポートされていないファイル]ではない場合、result + 1
+					//サポートされているdevice_type場合、result + 1
 					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
 						result ++;
 					}
