@@ -95,7 +95,7 @@
 								visibility:visible;
 								display: flex;
 								align-items: center;
-								position: absolute;            /* relativeからの絶対位置 */
+								position: fixed;            /* relativeからの絶対位置 */
 
 								//　0.5スケールなので倍に
 								bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM*2;

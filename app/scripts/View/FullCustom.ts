@@ -1331,7 +1331,21 @@ module Garage {
 				}
 				$functionName.html(outputString);
 
-				this.centeringTooltip($target);
+				let $tooltip: JQuery = $target.find(".tooltip-text");
+				let targetTop :number = +($target.css("top").replace("px",""));
+				let targetHeight = $target.outerHeight();
+				let tooltipHeight = $tooltip.outerHeight();
+				$tooltip.css("top", targetTop + targetHeight + "px");
+
+				let targetLeft: number = +($target.css("left").replace("px", ""));
+				let targetWidth = $target.outerWidth(true);
+				let tooltipWidth = $tooltip.outerWidth(true);
+
+				let facePageMarginLeft = +($("#face-pages-area").find(".face-page").css("margin-left").replace("px", ""));
+
+				let leftCenterOfTarget = targetLeft + targetWidth / 2 - tooltipWidth / 2 + facePageMarginLeft;
+				$tooltip.css("left", leftCenterOfTarget + "px");
+
 			}
 
 			/*
