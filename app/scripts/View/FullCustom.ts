@@ -2872,20 +2872,20 @@ module Garage {
 					area.h = this.gridSize_;
 				}
 
-				if (HUIS_FACE_PAGE_WIDTH < area.x + area.w) {
-					if (HUIS_FACE_PAGE_WIDTH < area.w) {
-						area.w = HUIS_FACE_PAGE_WIDTH;
-						area.x = 0;
+				if (GRID_AREA_WIDTH < area.x + area.w) {
+					if (GRID_AREA_WIDTH < area.w) {
+						area.w = GRID_AREA_WIDTH;
+						area.x = BIAS_X_DEFAULT_GRID_LEFT;
 					} else {
-						area.x = HUIS_FACE_PAGE_WIDTH - area.w;
+						area.x = GRID_AREA_WIDTH - area.w;
 					}
 				}
-				if (HUIS_FACE_PAGE_HEIGHT < area.y + area.h) {
-					if (HUIS_FACE_PAGE_HEIGHT < area.h) {
-						area.h = HUIS_FACE_PAGE_HEIGHT;
+				if (GRID_AREA_HEIGHT < area.y + area.h) {
+					if (GRID_AREA_HEIGHT < area.h) {
+						area.h = GRID_AREA_HEIGHT;
 						area.y = 0;
 					} else {
-						area.y = HUIS_FACE_PAGE_HEIGHT - area.h;
+						area.y = GRID_AREA_HEIGHT - area.h;
 					}
 				}
 			}
