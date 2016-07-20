@@ -3360,6 +3360,15 @@ module Garage {
 					}
 				}
 
+				//ブランド名が空の場合,メーカー名情報がない旨に変換
+				if (button.deviceInfo.code_db.brand == " ") {
+					if (button.state[0].action[0].code != null) {
+						button.deviceInfo.code_db.brand = $.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LEARNED");
+					} else {
+						button.deviceInfo.code_db.brand = $.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_NON_MAKER");
+					}
+				}
+
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
 				var $buttonDetail = $(templateButton(button));
