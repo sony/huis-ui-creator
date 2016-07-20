@@ -601,6 +601,13 @@ declare module Garage {
 	* PalletAreaで表示されないデバイスタイプ
 	*/
 	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+
+	/*
+	* CanvasAreaのグリッドサイズ
+	*/
+	var GRID_AREA_WIDTH: number;
+	var GRID_AREA_HEIGHT: number;
+
 }
 
 
