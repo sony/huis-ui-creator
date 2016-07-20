@@ -1002,16 +1002,8 @@ module Garage {
                         // グリッドスナップ用に調整
                         newArea.x = this.getGridCordinate(newArea.x) + this.BIAL_X_DEFAULT_GRID_LEFT;
                         newArea.y = this.getGridCordinate(newArea.y);
-
                         newArea.w = this.getGridCordinate(newArea.w);
-						if (newArea.w > GRID_AREA_WIDTH) {
-							newArea.w = GRID_AREA_WIDTH;
-						}
-
                         newArea.h = this.getGridCordinate(newArea.h);
-						if (newArea.h > GRID_AREA_HEIGHT) {
-							newArea.h = GRID_AREA_HEIGHT;
-						}
                     } else {
                         // グリッドスナップ用に調整
                         newArea.x = this.getGridCordinate(newArea.x);
