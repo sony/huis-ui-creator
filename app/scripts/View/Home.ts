@@ -249,6 +249,7 @@ module Garage {
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
                         buttons: ["yes", "no"],
 						title: PRODUCT_NAME,
+						cancelId:1,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
@@ -306,6 +307,7 @@ module Garage {
                                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
                                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 									title: PRODUCT_NAME,
+									cancelId:1,
                                 });
                                 if (response === 0) {
                                     //this._removeFace(remoteId);
