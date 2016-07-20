@@ -2987,8 +2987,49 @@ module Garage {
 			 * @param position {IPosition} 位置
 			 * @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
 			 */
-			private _getTarget(position: IPosition): JQuery {
-				var $items = $("#face-canvas .item");
+			private _getTarget(position: IPosition): JQuery {				
+
+				//label >> button >> images の優先順位
+
+				let $labels = $("#face-canvas .label-item");
+				let $legelTarget = this._getTargetIn(position, $labels);
+				if ($legelTarget != null) {
+					return $legelTarget
+				}
+
+				let $buttons = $("#face-canvas .button-item");
+				let $buttonTarget = this._getTargetIn(position, $buttons);
+				if ($buttonTarget != null) {
+					return $buttonTarget
+				}
+
+				let $images = $("#face-canvas .image-item");
+				let $imageTarget = this._getTargetIn(position, $images);
+				if ($imageTarget != null) {
+					return $imageTarget
+				}
+				
+				return null;
+			}
+
+
+			/*
+			* @param item :JQuery 位置
+			* @param position {IPosition} 位置
+			* @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
+			*/
+			private _getTargetIn(position: IPosition, $items: JQuery): JQuery {
+				let FUNCTION_NAME: string = TAG + " : _getTargetIn : ";
+				if (position == undefined) {
+					console.warn(FUNCTION_NAME + "position is undefined");
+					return
+				}
+
+				if ($items == undefined) {
+					console.warn(FUNCTION_NAME + "$item is undefined");
+					return
+				}
+
 				var l = $items.length;
 				for (let i = l - 1; 0 <= i; i--) {
 					let $item = $items.eq(i);
@@ -3006,6 +3047,7 @@ module Garage {
 						}
 					}
 				}
+
 				return null;
 			}
 
