@@ -59,6 +59,20 @@ body {
 			display: none;	
 	}
 				
+	//ラベル、ボタン、画像などのz-indexアイテム
+	.label-item{
+		z-index:3;	
+	}
+
+	.button-item{
+		z-index:2;
+	}
+
+	.image-item{
+		z-index:1;
+	}
+
+
     //スクロールバー
     ::-webkit-scrollbar {
         &:horizontal{
