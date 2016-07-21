@@ -3787,6 +3787,7 @@ module Garage {
                                 this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
+								event.preventDefault();
                             }
                             break;
                         case 89: // y Redo
@@ -3795,6 +3796,7 @@ module Garage {
                                 this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
+								event.preventDefault();
                             }
                         default:
                             break;
