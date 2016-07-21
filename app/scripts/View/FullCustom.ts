@@ -3022,12 +3022,12 @@ module Garage {
 				let FUNCTION_NAME: string = TAG + " : _getTargetIn : ";
 				if (position == undefined) {
 					console.warn(FUNCTION_NAME + "position is undefined");
-					return
+					return null;
 				}
 
 				if ($items == undefined) {
 					console.warn(FUNCTION_NAME + "$item is undefined");
-					return
+					return null;
 				}
 
 				var l = $items.length;
