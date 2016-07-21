@@ -55,7 +55,7 @@ module Garage {
                 var ret:any = {};
                 ret = super.events();
 				return $.extend(ret,{
-					"dblclick header .ui-title": "_onHeaderDblClick",
+					//"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
 					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
