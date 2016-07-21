@@ -2994,19 +2994,19 @@ module Garage {
 				let $labels = $("#face-canvas .label-item");
 				let $legelTarget = this._getTargetIn(position, $labels);
 				if ($legelTarget != null) {
-					return $legelTarget
+					return $legelTarget;
 				}
 
 				let $buttons = $("#face-canvas .button-item");
 				let $buttonTarget = this._getTargetIn(position, $buttons);
 				if ($buttonTarget != null) {
-					return $buttonTarget
+					return $buttonTarget;
 				}
 
 				let $images = $("#face-canvas .image-item");
 				let $imageTarget = this._getTargetIn(position, $images);
 				if ($imageTarget != null) {
-					return $imageTarget
+					return $imageTarget;
 				}
 				
 				return null;
