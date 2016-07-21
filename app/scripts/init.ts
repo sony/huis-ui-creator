@@ -69,6 +69,13 @@ module Garage {
 
 		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
 
+
+		GRID_AREA_WIDTH = 464;
+		GRID_AREA_HEIGHT = 812;
+		BIAS_X_DEFAULT_GRID_LEFT = 8;
+		BIAS_X_DEFAULT_GRID_RIGHT = 8;
+		DEFAULT_GRID = 29;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
