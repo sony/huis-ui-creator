@@ -709,7 +709,10 @@
             width: $SIZE_FACE_IN_PALLET_WIDTH;
             height: $SIZE_FACE_IN_PALLET_HEIGHT;
             margin-top:$SIZE_FACE_IN_PALLET_MARING_TOP;
-            
+			margin-right:$SIZE_FACE_IN_PALLET_MARING_RIGHT;
+			margin-left:$SIZE_FACE_IN_PALLET_MARING_LEFT;
+			margin-bottom:$SIZE_FACE_IN_PALLET_MARING_BOTTOM;
+            border : $SIZE_PALLET_BORDER solid $COLOR_PALLET_BORDER;
 
             #face-pages-area {
                 transform: scale(0.5);
@@ -720,7 +723,7 @@
                 padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
                 padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
                 background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
-                border : $SIZE_FACE_PAGES_AREA_BORDER_THICKNESS solid $COLOR_FACE_PAGES_AREA_BOARDER;
+                
 
                 //box-shadow: 0 0 30px rgba(0,0,0,0.6);
 
