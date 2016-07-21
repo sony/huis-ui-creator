@@ -2881,12 +2881,14 @@ module Garage {
 					area.h = this.gridSize_;
 				}
 
-				if (GRID_AREA_WIDTH < area.x + area.w) {
+				let maxX = GRID_AREA_WIDTH + BIAS_X_DEFAULT_GRID_LEFT;
+
+				if (maxX < area.x + area.w) {
 					if (GRID_AREA_WIDTH < area.w) {
 						area.w = GRID_AREA_WIDTH;
 						area.x = BIAS_X_DEFAULT_GRID_LEFT;
 					} else {
-						area.x = GRID_AREA_WIDTH - area.w;
+						area.x = maxX - area.w;
 					}
 				}
 				if (GRID_AREA_HEIGHT < area.y + area.h) {
