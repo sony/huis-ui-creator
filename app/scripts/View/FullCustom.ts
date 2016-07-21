@@ -1731,21 +1731,19 @@ module Garage {
 				// face ディレクトリ内に配置されるべき画像のパスを取得
 				let resolvedPath = model.resolvedPath;
 				// 画像を face ディレクトリ内にコピー
-				if (!fs.existsSync(resolvedPath)) {
-					// 画像のリサイズとグレースケール化
-					Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
-						.done((editedImage) => {
-							// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-							let editedImageName = path.basename(editedImage.path);
-							let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
+				// 画像のリサイズとグレースケール化
+				Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
+					.done((editedImage) => {
+						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
+						let editedImageName = path.basename(editedImage.path);
+						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
 
-							this._updateCurrentModelData({
-								"path": editedImagePath,
-								"resizeOriginal": editedImagePath,
-								"resized": true
-							});
+						this._updateCurrentModelData({
+							"path": editedImagePath,
+							"resizeOriginal": editedImagePath,
+							"resized": true
 						});
-                }
+					});
 
 				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
 				if (pageBackground) {
@@ -1782,30 +1780,27 @@ module Garage {
 				// resolvedPath ( [HUIS_FILES_ROOT]/[remoteId]/imageName)
 				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", image.path)).replace(/\\/g, "/");
 				image.resolvedPath = resolvedPath;
-				// 画像を face ディレクトリ内にコピー
-				if (!fs.existsSync(resolvedPath)) {
-					// 画像のリサイズとグレースケール化
-					Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
-						.done((editedImage) => {
-							// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-							let editedImageName = path.basename(editedImage.path);
-							let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-							this._updateCurrentModelStateData(stateId, {
-								"path": editedImagePath,
-								"resolved-path": editedImage.path.replace(/\\/g, "/"),
-								"resizeOriginal": editedImagePath
-							});
-
-							//ボタンのテキストを削除する
-							this._updateCurrentModelStateData(stateId ,"text","");
-
-							// テキストエリアの文字表示をアップデート
-							$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
-
-							//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
-							//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
+				// 画像のリサイズとグレースケール化
+				Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
+					.done((editedImage) => {
+						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
+						let editedImageName = path.basename(editedImage.path);
+						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
+						this._updateCurrentModelStateData(stateId, {
+							"path": editedImagePath,
+							"resolved-path": editedImage.path.replace(/\\/g, "/"),
+							"resizeOriginal": editedImagePath
 						});
-				}
+
+						//ボタンのテキストを削除する
+						this._updateCurrentModelStateData(stateId ,"text","");
+
+						// テキストエリアの文字表示をアップデート
+						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
+						//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
+						//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
+					});
 			}
 
 			/**
