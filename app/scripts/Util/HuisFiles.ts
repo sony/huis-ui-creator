@@ -1254,7 +1254,13 @@ module Garage {
 					console.warn(TAGS.HuisFiles + "_parseFace() cannot read " + facePath);
 					return undefined;
 				}
-				var plainFace: IPlainFace = JSON.parse(faceText.replace(/^\uFEFF/, ""));
+				try {
+					// JSON.parse()はJSONが正しくない場合例外を投げるのでtry-catchで受ける
+					var plainFace: IPlainFace = JSON.parse(faceText.replace(/^\uFEFF/, ""));
+				} catch (e) {
+					console.error("_parseFace: " + e);
+					console.log(plainFace);
+				}
 
 				// 読み込んだ face のチェック
 				if (!plainFace) {
@@ -1496,7 +1502,14 @@ module Garage {
 				if (!moduleText) {
 					return null;
 				}
-				var modulePlain: IModule = JSON.parse(moduleText.replace(/^\uFEFF/, ""));
+				try {
+					// JSON.parse()は失敗すると例外を投げるのでtry-catchで受ける
+					var modulePlain: IModule = JSON.parse(moduleText.replace(/^\uFEFF/, ""));
+				} catch (e) {
+					console.error("_parseModule: " + e);
+					console.log(modulePlain);
+				}
+
 				if (!modulePlain) {
 					return null;
 				}

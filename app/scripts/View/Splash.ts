@@ -135,7 +135,6 @@ module Garage {
                 } catch (err) {
                     console.error(err);
                     console.error("error occurred in syncWithHUIS");
-                    HUIS_ROOT_PATH = null;
                 }
             };
 
