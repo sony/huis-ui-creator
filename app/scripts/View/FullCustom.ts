@@ -2990,6 +2990,7 @@ module Garage {
 			private _getTarget(position: IPosition): JQuery {				
 
 				//label >> button >> images の優先順位
+				//この順番は、_base.cssで定義されている z-indexの高い順  
 
 				let $labels = $("#face-canvas .label-item");
 				let $legelTarget = this._getTargetIn(position, $labels);
