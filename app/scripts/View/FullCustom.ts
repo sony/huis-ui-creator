@@ -1414,6 +1414,8 @@ module Garage {
 				//ボタンに対して水平センタリング
 				this.layoutTargetOnCenterOfBase($tooltip, $button, 1.0, buttonScale);
 
+				//ボタンのしたにレイアウト
+				this.layoutTargetOnButtomOfBase($tooltip, $button, 1.0, buttonScale);
 			}
 
 

@@ -387,7 +387,38 @@ module Garage {
 			}
 
 
-		
+			/*
+			* targetをbaseの真下にレイアウトするをする.
+			* @param $target : JQuery   レイアウトされるJquery要素
+			* @param $base : JQuery 何に対してレイアウトされるかを示す Jquery要素
+			* @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			*/
+			protected layoutTargetOnButtomOfBase($target: JQuery, $base: JQuery, targetScale?: number, baseScale?: number) {
+				let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnButtomOfBase: ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if ($base == undefined) {
+					console.warn(FUNCTION_NAME + "$base is undefined");
+					return;
+				}
+
+				let targetLeft = $target.offset().left;
+				
+				let baseTop = $base.offset().top;
+				let baseHeight = $base.outerHeight(true);
+				if (baseScale) {
+					baseHeight = baseHeight * baseScale;
+				}
+
+				let targetTop = baseTop + baseHeight;
+				$target.offset({ top: targetTop, left: targetLeft });
+
+			}
 
         }
     }
