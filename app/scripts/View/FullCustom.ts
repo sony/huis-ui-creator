@@ -3567,6 +3567,22 @@ module Garage {
 					ring_right: "none",
 					ring_left: "none"
 				};
+
+				var actionListTranslate: IActionList = {
+					touch: "none",
+					touch_top: "none",
+					touch_bottom: "none",
+					touch_right: "none",
+					touch_left: "none",
+					long_press: "none",
+					swipe_up: "none",
+					swipe_down: "none",
+					swipe_right: "none",
+					swipe_left: "none",
+					ring_right: "none",
+					ring_left: "none"
+				};
+
 				var actions: IAction[] = state.action;
 				if (actions) {
 					actions.forEach((action) => {
@@ -3578,14 +3594,16 @@ module Garage {
 					});
 				}
 
+				
 				var translates: IStateTranslate[] = state.translate;
 				if (translates) {
 					translates.forEach((translate) => {
-						actionList[translate.input] = "translate_" + translate.next;
+						actionListTranslate[translate.input] = "translate-state-" + translate.next;
 					});
 				}
 
 				state.actionList = actionList;
+				state.actionListTranslate = actionListTranslate;
 			}
 
             /**
