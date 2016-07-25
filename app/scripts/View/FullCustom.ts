@@ -2764,6 +2764,7 @@ module Garage {
 							if (!_.isUndefined(inputName)) {
 								actionList[inputName] = value;
 								this.currentTargetButtonStatesUpdated_ = true;
+								this._updateCurrentModelButtonStatesData();
 							}
 						}
 						break;
