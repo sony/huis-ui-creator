@@ -356,7 +356,7 @@ module Garage {
 			* @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
 			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
 			*/
-			protected centeringHorizontalForOn($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
+			protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
 				let FUNCTION_NAME = TAG_BASE + " :centeringForOn: ";
 
 				if ($target == undefined) {

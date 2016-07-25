@@ -1412,7 +1412,7 @@ module Garage {
 				let buttonScale: number = +(buttonTransform[3].replace(" ", ""));
 
 				//ボタンに対して水平センタリング
-				this.centeringHorizontalForOn($tooltip, $button, 1.0, buttonScale);
+				this.layoutTargetOnCenterOfBase($tooltip, $button, 1.0, buttonScale);
 
 			}
 
