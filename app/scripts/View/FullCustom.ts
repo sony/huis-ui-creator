@@ -2262,7 +2262,7 @@ module Garage {
 						targetState = null;
 					}
 					var actionList = stateDetail.actionList;
-					var translates: IStateTranslate[] = [];
+					
 
 					if (actionList) {
 						var actions: IAction[] = [];
@@ -2274,29 +2274,46 @@ module Garage {
 							if (_.isUndefined(value) || value === "none") {
 								continue;
 							}
+							
+							let codeDb: ICodeDB = {
+								function: value,
+								brand: brand,
+								device_type: device_type,
+								db_codeset: db_codeset,
+								model_number: model_number
+							};
+							let action: IAction = {
+								input: key,
+								code_db: codeDb
+							};
+							actions.push(action);
+							
+						}
+					}
+
+					var translates: IStateTranslate[] = [];
+					var actionListTranslate = stateDetail.actionListTranslate;
+					if (actionListTranslate) {
+						var actionsTranslate: IAction[] = [];
+						for (let key in actionListTranslate) {
+							if (!key) {
+								continue;
+							}
+							let value: string = actionListTranslate[key];
+							if (_.isUndefined(value) || value === "none") {
+								continue;
+							}
 							if (value.indexOf("translate-state-") === 0) {
-								let stateId: number = parseInt(value.slice(value.indexOf("translate-state-")), 10);
+								let stateId: number = parseInt(value.replace("translate-state-",""));
 								let translate: IStateTranslate = {
 									input: key,
 									next: stateId
 								};
 								translates.push(translate);
-							} else {
-								let codeDb: ICodeDB = {
-									function: value,
-									brand: brand,
-									device_type: device_type,
-									db_codeset: db_codeset,
-									model_number: model_number
-								};
-								let action: IAction = {
-									input: key,
-									code_db: codeDb
-								};
-								actions.push(action);
-							}
+							} 
 						}
 					}
+
 					let state: IState = {
 						id: stateDetail.id,
 						image: targetState ? targetState[0]["image"] : stateDetail.image,
