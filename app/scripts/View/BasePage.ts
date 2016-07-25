@@ -357,7 +357,7 @@ module Garage {
 			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
 			*/
 			protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
-				let FUNCTION_NAME = TAG_BASE + " :centeringForOn: ";
+				let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnCenterOfBase: ";
 
 				if ($target == undefined) {
 					console.warn(FUNCTION_NAME + "$target is undefined");
