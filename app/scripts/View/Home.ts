@@ -121,12 +121,6 @@ module Garage {
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
                         this._renderFace($(elems[i]));
-
-						//最後のリモコンの右マージンは不要。
-						if (i == l - 1) {
-							$(elems[i]).css("margin-right", "0px");
-						}
-
                     }
                     this._calculateFaceListWidth();
                 } else {//リモコン数が0のとき導入画面を表示。
