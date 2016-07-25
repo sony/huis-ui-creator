@@ -76,6 +76,9 @@ module Garage {
 		BIAS_X_DEFAULT_GRID_RIGHT = 8;
 		DEFAULT_GRID = 29;
 
+		WINDOW_MIN_WIDTH = 768;
+		WINDOW_MIN_HEIGHT = 1280;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
