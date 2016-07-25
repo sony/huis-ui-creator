@@ -63,69 +63,41 @@
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
 
-            //box-shadow: 0 0 50px rgba(0,0,0,0.8);
+			//ボタン情報表示用 ツールチップ 非表示
+			#canvas-tooltip{						
+				overflow:initial;
+				text-shadow:none;
+					
+				visibility:visible;
+				display: flex;
+				align-items: center;
+				position: fixed; 
+
+				bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM;
+				height:$SIZE_TOOLTIP_HEIGHT;
+				width:initial;
+				font-size: $FONT_SIZE_SSS;
+				font-family:$FONT_FAMILY_TOOL_TIP;
+				color: $COLOR_TOOLTIP_TEXT;
+				background-color: $COLOR_TOOLTIP_BACKGROUND;
+				border : $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
+				padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
+				box-shadow:$COLOR_TOOLTIP_SHADOW;
+				z-index:100;				
+			}
+
+
+			//ボタン情報表示用 ツールチップ 非表示
+			#canvas-tooltip.disable{
+					display :none;
+			}
 
             #face-canvas {
                 
                 #face-pages-area{
                     transform: scale(0.5);
 					transform-origin: left top;
-
-					.tooltip{
-						overflow:initial;
-						text-shadow:none;
-
-						.tooltip-text{
-							white-space: nowrap;
-							display: flex;	
-							visibility:hidden;
-							&:before{
-								content:''; 
-								display:block; 
-								position:absolute;
-								height:0; 
-								width:0; 
-								z-index:100;
-							}
-						}
-					
-						&:hover{
-							
-							.tooltip-text{
-								visibility:visible;
-								display: flex;
-								align-items: center;
-								position: fixed;            /* relativeからの絶対位置 */
-
-								//　0.5スケールなので倍に
-								bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM*2;
-								height:$SIZE_TOOLTIP_HEIGHT*2;
-								width:initial;
-								font-size: $FONT_SIZE_SSS*2;
-								font-family:$FONT_FAMILY_TOOL_TIP;
-								color: $COLOR_TOOLTIP_TEXT;
-								background-color: $COLOR_TOOLTIP_BACKGROUND;
-								border : $SIZE_TOOLTIP_BORDER_THICKNESS*2 solid $COLOR_BLACK;
-								padding: 0 $SIZE_TOOLTIP_PADDING_SIDE*2;
-								box-shadow:$COLOR_TOOLTIP_SHADOW;
-								z-index:100;
-								
-							}
-						}
 				}
-				
-				.selected.tooltip{
-					.tooltip-text{
-						content:''; 
-						display:block; 
-						position:fixed;
-						height:0; 
-						width:0; 
-						z-index:100;
-						display:none;
-					}
-				}
-			}
                
                 #face-canvas-inner{
                     height:$SIZE_CANVAS_INNER_HEIGHT;
