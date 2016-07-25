@@ -10,6 +10,7 @@ module Garage {
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
 
+		let TAG_BASE: string = "[Garage.View.BasePage] ";
 
 		/**
 		 * @class StyleBuilderDefault
@@ -346,6 +347,60 @@ module Garage {
 				
 				return resultString;
 			}
+
+
+			/*
+			* 横にセンタリング処理をする.
+			* @param $target : JQuery   センタリングされるJquery要素
+			* @param $base : JQuery 何のセンタリングなのかのJquery要素
+			* @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			*/
+			protected centeringHorizontalForOn($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
+				let FUNCTION_NAME = TAG_BASE + " :centeringForOn: ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if ($base == undefined) {
+					console.warn(FUNCTION_NAME + "$base is undefined");
+					return;
+				}
+
+				let targetTop = $target.offset().top;
+				let targetWidth = $target.outerWidth(true);
+				if (targetScale) {
+					targetWidth = targetWidth * targetScale;
+				}
+
+				let baseLeft = $base.offset().left;
+				let baseWidth = $base.outerWidth(true);
+				if (baseScale) {
+					baseWidth = baseWidth * baseScale;
+				}
+
+				let targetLeft = baseLeft + baseWidth / 2 - targetWidth / 2;
+				//$target.offset({ top: targetTop, left: targetLeft });
+				$target.offset({ top: targetTop, left: targetLeft });
+
+				/*
+				let $tooltip: JQuery = $target.find(".tooltip-text");
+				let targetTop: number = +($target.css("top").replace("px", ""));
+				let targetHeight = $target.outerHeight();
+				let tooltipHeight = $tooltip.outerHeight();
+				$tooltip.css("top", targetTop + targetHeight + "px");
+
+				let targetLeft: number = +($target.css("left").replace("px", ""));
+				let targetWidth = $target.outerWidth(true);
+				let tooltipWidth = $tooltip.outerWidth(true);
+
+				let facePageMarginLeft = +($("#face-pages-area").find(".face-page").css("margin-left").replace("px", ""));
+				*/
+			}
+
+
 
 
         }

@@ -1407,6 +1407,12 @@ module Garage {
 				}
 				$functionName.html(outputString);
 
+				//#face-pages-areaのscale率を取得
+				let buttonTransform = $("#face-pages-area").css("transform").split(",");
+				let buttonScale: number = +(buttonTransform[3].replace(" ", ""));
+
+				//ボタンに対して水平センタリング
+				this.centeringHorizontalForOn($tooltip, $button, 1.0, buttonScale);
 
 			}
 
