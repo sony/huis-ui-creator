@@ -41,6 +41,8 @@ app.on('ready', function() {
 	mainWindow = new BrowserWindow({
 		width: 1280,
 		height: 800,
+		minWidth :  1280,
+		minHeight :768,
 		icon:  __dirname + '/app/huis-favicon.png',
 		title: 'HUIS UI CREATOR'
 	});
