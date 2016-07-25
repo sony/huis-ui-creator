@@ -3461,9 +3461,7 @@ module Garage {
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
-                        if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
-                            if (state.id != button.default) return;
-                        }
+                       
                         stateData.id = state.id;
                         let resizeMode: string;
                         if (state.image) {
@@ -3481,6 +3479,10 @@ module Garage {
                         }
 
                         this._setActionListToState(state);
+
+						if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
+                            if (state.id != button.default) return;
+                        }
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
