@@ -837,7 +837,8 @@
             "STR_REMOTE_BTN_SPECIAL_LIGHT_LEVEL_PLUS": "明るさ ＋",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLON": "全灯",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLOFF": "全照灯",
-            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD"
+            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD",
+            "STR_REMOTE_BTN_SPECIAL_AUDIO_AUX": "入力切替 AUX"
         }
     }
 }
