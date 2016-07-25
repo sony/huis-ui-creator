@@ -171,8 +171,9 @@ module Garage {
 					// キャンバス内のページ追加ボタン
 					"click #button-add-page": "onAddPageButtonClicked",
 
-					//キャンバスないのボタンアイテムをhover
+					//キャンバス内のボタンアイテムをhover
 					"mouseover #face-canvas #face-pages-area .button-item ": "onHoverButtonItemInCanvas",
+					"mouseout #face-canvas #face-pages-area .button-item ": "onHoverOutButtonItemInCanvas",
 
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
@@ -759,6 +760,9 @@ module Garage {
 						// 選択状態にする
 						this.$currentTarget_.addClass("selected");
 
+						//ツールチップを非表示にする。
+						this.disableButtonInfoTooltip();
+
 						// リサイザーを追加
 						this._setResizer(this.$currentTarget_);
 
@@ -1310,44 +1314,104 @@ module Garage {
 			private onHoverButtonItemInCanvas(event : Event) {
 				var $target = $(event.currentTarget);//Jquery
 
-				var functions: string[] = this.getFunctions($target);
+				this.showButtonInfoTooltip($target);
+			}
 
-				if (functions.length == 0) {
+			/**
+			 * キャンバス内のボタンアイテムのHoverが外されたときのハンドリング
+			 */
+			private onHoverOutButtonItemInCanvas(event: Event) {
+				let FUNCTION_NAME = TAG + " : onHoverOutButtonItemInCanvas : ";
+				if (event == null) {
+					console.warn(FUNCTION_NAME+"event is null");
 					return;
 				}
 
-				var outputFunctionName = functions[0];
-				var $functionName = $target.find(".function-name");
-				
-				$functionName.html(outputFunctionName);
+				//tooltipを非表示にする。
+				this.disableButtonInfoTooltip();
 
-				
-				//ローカライズ
-				$target.i18n();
+			}
+
+
+			/*
+			* キャンバス内のボタンの情報表示用ToolTipを非表示にする。
+			*/
+			private disableButtonInfoTooltip() {
+				let FUNCTION_NAME = TAG + " : disableButtonInfoTooltip : ";
+
+				let $tooltip = $("#canvas-tooltip");
+
+				if ($tooltip == undefined) {
+					console.warn(FUNCTION_NAME + "$tooltip is undefined");
+					return;
+				}
+
+				$tooltip.addClass("disable");
+			}
+
+
+
+			/*
+			* キャンバス内のボタンの情報表示用ToolTipを表示する。
+			* @param $button : JQuery ツールチップを表示するボタンの JQuery要素
+			*/
+			private showButtonInfoTooltip($button : JQuery) {
+				let FUNCTION_NAME = TAG + " : showButtonInfoTooltip : ";
+
+				if ($button == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				let $tooltip: JQuery= $("#canvas-tooltip");
+				if ($tooltip == undefined) {
+					console.warn(FUNCTION_NAME + "$tooltip is undefined");
+					return;
+				}
+
+				var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
+					return;
+				}
+
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;
+				}
+
+				//Hoverしたボタンが選択状態だった場合、表示しない。
+				if ($button.hasClass("selected")) {
+					this.disableButtonInfoTooltip();
+					return;
+				}
+				$tooltip.removeClass("disable");
+
+				//ツールチップ内の文言を代入
+				let deviceType: string = this.getButtonDeviceType($button);
+				$tooltip.find(".device-type").html(deviceType);
+
+				//ファンクション情報をローカライズ
+				let functions: string[] = this.getFunctions($button);
+				if (functions.length == 0) {
+					return;
+				}
+				let outputFunctionName = functions[0];
+				let $functionName:JQuery= $tooltip.find(".function-name");
+				$functionName.html(outputFunctionName);
 				var localizedString = $.i18n.t("button.function." + outputFunctionName);
 				var outputString = localizedString;
-
 				if (functions.length > 1) {
 					outputString = outputString + " etc";
 				}
 				$functionName.html(outputString);
 
-				let $tooltip: JQuery = $target.find(".tooltip-text");
-				let targetTop :number = +($target.css("top").replace("px",""));
-				let targetHeight = $target.outerHeight();
-				let tooltipHeight = $tooltip.outerHeight();
-				$tooltip.css("top", targetTop + targetHeight + "px");
-
-				let targetLeft: number = +($target.css("left").replace("px", ""));
-				let targetWidth = $target.outerWidth(true);
-				let tooltipWidth = $tooltip.outerWidth(true);
-
-				let facePageMarginLeft = +($("#face-pages-area").find(".face-page").css("margin-left").replace("px", ""));
-
-				let leftCenterOfTarget = targetLeft + targetWidth / 2 - tooltipWidth / 2 + facePageMarginLeft;
-				$tooltip.css("left", leftCenterOfTarget + "px");
 
 			}
+
+
+
 
 			/*
 			* ボタンのファンクションを取得
@@ -1382,6 +1446,36 @@ module Garage {
 
 				return fucntions;
 
+			}
+
+			/*
+			* ボタンのデバイスタイプを取得
+			* @ $button : JQuery デバイスタイプを取得したいボタンのJquery要素
+			* @ return : string  デバイスタイプ
+			*/
+			private getButtonDeviceType($button: JQuery): string{
+				var FUNCTION_NAME = this.FILE_NAME + " getButtonDeviceType :";
+
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$button is Undefined");
+					return;
+				}
+
+				var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
+					return;
+				}
+
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;
+				}
+
+
+				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();
+				
 			}
 
 			/*
