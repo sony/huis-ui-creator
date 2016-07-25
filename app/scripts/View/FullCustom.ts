@@ -36,6 +36,7 @@ module Garage {
 
 		interface IStateDetail extends IGState {
 			actionList?: IActionList;
+			actionListTranslate?: IActionList;
 		}
 
 
