@@ -1416,6 +1416,11 @@ module Garage {
 
 				//ボタンのしたにレイアウト
 				this.layoutTargetOnButtomOfBase($tooltip, $button, 1.0, buttonScale);
+
+				//マイナスマージンを設定
+				let tooltipTopMargin: number = +($tooltip.css("margin-top").replace("px", ""));
+				$tooltip.offset({ left: $tooltip.offset().left, top: $tooltip.offset().top + tooltipTopMargin });
+
 			}
 
 

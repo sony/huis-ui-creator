@@ -73,7 +73,7 @@
 				align-items: center;
 				position: fixed; 
 
-				bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM;
+				margin-top: $SIZE_TOOLTIP_MAGIN_TOP;
 				height:$SIZE_TOOLTIP_HEIGHT;
 				width:initial;
 				font-size: $FONT_SIZE_SSS;
