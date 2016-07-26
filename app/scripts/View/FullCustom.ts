@@ -3363,6 +3363,9 @@ module Garage {
 				// リサイザーを削除
 				$(".item-resizer").remove();
 
+				//テキストエリアのフォーカスを外す
+				$("input[type='text']").blur();
+
 				// detail エリアの削除
 				let $detail = $("#face-item-detail");
 				$detail.children().remove();
