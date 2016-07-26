@@ -127,7 +127,6 @@ module Garage {
                     console.log("numRemotes : " + numRemotes);
                     //導入画面は初期状態は非表示なのでここで表示する。
                     this._renderIntroduction();
-					$("#face-list").hide();
                 }
 
 				//テキストのローカライズ
@@ -151,7 +150,6 @@ module Garage {
                 $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
                 $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
                 $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
-
             }
 
 
