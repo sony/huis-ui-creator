@@ -72,7 +72,8 @@ module Garage {
 			private gridSize_: number;
             private isTextBoxFocused: Boolean;
 
-            
+            private bindedLayoutPage = null;
+
             
 			/**
 			 * construnctor
@@ -114,7 +115,10 @@ module Garage {
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
-					$(window).on("resize", $.proxy(this._pageLayout.bind(this), this));
+					//this._pageLayout.bind(this)をすると、新しいオブジェクトを返すので、off("resize", )の際にも使うため、メンバーに記憶する
+					//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
+					this.bindedLayoutPage = this._pageLayout.bind(this);
+					$(window).on("resize", $.proxy(this.bindedLayoutPage, this));
 
 					this.currentWindow_ = Remote.getCurrentWindow();
 					// コンテキストメニュー
@@ -148,7 +152,7 @@ module Garage {
 			}
 
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout);
+				$(window).off("resize", this.bindedLayoutPage);
 				super.onPageBeforeHide(event, data);
 			}
 

@@ -19,6 +19,8 @@ module Garage {
             private selectedRemoteId: string = null;
             private remoteIdToDelete;
 
+			private bindedLayoutPage = null;
+
 			/**
 			 * construnctor
 			 */
@@ -43,7 +45,9 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout.bind(this));
+				console.log("_pageLayout in home off called before");
+				$(window).off("resize", this.bindedLayoutPage);
+				console.log("_pageLayout in home off called after");
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -84,7 +88,10 @@ module Garage {
                 this.render();
                 this.selectedRemoteId = null; // 選択されていたものがあったら忘れること
 
-				$(window).on("resize", this._pageLayout.bind(this));
+				//this._pageLayout.bind(this)をすると、新しいオブジェクトを返すので、off("resize", )の際にも使うため、メンバーに記憶する
+				//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
+				this.bindedLayoutPage = this._pageLayout.bind(this);
+				$(window).on("resize", this.bindedLayoutPage);
 
 				this.currentWindow_ = Remote.getCurrentWindow();
 				// コンテキストメニュー
@@ -343,6 +350,9 @@ module Garage {
 			}
 
 			private _pageLayout() {
+
+				console.log("_pageLayout in home called");
+
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
 				this.closeAllPopups();
