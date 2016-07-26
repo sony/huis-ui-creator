@@ -45,9 +45,7 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				console.log("_pageLayout in home off called before");
 				$(window).off("resize", this.bindedLayoutPage);
-				console.log("_pageLayout in home off called after");
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -350,8 +348,6 @@ module Garage {
 			}
 
 			private _pageLayout() {
-
-				console.log("_pageLayout in home called");
 
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
