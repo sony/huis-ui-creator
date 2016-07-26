@@ -1194,7 +1194,7 @@ module Garage {
 
 				var menuItem_redo = new MenuItem({
 					label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_REDO"),
-					accelerator: "Shift+CmdOrCtrl+Z",
+					accelerator: "CmdOrCtrl+Y",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
 						var targetModel = this.commandManager_.redo();
