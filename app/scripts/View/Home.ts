@@ -43,7 +43,7 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout);
+				$(window).off("resize", this._pageLayout.bind(this));
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -84,7 +84,7 @@ module Garage {
                 this.render();
                 this.selectedRemoteId = null; // 選択されていたものがあったら忘れること
 
-				$(window).on("resize", this._pageLayout);
+				$(window).on("resize", this._pageLayout.bind(this));
 
 				this.currentWindow_ = Remote.getCurrentWindow();
 				// コンテキストメニュー
@@ -345,7 +345,7 @@ module Garage {
 			private _pageLayout() {
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
-
+				this.closeAllPopups();
 				//var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
                 var scrollHeight = windowHeight - $(window).outerHeight(true);

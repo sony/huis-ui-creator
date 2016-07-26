@@ -114,7 +114,7 @@ module Garage {
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
-					$(window).on("resize", $.proxy(this._pageLayout, this));
+					$(window).on("resize", $.proxy(this._pageLayout.bind(this), this));
 
 					this.currentWindow_ = Remote.getCurrentWindow();
 					// コンテキストメニュー
@@ -262,6 +262,8 @@ module Garage {
 				var windowHeight = innerHeight;
 
 				var mainHeight = innerHeight - $("#main").offset().top;
+
+				this.closeAllPopups();
 
 				let facePalletArea = {
 					width: PALLET_AREA_WIDTH_MIN,
