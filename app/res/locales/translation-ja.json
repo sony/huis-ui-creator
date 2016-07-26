@@ -806,8 +806,8 @@
             "STR_REMOTE_BTN_AIRCON_TEMP_29": "29℃",
             "STR_REMOTE_BTN_AIRCON_MODE_AUTO": "auto",
             "STR_REMOTE_BTN_AIRCON_MODE_COOL": "cool",
-            "STR_REMOTE_BTN_AIRCON_MODE_DRY ": "dry ",
-            "STR_REMOTE_BTN_AIRCON_MODE_FAN ": "fan ",
+            "STR_REMOTE_BTN_AIRCON_MODE_DRY": "dry",
+            "STR_REMOTE_BTN_AIRCON_MODE_FAN": "fan",
             "STR_REMOTE_BTN_AIRCON_MODE_HEAT": "heat",
             "STR_REMOTE_BTN_AIRCON_MODE_STANDARDDRY": "standard dry",
             "STR_REMOTE_BTN_AIRCON_MODE_CLOTHSDRY": "cloths dry",
@@ -837,7 +837,8 @@
             "STR_REMOTE_BTN_SPECIAL_LIGHT_LEVEL_PLUS": "明るさ ＋",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLON": "全灯",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLOFF": "全照灯",
-            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD"
+            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD",
+            "STR_REMOTE_BTN_SPECIAL_AUDIO_AUX": "入力切替 AUX"
         }
     }
 }
