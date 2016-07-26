@@ -36,6 +36,7 @@ module Garage {
 
 		interface IStateDetail extends IGState {
 			actionList?: IActionList;
+			actionListTranslate?: IActionList;
 		}
 
 
@@ -2368,7 +2369,7 @@ module Garage {
 						targetState = null;
 					}
 					var actionList = stateDetail.actionList;
-					var translates: IStateTranslate[] = [];
+					
 
 					if (actionList) {
 						var actions: IAction[] = [];
@@ -2380,29 +2381,46 @@ module Garage {
 							if (_.isUndefined(value) || value === "none") {
 								continue;
 							}
+							
+							let codeDb: ICodeDB = {
+								function: value,
+								brand: brand,
+								device_type: device_type,
+								db_codeset: db_codeset,
+								model_number: model_number
+							};
+							let action: IAction = {
+								input: key,
+								code_db: codeDb
+							};
+							actions.push(action);
+							
+						}
+					}
+
+					var translates: IStateTranslate[] = [];
+					var actionListTranslate = stateDetail.actionListTranslate;
+					if (actionListTranslate) {
+						var actionsTranslate: IAction[] = [];
+						for (let key in actionListTranslate) {
+							if (!key) {
+								continue;
+							}
+							let value: string = actionListTranslate[key];
+							if (_.isUndefined(value) || value === "none") {
+								continue;
+							}
 							if (value.indexOf("translate-state-") === 0) {
-								let stateId: number = parseInt(value.slice(value.indexOf("translate-state-")), 10);
+								let stateId: number = parseInt(value.replace("translate-state-",""));
 								let translate: IStateTranslate = {
 									input: key,
 									next: stateId
 								};
 								translates.push(translate);
-							} else {
-								let codeDb: ICodeDB = {
-									function: value,
-									brand: brand,
-									device_type: device_type,
-									db_codeset: db_codeset,
-									model_number: model_number
-								};
-								let action: IAction = {
-									input: key,
-									code_db: codeDb
-								};
-								actions.push(action);
-							}
+							} 
 						}
 					}
+
 					let state: IState = {
 						id: stateDetail.id,
 						image: targetState ? targetState[0]["image"] : stateDetail.image,
@@ -2870,6 +2888,7 @@ module Garage {
 							if (!_.isUndefined(inputName)) {
 								actionList[inputName] = value;
 								this.currentTargetButtonStatesUpdated_ = true;
+								this._updateCurrentModelButtonStatesData();
 							}
 						}
 						break;
@@ -3566,9 +3585,7 @@ module Garage {
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
-                        if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
-                            if (state.id != button.default) return;
-                        }
+                       
                         stateData.id = state.id;
                         let resizeMode: string;
                         if (state.image) {
@@ -3586,6 +3603,10 @@ module Garage {
                         }
 
                         this._setActionListToState(state);
+
+						if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
+                            if (state.id != button.default) return;
+                        }
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
@@ -3672,6 +3693,22 @@ module Garage {
 					ring_right: "none",
 					ring_left: "none"
 				};
+
+				var actionListTranslate: IActionList = {
+					touch: "none",
+					touch_top: "none",
+					touch_bottom: "none",
+					touch_right: "none",
+					touch_left: "none",
+					long_press: "none",
+					swipe_up: "none",
+					swipe_down: "none",
+					swipe_right: "none",
+					swipe_left: "none",
+					ring_right: "none",
+					ring_left: "none"
+				};
+
 				var actions: IAction[] = state.action;
 				if (actions) {
 					actions.forEach((action) => {
@@ -3683,14 +3720,16 @@ module Garage {
 					});
 				}
 
+				
 				var translates: IStateTranslate[] = state.translate;
 				if (translates) {
 					translates.forEach((translate) => {
-						actionList[translate.input] = "translate_" + translate.next;
+						actionListTranslate[translate.input] = "translate-state-" + translate.next;
 					});
 				}
 
 				state.actionList = actionList;
+				state.actionListTranslate = actionListTranslate;
 			}
 
             /**
