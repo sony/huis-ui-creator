@@ -811,6 +811,10 @@ module Garage {
 					if (!overDetailArea) {
 						this.mouseMoving_ = true;
 						event.preventDefault();
+
+						//preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
+						//そのため、preventDefault直後にフォーカスを設定しなおす。
+						this.$el.focus();
 					}
 				}
 			}
