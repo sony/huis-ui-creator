@@ -740,36 +740,40 @@ module Garage {
 				// 詳細編集エリア上を選択しているかをチェック
 				var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
 
-				// マウスポインター位置が、選択中のターゲット上でも詳細編集エリア上でもない場合は、
+				// マウスポインター位置が、選択中のターゲット上は、
 				// ターゲットを外す
-				if (!remainsTarget && !selectedResizer && !overDetailArea && this.isOnCanvasFacePagesArea(mousePosition)) {
+				if (!remainsTarget && !selectedResizer && !overDetailArea) {
 					// 直前に選択されていたボタンの状態更新があれば行う
 					this._updateCurrentModelButtonStatesData();
 
 					// 現在のターゲットを外す
 					this._loseTarget();
 
-					// マウスポインター位置にアイテムがあれば取得する
-					let $target = this._getTarget(mousePosition);
-					if ($target) {
-						$target.focus();
-						console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
-						this.$currentTarget_ = $target;
-						// target に紐付くモデルを取得
-						this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+					//詳細編集エリア上でない場合は反応しない
+					if (this.isOnCanvasFacePagesArea(mousePosition)) {
+						// マウスポインター位置にアイテムがあれば取得する
+						let $target = this._getTarget(mousePosition);
+						if ($target) {
+							$target.focus();
+							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
+							this.$currentTarget_ = $target;
+							// target に紐付くモデルを取得
+							this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
 
-						// 選択状態にする
-						this.$currentTarget_.addClass("selected");
+							// 選択状態にする
+							this.$currentTarget_.addClass("selected");
 
-						//ツールチップを非表示にする。
-						this.disableButtonInfoTooltip();
+							//ツールチップを非表示にする。
+							this.disableButtonInfoTooltip();
 
-						// リサイザーを追加
-						this._setResizer(this.$currentTarget_);
+							// リサイザーを追加
+							this._setResizer(this.$currentTarget_);
 
-						// 詳細編集エリアを表示
-						$("#face-item-detail-area").addClass("active");
-						this._showDetailItemArea(this.currentTargetModel_);
+							// 詳細編集エリアを表示
+							$("#face-item-detail-area").addClass("active");
+							this._showDetailItemArea(this.currentTargetModel_);
+					}
+					
 					} else {
 						// マウスポインター位置にアイテムが存在しない場合で、
 						// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
