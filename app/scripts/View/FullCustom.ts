@@ -1670,8 +1670,6 @@ module Garage {
                     corners: false
                 };
 
-                console.log("options.x options.y : " + options.x + ", " + options.y);
-
                 $selectMenu.popup(options).popup("open").on("vclick", () => {
                     $selectMenu.popup("close");
                 });
