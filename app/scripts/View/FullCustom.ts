@@ -214,8 +214,8 @@ module Garage {
                     "vclick #command-visit-help": "_onCommandVisitHelp",
 
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
-                    "focusin .property-value": "_onTextBoxFocusIn",
-                    "focusout .property-value": "_onTextBoxFocusOut",
+                    "focusin input[type='text']": "_onTextBoxFocusIn",
+                    "focusout input[type='text']": "_onTextBoxFocusOut",
 				});
 			}
 
@@ -245,6 +245,8 @@ module Garage {
 				$target.val("");
 				$target.focus();
 				$target.val(remoteName);
+
+				this.isTextBoxFocused = true;
 			}
 
 
