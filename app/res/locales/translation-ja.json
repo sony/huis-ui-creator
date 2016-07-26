@@ -121,7 +121,10 @@
         "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
     },
     "button": {
-        "input" : {
+        "none": {
+            "STR_REMOTE_BTN_NONE": "何もしない"
+        },
+        "input": {
             "STR_ACTION_INPUT_TAP": "タップ",
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)"
         },
