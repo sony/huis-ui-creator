@@ -2396,6 +2396,23 @@ module Garage {
 							actions.push(action);
 							
 						}
+
+						//アクションが一つもない場合、actionが空のボタンにする。
+						if (actions.length == 0) {
+							let codeDb: ICodeDB = {
+								function: "none",
+								brand: brand,
+								device_type: device_type,
+								db_codeset: db_codeset,
+								model_number: model_number
+							};
+							let action: IAction = {
+								input: "none",
+								code_db: codeDb
+							};
+							actions.push(action);
+						}
+
 					}
 
 					var translates: IStateTranslate[] = [];
