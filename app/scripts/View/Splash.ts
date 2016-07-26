@@ -98,6 +98,7 @@ module Garage {
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 							title: PRODUCT_NAME,
+							cancelId: 1,
                         }
 					);
                     if (response !== 0) {
