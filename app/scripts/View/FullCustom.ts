@@ -152,7 +152,15 @@ module Garage {
 			}
 
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this.bindedLayoutPage);
+				let FUNCTION_NAME = TAG + "onPageBeforeHide :";
+
+				if (this.bindedLayoutPage == null) {
+					console.warn(FUNCTION_NAME + "this.bindedLayoutPage is null");
+					$(window).off("resize", this._pageLayout);
+				} else {
+					$(window).off("resize", this.bindedLayoutPage);
+				}
+				
 				super.onPageBeforeHide(event, data);
 			}
 
@@ -267,7 +275,9 @@ module Garage {
 
 				var mainHeight = innerHeight - $("#main").offset().top;
 
-				this.closeAllPopups();
+				if (this != null) {
+					this.closeAllPopups();
+				}
 
 				let facePalletArea = {
 					width: PALLET_AREA_WIDTH_MIN,

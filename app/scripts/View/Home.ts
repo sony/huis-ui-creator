@@ -45,7 +45,16 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this.bindedLayoutPage);
+
+				let FUNCTION_NAME = TAG + " : onPageBeforeHide : ";
+
+				if (this.bindedLayoutPage == null) {
+					console.warn(FUNCTION_NAME + "this.bindedLayoutPage is null");
+					$(window).off("resize", this._pageLayout);
+				} else {
+					$(window).off("resize", this.bindedLayoutPage);
+				}
+
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -351,7 +360,11 @@ module Garage {
 
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
-				this.closeAllPopups();
+
+				if (this != null) {
+					this.closeAllPopups();
+				}
+
 				//var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
                 var scrollHeight = windowHeight - $(window).outerHeight(true);
