@@ -70,8 +70,10 @@
             "STR_EDIT_PROPERTY_LABEL_ACTION": "アクション",
             "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
             "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
-            "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集"
-        },
+            "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
+            "STR_EDIT_PROPERTY_TITLE_NON_MAKER": "--",
+            "STR_EDIT_PROPERTY_TITLE_LEARNED" :  "--"
+        },  
         "canvas": { 
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
         }
