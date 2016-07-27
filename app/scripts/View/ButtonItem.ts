@@ -49,6 +49,10 @@ module Garage {
 							if (buttonData.version) {
 								buttonModel.version = buttonData.version;
 							}
+
+							if (buttonData.remoteId) {
+								buttonModel.remoteId = buttonData.remoteId;
+							}
 							
 							//buttonModel.set("area", buttonData.area);
 							buttonModel.area = buttonData.area;
