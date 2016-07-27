@@ -297,11 +297,36 @@ module Garage {
 			 * @param modelNumber {string} 型番。機器によっては省略。
 			 * @return {string[]} 機能の一覧。取得できない場合は null
 			 */
-			getMasterFunctions(brand: string, deviceType: string, modelNumber?: string): string[];
+			getMasterFunctions(brand: string, deviceType: string, modelNumber?: string, code? :string): string[];
 
-			getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
+			getMasterFunctions(param1: string, param2?: string, param3?: string, param4? : string): string[] {
 				// param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
-				if (param2) {
+				// param4 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番、 param4 : code
+
+				
+				if (param4) {//param4がある場合は、codeでfunctionsを検索する。
+					let brand = param1;
+					let deviceType = param2;
+					let modelNumber = param3;
+					let code = param4;
+
+					for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+						let remoteId = this.remoteList_[i].remote_id;
+						let codesMaster: string[] = this.getMasterCodes(remoteId);
+
+						//同一のコードを持つremoteがあった場合そのremoteId
+						if (codesMaster) {
+							for (let j = 0; j < codesMaster.length; j++){
+								if (code == codesMaster[j]) {
+									return this._getMasterFunctions(remoteId);
+								}
+							}
+						}
+
+					}
+
+
+				}else if (param2) {
 					let brand = param1,
 						deviceType = param2,
 						modelNumber = param3;
@@ -320,6 +345,62 @@ module Garage {
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
 				}
+			}
+
+			/**
+			 * 機器の master face に記述されている最初の code を取得する。
+			 * 取得した code は、「このcodeをもつリモコンはどのremoteIdか」検索するために利用されると想定。
+			 * 
+			 * @param remoteId {string} リモコンの remoteId
+			 * @return {strings[]} master face に記述されている codeをすべて格納した配列。見つからない場合は null。
+			 */
+			private getMasterCodes(remoteId: string): string[] {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterCode: ";
+				if (remoteId == undefined) {
+					console.warn(FUNCTION_NAME + "remoteId is undefined");
+					return;
+				}
+
+				let masterFace = this._getMasterFace(remoteId);
+				if (!masterFace) {
+					console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
+					return null;
+				}
+
+				let resultCodes: string[] = [];
+
+				var modules = masterFace.modules;
+				for (let i = 0, ml = modules.length; i < ml; i++) {
+					var buttons = modules[i].button;
+					if (!buttons) {
+						continue;
+					}
+					for (let j = 0, bl = buttons.length; j < bl; j++) {
+						var states = buttons[j].state;
+						if (!states) {
+							continue;
+						}
+						for (let k = 0, sl = states.length; k < sl; k++) {
+							var actions = states[k].action;
+							if (!actions) {
+								continue;
+							}
+							for (let l = 0, al = actions.length; l < al; l++) {
+								var code = actions[l].code;
+								if (code) {
+									resultCodes.push(code);
+								}
+							}
+						}
+					}
+				}
+
+				if (resultCodes.length == 0) {
+					return null;
+				}
+
+				return resultCodes;
+
 			}
 
 			private _getMasterFunctions(remoteId: string): string[] {

@@ -3635,6 +3635,36 @@ module Garage {
 				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
 			}
 
+
+			/*
+			*  ボタンの中のコード(学習して登録した際の信号)をすべて返す
+			*/
+			private getCodesFrom(button: Model.ButtonItem): string[]{
+				let FUNCTION_NAME: string = TAG + "getCodesFrom";
+
+				if (button == undefined) {
+					console.warn(FUNCTION_NAME + "button is undefined");
+					return;
+				}
+
+				let result: string[] = [];
+
+				for (let i = 0; i < button.state.length; i++) {
+					for (let j = 0; j < button.state[i].action.length; j++) {
+						if (button.state[i].action[j].code != undefined) {
+							result.push(button.state[i].action[j].code);
+						}
+					}
+				}
+
+				if (result.length == 0) {
+					return null;
+				}
+
+				return result;
+
+			}
+
 			/**
 			 * ボタンアイテムの詳細情報エリアのレンダリング
 			 */
@@ -3648,8 +3678,22 @@ module Garage {
 				if (deviceInfo) {
 					if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
 						let codeDb = deviceInfo.code_db;
-						deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
+						let codes: string[] = this.getCodesFrom(button);
+
+
+						if (codeDb.brand != " " && codeDb.brand != undefined && 
+							codeDb.device_type != " " && codeDb.device_type != undefined &&
+							codeDb.model_number != " " && codeDb.device_type != undefined) {
+							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
+							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
+						} else if(codes != null){
+							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
+							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number, codes[0]);
+						}
+
+
 						button.deviceInfo = deviceInfo;
+						
 					}
 				}
 
