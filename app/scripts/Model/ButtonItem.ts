@@ -6,6 +6,7 @@ module Garage {
 
 		export class ButtonItem extends Backbone.Model implements IGButton, ItemModel {
 
+			remoteId: string;
 			private stateCollection_: ButtonStateCollection;
 			private materialsRootPath_: string;
 			private resolvedImagePathDirectory_: string;
@@ -53,14 +54,6 @@ module Garage {
 						stateModel.area = val;
 					});
 				}
-			}
-
-			get remoteId(): string {
-				return this.get("remoteId");
-			}
-
-			set remoteId(val: string) {
-				this.set("remoteId", val);
 			}
 
 			get default(): number {
@@ -199,7 +192,7 @@ module Garage {
 			 * 変更可能なプロパティーの一覧
 			 */
 			get properties(): string[]{
-				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version","remoteId"];
+				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version"];
 			}
 
 			/**

@@ -447,10 +447,6 @@ module Garage {
 					newButton.version = srcButton.version;
 				}
 
-				if (srcButton.remoteId) {
-					newButton.remoteId = srcButton.remoteId;
-				}
-
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}

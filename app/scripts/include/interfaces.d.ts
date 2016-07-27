@@ -179,8 +179,6 @@ interface IGButton {
 	default?: number;
 	state: IGState[];
 	name?: string;
-	remoteId?: string;
-
 	/**
 	 * 現在の state.id
 	 */
