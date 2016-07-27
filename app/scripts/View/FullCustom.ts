@@ -3614,14 +3614,7 @@ module Garage {
 					}
 				}
 
-				//ブランド名が空の場合,メーカー名情報がない旨に変換
-				if (button.deviceInfo.code_db.brand == " ") {
-					if (button.state[0].action[0].code != null) {
-						button.deviceInfo.code_db.brand = $.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LEARNED");
-					} else {
-						button.deviceInfo.code_db.brand = $.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_NON_MAKER");
-					}
-				}
+				
 
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
@@ -3726,6 +3719,18 @@ module Garage {
 
 				
                 $detail.append($buttonDetail);
+
+				let $makerName = $(".button-info-brand-and-type").find(".brand_name");
+
+				//ブランド名が空の場合,メーカー名情報がない旨に変換
+				if ($makerName.text() == " ") {
+					if (button.state[0].action[0].code != null) {
+						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LEARNED"));
+					} else {
+						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_NON_MAKER"));
+					}
+				}
+
 
                 //x,y情報を別途　記入
                 this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
