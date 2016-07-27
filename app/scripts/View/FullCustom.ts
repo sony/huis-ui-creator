@@ -207,7 +207,9 @@ module Garage {
                     "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
 					"click #command-change-button-image": "onEditImageButtonInPopupClicked",
 					"click #command-change-button-text": "onEditTextButtonInPopupClicked",
-					
+
+					//リモコン名編集用のテキストフィールド
+					"click #input-face-name" : "onRemoteNameTextFieldClicked",
 
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
@@ -226,8 +228,8 @@ module Garage {
                     "vclick #command-visit-help": "_onCommandVisitHelp",
 
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
-                    "focusin .property-value": "_onTextBoxFocusIn",
-                    "focusout .property-value": "_onTextBoxFocusOut",
+                    "focusin input[type='text']": "_onTextBoxFocusIn",
+                    "focusout input[type='text']": "_onTextBoxFocusOut",
 				});
 			}
 
@@ -257,6 +259,8 @@ module Garage {
 				$target.val("");
 				$target.focus();
 				$target.val(remoteName);
+
+				this.isTextBoxFocused = true;
 			}
 
 
@@ -2042,6 +2046,15 @@ module Garage {
 				}
             }
 
+			/*
+			* リモコン名編集用のテキストフィールドをクリックした際に呼び出し
+			*/
+			private onRemoteNameTextFieldClicked(event: Event) {
+				//リモコン名編集するときには、ほかのターゲットをはずす。
+				this._loseTarget();
+				$(event.currentTarget).focus();
+			}
+
 			/**
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
@@ -3411,6 +3424,9 @@ module Garage {
 				$("#face-item-detail-area").removeClass("active");
 				// リサイザーを削除
 				$(".item-resizer").remove();
+
+				//テキストエリアのフォーカスを外す
+				$("input[type='text']").blur();
 
 				// detail エリアの削除
 				let $detail = $("#face-item-detail");
