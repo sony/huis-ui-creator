@@ -3688,7 +3688,11 @@ module Garage {
 							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
 						} else if(codes != null){
 							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
-							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number, codes[0]);
+							let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
+							if (remoteId != null) {
+								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
+							}
 						}
 
 

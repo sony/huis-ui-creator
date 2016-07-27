@@ -297,36 +297,12 @@ module Garage {
 			 * @param modelNumber {string} 型番。機器によっては省略。
 			 * @return {string[]} 機能の一覧。取得できない場合は null
 			 */
-			getMasterFunctions(brand: string, deviceType: string, modelNumber?: string, code? :string): string[];
+			getMasterFunctions(brand: string, deviceType: string, modelNumber?: string): string[];
 
-			getMasterFunctions(param1: string, param2?: string, param3?: string, param4? : string): string[] {
+			getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
 				// param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
-				// param4 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番、 param4 : code
 
-				
-				if (param4) {//param4がある場合は、codeでfunctionsを検索する。
-					let brand = param1;
-					let deviceType = param2;
-					let modelNumber = param3;
-					let code = param4;
-
-					for (let i = 0, l = this.remoteList_.length; i < l; i++) {
-						let remoteId = this.remoteList_[i].remote_id;
-						let codesMaster: string[] = this.getMasterCodes(remoteId);
-
-						//同一のコードを持つremoteがあった場合そのremoteId
-						if (codesMaster) {
-							for (let j = 0; j < codesMaster.length; j++){
-								if (code == codesMaster[j]) {
-									return this._getMasterFunctions(remoteId);
-								}
-							}
-						}
-
-					}
-
-
-				}else if (param2) {
+				if (param2) {
 					let brand = param1,
 						deviceType = param2,
 						modelNumber = param3;
@@ -345,6 +321,36 @@ module Garage {
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
 				}
+			}
+
+			/*
+			* 同一のコードを持つremoteがあった場合そのremoteIdをする
+			* @param code{string} 学習して登録した際の button/state/action/code
+			* @return remoteId{string} 入力したcodeをもつリモコンのID
+			*/
+			getRemoteIdByCode(code: string): string {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+				if (code == undefined) {
+					console.warn(FUNCTION_NAME + "code is undefined");
+				}
+
+				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+					let remoteId = this.remoteList_[i].remote_id;
+					let codesMaster: string[] = this.getMasterCodes(remoteId);
+
+					//同一のコードを持つremoteがあった場合そのremoteId
+					if (codesMaster) {
+						for (let j = 0; j < codesMaster.length; j++) {
+							if (code == codesMaster[j]) {
+								return remoteId;
+							}
+						}
+					}
+
+				}
+
+				return null;
+
 			}
 
 			/**
