@@ -2413,13 +2413,23 @@ module Garage {
 
 				// ボタンにひも付けられている機器の情報を取得
 				var deviceInfo = button.deviceInfo;
-				var brand: string, device_type: string, db_codeset: string, model_number: string;
+				var brand: string,
+					device_type: string,
+					db_codeset: string,
+					model_number: string,
+					functions: string[],
+					functionCodeHash: IStringStringHash;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
 					db_codeset = deviceInfo.code_db.db_codeset;
 					model_number = deviceInfo.code_db.model_number;
+					if (deviceInfo.functionCodeHash){
+						functionCodeHash = deviceInfo.functionCodeHash;
+					}
 				}
+
+				
 
 				var currentStates: IState[] = $.extend(true, [], button.state);
 				// 更新後の button states を作成する
@@ -2453,10 +2463,28 @@ module Garage {
 								db_codeset: db_codeset,
 								model_number: model_number
 							};
+
+
 							let action: IAction = {
 								input: key,
 								code_db: codeDb
 							};
+
+							
+							//このFunctionに登録されているaction/code を取得する。
+							if (functionCodeHash != undefined) {
+								let code: string = functionCodeHash[value];
+								//codeがある場合は actionに登録する。
+								if (code != null) {
+									action = {
+										input: key,
+										code_db: codeDb,
+										code: code,
+									};
+								}
+							}
+						
+
 							actions.push(action);
 							
 						}
