@@ -1384,7 +1384,7 @@ module Garage {
 
 				//ファンクションが取得できるかチェック
 				let functions: string[] = this.getFunctions($button);
-				if (functions.length == 0 || functions == undefined) {
+				if (functions == undefined  || functions.length == 0) {
 					functions.push("none");
 				}
 
@@ -2410,7 +2410,7 @@ module Garage {
 						}
 
 						//アクションが一つもない場合、actionが空のボタンにする。
-						if (actions.length == 0) {
+						if (actions != undefined && actions.length == 0) {
 							let codeDb: ICodeDB = {
 								function: "none",
 								brand: brand,
