@@ -336,12 +336,19 @@ module Garage {
 
 				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
 					let remoteId = this.remoteList_[i].remote_id;
+					let face = this.getFace(remoteId);
 					let codesMaster: string[] = this.getMasterCodes(remoteId);
+					let deviceType = face.category;
 
-					//同一のコードを持つremoteがあった場合そのremoteId
+					//サポート外のdeviceTypeだった場合、次のremoteIdへ
+					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(deviceType) != -1) {
+						continue;
+					}
+
 					if (codesMaster) {
+						//同一のコードを持つremoteがあった場合そのremoteId
 						for (let j = 0; j < codesMaster.length; j++) {
-							if (code == codesMaster[j]) {
+							if (code == codesMaster[j] ) {
 								return remoteId;
 							}
 						}
