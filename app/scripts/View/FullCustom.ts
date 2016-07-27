@@ -347,7 +347,11 @@ module Garage {
                 });
 
 				// faceList の更新
-				this._layoutFacesList();
+				if (this != null) {
+					this._layoutFacesList();
+				}
+
+				
 			}
 
 			/**
