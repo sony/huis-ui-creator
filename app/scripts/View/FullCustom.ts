@@ -72,7 +72,8 @@ module Garage {
 			private gridSize_: number;
             private isTextBoxFocused: Boolean;
 
-            
+            private bindedLayoutPage = null;
+
             
 			/**
 			 * construnctor
@@ -114,7 +115,10 @@ module Garage {
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
-					$(window).on("resize", $.proxy(this._pageLayout, this));
+					//this._pageLayout.bind(this)をすると、新しいオブジェクトを返すので、off("resize", )の際にも使うため、メンバーに記憶する
+					//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
+					this.bindedLayoutPage = this._pageLayout.bind(this);
+					$(window).on("resize", $.proxy(this.bindedLayoutPage, this));
 
 					this.currentWindow_ = Remote.getCurrentWindow();
 					// コンテキストメニュー
@@ -148,7 +152,15 @@ module Garage {
 			}
 
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout);
+				let FUNCTION_NAME = TAG + "onPageBeforeHide :";
+
+				if (this.bindedLayoutPage == null) {
+					console.warn(FUNCTION_NAME + "this.bindedLayoutPage is null");
+					$(window).off("resize", this._pageLayout);
+				} else {
+					$(window).off("resize", this.bindedLayoutPage);
+				}
+				
 				super.onPageBeforeHide(event, data);
 			}
 
@@ -262,6 +274,10 @@ module Garage {
 				var windowHeight = innerHeight;
 
 				var mainHeight = innerHeight - $("#main").offset().top;
+
+				if (this != null) {
+					this.closeAllPopups();
+				}
 
 				let facePalletArea = {
 					width: PALLET_AREA_WIDTH_MIN,

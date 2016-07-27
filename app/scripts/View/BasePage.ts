@@ -420,6 +420,26 @@ module Garage {
 
 			}
 
+
+			/*
+			* popupをすべて閉じる
+			*/
+			protected closeAllPopups() {
+				let FUNCTION_NAME = TAG_BASE + " :closeAllPopups: ";
+
+				let $popups = $("section[data-role='popup']");
+				//$popups.popup("close");
+				
+				if ($popups) {
+					$popups.each((index: number, elem: Element) => {
+						$(elem).popup("close");
+					});
+				}
+			}
+			
+
+		
+
         }
     }
 }

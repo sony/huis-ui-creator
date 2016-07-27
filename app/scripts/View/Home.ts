@@ -19,6 +19,8 @@ module Garage {
             private selectedRemoteId: string = null;
             private remoteIdToDelete;
 
+			private bindedLayoutPage = null;
+
 			/**
 			 * construnctor
 			 */
@@ -43,7 +45,16 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout);
+
+				let FUNCTION_NAME = TAG + " : onPageBeforeHide : ";
+
+				if (this.bindedLayoutPage == null) {
+					console.warn(FUNCTION_NAME + "this.bindedLayoutPage is null");
+					$(window).off("resize", this._pageLayout);
+				} else {
+					$(window).off("resize", this.bindedLayoutPage);
+				}
+
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -84,7 +95,10 @@ module Garage {
                 this.render();
                 this.selectedRemoteId = null; // 選択されていたものがあったら忘れること
 
-				$(window).on("resize", this._pageLayout);
+				//this._pageLayout.bind(this)をすると、新しいオブジェクトを返すので、off("resize", )の際にも使うため、メンバーに記憶する
+				//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
+				this.bindedLayoutPage = this._pageLayout.bind(this);
+				$(window).on("resize", this.bindedLayoutPage);
 
 				this.currentWindow_ = Remote.getCurrentWindow();
 				// コンテキストメニュー
@@ -343,8 +357,13 @@ module Garage {
 			}
 
 			private _pageLayout() {
+
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
+
+				if (this != null) {
+					this.closeAllPopups();
+				}
 
 				//var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
