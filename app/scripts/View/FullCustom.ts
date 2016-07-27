@@ -347,7 +347,11 @@ module Garage {
                 });
 
 				// faceList の更新
-				this._layoutFacesList();
+				if (this != null) {
+					this._layoutFacesList();
+				}
+
+				
 			}
 
 			/**
@@ -1412,7 +1416,9 @@ module Garage {
 
 				//ファンクションが取得できるかチェック
 				let functions: string[] = this.getFunctions($button);
-				if (functions == undefined  || functions.length == 0) {
+
+				if (functions == undefined || functions.length == 0) {
+					functions = [];
 					functions.push("none");
 				}
 
