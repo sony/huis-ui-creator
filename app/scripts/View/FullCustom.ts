@@ -831,6 +831,10 @@ module Garage {
 					if (!overDetailArea) {
 						this.mouseMoving_ = true;
 						event.preventDefault();
+
+						//preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
+						//そのため、preventDefault直後にフォーカスを設定しなおす。
+						this.$el.focus();
 					}
 				}
 			}
@@ -1701,8 +1705,6 @@ module Garage {
                     tolerance: popupMenuY + ",0,0,"+$target.offset().left,
                     corners: false
                 };
-
-                console.log("options.x options.y : " + options.x + ", " + options.y);
 
                 $selectMenu.popup(options).popup("open").on("vclick", () => {
                     $selectMenu.popup("close");
