@@ -41,13 +41,13 @@
         font-family:$FONT_WEIGHT_BUTTON_ITEM;
 		
         &:hover{
-			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+			background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
 			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
         }
 
         &:focus{
 			outline:none;
-			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+			background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
 			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
         }     
     }
