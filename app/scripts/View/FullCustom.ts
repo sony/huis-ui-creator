@@ -693,10 +693,21 @@ module Garage {
 							let remoteId = this.faceRenderer_pallet_.getRemoteId();
 							let functions = huisFiles.getMasterFunctions(remoteId);
 							let codeDb = huisFiles.getMasterCodeDb(remoteId);
+							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+
 							let deviceInfo: IButtonDeviceInfo = {
 								functions: functions,
 								code_db: codeDb
 							};
+
+							if (functionCodeHash != null) {
+								deviceInfo = {
+									functions: functions,
+									code_db: codeDb,
+									functionCodeHash: functionCodeHash,
+								};
+							}
+
 							targetModel.button.deviceInfo = deviceInfo;
 							model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
 						}
