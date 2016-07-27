@@ -1382,6 +1382,12 @@ module Garage {
 					return;
 				}
 
+				//ファンクションが取得できるかチェック
+				let functions: string[] = this.getFunctions($button);
+				if (functions == undefined  || functions.length == 0) {
+					functions.push("none");
+				}
+
 				//Hoverしたボタンが選択状態だった場合、表示しない。
 				if ($button.hasClass("selected")) {
 					this.disableButtonInfoTooltip();
@@ -1394,14 +1400,17 @@ module Garage {
 				$tooltip.find(".device-type").html(deviceType);
 
 				//ファンクション情報をローカライズ
-				let functions: string[] = this.getFunctions($button);
-				if (functions.length == 0) {
-					return;
-				}
 				let outputFunctionName = functions[0];
 				let $functionName:JQuery= $tooltip.find(".function-name");
 				$functionName.html(outputFunctionName);
-				var localizedString = $.i18n.t("button.function." + outputFunctionName);
+				var localizedString = null;
+				if (outputFunctionName !== "none") {
+					localizedString = $.i18n.t("button.function." + outputFunctionName);
+				} else {
+					localizedString = $.i18n.t("button.none.STR_REMOTE_BTN_NONE");
+				}
+				
+				
 				var outputString = localizedString;
 				if (functions.length > 1) {
 					outputString = outputString + " etc";
@@ -1455,7 +1464,10 @@ module Garage {
 				var stateNum = buttonModel.button.state.length;
 				var fucntions: string[] = [];
 				for (var i = 0; i < buttonModel.button.state.length; i++){
-					fucntions.push(buttonModel.button.state[i].action[0].code_db.function.toString());
+					if (buttonModel.button.state[i].action[0]){
+						fucntions.push(buttonModel.button.state[i].action[0].code_db.function.toString());
+
+					}
 				}
 
 				return fucntions;
@@ -2396,6 +2408,23 @@ module Garage {
 							actions.push(action);
 							
 						}
+
+						//アクションが一つもない場合、actionが空のボタンにする。
+						if (actions != undefined && actions.length == 0) {
+							let codeDb: ICodeDB = {
+								function: "none",
+								brand: brand,
+								device_type: device_type,
+								db_codeset: db_codeset,
+								model_number: model_number
+							};
+							let action: IAction = {
+								input: "none",
+								code_db: codeDb
+							};
+							actions.push(action);
+						}
+
 					}
 
 					var translates: IStateTranslate[] = [];
