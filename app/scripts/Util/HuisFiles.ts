@@ -377,11 +377,12 @@ module Garage {
 						let code_db = action.code_db;
 						let code = action.code;
 						if (code_db && code_db.function) {
-							if (code_db.db_codeset != " " || code_db.brand != " ") {
-								//プリセット用 db_codeset と brand が空白文字で。
+
+							if (code != null && code != undefined && code != " ") {
+								//学習によって登録された用 codeがある場合
 								functions.push(code_db.function);
-							} else if (code != null && code != undefined && code != " ") {
-								//学習によって登録された用 db_codeset と brand が空白文字で、codeに値がはいっている。
+							}else if (code_db.db_codeset != " " || code_db.brand != " ") {
+								//プリセット用 db_codeset と brand が空白文字で。
 								functions.push(code_db.function);
 							} else {
 								//db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
