@@ -923,9 +923,6 @@ module Garage {
 						id: state.id
 					};
 
-					if (!_.isUndefined(state.active)) {
-						normalizedState.active = state.active;
-					}
 					if (state.image) {
 						normalizedState.image = this._normalizeImages(state.image, remoteId);
 					}
