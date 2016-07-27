@@ -367,15 +367,31 @@ module Garage {
 				};
 
 				var getFunctions_actions = function (actions: IAction[], functions: string[]) {
+					let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
+
 					if (!_.isArray(actions)) {
 						return;
 					}
 
 					actions.forEach((action: IAction) => {
 						let code_db = action.code_db;
+						let code = action.code;
 						if (code_db && code_db.function) {
-							functions.push(code_db.function);
+							if (code_db.db_codeset != " " || code_db.brand != " ") {
+								//プリセット用 db_codeset と brand が空白文字で。
+								functions.push(code_db.function);
+							} else if (code != null && code != undefined && code != " ") {
+								//学習によって登録された用 db_codeset と brand が空白文字で、codeに値がはいっている。
+								functions.push(code_db.function);
+							} else {
+								//db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
+								//console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
+							}
+						} else {
+							console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
 						}
+
+						 
 					});
 
 				};
