@@ -220,6 +220,15 @@ interface IButton {
 interface IButtonDeviceInfo {
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
+}
+
+/**
+ * @interface IStringStringHash
+ * @brief keyもValueもStringのハッシュ
+ */
+interface IStringStringHash {
+	[key: string]: string;
 }
 
 /**

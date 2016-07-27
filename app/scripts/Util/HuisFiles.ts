@@ -301,6 +301,7 @@ module Garage {
 
 			getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
 				// param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
+
 				if (param2) {
 					let brand = param1,
 						deviceType = param2,
@@ -320,6 +321,99 @@ module Garage {
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
 				}
+			}
+
+			/*
+			* 同一のコードを持つremoteがあった場合そのremoteIdをする
+			* @param code{string} 学習して登録した際の button/state/action/code
+			* @return remoteId{string} 入力したcodeをもつリモコンのID
+			*/
+			getRemoteIdByCode(code: string): string {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+				if (code == undefined) {
+					console.warn(FUNCTION_NAME + "code is undefined");
+				}
+
+				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+					let remoteId = this.remoteList_[i].remote_id;
+					let face = this.getFace(remoteId);
+					let codesMaster: string[] = this.getMasterCodes(remoteId);
+					let deviceType = face.category;
+
+					//サポート外のdeviceTypeだった場合、次のremoteIdへ
+					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(deviceType) != -1) {
+						continue;
+					}
+
+					if (codesMaster) {
+						//同一のコードを持つremoteがあった場合そのremoteId
+						for (let j = 0; j < codesMaster.length; j++) {
+							if (code == codesMaster[j] ) {
+								return remoteId;
+							}
+						}
+					}
+
+				}
+
+				return null;
+
+			}
+
+			/**
+			 * 機器の master face に記述されている最初の code を取得する。
+			 * 取得した code は、「このcodeをもつリモコンはどのremoteIdか」検索するために利用されると想定。
+			 * 
+			 * @param remoteId {string} リモコンの remoteId
+			 * @return {strings[]} master face に記述されている codeをすべて格納した配列。見つからない場合は null。
+			 */
+			private getMasterCodes(remoteId: string): string[] {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterCode: ";
+				if (remoteId == undefined) {
+					console.warn(FUNCTION_NAME + "remoteId is undefined");
+					return;
+				}
+
+				let masterFace = this._getMasterFace(remoteId);
+				if (!masterFace) {
+					console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
+					return null;
+				}
+
+				let resultCodes: string[] = [];
+
+				var modules = masterFace.modules;
+				for (let i = 0, ml = modules.length; i < ml; i++) {
+					var buttons = modules[i].button;
+					if (!buttons) {
+						continue;
+					}
+					for (let j = 0, bl = buttons.length; j < bl; j++) {
+						var states = buttons[j].state;
+						if (!states) {
+							continue;
+						}
+						for (let k = 0, sl = states.length; k < sl; k++) {
+							var actions = states[k].action;
+							if (!actions) {
+								continue;
+							}
+							for (let l = 0, al = actions.length; l < al; l++) {
+								var code = actions[l].code;
+								if (code) {
+									resultCodes.push(code);
+								}
+							}
+						}
+					}
+				}
+
+				if (resultCodes.length == 0) {
+					return null;
+				}
+
+				return resultCodes;
+
 			}
 
 			private _getMasterFunctions(remoteId: string): string[] {
@@ -367,15 +461,32 @@ module Garage {
 				};
 
 				var getFunctions_actions = function (actions: IAction[], functions: string[]) {
+					let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
+
 					if (!_.isArray(actions)) {
 						return;
 					}
 
 					actions.forEach((action: IAction) => {
 						let code_db = action.code_db;
+						let code = action.code;
 						if (code_db && code_db.function) {
-							functions.push(code_db.function);
+
+							if (code != null && code != undefined && code != " ") {
+								//学習によって登録された用 codeがある場合
+								functions.push(code_db.function);
+							}else if (code_db.db_codeset != " " || code_db.brand != " ") {
+								//プリセット用 db_codeset と brand が空白文字で。
+								functions.push(code_db.function);
+							} else {
+								//db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
+								//console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
+							}
+						} else {
+							console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
 						}
+
+						 
 					});
 
 				};
@@ -430,6 +541,65 @@ module Garage {
 				}
 
 				return null;
+			}
+
+			/*
+			* 機器の master face に記述されている最初の codeのうち、FuncitonNameが一致しているものを取得する。
+			* @param remoteId : string リモコンの remoteId
+			* @return functionのIDとcodenの対応表を返す
+			*/
+			getMasterFunctionCodeMap(remoteId: string): IStringStringHash{
+				let FUNCTION_NAME = TAGS.HuisFiles + "getMasterFunctionCode";
+				
+				if (remoteId == undefined) {
+					console.warn(FUNCTION_NAME + "remoteId is undefined");
+					return null;
+				}
+
+				let masterFace : IGFace = this._getMasterFace(remoteId);
+				if (!masterFace) {
+					console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
+					return null;
+				}
+
+				let result: IStringStringHash = {};
+
+				var modules = masterFace.modules;
+				for (let i = 0, ml = modules.length; i < ml; i++) {
+					var buttons = modules[i].button;
+					if (!buttons) {
+						continue;
+					}
+					for (let j = 0, bl = buttons.length; j < bl; j++) {
+						var states = buttons[j].state;
+						if (!states) {
+							continue;
+						}
+						for (let k = 0, sl = states.length; k < sl; k++) {
+							var actions = states[k].action;
+							if (!actions) {
+								continue;
+							}
+							for (let l = 0, al = actions.length; l < al; l++) {
+								let learningCode = actions[l].code;
+								let functionName = actions[l].code_db.function;
+								if (learningCode != null && learningCode != undefined && learningCode != " ") {
+									if (functionName != null && functionName != undefined && functionName != " ") {
+										result[functionName] = learningCode;
+										
+									}	
+								}
+							}
+						}
+					}
+				}
+
+				if (Object.keys(result).length == 0) {
+					return null;
+				}
+
+				return result;
+
 			}
 
 			/**
