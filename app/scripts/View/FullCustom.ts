@@ -195,7 +195,9 @@ module Garage {
                     "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
 					"click #command-change-button-image": "onEditImageButtonInPopupClicked",
 					"click #command-change-button-text": "onEditTextButtonInPopupClicked",
-					
+
+					//リモコン名編集用のテキストフィールド
+					"click #input-face-name" : "onRemoteNameTextFieldClicked",
 
 					// 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
@@ -2009,6 +2011,15 @@ module Garage {
 				} else {//キャンセル処理の場合、なにもしない。
 				}
             }
+
+			/*
+			* リモコン名編集用のテキストフィールドをクリックした際に呼び出し
+			*/
+			private onRemoteNameTextFieldClicked(event: Event) {
+				//リモコン名編集するときには、ほかのターゲットをはずす。
+				this._loseTarget();
+				$(event.currentTarget).focus();
+			}
 
 			/**
 			 * 編集完了ボタンを押したときに呼び出される
