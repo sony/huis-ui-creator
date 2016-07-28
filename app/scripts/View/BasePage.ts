@@ -446,12 +446,12 @@ module Garage {
 
 				if ($target == undefined) {
 					console.warn(FUNCTION_NAME + "$target is undefined");
-					return
+					return;
 				}
 
 				if (mousePosition == undefined) {
 					console.warn(FUNCTION_NAME + "mousePosition is undefined");
-					return
+					return;
 				}
 
 				let targetX = $target.offset().left;
