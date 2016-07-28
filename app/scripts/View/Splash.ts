@@ -83,6 +83,7 @@ module Garage {
                 $(window).on("beforeunload", this._closeWarning);
 
                 this.currentWindow_ = Remote.getCurrentWindow();
+				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
                 this.currentWindow_.setMenuBarVisibility(false);
 
 				$("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
