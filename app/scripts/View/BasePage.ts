@@ -435,6 +435,13 @@ module Garage {
 						$(elem).popup("close");
 					});
 				}
+
+				let $uiPopups = $(".custom-select select");
+				if ($uiPopups) {
+					$uiPopups.each((index: number, elem: Element) => {
+						$(elem).selectmenu("close");
+					});
+				}
 			}
 
 
