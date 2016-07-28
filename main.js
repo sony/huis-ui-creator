@@ -39,8 +39,8 @@ app.on('ready', function() {
 	// ブラウザウィンドウを作る
 
 	mainWindow = new BrowserWindow({
-		width: 1280,
-		height: 800,
+	    width: 1280 + 16,
+	    height: 768 + 38,
 		minWidth :  1280 + 16,//+16は、ウィンドウ自体枠の幅を補正。
 		minHeight :768 + 38,//+38は、ウィンドウ自体枠の高さを補正。
 		icon:  __dirname + '/app/huis-favicon.png',
