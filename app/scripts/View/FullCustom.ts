@@ -185,8 +185,9 @@ module Garage {
 					"click #button-add-page": "onAddPageButtonClicked",
 
 					//キャンバス内のボタンアイテムをhover
-					"mouseover #face-canvas #face-pages-area .button-item ": "onHoverButtonItemInCanvas",
-					"mouseout #face-canvas #face-pages-area .button-item ": "onHoverOutButtonItemInCanvas",
+					"mouseenter #face-canvas #face-pages-area .button-item ": "onHoverButtonItemInCanvas",
+					"mouseleave #face-canvas #face-pages-area .button-item ": "onHoverOutButtonItemInCanvas",
+					"mouseleave #canvas-tooltip" : "onOutTooltip",
 
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
@@ -1371,11 +1372,27 @@ module Garage {
 					return;
 				}
 
-				//tooltipを非表示にする。
-				this.disableButtonInfoTooltip();
+				//tooltipの上にいる かつ ボタンの上にいるときは 非表示にしない
+				var mousePosition: IPosition = {
+					x: event.pageX,
+					y: event.pageY
+				};
+				let $tooltip: JQuery = $("#canvas-tooltip");
+				var $target = $(event.currentTarget);//Jquery
+				if (!this.isMousePositionOn($tooltip, mousePosition)) {
+
+					//tooltipを非表示にする。
+					this.disableButtonInfoTooltip();
+				}
+
+				
 
 			}
 
+			//tooltipから離れたときも、
+			private onOutTooltip(event: Event) {
+				this.disableButtonInfoTooltip();
+			}
 
 			/*
 			* キャンバス内のボタンの情報表示用ToolTipを非表示にする。
