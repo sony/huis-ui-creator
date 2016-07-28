@@ -436,8 +436,41 @@ module Garage {
 					});
 				}
 			}
-			
 
+
+			/*
+			* 
+			*/
+			protected isMousePositionOn($target : JQuery, mousePosition : IPosition):boolean {
+				let FUNCTION_NAME = TAG_BASE + " : isMousePositionOn : ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if (mousePosition == undefined) {
+					console.warn(FUNCTION_NAME + "mousePosition is undefined");
+					return;
+				}
+
+				let targetX = $target.offset().left;
+				let targetY = $target.offset().top;
+				let targetW = $target.outerWidth(true);
+				let targetH = $target.outerHeight(true);
+
+				let mouseX = mousePosition.x;
+				let mouseY = mousePosition.y;
+
+				if (mouseX >= targetX && mouseX <= targetX + targetW) {
+					if (mouseY >= targetY && mouseY <= targetY+targetH){
+						return true;
+					}
+				}
+
+				return false;
+
+			}
 		
 
         }
