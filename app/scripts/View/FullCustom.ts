@@ -784,30 +784,31 @@ module Garage {
 					// 現在のターゲットを外す
 					this._loseTarget();
 
-					//詳細編集エリア上でない場合は反応しない
-					if (this.isOnCanvasFacePagesArea(mousePosition)) {
 						// マウスポインター位置にアイテムがあれば取得する
 						let $target = this._getTarget(mousePosition);
 						if ($target) {
-							$target.focus();
-							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
-							this.$currentTarget_ = $target;
-							// target に紐付くモデルを取得
-							this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
 
-							// 選択状態にする
-							this.$currentTarget_.addClass("selected");
+							//詳細編集エリア上でない場合は反応しない
+							if (this.isOnCanvasFacePagesArea(mousePosition)) {
+								$target.focus();
+								console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
+								this.$currentTarget_ = $target;
+								// target に紐付くモデルを取得
+								this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
 
-							//ツールチップを非表示にする。
-							this.disableButtonInfoTooltip();
+								// 選択状態にする
+								this.$currentTarget_.addClass("selected");
 
-							// リサイザーを追加
-							this._setResizer(this.$currentTarget_);
+								//ツールチップを非表示にする。
+								this.disableButtonInfoTooltip();
 
-							// 詳細編集エリアを表示
-							$("#face-item-detail-area").addClass("active");
-							this._showDetailItemArea(this.currentTargetModel_);
-					}
+								// リサイザーを追加
+								this._setResizer(this.$currentTarget_);
+
+								// 詳細編集エリアを表示
+								$("#face-item-detail-area").addClass("active");
+								this._showDetailItemArea(this.currentTargetModel_);
+							}
 					
 					} else {
 						// マウスポインター位置にアイテムが存在しない場合で、
