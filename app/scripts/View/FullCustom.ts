@@ -187,7 +187,7 @@ module Garage {
 					//キャンバス内のボタンアイテムをhover
 					"mouseenter #face-canvas #face-pages-area .button-item ": "onHoverButtonItemInCanvas",
 					"mouseleave #face-canvas #face-pages-area .button-item ": "onHoverOutButtonItemInCanvas",
-					"mouseleave #canvas-tooltip" : "onOutTooltip",
+					"mouseleave #canvas-tooltip" : "onHoverOutTooltip",
 
 					// 詳細編集エリアのイベント
 					"change #face-item-detail input": "onItemPropertyChanged",
@@ -1389,8 +1389,9 @@ module Garage {
 
 			}
 
-			//tooltipから離れたときも、
-			private onOutTooltip(event: Event) {
+			//tooltipから離れたとき呼び出されるイベントハンドラ
+			private onHoverOutTooltip(event: Event) {
+				//tooltiopを非表示にする
 				this.disableButtonInfoTooltip();
 			}
 
