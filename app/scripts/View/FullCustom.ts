@@ -784,11 +784,12 @@ module Garage {
 					// 現在のターゲットを外す
 					this._loseTarget();
 
-					//詳細編集エリア上でない場合は反応しない
-					if (this.isOnCanvasFacePagesArea(mousePosition)) {
-						// マウスポインター位置にアイテムがあれば取得する
-						let $target = this._getTarget(mousePosition);
-						if ($target) {
+					// マウスポインター位置にアイテムがあれば取得する
+					let $target = this._getTarget(mousePosition);
+					if ($target) {
+
+						//CanvasのFacePagesArea上でない場合は反応しない
+						if (this.isOnCanvasFacePagesArea(mousePosition)) {
 							$target.focus();
 							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
 							this.$currentTarget_ = $target;
@@ -807,7 +808,7 @@ module Garage {
 							// 詳細編集エリアを表示
 							$("#face-item-detail-area").addClass("active");
 							this._showDetailItemArea(this.currentTargetModel_);
-					}
+						}
 					
 					} else {
 						// マウスポインター位置にアイテムが存在しない場合で、
