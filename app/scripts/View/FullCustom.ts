@@ -1477,7 +1477,7 @@ module Garage {
 				
 				var outputString = localizedString;
 				if (functions.length > 1) {
-					outputString = outputString + " etc";
+					outputString = outputString + " etc.";
 				}
 				$functionName.html(outputString);
 
