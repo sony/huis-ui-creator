@@ -435,6 +435,13 @@ module Garage {
 						$(elem).popup("close");
 					});
 				}
+
+				let $uiPopups = $("select[data-native-menu='false']");
+				if ($uiPopups) {
+					$uiPopups.each((index: number, elem: Element) => {
+						$(elem).selectmenu("close");
+					});
+				}
 			}
 
 
