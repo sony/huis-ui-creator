@@ -1013,32 +1013,34 @@ module Garage {
 			 * アイテムのリサイズを行う
 			 */
 			private _resizeItem(position: IPosition, update?: boolean) {
+
+
 				var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
 					switch (this.selectedResizer_) {
 						case "left-top":
-							newArea.x += deltaX * 2;
-							newArea.y += deltaY * 2;
-							newArea.w -= deltaX * 2;
-							newArea.h -= deltaY * 2;
+							newArea.x += deltaX;
+							newArea.y += deltaY;
+							newArea.w -= deltaX;
+							newArea.h -= deltaY;
 							break;
 
 						case "right-top":
-							newArea.y += deltaY * 2;
-							newArea.w += deltaX * 2;
-							newArea.h -= deltaY * 2;
+							newArea.y += deltaY;
+							newArea.w += deltaX;
+							newArea.h -= deltaY;
 							break;
 
 						case "right-bottom":
-							newArea.w += deltaX * 2;
-							newArea.h += deltaY * 2;
+							newArea.w += deltaX;
+							newArea.h += deltaY;
 							break;
 
 						case "left-bottom":
-							newArea.x += deltaX * 2;
-							newArea.w -= deltaX * 2;
-							newArea.h += deltaY * 2;
+							newArea.x += deltaX;
+							newArea.w -= deltaX;
+							newArea.h += deltaY;
 							break;
 
 						default:
@@ -1065,13 +1067,13 @@ module Garage {
 
 				var deltaX = position.x - this.mouseMoveStartPosition_.x;
 				var deltaY = position.y - this.mouseMoveStartPosition_.y;
+
 				if (deltaX === 0 && deltaY === 0) {
 					return;
 				}
 
-				var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX, deltaY);
-
-			
+				//canvasAreaは実際の大きさの1/2に表示されているため、mouseの移動量は2倍にする。
+				var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX*2, deltaY*2);
 
 				this.$currentTarget_.css({
 					left: newArea.x + "px",
