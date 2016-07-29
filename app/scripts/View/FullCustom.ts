@@ -1047,13 +1047,32 @@ module Garage {
 							;
 					}
 
-	                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+					//グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
                         // グリッドスナップ用に調整
-                        newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
-                        newArea.y = this.getGridCordinate(newArea.y);
-                        newArea.w = this.getGridCordinate(newArea.w);
+						
+						newArea.w = this.getGridCordinate(newArea.w);
                         newArea.h = this.getGridCordinate(newArea.h);
+
+						//widthに変化がない場合は、xは変更しない。
+						//xが変化する場合(left-top/left-bottom)の場合のみxは変更
+						if (newArea.w != baseArea.w && newArea.x != baseArea.x) {
+							let deltaW: number = newArea.w - baseArea.w;
+							newArea.x = baseArea.x - deltaW;
+							//newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
+						} else {
+							newArea.x = baseArea.x;
+						}
+
+						//hwightに変化がない場合は、yは変更しない。
+						if (newArea.h != baseArea.h && newArea.y != baseArea.y) {
+							let deltaH: number = newArea.h - baseArea.h;
+							newArea.y = baseArea.y - deltaH;
+						} else {
+							newArea.y = baseArea.y;
+						}
+                        
+
                     } else {
                         // グリッドスナップ用に調整
                         newArea.x = this.getGridCordinate(newArea.x);
