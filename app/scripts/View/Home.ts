@@ -101,9 +101,9 @@ module Garage {
 				$(window).on("resize", this.bindedLayoutPage);
 
 				this.currentWindow_ = Remote.getCurrentWindow();
+				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
-
 				
 			}
 
