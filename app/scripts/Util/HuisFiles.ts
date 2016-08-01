@@ -1400,11 +1400,21 @@ module Garage {
 					let face: IGFace = this._parseFace(facePath, remoteId);
 					let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
 
-					remoteInfos.push({
-						remoteId: remoteId,
-						face: face,
-						mastarFace: masterFace
-					});
+					if (face != undefined && remoteId != undefined) {
+						if (masterFace != undefined){
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+								mastarFace: masterFace
+							});
+						}else{
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+							});
+						}
+					}
+
 				}
 
 				return remoteInfos;
