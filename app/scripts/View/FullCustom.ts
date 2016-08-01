@@ -1058,7 +1058,8 @@ module Garage {
 						//xが変化する場合(left-top/left-bottom)の場合のみxは変更
 						if (newArea.w != baseArea.w && newArea.x != baseArea.x) {
 							let deltaW: number = newArea.w - baseArea.w;
-							newArea.x = baseArea.x - deltaW;
+							newArea.x = baseArea.x - deltaW ;
+							newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT; 
 							//newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
 						} else {
 							newArea.x = baseArea.x;
@@ -1068,6 +1069,7 @@ module Garage {
 						if (newArea.h != baseArea.h && newArea.y != baseArea.y) {
 							let deltaH: number = newArea.h - baseArea.h;
 							newArea.y = baseArea.y - deltaH;
+							newArea.y = this.getGridCordinate(newArea.y);
 						} else {
 							newArea.y = baseArea.y;
 						}
