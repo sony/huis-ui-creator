@@ -1491,6 +1491,26 @@ module Garage {
 					}
 				}
 
+				//フルカスタムリモコンのモジュールがJsonが壊れるなどして、mosduleファイルが0個のとき、空のModuleFileを用意する
+				if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
+					face.modules.length == 0) {
+
+					let gmodule: IGModule = {
+						offsetY: 0,
+						pageIndex: 0,
+						remoteId: remoteId,
+						area: {
+							x: 0,
+							y: 0,
+							w: HUIS_FACE_PAGE_WIDTH,
+							h: HUIS_FACE_PAGE_HEIGHT
+						},
+						name: remoteId + "_page_0" // 暫定
+					}
+					face.modules.push(gmodule);
+				}
+
+
 				return face;
 			}
 
