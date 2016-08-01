@@ -648,9 +648,13 @@ module Garage {
 
 				for (let i: number = 0; i < this.remoteInfos_.length; i++){
 					//サポートされているdevice_type場合、result + 1
-					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
-						result ++;
+					if (this.remoteInfos_[i].face){
+						if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+							result++;
+						}
 					}
+
+					
 				}
 
 				return result;
