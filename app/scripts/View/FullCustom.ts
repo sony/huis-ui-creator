@@ -785,12 +785,12 @@ module Garage {
 					// 現在のターゲットを外す
 					this._loseTarget();
 
+					//CanvasのFacePagesArea上でない場合は反応しない
+					if (this.isOnCanvasFacePagesArea(mousePosition)) {
 					// マウスポインター位置にアイテムがあれば取得する
-					let $target = this._getTarget(mousePosition);
-					if ($target) {
+						let $target = this._getTarget(mousePosition);
+						if ($target) {
 
-						//CanvasのFacePagesArea上でない場合は反応しない
-						if (this.isOnCanvasFacePagesArea(mousePosition)) {
 							$target.focus();
 							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
 							this.$currentTarget_ = $target;
@@ -809,23 +809,25 @@ module Garage {
 							// 詳細編集エリアを表示
 							$("#face-item-detail-area").addClass("active");
 							this._showDetailItemArea(this.currentTargetModel_);
+						
+
+						} else {
+							// マウスポインター位置にアイテムが存在しない場合で、
+							// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
+							let $page = this._getTargetPageModule(mousePosition);
+							if ($page) {
+								// ページ背景の model の作成、もしくは既存のものを取得する
+								let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
+								this.currentTargetModel_ = {
+									type: "image",
+									image: backgroundImageModel
+								};
+								$("#face-item-detail-area").addClass("active");
+								// ページの背景の detail エリアを作成する
+								this._showDetailItemAreaOfPage($page);
+							}
 						}
-					
-					} else {
-						// マウスポインター位置にアイテムが存在しない場合で、
-						// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
-						let $page = this._getTargetPageModule(mousePosition);
-						if ($page) {
-							// ページ背景の model の作成、もしくは既存のものを取得する
-							let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
-							this.currentTargetModel_ = {
-								type: "image",
-								image: backgroundImageModel
-							};
-							$("#face-item-detail-area").addClass("active");
-							// ページの背景の detail エリアを作成する
-							this._showDetailItemAreaOfPage($page);
-						}
+
 					}
 				}
 				if (remainsTarget) {
