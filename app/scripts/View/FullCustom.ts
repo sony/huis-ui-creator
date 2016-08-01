@@ -1013,45 +1013,68 @@ module Garage {
 			 * アイテムのリサイズを行う
 			 */
 			private _resizeItem(position: IPosition, update?: boolean) {
+
+
 				var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
 					switch (this.selectedResizer_) {
 						case "left-top":
-							newArea.x += deltaX * 2;
-							newArea.y += deltaY * 2;
-							newArea.w -= deltaX * 2;
-							newArea.h -= deltaY * 2;
+							newArea.x += deltaX;
+							newArea.y += deltaY;
+							newArea.w -= deltaX;
+							newArea.h -= deltaY;
 							break;
 
 						case "right-top":
-							newArea.y += deltaY * 2;
-							newArea.w += deltaX * 2;
-							newArea.h -= deltaY * 2;
+							newArea.y += deltaY;
+							newArea.w += deltaX;
+							newArea.h -= deltaY;
 							break;
 
 						case "right-bottom":
-							newArea.w += deltaX * 2;
-							newArea.h += deltaY * 2;
+							newArea.w += deltaX;
+							newArea.h += deltaY;
 							break;
 
 						case "left-bottom":
-							newArea.x += deltaX * 2;
-							newArea.w -= deltaX * 2;
-							newArea.h += deltaY * 2;
+							newArea.x += deltaX;
+							newArea.w -= deltaX;
+							newArea.h += deltaY;
 							break;
 
 						default:
 							;
 					}
 
-	                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+					//グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
                         // グリッドスナップ用に調整
-                        newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
-                        newArea.y = this.getGridCordinate(newArea.y);
-                        newArea.w = this.getGridCordinate(newArea.w);
+						
+						newArea.w = this.getGridCordinate(newArea.w);
                         newArea.h = this.getGridCordinate(newArea.h);
+
+						//widthに変化がない場合は、xは変更しない。
+						//xが変化する場合(left-top/left-bottom)の場合のみxは変更
+						if (newArea.w != baseArea.w && newArea.x != baseArea.x) {
+							let deltaW: number = newArea.w - baseArea.w;
+							newArea.x = baseArea.x - deltaW ;
+							newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT; 
+							//newArea.x = this.getGridCordinate(newArea.x) + BIAS_X_DEFAULT_GRID_LEFT;
+						} else {
+							newArea.x = baseArea.x;
+						}
+
+						//hwightに変化がない場合は、yは変更しない。
+						if (newArea.h != baseArea.h && newArea.y != baseArea.y) {
+							let deltaH: number = newArea.h - baseArea.h;
+							newArea.y = baseArea.y - deltaH;
+							newArea.y = this.getGridCordinate(newArea.y);
+						} else {
+							newArea.y = baseArea.y;
+						}
+                        
+
                     } else {
                         // グリッドスナップ用に調整
                         newArea.x = this.getGridCordinate(newArea.x);
@@ -1065,13 +1088,13 @@ module Garage {
 
 				var deltaX = position.x - this.mouseMoveStartPosition_.x;
 				var deltaY = position.y - this.mouseMoveStartPosition_.y;
+
 				if (deltaX === 0 && deltaY === 0) {
 					return;
 				}
 
-				var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX, deltaY);
-
-			
+				//canvasAreaは実際の大きさの1/2に表示されているため、mouseの移動量は2倍にする。
+				var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX*2, deltaY*2);
 
 				this.$currentTarget_.css({
 					left: newArea.x + "px",
