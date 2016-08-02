@@ -3147,8 +3147,8 @@ module Garage {
 			 * @param area {IArea} [in,out] アイテムのエリア
 			 */
 			private _normalizeArea(area: IArea) {
-				if (area.x < 0) {
-					area.x = 0;
+				if (area.x < BIAS_X_DEFAULT_GRID_LEFT) {
+					area.x = BIAS_X_DEFAULT_GRID_LEFT;
 				}
 				if (area.y < 0) {
 					area.y = 0;
