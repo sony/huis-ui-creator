@@ -648,9 +648,13 @@ module Garage {
 
 				for (let i: number = 0; i < this.remoteInfos_.length; i++){
 					//サポートされているdevice_type場合、result + 1
-					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
-						result ++;
+					if (this.remoteInfos_[i].face){
+						if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+							result++;
+						}
 					}
+
+					
 				}
 
 				return result;
@@ -1396,11 +1400,21 @@ module Garage {
 					let face: IGFace = this._parseFace(facePath, remoteId);
 					let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
 
-					remoteInfos.push({
-						remoteId: remoteId,
-						face: face,
-						mastarFace: masterFace
-					});
+					if (face != undefined && remoteId != undefined) {
+						if (masterFace != undefined){
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+								mastarFace: masterFace
+							});
+						}else{
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+							});
+						}
+					}
+
 				}
 
 				return remoteInfos;
@@ -1476,6 +1490,26 @@ module Garage {
 						face.modules.push(gmodule);
 					}
 				}
+
+				//フルカスタムリモコンのモジュールがJsonが壊れるなどして、mosduleファイルが0個のとき、空のModuleFileを用意する
+				if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
+					face.modules.length == 0) {
+
+					let gmodule: IGModule = {
+						offsetY: 0,
+						pageIndex: 0,
+						remoteId: remoteId,
+						area: {
+							x: 0,
+							y: 0,
+							w: HUIS_FACE_PAGE_WIDTH,
+							h: HUIS_FACE_PAGE_HEIGHT
+						},
+						name: remoteId + "_page_0" // 暫定
+					}
+					face.modules.push(gmodule);
+				}
+
 
 				return face;
 			}
