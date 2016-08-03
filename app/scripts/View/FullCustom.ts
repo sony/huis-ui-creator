@@ -2277,6 +2277,9 @@ module Garage {
 					$target.addClass("disabled");
 				}
 
+				//backgroundImageか否か
+				let isBackground: boolean = $target.hasClass("background");
+
 				// model の各プロパティーに対して、CSS 設定等で表示を更新する
 				let itemType = targetModel.itemType;
 				let keys = targetModel.properties;
@@ -2334,7 +2337,7 @@ module Garage {
 									}
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
-                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
 								};
 								img.src = resolvedPath;
 
@@ -2395,8 +2398,10 @@ module Garage {
 									let img = new Image();
 									img.onload = () => {
 										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
+
+
 										// プレビュー部分の更新
-                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
                                     };
                                     if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                         img.src = resolvedOriginalPath;
@@ -2411,7 +2416,7 @@ module Garage {
             /**
             * 詳細設定エリアのプレビューの画像を更新する
             */
-            private _updatePreviewInDetailArea(imagePath : string, $preview) {
+            private _updatePreviewInDetailArea(imagePath : string, $preview, isBackground? : boolean) {
                 if (imagePath == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
 					return;
@@ -2421,6 +2426,10 @@ module Garage {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
 					return;
                 }
+
+				if (isBackground == undefined) {
+					isBackground = false;
+				}
 
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
 				if (imagePath != HUIS_REMOTEIMAGES_ROOT
@@ -2432,8 +2441,14 @@ module Garage {
 					let imgWidth = img.width;
 					let imgHeight = img.height;
 					previewHeight = imgHeight * (previewWidth / imgWidth);
+
+					//previewHeight = Nanのときもあるので MIN_HEIGHT_PREVIEW > previewHeightではない。
 					if (!(MIN_HEIGHT_PREVIEW < previewHeight)) {
 						previewHeight = MIN_HEIGHT_PREVIEW;
+					}
+
+					if (isBackground) {
+						previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
 					}
 				}
 
@@ -3671,7 +3686,7 @@ module Garage {
 				}
 
 				if (backgroundModel != null) {
-					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"));
+					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"),true);
 				} else {
 					console.warn(FUNCTION_NAME + "backgroundModel is null");
 				}

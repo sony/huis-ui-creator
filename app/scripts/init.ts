@@ -89,12 +89,16 @@ module Garage {
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
 		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
 		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
+
+		REMOTE_BACKGROUND_WIDTH = 540;
+		REMOTE_BACKGROUND_HEIGHT = 870;
+
 		// ページの背景の起点座標とサイズ
 		HUIS_PAGE_BACKGROUND_AREA = {
 			x: -30,
 			y: -24,
-			w: 540,
-			h: 870
+			w: REMOTE_BACKGROUND_WIDTH,
+			h: REMOTE_BACKGROUND_HEIGHT
 		};
 
 		// 画像追加時の画像編集パラメーター

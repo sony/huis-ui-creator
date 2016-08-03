@@ -625,6 +625,11 @@ declare module Garage {
 	*/
 	var WINDOW_MIN_WIDTH: number;
 	var WINDOW_MIN_HEIGHT: number;
+	/*
+	* リモコンの背景の大きさ
+	*/
+	var REMOTE_BACKGROUND_WIDTH: number;
+	var REMOTE_BACKGROUND_HEIGHT: number;
 
 }
 
