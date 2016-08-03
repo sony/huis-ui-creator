@@ -91,7 +91,7 @@ module Garage {
                     if (_.isArray(model.state)) {
 						filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
 							filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
-                                return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " ");
+                                return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " " && a.code_db.function !== "none");
 							});
 							return (filtered_action.length > 0);
                         });
