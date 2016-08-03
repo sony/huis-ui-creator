@@ -120,10 +120,19 @@ module Garage {
 				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
-					faceList.push({
-						remoteId: face.remoteId,
-						name: face.name
-					});
+
+					if (face.name == " ") {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: "　"
+						});
+					} else {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: face.name
+						});
+					}
+
                 });
 
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
