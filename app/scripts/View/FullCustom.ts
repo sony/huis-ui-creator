@@ -882,9 +882,9 @@ module Garage {
 				}
 
 				let facePagesAreaLeft:number = $facePagesAreaOnCanvas.offset().left;
-				let facePagesAreaRight:number = $facePagesAreaOnCanvas.offset().left + $facePagesAreaOnCanvas.width();
+				let facePagesAreaRight:number = $facePagesAreaOnCanvas.offset().left + $facePagesAreaOnCanvas.width()/2;
 				let facePagesAreaTop :number= $facePagesAreaOnCanvas.offset().top;
-				let facePagesAreaBottom :number= $facePagesAreaOnCanvas.offset().top + $facePagesAreaOnCanvas.height();
+				let facePagesAreaBottom :number= $facePagesAreaOnCanvas.offset().top + $facePagesAreaOnCanvas.height()/2;
 
 				if (mousePosition.x > facePagesAreaLeft && mousePosition.x < facePagesAreaRight
 					&& mousePosition.y > facePagesAreaTop && mousePosition.y < facePagesAreaBottom) {
