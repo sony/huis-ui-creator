@@ -121,7 +121,11 @@ module Garage {
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
 
-					if (face.name == " ") {
+					//faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
+					let tmpFaceName: string =face.name;
+					var regExp = new RegExp(" ", "g");
+					tmpFaceName = tmpFaceName.replace(regExp, "");
+					if (tmpFaceName == "") {
 						faceList.push({
 							remoteId: face.remoteId,
 							name: "　"
