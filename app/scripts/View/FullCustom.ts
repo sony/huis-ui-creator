@@ -1851,6 +1851,16 @@ module Garage {
 								console.warn("This type of JPEG is not supported");
 								return;
 							}
+							else if (result === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
+								let response = electronDialog.showMessageBox({
+									type: "error",
+									message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE"),
+									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+									title: PRODUCT_NAME,
+								});
+								console.warn("Image file too large");
+								return;
+							}
 							else if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない								
 								console.warn("Imega file not found"); // 普通はこないので特にダイアログは出さないで、編集画面にも何も起きない状態に
 								return;

@@ -17,6 +17,10 @@ module Garage {
 			public static ERROR_TYPE_JPEG2000: number = -1;
 			public static ERROR_TYPE_JPEGLOSSLESS: number = -2;
 			public static ERROR_TYPE_NOT_JPEG: number = -3;
+			public static ERROR_SIZE_TOO_LARGE: number = -10;
+
+			public static MAX_IMAGE_FILESIZE: number = 5000000;
+
 
 
 			constructor() {
@@ -52,16 +56,20 @@ module Garage {
 
 			/**
 			 * JPEGの種別を判定し、HUISが取り扱えるものならtrueを返す
+			 * サイズ上限(MiscUtil.MAX_IMAGE_FILESIZE)との比較も行う(2016.8.3新規)
 			 * @param path {string} [in] チェックしたいJPEGファイル
 			 */
 
 			checkJPEG(path: string): number {
 				let b = new Buffer(8);
+				let s: Stats = null;
+
 				try {
 
 					let fd = fs.openSync(path, 'r');
 
 					fs.readSync(fd, b, 0, 8, 0);
+					s = fs.fstatSync(fd);
 					fs.closeSync(fd);
 				} catch (e) {
 					console.error("checkJPEG: " + e);
@@ -82,6 +90,8 @@ module Garage {
 					//console.log(b);
 					return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS); 
 				}
+				// サイズチェック
+				if (s.size >= MiscUtil.MAX_IMAGE_FILESIZE) return (MiscUtil.ERROR_SIZE_TOO_LARGE);
 
 				return (MiscUtil.ERROR_TYPE_NOERROR);
 			}
