@@ -1759,21 +1759,26 @@ module Garage {
 
                 $selectMenu.outerWidth(targetWidth);
 
-                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
-                    var maringBottom :any= $selectMenu.css("margin-bottom").replace("px", "");
-                    popupMenuY = $target.offset().top - popupMenuHeight;
-                }
-
-                var options: PopupOptions = {
-                    x:0,
-                    y:0,
-                    tolerance: popupMenuY + ",0,0,"+$target.offset().left,
+				var options: PopupOptions = {
+                    x: 0,
+                    y: 0,
+                    tolerance: popupMenuY + ",0,0," + $target.offset().left,
                     corners: false
                 };
 
-                $selectMenu.popup(options).popup("open").on("vclick", () => {
-                    $selectMenu.popup("close");
-                });
+                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
+					popupMenuY = innerHeight - $target.offset().top;
+
+					options = {
+						x: 0,
+						y: 0,
+						tolerance: "0,0," + popupMenuY + "," + $target.offset().left,
+						corners: false
+					};
+                }
+
+				$selectMenu.popup(options);
+			
             }
 
 			/**
