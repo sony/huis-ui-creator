@@ -19,7 +19,6 @@ module Garage {
 			public static ERROR_TYPE_NOT_JPEG: number = -3;
 			public static ERROR_SIZE_TOO_LARGE: number = -10;
 
-			public static MAX_IMAGE_FILESIZE: number = 5000000;
 
 
 
@@ -91,7 +90,7 @@ module Garage {
 					return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS); 
 				}
 				// サイズチェック
-				if (s.size >= MiscUtil.MAX_IMAGE_FILESIZE) return (MiscUtil.ERROR_SIZE_TOO_LARGE);
+				if (s.size >= MAX_IMAGE_FILESIZE) return (MiscUtil.ERROR_SIZE_TOO_LARGE);
 
 				return (MiscUtil.ERROR_TYPE_NOERROR);
 			}

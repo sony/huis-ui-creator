@@ -630,6 +630,10 @@ declare module Garage {
 	*/
 	var REMOTE_BACKGROUND_WIDTH: number;
 	var REMOTE_BACKGROUND_HEIGHT: number;
+	/*
+	* 設定できる画像の容量の最大値[byte]
+	*/
+	var MAX_IMAGE_FILESIZE: number;
 
 }
 

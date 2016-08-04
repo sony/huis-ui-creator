@@ -1854,7 +1854,7 @@ module Garage {
 							else if (result === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
 								let response = electronDialog.showMessageBox({
 									type: "error",
-									message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE"),
+									message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
 									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 									title: PRODUCT_NAME,
 								});
