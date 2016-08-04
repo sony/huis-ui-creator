@@ -120,10 +120,23 @@ module Garage {
 				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
-					faceList.push({
-						remoteId: face.remoteId,
-						name: face.name
-					});
+
+					//faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
+					let tmpFaceName: string =face.name;
+					var regExp = new RegExp(" ", "g");
+					tmpFaceName = tmpFaceName.replace(regExp, "");
+					if (tmpFaceName == "") {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: "　"
+						});
+					} else {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: face.name
+						});
+					}
+
                 });
 
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
