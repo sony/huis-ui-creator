@@ -215,12 +215,14 @@ module Garage {
 				newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
 
 				//Jsonファイルが壊れるなどして
-				//もし、同名のリモコンがある場合
-				//this.collection.length + 1とする
+				//もし、同名のリモコンがすでにある場合
+				//モジュール名は、"[remoteId]_page_[pageCount+1]"とする
+				let pageIndexNo :number = pageCount;
 				let tmpPageNames: string[] = [];
 				for (let i = 0; i < this.collection.length; i++){
 					if (this.collection.models[i].name == newPageModuleModel.name) {
-						newPageModuleModel.name = this.remoteId_ + "_page_" + (this.collection.length + 1);
+						pageIndexNo++;
+						newPageModuleModel.name = this.remoteId_ + "_page_" + pageIndexNo;
 					}
 				}
 		
