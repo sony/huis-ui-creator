@@ -214,9 +214,8 @@ module Garage {
 
 				newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
 
-				//Jsonファイルが壊れるなどして
 				//もし、同名のリモコンがすでにある場合
-				//モジュール名は、"[remoteId]_page_[pageCount+1]"とする
+				//モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
 				let pageIndexNo :number = pageCount;
 				let tmpPageNames: string[] = [];
 				for (let i = 0; i < this.collection.length; i++){
