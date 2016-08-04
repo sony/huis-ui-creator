@@ -101,6 +101,8 @@ module Garage {
 			h: REMOTE_BACKGROUND_HEIGHT
 		};
 
+		MAX_IMAGE_FILESIZE = 5000000;
+
 		// 画像追加時の画像編集パラメーター
 		IMAGE_EDIT_PARAMS = {
 			resize: {
