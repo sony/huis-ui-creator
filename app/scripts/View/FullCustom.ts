@@ -908,6 +908,15 @@ module Garage {
 					return;
 				}
 
+				
+				//マウスがWindowSizeよりはみ出していた場合、フォーカスを外す
+				if (event.pageX < 0 + MARGIN_MOUSEMOVABLE_LEFT || event.pageX > innerWidth - MARGIN_MOUSEMOVABLE_RIGHT
+					|| event.pageY < 0 + MARGIN_MOUSEMOVALBE_TOP || event.pageY > innerHeight - MARGIN_MOUSEMOVALBE_BOTTOM) {
+					event.type = "mouseup";
+					this.onMainMouseUp(event);
+					return;
+				}
+
 				// リサイザーが選択されている場合は、アイテムのリサイズを行う
 				if (this.selectedResizer_) {
 					this._resizeItem({ x: event.pageX, y: event.pageY }, false);
