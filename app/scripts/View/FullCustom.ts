@@ -1731,12 +1731,27 @@ module Garage {
 				var $target = $(event.currentTarget);
 				var $editButton = this.$page.find("#edit-image-or-text");
 				let stateId = parseInt(JQUtils.data($editButton, "stateId"), 10); //$target.data("state-id");
-				this.procDeleteImage($editButton);
 
+				//画像を削除 procDeleteをつかうと、無駄な履歴が残るので使わない。
+				let targetState = this._getCurrentTargetState(stateId);
+				if (!targetState) {
+					return;
+				}
+				// 状態内の image を削除
+				targetState.image = null;
+				$(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
+				$(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
 				let $textField: JQuery = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
+
 				let textInTextFiled: string = $textField.val();
 
-				this._updateCurrentModelStateData(stateId, "text", textInTextFiled);
+				this._updateCurrentModelStateData(stateId,
+					{
+						"text": textInTextFiled,
+						"path": null,
+						"resolved-path": null
+
+					});
 				this.setFocusAndMoveCursorToEnd($textField);
 			}
 
