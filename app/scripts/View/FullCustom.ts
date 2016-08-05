@@ -2285,6 +2285,9 @@ module Garage {
 			 * @param targetModel {ItemModel} アイテム要素の表示更新の対象となる model
 			 */
 			private _updateItemElementOnCanvas(targetModel: ItemModel) {
+
+				let FUNCTION_NAME = TAG + " : _updateItemElementOnCanvas : ";
+
 				let $target = this._getItemElementByModel(targetModel);
 				if (targetModel.enabled) {
 					$target.removeClass("disabled");
