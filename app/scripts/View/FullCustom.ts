@@ -2506,6 +2506,7 @@ module Garage {
 										let props = {};
 
 										let label = targetState.label;
+										props["text"] = "";
 										if (label != null) {
 											if (label[0] != null){
 												let text = label[0].text;
@@ -2521,6 +2522,7 @@ module Garage {
 										}
 
 										let image = targetState.image;
+										props["resolved-path"] = "null";
 										if (image != null) {
 											if (image[0] != null) {
 												let resolvedPath = image[0].resolvedPath;
@@ -2959,8 +2961,12 @@ module Garage {
 							case "text":
 							case "size":
 								{
-									let label = targetState.label[0];
+								
 									let $labelElement = $targetStateElem.find(".state-label");
+									let label = targetState.label[0];
+									if (label == null) {
+										break;
+									}
 									$labelElement.text(label.text);
 									$labelElement.css({
 										left: "0",
