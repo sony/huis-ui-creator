@@ -3067,7 +3067,11 @@ module Garage {
 				}
 
 				//cssのbackgroundImage要素から、画像名を抽出
-				var backgroundImageCssArray = $preview.css("background-image").split("/");
+				let previceBagroundCSS: string = $preview.css("background-image");
+				if (previceBagroundCSS == null) {
+					return;
+				}
+				var backgroundImageCssArray = previceBagroundCSS.split("/");
 				var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
 				var path = pathArray[0];
 
