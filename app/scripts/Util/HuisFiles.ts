@@ -4,7 +4,7 @@ module Garage {
 	export module Util {
 		import IPromise = CDP.IPromise;
 		//import makePromise = CDP.makePromise;
-		import OffscreenEditor = Model.OffscreenEditor;
+		//import OffscreenEditor = Model.OffscreenEditor;
 
 		var TAGS = {
 			HuisFiles: "[Garage.Util.HuisFiles] ",
@@ -1235,7 +1235,7 @@ module Garage {
 							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
-						let newFileName = OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+						let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
 						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
 						let newFileFullPath: string;
@@ -1247,7 +1247,7 @@ module Garage {
 						}
 						// editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
 						// 補正は拡張子の付け替え。
-						newFileFullPath = OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
+						newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
 
 						normalizedImage = {
 							area: image.area,
@@ -1734,7 +1734,7 @@ module Garage {
 					} else {
 						resizeImage = resizeImages.shift();
 
-						OffscreenEditor.editImage(resizeImage.src, {
+						Model.OffscreenEditor.editImage(resizeImage.src, {
 							resize: resizeImage.params
 						}, resizeImage.dst)
 							.always(() => {
