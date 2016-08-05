@@ -2135,6 +2135,7 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
+				$("#button-edit-done").prop("disabled", true);
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
 
@@ -2191,10 +2192,13 @@ module Garage {
 									//CDP.this.showGarageToast"HUIS との同期が完了しました。"); 使われてない？
 									Framework.Router.back();
 								}
+								$("#button-edit-done").prop("disabled", false);
+
 							});
 						} else {
 							//this.showGarageToast("リモコンを保存しました。");　使われてない
 							Framework.Router.back();
+							$("#button-edit-done").prop("disabled", false);
 					}
 				});
 			}
