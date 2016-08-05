@@ -2429,7 +2429,7 @@ module Garage {
 							break;
 						case "state": //ボタンの画像などを変更した際の、変更
 							{
-								if (itemType == "button") {
+								if (itemType === "button") {
 									let targetButton :IGButton = $.extend(true, {}, targetModel);
 									var states = value;
 									if (!states) {
@@ -2441,7 +2441,7 @@ module Garage {
 
 									//ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
 									let stateId: number = targetButton.default;
-									if (stateId == undefined) {
+									if (stateId == null) {
 										stateId = 0;
 									}
 
@@ -2472,14 +2472,14 @@ module Garage {
 									}
 
 									let buttonW = targetButton.area.w;
-									if (buttonW == undefined) {
-										console.warn(FUNCTION_NAME + "buttonW is undefined");
+									if (buttonW == null) {
+										console.warn(FUNCTION_NAME + "buttonW is null");
 										return;
 									}
 
 									let buttonH = targetButton.area.h;
-									if (buttonH == undefined) {
-										console.warn(FUNCTION_NAME + "buttonH is undefined");
+									if (buttonH == null) {
+										console.warn(FUNCTION_NAME + "buttonH is null");
 										return;
 									}
 
@@ -2491,29 +2491,34 @@ module Garage {
 										let props = {};
 
 										let label = targetState.label;
-										if (label != undefined){
-											let text = label[0].text;
-											if (text != undefined) {
-												props["text"] = text;
-											}
+										if (label != null) {
+											if (label[0] != null){
+												let text = label[0].text;
+												if (text != null) {
+													props["text"] = text;
+												}
 
-											let size = label[0].size;
-											if (size != undefined) {
-												props["size"] = size;
+												let size = label[0].size;
+												if (size != null) {
+													props["size"] = size;
+												}
 											}
 										}
 
 										let image = targetState.image;
-										if (image != undefined) {
-											let resolvedPath =image[0].resolvedPath;
-											if (resolvedPath != undefined) {
-												props["resolved-path"] = resolvedPath;
-											}
+										if (image != null) {
+											if (image[0] != null) {
+												let resolvedPath = image[0].resolvedPath;
+												if (resolvedPath != null) {
+													props["resolved-path"] = resolvedPath;
+												}
 
-											let resizeMode = image[0].resizeMode;
-											if (resizeMode != undefined) {
-												props["resizeMode"] = resizeMode;
+												let resizeMode = image[0].resizeMode;
+												if (resizeMode != null) {
+													props["resizeMode"] = resizeMode;
+												}
 											}
+											
 										}
 
 										let keys = Object.keys(props);
