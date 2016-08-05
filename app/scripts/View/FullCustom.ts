@@ -2011,11 +2011,11 @@ module Garage {
 						this._updateCurrentModelStateData(stateId, {
 							"path": editedImagePath,
 							"resolved-path": editedImage.path.replace(/\\/g, "/"),
-							"resizeOriginal": editedImagePath
+							"resizeOriginal": editedImagePath,
+							"text":""
 						});
 
-						//ボタンのテキストを削除する
-						this._updateCurrentModelStateData(stateId ,"text","");
+						
 
 						// テキストエリアの文字表示をアップデート
 						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
