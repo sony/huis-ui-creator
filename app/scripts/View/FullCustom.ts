@@ -2427,9 +2427,110 @@ module Garage {
 								}
 							}
 							break;
+						case "state": //ボタンの画像などを変更した際の、変更
+							{
+								if (itemType == "button") {
+									let targetButton :IGButton = $.extend(true, {}, targetModel);
+									var states = value;
+									if (!states) {
+										console.warn(FUNCTION_NAME + "state is not found in button");
+										return;
+									}
+
+								
+
+									//ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
+									let stateId: number = targetButton.default;
+									if (stateId == undefined) {
+										stateId = 0;
+									}
+
+									var currentStates: IGState[] = $.extend(true, [], states);
+
+									let targetStates: IGState[];
+									if (_.isUndefined(stateId)) {
+										// stateId が指定されていない場合は、全 state を更新
+										targetStates = states;
+									} else {
+										targetStates = states.filter((state) => {
+											return state.id === stateId;
+										});
+									}
+
+									if (!targetStates || targetStates.length < 1) {
+										console.warn(FUNCTION_NAME + "state id is not found");
+										return;
+									}
+
+									// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
+									var $targetStateElem = $target.find(".button-state").filter((index: number, elem: Element) => {
+										return parseInt(JQUtils.data($(elem), "stateId"), 10) === stateId;
+									});
+									if (!$targetStateElem || $targetStateElem.length < 1) {
+										console.warn(FUNCTION_NAME + "target state elem is not found");
+										return;
+									}
+
+									let buttonW = targetButton.area.w;
+									if (buttonW == undefined) {
+										console.warn(FUNCTION_NAME + "buttonW is undefined");
+										return;
+									}
+
+									let buttonH = targetButton.area.h;
+									if (buttonH == undefined) {
+										console.warn(FUNCTION_NAME + "buttonH is undefined");
+										return;
+									}
+
+									
+
+									targetStates.forEach((targetState: IGState) => {
+
+										//"text", "size", "path", "resolved-path", "resizeMode"すべてが変化したとみなす。
+										let props = {};
+
+										let label = targetState.label;
+										if (label != undefined){
+											let text = label[0].text;
+											if (text != undefined) {
+												props["text"] = text;
+											}
+
+											let size = label[0].size;
+											if (size != undefined) {
+												props["size"] = size;
+											}
+										}
+
+										let image = targetState.image;
+										if (image != undefined) {
+											let resolvedPath =image[0].resolvedPath;
+											if (resolvedPath != undefined) {
+												props["resolved-path"] = resolvedPath;
+											}
+
+											let resizeMode = image[0].resizeMode;
+											if (resizeMode != undefined) {
+												props["resizeMode"] = resizeMode;
+											}
+										}
+
+										let keys = Object.keys(props);
+										keys.forEach((key) => {
+											let value = props[key];
+											this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, buttonW, buttonH);
+										});
+									});
+								}
+							}
+							break;
 					}
+
+					
 				});
 			}
+
 
             /**
             * 詳細設定エリアのプレビューの画像を更新する
