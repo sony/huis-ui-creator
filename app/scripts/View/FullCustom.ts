@@ -1978,18 +1978,23 @@ module Garage {
 						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
 						let editedImageName = path.basename(editedImage.path);
 						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-
-						this._updateCurrentModelData({
-							"path": editedImagePath,
-							"resizeOriginal": editedImagePath,
-							"resized": true
-						});
+						if (pageBackground) {
+							// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
+							this._updateCurrentModelData({
+								"enabled": true,
+								"path": editedImagePath,
+								"resizeOriginal": editedImagePath,
+								"resized": true
+							});
+						} else {
+							this._updateCurrentModelData({
+								"path": editedImagePath,
+								"resizeOriginal": editedImagePath,
+								"resized": true
+							});
+						}
+						
 					});
-
-				// pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
-				if (pageBackground) {
-					this._updateCurrentModelData("enabled", true);
-				}
 			}
 
 			private _reflectImageToButtonState(remoteId: string, $target: JQuery, imageFilePath: string) {
