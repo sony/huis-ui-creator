@@ -3032,9 +3032,19 @@ module Garage {
 			* ボタン画像がある場合、テキストエリアを表示に。する
 			*/
 			private toggleImagePreview(stateId: number) {
-				
+				let FUNCTION_NAME = TAG + " :toggleImagePreview: ";
+
 				var $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+				if ($preview == null) {
+					//redo, undoの際に、previewが表示されていない場合がある。
+					return;
+				}
+
 				var $textFieldInPreview = $preview.find(".text-field-in-preview");
+				if ($textFieldInPreview == null) {
+					console.warn(FUNCTION_NAME + "$textFieldInPreview is undefined");
+					return;
+				}
 
 				//cssのbackgroundImage要素から、画像名を抽出
 				var backgroundImageCssArray = $preview.css("background-image").split("/");
