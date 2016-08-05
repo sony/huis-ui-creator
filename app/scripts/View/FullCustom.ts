@@ -2101,6 +2101,8 @@ module Garage {
             * 戻るボタンが押されたときに呼び出される
             */
             private onBackButtonClicked(event: Event) {
+				$("#button-edit-back").prop("disabled", true);	// 二度押し対策
+
 				let response = electronDialog.showMessageBox(
 					{
 						type: "warning",
@@ -2120,7 +2122,9 @@ module Garage {
 					Framework.Router.back();//negative なボタンの場合、homeに戻る
 				} else {//キャンセル処理の場合、なにもしない。
 				}
-            }
+
+				$("#button-edit-back").prop("disabled", false);
+           }
 
 			/*
 			* リモコン名編集用のテキストフィールドをクリックした際に呼び出し
@@ -2135,7 +2139,8 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
-				$("#button-edit-done").prop("disabled", true);
+				$("#button-edit-done").prop("disabled", true); // 二度押し対策
+
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
 
