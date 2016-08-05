@@ -2805,7 +2805,35 @@ module Garage {
 
 						}
 
-						// canvas 上のスタイルと詳細エリアの更新
+						this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
+
+					
+					});
+				});
+
+				
+
+				var memento: IMemento = {
+					target: button,
+					previousData: { "state": currentStates },
+					nextData: { "state": states }
+				};
+				var mementoCommand = new MementoCommand(memento);
+				this.commandManager_.invoke(mementoCommand);
+
+			}
+
+			/*
+			*  button のcanvas 上のスタイルと詳細エリアの更新する
+			*  @param stateId {number} buttonのステートID
+			*  @param key{string} update対象の種類 "text", "size" など
+			*  @param value 変更量
+			*  @$targetStateElem {JQuery} 対象のJQuery要素
+			*  @buttonAreaW{number} 変更対象のボタンのW
+			*  @buttonAreaH{number} 変更対象のボタンのH
+			*/
+			private updateButtonOnCustom(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
+					// canvas 上のスタイルと詳細エリアの更新
 						switch (key) {
 							case "text":
 							case "size":
@@ -2816,9 +2844,9 @@ module Garage {
 									$labelElement.css({
 										left: "0",
 										top: "0",
-										width: button.area.w + "px",
-										height: button.area.h + "px",
-										lineHeight: button.area.h + "px",
+										width: buttonAreaW + "px",
+										height: buttonAreaH + "px",
+										lineHeight: buttonAreaH + "px",
 										color: "rgb(0,0,0)",
 										fontSize: Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
 									});
@@ -2851,8 +2879,8 @@ module Garage {
 									$imageElement.css({
 										left: "0",
 										top: "0",
-										width: button.area.w + "px",
-										height: button.area.h + "px",
+										width: buttonAreaW + "px",
+										height: buttonAreaH + "px",
 										backgroundImage: value ? "url(" + value + ")" : "none"
 									});
 									// 画像のロードが完了してから表示を更新する
@@ -2896,19 +2924,6 @@ module Garage {
 								}
 								break;
 						}
-					});
-				});
-
-				
-
-				var memento: IMemento = {
-					target: button,
-					previousData: { "state": currentStates },
-					nextData: { "state": states }
-				};
-				var mementoCommand = new MementoCommand(memento);
-				this.commandManager_.invoke(mementoCommand);
-
 			}
 
 
