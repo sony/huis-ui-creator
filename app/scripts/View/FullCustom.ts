@@ -3856,22 +3856,18 @@ module Garage {
 						backgroundModel = this.faceRenderer_canvas_.getImage(moduleId, itemId);
 					}
 				}
-				if (backgroundModel) {
+				if (backgroundModel && backgroundModel.enabled) {
+
 					let $pageBackgroundDetail = $(templatePageBackground(backgroundModel));
 					$detail.append($pageBackgroundDetail);
 					let resizeMode = backgroundModel.resizeMode;
 					if (resizeMode) {
 						$(".image-resize-mode").val(resizeMode);
 					}
+					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"), true);
 				} else {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
-				}
-
-				if (backgroundModel != null) {
-					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"),true);
-				} else {
-					console.warn(FUNCTION_NAME + "backgroundModel is null");
 				}
 
 				$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
