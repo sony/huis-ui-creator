@@ -146,7 +146,14 @@ module Garage {
 
 	var loadUtils = (callback: Function): void => {
 		// Util のロードと初期化
-		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.miscutil", "garage.util.garagefiles", "garage.util.jqutils"],
+		requirejs(["pixi",
+			"garage.model.offscreeneditor",
+			"garage.util.huisfiles",
+			"garage.util.electrondialog",
+			"garage.util.huisdev",
+			"garage.util.miscutil",
+			"garage.util.garagefiles",
+			"garage.util.jqutils"],
 			() => {
 				try {
 					electronDialog = new Util.ElectronDialog();
