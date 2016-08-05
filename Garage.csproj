@@ -202,8 +202,6 @@
     <Content Include="app\stylesheets\_home.scss" />
     <Content Include="app\templates\full-custom.html" />
     <Content Include="app\stylesheets\_full-custom.scss" />
-    <Content Include="app\templates\face-render-experiment.html" />
-    <Content Include="app\stylesheets\_face-render-experiment.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\templates\splash.html" />
@@ -302,13 +300,6 @@
     </Content>
     <Content Include="app\scripts\View\FullCustom.js.map">
       <DependentUpon>FullCustom.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="app\scripts\View\FaceRenderExperiment.ts" />
-    <Content Include="app\scripts\View\FaceRenderExperiment.js">
-      <DependentUpon>FaceRenderExperiment.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\FaceRenderExperiment.js.map">
-      <DependentUpon>FaceRenderExperiment.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonItem.ts" />
     <Content Include="app\scripts\Model\ButtonItem.js">
