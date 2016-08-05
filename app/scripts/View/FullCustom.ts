@@ -1834,6 +1834,10 @@ module Garage {
 							return;
 						}
 
+						//画像ファイルダイアログが表示されると、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
+						//そのため、直後にフォーカスを設定しなおす。
+						this.$el.focus();
+
 						let imageFilePath = imageFiles[0];
 						let remoteId = this.faceRenderer_canvas_.getRemoteId();
 						let imageFileExt = path.extname(imageFilePath).toLowerCase();
