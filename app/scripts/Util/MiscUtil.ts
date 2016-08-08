@@ -20,8 +20,6 @@ module Garage {
 			public static ERROR_SIZE_TOO_LARGE: number = -10;
 
 
-
-
 			constructor() {
 				if (!fs) {
 					fs = require("fs-extra");
@@ -54,25 +52,44 @@ module Garage {
 			}
 
 			/**
-			 * JPEGの種別を判定し、HUISが取り扱えるものならtrueを返す
-			 * サイズ上限(MiscUtil.MAX_IMAGE_FILESIZE)との比較も行う(2016.8.3新規)
+			 * HUISが取り扱えるサイズの画像ファイルならERROR_TYPE_NOERRORを返す
+			 * サイズ上限はGarage.MAX_IMAGE_FILESIZEで定義されている。
+			 * @param path {string} [in] チェックしたいJPEG/PNGファイル
+			 */
+			checkFileSize(path: string): number {
+				let s: Stats = null;
+
+				try {
+					let fd = fs.openSync(path, 'r');
+					s = fs.fstatSync(fd);
+					fs.closeSync(fd);
+				} catch (e) {
+					console.error("checkFileSize: " + e);
+					return
+				}
+				// サイズチェック
+				if (s.size >= MAX_IMAGE_FILESIZE) return (MiscUtil.ERROR_SIZE_TOO_LARGE);
+
+				return (MiscUtil.ERROR_TYPE_NOERROR);
+			}
+
+			/**
+			 * JPEGの種別を判定し、HUISが取り扱えるものならERROR_TYPE_NOERRORを返す
 			 * @param path {string} [in] チェックしたいJPEGファイル
 			 */
 
 			checkJPEG(path: string): number {
 				let b = new Buffer(8);
-				let s: Stats = null;
 
 				try {
 
 					let fd = fs.openSync(path, 'r');
 
 					fs.readSync(fd, b, 0, 8, 0);
-					s = fs.fstatSync(fd);
 					fs.closeSync(fd);
 				} catch (e) {
 					console.error("checkJPEG: " + e);
-					return 
+					return (MiscUtil.ERROR_FILE_ACCESS);
 				}
 				// JPEG2000か
 				if ((b[0] === 0) && (b[1] === 0)) {
@@ -89,8 +106,6 @@ module Garage {
 					//console.log(b);
 					return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS); 
 				}
-				// サイズチェック
-				if (s.size >= MAX_IMAGE_FILESIZE) return (MiscUtil.ERROR_SIZE_TOO_LARGE);
 
 				return (MiscUtil.ERROR_TYPE_NOERROR);
 			}
