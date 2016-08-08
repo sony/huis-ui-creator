@@ -229,15 +229,6 @@ module Garage {
             //    }
             //}
 
-			private _onHeaderDblClick() {
-				var currentWindow = Remote.getCurrentWindow();
-				if (currentWindow.isDevToolsOpened()) {
-					Framework.Router.navigate("#face-render-experiment");
-				} else {
-					currentWindow.toggleDevTools();
-				}
-			}
-
 			private _onCreateNewRemote() {
 				let canCreateResult = huisFiles.canCreateNewRemote();
 				if (canCreateResult == 0) {
