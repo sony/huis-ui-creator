@@ -2472,18 +2472,9 @@ module Garage {
 								if (itemType === "button") {
 									let targetButton :IGButton = $.extend(true, {}, targetModel);
 									var states = value;
-									if (!states) {
-										console.warn(FUNCTION_NAME + "state is not found in button");
-										return;
-									}
-
-								
 
 									//ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
 									let stateId: number = targetButton.default;
-									if (stateId == null) {
-										stateId = 0;
-									}
 
 									var currentStates: IGState[] = $.extend(true, [], states);
 
