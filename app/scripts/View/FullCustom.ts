@@ -2472,12 +2472,6 @@ module Garage {
 								if (itemType === "button") {
 									let targetButton :IGButton = $.extend(true, {}, targetModel);
 									var states = value;
-									if (!states) {
-										console.warn(FUNCTION_NAME + "state is not found in button");
-										return;
-									}
-
-								
 
 									//ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
 									let stateId: number = targetButton.default;
@@ -2488,14 +2482,10 @@ module Garage {
 									var currentStates: IGState[] = $.extend(true, [], states);
 
 									let targetStates: IGState[];
-									if (_.isUndefined(stateId)) {
-										// stateId が指定されていない場合は、全 state を更新
-										targetStates = states;
-									} else {
-										targetStates = states.filter((state) => {
-											return state.id === stateId;
-										});
-									}
+
+									targetStates = states.filter((state) => {
+										return state.id === stateId;
+									});
 
 									if (!targetStates || targetStates.length < 1) {
 										console.warn(FUNCTION_NAME + "state id is not found");
