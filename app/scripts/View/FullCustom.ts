@@ -93,8 +93,6 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
-                requirejs(["pixi"]);
-
 				
 			}
 

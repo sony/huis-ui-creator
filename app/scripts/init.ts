@@ -129,25 +129,69 @@ module Garage {
 
         HELP_SITE_URL = "http://rd1.sony.net/help/remote/huis_ui_creator/ja/";
 
-        if (fs.existsSync("debug")) {
-            DEBUG_MODE = true;
-            console.warn("DEBUG_MODE enabled");
-        } else {
-            DEBUG_MODE = false;
-        }
+        //if (fs.existsSync("debug")) {
+        //    DEBUG_MODE = true;
+        //    console.warn("DEBUG_MODE enabled");
+        //} else {
+        //    DEBUG_MODE = false;
+        //}
+
+        fs.stat("debug", (err: Error, stats) => {
+			if (err) {
+				DEBUG_MODE = false;
+			} else {
+				console.log(err);
+				console.warn("DEBUG_MODE enabled");
+				DEBUG_MODE = true;
+			}
+		});
 
 		callback();
 	};
 
 	var loadUtils = (callback: Function): void => {
 		// Util のロードと初期化
-		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.miscutil", "garage.util.garagefiles", "garage.util.jqutils"], () => {
-			electronDialog = new Util.ElectronDialog();
-			huisFiles = new Util.HuisFiles();
-			garageFiles = new Util.GarageFiles();
-			miscUtil = new Util.MiscUtil();
-			callback();
-		});
+		requirejs(["pixi",
+			"garage.model.offscreeneditor",
+			"garage.util.huisfiles",
+			"garage.util.electrondialog",
+			"garage.util.huisdev",
+			"garage.util.miscutil",
+			"garage.util.garagefiles",
+			"garage.util.jqutils"],
+			() => {
+				try {
+					electronDialog = new Util.ElectronDialog();
+					huisFiles = new Util.HuisFiles();
+					garageFiles = new Util.GarageFiles();
+					miscUtil = new Util.MiscUtil();
+				} catch (e) {
+					console.error("init.ts loadUtils failed. " + e);
+				}
+				callback();
+			},
+			(err: RequireError) => {
+				console.error("init.ts loadUtils failed. " + err);
+				//load trouble, retry
+				requirejs(err.requireModules,
+					() => {
+						try {
+							electronDialog = new Util.ElectronDialog();
+							huisFiles = new Util.HuisFiles();
+							garageFiles = new Util.GarageFiles();
+							miscUtil = new Util.MiscUtil();
+						} catch (e) {
+							console.error("init.ts loadUtils failed. " + e);
+						}
+						callback();
+					},
+					(err: RequireError) => {
+						console.error("retry failed..." + err);
+					}
+
+				); 
+			}
+		);
 	};
 
 	// 起動時のチェック
