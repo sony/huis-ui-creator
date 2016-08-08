@@ -2382,7 +2382,8 @@ module Garage {
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
 								let resolvedPath = targetModel["resizeResolvedOriginalPath"];
-								if (!resolvedPath) {
+
+								if (!resolvedPath || resolvedPath == HUIS_REMOTEIMAGES_ROOT) {
 									resolvedPath = targetModel["resolvedPath"];
 								}
 
