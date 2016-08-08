@@ -634,6 +634,15 @@ declare module Garage {
 	* 設定できる画像の容量の最大値[byte]
 	*/
 	var MAX_IMAGE_FILESIZE: number;
+	/*
+	* EDIT画面で、マウスを動かせる範囲。
+	* Windowの端から何ピクセルか
+	*/
+	var MARGIN_MOUSEMOVALBE_TOP: number;
+	var MARGIN_MOUSEMOVABLE_LEFT: number;
+	var MARGIN_MOUSEMOVABLE_RIGHT: number;
+	var MARGIN_MOUSEMOVALBE_BOTTOM: number;
+	
 
 }
 

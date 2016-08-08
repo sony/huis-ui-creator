@@ -79,6 +79,11 @@ module Garage {
 		WINDOW_MIN_WIDTH = 768;
 		WINDOW_MIN_HEIGHT = 1280;
 
+		MARGIN_MOUSEMOVALBE_TOP = 100;
+		MARGIN_MOUSEMOVABLE_LEFT = 200;
+		MARGIN_MOUSEMOVABLE_RIGHT = 200;
+		MARGIN_MOUSEMOVALBE_BOTTOM = 80;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
