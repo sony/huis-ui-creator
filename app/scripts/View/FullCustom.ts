@@ -1840,6 +1840,18 @@ module Garage {
 							});
 							return;
 						}
+
+						if (miscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
+							let response = electronDialog.showMessageBox({
+								type: "error",
+								message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
+								buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+								title: PRODUCT_NAME,
+							});
+							console.warn("Image file too large");
+							return;
+						}
+
 						if ((imageFileExt === ".jpg") || (imageFileExt === ".jpeg")) {
 							let result = miscUtil.checkJPEG(imageFilePath);
 							if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
@@ -1861,16 +1873,6 @@ module Garage {
 									title: PRODUCT_NAME,
 								});
 								console.warn("This type of JPEG is not supported");
-								return;
-							}
-							else if (result === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
-								let response = electronDialog.showMessageBox({
-									type: "error",
-									message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
-									buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-									title: PRODUCT_NAME,
-								});
-								console.warn("Image file too large");
 								return;
 							}
 							else if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない								
