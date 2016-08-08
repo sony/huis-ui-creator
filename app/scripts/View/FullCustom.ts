@@ -2383,7 +2383,7 @@ module Garage {
 								// 存在しない場合は、image.path を使う。
 								let resolvedPath = targetModel["resizeResolvedOriginalPath"];
 
-								if (resolvedPath == null || resolvedPath == HUIS_REMOTEIMAGES_ROOT) {
+								if (!resolvedPath || resolvedPath == HUIS_REMOTEIMAGES_ROOT) {
 									resolvedPath = targetModel["resolvedPath"];
 								}
 
