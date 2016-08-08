@@ -2475,17 +2475,18 @@ module Garage {
 
 									//ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
 									let stateId: number = targetButton.default;
-									if (stateId == null) {
-										stateId = 0;
-									}
 
 									var currentStates: IGState[] = $.extend(true, [], states);
 
 									let targetStates: IGState[];
-
-									targetStates = states.filter((state) => {
-										return state.id === stateId;
-									});
+									if (_.isUndefined(stateId)) {
+										// stateId が指定されていない場合は、全 state を更新
+										targetStates = states;
+									} else {
+										targetStates = states.filter((state) => {
+											return state.id === stateId;
+										});
+									}
 
 									if (!targetStates || targetStates.length < 1) {
 										console.warn(FUNCTION_NAME + "state id is not found");
