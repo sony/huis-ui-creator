@@ -1,12 +1,12 @@
-﻿<article data-role="page" id="page-home" data-title="Garage" data-theme="b">
+﻿<article data-role="page" id="page-home" data-title="HUIS UI CREATOR" data-theme="b">
     <header data-role="header">
-        <h3>Home</h3>
+
+        <h3>★HOME</h3>
         <div class="header-button-lline-alingn-right">
-            <button id="create-new-remote"></button>
-            <button id="sync-pc-to-huis"></button>
+            <button id="create-new-remote" title="★新規リモコン作成"></button>
+            <!--<button id="sync-pc-to-huis"></button>-->
             <button id="option-pulldown-menu"></button>
         </div>
-        <!--<a href="#face-render-experiment" class="ui-btn-right">FRE</a>-->
     </header>
     <section data-role="content">
         <section id="face-list-container">
@@ -29,14 +29,6 @@
             </ul>
         </section>
 
-        <section id="face-history">
-            <h3>HISTORY</h3>
-            <section id="face-history-list-container">
-                <ul id="face-history-list"></ul>
-            </section>
-        </section>
-
-
         <script type="text/template" id="face-list-template">
                 {{#faceList}}
                 <li class="face" data-remoteid="{{remoteId}}">
@@ -47,12 +39,12 @@
         </script>
         <section id="option-pulldown-menu-popup" data-role="popup" >
             <ul id="option-pulldown-menu-list">
-                <li id="command-about-this" class="menu-item-text">このアプリについて</li>
-                <li id="command-visit-help" class="menu-item-text">ヘルプサイトを開く</li>
+                <li id="command-visit-help" class="menu-item-text">★ヘルプガイドを見る</li>
+				<li id="command-about-this" class="menu-item-text">★HUIS UI CREATOR のバージョン情報</li>
             </ul>
         </section>
 
-        
+
 
     </section>
 </article>

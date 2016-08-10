@@ -176,7 +176,11 @@
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
-						if ((dir1Stat.size === dir2Stat.size && dir1Stat.mtime.getTime() === dir2Stat.mtime.getTime()) ||
+						// ファイル更新日時が±10秒までは同じファイルとして扱う
+						// 以下の点に注意
+						// 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
+						// 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
+						if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10*1000 ) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
 						}
@@ -225,7 +229,7 @@
 				 * 
 				 * @return {IProgress}
 				 */
-                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
                     var errorValue: Error= null; 
@@ -272,6 +276,12 @@
                                         $dialog.find("p").html(dialogProps.options.anotherOption.title);
                                     }
                                 }
+
+                                setTimeout(() => {
+                                    if (actionBeforeComplete) {
+                                        actionBeforeComplete();
+                                    }
+                                });
 
                                 setTimeout(() => {
                                     if (dialog) {
@@ -345,7 +355,10 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file));
+								let option: CopyOptions = {
+									preserveTimestamps: true
+								}
+								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
 								df.reject(err);

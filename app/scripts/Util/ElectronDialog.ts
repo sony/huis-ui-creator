@@ -40,6 +40,10 @@ module Garage {
 			 * Extra information of the message.
 			 */
 			detail?: string;
+			/*
+			 * return velue when no button cliecked but thr dialog window closed
+			 */
+			cancelId?: number;
 			icon?: any;
 		}
 
@@ -62,7 +66,6 @@ module Garage {
 			 */
 			showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
 				this._resetElectronDialog();
-                this._resetElectronDialog();
                 if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
                     if (this._dialog) {
                         this._dialog.showOpenDialog(options, callback);
@@ -125,7 +128,6 @@ module Garage {
 			 * Electron のダイアログを使用するための初期設定
 			 */
             private _resetElectronDialog() {
-                //debugger;
 				if (!this._dialogOwner) {
                     var browserWindow = Remote.BrowserWindow;
                     this._dialogOwner = browserWindow.getFocusedWindow(); // focusが他のアプリやDebuggerにあるとnullが返る

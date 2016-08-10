@@ -40,6 +40,7 @@ module Config {
 			"garage.util.huisfiles": "scripts/Util/HuisFiles",
 			"garage.util.electrondialog": "scripts/Util/ElectronDialog",
 			"garage.util.huisdev": "scripts/Util/HuisDev",
+			"garage.util.miscutil": "scripts/Util/MiscUtil",
 			"garage.util.garagefiles": "scripts/Util/GarageFiles",
 			"garage.util.jqutils": "scripts/Util/JQueryUtils",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
@@ -50,6 +51,8 @@ module Config {
 
 			// application
 			"app": "scripts/app",
+			// wait for module load for 100 seconds
+			"waitSeconds": 100,
 		},
 
 		shim: {
