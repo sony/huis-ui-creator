@@ -1,6 +1,6 @@
-﻿<article data-role="page" id="page-full-custom" data-title="Garage" data-theme="b">
-    <header data-role="header" data-title="Garage">
-        <h3>EDIT</h3>
+﻿<article data-role="page" id="page-full-custom" data-title="HUIS UI CREATOR" data-theme="b">
+    <header data-role="header" data-title="HUIS UI CREATOR">
+        <h3 id="page-title-edit">★EDIT</h3>
         <button id="button-edit-back" data-rel="back" data-role="button"></button>
         <div class="header-button-lline-alingn-right">
             <button id="button-edit-done"></button>
@@ -18,7 +18,9 @@
                         <div class="item-resizer right-bottom"></div>
                         <div class="item-resizer left-bottom"></div>
                     </script>
-                    <button id="button-add-page">新規ページ</button>
+                    <button id="button-add-page">★新規ページ</button>
+					<!--Tooltip-->
+					<div id="canvas-tooltip" class="disable"><span class="device-type">★device_type</span> : <span class="function-name">★functino_name</span></div>
                 </section>
                 <section id="face-item-detail-area">
                     <section id="face-item-detail"></section>
@@ -27,12 +29,11 @@
             <section id="face-pallet-area">
                 <section id="face-item-list-container">
                     <div id="face-item-list">
-                        <div class="face-item" data-remote-id="common">COMMON</div>
+                        <div class="face-item" data-remote-id="common">Common</div>
                         <script type="text/template" id="template-face-item">
                         {{#faces}}
                         <div class="face-item" data-remote-id="{{remoteId}}">{{name}}</div>
                         {{/faces}}
-                        
                         </script>
                     </div>
                     <div id="face-item-list-scroll-left"></div>
@@ -49,8 +50,19 @@
     </section>
     <section id="option-pulldown-menu-popup" data-role="popup">
         <ul id="option-pulldown-menu-list">
-            <li id="command-about-this" class="menu-item-text">このアプリについて</li>
-            <li id="command-visit-help" class="menu-item-text">ヘルプサイトを開く</li>
+            <li id="command-delete-remote" class="menu-item-text">★このリモコンを削除</li>
+            <li class="menu-item-separator"></li>
+            <li id="command-visit-help" class="menu-item-text">★ヘルプガイドを見る</li>
+			<li id="command-about-this" class="menu-item-text">★HUIS UI CREATOR のバージョン情報</li>
+        </ul>
+    </section>
+
+    <!--画像編集用のPOPUP-->
+    <section id="edit-image-popup" data-role="popup">
+        <div id="popup-arrow"></div>
+        <ul class ="popup-list">
+            <li id="command-change-button-image" class="popup-menu-item-text-black"><div id="popup-icon-image-image-button"></div><span class="menu-item-text">★画像ボタン</span></li>
+            <li id="command-change-button-text" class="popup-menu-item-text-black"><div id="popup-icon-image-text-button"></div><span class="menu-item-text">★テキストボタン</span></li>
         </ul>
     </section>
 </article>

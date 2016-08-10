@@ -9,7 +9,7 @@
         }
     },
     "app": {
-        "name": "★HUIS UI CREATOR"
+        "name": "HUIS UI CREATOR"
     },
     "settings": {
         "title": "★TODO"
@@ -23,7 +23,115 @@
     "edit": {
         "title": "★TODO"
     },
+    "dialog": {
+        "message": {
+            "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
+            "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
+            "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING": "リモコンと同期中です。\nUSBケーブルを抜かないでください。",
+            "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うには\nUSBケーブルを抜いてください。",
+            "STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
+            "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "同期に失敗しました。\nHUIS REMOTE CONTROLLERとパソコンが正常に接続されていません。\nHUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていません。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC": "同期中にアプリを終了すると、データが破損する恐れがあります。\n本当に終了しますか？",
+            "STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていない可能性があります。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_WARN_NONSAVE": "リモコンの変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。",
+            "STR_DIALOG_MESSAGE_WARN_OVERLAP": "重なって配置されているボタンがあるため編集を終了できません。\nボタンを再配置してください。",
+            "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1": "\nページ ",
+            "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2": " に重なり合っているボタンが ",
+            "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3": " 個あります。",
+            "STR_DIALOG_MESSAGE_ALERT_DISCONNECT": "HUIS REMOTE CONTROLLERとの接続が解除されました。\nアプリを終了します。",
+            "STR_DIALOG_MESSAGE_ALERT_LIMIT_1": "リモコンを作成できません。\nHUIS REMOTE CONTROLLERに登録できるリモコンは",
+            "STR_DIALOG_MESSAGE_ALERT_LIMIT_2": "個までです。\n不要なリモコンを削除してください。",
+            "STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE": "リモコンを削除すると元に戻せません。\n削除しますか？",
+            "STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME": "リモコンの名前がないため編集を終了できません。\n名前を入力してください。",
+            "STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE": "画像の読み込みに失敗しました。\nサポートされていないファイル形式です。\nJPEGまたはPNGのファイルを選択してください。",
+            "STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE": "画像の読み込みに失敗しました。\nJPEG2000, JPEG Losslessはサポートされていません。\nJPEGまたはPNGのファイルを選択してください。",
+            "STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE": "画像の読み込みに失敗しました。\nファイルが壊れている可能性があります。\nファイルを確認して、もう一度お試しください。",
+            "STR_DIALOG_MESSAGE_ERROR_NO_REMOTE_IN_HUIS": "リモコンを新規作成できません。\n先にHUIS REMOTE CONTROLLERでリモコンを登録してください。",
+            "STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1": "画像の読み込みに失敗しました。\n画像の容量が大き過ぎます。\n",
+            "STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2": "Mバイト以下の画像を選択してください。",
+            "STR_DAIALOG_ALERT_DELTE_PAGE": "ページを削除すると元に戻せません。\n削除しますか？"
+        },
+        "button": {
+            "STR_DIALOG_BUTTON_OK": "OK",
+            "STR_DIALOG_BUTTON_CANCEL": "キャンセル",
+            "STR_DIALOG_BUTTON_RETRY": "リトライ",
+            "STR_DIALOG_BUTTON_CLOSE_APP": "アプリを終了",
+            "STR_DIALOG_BUTTON_SAVE": "保存",
+            "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
+            "STR_DIALOG_BUTTON_DELETE": "削除"
+        }
+    },
+    "edit": {
+        "STR_EDIT_TITLE": "EDIT",
+        "property": {
+            "STR_EDIT_PROPERTY_TITLE_BACKGROUND": "Background",
+            "STR_EDIT_PROPERTY_TITLE_IMAGE": "Image",
+            "STR_EDIT_PROPERTY_TITLE_LABEL": "Label",
+            "STR_EDIT_PROPERTY_TITLE_BUTTON": "Button",
+            "STR_EDIT_PROPERTY_LABEL_ACTION": "アクション",
+            "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
+            "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
+            "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
+            "STR_EDIT_PROPERTY_TITLE_NON_MAKER": "--",
+            "STR_EDIT_PROPERTY_TITLE_LEARNED" :  "--"
+        },  
+        "canvas": { 
+            "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
+        }
+    },
+    "home": {
+        "STR_HOME_TITLE": "HOME",
+        "STR_HOME_INTRODUCTION_1": "HUIS REMOTE CONTROLLERを<br>",
+        "STR_HOME_INTRODUCTION_2": "あなた好み",
+        "STR_HOME_INTRODUCTION_3": "のデザインに。"
+    },
+    "splash": { 
+        "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
+    },
+    "about": {
+        "STR_ABOUT_TITLE": " のバージョン情報",
+        "STR_ABOUT_TEXT_COPYRIGHT": "Copyright 2016 Sony Corporation",
+        "STR_ABOUT_TEXT_VERSION": "Version "
+    },
+    "context_menu": {
+        "STR_CONTEXT_VALIDATE_ELEMENTS": "要素を検証",
+        "STR_CONTEXT_GRID_SIZE": "グリッドサイズ",
+        "grid_value": {
+            "STR_CONTEXT_GRID_SIZE_NON": "なし",
+            "STR_CONTEXT_GRID_SIZE_8PX": "8px",
+            "STR_CONTEXT_GRID_SIZE_16PX": "16px",
+            "STR_CONTEXT_GRID_SIZE_32PX": "32px",
+            "STR_CONTEXT_GRID_SIZE_64PX": "64px"
+        },
+        "STR_CONTEXT_DELETE_REMOTE": "リモコンを削除",
+        "STR_CONTEXT_DELETE_ITEM": "削除",
+        "STR_CONTEXT_DELETE_PAGE": "ページを削除",
+        "STR_CONTEXT_UNDO": "元に戻す",
+        "STR_CONTEXT_REDO": "やり直し"
+    },
+    "option_menu": {
+        "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
+        "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
+        "STR_OPTION_MENU_ABOUT": " のバージョン情報"
+    },
+    "tooltip": {
+        "STR_TOOLTIP_PALLET_ITEMS": "ダブルクリックで追加",
+        "STR_TOOLTIP_NEW_REMOTE": "新規リモコン作成"
+    },
+    "toast": {
+        "STR_TOAST_UNDO": "元に戻す",
+        "STR_TOAST_REDO": "やり直し",
+        "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
+    },
     "button": {
+        "none": {
+            "STR_REMOTE_BTN_NONE": "何もしない"
+        },
+        "input": {
+            "STR_ACTION_INPUT_TAP": "タップ",
+            "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)"
+        },
         "function": {
             "STR_REMOTE_BTN_POWER_TOGGLE": "電源ON/OFF",
             "STR_REMOTE_BTN_POWER_ON": "電源ON",
@@ -44,7 +152,7 @@
             "STR_REMOTE_BTN_DIGIT_9": "チャンネル 9",
             "STR_REMOTE_BTN_DIGIT_0": "チャンネル 0",
             "STR_REMOTE_BTN_CHANNEL_ENTER": "チャンネル決定",
-            "STR_REMOTE_BTN_PLUS100": "チェンネル＋100",
+            "STR_REMOTE_BTN_PLUS100": "チャンネル＋100",
             "STR_REMOTE_BTN_LAST_CHANNEL_RECALL": "最後に観たチャンネル",
             "STR_REMOTE_BTN_INPUT": "入力切替",
             "STR_REMOTE_BTN_EXTERNAL": "外部入力",
@@ -116,7 +224,7 @@
             "STR_REMOTE_BTN_3D": "３D",
             "STR_REMOTE_BTN_PICTURE": "画質",
             "STR_REMOTE_BTN_SOUND_MODE": "音質",
-            "STR_REMOTE_BTN_CANCEL_CLEAR": "チェンネル取り消し",
+            "STR_REMOTE_BTN_CANCEL_CLEAR": "チャンネル取り消し",
             "STR_REMOTE_BTN_STANDBY": "スタンバイ",
             "STR_REMOTE_BTN_SLEEP": "スリープ",
             "STR_REMOTE_BTN_EJECT": "取り出し",
@@ -166,7 +274,7 @@
             "STR_REMOTE_BTN_TOOLS": "ツール",
             "STR_REMOTE_BTN_SKYPE": "スカイプ",
             "STR_REMOTE_BTN_PANDORA": "パンドラ",
-            "STR_REMOTE_BTN_YOUTUBE": "Youtube",
+            "STR_REMOTE_BTN_YOUTUBE": "YouTube",
             "STR_REMOTE_BTN_AUDIO_DESCRIPTION": "音声説明",
             "STR_REMOTE_BTN_SCREEN_SIZE": "画面サイズ",
             "STR_REMOTE_BTN_BLACKSCREEN": "画面暗転",
@@ -315,7 +423,7 @@
             "STR_REMOTE_BTN_AIRCON_TURBO": "Turbo",
             "STR_REMOTE_BTN_AIRCON_INTRENALCLEAN": "IntrenalClean",
             "STR_REMOTE_BTN_AIRCON_COMFORT": "Comfort",
-            "STR_REMOTE_BTN_AIRCON_PLEASENTSLEEP": "PleasentSleep",
+            "STR_REMOTE_BTN_AIRCON_PLEASENTSLEEP": "PleasantSleep",
             "STR_REMOTE_BTN_AIRCON_HEALTHYCOOL": "HealthyCool",
             "STR_REMOTE_BTN_AIRCON_LIGHTCLEAN": "LightClean",
             "STR_REMOTE_BTN_AIRCON_EASYTIMEROFF": "EasyTimerOff",
@@ -705,8 +813,8 @@
             "STR_REMOTE_BTN_AIRCON_TEMP_29": "29℃",
             "STR_REMOTE_BTN_AIRCON_MODE_AUTO": "auto",
             "STR_REMOTE_BTN_AIRCON_MODE_COOL": "cool",
-            "STR_REMOTE_BTN_AIRCON_MODE_DRY ": "dry ",
-            "STR_REMOTE_BTN_AIRCON_MODE_FAN ": "fan ",
+            "STR_REMOTE_BTN_AIRCON_MODE_DRY": "dry",
+            "STR_REMOTE_BTN_AIRCON_MODE_FAN": "fan",
             "STR_REMOTE_BTN_AIRCON_MODE_HEAT": "heat",
             "STR_REMOTE_BTN_AIRCON_MODE_STANDARDDRY": "standard dry",
             "STR_REMOTE_BTN_AIRCON_MODE_CLOTHSDRY": "cloths dry",
@@ -735,8 +843,9 @@
             "STR_REMOTE_BTN_SPECIAL_LIGHT_LEVEL_MINUS": "明るさ －",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_LEVEL_PLUS": "明るさ ＋",
             "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLON": "全灯",
-            "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLOFF": "全照灯",
-            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD"
+            "STR_REMOTE_BTN_SPECIAL_LIGHT_ALLOFF": "全消灯",
+            "STR_REMOTE_BTN_SPECIAL_STB_VOD": "VOD",
+            "STR_REMOTE_BTN_SPECIAL_AUDIO_AUX": "入力切替 AUX"
         }
     }
 }

@@ -38,7 +38,7 @@ module Garage {
 			}
 
 			initialize(options?: Backbone.ViewOptions<Model.Module>) {
-				var modulesData: IGModule[];
+				var modulesData: IGModule[] = [];
 				if (options && options.attributes) {
 					if (options.attributes["modules"]) {
 						modulesData = options.attributes["modules"];
@@ -130,6 +130,18 @@ module Garage {
 					this.$facePages_.push($facePage);
 				}
 
+				//Jsonファイルが破壊されているなどの理由で、this.$facePages_がひとつもないとき
+				// index0の$facePageをつくる
+				if (this.$facePages_.length == 0) {
+					let $facePage = $(this.faceAreaTemplate_({
+						index: 0,
+						width: HUIS_FACE_PAGE_WIDTH,
+						height: HUIS_FACE_PAGE_HEIGHT
+					}));
+					this.$facePages_.push($facePage);
+				}
+
+
 				this.collection.each((item, index) => {
 					let pageIndex: number = item.get("pageIndex");
 					let $targetFacePage = this.$facePages_[pageIndex];
@@ -142,10 +154,10 @@ module Garage {
 						cid: item.cid
 					}));
 
-					// 画像をレンダリング
-					this._renderImages(item.image, index, $moduleContainer);
 					// ラベルをレンダリング
 					this._renderLabels(item.label, index, $moduleContainer);
+					// 画像をレンダリング
+					this._renderImages(item.image, index, $moduleContainer);
 					// ボタンをレンダリング
 					this._renderButtons(item.button, index, $moduleContainer);
 
@@ -153,6 +165,15 @@ module Garage {
 					$targetFacePage.append($moduleContainer);
 					this.$el.append($targetFacePage);
 				});
+
+				//Jsonファイルが破壊されているなどの理由で、moduleがひとつもないとき
+				// facePagesだけでappendする
+				if (this.collection.length == 0) {
+					let $targetFacePage = this.$facePages_[0];
+					this.$el.append($targetFacePage);
+				}
+				
+
 				return this;
 			}
 
@@ -192,6 +213,18 @@ module Garage {
 				var newPageModuleModel = new Model.Module();
 
 				newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
+
+				//もし、同名のリモコンがすでにある場合
+				//モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
+				let pageIndexNo :number = pageCount;
+				let tmpPageNames: string[] = [];
+				for (let i = 0; i < this.collection.length; i++){
+					if (this.collection.models[i].name == newPageModuleModel.name) {
+						pageIndexNo++;
+						newPageModuleModel.name = this.remoteId_ + "_page_" + pageIndexNo;
+					}
+				}
+		
 				newPageModuleModel.remoteId = this.remoteId_;
 				newPageModuleModel.offsetY = 0;
 				newPageModuleModel.pageIndex = pageCount;
@@ -439,6 +472,14 @@ module Garage {
 				    newButton.default = srcButton.default;
 				}
 
+				if (srcButton.name) {
+					newButton.name = srcButton.name;
+				}
+
+				if (srcButton.version) {
+					newButton.version = srcButton.version;
+				}
+
 				if (srcButton.currentStateId) {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
@@ -593,6 +634,12 @@ module Garage {
 					srcImagePath = image.resolvedPath;
 				}
 
+				//バージョン情報をもっている場合、引き継ぐ
+				if (image.version != null) {
+					newImage.version = image.version;
+				}
+
+
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
 				imageView.setElement($module);
@@ -689,7 +736,13 @@ module Garage {
 				newLabel.text = label.text;
 				newLabel.color = label.color;
 				newLabel.font = label.font;
-				newLabel.size = label.size;
+                newLabel.size = label.size;
+                newLabel.font_weight = label.font_weight;
+
+				//バージョン情報がある場合、コピーする
+				if (label.version) {
+					newLabel.version = label.version;
+				}
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
