@@ -132,7 +132,6 @@
             "STR_ACTION_INPUT_TAP": "タップ",
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)"
         },
->>>>>>> remotes/huis/release/forgithub-2
         "function": {
             "STR_REMOTE_BTN_POWER_TOGGLE": "電源ON/OFF",
             "STR_REMOTE_BTN_POWER_ON": "電源ON",
