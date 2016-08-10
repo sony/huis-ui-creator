@@ -70,7 +70,6 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
-
             private isTextBoxFocused: Boolean;
 
             private bindedLayoutPage = null;
@@ -221,13 +220,6 @@ module Garage {
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
 					// コンテキストメニュー
 					"contextmenu": "onContextMenu",
-                    // プルダウンメニューのリスト
-                    "vclick #command-about-this": "_onCommandAboutThis",
-                    "vclick #command-visit-help": "_onCommandVisitHelp",
-                    // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
-                    "focusin .property-value": "_onTextBoxFocusIn",
-                    "focusout .property-value": "_onTextBoxFocusOut",
-
 
                     // プルダウンメニューのリスト
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
@@ -1226,7 +1218,7 @@ module Garage {
                             }
                         }, {
 							label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_32PX"), type: "checkbox", checked: this.gridSize_ === 32 ? true : false, click: () => {
-							this._setGridSize(32);
+								this._setGridSize(32);
 							}
 						}, {
 							label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_64PX"), type: "checkbox", checked: this.gridSize_ === 64 ? true : false, click: () => {
@@ -4090,6 +4082,8 @@ module Garage {
 
                 //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
     
+
+			}
 
 
             /*
