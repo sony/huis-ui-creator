@@ -2150,13 +2150,15 @@ module Garage {
 					});
 
 				if (response === 0) {// positiveなボタンの場合,Saveと同じ処理
+					$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
 					this.onEditDoneButtonClicked(event);
 				} else if (response === 1) {
+					$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
 					Framework.Router.back();//negative なボタンの場合、homeに戻る
 				} else {//キャンセル処理の場合、なにもしない。
 				}
 
-				$("#button-edit-back").prop("disabled", false);
+				$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
            }
 
 			/*
@@ -2199,6 +2201,7 @@ module Garage {
 						var $remoteName: JQuery = $("#input-face-name");
 						this.setFocusAndMoveCursorToEnd($remoteName);
 					}
+					$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
 				}
 				let overlapButtonError = this._overlapButtonsExist();
@@ -2210,6 +2213,7 @@ module Garage {
 						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 						title: PRODUCT_NAME,
 					});
+					$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
 				}
 				huisFiles.updateFace(remoteId, faceName, gmodules)
@@ -2230,7 +2234,7 @@ module Garage {
 									//CDP.this.showGarageToast"HUIS との同期が完了しました。"); 使われてない？
 									Framework.Router.back();
 								}
-								$("#button-edit-done").prop("disabled", false);
+								$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 
 							});
 						} else {
