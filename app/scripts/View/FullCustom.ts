@@ -74,6 +74,7 @@ module Garage {
 
             private bindedLayoutPage = null;
 
+            private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
             
 			/**
 			 * construnctor
@@ -93,7 +94,6 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
-				
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -109,7 +109,11 @@ module Garage {
 					this._pageLayout();
 					this._listupFaces();
 					var remoteId = this._getUrlQueryParameter("remoteId");
-					this._renderCanvas(remoteId);
+                    this._renderCanvas(remoteId);
+
+                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
+                    var gmodules = this.faceRenderer_canvas_.getModules();
+                    this.buttonDeviceInfoCache.load(gmodules);
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -695,12 +699,14 @@ module Garage {
 							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
 
 							let deviceInfo: IButtonDeviceInfo = {
-								functions: functions,
+                                id: "",
+                                functions: functions,
 								code_db: codeDb
 							};
 
 							if (functionCodeHash != null) {
-								deviceInfo = {
+                                deviceInfo = {
+                                    id: "",
 									functions: functions,
 									code_db: codeDb,
 									functionCodeHash: functionCodeHash,
@@ -2215,7 +2221,10 @@ module Garage {
 					});
 					$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
-				}
+                }
+
+                this.buttonDeviceInfoCache.update(gmodules);
+
 				huisFiles.updateFace(remoteId, faceName, gmodules)
 					.always(() => {
 						garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
