@@ -21,18 +21,25 @@ module Garage {
                     return;
                 }
 
-                let buttonDeviceInfoCache: IButtonDeviceInfo[] = fs.readJSONSync(this.filePath);
+                let buttonDeviceInfoCache: IButtonDeviceInfo[];
+                try {
+                    buttonDeviceInfoCache = fs.readJSONSync(this.filePath);
+                } catch (e) {
+                    console.log("failed to read buttondeviceinfo.cache: " + e);
+                    return;
+                }
 
                 for (let gmodule of gmodules) {
-                    if (!gmodule.button) return;
+                    if (!gmodule.button) continue;
 
                     for (let gbutton of gmodule.button) {
+                        if (!gbutton.area) continue;
+
                         let cache = this.find(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y);
 
                         if (cache) {
                             // 参照を直接更新
-                            gbutton.deviceInfo.functions = cache.functions;
-                            gbutton.deviceInfo.functionCodeHash = cache.functionCodeHash
+                            gbutton.deviceInfo = cache;
                         }
                     }
                 }
@@ -74,7 +81,11 @@ module Garage {
                     }
                 }
 
-                fs.outputJSONSync(this.filePath, newList, { spaces: 2 });
+                try {
+                    fs.outputJSONSync(this.filePath, newList, { spaces: 2 });
+                } catch (e) {
+                    console.log("failed to write buttondeviceinfo.cache: " + e);
+                }
             }
 
 

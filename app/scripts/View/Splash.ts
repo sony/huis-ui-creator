@@ -169,7 +169,9 @@ module Garage {
                             callback();
                         }
                     }
-                });
+                },
+                    // buttonDeviceInfoキャッシュファイルは同期対象外
+                    (path) => { return (path.indexOf("_buttondeviceinfo.cache") != -1) });
             };
 
         }
