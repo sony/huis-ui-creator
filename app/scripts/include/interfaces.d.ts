@@ -585,9 +585,17 @@ declare module Garage {
 	* Garageで表示するテキストの表示上の減衰率
 	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
 	* RATIO_TEXT_SIZE_HUIS_GARAGE = HUISで表示するのと同じにみえる text_size / 実際のtext size(ex 23px / 30px
+	*
+	* 一定の値では、HUISと同じ見え方にはならないので、関数で、補正する。
+	* そのための定数として、ここに定義する。
+	*  MIN_TEXT_SIZE:テキストの最小サイズ
+	*  GAIN_TEXT_SIZE_OFFSET_FUNC :関数の減少ゲイン
 	*/
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
+	var MIN_TEXT_SIZE: number;
+	var GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC: number;
+	var GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC: number;
 
 	/**
 	* HUISで利用されているデバイスタイプ
