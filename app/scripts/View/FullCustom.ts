@@ -947,6 +947,40 @@ module Garage {
 				}
 			}
 
+			/*
+			* テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+			private getOffsetTextButtonSize(textsize: number):number{
+				let FUNCTION_NAME = TAG + " : getOffsetTextSize :";
+
+				if (textsize == null) {
+					console.error(FUNCTION_NAME + "textsize is null");
+					return 0;
+				}
+
+				return textsize*(RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC);
+			}
+
+			/*
+			* テキストラベルの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+			private getOffsetTextLabelSize(textsize: number): number {
+				let FUNCTION_NAME = TAG + " : getOffsetTextLabelSize :";
+
+				if (textsize == null) {
+					console.error(FUNCTION_NAME + "textsize is null");
+					return 0;
+				}
+
+				return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
+			}
+
+
+
 			/**
 			 * フルカスタム編集画面での mouseup イベントのハンドリング
 			 */
@@ -2358,9 +2392,9 @@ module Garage {
 						case "size":
 							//HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
 							if (itemType == "button") {
-								value = (value * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+								value = this.getOffsetTextButtonSize(value);
 							} else if (itemType == "label") {
-								value = (value * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+								value = this.getOffsetTextLabelSize(value);
 							}
 							
 							$target.css("font-size", value + "pt");
@@ -2994,7 +3028,7 @@ module Garage {
 										height: buttonAreaH + "px",
 										lineHeight: buttonAreaH + "px",
 										color: "rgb(0,0,0)",
-										fontSize: (label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
+										fontSize: this.getOffsetTextButtonSize(label.size) + "pt"
 									});
 
 									//画像が存在するとき、テキストEdit機能を非表示にする
