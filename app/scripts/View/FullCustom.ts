@@ -93,7 +93,7 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
-				
+
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -117,6 +117,11 @@ module Garage {
 					//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
 					this.bindedLayoutPage = this._pageLayout.bind(this);
 					$(window).on("resize", $.proxy(this.bindedLayoutPage, this));
+
+                    //ドラッグドロップのwindow外mouseup処理
+                    $(document)
+                        .off("mouseup.itemdrag")     // 多重登録防止
+                        .on("mouseup.itemdrag", this.onMouseUp);
 
 					this.currentWindow_ = Remote.getCurrentWindow();
 					// コンテキストメニュー
@@ -145,7 +150,6 @@ module Garage {
 					//html上の文言をローカライズ
 					$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
 					$("#button-add-page").html($.i18n.t("edit.canvas.STR_EDIT_CANVAS_NEW_PAGE_BTN"));
-
 				});
 			}
 
@@ -166,9 +170,13 @@ module Garage {
                 var ret: any = {};
                 ret = super.events();
 
-				return $.extend(ret,{
+                return $.extend(ret, {
+                    // FullCustom画面全体のマウス移動
+                    "mousemove": "onMouseMove",
+
 					// パレット内のアイテムのダブルクリック
-					"dblclick #face-pallet .item": "onPalletItemDblClick",
+                    "dblclick #face-pallet .item": "onPalletItemDblClick",
+                    "mousedown #face-pallet .item": "onPalletItemMouseDown",
 
 					// 画面内のマウスイベント
 					"mousedown #main": "onMainMouseDown",
@@ -668,88 +676,157 @@ module Garage {
 			}
 
 
+            private onMouseMove(event: Event) {
+                
+            }
+
+            /**
+             * documentのmouseupイベント
+             */
+            private onMouseUp(event: Event) {
+                // ドラッグの範囲外終了処理
+                // アイテム内で終了した場合の処理は別で記述し、stopPropagationによりバブリングを阻止するのでここまで到達しない
+                //console.log(event.type);
+            }
+
 			/**
 			 * パレット内のアイテムをダブルクリック
 			 */
-			private onPalletItemDblClick(event: Event) {
-				var $target = $(event.currentTarget);
-				var $parent = $target.parent();
-				var targetModel = this._getItemModel($target, "pallet");
-				if (!targetModel) {
-					return;
-				}
+            private onPalletItemDblClick(event: Event) {
+                let newItem: ItemModel = this.putPalletItemToCanvas(event);
 
-				// 現在ターゲットとなっているページを追加先とする
-				var moduleId_canvas: string = this._getCanvasPageModuleId();
-				var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10); //$parent.data("module-offset-y");
+                if (!newItem) return;
 
-				var model: ItemModel;
+                // model 状態を有効にする
+                var memento: IMemento = {
+                    target: newItem,
+                    previousData: {
+                        enabled: false
+                    },
+                    nextData: {
+                        enabled: true
+                    }
+                };
+                var mementoCommand = new MementoCommand(memento);
+                this.commandManager_.invoke(mementoCommand);
 
-				switch (targetModel.type) {
-					case "button":
-						if (targetModel.button) {
-							// ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
-							let remoteId = this.faceRenderer_pallet_.getRemoteId();
-							let functions = huisFiles.getMasterFunctions(remoteId);
-							let codeDb = huisFiles.getMasterCodeDb(remoteId);
-							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
-
-							let deviceInfo: IButtonDeviceInfo = {
-								functions: functions,
-								code_db: codeDb
-							};
-
-							if (functionCodeHash != null) {
-								deviceInfo = {
-									functions: functions,
-									code_db: codeDb,
-									functionCodeHash: functionCodeHash,
-								};
-							}
-
-							targetModel.button.deviceInfo = deviceInfo;
-							model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-						}
-						break;
-
-					case "image":
-						if (targetModel.image) {
-							model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
-								// 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
-								// このタイミングで CSS を更新
-								this._updateItemElementOnCanvas(model);
-							});
-						}
-						break;
-
-					case "label":
-						if (targetModel.label) {
-							model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
-						}
-						break;
-
-					default:
-				}
-
-				if (!model) {
-					return;
-				}
-
-				// model 状態を有効にする
-				var memento: IMemento = {
-					target: model,
-					previousData: {
-						enabled: false
-					},
-					nextData: {
-						enabled: true
-					}
-				};
-				var mementoCommand = new MementoCommand(memento);
-				this.commandManager_.invoke(mementoCommand);
-
-				this._updateItemElementOnCanvas(model);
+                this._updateItemElementOnCanvas(newItem);
 			}
+
+            /**
+             *
+             */
+            private onPalletItemMouseDown(event: Event) {
+                let canvasArea: JQuery = $("#face-canvas").find("#face-pages-area");
+                let palletArea: JQuery = $("#face-pallet").find("#face-pages-area");
+
+                let offset: IPosition = {
+                    x: (palletArea.offset().left - canvasArea.offset().left) * 2,
+                    y: (palletArea.offset().top - canvasArea.offset().top) * 2
+                };
+
+                let newItem: ItemModel = this.putPalletItemToCanvas(event, offset);
+                this._updateItemElementOnCanvas(newItem);
+
+                this._loseTarget();
+
+                var mousePosition: IPosition = {
+                    x: event.pageX,
+                    y: event.pageY
+                };
+                let target = this._getTarget(mousePosition);
+                console.log("x: " + mousePosition.x + ",y: " + mousePosition.y);
+                if (target) {
+                    this.setDragTarget(target);
+                    this.startDraggingCanvasItem(mousePosition, true);
+                } else {
+                    console.log("!!!! target not found !!!!");
+                }
+            }
+
+            /**
+             * Pallet上のItemをCanvasに追加
+             *
+             * @param event
+             * @param offset Item追加位置の補正座標
+             * @return 追加したItemModel
+             */
+            private putPalletItemToCanvas(event: Event, offset?: IPosition): ItemModel {
+                var $target = $(event.currentTarget);
+                var $parent = $target.parent();
+                var targetModel = this._getItemModel($target, "pallet");
+                if (!targetModel) {
+                    return;
+                }
+
+                // 現在ターゲットとなっているページを追加先とする
+                var moduleId_canvas: string = this._getCanvasPageModuleId();
+                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10); //$parent.data("module-offset-y");
+
+                var model: ItemModel;
+
+                switch (targetModel.type) {
+                    case "button":
+                        if (targetModel.button) {
+                            // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                            let functions = huisFiles.getMasterFunctions(remoteId);
+                            let codeDb = huisFiles.getMasterCodeDb(remoteId);
+                            let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+
+                            let deviceInfo: IButtonDeviceInfo = {
+                                functions: functions,
+                                code_db: codeDb
+                            };
+
+                            if (functionCodeHash != null) {
+                                deviceInfo = {
+                                    functions: functions,
+                                    code_db: codeDb,
+                                    functionCodeHash: functionCodeHash,
+                                };
+                            }
+
+                            targetModel.button.deviceInfo = deviceInfo;
+                            if (offset) {
+                                targetModel.button.area.x += offset.x;
+                                targetModel.button.area.y += offset.y;
+                            }
+                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
+                        }
+                        break;
+
+                    case "image":
+                        if (targetModel.image) {
+                            if (offset) {
+                                targetModel.image.area.x += offset.x;
+                                targetModel.image.area.y += offset.y;
+                            }
+
+                            model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
+                                // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
+                                // このタイミングで CSS を更新
+                                this._updateItemElementOnCanvas(model);
+                            });
+                        }
+                        break;
+
+                    case "label":
+                        if (targetModel.label) {
+                            if (offset) {
+                                targetModel.label.area.x += offset.x;
+                                targetModel.label.area.y += offset.y;
+                            }
+
+                            model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
+                        }
+                        break;
+
+                    default:
+                }
+                
+                return model;
+            }
 
 			/**
 			 * フルカスタム編集画面での mousedown イベントのハンドリング
@@ -788,7 +865,8 @@ module Garage {
 					// マウスポインター位置にアイテムがあれば取得する
 						let $target = this._getTarget(mousePosition);
 						if ($target) {
-
+                            this.setDragTarget($target);
+                            /*
 							$target.focus();
 							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
 							this.$currentTarget_ = $target;
@@ -807,8 +885,7 @@ module Garage {
 							// 詳細編集エリアを表示
 							$("#face-item-detail-area").addClass("active");
 							this._showDetailItemArea(this.currentTargetModel_);
-						
-
+						    */
 						} else {
 							// マウスポインター位置にアイテムが存在しない場合で、
 							// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
@@ -835,7 +912,10 @@ module Garage {
 				if (selectedResizer) {
 					this.selectedResizer_ = selectedResizer;
 					console.log(this.selectedResizer_);
-				}
+                }
+
+                this.startDraggingCanvasItem(mousePosition);
+                /*
 				if (this.$currentTarget_ && this.isOnCanvasFacePagesArea(mousePosition)) {
 					this.mouseMoveStartPosition_ = mousePosition;
 					this.mouseMoveStartTargetPosition_ = {
@@ -858,7 +938,54 @@ module Garage {
 						this.$el.focus();
 					}
 				}
-			}
+                */
+            }
+
+            private setDragTarget(target: JQuery) {
+                target.focus();
+                console.log("target " + JQUtils.data(target, "cid")); //$target.data("cid"));
+                this.$currentTarget_ = target;
+                // target に紐付くモデルを取得
+                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+
+                // 選択状態にする
+                this.$currentTarget_.addClass("selected");
+
+                //ツールチップを非表示にする。
+                this.disableButtonInfoTooltip();
+
+                // リサイザーを追加
+                this._setResizer(this.$currentTarget_);
+
+                // 詳細編集エリアを表示
+                $("#face-item-detail-area").addClass("active");
+                this._showDetailItemArea(this.currentTargetModel_);
+            }
+
+            private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
+                if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
+                    this.mouseMoveStartPosition_ = mousePosition;
+                    this.mouseMoveStartTargetPosition_ = {
+                        x: parseInt(this.$currentTarget_.css("left"), 10),
+                        y: parseInt(this.$currentTarget_.css("top"), 10)
+                    };
+                    this.mouseMoveStartTargetArea_ = {
+                        x: parseInt(this.$currentTarget_.css("left"), 10),
+                        y: parseInt(this.$currentTarget_.css("top"), 10),
+                        w: parseInt(this.$currentTarget_.css("width"), 10),
+                        h: parseInt(this.$currentTarget_.css("height"), 10)
+                    };
+
+                    if (!this._checkDetailItemAreaPosition(mousePosition)) {
+                        this.mouseMoving_ = true;
+                        event.preventDefault();
+
+                        //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
+                        //そのため、preventDefault直後にフォーカスを設定しなおす。
+                        this.$el.focus();
+                    }
+                }
+            }
 
 			/*
 			* 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
@@ -1012,9 +1139,15 @@ module Garage {
 				var newArea = this._validateArea({
 					x: newX,
 					y: newY
-				});
-				this._updateCurrentModelData("area", newArea);
-				this._showDetailItemArea(this.currentTargetModel_);
+                });
+
+                if (newArea) {
+                    this._updateCurrentModelData("area", newArea);
+                    this._showDetailItemArea(this.currentTargetModel_);
+                } else {
+                    // 補正しても元の位置に戻しても問題がある場合
+                    this._deleteCurrentTargetItem();
+                }
             }
 
 
@@ -3344,9 +3477,14 @@ module Garage {
 				this._normalizeArea(complementedArea);
 
 				if (this.currentTargetModel_.type === "button") {
-					if (this._checkOverlapButton(complementedArea, model.cid)) {
-						// 重なり合わせられた場合は、最初の area に戻す
-						complementedArea = $.extend(true, {}, model.area);
+                    if (this._checkOverlapButton(complementedArea, model.cid)) {
+                        if (!this._isOutOfCanvas(model.area)) {
+                            // 重なり合わせられた場合は、最初の area に戻す
+                            complementedArea = $.extend(true, {}, model.area);
+                        } else {
+                            // 最初のareaがキャンバス外の場合はnullを返す
+                            complementedArea = null;
+                        }
 					}
 				}
 
@@ -3390,7 +3528,16 @@ module Garage {
 						area.y = GRID_AREA_HEIGHT - area.h;
 					}
 				}
-			}
+            }
+
+            private _isOutOfCanvas(area: IArea): boolean {
+                return (area.x < BIAS_X_DEFAULT_GRID_LEFT                            ||
+                        area.y < 0                                                   ||
+                        area.w <= 0                                                  ||
+                        area.h <= 0                                                  ||
+                        area.x + area.w > GRID_AREA_WIDTH + BIAS_X_DEFAULT_GRID_LEFT ||
+                        area.y + area.h > GRID_AREA_HEIGHT);
+            }
 
 			/**
 			 * 指定した area がいずかの button と衝突するかをチェックする。
