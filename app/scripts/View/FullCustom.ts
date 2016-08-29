@@ -2041,14 +2041,15 @@ module Garage {
 						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
 						let editedImageName = path.basename(editedImage.path);
 						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-						this._updateCurrentModelStateData(stateId, {
+
+
+						//このバージョンでは、すべてのステートの画像を変更する。
+						this._updateCurrentModelStateData(TARGET_ALL_STATE, {
 							"path": editedImagePath,
 							"resolved-path": editedImage.path.replace(/\\/g, "/"),
 							"resizeOriginal": editedImagePath,
 							"text":""
 						});
-
-						
 
 						// テキストエリアの文字表示をアップデート
 						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
@@ -2860,8 +2861,9 @@ module Garage {
 				var currentStates: IGState[] = $.extend(true, [], states);
 
 				let targetStates: IGState[];
-				if (_.isUndefined(stateId)) {
+				if (_.isUndefined(stateId) || stateId === TARGET_ALL_STATE) {
 					// stateId が指定されていない場合は、全 state を更新
+					// あるいは、stateIdがTARGET_ALL_STATEの場合
 					targetStates = states;
 				} else {
 					targetStates = states.filter((state) => {
@@ -2877,7 +2879,11 @@ module Garage {
 				// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
 				var targetState = targetStates[0];
 				var $targetStateElem = this.$currentTarget_.find(".button-state").filter((index: number, elem: Element) => {
-					return parseInt(JQUtils.data($(elem), "stateId"), 10) === stateId;
+					let tmpStateId = 0;
+					if (!_.isUndefined(stateId) && stateId !== TARGET_ALL_STATE) {
+						tmpStateId = stateId;
+					}
+					return parseInt(JQUtils.data($(elem), "stateId"), 10) === tmpStateId;
 				});
 				if (!$targetStateElem || $targetStateElem.length < 1) {
 					console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
@@ -2950,8 +2956,8 @@ module Garage {
 							default:
 
 						}
-
-						this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
+						let currentStateId = targetState.id;
+						this.updateButtonOnCustom(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
 					
 					});
