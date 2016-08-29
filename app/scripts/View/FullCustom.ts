@@ -1636,8 +1636,9 @@ module Garage {
 				}
 
 				if (key.indexOf("state-") === 0) {
-					let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-					this._updateCurrentModelStateData(stateId, key.slice("state-".length), value);
+					//let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+					//このバージョンでは、すべての画像を変更する。
+					this._updateCurrentModelStateData(TARGET_ALL_STATE, key.slice("state-".length), value);
 				} else {
 					this._updateCurrentModelData(key, value);
 				}
@@ -2809,7 +2810,12 @@ module Garage {
 				var solveLabel = function (state: IGState) {
 					var defaltTextSize = 30;
 					let localStateId = state.id;
+
 					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
+
+					if ($targetTextSizePullDown.length == 0) {//DOMが存在しないとき(長さが0のとき)stateId=0の際のDOMを読み込み
+						$targetTextSizePullDown = $(".property-state-text-size[data-state-id=\"0\"]");
+					}
 
 					if ($targetTextSizePullDown) {
 						defaltTextSize = +($targetTextSizePullDown.val());
