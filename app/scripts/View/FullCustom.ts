@@ -171,9 +171,6 @@ module Garage {
                 ret = super.events();
 
                 return $.extend(ret, {
-                    // FullCustom画面全体のマウス移動
-                    "mousemove": "onMouseMove",
-
 					// パレット内のアイテムのダブルクリック
                     "dblclick #face-pallet .item": "onPalletItemDblClick",
                     "mousedown #face-pallet .item": "onPalletItemMouseDown",
@@ -675,18 +672,11 @@ module Garage {
 				return undefined;
 			}
 
-
-            private onMouseMove(event: Event) {
-                
-            }
-
             /**
              * documentのmouseupイベント
              */
             private onMouseUp(event: Event) {
                 // ドラッグの範囲外終了処理
-                // アイテム内で終了した場合の処理は別で記述し、stopPropagationによりバブリングを阻止するのでここまで到達しない
-                //console.log(event.type);
             }
 
 			/**
@@ -714,44 +704,53 @@ module Garage {
 			}
 
             /**
-             *
+             * パレット内のアイテム上でマウス押下
+             * 対象アイテムをCanvasに追加しドラッグ状態にする
              */
             private onPalletItemMouseDown(event: Event) {
-                let canvasArea: JQuery = $("#face-canvas").find("#face-pages-area");
-                let palletArea: JQuery = $("#face-pallet").find("#face-pages-area");
-
-                let offset: IPosition = {
-                    x: (palletArea.offset().left - canvasArea.offset().left) * 2,
-                    y: (palletArea.offset().top - canvasArea.offset().top) * 2
+                var mousePosition: IPosition = {
+                    x: event.pageX,
+                    y: event.pageY
                 };
+                console.log("mouse : " + mousePosition.x + "-" + mousePosition.y);
+
+                let offset = this.getMousePointFromCanvas(mousePosition);
+                console.log("offset: " + offset.x + "-" + offset.y);
 
                 let newItem: ItemModel = this.putPalletItemToCanvas(event, offset);
                 this._updateItemElementOnCanvas(newItem);
 
                 this._loseTarget();
 
-                var mousePosition: IPosition = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
                 let target = this._getTarget(mousePosition);
-                console.log("x: " + mousePosition.x + ",y: " + mousePosition.y);
                 if (target) {
                     this.setDragTarget(target);
                     this.startDraggingCanvasItem(mousePosition, true);
                 } else {
-                    console.log("!!!! target not found !!!!");
+                    console.log("target not found. mousePosition: " + mousePosition.x + ", " + mousePosition.y);
                 }
+            }
+
+            /**
+             * 対象キャンバスからマウス位置までの相対座標を取得
+             */
+            private getMousePointFromCanvas(mousePosition: IPosition): IPosition {
+                let targetCanvasModule = $("#face-canvas .module-container[data-cid=" + this._getCanvasPageModuleId() + "]");
+
+                return {
+                    x: (mousePosition.x - targetCanvasModule.parent().offset().left) * 2,
+                    y: (mousePosition.y - targetCanvasModule.parent().offset().top) * 2
+                };
             }
 
             /**
              * Pallet上のItemをCanvasに追加
              *
              * @param event
-             * @param offset Item追加位置の補正座標
+             * @param position Itemを追加するCanvas上の座標
              * @return 追加したItemModel
              */
-            private putPalletItemToCanvas(event: Event, offset?: IPosition): ItemModel {
+            private putPalletItemToCanvas(event: Event, position?: IPosition): ItemModel {
                 var $target = $(event.currentTarget);
                 var $parent = $target.parent();
                 var targetModel = this._getItemModel($target, "pallet");
@@ -761,13 +760,16 @@ module Garage {
 
                 // 現在ターゲットとなっているページを追加先とする
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
-                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10); //$parent.data("module-offset-y");
+                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
+
+                targetModel = $.extend(true, {}, targetModel);
 
                 var model: ItemModel;
 
                 switch (targetModel.type) {
                     case "button":
                         if (targetModel.button) {
+                            console.log("button model: " + targetModel.button.area.x + "-" + targetModel.button.area.y);
                             // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
                             let remoteId = this.faceRenderer_pallet_.getRemoteId();
                             let functions = huisFiles.getMasterFunctions(remoteId);
@@ -788,34 +790,38 @@ module Garage {
                             }
 
                             targetModel.button.deviceInfo = deviceInfo;
-                            if (offset) {
-                                targetModel.button.area.x += offset.x;
-                                targetModel.button.area.y += offset.y;
+                            if (position) {
+                                // 座標指定時はItemの中央をマウス位置に合わせる
+                                targetModel.button.area.x = position.x - targetModel.button.area.w / 2;
+                                targetModel.button.area.y = position.y - targetModel.button.area.h / 2 - moduleOffsetY_pallet;
                             }
+
                             model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
                         }
                         break;
 
                     case "image":
                         if (targetModel.image) {
-                            if (offset) {
-                                targetModel.image.area.x += offset.x;
-                                targetModel.image.area.y += offset.y;
+                            if (position) {
+                                // 座標指定時はItemの中央をマウス位置に合わせる
+                                targetModel.image.area.x = position.x - targetModel.image.area.w / 2;
+                                targetModel.image.area.y = position.y - targetModel.image.area.h / 2 - moduleOffsetY_pallet;
                             }
 
                             model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
-                                // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
-                                // このタイミングで CSS を更新
-                                this._updateItemElementOnCanvas(model);
-                            });
+                                    // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
+                                    // このタイミングで CSS を更新
+                                    this._updateItemElementOnCanvas(model);
+                                });
                         }
                         break;
 
                     case "label":
                         if (targetModel.label) {
-                            if (offset) {
-                                targetModel.label.area.x += offset.x;
-                                targetModel.label.area.y += offset.y;
+                            if (position) {
+                                // 座標指定時はItemの中央をマウス位置に合わせる
+                                targetModel.label.area.x = position.x - targetModel.label.area.w / 2;
+                                targetModel.label.area.y = position.y - targetModel.label.area.h / 2 - moduleOffsetY_pallet;
                             }
 
                             model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
@@ -866,26 +872,6 @@ module Garage {
 						let $target = this._getTarget(mousePosition);
 						if ($target) {
                             this.setDragTarget($target);
-                            /*
-							$target.focus();
-							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
-							this.$currentTarget_ = $target;
-							// target に紐付くモデルを取得
-							this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
-
-							// 選択状態にする
-							this.$currentTarget_.addClass("selected");
-
-							//ツールチップを非表示にする。
-							this.disableButtonInfoTooltip();
-
-							// リサイザーを追加
-							this._setResizer(this.$currentTarget_);
-
-							// 詳細編集エリアを表示
-							$("#face-item-detail-area").addClass("active");
-							this._showDetailItemArea(this.currentTargetModel_);
-						    */
 						} else {
 							// マウスポインター位置にアイテムが存在しない場合で、
 							// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
@@ -915,32 +901,11 @@ module Garage {
                 }
 
                 this.startDraggingCanvasItem(mousePosition);
-                /*
-				if (this.$currentTarget_ && this.isOnCanvasFacePagesArea(mousePosition)) {
-					this.mouseMoveStartPosition_ = mousePosition;
-					this.mouseMoveStartTargetPosition_ = {
-						x: parseInt(this.$currentTarget_.css("left"), 10),
-						y: parseInt(this.$currentTarget_.css("top"), 10)
-					};
-					this.mouseMoveStartTargetArea_ = {
-						x: parseInt(this.$currentTarget_.css("left"), 10),
-						y: parseInt(this.$currentTarget_.css("top"), 10),
-						w: parseInt(this.$currentTarget_.css("width"), 10),
-						h: parseInt(this.$currentTarget_.css("height"), 10)
-					};
-					// 詳細編集エリア上の場合は、mousemove 状態にしない
-					if (!overDetailArea) {
-						this.mouseMoving_ = true;
-						event.preventDefault();
-
-						//preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
-						//そのため、preventDefault直後にフォーカスを設定しなおす。
-						this.$el.focus();
-					}
-				}
-                */
             }
 
+            /**
+             * Canvas上のドラッグ対象を設定
+             */
             private setDragTarget(target: JQuery) {
                 target.focus();
                 console.log("target " + JQUtils.data(target, "cid")); //$target.data("cid"));
@@ -962,6 +927,9 @@ module Garage {
                 this._showDetailItemArea(this.currentTargetModel_);
             }
 
+            /**
+             * Canvas上のドラッグ対象をドラッグ状態にする
+             */
             private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
                     this.mouseMoveStartPosition_ = mousePosition;
