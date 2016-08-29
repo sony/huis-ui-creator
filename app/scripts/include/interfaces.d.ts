@@ -642,7 +642,10 @@ declare module Garage {
 	var MARGIN_MOUSEMOVABLE_LEFT: number;
 	var MARGIN_MOUSEMOVABLE_RIGHT: number;
 	var MARGIN_MOUSEMOVALBE_BOTTOM: number;
-	
+	/*
+	 * ステートの内容を変更する際の特殊 ID
+	 */
+	var TARGET_ALL_STATE : number;
 
 }
 
