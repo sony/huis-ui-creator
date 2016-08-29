@@ -1752,12 +1752,11 @@ module Garage {
 
 				let textInTextFiled: string = $textField.val();
 
-				this._updateCurrentModelStateData(stateId,
+				this._updateCurrentModelStateData(TARGET_ALL_STATE,
 					{
 						"text": textInTextFiled,
 						"path": null,
 						"resolved-path": null
-
 					});
 				this.setFocusAndMoveCursorToEnd($textField);
 			}
@@ -2809,7 +2808,8 @@ module Garage {
 				 */
 				var solveLabel = function (state: IGState) {
 					var defaltTextSize = 30;
-					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
+					let localStateId = state.id;
+					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
 
 					if ($targetTextSizePullDown) {
 						defaltTextSize = +($targetTextSizePullDown.val());
