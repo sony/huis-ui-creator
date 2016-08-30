@@ -2867,9 +2867,11 @@ module Garage {
 				var currentStates: IGState[] = $.extend(true, [], states);
 
 				let targetStates: IGState[];
-				if (_.isUndefined(stateId) || stateId === TARGET_ALL_STATE) {
+				if (_.isUndefined(stateId) ) {
 					// stateId が指定されていない場合は、全 state を更新
-					// あるいは、stateIdがTARGET_ALL_STATEの場合
+					targetStates = states;
+				} else if (stateId === TARGET_ALL_STATE) {
+					// stateIdがTARGET_ALL_STATEの場合、全stateを更新
 					targetStates = states;
 				} else {
 					targetStates = states.filter((state) => {
@@ -2885,9 +2887,13 @@ module Garage {
 				// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
 				var targetState = targetStates[0];
 				var $targetStateElem = this.$currentTarget_.find(".button-state").filter((index: number, elem: Element) => {
-					let tmpStateId = 0;
-					if (!_.isUndefined(stateId) && stateId !== TARGET_ALL_STATE) {
-						tmpStateId = stateId;
+					let tmpStateId = stateId;
+					if (_.isUndefined(stateId)) {
+						// stateId が指定されていない場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
+					} else if (stateId === TARGET_ALL_STATE) {
+						// stateId がTARGET_ALL_STATEの場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
 					}
 					return parseInt(JQUtils.data($(elem), "stateId"), 10) === tmpStateId;
 				});
