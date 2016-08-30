@@ -1015,6 +1015,12 @@ module Garage {
 				});
 				this._updateCurrentModelData("area", newArea);
 				this._showDetailItemArea(this.currentTargetModel_);
+
+				if (this.currentTargetModel_.type === "button") {
+					//ボタンの場合、アイテムの重なりをチェックする
+					this._overlapButtonsExist();
+				}
+
             }
 
 
@@ -3343,13 +3349,7 @@ module Garage {
 
 				this._normalizeArea(complementedArea);
 
-				if (this.currentTargetModel_.type === "button") {
-					if (this._checkOverlapButton(complementedArea, model.cid)) {
-						// 重なり合わせられた場合は、最初の area に戻す
-						complementedArea = $.extend(true, {}, model.area);
-					}
-				}
-
+				
 				return complementedArea;
 			}
 
@@ -3500,18 +3500,25 @@ module Garage {
 							// 両方のボタンが enabled 状態のときのみ判定
 							if (buttons[i].enabled && buttons[j].enabled) {
 								// 当たり判定
-								if (button1Area.x < button2Area.x + button2Area.w && button2Area.x < button1Area.x + button1Area.w) {
-									if (button1Area.y < button2Area.y + button2Area.h && button2Area.y < button1Area.y + button1Area.h) {
+								if (button1Area.x < button2Area.x + button2Area.w && button2Area.x < button1Area.x + button1Area.w &&
+									button1Area.y < button2Area.y + button2Area.h && button2Area.y < button1Area.y + button1Area.h) {
 										console.warn(TAG + "_overlapButtonsExist()");
 										console.warn("pageIndex: " + pageIndex + ", i: " + i + ", j: " + j);
 										console.warn(button1Area);
 										console.warn(button2Area);
+
+										this.changeButtonFrameColorWarn(buttons[i]);
+										this.changeButtonFrameColorWarn(buttons[j]);
+
 										overlapButtonCount++;
-									}
+									} else {
+										this.changeButtonFrameColorNormal(buttons[i]);
+										this.changeButtonFrameColorNormal(buttons[j]);
 								}
 							}
 						}
 					}
+
 					if (0 < overlapButtonCount) {
 						result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2") + overlapButtonCount + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3");
 					}
