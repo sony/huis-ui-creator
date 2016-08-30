@@ -10,6 +10,7 @@ module Garage {
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
 
+		let TAG_BASE: string = "[Garage.View.BasePage] ";
 
 		/**
 		 * @class StyleBuilderDefault
@@ -204,11 +205,13 @@ module Garage {
 			protected centeringTooltip($target: JQuery) {
 				//tooltipを中央揃えにする。
 				var $tooltip = $target.find(".tooltip-text");
-				var widthButton = $target.width();
-				var widthToolTip = $tooltip.outerWidth(true);
-				var centeredLeft = (widthButton - widthToolTip) / 2;
-				$tooltip.css("left", centeredLeft + "px");
-				this.deterOverWindow($tooltip);
+				if ($tooltip != undefined) {
+					var widthButton = $target.width();
+					var widthToolTip = $tooltip.outerWidth(true);
+					var centeredLeft = (widthButton - widthToolTip) / 2;
+					$tooltip.css("left", centeredLeft + "px");
+					this.deterOverWindow($tooltip);
+				}
 			}
 
 			/*
@@ -216,6 +219,16 @@ module Garage {
 			* @param $target:JQuery これから表示するJQuery要素
 			*/
 			protected deterOverWindow($target: JQuery) {
+				let FUNCTION_NAME = "BasePage.ts : deterOverWindow : ";
+				if ($target == undefined) {
+					console.error(FUNCTION_NAME + " $target is undefined");
+					return;
+				}
+
+				if ($target.offset() == undefined) {
+					return;
+				}
+
 				var left = $target.offset().left;
 				var width = $target.outerWidth(true);
 
@@ -321,16 +334,10 @@ module Garage {
 							outputString += ", "
 						}
 						outputString += inhibitWords[i] + " ";
-						if (inhibitWords[i] == "\\" ){
-							inhibitWords[i] = "\\\\";//正規表現では \\ はうけつけない。
-						}
-						if (inhibitWords[i] == "*") {
-							inhibitWords[i] = "\\*";//正規表現では * はうけつけない。
-						}
-						if (inhibitWords[i] == "|") {
-							inhibitWords[i] = "\\|";//正規表現では | はうけつけない。
-						}
 
+						//GegExp(正規表現)を利用するために、頭に\\をつける。
+						inhibitWords[i] = "\\" + inhibitWords[i];
+ 						
 						var regExp = new RegExp(inhibitWords[i], "g");
 						resultString = resultString.replace(regExp, "");
 					}
@@ -341,6 +348,137 @@ module Garage {
 				return resultString;
 			}
 
+
+			/*
+			* 横にセンタリング処理をする.
+			* @param $target : JQuery   センタリングされるJquery要素
+			* @param $base : JQuery 何のセンタリングなのかのJquery要素
+			* @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			*/
+			protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
+				let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnCenterOfBase: ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if ($base == undefined) {
+					console.warn(FUNCTION_NAME + "$base is undefined");
+					return;
+				}
+
+				let targetTop = $target.offset().top;
+				let targetWidth = $target.outerWidth(true);
+				if (targetScale) {
+					targetWidth = targetWidth * targetScale;
+				}
+
+				let baseLeft = $base.offset().left;
+				let baseWidth = $base.outerWidth(true);
+				if (baseScale) {
+					baseWidth = baseWidth * baseScale;
+				}
+
+				let targetLeft = baseLeft + baseWidth / 2 - targetWidth / 2;
+				$target.offset({ top: targetTop, left: targetLeft });
+
+			}
+
+
+			/*
+			* targetをbaseの真下にレイアウトするをする.
+			* @param $target : JQuery   レイアウトされるJquery要素
+			* @param $base : JQuery 何に対してレイアウトされるかを示す Jquery要素
+			* @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			* @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
+			*/
+			protected layoutTargetOnButtomOfBase($target: JQuery, $base: JQuery, targetScale?: number, baseScale?: number) {
+				let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnButtomOfBase: ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if ($base == undefined) {
+					console.warn(FUNCTION_NAME + "$base is undefined");
+					return;
+				}
+
+				let targetLeft = $target.offset().left;
+				
+				let baseTop = $base.offset().top;
+				let baseHeight = $base.outerHeight(true);
+				if (baseScale) {
+					baseHeight = baseHeight * baseScale;
+				}
+
+				let targetTop = baseTop + baseHeight;
+				$target.offset({ top: targetTop, left: targetLeft });
+
+			}
+
+
+			/*
+			* popupをすべて閉じる
+			*/
+			protected closeAllPopups() {
+				let FUNCTION_NAME = TAG_BASE + " :closeAllPopups: ";
+
+				let $popups = $("section[data-role='popup']");
+				//$popups.popup("close");
+				
+				if ($popups) {
+					$popups.each((index: number, elem: Element) => {
+						$(elem).popup("close");
+					});
+				}
+
+				let $uiPopups = $("select[data-native-menu='false']");
+				if ($uiPopups) {
+					$uiPopups.each((index: number, elem: Element) => {
+						$(elem).selectmenu("close");
+					});
+				}
+			}
+
+
+			/*
+			* 
+			*/
+			protected isMousePositionOn($target : JQuery, mousePosition : IPosition):boolean {
+				let FUNCTION_NAME = TAG_BASE + " : isMousePositionOn : ";
+
+				if ($target == undefined) {
+					console.warn(FUNCTION_NAME + "$target is undefined");
+					return;
+				}
+
+				if (mousePosition == undefined) {
+					console.warn(FUNCTION_NAME + "mousePosition is undefined");
+					return;
+				}
+
+				let targetX = $target.offset().left;
+				let targetY = $target.offset().top;
+				let targetW = $target.outerWidth(true);
+				let targetH = $target.outerHeight(true);
+
+				let mouseX = mousePosition.x;
+				let mouseY = mousePosition.y;
+
+				if (mouseX >= targetX && mouseX <= targetX + targetW) {
+					if (mouseY >= targetY && mouseY <= targetY+targetH){
+						return true;
+					}
+				}
+
+				return false;
+
+			}
+		
 
         }
     }

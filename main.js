@@ -16,6 +16,15 @@ var {app, BrowserWindow, crashReporter} = require('electron');
 // JavaScript のオブジェクトが GC されたときにウィンドウが閉じてしまうため
 var mainWindow = null;
 
+var shouldQuit = app.makeSingleInstance(function(argv, workingDirectory) {
+	if(mainWindow.isMinimized()) mainWindow.restore();
+	mainWindow.focus();
+});
+
+if (shouldQuit) {
+	app.quit();
+}
+
 // すべてのウィンドウが閉じられたら終了
 app.on('window-all-closed', function() {
   // OSX だと、ユーザーが Cmd + Q で明示的に終了するまで
@@ -30,8 +39,10 @@ app.on('ready', function() {
 	// ブラウザウィンドウを作る
 
 	mainWindow = new BrowserWindow({
-		width: 1280,
-		height: 800,
+	    width: 1280,
+	    height: 768,
+		//minWidth :  1280,
+		//minHeight :768,
 		icon:  __dirname + '/app/huis-favicon.png',
 		title: 'HUIS UI CREATOR'
 	});

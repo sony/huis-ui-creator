@@ -3,7 +3,7 @@
         {{! ボタンの詳細情報エリア}}
 
 
-        <h3 id="face-item-detail-title">★Button 
+        <h3 id="face-item-detail-title"><span class="title-label">★Button</span> 
         <span class="button-info-brand-and-type">
             {{#deviceInfo}}
             {{#code_db}}
@@ -90,8 +90,8 @@
 						<option value="14">14px</option>
 						<option value="16">16px</option>
 						<option value="18">18px</option>
-						<option value="20" selected>20px</option>
-						<option value="24">24px</option>
+						<option value="20">20px</option>
+						<option value="23" selected>23px</option>
 						<option value="28">28px</option>
 						<option value="30">30px</option>
 						<option value="32">32px</option>
@@ -231,7 +231,7 @@
 								<option value="16">16px</option>
 								<option value="18">18px</option>
 								<option value="20">20px</option>
-								<option value="24">24px</option>
+								<option value="23">23px</option>
 								<option value="28">28px</option>
 								<option value="30" selected>30px</option>
 								<option value="32">32px</option>
@@ -307,13 +307,13 @@
 							<!--jQueryMobileを動的に追加されたDOMに使用するためには、trigger("create")を呼び出す範囲指定が必要-->
 							<div class="custom-select">
 								<select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
-									<option value="touch">タップ</option>
-									<option value="long_press">長押し</option>
+									<option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
+									<option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
 								</select>
 							</div>
 							<div class="custom-select">
 									<select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false">
-										<option value="none">何もしない</option>
+										<option value="none" data-i18n="button.none.STR_REMOTE_BTN_NONE">★何もしない</option>
 										{{#functions}}
 										<option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
 										{{/functions}}

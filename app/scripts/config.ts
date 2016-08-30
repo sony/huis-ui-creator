@@ -51,6 +51,8 @@ module Config {
 
 			// application
 			"app": "scripts/app",
+			// wait for module load for 100 seconds
+			"waitSeconds": 100,
 		},
 
 		shim: {

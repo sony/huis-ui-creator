@@ -40,8 +40,9 @@ module Garage {
 		} catch (err) {
 			console.error(err);
 		}
-		
 
+		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.663;
+		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.7;
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
@@ -50,6 +51,38 @@ module Garage {
 
 		// 製品名の設定
 		PRODUCT_NAME = "HUIS UI CREATOR";
+
+		// デバイスタイプ
+		DEVICE_TYPE_TV = "TV";
+		DEVICE_TYPE_AC = "Air conditioner";
+		DEVICE_TYPE_LIGHT = "Light";
+		DEVICE_TYPE_AUDIO = "Audio";
+		DEVICE_TYPE_PLAYER = "Player";
+		DEVICE_TYPE_RECORDER = "Recorder";
+		DEVICE_TYPE_PROJECTOR = "Projector";
+		DEVICE_TYPE_STB = "Set top box";
+		DEVICE_TYPE_FAN = "Fan";
+		DEVICE_TYPE_AIR_CLEANER = "Air cleaner";
+		DEVICE_TYPE_CUSOM = "Custom";
+		DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
+		DEVICE_TYPE_BT = "Bluetooth";
+
+		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
+
+
+		GRID_AREA_WIDTH = 464;
+		GRID_AREA_HEIGHT = 812;
+		BIAS_X_DEFAULT_GRID_LEFT = 8;
+		BIAS_X_DEFAULT_GRID_RIGHT = 8;
+		DEFAULT_GRID = 29;
+
+		WINDOW_MIN_WIDTH = 768;
+		WINDOW_MIN_HEIGHT = 1280;
+
+		MARGIN_MOUSEMOVALBE_TOP = 100;
+		MARGIN_MOUSEMOVABLE_LEFT = 200;
+		MARGIN_MOUSEMOVABLE_RIGHT = 200;
+		MARGIN_MOUSEMOVALBE_BOTTOM = 80;
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -60,14 +93,20 @@ module Garage {
 		}
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
 		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
+		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
+
+		REMOTE_BACKGROUND_WIDTH = 540;
+		REMOTE_BACKGROUND_HEIGHT = 870;
 
 		// ページの背景の起点座標とサイズ
 		HUIS_PAGE_BACKGROUND_AREA = {
 			x: -30,
 			y: -24,
-			w: 540,
-			h: 870
+			w: REMOTE_BACKGROUND_WIDTH,
+			h: REMOTE_BACKGROUND_HEIGHT
 		};
+
+		MAX_IMAGE_FILESIZE = 5000000;
 
 		// 画像追加時の画像編集パラメーター
 		IMAGE_EDIT_PARAMS = {
@@ -88,27 +127,71 @@ module Garage {
 			imageType: "image/png"
         };
 
-        HELP_SITE_URL = "http://rd1.sony.net/help/remote/ui_creator/ja/";
+        HELP_SITE_URL = "http://rd1.sony.net/help/remote/huis_ui_creator/ja/";
 
-        if (fs.existsSync("debug")) {
-            DEBUG_MODE = true;
-            console.warn("DEBUG_MODE enabled");
-        } else {
-            DEBUG_MODE = false;
-        }
+        //if (fs.existsSync("debug")) {
+        //    DEBUG_MODE = true;
+        //    console.warn("DEBUG_MODE enabled");
+        //} else {
+        //    DEBUG_MODE = false;
+        //}
+
+        fs.stat("debug", (err: Error, stats) => {
+			if (err) {
+				DEBUG_MODE = false;
+			} else {
+				console.log(err);
+				console.warn("DEBUG_MODE enabled");
+				DEBUG_MODE = true;
+			}
+		});
 
 		callback();
 	};
 
 	var loadUtils = (callback: Function): void => {
 		// Util のロードと初期化
-		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.miscutil", "garage.util.garagefiles", "garage.util.jqutils"], () => {
-			electronDialog = new Util.ElectronDialog();
-			huisFiles = new Util.HuisFiles();
-			garageFiles = new Util.GarageFiles();
-			miscUtil = new Util.MiscUtil();
-			callback();
-		});
+		requirejs(["pixi",
+			"garage.model.offscreeneditor",
+			"garage.util.huisfiles",
+			"garage.util.electrondialog",
+			"garage.util.huisdev",
+			"garage.util.miscutil",
+			"garage.util.garagefiles",
+			"garage.util.jqutils"],
+			() => {
+				try {
+					electronDialog = new Util.ElectronDialog();
+					huisFiles = new Util.HuisFiles();
+					garageFiles = new Util.GarageFiles();
+					miscUtil = new Util.MiscUtil();
+				} catch (e) {
+					console.error("init.ts loadUtils failed. " + e);
+				}
+				callback();
+			},
+			(err: RequireError) => {
+				console.error("init.ts loadUtils failed. " + err);
+				//load trouble, retry
+				requirejs(err.requireModules,
+					() => {
+						try {
+							electronDialog = new Util.ElectronDialog();
+							huisFiles = new Util.HuisFiles();
+							garageFiles = new Util.GarageFiles();
+							miscUtil = new Util.MiscUtil();
+						} catch (e) {
+							console.error("init.ts loadUtils failed. " + e);
+						}
+						callback();
+					},
+					(err: RequireError) => {
+						console.error("retry failed..." + err);
+					}
+
+				); 
+			}
+		);
 	};
 
 	// 起動時のチェック
@@ -129,6 +212,7 @@ module Garage {
                                 message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
                                 buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 								title: PRODUCT_NAME,
+								cancelId:0,
                             });
 
                         if (response !== 0) {
@@ -147,6 +231,7 @@ module Garage {
 						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
 						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
 						title: PRODUCT_NAME,
+						cancelId:0,
                     });
 
 				if (response !== 0) {

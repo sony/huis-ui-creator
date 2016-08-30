@@ -37,7 +37,7 @@ module Garage {
                 this._initializeSplashView();
                 (function loop() {
                     setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH)) {
+                    if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
                         electronDialog.showMessageBox({
                             type: "error",
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
@@ -83,6 +83,7 @@ module Garage {
                 $(window).on("beforeunload", this._closeWarning);
 
                 this.currentWindow_ = Remote.getCurrentWindow();
+				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
                 this.currentWindow_.setMenuBarVisibility(false);
 
 				$("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
@@ -98,11 +99,14 @@ module Garage {
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 							title: PRODUCT_NAME,
-                        });
+							cancelId: 1,
+                        }
+					);
                     if (response !== 0) {
                         return null;
                     }
                 }
+				isHUISConnected = false;
             }
 
             private _pageLayout() {
@@ -133,7 +137,6 @@ module Garage {
                 } catch (err) {
                     console.error(err);
                     console.error("error occurred in syncWithHUIS");
-                    HUIS_ROOT_PATH = null;
                 }
             };
 

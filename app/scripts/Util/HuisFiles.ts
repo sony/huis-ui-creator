@@ -4,7 +4,7 @@ module Garage {
 	export module Util {
 		import IPromise = CDP.IPromise;
 		//import makePromise = CDP.makePromise;
-		import OffscreenEditor = Model.OffscreenEditor;
+		//import OffscreenEditor = Model.OffscreenEditor;
 
 		var TAGS = {
 			HuisFiles: "[Garage.Util.HuisFiles] ",
@@ -301,6 +301,7 @@ module Garage {
 
 			getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
 				// param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
+
 				if (param2) {
 					let brand = param1,
 						deviceType = param2,
@@ -320,6 +321,99 @@ module Garage {
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
 				}
+			}
+
+			/*
+			* 同一のコードを持つremoteがあった場合そのremoteIdをする
+			* @param code{string} 学習して登録した際の button/state/action/code
+			* @return remoteId{string} 入力したcodeをもつリモコンのID
+			*/
+			getRemoteIdByCode(code: string): string {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+				if (code == undefined) {
+					console.warn(FUNCTION_NAME + "code is undefined");
+				}
+
+				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+					let remoteId = this.remoteList_[i].remote_id;
+					let face = this.getFace(remoteId);
+					let codesMaster: string[] = this.getMasterCodes(remoteId);
+					let deviceType = face.category;
+
+					//サポート外のdeviceTypeだった場合、次のremoteIdへ
+					if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(deviceType) != -1) {
+						continue;
+					}
+
+					if (codesMaster) {
+						//同一のコードを持つremoteがあった場合そのremoteId
+						for (let j = 0; j < codesMaster.length; j++) {
+							if (code == codesMaster[j] ) {
+								return remoteId;
+							}
+						}
+					}
+
+				}
+
+				return null;
+
+			}
+
+			/**
+			 * 機器の master face に記述されている最初の code を取得する。
+			 * 取得した code は、「このcodeをもつリモコンはどのremoteIdか」検索するために利用されると想定。
+			 * 
+			 * @param remoteId {string} リモコンの remoteId
+			 * @return {strings[]} master face に記述されている codeをすべて格納した配列。見つからない場合は null。
+			 */
+			private getMasterCodes(remoteId: string): string[] {
+				let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterCode: ";
+				if (remoteId == undefined) {
+					console.warn(FUNCTION_NAME + "remoteId is undefined");
+					return;
+				}
+
+				let masterFace = this._getMasterFace(remoteId);
+				if (!masterFace) {
+					console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
+					return null;
+				}
+
+				let resultCodes: string[] = [];
+
+				var modules = masterFace.modules;
+				for (let i = 0, ml = modules.length; i < ml; i++) {
+					var buttons = modules[i].button;
+					if (!buttons) {
+						continue;
+					}
+					for (let j = 0, bl = buttons.length; j < bl; j++) {
+						var states = buttons[j].state;
+						if (!states) {
+							continue;
+						}
+						for (let k = 0, sl = states.length; k < sl; k++) {
+							var actions = states[k].action;
+							if (!actions) {
+								continue;
+							}
+							for (let l = 0, al = actions.length; l < al; l++) {
+								var code = actions[l].code;
+								if (code) {
+									resultCodes.push(code);
+								}
+							}
+						}
+					}
+				}
+
+				if (resultCodes.length == 0) {
+					return null;
+				}
+
+				return resultCodes;
+
 			}
 
 			private _getMasterFunctions(remoteId: string): string[] {
@@ -367,15 +461,32 @@ module Garage {
 				};
 
 				var getFunctions_actions = function (actions: IAction[], functions: string[]) {
+					let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
+
 					if (!_.isArray(actions)) {
 						return;
 					}
 
 					actions.forEach((action: IAction) => {
 						let code_db = action.code_db;
+						let code = action.code;
 						if (code_db && code_db.function) {
-							functions.push(code_db.function);
+
+							if (code != null && code != undefined && code != " ") {
+								//学習によって登録された用 codeがある場合
+								functions.push(code_db.function);
+							}else if (code_db.db_codeset != " " || code_db.brand != " ") {
+								//プリセット用 db_codeset と brand が空白文字で。
+								functions.push(code_db.function);
+							} else {
+								//db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
+								//console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
+							}
+						} else {
+							console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
 						}
+
+						 
 					});
 
 				};
@@ -432,6 +543,65 @@ module Garage {
 				return null;
 			}
 
+			/*
+			* 機器の master face に記述されている最初の codeのうち、FuncitonNameが一致しているものを取得する。
+			* @param remoteId : string リモコンの remoteId
+			* @return functionのIDとcodenの対応表を返す
+			*/
+			getMasterFunctionCodeMap(remoteId: string): IStringStringHash{
+				let FUNCTION_NAME = TAGS.HuisFiles + "getMasterFunctionCode";
+				
+				if (remoteId == undefined) {
+					console.warn(FUNCTION_NAME + "remoteId is undefined");
+					return null;
+				}
+
+				let masterFace : IGFace = this._getMasterFace(remoteId);
+				if (!masterFace) {
+					console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
+					return null;
+				}
+
+				let result: IStringStringHash = {};
+
+				var modules = masterFace.modules;
+				for (let i = 0, ml = modules.length; i < ml; i++) {
+					var buttons = modules[i].button;
+					if (!buttons) {
+						continue;
+					}
+					for (let j = 0, bl = buttons.length; j < bl; j++) {
+						var states = buttons[j].state;
+						if (!states) {
+							continue;
+						}
+						for (let k = 0, sl = states.length; k < sl; k++) {
+							var actions = states[k].action;
+							if (!actions) {
+								continue;
+							}
+							for (let l = 0, al = actions.length; l < al; l++) {
+								let learningCode = actions[l].code;
+								let functionName = actions[l].code_db.function;
+								if (learningCode != null && learningCode != undefined && learningCode != " ") {
+									if (functionName != null && functionName != undefined && functionName != " ") {
+										result[functionName] = learningCode;
+										
+									}	
+								}
+							}
+						}
+					}
+				}
+
+				if (Object.keys(result).length == 0) {
+					return null;
+				}
+
+				return result;
+
+			}
+
 			/**
 			 * Common の face を取得する。
 			 */
@@ -441,16 +611,53 @@ module Garage {
 
 			/**
 			 * 新しい face を作成できるかどうか。
-			 * 現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
-			 * 
-			 * @return {boolean} 作成可能の場合は true。それ以外の場合は false。
+			 * @return 正常にリモコンを作れる場合 0, 異常時は0以下の値を返す。
 			 */
-			canCreateNewRemote(): boolean {
-				if (this.remoteList_.length < MAX_HUIS_FILES) {
-					return true;
-				} else {
-					return false;
+			canCreateNewRemote(): number {
+				//現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
+				if (this.remoteList_.length >= MAX_HUIS_FILES) {
+					return -1;
 				}
+
+				//HUIS内にPalletAreaに参照できるリモコンがあるか否かで判定する。
+				if (this.getNumVariableRemote() <= 0) {
+					return -2;
+				}
+				
+				return 0;
+				
+			}
+
+
+			/**
+			 * PalletAreaに出現するリモコンの数を取得する
+			 * @return PalletAreaに出現するリモコンの数 : number
+			 */
+			getNumVariableRemote(): number{
+				let FUNCTION_NAME = TAGS + " : getNumVariableRmote : ";
+				if (this.remoteInfos_ == undefined) {
+					console.warn(FUNCTION_NAME + "remoteInfos_ is undefined");
+					return 0;
+				}
+
+				if (this.remoteInfos_.length == 0) {
+					return 0;
+				}
+
+				let result = 0;
+
+				for (let i: number = 0; i < this.remoteInfos_.length; i++){
+					//サポートされているdevice_type場合、result + 1
+					if (this.remoteInfos_[i].face){
+						if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+							result++;
+						}
+					}
+
+					
+				}
+
+				return result;
 			}
 
 			/**
@@ -480,7 +687,7 @@ module Garage {
 					} else {
 						newRemoteId = 0;
 					}
-				} else {
+				} else if (sortedRemoteId.length > 1){
 					// 新しい remoteId として使える数字を探す
 					let l = sortedRemoteId.length;
 					for (let i = 0; i < l - 1; i++) {
@@ -503,6 +710,8 @@ module Garage {
 					if (newRemoteId < 0) {
 						newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
 					}
+				} else if (sortedRemoteId.length <= 0) {
+					newRemoteId = 0;
 				}
 
 				if (0 <= newRemoteId) {
@@ -888,9 +1097,6 @@ module Garage {
 						id: state.id
 					};
 
-					if (!_.isUndefined(state.active)) {
-						normalizedState.active = state.active;
-					}
 					if (state.image) {
 						normalizedState.image = this._normalizeImages(state.image, remoteId);
 					}
@@ -1029,7 +1235,7 @@ module Garage {
 							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
-						let newFileName = OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+						let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
 						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
 						let newFileFullPath: string;
@@ -1041,7 +1247,7 @@ module Garage {
 						}
 						// editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
 						// 補正は拡張子の付け替え。
-						newFileFullPath = OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
+						newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
 
 						normalizedImage = {
 							area: image.area,
@@ -1194,11 +1400,21 @@ module Garage {
 					let face: IGFace = this._parseFace(facePath, remoteId);
 					let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
 
-					remoteInfos.push({
-						remoteId: remoteId,
-						face: face,
-						mastarFace: masterFace
-					});
+					if (face != undefined && remoteId != undefined) {
+						if (masterFace != undefined){
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+								mastarFace: masterFace
+							});
+						}else{
+							remoteInfos.push({
+								remoteId: remoteId,
+								face: face,
+							});
+						}
+					}
+
 				}
 
 				return remoteInfos;
@@ -1219,7 +1435,13 @@ module Garage {
 					console.warn(TAGS.HuisFiles + "_parseFace() cannot read " + facePath);
 					return undefined;
 				}
-				var plainFace: IPlainFace = JSON.parse(faceText.replace(/^\uFEFF/, ""));
+				try {
+					// JSON.parse()はJSONが正しくない場合例外を投げるのでtry-catchで受ける
+					var plainFace: IPlainFace = JSON.parse(faceText.replace(/^\uFEFF/, ""));
+				} catch (e) {
+					console.error("_parseFace: " + e);
+					console.log(plainFace);
+				}
 
 				// 読み込んだ face のチェック
 				if (!plainFace) {
@@ -1268,6 +1490,26 @@ module Garage {
 						face.modules.push(gmodule);
 					}
 				}
+
+				//フルカスタムリモコンのモジュールがJsonが壊れるなどして、mosduleファイルが0個のとき、空のModuleFileを用意する
+				if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
+					face.modules.length == 0) {
+
+					let gmodule: IGModule = {
+						offsetY: 0,
+						pageIndex: 0,
+						remoteId: remoteId,
+						area: {
+							x: 0,
+							y: 0,
+							w: HUIS_FACE_PAGE_WIDTH,
+							h: HUIS_FACE_PAGE_HEIGHT
+						},
+						name: remoteId + "_page_0" // 暫定
+					}
+					face.modules.push(gmodule);
+				}
+
 
 				return face;
 			}
@@ -1461,7 +1703,14 @@ module Garage {
 				if (!moduleText) {
 					return null;
 				}
-				var modulePlain: IModule = JSON.parse(moduleText.replace(/^\uFEFF/, ""));
+				try {
+					// JSON.parse()は失敗すると例外を投げるのでtry-catchで受ける
+					var modulePlain: IModule = JSON.parse(moduleText.replace(/^\uFEFF/, ""));
+				} catch (e) {
+					console.error("_parseModule: " + e);
+					console.log(modulePlain);
+				}
+
 				if (!modulePlain) {
 					return null;
 				}
@@ -1485,7 +1734,7 @@ module Garage {
 					} else {
 						resizeImage = resizeImages.shift();
 
-						OffscreenEditor.editImage(resizeImage.src, {
+						Model.OffscreenEditor.editImage(resizeImage.src, {
 							resize: resizeImage.params
 						}, resizeImage.dst)
 							.always(() => {

@@ -44,7 +44,7 @@ body {
     line-height:$FONT_HEIGHT_COMMON;
     color:$COLOR_TEXT_COMMON;
     text-shadow: none;
-    overflow: auto;
+    overflow: hidden;
     -webkit-text-size-adjust: 100%;
        -moz-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
@@ -59,6 +59,20 @@ body {
 			display: none;	
 	}
 				
+	//ラベル、ボタン、画像などのz-indexアイテム
+	.label-item{
+		z-index:3;	
+	}
+
+	.button-item{
+		z-index:2;
+	}
+
+	.image-item{
+		z-index:1;
+	}
+
+
     //スクロールバー
     ::-webkit-scrollbar {
         &:horizontal{
@@ -214,6 +228,7 @@ body {
                     padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
                     font-size:$FONT_SIZE_TITLE;
                     font-family:$FONT_FAMILY_TITLE;
+					font-weight:initial;
                 }
             }
 

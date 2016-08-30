@@ -63,69 +63,41 @@
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
 
-            //box-shadow: 0 0 50px rgba(0,0,0,0.8);
+			//ボタン情報表示用 ツールチップ 非表示
+			#canvas-tooltip{						
+				overflow:initial;
+				text-shadow:none;
+					
+				visibility:visible;
+				display: flex;
+				align-items: center;
+				position: fixed; 
+
+				margin-top: $SIZE_TOOLTIP_MAGIN_TOP;
+				height:$SIZE_TOOLTIP_HEIGHT;
+				width:initial;
+				font-size: $FONT_SIZE_SSS;
+				font-family:$FONT_FAMILY_TOOL_TIP;
+				color: $COLOR_TOOLTIP_TEXT;
+				background-color: $COLOR_TOOLTIP_BACKGROUND;
+				border : $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
+				padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
+				box-shadow:$COLOR_TOOLTIP_SHADOW;
+				z-index:100;				
+			}
+
+
+			//ボタン情報表示用 ツールチップ 非表示
+			#canvas-tooltip.disable{
+					display :none;
+			}
 
             #face-canvas {
                 
                 #face-pages-area{
                     transform: scale(0.5);
 					transform-origin: left top;
-
-					.tooltip{
-						overflow:initial;
-						text-shadow:none;
-
-						.tooltip-text{
-							white-space: nowrap;
-							display: flex;	
-							visibility:hidden;
-							&:before{
-								content:''; 
-								display:block; 
-								position:absolute;
-								height:0; 
-								width:0; 
-								z-index:100;
-							}
-						}
-					
-						&:hover{
-							
-							.tooltip-text{
-								visibility:visible;
-								display: flex;
-								align-items: center;
-								position: absolute;            /* relativeからの絶対位置 */
-
-								//　0.5スケールなので倍に
-								bottom: $SIZE_TOOLTIP_MAGIN_BOTTOM*2;
-								height:$SIZE_TOOLTIP_HEIGHT*2;
-								width:initial;
-								font-size: $FONT_SIZE_SSS*2;
-								font-family:$FONT_FAMILY_TOOL_TIP;
-								color: $COLOR_TOOLTIP_TEXT;
-								background-color: $COLOR_TOOLTIP_BACKGROUND;
-								border : $SIZE_TOOLTIP_BORDER_THICKNESS*2 solid $COLOR_BLACK;
-								padding: 0 $SIZE_TOOLTIP_PADDING_SIDE*2;
-								box-shadow:$COLOR_TOOLTIP_SHADOW;
-								z-index:100;
-								
-							}
-						}
 				}
-				
-				.selected.tooltip{
-					.tooltip-text{
-						content:''; 
-						display:block; 
-						position:absolute;
-						height:0; 
-						width:0; 
-						z-index:100;
-						visibility:hidden;
-					}
-				}
-			}
                
                 #face-canvas-inner{
                     height:$SIZE_CANVAS_INNER_HEIGHT;
@@ -192,7 +164,16 @@
                 }
 
                 
+				.image-item.background{
+					border :none;
 
+					&:hover{
+						background:none;
+						background-position:center;
+						background-repeat: no-repeat;
+						background-size: contain;
+					}
+				}
                 
             }
         }
@@ -345,8 +326,8 @@
                 background-size: contain;
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
-                border : 2px solid $COLOR_PROPATY_PREVIEW_BORDER;
-
+                border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
+			
 				//画像編集ボタン
                 #edit-image-or-text,
 				#edit-image-background,
@@ -610,7 +591,7 @@
                     font-size:$FONT_SIZE_FACE_ITEM_LIST_ITEM;
                     font-family: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
 
-                    max-width: 160px;
+                    max-width: $SIZE_PROPATY_AREA_FACE_ITEM_MAX_WIDTH;
                     text-align:center;
                     vertical-align: middle;
                     //text-shadow: -1px -1px 1px rgba(255,255,255,0.7), 1px 1px 1px rgba(255,255,255,0.7), -1px 1px rgba(255,255,255,0.7), 1px -1px 2px rgba(255,255,255,0.7);
@@ -700,7 +681,10 @@
             width: $SIZE_FACE_IN_PALLET_WIDTH;
             height: $SIZE_FACE_IN_PALLET_HEIGHT;
             margin-top:$SIZE_FACE_IN_PALLET_MARING_TOP;
-            
+			margin-right:$SIZE_FACE_IN_PALLET_MARING_RIGHT;
+			margin-left:$SIZE_FACE_IN_PALLET_MARING_LEFT;
+			margin-bottom:$SIZE_FACE_IN_PALLET_MARING_BOTTOM;
+            border : $SIZE_PALLET_BORDER solid $COLOR_PALLET_BORDER;
 
             #face-pages-area {
                 transform: scale(0.5);
@@ -711,7 +695,7 @@
                 padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
                 padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
                 background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
-                border : $SIZE_FACE_PAGES_AREA_BORDER_THICKNESS solid $COLOR_FACE_PAGES_AREA_BOARDER;
+                
 
                 //box-shadow: 0 0 30px rgba(0,0,0,0.6);
 

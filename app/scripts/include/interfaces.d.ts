@@ -220,6 +220,15 @@ interface IButton {
 interface IButtonDeviceInfo {
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
+}
+
+/**
+ * @interface IStringStringHash
+ * @brief keyもValueもStringのハッシュ
+ */
+interface IStringStringHash {
+	[key: string]: string;
 }
 
 /**
@@ -567,6 +576,73 @@ declare module Garage {
 	 * アプリの名称
 	 */
 	var PRODUCT_NAME: string;
+
+	/*
+	* EDITの詳細編集エリア プレビューの高さの最小
+	*/
+	var MIN_HEIGHT_PREVIEW: number;
+	/**
+	* Garageで表示するテキストの表示上の減衰率
+	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
+	* RATIO_TEXT_SIZE_HUIS_GARAGE = HUISで表示するのと同じにみえる text_size / 実際のtext size(ex 23px / 30px
+	*/
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
+
+	/**
+	* HUISで利用されているデバイスタイプ
+	*/
+	var DEVICE_TYPE_TV: string; 
+	var DEVICE_TYPE_AC: string;
+	var DEVICE_TYPE_LIGHT: string;
+	var DEVICE_TYPE_AUDIO: string;
+	var DEVICE_TYPE_PLAYER: string;
+	var DEVICE_TYPE_RECORDER: string;
+	var DEVICE_TYPE_PROJECTOR: string;
+	var DEVICE_TYPE_STB: string;
+	var DEVICE_TYPE_FAN: string;
+	var DEVICE_TYPE_AIR_CLEANER: string;
+	var DEVICE_TYPE_CUSOM: string;
+	var DEVICE_TYPE_FULL_CUSTOM: string;
+	var DEVICE_TYPE_BT: string;
+
+	/**
+	* PalletAreaで表示されないデバイスタイプ
+	*/
+	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+
+	/*
+	* CanvasAreaのグリッドサイズ
+	*/
+	var GRID_AREA_WIDTH: number;
+	var GRID_AREA_HEIGHT: number;
+	var BIAS_X_DEFAULT_GRID_LEFT :number  //デフォルトグリッドの際は左にあるマージン
+    var BIAS_X_DEFAULT_GRID_RIGHT :number;//デフォルトグリッドの際は左にあるマージン	
+    var DEFAULT_GRID: number; //デフォルトのグリッドサイズ
+
+	/*
+	* Windowの最小幅・高さ
+	*/
+	var WINDOW_MIN_WIDTH: number;
+	var WINDOW_MIN_HEIGHT: number;
+	/*
+	* リモコンの背景の大きさ
+	*/
+	var REMOTE_BACKGROUND_WIDTH: number;
+	var REMOTE_BACKGROUND_HEIGHT: number;
+	/*
+	* 設定できる画像の容量の最大値[byte]
+	*/
+	var MAX_IMAGE_FILESIZE: number;
+	/*
+	* EDIT画面で、マウスを動かせる範囲。
+	* Windowの端から何ピクセルか
+	*/
+	var MARGIN_MOUSEMOVALBE_TOP: number;
+	var MARGIN_MOUSEMOVABLE_LEFT: number;
+	var MARGIN_MOUSEMOVABLE_RIGHT: number;
+	var MARGIN_MOUSEMOVALBE_BOTTOM: number;
+	
 
 }
 

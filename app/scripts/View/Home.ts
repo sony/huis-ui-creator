@@ -19,6 +19,8 @@ module Garage {
             private selectedRemoteId: string = null;
             private remoteIdToDelete;
 
+			private bindedLayoutPage = null;
+
 			/**
 			 * construnctor
 			 */
@@ -43,7 +45,16 @@ module Garage {
 
 			//! page before hide event
 			onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
-				$(window).off("resize", this._pageLayout);
+
+				let FUNCTION_NAME = TAG + " : onPageBeforeHide : ";
+
+				if (this.bindedLayoutPage == null) {
+					console.warn(FUNCTION_NAME + "this.bindedLayoutPage is null");
+					$(window).off("resize", this._pageLayout);
+				} else {
+					$(window).off("resize", this.bindedLayoutPage);
+				}
+
 				let $faceContainer = $(".face-container");
 				$faceContainer.off("click");
 
@@ -55,7 +66,7 @@ module Garage {
                 var ret:any = {};
                 ret = super.events();
 				return $.extend(ret,{
-					"dblclick header .ui-title": "_onHeaderDblClick",
+					//"dblclick header .ui-title": "_onHeaderDblClick",
 					"click #create-new-remote": "_onCreateNewRemote",
 					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
@@ -84,12 +95,15 @@ module Garage {
                 this.render();
                 this.selectedRemoteId = null; // 選択されていたものがあったら忘れること
 
-				$(window).on("resize", this._pageLayout);
+				//this._pageLayout.bind(this)をすると、新しいオブジェクトを返すので、off("resize", )の際にも使うため、メンバーに記憶する
+				//bind(this)することで、thisを _pageLayout に渡せる。bindがないとが thisが他のポイントをさせる。
+				this.bindedLayoutPage = this._pageLayout.bind(this);
+				$(window).on("resize", this.bindedLayoutPage);
 
 				this.currentWindow_ = Remote.getCurrentWindow();
+				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
-
 				
 			}
 
@@ -106,10 +120,23 @@ module Garage {
 				var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
 				var faceList: { remoteId: string, name: string }[] = [];
 				faces.forEach((face: IGFace) => {
-					faceList.push({
-						remoteId: face.remoteId,
-						name: face.name
-					});
+
+					//faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
+					let tmpFaceName: string =face.name;
+					var regExp = new RegExp(" ", "g");
+					tmpFaceName = tmpFaceName.replace(regExp, "");
+					if (tmpFaceName == "") {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: "　"
+						});
+					} else {
+						faceList.push({
+							remoteId: face.remoteId,
+							name: face.name
+						});
+					}
+
                 });
 
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
@@ -150,7 +177,6 @@ module Garage {
                 $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
                 $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
                 $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
-
             }
 
 
@@ -203,25 +229,26 @@ module Garage {
             //    }
             //}
 
-			private _onHeaderDblClick() {
-				var currentWindow = Remote.getCurrentWindow();
-				if (currentWindow.isDevToolsOpened()) {
-					Framework.Router.navigate("#face-render-experiment");
-				} else {
-					currentWindow.toggleDevTools();
-				}
-			}
-
 			private _onCreateNewRemote() {
-				if (huisFiles.canCreateNewRemote()) {
+				let canCreateResult = huisFiles.canCreateNewRemote();
+				if (canCreateResult == 0) {
 					Framework.Router.navigate("#full-custom");
-				} else {
+				} else if (canCreateResult == -2) {
 					electronDialog.showMessageBox({
 						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_NO_REMOTE_IN_HUIS"),
 						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
 						title: PRODUCT_NAME,
 					});
+				} else if (canCreateResult == -1) {
+					electronDialog.showMessageBox({
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+						title: PRODUCT_NAME,
+					});
+				} else {
+					console.warn("no alert dialog in _onCreateNewRemote()");
 				}
 			}
 
@@ -248,6 +275,7 @@ module Garage {
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
                         buttons: ["yes", "no"],
 						title: PRODUCT_NAME,
+						cancelId:1,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
@@ -305,6 +333,7 @@ module Garage {
                                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
                                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
 									title: PRODUCT_NAME,
+									cancelId:1,
                                 });
                                 if (response === 0) {
                                     //this._removeFace(remoteId);
@@ -332,8 +361,13 @@ module Garage {
 			}
 
 			private _pageLayout() {
+
 				var windowWidth = innerWidth;
 				var windowHeight = innerHeight;
+
+				if (this != null) {
+					this.closeAllPopups();
+				}
 
 				//var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
@@ -342,7 +376,8 @@ module Garage {
 				//if (faceListContainerHeight < 200) {s
 				//	faceListContainerHeight = 200;
 				//}
-			    $("#face-list").css("height", faceListContainerHeight + "px");
+				$("#face-list").css("height", faceListContainerHeight + "px");
+				$("#home-introductions").css("height", faceListContainerHeight + "px");
 			}
 
 			/**

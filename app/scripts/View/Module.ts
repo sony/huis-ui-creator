@@ -130,6 +130,18 @@ module Garage {
 					this.$facePages_.push($facePage);
 				}
 
+				//Jsonファイルが破壊されているなどの理由で、this.$facePages_がひとつもないとき
+				// index0の$facePageをつくる
+				if (this.$facePages_.length == 0) {
+					let $facePage = $(this.faceAreaTemplate_({
+						index: 0,
+						width: HUIS_FACE_PAGE_WIDTH,
+						height: HUIS_FACE_PAGE_HEIGHT
+					}));
+					this.$facePages_.push($facePage);
+				}
+
+
 				this.collection.each((item, index) => {
 					let pageIndex: number = item.get("pageIndex");
 					let $targetFacePage = this.$facePages_[pageIndex];
@@ -153,6 +165,15 @@ module Garage {
 					$targetFacePage.append($moduleContainer);
 					this.$el.append($targetFacePage);
 				});
+
+				//Jsonファイルが破壊されているなどの理由で、moduleがひとつもないとき
+				// facePagesだけでappendする
+				if (this.collection.length == 0) {
+					let $targetFacePage = this.$facePages_[0];
+					this.$el.append($targetFacePage);
+				}
+				
+
 				return this;
 			}
 
@@ -192,6 +213,18 @@ module Garage {
 				var newPageModuleModel = new Model.Module();
 
 				newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
+
+				//もし、同名のリモコンがすでにある場合
+				//モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
+				let pageIndexNo :number = pageCount;
+				let tmpPageNames: string[] = [];
+				for (let i = 0; i < this.collection.length; i++){
+					if (this.collection.models[i].name == newPageModuleModel.name) {
+						pageIndexNo++;
+						newPageModuleModel.name = this.remoteId_ + "_page_" + pageIndexNo;
+					}
+				}
+		
 				newPageModuleModel.remoteId = this.remoteId_;
 				newPageModuleModel.offsetY = 0;
 				newPageModuleModel.pageIndex = pageCount;
