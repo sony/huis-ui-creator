@@ -4370,9 +4370,14 @@ module Garage {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
 
+				if (event.keyCode == 9) {//tabの場合は無視
+					event.preventDefault();
+					return;
+				}
+
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
-                        case 8: // BS
+                        case 8: // BackSpace
                         case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
