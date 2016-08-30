@@ -3433,6 +3433,41 @@ module Garage {
 				return false;
 			}
 
+		
+			/*
+			* 重なりあったボタンの枠線を警告色に変える
+			* @param overlayedButton{ Model.buttonItem } 枠の色を変える
+			*/
+			private changeButtonFrameColorWarn(overlayedButton: Model.ButtonItem) {
+				let FUNCTION_NAME = TAG + " : changeButtonFrameColorWarn : ";
+				if (overlayedButton == null) {
+					console.warn(FUNCTION_NAME + "overlayedButton is null");
+				}
+				let $button: JQuery = this._getItemElementByModel(overlayedButton);
+
+				if ($button) {
+					$button.addClass("overlayed");
+				}
+				
+			}
+
+			/*
+			 * ボタンの枠線をもとに戻す
+			 */
+			private changeButtonFrameColorNormal(normalButton: Model.ButtonItem) {
+				let FUNCTION_NAME = TAG + " : changeButtonFrameColorNormal : ";
+				if (normalButton == null) {
+					console.warn(FUNCTION_NAME + "normalButton is null");
+				}
+				let $button: JQuery = this._getItemElementByModel(normalButton);
+
+				if ($button) {
+					$button.removeClass("overlayed");
+				}
+			}
+
+
+
 			/**
 			 * キャンバス内に重なり合っているボタンがないかをチェックする。
 			 * 
