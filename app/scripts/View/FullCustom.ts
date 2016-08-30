@@ -3314,6 +3314,9 @@ module Garage {
 					this.faceRenderer_canvas_.deletePage(pageIndex);
 					let $pageContainer = $pageModule.parent();
 					$pageContainer.remove();
+
+					// 現在のターゲットを外す
+					this._loseTarget();
 					return;
 				} else {
 					return;
