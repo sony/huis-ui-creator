@@ -84,6 +84,8 @@ module Garage {
 		MARGIN_MOUSEMOVABLE_RIGHT = 200;
 		MARGIN_MOUSEMOVALBE_BOTTOM = 80;
 
+		TARGET_ALL_STATE = 999;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)

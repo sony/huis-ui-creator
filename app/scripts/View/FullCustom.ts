@@ -1636,8 +1636,9 @@ module Garage {
 				}
 
 				if (key.indexOf("state-") === 0) {
-					let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-					this._updateCurrentModelStateData(stateId, key.slice("state-".length), value);
+					//let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+					//このバージョンでは、すべての画像を変更する。
+					this._updateCurrentModelStateData(TARGET_ALL_STATE, key.slice("state-".length), value);
 				} else {
 					this._updateCurrentModelData(key, value);
 				}
@@ -1752,12 +1753,11 @@ module Garage {
 
 				let textInTextFiled: string = $textField.val();
 
-				this._updateCurrentModelStateData(stateId,
+				this._updateCurrentModelStateData(TARGET_ALL_STATE,
 					{
 						"text": textInTextFiled,
 						"path": null,
 						"resolved-path": null
-
 					});
 				this.setFocusAndMoveCursorToEnd($textField);
 			}
@@ -2041,14 +2041,15 @@ module Garage {
 						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
 						let editedImageName = path.basename(editedImage.path);
 						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-						this._updateCurrentModelStateData(stateId, {
+
+
+						//このバージョンでは、すべてのステートの画像を変更する。
+						this._updateCurrentModelStateData(TARGET_ALL_STATE, {
 							"path": editedImagePath,
 							"resolved-path": editedImage.path.replace(/\\/g, "/"),
 							"resizeOriginal": editedImagePath,
 							"text":""
 						});
-
-						
 
 						// テキストエリアの文字表示をアップデート
 						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
@@ -2808,7 +2809,13 @@ module Garage {
 				 */
 				var solveLabel = function (state: IGState) {
 					var defaltTextSize = 30;
-					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
+					let localStateId = state.id;
+
+					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
+
+					if ($targetTextSizePullDown.length == 0) {//DOMが存在しないとき(長さが0のとき)stateId=0の際のDOMを読み込み
+						$targetTextSizePullDown = $(".property-state-text-size[data-state-id=\"0\"]");
+					}
 
 					if ($targetTextSizePullDown) {
 						defaltTextSize = +($targetTextSizePullDown.val());
@@ -2860,8 +2867,11 @@ module Garage {
 				var currentStates: IGState[] = $.extend(true, [], states);
 
 				let targetStates: IGState[];
-				if (_.isUndefined(stateId)) {
+				if (_.isUndefined(stateId) ) {
 					// stateId が指定されていない場合は、全 state を更新
+					targetStates = states;
+				} else if (stateId === TARGET_ALL_STATE) {
+					// stateIdがTARGET_ALL_STATEの場合、全stateを更新
 					targetStates = states;
 				} else {
 					targetStates = states.filter((state) => {
@@ -2877,7 +2887,15 @@ module Garage {
 				// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
 				var targetState = targetStates[0];
 				var $targetStateElem = this.$currentTarget_.find(".button-state").filter((index: number, elem: Element) => {
-					return parseInt(JQUtils.data($(elem), "stateId"), 10) === stateId;
+					let tmpStateId = stateId;
+					if (_.isUndefined(stateId)) {
+						// stateId が指定されていない場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
+					} else if (stateId === TARGET_ALL_STATE) {
+						// stateId がTARGET_ALL_STATEの場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
+					}
+					return parseInt(JQUtils.data($(elem), "stateId"), 10) === tmpStateId;
 				});
 				if (!$targetStateElem || $targetStateElem.length < 1) {
 					console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
@@ -2950,8 +2968,8 @@ module Garage {
 							default:
 
 						}
-
-						this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
+						let currentStateId = targetState.id;
+						this.updateButtonOnCustom(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
 					
 					});
