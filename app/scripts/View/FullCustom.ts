@@ -1529,8 +1529,19 @@ module Garage {
 				$tooltip.removeClass("disable");
 
 				//ツールチップ内の文言を代入
-				let deviceType: string = this.getButtonDeviceType($button);
-				$tooltip.find(".device-type").html(deviceType);
+
+				let deviceInfo: IButtonDeviceInfo = this.getButtonDeviceInfo($button);
+
+				// リモコン名を取得できない場合、デバイスタイプを表示する。(ver1.3対策)
+				let remoteInfo: string = this.getButtonDeviceType($button);
+
+				if (deviceInfo) {
+					if (deviceInfo.remoteName) {
+						remoteInfo = deviceInfo.remoteName;
+					}
+				}
+
+				$tooltip.find(".remote-info").html(remoteInfo);
 
 				//ファンクション情報をローカライズ
 				let outputFunctionName = functions[0];
