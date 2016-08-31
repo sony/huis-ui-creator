@@ -1633,9 +1633,44 @@ module Garage {
 				}
 
 
-				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();
-				
+				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();	
 			}
+
+
+			/*
+			* ボタンのリモコン名を取得
+			* @ $button : JQuery ボタンのJquery要素
+			* @ return : string  リモコン名
+			*/
+			private getButtonDeviceInfo($button: JQuery): IButtonDeviceInfo {
+				var FUNCTION_NAME = this.FILE_NAME + " getButtonRemoteName :";
+
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$button is Undefined");
+					return;
+				}
+
+				var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
+					return;
+				}
+
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;
+				}
+
+				let deviceInfo: IButtonDeviceInfo= buttonModel.button.deviceInfo;
+				if (deviceInfo == null) {
+					console.warn(FUNCTION_NAME + "deviceInfo is not button model");
+					return;
+				}
+
+				return deviceInfo;
+			}
+
 
 			/*
 			* リモコン名のテキストフィールドの値が変わったときに呼び出される
