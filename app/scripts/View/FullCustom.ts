@@ -944,6 +944,7 @@ module Garage {
 						"left": newX + "px",
 						"top": newY + "px"
 					});
+					this.checkOverlayCurrentTargetButton();
 				}
 			}
 
@@ -1130,6 +1131,9 @@ module Garage {
 					height: newArea.h + "px",
 					lineHeight: newArea.h + "px"
 				});
+
+				this.checkOverlayCurrentTargetButton();
+
 				if (this.currentTargetModel_.type === "button") {
 					this._resizeButtonStateItem(this.$currentTarget_, newArea);
 					this._updateCurrentModelStateData(undefined, "resized", true);
