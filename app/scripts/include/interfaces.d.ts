@@ -218,6 +218,7 @@ interface IButton {
  * @brief ボタンがひも付けられている機器の情報と使用できる機能
  */
 interface IButtonDeviceInfo {
+	remoteName?: string;  // もともとのボタンのリモコン名
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
 	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表

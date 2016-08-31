@@ -693,14 +693,17 @@ module Garage {
 							let functions = huisFiles.getMasterFunctions(remoteId);
 							let codeDb = huisFiles.getMasterCodeDb(remoteId);
 							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+							let remoteName = huisFiles.getFace(remoteId).name;
 
 							let deviceInfo: IButtonDeviceInfo = {
+								remoteName: remoteName,
 								functions: functions,
 								code_db: codeDb
 							};
 
 							if (functionCodeHash != null) {
 								deviceInfo = {
+									remoteName: remoteName,
 									functions: functions,
 									code_db: codeDb,
 									functionCodeHash: functionCodeHash,
@@ -2672,7 +2675,8 @@ module Garage {
 					db_codeset: string,
 					model_number: string,
 					functions: string[],
-					functionCodeHash: IStringStringHash;
+					functionCodeHash: IStringStringHash,
+					remoteName:string;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
@@ -2681,6 +2685,11 @@ module Garage {
 					if (deviceInfo.functionCodeHash){
 						functionCodeHash = deviceInfo.functionCodeHash;
 					}
+
+					if (deviceInfo.remoteName) {
+						remoteName = deviceInfo.remoteName;
+					}
+					
 				}
 
 				
@@ -3988,11 +3997,15 @@ module Garage {
 							codeDb.device_type != " " && codeDb.device_type != undefined &&
 							codeDb.model_number != " " && codeDb.device_type != undefined) {
 							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
+							let remoteId = huisFiles.getRemoteIdByCodeDb(codeDb.brand, codeDb.device_type, codeDb.model_number);
+							deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
+							deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+
 						} else if(codes != null){
 							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
 							let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
 							if (remoteId != null) {
+								deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
 								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
 								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
 							}
