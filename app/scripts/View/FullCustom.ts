@@ -1016,12 +1016,24 @@ module Garage {
 				this._updateCurrentModelData("area", newArea);
 				this._showDetailItemArea(this.currentTargetModel_);
 
+				this.checkOverlapButtonsExist();
+
+            }
+
+
+
+			/*
+			* ボタンの重なりをチェックする。
+			*/
+			private checkOverlapButtonsExist() {
 				if (this.currentTargetModel_.type === "button") {
 					//ボタンの場合、アイテムの重なりをチェックする
 					this._overlapButtonsExist();
 				}
+			}
 
-            }
+
+
 
 
 			/**
@@ -1129,6 +1141,7 @@ module Garage {
 					this._updateCurrentModelData("area", validateArea);
 					this._showDetailItemArea(this.currentTargetModel_);
 					this._setResizer(this.$currentTarget_);
+					this.checkOverlapButtonsExist();
 				} else {
 					this._setResizer(this.$currentTarget_);
 				}
