@@ -1974,12 +1974,8 @@ module Garage {
 				// 画像は remoteimages/[remoteId]/ 以下に配置される。
 				// image.path には remoteimages 起点の画像パスを指定する。
 				var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-				let model = <Model.ImageItem>this._updateCurrentModelData({
-					"path": imagePath,
-					"resizeOriginal": imagePath
-				});
 				// face ディレクトリ内に配置されるべき画像のパスを取得
-				let resolvedPath = model.resolvedPath;
+				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", imagePath)).replace(/\\/g, "/");
 				// 画像を face ディレクトリ内にコピー
 				// 画像のリサイズとグレースケール化
 				Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
