@@ -523,6 +523,14 @@ module Garage {
 						}
 					}
 
+					if (srcState.label) {
+						if (_.isArray(srcState.label)) {
+							newState.label = $.extend(true, [], srcState.label);
+						} else {
+							newState.label = [$.extend(true, {}, srcState.label)];
+						}
+					}
+
 					newStates.push(newState);
 				});
 
