@@ -3433,6 +3433,64 @@ module Garage {
 				return false;
 			}
 
+
+
+			/*
+			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
+			 */
+			private checkOverlayCurrentTargetButton() {
+
+				if (this.currentTargetModel_.type != "button") {
+					return;
+				}
+
+				let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
+
+				if (this.$currentTarget_ == undefined) {
+					console.warn(FUNCTION_NAME + "$currentTarget_ is undefined");
+					return;
+				}
+
+				let currentTargetArea: IArea = {
+					x: parseInt(this.$currentTarget_.css("left"), 10),
+					y: parseInt(this.$currentTarget_.css("top"), 10),
+					w: parseInt(this.$currentTarget_.css("width"), 10),
+					h: parseInt(this.$currentTarget_.css("height"), 10)
+				}
+
+				if (currentTargetArea == null) {
+					console.warn(FUNCTION_NAME + "currentTargetArea is undefined");
+					return;
+				}
+
+				var moduleId = this._getCanvasPageModuleId();
+				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
+				if (!buttons) {
+					return ;
+				}
+
+				let overlayButtonCount:number = 0;
+
+				for (let i = 0; i < buttons.length; i++){
+
+					if (this._checkOverlapButton(currentTargetArea, this.currentTargetModel_.button.cid) &&
+						this._checkOverlapButton(buttons[i].area)) {
+
+						this.changeButtonFrameColorWarn(buttons[i]);
+						this.changeButtonFrameColorWarn(this.currentTargetModel_.button, true);
+						overlayButtonCount++;
+
+					} else {
+						this.changeButtonFrameColorNormal(buttons[i]);
+					}
+				}
+
+				if (overlayButtonCount == 0) {
+					this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
+				}
+
+			}
+
 		
 			/*
 			* 重なりあったボタンの枠線を警告色に変える
