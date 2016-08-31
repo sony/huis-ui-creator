@@ -3436,16 +3436,19 @@ module Garage {
 		
 			/*
 			* 重なりあったボタンの枠線を警告色に変える
-			* @param overlayedButton{ Model.buttonItem } 枠の色を変える
+			* @param overlayedButton{ Model.buttonItem } 枠の色を変える対象のbutton model
+			* @param isCurrentTarget{boolean} 対象がcurrentTargetだった場合true
 			*/
-			private changeButtonFrameColorWarn(overlayedButton: Model.ButtonItem) {
+			private changeButtonFrameColorWarn(overlayedButton: Model.ButtonItem,isCurrentTarget? : boolean) {
 				let FUNCTION_NAME = TAG + " : changeButtonFrameColorWarn : ";
 				if (overlayedButton == null) {
 					console.warn(FUNCTION_NAME + "overlayedButton is null");
 				}
 				let $button: JQuery = this._getItemElementByModel(overlayedButton);
 
-				if ($button) {
+				if (isCurrentTarget) {
+					this.$currentTarget_.addClass("overlayed");
+				}else if ($button) {
 					$button.addClass("overlayed");
 				}
 				
@@ -3453,15 +3456,19 @@ module Garage {
 
 			/*
 			 * ボタンの枠線をもとに戻す
+			 * @param overlayedButton{ Model.buttonItem } 枠の色を変える対象のbutton model
+			 * @param isCurrentTarget{boolean} 対象がcurrentTargetだった場合true
 			 */
-			private changeButtonFrameColorNormal(normalButton: Model.ButtonItem) {
+			private changeButtonFrameColorNormal(normalButton: Model.ButtonItem, isCurrentTarget ? : boolean) {
 				let FUNCTION_NAME = TAG + " : changeButtonFrameColorNormal : ";
 				if (normalButton == null) {
 					console.warn(FUNCTION_NAME + "normalButton is null");
 				}
 				let $button: JQuery = this._getItemElementByModel(normalButton);
 
-				if ($button) {
+				if (isCurrentTarget) {
+					this.$currentTarget_.removeClass("overlayed");
+				}else if ($button) {
 					$button.removeClass("overlayed");
 				}
 			}
