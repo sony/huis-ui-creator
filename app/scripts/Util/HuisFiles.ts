@@ -1292,6 +1292,12 @@ module Garage {
 					return null;
 				}
 
+				// Commonの場合はMasterFaceがないので、faceを返す。
+				if (remoteId == "common") {
+					return this.commonRemoteInfo_.face;
+				}
+
+
 				// 指定した remoteId の情報を取得する
 				var targetRemoteInfos = this.remoteInfos_.filter((remoteInfo) => {
 					if (remoteInfo.remoteId === remoteId) {
