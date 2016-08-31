@@ -1143,6 +1143,10 @@ module Garage {
 							normalizedAction.code_db.model_number = action.code_db.model_number;
 						}
 					}
+					if (action.interval) {
+						normalizedAction.interval = action.interval;
+					}
+
 					normalizedActions.push(normalizedAction);
 				});
 

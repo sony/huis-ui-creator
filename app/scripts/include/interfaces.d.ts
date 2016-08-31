@@ -74,6 +74,7 @@ interface IAction {
 	 * データベースから引くためのIR信号
 	 */
     code_db?: ICodeDB;
+	interval?: number; // マクロ時の送信間隔。
 	[x: string]: any;
 }
 
