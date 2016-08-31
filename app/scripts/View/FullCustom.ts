@@ -684,7 +684,7 @@ module Garage {
 			 * パレット内のアイテムをダブルクリック
 			 */
             private onPalletItemDblClick(event: Event) {
-                let newItem: ItemModel = this.putPalletItemToCanvas(event);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(event);
 
                 if (!newItem) return;
 
@@ -709,34 +709,41 @@ module Garage {
              * 対象アイテムをCanvasに追加しドラッグ状態にする
              */
             private onPalletItemMouseDown(event: Event) {
+                this.selectedResizer_ = null;
+
+                // 直前に選択されていたボタンの状態更新があれば行う
+                this._updateCurrentModelButtonStatesData();
+
+                // 現在のターゲットを外す
+                this._loseTarget();
+
+                let newItem: ItemModel = this.setPalletItemOnCanvas(event, true);
+                this._updateItemElementOnCanvas(newItem);
+                
                 var mousePosition: IPosition = {
                     x: event.pageX,
                     y: event.pageY
                 };
-
-                let newItem: ItemModel = this.putPalletItemToCanvas(event, mousePosition);
-                this._updateItemElementOnCanvas(newItem);
-
-                this._loseTarget();
-
                 let target = this._getTarget(mousePosition);
                 if (target) {
                     this.setDragTarget(target);
                     this.startDraggingCanvasItem(mousePosition, true);
+                    event.stopPropagation();
                 } else {
                     console.log("target not found. mousePosition: " + mousePosition.x + ", " + mousePosition.y);
                 }
             }
 
             /**
-             * 対象キャンバスからマウス位置までの相対座標を取得
+             * 対象キャンバスから指定位置までの相対座標を取得
+             * @param position 画面上の座標
              */
-            private getMousePointFromCanvas(mousePosition: IPosition): IPosition {
+            private getPointFromCanvas(position: IPosition): IPosition {
                 let targetCanvasModule = $("#face-canvas .module-container[data-cid=" + this._getCanvasPageModuleId() + "]");
 
                 return {
-                    x: (mousePosition.x - targetCanvasModule.parent().offset().left) * 2,
-                    y: (mousePosition.y - targetCanvasModule.parent().offset().top) * 2
+                    x: (position.x - targetCanvasModule.parent().offset().left) * 2,
+                    y: (position.y - targetCanvasModule.parent().offset().top) * 2
                 };
             }
 
@@ -747,7 +754,7 @@ module Garage {
              * @param mousePosition Itemを追加するmouse座標
              * @return 追加したItemModel
              */
-            private putPalletItemToCanvas(event: Event, mousePosition?: IPosition): ItemModel {
+            private setPalletItemOnCanvas(event: Event, setOnEventPosition?: boolean): ItemModel {
                 var $target = $(event.currentTarget);
                 var $parent = $target.parent();
                 var targetModel = this._getItemModel($target, "pallet");
@@ -761,8 +768,8 @@ module Garage {
 
                 targetModel = $.extend(true, {}, targetModel);
 
-                if (mousePosition) {
-                    var itemPosition = this.getMousePointFromCanvas(mousePosition);
+                if (setOnEventPosition) {
+                    var itemPosition = this.getPointFromCanvas({x: $target.offset().left, y: $target.offset().top});
                 }
 
                 var model: ItemModel;
@@ -792,9 +799,8 @@ module Garage {
 
                             targetModel.button.deviceInfo = deviceInfo;
                             if (itemPosition) {
-                                // 座標指定時はItemの中央をマウス位置に合わせる
-                                targetModel.button.area.x = itemPosition.x - targetModel.button.area.w / 2;
-                                targetModel.button.area.y = itemPosition.y - targetModel.button.area.h / 2 - moduleOffsetY_pallet;
+                                targetModel.button.area.x = itemPosition.x;
+                                targetModel.button.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
 
                             model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
@@ -804,9 +810,8 @@ module Garage {
                     case "image":
                         if (targetModel.image) {
                             if (itemPosition) {
-                                // 座標指定時はItemの中央をマウス位置に合わせる
-                                targetModel.image.area.x = itemPosition.x - targetModel.image.area.w / 2;
-                                targetModel.image.area.y = itemPosition.y - targetModel.image.area.h / 2 - moduleOffsetY_pallet;
+                                targetModel.image.area.x = itemPosition.x;
+                                targetModel.image.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
 
                             model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
@@ -820,9 +825,8 @@ module Garage {
                     case "label":
                         if (targetModel.label) {
                             if (itemPosition) {
-                                // 座標指定時はItemの中央をマウス位置に合わせる
-                                targetModel.label.area.x = itemPosition.x - targetModel.label.area.w / 2;
-                                targetModel.label.area.y = itemPosition.y - targetModel.label.area.h / 2 - moduleOffsetY_pallet;
+                                targetModel.label.area.x = itemPosition.x;
+                                targetModel.label.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
 
                             model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
@@ -930,31 +934,65 @@ module Garage {
                 $("#face-item-detail-area").addClass("active");
                 this._showDetailItemArea(this.currentTargetModel_);
 
-                // dummy設定
+                // dummy表示
                 this.setCurrentTargetDummy();
             }
 
             private setCurrentTargetDummy() {
-                if (this.$currentTargetDummy_) return;
+                if (!this.$currentTarget_ ||
+                    this.$currentTargetDummy_) {
+                    return;
+                }
 
-                let faceEditArea = $('#face-edit-area');
-                let currentTarget = this.$currentTarget_;
-                let dummy = this.$currentTarget_.clone();
+                let dummyArea = $('#face-dummy-area');
+                let dummy = this.createDragItemDummy(this.$currentTarget_, dummyArea);
+                dummyArea.append(dummy);
+
+                this.$currentTargetDummy_ = dummy;
+            }
+
+            /**
+             * ドラッグ対象アイテムのCanvas外表示用ダミーを生成
+             * @param target ドラッグ対象アイテム
+             * @param dummyArea ダミー表示エリア
+             */
+            private createDragItemDummy(target: JQuery, dummyArea: JQuery): JQuery {
+                let dummy: JQuery = target.clone();
+
                 dummy
                     .attr('id', 'canvas-item-dummy')
                     .css({
-                        'transform-origin': 'left top',
-                        'transform': 'scale(0.5)',
-                        'left': currentTarget.offset().left - faceEditArea.offset().left + 'px',
-                        'top': currentTarget.offset().top - faceEditArea.offset().top + 'px',
-                        'border': '2px solid  #4F4F4F',
-                        'position': 'absolute',
-                        'z-index': 2,
-                        //'opacity': 0.7,
+                        'left': (target.offset().left - dummyArea.offset().left) * 2 + 'px',
+                        'top': (target.offset().top - dummyArea.offset().top) * 2 + 'px',
+                        'border': target.css('border'),
+                        'background-color': target.css('background-color'),
                     });
-                faceEditArea.append(dummy);
-                this.$currentTargetDummy_ = dummy;
-                console.log("dummy: " + dummy.html());
+
+                // background-imageは要素追加後に非同期に設定されるので意味がない？
+                /*
+                let bgImage = target.css('background-image');
+                if (bgImage != 'none') {
+                    dummy.css('background-image', bgImage);
+                }
+                */
+
+                this._setResizer(dummy);
+
+                /*
+                let resizers = ['.left-top', '.left-bottom', '.right-top', '.right-bottom'];
+                for (let resizerClass in ['.left-top', '.left-bottom', '.right-top', '.right-bottom']) {
+                    let targetResizer = target.find(resizerClass);
+
+                    let dummyResizer = dummy.find(resizerClass);
+
+                    for (let cssProp in ['position', 'box-sizing', 'width', 'height', 'top', 'left', 'border', 'background-color', 'cursor']) {
+                        dummyResizer.css(cssProp, targetResizer.css(cssProp));
+                        console.log(resizerClass + " " + cssProp + ": " + targetResizer.css(cssProp));
+                    }
+                }
+                */
+
+                return dummy;
             }
 
             /**
@@ -1077,13 +1115,11 @@ module Garage {
             private moveCurrentTargetDummy() {
                 if (!this.$currentTargetDummy_) return;
 
-                let faceEditArea = $('#face-edit-area');
+                let faceEditArea = $('#face-dummy-area');
                 let dummyPosition: IPosition = {
-                    x: this.$currentTarget_.offset().left - faceEditArea.offset().left,
-                    y: this.$currentTarget_.offset().top - faceEditArea.offset().top
+                    x: (this.$currentTarget_.offset().left - faceEditArea.offset().left) * 2,
+                    y: (this.$currentTarget_.offset().top - faceEditArea.offset().top) * 2
                 };
-
-                // TODO：canvasに重なっていたら消す
 
                 this.$currentTargetDummy_.css({
                     "left": dummyPosition.x + 'px',
@@ -1096,7 +1132,6 @@ module Garage {
 			 */
             private onMainMouseUp(event: Event) {
                 if (this.$currentTargetDummy_) {
-                    console.log("currentTargetDummy removed.");
                     this.$currentTargetDummy_.remove();
                     this.$currentTargetDummy_ = null;
                 }
@@ -2559,6 +2594,12 @@ module Garage {
 									$("#refer-image").val(path);
 									// 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
+
+                                    try {
+                                        this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
+                                    } catch (e) {
+                                        // ロード中にダミーが消される可能性を考慮
+                                    }
 								};
 								img.src = resolvedPath;
 
