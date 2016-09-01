@@ -307,7 +307,7 @@ module Garage {
 						deviceType = param2,
 						modelNumber = param3;
 
-					return this._getMasterFunctions(this.getRemoteIdByCodeDb(brand,deviceType, modelNumber));
+					return this._getMasterFunctions(this.getRemoteIdByCodeDbElements(brand,deviceType, modelNumber));
 
 				} else { // param2 が指定されていない場合は、param1: remoteId
 					let remoteId = param1;
@@ -359,7 +359,7 @@ module Garage {
 			* @return remoteId{string}リモコンのID
 			*/
 
-			getRemoteIdByCodeDb(brand, deviceType, modelNumber):string {
+			getRemoteIdByCodeDbElements(brand, deviceType, modelNumber):string {
 				let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
 	
 				for (let i = 0, l = this.remoteList_.length; i < l; i++) {

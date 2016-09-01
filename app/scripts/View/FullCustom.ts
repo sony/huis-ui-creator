@@ -4043,7 +4043,7 @@ module Garage {
 							codeDb.device_type != " " && codeDb.device_type != undefined &&
 							codeDb.model_number != " " && codeDb.device_type != undefined) {
 							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-							let remoteId = huisFiles.getRemoteIdByCodeDb(codeDb.brand, codeDb.device_type, codeDb.model_number);
+							let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
 							deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
 							deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
 
