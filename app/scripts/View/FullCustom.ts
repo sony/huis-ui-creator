@@ -3480,12 +3480,13 @@ module Garage {
 					return;
 				}
 
+
+				//同じページ内のすべてのボタンに対して、CurrentTargetと重なり判定
 				var moduleId = this._getCanvasPageModuleId();
 				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
 				if (!buttons) {
 					return ;
 				}
-
 				let overlayButtonCount:number = 0;
 
 				for (let i = 0; i < buttons.length; i++){
