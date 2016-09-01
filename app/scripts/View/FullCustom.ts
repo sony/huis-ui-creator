@@ -1644,7 +1644,8 @@ module Garage {
 				}
 
 
-				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();	
+				return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+
 			}
 
 
