@@ -1534,7 +1534,6 @@ module Garage {
 
 				// リモコン名を取得できない場合、デバイスタイプを表示する。(ver1.3対策)
 				let remoteInfo: string = this.getButtonDeviceType($button);
-
 				if (deviceInfo) {
 					if (deviceInfo.remoteName) {
 						remoteInfo = deviceInfo.remoteName;
