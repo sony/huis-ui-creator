@@ -3714,12 +3714,7 @@ module Garage {
 				let pageCount = this.faceRenderer_canvas_.getPageCount();
 				for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
 					// ページにある button を取得
-
-					let pageModuleId = this._getCanvasPageModuleId();
-
-					if (pageIndex) {
-						pageModuleId = this._getCanvasPageModuleId(pageIndex);
-					}
+					let	pageModuleId = this._getCanvasPageModuleId(pageIndex);
 
 					if (!pageModuleId) {
 						continue;
