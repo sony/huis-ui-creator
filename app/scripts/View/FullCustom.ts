@@ -3829,6 +3829,25 @@ module Garage {
 				}
 			}
 
+			/*
+			* マクロボタンか否か判定する。
+			* @param buttonModel{Model.ButtonItem} :判定対象のモデル
+			*/
+			private isMacroButton(button: Model.ButtonItem): boolean{
+				let FUNCTION_NAME = TAG + "isMacroButton : ";
+
+				if (button == null) {
+					console.warn(FUNCTION_NAME + "button is null");
+					return false;
+				}
+			
+				if (button.state[0].action[0].interval !== undefined) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
 			/**
 			 * 詳細編集エリアを表示する。
 			 * 
@@ -3846,12 +3865,14 @@ module Garage {
 
 				switch (targetModel.type) {
 					case "button":
-						// ボタンアイテムの詳細エリアを表示
-						this._renderButtonItemDetailArea(targetModel.button, $detail);
-						//テキストをローカライズ
-						$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
-						$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
-						$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+						if (this.isMacroButton(targetModel.button)) {
+							// マクロボタンアイテムの詳細エリアを表示
+							this._renderMacroButtonItemDetailArea(targetModel.button, $detail);
+						} else {
+							// ボタンアイテムの詳細エリアを表示
+							this._renderButtonItemDetailArea(targetModel.button, $detail);
+						}
+						
 						break;
 					case "image":
 						// 画像アイテムの詳細エリアを表示
@@ -3969,6 +3990,30 @@ module Garage {
 				return result;
 
 			}
+
+
+			/*
+			* マクロボタンアイテムの詳細情報エリアのレンダリング
+			* 
+			*/
+			private _renderMacroButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
+				let FUNCTION_NAME = TAG + "_renderMacroButtonItemDetailArea: ";
+
+				if (!button) {
+					console.warn(FUNCTION_NAME + "button is null");
+					return;
+				}
+
+				if (!$detail) {
+					console.warn(FUNCTION_NAME + "$detail is null");
+					return;
+				}
+
+				// ボタン情報の外枠部分をレンダリング
+				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
+				var $buttonDetail = $(templateButton(button));
+			}
+
 
 			/**
 			 * ボタンアイテムの詳細情報エリアのレンダリング
@@ -4133,6 +4178,10 @@ module Garage {
                 //テキストボタン、あるいは画像のどちらかを表示する。
 				this.toggleImagePreview(button.default);
 
+				//テキストをローカライズ
+				$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
+				$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
+				$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
                 //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
     
 
