@@ -3586,8 +3586,7 @@ module Garage {
 							// 両方のボタンが enabled 状態のときのみ判定
 							if (buttons[i].enabled && buttons[j].enabled) {
 								// 当たり判定
-								if (button1Area.x < button2Area.x + button2Area.w && button2Area.x < button1Area.x + button1Area.w &&
-									button1Area.y < button2Area.y + button2Area.h && button2Area.y < button1Area.y + button1Area.h) {
+								if (this.isOverlap(button1Area, button2Area)) {
 										console.warn(TAG + "_overlapButtonsExist()");
 										console.warn("pageIndex: " + pageIndex + ", i: " + i + ", j: " + j);
 										console.warn(button1Area);
