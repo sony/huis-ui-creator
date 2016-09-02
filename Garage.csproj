@@ -315,6 +315,7 @@
     <Content Include="app\scripts\Model\ButtonItemsCollection.js.map">
       <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="app\scripts\View\PropertyAreaMacroButton.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
     <Content Include="tests\jasmine\Model.ButtonItem.js">
