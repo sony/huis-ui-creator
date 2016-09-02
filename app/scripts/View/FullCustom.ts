@@ -3402,40 +3402,6 @@ module Garage {
 				}
 			}
 
-			/**
-			 * 指定した area がいずかの button と衝突するかをチェックする。
-			 * 
-			 * @param area {IArea} チェックする area
-			 * @param targetId {string} target となるボタンの cid。重なり判定時にボタン一覧から target となるボタンを除外するために使用する。
-			 * @return {boolean} いずれかの button と衝突する場合はtrue。衝突しない場合は false
-			 */
-			private _checkOverlapButton(area: IArea, targetId?: string): boolean {
-				if (!area) {
-					console.error(TAG + "_checkOverlapButton()  area is undefined.");
-					return false;
-				}
-				var moduleId = this._getCanvasPageModuleId();
-				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
-				if (!buttons) {
-					return false;
-				}
-
-				let overlapButtonCount :number= 0;
-				for (let i = 0, l = buttons.length; i < l; i++) {
-					let button = buttons[i];
-					if (this.isOverlapWithButton(area, button, targetId)) {
-						overlapButtonCount++
-					}
-				}
-
-				//重なっているボタンが一つでもある場合、true
-				if (overlapButtonCount > 0) {
-					return true;
-				}else {
-					return false;
-				}
-			}
-
 
 
 			/*
@@ -3593,42 +3559,7 @@ module Garage {
 			}
 
 
-			/*
-			* 入力したエリアと入力したボタンが重なっているかの判定
-			* @param area{IArea}
-			* @param button{Model.ButtonItem}
-			* @param targetId ? {string} 判定対象とするボタンのcid
-			* @return
-			*/
-			private isOverlapWithButton(area: IArea, button: Model.ButtonItem, targetId? : string): boolean {
-				let FUNCTION_NAME = TAG + "isOverlapWithButton : ";
-				if (area == null) {
-					console.warn("area is null");
-					return false;
-				}
-				if (button == null) {
-					console.warn("button is null");
-					return false;
-				}
-
-				if (!button || !button.area) {
-					return false;
-				}
-
-				if (button.cid === targetId) {
-					return false;
-				}
-
-				if (!button.enabled) {
-					return false;
-				}
-
-				let buttonArea = button.area;
-				// 当たり判定
-				return this.isOverlap(area, buttonArea);
-
-			}
-
+	
 		
 			/*
 			* 重なりあったボタンの枠線を警告色に変える
