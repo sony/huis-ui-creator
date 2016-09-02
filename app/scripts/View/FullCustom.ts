@@ -3470,8 +3470,6 @@ module Garage {
 					return;
 				}
 
-				// ページ内のボタンが重なり合わないかをチェック
-				let overlapButtonCount = 0;
 
 				// 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
 				let overlapButtons: Model.ButtonItem[] = [];
