@@ -401,7 +401,7 @@ module Garage {
 			private _listupFaces() {
 				// fullcustom と "Air conditioner" を除いた face 一覧を取得する
 				// "Air conditioner" のボタンの形式が Garage では扱えないもののため 
-				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special", "Bluetooth"] });
+				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special"] });
 				// faces データから face 一覧を作成し、face list に追加する
 				var faceItemTemplate = Tools.Template.getJST("#template-face-item", this.templateFullCustomFile_);
 				$("#face-item-list").append($(faceItemTemplate({ faces: faces })));
@@ -693,6 +693,7 @@ module Garage {
 							let functions = huisFiles.getMasterFunctions(remoteId);
 							let codeDb = huisFiles.getMasterCodeDb(remoteId);
 							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                            let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
 
 							let deviceInfo: IButtonDeviceInfo = {
 								functions: functions,
@@ -705,7 +706,11 @@ module Garage {
 									code_db: codeDb,
 									functionCodeHash: functionCodeHash,
 								};
-							}
+                            }
+
+                            if (bluetoothData != null) {
+                                deviceInfo.bluetooth_data = bluetoothData;
+                            }
 
 							targetModel.button.deviceInfo = deviceInfo;
 							model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
