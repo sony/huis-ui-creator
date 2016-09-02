@@ -748,7 +748,10 @@ module Garage {
 				var mementoCommand = new MementoCommand(memento);
 				this.commandManager_.invoke(mementoCommand);
 
-				this._updateItemElementOnCanvas(model);
+                this._updateItemElementOnCanvas(model);
+
+                //重なり判定を行う
+                this.checkOverlapButtonsExist();
 			}
 
 			/**
@@ -1027,10 +1030,8 @@ module Garage {
 			* ボタンの重なりをチェックする。
 			*/
 			private checkOverlapButtonsExist() {
-				if (this.currentTargetModel_.type === "button") {
-					//ボタンの場合、アイテムの重なりをチェックする
-					this._overlapButtonsExist();
-				}
+				//ボタンの場合、アイテムの重なりをチェックする
+				this._overlapButtonsExist();
 			}
 
 
