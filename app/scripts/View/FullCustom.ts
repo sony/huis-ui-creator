@@ -945,8 +945,10 @@ module Garage {
 					this.$currentTarget_.css({
 						"left": newX + "px",
 						"top": newY + "px"
-					});
-					this.checkOverlayCurrentTargetButton();
+                    });
+
+                    //currentTargetの重なり判定
+                    this.changeColorOverlayCurrentTargetButton();
 				}
 			}
 
@@ -1131,7 +1133,8 @@ module Garage {
 					lineHeight: newArea.h + "px"
 				});
 
-				this.checkOverlayCurrentTargetButton();
+                //currentTargetの重なり判定
+                this.changeColorOverlayCurrentTargetButton();
 
 				if (this.currentTargetModel_.type === "button") {
 					this._resizeButtonStateItem(this.$currentTarget_, newArea);
@@ -3448,7 +3451,7 @@ module Garage {
 			/*
 			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
 			 */
-			private checkOverlayCurrentTargetButton() {
+			private changeColorOverlayCurrentTargetButton() {
 
                 let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
 
