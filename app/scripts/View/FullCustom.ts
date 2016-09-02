@@ -1026,16 +1026,6 @@ module Garage {
 
 
 
-			/*
-			* ボタンの重なりをチェックする。
-			*/
-			private checkOverlapButtonsExist() {
-				//ボタンの場合、アイテムの重なりをチェックする
-				this._overlapButtonsExist();
-			}
-
-
-
 
 
 			/**
@@ -2599,7 +2589,7 @@ module Garage {
 					
                 });
 
-                this.checkOverlapButtonsExist();
+                this._overlapButtonsExist();
 			}
 
 
