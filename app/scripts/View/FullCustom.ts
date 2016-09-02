@@ -750,8 +750,7 @@ module Garage {
 
                 this._updateItemElementOnCanvas(model);
 
-                //重なり判定を行う
-                this.checkOverlapButtonsExist();
+         
 			}
 
 			/**
@@ -2597,7 +2596,9 @@ module Garage {
 					}
 
 					
-				});
+                });
+
+                this.checkOverlapButtonsExist();
 			}
 
 
