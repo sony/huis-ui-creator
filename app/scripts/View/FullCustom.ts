@@ -3450,66 +3450,40 @@ module Garage {
 			 */
 			private checkOverlayCurrentTargetButton() {
 
+                let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
+
 				//currentTargetがボタンでなかった場合、無視する
 				if (this.currentTargetModel_.type != "button") {
 					return;
 				}
 				if (!this.currentTargetModel_.button) {
 					return;
-				}
+                }
 
-
-				let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
-
+                //currentTargetのエリアを取得
 				if (this.$currentTarget_ == undefined) {
 					console.warn(FUNCTION_NAME + "$currentTarget_ is undefined");
 					return;
 				}
-
 				let currentTargetArea: IArea = {
 					x: parseInt(this.$currentTarget_.css("left"), 10),
 					y: parseInt(this.$currentTarget_.css("top"), 10),
 					w: parseInt(this.$currentTarget_.css("width"), 10),
 					h: parseInt(this.$currentTarget_.css("height"), 10)
 				}
-
 				if (currentTargetArea == null) {
 					console.warn(FUNCTION_NAME + "currentTargetArea is undefined");
 					return;
 				}
 
-
-				//同じページ内のすべてのボタンに対して、CurrentTargetと重なり判定
-				var moduleId = this._getCanvasPageModuleId();
+                //同じページ内の重なっているボタンを取得
+                var moduleId = this._getCanvasPageModuleId();
 				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
 				if (!buttons) {
 					return ;
-				}
-				let overlapButtons: Model.ButtonItem[] = [];
-				let exceptionButtonsCid: string[] = [] 
-				exceptionButtonsCid.push(this.currentTargetModel_.button.cid);
-				for (let i = 0; i < buttons.length; i++){
-					let targetButton: Model.ButtonItem = buttons[i];
-
-					//CurrentTargetのボタンの場合、無視
-					if (targetButton.cid === this.currentTargetModel_.button.cid) {
-						continue;
-					}
-
-					//ボタンと重なっているか判定
-					if (this.isOverlapWithButton(currentTargetArea, targetButton)) {
-						this.changeButtonFrameColorWarn(targetButton);
-						this.changeButtonFrameColorWarn(this.currentTargetModel_.button, true);
-						overlapButtons.push(targetButton);
-						exceptionButtonsCid.push(targetButton.cid);
-						overlapButtons.push(this.currentTargetModel_.button);
-					}
-				}
-
-				//その他の重複ボタン
-				let overlapButtonsOther = this.getOverlapButtonItems(buttons, currentTargetArea);
-				Array.prototype.push.apply(overlapButtons, overlapButtonsOther);
-
+                }
+                //currentTargetのみ、Modelの座標ではなく、cssの座標を用いる。
+				let overlapButtons = this.getOverlapButtonItems(buttons, currentTargetArea);
 				if (overlapButtons.length === 0) {
 					this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
 				}
