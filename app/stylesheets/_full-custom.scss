@@ -201,6 +201,30 @@
             font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
             color: $COLOR_PROPATY_AREA_TEXT;
 
+            #macro-container{
+                #add-signal-btn{
+                    background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+                    margin : 0 auto;
+                    height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
+                    width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
+          
+                    &:hover{
+                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+                    }
+
+                    &:active{
+                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
+                    }
+                }
+
+                .signal-container{
+                    margin-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_MARGIN_TOP;
+                }
+
+            }
+
+
+
             .one-line-label{
                 line-height:$TEXT_HEIGHT_DEFAULT;
                 margin-bottom:$SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;

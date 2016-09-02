@@ -4009,9 +4009,17 @@ module Garage {
 					return;
 				}
 
-				// ボタン情報の外枠部分をレンダリング
-				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-				var $buttonDetail = $(templateButton(button));
+				let propertyArea = new PropertyAreaMacroButton({
+						el: $detail,
+						attributes: {
+							button: button
+						}
+					}
+				);
+
+				propertyArea.render();
+				
+
 			}
 
 
