@@ -131,7 +131,7 @@ module Garage {
                 this.model.state[this.model.default].action = actionsForUpdate;
             }
 
-            //
+            //Invervalのプルダウンが変更されたら呼ばれる
             private onInvervalPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
 
