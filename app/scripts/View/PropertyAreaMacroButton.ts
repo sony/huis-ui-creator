@@ -169,7 +169,7 @@ module Garage {
 
 
             renderView(): JQuery {
-                let FUNCTION_NAME = TAG + ":render : ";
+                let FUNCTION_NAME = TAG + ":renderView : ";
 
 
 				//マクロの基本情報を付与
