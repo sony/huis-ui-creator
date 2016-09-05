@@ -3524,19 +3524,18 @@ module Garage {
 					return;
 				}
 
-				//対象となるボタン数が0ならそのまま返す。
+                //すべてのボタンの色を通常にもどす。
 				if (buttons.length === 0) {
 					return;
 				}
-				//重なっていないボタンの色を通常にもどす。
                 for (let i = 0; i < buttons.length; i++) {
                     this.changeButtonFrameColorNormal(buttons[i]);
                 }
 
-                //対象となるボタン数が0ならそのまま返す。
+                //重なっているボタンを警告色にする
                 if (overlapButtons.length === 0) {
                     return;
-                }
+                }               
                 for (let j = 0; j < overlapButtons.length; j++){
                     this.changeButtonFrameColorWarn(overlapButtons[j]);
                 }
