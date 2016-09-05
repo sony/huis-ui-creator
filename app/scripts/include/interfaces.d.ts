@@ -451,6 +451,15 @@ interface DialogProps {
 	id: string; //<! 表示するダイアログ DOM の id
 	options: CDP.UI.DialogOptions;
 }
+/*
+* @inteface IRemoteInfo
+* brief HuisFilesでおもに利用するリモコンの基礎情報
+*/
+interface IRemoteInfo {
+    remoteId: string;
+    face: IGFace;
+    mastarFace?: IGFace;
+}
 
 //declare const enum EFaceCategory {
 //	TV,

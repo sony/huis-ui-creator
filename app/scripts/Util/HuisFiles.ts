@@ -17,11 +17,6 @@ module Garage {
 			modules: any[];
 		}
 
-		interface IRemoteInfo {
-			remoteId: string;
-			face: IGFace;
-			mastarFace?: IGFace;
-		}
 
 		interface IWaitingRisizeImage {
 			src: string; //! リサイズの original のパス。(PC 上のフルパス)
