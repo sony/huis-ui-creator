@@ -41,6 +41,7 @@ module Garage {
             //}
 
             updateModel() {
+                let FUNCTION_NAME = TAG + "updateModel : ";
 
                 //orderをkeyとしたActionのハッシュを作成。
                 let tmpActionsWithOrder = {};
@@ -139,7 +140,7 @@ module Garage {
 
             //+ボタンがクリックされた場合に呼び出される
             private onPlusBtnClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onPlusBtnClick";
+                let FUNCTION_NAME = TAG + "onPlusBtnClick : ";
 
                 let $signalContainer = this.$el.find("#signals-container");
                 let signalData: any = {};      
@@ -168,6 +169,7 @@ module Garage {
 
 
             render(): PropertyAreaMacroButton {
+                let FUNCTION_NAME = TAG + ":render : ";
 
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
