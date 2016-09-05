@@ -359,8 +359,8 @@
 								this._checkCancel();
                                 let option: CopyOptions = {
                                     preserveTimestamps: true,
-                                    // ボタンデバイス情報のキャッシュファイルは同期しない
-                                    filter: (function (src) { return src.indexOf("_buttondeviceinfo.cache") == -1; })
+                                    // ボタンデバイス情報のキャッシュファイルは本体に送らない
+                                    filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
@@ -391,8 +391,9 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								let filePath = getAbsPath(dstRootDir, file);
-								if (fs.existsSync(filePath)) {
+                                let filePath = getAbsPath(dstRootDir, file);
+                                // ローカルのボタンデバイス情報のキャッシュファイルは削除対象外
+                                if (fs.existsSync(filePath) && filePath.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1) {
 									let fileStat = fs.lstatSync(filePath);
 									if (fileStat) {
 										if (fileStat.isDirectory()) {

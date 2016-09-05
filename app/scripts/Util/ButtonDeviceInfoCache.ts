@@ -3,13 +3,15 @@
 module Garage {
     export module Util {
 
+        export const FILE_NAME_BUTTON_DEVICE_INFO_CACHE = "_buttondeviceinfo.cache";
+
         export class ButtonDeviceInfoCache {
 
             private filePath: string;
 
             constructor(huisFilesRoot: string, remoteId: string) {
 
-                this.filePath = path.join(huisFilesRoot, remoteId, remoteId + "_buttondeviceinfo.cache");
+                this.filePath = path.join(huisFilesRoot, remoteId, remoteId + FILE_NAME_BUTTON_DEVICE_INFO_CACHE);
             }
 
             /**
