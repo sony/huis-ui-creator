@@ -25,7 +25,7 @@ module Garage {
                 try {
                     buttonDeviceInfoCache = fs.readJSONSync(this.filePath);
                 } catch (e) {
-                    console.log("failed to read buttondeviceinfo.cache: " + e);
+                    console.error("failed to read buttondeviceinfo.cache: " + e);
                     return;
                 }
 
@@ -73,6 +73,8 @@ module Garage {
                 let newList: IButtonDeviceInfo[] = [];
 
                 for (let gmodule of gmodules) {
+                    if (!gmodule.button) continue;
+
                     for (let gbutton of gmodule.button) {
                         // 座標からIDを生成/更新 page-x座標-y座標
                         gbutton.deviceInfo.id = gmodule.pageIndex + "-" + gbutton.area.x + "-" + gbutton.area.y;
@@ -84,7 +86,7 @@ module Garage {
                 try {
                     fs.outputJSONSync(this.filePath, newList, { spaces: 2 });
                 } catch (e) {
-                    console.log("failed to write buttondeviceinfo.cache: " + e);
+                    console.error("failed to write buttondeviceinfo.cache: " + e);
                 }
             }
 

@@ -2245,9 +2245,7 @@ module Garage {
 								}
 								$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 
-                            },
-                                // buttonDeviceInfoキャッシュファイルは同期対象外
-                                (path) => { return (path.indexOf("_buttondeviceinfo.cache") != -1) });
+                            });
 						} else {
 							//this.showGarageToast("リモコンを保存しました。");　使われてない
 							Framework.Router.back();
@@ -4326,9 +4324,7 @@ module Garage {
                         } else {
                             Framework.Router.back();
                         }
-                    },
-                        // buttonDeviceInfoキャッシュファイルは同期対象外
-                        (path) => { return (path.indexOf("_buttondeviceinfo.cache") != -1) });
+                    });
                 }
             }
 

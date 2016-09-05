@@ -137,9 +137,7 @@
 				}
 			}
 
-            function diffAsync(dir1: string, dir2: string, excludeFilter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
-                // 同期対象外フィルタが未設定の場合は全てを対象とするフィルタを設定
-                let isExcludePath = excludeFilter || (() => { return false; });
+            function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
 
 				let df = $.Deferred<IDiffInfo>();
 				let promise = CDP.makePromise(df);
@@ -159,8 +157,6 @@
 
 					// dir1にのみ含まれているファイルを算出
                     for (let i = 0, l = dir1Files.length; i < l; i++) {
-                        if (isExcludePath(dir1Files[i])) continue;
-
                         if ($.inArray(dir1Files[i], dir2Files) === -1) {
 							dir1ExtraFiles.push(dir1Files[i]);
 						} else {
@@ -169,8 +165,7 @@
 					}
 					// dir2にのみ含まれているファイルを算出
 					for (let i = 0, l = dir2Files.length; i < l; i++) {
-                        if (!isExcludePath(dir2Files[i]) &&
-                            $.inArray(dir2Files[i], dir1Files) === -1) {
+                        if ($.inArray(dir2Files[i], dir1Files) === -1) {
 							dir2ExtraFiles.push(dir2Files[i]);
 						}
 					}
@@ -235,7 +230,7 @@
 				 * 
 				 * @return {IProgress}
 				 */
-                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void, excludeFilter?: (file: string) => boolean): IProgress {
+                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
 					var dialog: Dialog = null;
 					this._isCanceled = false;
                     var errorValue: Error= null; 
@@ -302,8 +297,7 @@
                                 }
                                 callback(err);
                             }
-                        },
-                        excludeFilter);
+                        });
 					}, 100);
 					return { cancel: this._cancel };
 				}
@@ -313,8 +307,8 @@
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数
 				// TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
-				private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void, excludeFilter?: (path: string) => boolean): void {
-					this._compDirs(srcRootDir, destRootDir, excludeFilter)  // Directory間の差分を取得
+				private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
+					this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
 					.then((diffInfo: IDiffInfo)	=> {
 						// TODO: ディスクの容量チェック
 
@@ -363,9 +357,10 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								let option: CopyOptions = {
-									preserveTimestamps: true
-								}
+                                let option: CopyOptions = {
+                                    preserveTimestamps: true,
+                                    filter: (function (src) { return src.indexOf("_buttondeviceinfo.cache") == -1; })
+                                }
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
@@ -430,13 +425,13 @@
 					}
 				}
 
-                private _compDirs(dir1: string, dir2: string, excludeFilter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
+                private _compDirs(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
 					var df = $.Deferred();
 					var dir1Files, dir2Files;
 					try {
 						this._checkCancel();
 						setTimeout(() => {
-							diffAsync(dir1, dir2, excludeFilter).then((diffInfo) => {
+							diffAsync(dir1, dir2).then((diffInfo) => {
 								df.resolve(diffInfo);
 							});
 						});
