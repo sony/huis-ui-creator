@@ -124,6 +124,7 @@ interface IStateTranslate {
     next: number;
 }
 
+
 /**
  * @interface IGState
  * @brief IState に対して Garage で使用する情報を付加し、image や label を IGXxx に変換したもの
@@ -654,7 +655,12 @@ declare module Garage {
 	/*
 	 * ステートの内容を変更する際の特殊 ID
 	 */
-	var TARGET_ALL_STATE : number;
+    var TARGET_ALL_STATE: number;
+    /*
+     * マクロに登録できる信号の最大数
+     */
+    var MAX_NUM_MACRO_SIGNAL : number;
+
 
 }
 

@@ -74,6 +74,9 @@ module Garage {
 
             private bindedLayoutPage = null;
 
+            //マクロのプロパティView用
+            private macroProperty: PropertyAreaMacroButton;
+
             
 			/**
 			 * construnctor
@@ -100,7 +103,7 @@ module Garage {
 				requirejs(["garage.view.fullcustomcommand"], () => {
 
 					super.onPageShow(event, data);
-
+                    this.macroProperty = null;
 					this.newRemote_ = false;
 
 					this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -3789,7 +3792,13 @@ module Garage {
 				this.$currentTarget_ = null;
 				this.currentTargetModel_ = null;
 				this.currentTargetButtonStates_ = null;
-				this.currentTargetButtonStatesUpdated_ = false;
+                this.currentTargetButtonStatesUpdated_ = false;
+
+                //マクロ用のプロパティのインスタンスを削除
+                if (this.macroProperty != null) {
+                    this.macroProperty.remove();
+                    this.macroProperty = null
+                }
 			}
 
 			/**
@@ -4009,15 +4018,16 @@ module Garage {
 					return;
 				}
 
-				let propertyArea = new PropertyAreaMacroButton({
-						el: $detail,
-						attributes: {
-							button: button
-						}
-					}
-				);
+                if (this.macroProperty == null) {
+                    this.macroProperty = new PropertyAreaMacroButton({
+                        el: $detail,
+                        model: button,
+                    });
+                }
 
-				propertyArea.render();
+                this.macroProperty.render();
+                //listento
+                //this.listenTo(button, "change", 
 				
 
 			}

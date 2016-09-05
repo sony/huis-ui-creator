@@ -629,6 +629,62 @@ module Garage {
 			}
 
 
+            /**
+            * 利用できるリモコンのリストを返す
+            * @return {IRemoteInfo[]}
+            */
+            getSupportedRemoteInfo(): IRemoteInfo[]{
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteNameList :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result :IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++){
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
+
+
+            /*
+            * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
+            */
+            getDeviceInfo(remoteId): IButtonDeviceInfo {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getDevieInfo:";
+
+                if (remoteId == null) {
+                    console.warn(FUNCTION_NAME + "remoteId is null");
+                    return;
+                }
+
+                let functions = this.getMasterFunctions(remoteId);
+                let codeDb = this.getMasterCodeDb(remoteId);
+                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+
+                let deviceInfo: IButtonDeviceInfo = {
+                    functions: functions,
+                    code_db: codeDb
+                };
+
+                if (functionCodeHash != null) {
+                    deviceInfo = {
+                        functions: functions,
+                        code_db: codeDb,
+                        functionCodeHash: functionCodeHash,
+                    };
+                }
+
+                return deviceInfo;
+            }
+
+
 			/**
 			 * PalletAreaに出現するリモコンの数を取得する
 			 * @return PalletAreaに出現するリモコンの数 : number

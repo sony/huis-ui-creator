@@ -90,6 +90,8 @@ module Garage {
 
 		TARGET_ALL_STATE = 999;
 
+        MAX_NUM_MACRO_SIGNAL = 63;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
