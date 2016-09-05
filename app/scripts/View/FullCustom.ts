@@ -4018,14 +4018,21 @@ module Garage {
 					return;
 				}
 
+                $detail.append('<div class = "macro-property-area"></div>');
+
+                var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
+                //var $buttonDetail = $(templateButton(this._macroButtonModel));
+                var $buttonDetail = $(templateButton(this.model));
+                $detail.append($buttonDetail);
+
+
                 if (this.macroProperty == null) {
                     this.macroProperty = new PropertyAreaMacroButton({
-                        el: $detail,
+                        el: $buttonDetail,
                         model: button,
                     });
                 }
-
-                this.macroProperty.render();
+                $detail.append(this.macroProperty.renderView())
                 //listento
                 //this.listenTo(button, "change", 
 				

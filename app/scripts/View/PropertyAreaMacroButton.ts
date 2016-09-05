@@ -168,19 +168,13 @@ module Garage {
             }
 
 
-            render(): PropertyAreaMacroButton {
+            renderView(): JQuery {
                 let FUNCTION_NAME = TAG + ":render : ";
-
-				// ボタン情報の外枠部分をレンダリング
-				var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
-				//var $buttonDetail = $(templateButton(this._macroButtonModel));
-				var $buttonDetail = $(templateButton(this.model));
-				
 
 
 				//マクロの基本情報を付与
 				// ボタンの state 情報を付加
-				var $macroContainer = $buttonDetail.nextAll("#macro-container");
+				var $macroContainer = this.$el.nextAll("#macro-container");
 				let macroData: any = {};
 				let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
 
@@ -216,11 +210,11 @@ module Garage {
                 signalData.id = this.model.default;
 				let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
 				let $signalDetail = $(templateSignal(signalData));
-				$signalContainer.append($signalDetail);
-
-				this.$el.append($buttonDetail);
+                $signalContainer.append($signalDetail);
                 this.actionsCount++;
-				return this;
+
+                return $macroContainer;
+                
 			}
 
 		}
