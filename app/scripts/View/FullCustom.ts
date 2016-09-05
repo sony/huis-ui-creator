@@ -4022,7 +4022,7 @@ module Garage {
 
                 var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
                 //var $buttonDetail = $(templateButton(this._macroButtonModel));
-                var $buttonDetail = $(templateButton(this.model));
+                var $buttonDetail = $(templateButton(button));
                 $detail.append($buttonDetail);
 
 
