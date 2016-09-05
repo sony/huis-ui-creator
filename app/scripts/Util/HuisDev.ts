@@ -359,6 +359,7 @@
 								this._checkCancel();
                                 let option: CopyOptions = {
                                     preserveTimestamps: true,
+                                    // ボタンデバイス情報のキャッシュファイルは同期しない
                                     filter: (function (src) { return src.indexOf("_buttondeviceinfo.cache") == -1; })
                                 }
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);

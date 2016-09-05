@@ -18,6 +18,7 @@ module Garage {
             load(gmodules: IGModule[]) {
 
                 if (!fs.existsSync(this.filePath)) {
+                    console.log("buttondeviceinfo.cache not found: " + this.filePath);
                     return;
                 }
 
@@ -52,13 +53,9 @@ module Garage {
              */
             private find(cache: IButtonDeviceInfo[], page: number, x: number, y: number): IButtonDeviceInfo {
                 for (let buttonDeviceInfo of cache) {
-                    let id: string[] = buttonDeviceInfo.id.split("-");
+                    let id: string = ButtonDeviceInfoCache.createId(page, x, y);
 
-                    if (id.length <= 0) continue;
-
-                    if (+id[0] == page &&
-                        +id[1] == x    &&
-                        +id[2] == y) {
+                    if (buttonDeviceInfo.id == id) {
                         return buttonDeviceInfo;
                     }
                 }
@@ -67,18 +64,27 @@ module Garage {
             }
 
             /**
+             * ButtonDeviceInfoCacheのIDを生成
+             * @param page ボタンのあるページ番号
+             * @param x    ボタンのx座標
+             * @param y    ボタンのy座標
+             * @return IDの文字列
+             */
+            private static createId(page: number, x: number, y: number): string {
+                return page + "-" + x + "-" + y;
+            }
+
+            /**
              * 渡されたIGModule内のボタン情報をキャッシュファイルに出力
              */
-            update(gmodules: IGModule[]) {
+            save(gmodules: IGModule[]) {
                 let newList: IButtonDeviceInfo[] = [];
 
                 for (let gmodule of gmodules) {
                     if (!gmodule.button) continue;
 
                     for (let gbutton of gmodule.button) {
-                        // 座標からIDを生成/更新 page-x座標-y座標
-                        gbutton.deviceInfo.id = gmodule.pageIndex + "-" + gbutton.area.x + "-" + gbutton.area.y;
-
+                        gbutton.deviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y);
                         newList.push(gbutton.deviceInfo);
                     }
                 }

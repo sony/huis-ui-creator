@@ -113,6 +113,7 @@ module Garage {
 
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     var gmodules = this.faceRenderer_canvas_.getModules();
+                    // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
                     this.buttonDeviceInfoCache.load(gmodules);
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
@@ -2223,7 +2224,7 @@ module Garage {
 					return;
                 }
 
-                this.buttonDeviceInfoCache.update(gmodules);
+                this.buttonDeviceInfoCache.save(gmodules);
 
 				huisFiles.updateFace(remoteId, faceName, gmodules)
 					.always(() => {
