@@ -9,6 +9,7 @@
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
+/// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 
 /**
@@ -218,6 +219,7 @@ interface IButton {
  * @brief ボタンがひも付けられている機器の情報と使用できる機能
  */
 interface IButtonDeviceInfo {
+    id: string; // ボタン識別子
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
 	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
