@@ -948,7 +948,7 @@ module Garage {
                     });
 
                     //currentTargetの重なり判定
-                    this.changeColorOverlayCurrentTargetButton();
+                    this.changeColorOverlapedButtonsWithCurrentTargetButton();
 				}
 			}
 
@@ -1124,7 +1124,7 @@ module Garage {
 				});
 
                 //currentTargetの重なり判定
-                this.changeColorOverlayCurrentTargetButton();
+                this.changeColorOverlapedButtonsWithCurrentTargetButton();
 
 				if (this.currentTargetModel_.type === "button") {
 					this._resizeButtonStateItem(this.$currentTarget_, newArea);
@@ -3407,7 +3407,7 @@ module Garage {
 			/*
 			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
 			 */
-			private changeColorOverlayCurrentTargetButton() {
+            private changeColorOverlapedButtonsWithCurrentTargetButton() {
 
                 let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
 
@@ -3507,7 +3507,7 @@ module Garage {
 			}
 
 			/*
-			* 重なっていないボタンを通常色に戻す。
+			* 重なっているボタンを警告色に変える。
 			* @param overlapedButtons :{Model.ButtonItem[]} 重なっているボタンの配列
 			* @param buttons:{Model.ButtonItem[]} 対象となるボタン配列
 			*/
@@ -3528,32 +3528,19 @@ module Garage {
 				if (buttons.length === 0) {
 					return;
 				}
-
 				//重なっていないボタンの色を通常にもどす。
-				for (let i = 0; i < buttons.length; i++) {
-					let targetButton = buttons[i];
-					let isOverlapButton: boolean = false;
+                for (let i = 0; i < buttons.length; i++) {
+                    this.changeButtonFrameColorNormal(buttons[i]);
+                }
 
-					//重なっているボタン数が０ならば無条件でボタンの色を戻す。
-					if (overlapButtons.length == 0) {
-						this.changeButtonFrameColorNormal(targetButton);
-						continue;
-					}
-
-					for (let j = 0; j < overlapButtons.length; j++) {
-						// 重なっているボタンか判定
-						if (targetButton.cid === overlapButtons[j].cid) {
-							isOverlapButton = true;
-							this.changeButtonFrameColorWarn(overlapButtons[j]);
-						}
-					}
-
-					//重なっていないボタンならば、色を元に戻す
-					if (!isOverlapButton) {
-						this.changeButtonFrameColorNormal(targetButton);
-					}
-				}
-				
+                //対象となるボタン数が0ならそのまま返す。
+                if (overlapButtons.length === 0) {
+                    return;
+                }
+                for (let j = 0; j < overlapButtons.length; j++){
+                    this.changeButtonFrameColorWarn(overlapButtons[j]);
+                }
+					
 			}
 
 
