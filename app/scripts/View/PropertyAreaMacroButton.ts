@@ -44,13 +44,19 @@ module Garage {
                 // Please add events
                 return {
                     "click #add-signal-btn": "onPlusBtnClick",
-                    "change .interval-input" : "onInvervalPullDownListChanged"
+                    "change .interval-input": "onInvervalPullDownListChanged",
+                    "change .state-action-input" : "onActionPullDownListChanged"
                 };
             }
 
 
+            getModel():Model.ButtonItem {
+                return this.model;
+            }
+
             //remove() {
             //}
+
 
             updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
@@ -127,7 +133,8 @@ module Garage {
                 //order順に並び変えて配列にいれる。
                 let actionsForUpdate: IAction[] = [];
                 let keys = Object.keys(tmpActionsWithOrder);
-                let keysNumCount: number = 0;;                for (let i = 0; i < MAX_NUM_MACRO_SIGNAL; i++) {
+                let keysNumCount: number = 0;;
+                for (let i = 0; i < MAX_NUM_MACRO_SIGNAL; i++) {
 
                     //keyに i がある場合、push
                     if (keys.indexOf(i.toString()) != -1) {
@@ -140,13 +147,24 @@ module Garage {
                     }
                 }
 
-                this.model.state[this.model.default].action = actionsForUpdate;
+                //マクロボタンのstateは、デフォルト一つとする。
+                this.defaultState.action = actionsForUpdate;
+                let states: IGState[] = [];
+                
+                states.push(this.defaultState);
+
+                this.model.state = states;
             }
 
             //Invervalのプルダウンが変更されたら呼ばれる
             private onInvervalPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
+                this.updateModel();
+            }
 
+            //Actionを変更させたときに呼ばれる
+            private onActionPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
                 this.updateModel();
             }
 
@@ -168,7 +186,7 @@ module Garage {
                     action: empltyAction,
                     id: this.defaultState.id,
                     remotesList: this.availableRemotelist,
-                }
+                };
 
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");

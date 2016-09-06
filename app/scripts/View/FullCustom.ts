@@ -4223,11 +4223,38 @@ module Garage {
                     });
                 }
                 $detail.append(this.macroProperty.renderView())
-                //listento
-                //this.listenTo(button, "change", 
-				
 
+                //モデルが更新されたとき
+                //listento
+                this.listenTo(this.macroProperty.model, "change", (event: JQueryEventObject) => {
+                    let macroButton: Model.ButtonItem = this.macroProperty.getModel();
+                    if (macroButton == null) {
+                        return;
+                    }
+
+                    this.updateButtonItemModel(macroButton);
+
+                });
+
+                
 			}
+
+
+            private updateButtonItemModel(button : Model.ButtonItem) {
+                let FUNCTION_NAME = TAG + "updateButtonItemModel";
+
+                let currentButtonState = this.currentTargetButtonStates_;
+                let newButtonState = button.state;
+
+                // 状態を更新する
+                var memento: IMemento = {
+                    target: button,
+                    previousData: { "state": currentButtonState },
+                    nextData: { "state": newButtonState }
+                };
+                var mementoCommand = new MementoCommand(memento);
+                this.commandManager_.invoke(mementoCommand);   
+            }
 
 
 			/**
