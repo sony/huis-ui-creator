@@ -478,7 +478,36 @@ module Garage {
 				return false;
 
 			}
-		
+
+			/*
+			* ふたつのエリアが重なっているか判定する
+			* @param area1{IArea}
+			* @param area2{IArea}
+			* @return boolean
+			*/
+			protected isOverlap(area1: IArea, area2: IArea): boolean {
+				let FUNCTION_NAME = TAG_BASE + "isOverlap: ";
+
+				if (area1 == null) {
+					console.warn(FUNCTION_NAME + "area1 is null");
+					return false;
+				}
+
+				if (area2 == null) {
+					console.warn(FUNCTION_NAME + "area2 is null");
+					return false;
+				}
+
+				if (area1.x < area2.x + area2.w && area2.x < area1.x + area1.w) {
+					if (area1.y < area2.y + area2.h && area2.y < area1.y + area1.h) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+
 
         }
     }
