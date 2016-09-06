@@ -306,17 +306,9 @@ module Garage {
 					let brand = param1,
 						deviceType = param2,
 						modelNumber = param3;
-					for (let i = 0, l = this.remoteList_.length; i < l; i++) {
-						let remoteId = this.remoteList_[i].remote_id;
-						let codeDb = this.getMasterCodeDb(remoteId);
-						if (codeDb) {
-							if (codeDb.brand === brand &&
-								codeDb.device_type === deviceType &&
-								(!modelNumber || codeDb.model_number === modelNumber)) {
-								return this._getMasterFunctions(remoteId);
-							}
-						}
-					}
+
+					return this._getMasterFunctions(this.getRemoteIdByCodeDbElements(brand,deviceType, modelNumber));
+
 				} else { // param2 が指定されていない場合は、param1: remoteId
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
@@ -357,7 +349,32 @@ module Garage {
 				}
 
 				return null;
+			}
 
+			/*
+			* 同じbrand, deviceType, modelNumberをもつリモコンのremoteIdを取得する。
+			* @param brand{string} 機器のブランド
+			* @param deviceType{string} 機器のタイプ
+			* @param modelNumber{string} 機器のモデルナンバー
+			* @return remoteId{string}リモコンのID
+			*/
+
+			getRemoteIdByCodeDbElements(brand, deviceType, modelNumber):string {
+				let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
+	
+				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+					let remoteId = this.remoteList_[i].remote_id;
+					let codeDb = this.getMasterCodeDb(remoteId);
+					if (codeDb) {
+						if (codeDb.brand === brand &&
+							codeDb.device_type === deviceType &&
+							(!modelNumber || codeDb.model_number === modelNumber)) {
+							return remoteId;
+						}
+					}
+				}
+
+				return null;
 			}
 
 			/**

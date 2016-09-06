@@ -279,6 +279,7 @@
       <DependentUpon>init.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\ButtonDeviceInfoCache.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ElectronDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\GarageFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />

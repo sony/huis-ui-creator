@@ -137,7 +137,8 @@
 				}
 			}
 
-			function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+            function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+
 				let df = $.Deferred<IDiffInfo>();
 				let promise = CDP.makePromise(df);
 
@@ -155,8 +156,8 @@
 					let temp = [];
 
 					// dir1にのみ含まれているファイルを算出
-					for (let i = 0, l = dir1Files.length; i < l; i++) {
-						if ($.inArray(dir1Files[i], dir2Files) === -1) {
+                    for (let i = 0, l = dir1Files.length; i < l; i++) {
+                        if ($.inArray(dir1Files[i], dir2Files) === -1) {
 							dir1ExtraFiles.push(dir1Files[i]);
 						} else {
 							temp.push(dir1Files[i]);
@@ -164,7 +165,7 @@
 					}
 					// dir2にのみ含まれているファイルを算出
 					for (let i = 0, l = dir2Files.length; i < l; i++) {
-						if ($.inArray(dir2Files[i], dir1Files) === -1) {
+                        if ($.inArray(dir2Files[i], dir1Files) === -1) {
 							dir2ExtraFiles.push(dir2Files[i]);
 						}
 					}
@@ -296,7 +297,7 @@
                                 }
                                 callback(err);
                             }
-						});
+                        });
 					}, 100);
 					return { cancel: this._cancel };
 				}
@@ -356,9 +357,11 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								let option: CopyOptions = {
-									preserveTimestamps: true
-								}
+                                let option: CopyOptions = {
+                                    preserveTimestamps: true,
+                                    // ボタンデバイス情報のキャッシュファイルは本体に送らない
+                                    filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
+                                }
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
@@ -388,8 +391,9 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								let filePath = getAbsPath(dstRootDir, file);
-								if (fs.existsSync(filePath)) {
+                                let filePath = getAbsPath(dstRootDir, file);
+                                // ローカルのボタンデバイス情報のキャッシュファイルは削除対象外
+                                if (fs.existsSync(filePath) && filePath.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1) {
 									let fileStat = fs.lstatSync(filePath);
 									if (fileStat) {
 										if (fileStat.isDirectory()) {
@@ -423,7 +427,7 @@
 					}
 				}
 
-				private _compDirs(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+                private _compDirs(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
 					var df = $.Deferred();
 					var dir1Files, dir2Files;
 					try {

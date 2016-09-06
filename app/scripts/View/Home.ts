@@ -304,7 +304,7 @@ module Garage {
 							});
 						} else {
 						}
-					});
+                    });
 				}
             }
 
