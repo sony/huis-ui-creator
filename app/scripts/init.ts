@@ -91,6 +91,8 @@ module Garage {
 		TARGET_ALL_STATE = 999;
 
         MAX_NUM_MACRO_SIGNAL = 63;
+        DEFAULT_INTERVAL_MACRO = 0.4;
+
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

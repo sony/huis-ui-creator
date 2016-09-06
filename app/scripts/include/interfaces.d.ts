@@ -669,7 +669,14 @@ declare module Garage {
      * マクロに登録できる信号の最大数
      */
     var MAX_NUM_MACRO_SIGNAL : number;
-
+    /*
+     * マクロを設定する際のデフォルトInverval秒数
+     */
+    var DEFAULT_INTERVAL_MACRO: number;
+     /*
+      * マクロを設定する際のデフォルトInverval秒数
+      */
+    var DEFAULT_INTERVAL_MACRO: number;
 
 }
 
