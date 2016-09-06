@@ -82,7 +82,7 @@ module Garage {
 
                     //remoteIdを仮取得
                     let tmpRemoteId = $target.find("select.remote-input").val();
-                    if (tmpRemoteId == null) {
+                    if (tmpRemoteId == null || tmpRemoteId == "none") {
                         continue;
                     }
 
