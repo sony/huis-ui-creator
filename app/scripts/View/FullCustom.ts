@@ -698,20 +698,17 @@ module Garage {
 							let functions = huisFiles.getMasterFunctions(remoteId);
 							let codeDb = huisFiles.getMasterCodeDb(remoteId);
 							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+							let remoteName = huisFiles.getFace(remoteId).name;
 
 							let deviceInfo: IButtonDeviceInfo = {
                                 id: "",
                                 functions: functions,
+								remoteName: remoteName,
 								code_db: codeDb
 							};
 
-							if (functionCodeHash != null) {
-                                deviceInfo = {
-                                    id: "",
-									functions: functions,
-									code_db: codeDb,
-									functionCodeHash: functionCodeHash,
-								};
+                            if (functionCodeHash != null) {
+                                deviceInfo.functionCodeHash = functionCodeHash;
 							}
 
 							targetModel.button.deviceInfo = deviceInfo;
@@ -1547,8 +1544,18 @@ module Garage {
 				$tooltip.removeClass("disable");
 
 				//ツールチップ内の文言を代入
-				let deviceType: string = this.getButtonDeviceType($button);
-				$tooltip.find(".device-type").html(deviceType);
+
+				let deviceInfo: IButtonDeviceInfo = this.getButtonDeviceInfo($button);
+
+				// リモコン名を取得できない場合、デバイスタイプを表示する。(ver1.3対策)
+				let remoteInfo: string = this.getButtonDeviceType($button);
+				if (deviceInfo) {
+					if (deviceInfo.remoteName) {
+						remoteInfo = deviceInfo.remoteName;
+					}
+				}
+
+				$tooltip.find(".remote-info").html(remoteInfo);
 
 				//ファンクション情報をローカライズ
 				let outputFunctionName = functions[0];
@@ -1651,9 +1658,45 @@ module Garage {
 				}
 
 
-				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();
-				
+				return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+
 			}
+
+
+			/*
+			* ボタンのリモコン名を取得
+			* @ $button : JQuery ボタンのJquery要素
+			* @ return : string  リモコン名
+			*/
+			private getButtonDeviceInfo($button: JQuery): IButtonDeviceInfo {
+				var FUNCTION_NAME = this.FILE_NAME + " getButtonRemoteName :";
+
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$button is Undefined");
+					return;
+				}
+
+				var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
+					return;
+				}
+
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;
+				}
+
+				let deviceInfo: IButtonDeviceInfo= buttonModel.button.deviceInfo;
+				if (deviceInfo == null) {
+					console.warn(FUNCTION_NAME + "deviceInfo is not button model");
+					return;
+				}
+
+				return deviceInfo;
+			}
+
 
 			/*
 			* リモコン名のテキストフィールドの値が変わったときに呼び出される
@@ -2698,7 +2741,8 @@ module Garage {
 					db_codeset: string,
 					model_number: string,
 					functions: string[],
-					functionCodeHash: IStringStringHash;
+					functionCodeHash: IStringStringHash,
+					remoteName:string;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
@@ -2707,6 +2751,11 @@ module Garage {
 					if (deviceInfo.functionCodeHash){
 						functionCodeHash = deviceInfo.functionCodeHash;
 					}
+
+					if (deviceInfo.remoteName) {
+						remoteName = deviceInfo.remoteName;
+					}
+					
 				}
 
 				
@@ -4131,11 +4180,15 @@ module Garage {
 							codeDb.device_type != " " && codeDb.device_type != undefined &&
 							codeDb.model_number != " " && codeDb.device_type != undefined) {
 							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
+							let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+							deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
+							deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+
 						} else if(codes != null){
 							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
 							let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
 							if (remoteId != null) {
+								deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
 								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
 								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
 							}
