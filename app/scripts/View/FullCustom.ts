@@ -3442,13 +3442,18 @@ module Garage {
 					return ;
                 }
                 //currentTargetのみ、Modelの座標ではなく、cssの座標を用いる。
-				let overlapButtons = this.getOverlapButtonItems(buttons, currentTargetArea);
-				if (overlapButtons.length === 0) {
+                let overlapButtons = this.getOverlapButtonItems(buttons, currentTargetArea);
+
+                //overlapButtonsがundefinedのとき、重なっているボタン数が0のとき、currentTargetModelを通常色に
+                if (overlapButtons == null || overlapButtons.length === 0) {
 					this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
-				}
+                }
 
-				this.changeOverlapButtonsFrame(overlapButtons, buttons);
-
+                //undefinedのとき、空の配列にする。
+                if (overlapButtons == null) {
+                    overlapButtons = [];
+                }
+                this.changeOverlapButtonsFrame(overlapButtons, buttons);
 			}
 
 			/*
@@ -3605,11 +3610,19 @@ module Garage {
 
 					let overlapButtons: Model.ButtonItem[] = this.getOverlapButtonItems(buttons);
 
-					if (0 < overlapButtons.length) {
-						result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2") + overlapButtons.length + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3");
-					}
+                    if (overlapButtons) {
+                        if (0 < overlapButtons.length) {
+                            result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2") + overlapButtons.length + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3");
+                        }
+                        
+                    }
 
-					this.changeOverlapButtonsFrame(overlapButtons,buttons);
+                    //undefinedのとき、からの配列にする
+                    if (overlapButtons != null) {
+                        overlapButtons = [];
+                    }
+
+                    this.changeOverlapButtonsFrame(overlapButtons, buttons);
 
 
 				}
