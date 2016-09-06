@@ -227,15 +227,24 @@ module Garage {
 					}
 				}
 
-				if (state.label) {
-					macroData.label = state.label[0];
+                let labelSize: number = null;
+                if (state.label) {
+                    let label: IGLabel = state.label[0];
+                    macroData.label = label;
+                    labelSize = label.size;
 				}
 
 				let $macroDetail = $(templateMacro(macroData));
 				$macroContainer.append($macroDetail);
 
-
-
+                
+                //テキストラベルのpullDownを変更する。
+                var $textSize = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
+                
+                if (labelSize != null) {
+                    $textSize.val(labelSize.toString());
+                }
+                
                 let actions:IAction[] = state.action;
 
 
