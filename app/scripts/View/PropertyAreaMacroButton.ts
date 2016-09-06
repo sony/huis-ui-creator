@@ -10,20 +10,32 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyArea] ";
 
+        //信号選択用のプルダウンを表示するための情報
+        interface ISignalData {
+            order: number; //マクロでの信号の順番
+            action: IAction; //表示するAction
+            id: number;    // マクロボタンのStateId
+            remoteList : IRemoteInfo[] //現在利用可能なリモコンのリスト
+        }
+
         export class PropertyAreaMacroButton extends Backbone.View<Model.ButtonItem> {
 
 			private templateItemDetailFile_: string;
             private actionsCount : number;
             private defaultStateID: number;
+            private availableRemotelist: IRemoteInfo[];
+            private defaultState : IGState; // マクロボタンDefaultのstate
 
 			/**
 			 * constructor
 			 */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
-                this.actionsCount = 0;
-				this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
+                this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfo();
 
+                //stateIdはデフォルト値とする。
+                this.defaultState = this.model.state[this.model.default];
 			}
 
 		
@@ -47,7 +59,7 @@ module Garage {
                 let tmpActionsWithOrder = {};
 
                 //現状表示されている 各信号のJquery値を取得
-                let $signalContainers : JQuery = this.$el.find(".signal-container");
+                let $signalContainers : JQuery = this.$el.find(".signal-container-element");
 
                 // 信号のJqueryがない場合、return
                 if ($signalContainers.length == 0) {
@@ -143,27 +155,31 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onPlusBtnClick : ";
 
                 let $signalContainer = this.$el.find("#signals-container");
-                let signalData: any = {};      
-                //ステートは、ボタンのデフォルトとする。
-                signalData.id = this.model.default;
-                //signalData.order = this._macroButtonModel.state[signalData.id].action.length;
-                signalData.order = this.actionsCount;
-                signalData.remotes = huisFiles.getSupportedRemoteInfo();
+                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
-                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
-                let $signalDetail = $(templateSignal(signalData));
-                $signalContainer.append($signalDetail);
-                let $targetSignalContainer = $signalContainer.find(".signal-container[data-signal-order=\"" + signalData.order + "\"]");
+                let empltyAction: IAction = {
+                    input: tmpInput,
+                    interval: DEFAULT_INTERVAL_MACRO,
+                };
+                let tmpOrder = this.defaultState.action.length;
 
-                //インターバル用のテンプレートを読み込み
-                let $intervalContainer = $targetSignalContainer.find("#signal-interval-container");
-                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-interval", this.templateItemDetailFile_);
-                let $intervalDetail = $(templateInterval(signalData));
-                $intervalContainer.append($intervalDetail);
+                let signalData: ISignalData = {
+                    order: tmpOrder,
+                    action: empltyAction,
+                    id: this.defaultState.id,
+                    remoteList: this.availableRemotelist,
+                }
+
+                //すでに、同じorderのDOMがない場合には追加
+                let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
+                if ($newSignalContainerElement.length == 0) {
+                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                } else {
+                    console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
+                }
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-                this.actionsCount++;
 
             }
 
@@ -178,10 +194,11 @@ module Garage {
 				let macroData: any = {};
 				let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
 
-                let id = this.model.default;
+                let state = this.defaultState;
+                let id : number = this.defaultState.id;
                 macroData.id = id;
 
-				let state =  this.model.state[id];
+				
 				let resizeMode: string;
 
 				if(state.image) {
@@ -201,21 +218,110 @@ module Garage {
 
 
 
-				//１シグナル分追加する。
-				let $signalContainer = $macroContainer.find("#signals-container");
-				let signalData: any = {};
-                signalData.order = 0;
-                signalData.remotes = huisFiles.getSupportedRemoteInfo();
-                //ステートは、ボタンのデフォルトとする。
-                signalData.id = this.model.default;
-				let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
-				let $signalDetail = $(templateSignal(signalData));
-                $signalContainer.append($signalDetail);
-                this.actionsCount++;
+                let actions:IAction[] = state.action;
+
+
+				//最初の１シグナル分は特例で、追加する。
+                let $signalContainer = $macroContainer.find("#signals-container");
+                let signalData: ISignalData = {
+                    order: 0,
+                    action: actions[0],
+                    id: id,
+                    remoteList: this.availableRemotelist,
+                }
+                this.renderSignalDetailWithoutInterval(signalData,$signalContainer);
+
+                for (let i = 1; i < actions.length; i++){
+                    signalData.order = i;
+                    signalData.action = actions[i];
+                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                }
+                
+
 
                 return $macroContainer;
                 
 			}
+
+
+            /*
+            * インターバルなしの一回文のシグナルのJQueryを取得する。
+            * @param signalData{ISignalData} 表示する内容のアクション
+            * @param $signalContainer{JQuery} 描画する先のJQuery
+            * @return {JQuery}appendして描画するためのJQuery
+            */
+            private renderSignalDetailWithoutInterval(signalData:ISignalData, $signalContainer: JQuery){
+                let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
+
+                if (signalData == null) {
+                    console.warn(FUNCTION_NAME + "signalData is null");
+                    return;
+                }
+
+                if ($signalContainer == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainer is null");
+                    return;
+                }
+   
+                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
+                $signalContainer.append( $(templateSignal(signalData)));
+            }
+
+            /*
+            * インターバルつきの一回文のシグナルのJQueryを取得する。
+            * @param signalData{ISignalData} 表示する内容のアクション
+            * @param $signalContainer{JQuery} 描画する先のJQuery
+            * @return {JQuery}appendして描画するためのJQuery
+            */
+            private renderSignalDetailWithInterval(signalData: ISignalData, $signalContainer: JQuery) {
+                let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
+
+                if (signalData == null) {
+                    console.warn(FUNCTION_NAME + "signalData is null");
+                    return;
+                }
+
+                if ($signalContainer == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainer is null");
+                    return;
+                }
+
+                //interval以外を描写
+                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+
+                let $targetSignalContainer = $signalContainer.find(".signal-container-element[data-signal-order=\"" + signalData.order + "\"]");
+                //インターバル用のテンプレートを読み込み
+                let $intervalContainer = $targetSignalContainer.find("#signal-interval-container");
+                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-interval", this.templateItemDetailFile_);
+                let $intervalDetail = $(templateInterval(signalData));
+                $intervalContainer.append($intervalDetail);
+
+                //それぞれの表示を変えていく。
+
+                //inverfalの表示を変更
+                if (signalData.action.interval) {
+                    $targetSignalContainer.find("select.interval-input").val(signalData.action.interval.toString());
+
+                }
+
+                /*
+                //リモコンの表示を変更
+                if (signalData.action.code_db.a){
+                }
+                let tmpRemoteId = $target.find("select.remote-input").val();
+                if (tmpRemoteId == null) {
+                    continue;
+                }
+
+                //functionを仮取得
+                let tmpFunction = $target.find("select.function-input").val();
+                if (tmpFunction == "none") {
+                    tmpFunction = null;
+                }*/
+
+
+            }
+
 
 		}
 	}
