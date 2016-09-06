@@ -15,7 +15,7 @@ module Garage {
             order: number; //マクロでの信号の順番
             action: IAction; //表示するAction
             id: number;    // マクロボタンのStateId
-            remoteList : IRemoteInfo[] //現在利用可能なリモコンのリスト
+            remotesList : IRemoteInfo[] //現在利用可能なリモコンのリスト
         }
 
         export class PropertyAreaMacroButton extends Backbone.View<Model.ButtonItem> {
@@ -167,7 +167,7 @@ module Garage {
                     order: tmpOrder,
                     action: empltyAction,
                     id: this.defaultState.id,
-                    remoteList: this.availableRemotelist,
+                    remotesList: this.availableRemotelist,
                 }
 
                 //すでに、同じorderのDOMがない場合には追加
@@ -227,7 +227,7 @@ module Garage {
                     order: 0,
                     action: actions[0],
                     id: id,
-                    remoteList: this.availableRemotelist,
+                    remotesList: this.availableRemotelist,
                 }
                 this.renderSignalDetailWithoutInterval(signalData,$signalContainer);
 

@@ -396,9 +396,9 @@
             <div class="custom-select">
                 <select class="remote-input" id="select-macro-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" date-signal-order = "{{order}}">
                     <option value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
-                    {{#remotes}}
+                    {{#remotesList}}
                     <option value="{{remoteId}}" >{{face.name}}</option>
-                    {{/remotes}}
+                    {{/remotesList}}
                 </select>
             </div>
 
