@@ -126,7 +126,12 @@
                     &.background {
                         cursor: default;
                     }
+
                 }
+
+				.button-item.overlayed{
+					border-color : $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
+				}
 
                 .item-resizer {
                     position: absolute;

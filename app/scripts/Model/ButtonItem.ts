@@ -175,7 +175,8 @@ module Garage {
 							let action = stateModel.action[0];
 							if (action && action.code_db) {
 								let code_db = action.code_db;
-								let deviceInfo: IButtonDeviceInfo = {
+                                let deviceInfo: IButtonDeviceInfo = {
+                                    id: "",
 									code_db: code_db,
 									functions: []
 								};
