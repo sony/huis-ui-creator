@@ -602,12 +602,12 @@ module Garage {
 
             }
 
-			/**
-			 * 機器の master face に記述されている最初の bluetooth_data を取得する。
-			 * 
-			 * @param remoteId {string} リモコンの remoteId
-			 * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
-			 */
+            /**
+             * 機器の master face に記述されている最初の bluetooth_data を取得する。
+             *
+             * @param remoteId {string} リモコンの remoteId
+             * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
+             */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
                 let masterFace: IGFace = this._getMasterFace(remoteId);
                 if (!masterFace) {

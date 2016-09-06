@@ -657,12 +657,13 @@ declare module Garage {
 	var DEVICE_TYPE_AIR_CLEANER: string;
 	var DEVICE_TYPE_CUSOM: string;
 	var DEVICE_TYPE_FULL_CUSTOM: string;
-	var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_SPECIAL: string;
 
 	/**
 	* PalletAreaで表示されないデバイスタイプ
 	*/
-	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+    var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
 
 	/*
 	* CanvasAreaのグリッドサイズ
