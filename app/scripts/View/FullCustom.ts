@@ -4241,7 +4241,8 @@ module Garage {
                 
 
                 //モデルが更新されたときfullcustom側のmodelも更新する
-                //listento
+                //TODO:maximum stackを解消する
+         
                 this.listenTo(this.macroProperty.model, "change", (event: JQueryEventObject) => {
                     let macroButton: Model.ButtonItem = this.macroProperty.getModel();
                     if (macroButton == null) {
