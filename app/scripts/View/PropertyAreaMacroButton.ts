@@ -41,6 +41,13 @@ module Garage {
 
 
 
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// event method
+            /////////////////////////////////////////////////////////////////////////////////////////
+
             events() {
                 // Please add events
                 return {
@@ -49,19 +56,125 @@ module Garage {
                     "change .state-action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
-                    "change select" : "onAnyPulllDownChanged"
+                    "change select": "onAnyPulllDownChanged",
+                    "click #delete-signal-area .delete-signal" : "onDeleteButtonClick"
                 };
             }
 
+            //プルダウンのいずれかが変更されたときに呼ばれる
+            private onAnyPulllDownChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
+                this.controlPlusButtonEnableDisable();
+            }
 
+            //Invervalのプルダウンが変更されたら呼ばれる
+            private onInvervalPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
+                this.updateModel();
+            }
+
+            //Actionを変更させたときに呼ばれる
+            private onActionPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
+                this.updateModel();
+            }
+
+            //リモコン選択用のプルダウンが変更されたときに呼ばれる
+            private onRemotePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onRemotePullDownListChanged";
+                let $target = $(event.currentTarget);
+                let remoteId = $target.val();
+
+                //remoteIdがない場合、処理を終了する。
+                if (remoteId == "none" || remoteId == null) {
+                    return;
+                }
+
+                // プルダウンに設定されている Actionの順番を取得
+                let order = this.getOrderFrom($target);
+                if (order == null) {
+                    return;
+                }
+
+                let inputSignalData: ISignalData = {
+                    id: this.defaultState.id,
+                    order: order
+                }
+
+                //すでに、function選択用PullDownがある場合、削除する。
+                this.removeFunctionPullDown(order);
+
+                //Function選択用のPullダウンにFunctionを設定する。
+                this.renderFunctionsOf(inputSignalData);
+
+                //remoeIdを選ぶとき、
+            }
+
+            //機能選択用のプルダウンが変更されたときに呼び出される
+            private onFunctionPulllDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
+                this.updateModel();
+            }
+
+            //+ボタンがクリックされた場合に呼び出される
+            private onPlusBtnClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onPlusBtnClick : ";
+
+                let $target = $(event.currentTarget);
+                if ($target.hasClass("disabled")) {
+                    return;
+                }
+
+                let $signalContainer = this.$el.find("#signals-container");
+                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
+
+                let empltyAction: IAction = {
+                    input: tmpInput,
+                    interval: DEFAULT_INTERVAL_MACRO,
+                };
+                let tmpOrder = this.defaultState.action.length;
+
+                let signalData: ISignalData = {
+                    order: tmpOrder,
+                    action: empltyAction,
+                    id: this.defaultState.id,
+                    remotesList: this.availableRemotelist,
+                };
+
+                //すでに、同じorderのDOMがない場合には追加
+                let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
+                if ($newSignalContainerElement.length == 0) {
+                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                } else {
+                    console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
+                }
+
+                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                $('.custom-select').trigger('create');
+
+                this.controlPlusButtonEnableDisable();
+
+            }
+
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// public method
+            /////////////////////////////////////////////////////////////////////////////////////////
+
+            /*
+            *保持しているモデルを取得する
+            * @return {Model.BUttonItem}
+            */
             getModel(): Model.ButtonItem {
                 return this.model;
             }
 
-            //remove() {
-            //}
-
-
+            /*
+             *保持しているモデルをプルダウンの内容に合わせてアップデートする。
+             */
             updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
@@ -168,102 +281,9 @@ module Garage {
                 this.model.state = states;
             }
 
-            //プルダウンのいずれかが変更されたときに呼ばれる
-            private onAnyPulllDownChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
-                this.controlPlusButtonEnableDisable();
-            }
-
-            //Invervalのプルダウンが変更されたら呼ばれる
-            private onInvervalPullDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
-                this.updateModel();
-            }
-
-            //Actionを変更させたときに呼ばれる
-            private onActionPullDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
-                this.updateModel();
-            }
-
-            //リモコン選択用のプルダウンが変更されたときに呼ばれる
-            private onRemotePullDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onRemotePullDownListChanged";
-                let $target = $(event.currentTarget);
-                let remoteId = $target.val();
-
-                //remoteIdがない場合、処理を終了する。
-                if (remoteId == "none" || remoteId == null) {
-                    return;
-                }
-
-                // プルダウンに設定されている Actionの順番を取得
-                let order = this.getOrderFrom($target);
-                if (order == null) {
-                    return;
-                }
-
-                let inputSignalData: ISignalData = {
-                    id: this.defaultState.id,
-                    order: order
-                }
-
-                //すでに、function選択用PullDownがある場合、削除する。
-                this.removeFunctionPullDown(order);
-
-                //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(inputSignalData);
-
-                //remoeIdを選ぶとき、
-            }
-
-            //機能選択用のプルダウンが変更されたときに呼び出される
-            private onFunctionPulllDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
-                this.updateModel();
-            }
-
-            //+ボタンがクリックされた場合に呼び出される
-            private onPlusBtnClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onPlusBtnClick : ";
-
-                let $target = $(event.currentTarget);
-                if ($target.hasClass("disabled")) {
-                    return;
-                }
-
-                let $signalContainer = this.$el.find("#signals-container");
-                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
-
-                let empltyAction: IAction = {
-                    input: tmpInput,
-                    interval: DEFAULT_INTERVAL_MACRO,
-                };
-                let tmpOrder = this.defaultState.action.length;
-
-                let signalData: ISignalData = {
-                    order: tmpOrder,
-                    action: empltyAction,
-                    id: this.defaultState.id,
-                    remotesList: this.availableRemotelist,
-                };
-
-                //すでに、同じorderのDOMがない場合には追加
-                let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
-                if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
-                } else {
-                    console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
-                }
-
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
-
-                this.controlPlusButtonEnableDisable();
-
-            }
-
-
+            /*
+            * 保持しているモデルの内容でプルダウンを描画する
+            */
             renderView(): JQuery {
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
@@ -346,6 +366,13 @@ module Garage {
 
             }
 
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// private method
+            /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
             * インターバルなしの一回文のシグナルのJQueryを取得する。
