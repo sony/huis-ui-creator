@@ -732,10 +732,13 @@
     #face-dummy-area {
         position: absolute;
         transform: scale(0.5);
-		transform-origin: left top;
+        transform-origin: left top;
         z-index: 101;
-
         
+        .item {
+            background-color:$COLOR_DUMMY_ITEM_BACKGROUND;
+        }
+
         .item-resizer {
             position: absolute;
             box-sizing:border-box;

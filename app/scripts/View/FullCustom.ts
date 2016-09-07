@@ -119,11 +119,6 @@ module Garage {
 					this.bindedLayoutPage = this._pageLayout.bind(this);
 					$(window).on("resize", $.proxy(this.bindedLayoutPage, this));
 
-                    //ドラッグドロップのwindow外mouseup処理
-                    $(document)
-                        .off("mouseup.itemdrag")     // 多重登録防止
-                        .on("mouseup.itemdrag", this.onMouseUp);
-
 					this.currentWindow_ = Remote.getCurrentWindow();
 					// コンテキストメニュー
 					this.contextMenu_ = new Menu();
@@ -173,7 +168,7 @@ module Garage {
 
                 return $.extend(ret, {
 					// パレット内のアイテムのダブルクリック
-                    "dblclick #face-pallet .item": "onPalletItemDblClick",
+                    //"dblclick #face-pallet .item": "onPalletItemDblClick",
                     "mousedown #face-pallet .item": "onPalletItemMouseDown",
 
 					// 画面内のマウスイベント
@@ -673,16 +668,10 @@ module Garage {
 				return undefined;
 			}
 
-            /**
-             * documentのmouseupイベント
-             */
-            private onMouseUp(event: Event) {
-                // ドラッグの範囲外終了処理
-            }
-
 			/**
 			 * パレット内のアイテムをダブルクリック
 			 */
+            /*
             private onPalletItemDblClick(event: Event) {
                 let newItem: ItemModel = this.setPalletItemOnCanvas(event);
 
@@ -703,6 +692,7 @@ module Garage {
 
                 this._updateItemElementOnCanvas(newItem);
 			}
+            */
 
             /**
              * パレット内のアイテム上でマウス押下
@@ -754,7 +744,7 @@ module Garage {
              * @param mousePosition Itemを追加するmouse座標
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(event: Event, setOnEventPosition?: boolean): ItemModel {
+            private setPalletItemOnCanvas(event: Event, setOnEventPosition: boolean = false): ItemModel {
                 var $target = $(event.currentTarget);
                 var $parent = $target.parent();
                 var targetModel = this._getItemModel($target, "pallet");
@@ -769,7 +759,7 @@ module Garage {
                 targetModel = $.extend(true, {}, targetModel);
 
                 if (setOnEventPosition) {
-                    var itemPosition = this.getPointFromCanvas({x: $target.offset().left, y: $target.offset().top});
+                    var itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
                 }
 
                 var model: ItemModel;
@@ -798,7 +788,7 @@ module Garage {
                             }
 
                             targetModel.button.deviceInfo = deviceInfo;
-                            if (itemPosition) {
+                            if (setOnEventPosition) {
                                 targetModel.button.area.x = itemPosition.x;
                                 targetModel.button.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
@@ -809,7 +799,7 @@ module Garage {
 
                     case "image":
                         if (targetModel.image) {
-                            if (itemPosition) {
+                            if (setOnEventPosition) {
                                 targetModel.image.area.x = itemPosition.x;
                                 targetModel.image.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
@@ -824,7 +814,7 @@ module Garage {
 
                     case "label":
                         if (targetModel.label) {
-                            if (itemPosition) {
+                            if (setOnEventPosition) {
                                 targetModel.label.area.x = itemPosition.x;
                                 targetModel.label.area.y = itemPosition.y - moduleOffsetY_pallet;
                             }
@@ -963,34 +953,11 @@ module Garage {
                     .attr('id', 'canvas-item-dummy')
                     .css({
                         'left': (target.offset().left - dummyArea.offset().left) * 2 + 'px',
-                        'top': (target.offset().top - dummyArea.offset().top) * 2 + 'px',
+                        'top' : (target.offset().top  - dummyArea.offset().top ) * 2 + 'px',
                         'border': target.css('border'),
-                        'background-color': target.css('background-color'),
                     });
 
-                // background-imageは要素追加後に非同期に設定されるので意味がない？
-                /*
-                let bgImage = target.css('background-image');
-                if (bgImage != 'none') {
-                    dummy.css('background-image', bgImage);
-                }
-                */
-
                 this._setResizer(dummy);
-
-                /*
-                let resizers = ['.left-top', '.left-bottom', '.right-top', '.right-bottom'];
-                for (let resizerClass in ['.left-top', '.left-bottom', '.right-top', '.right-bottom']) {
-                    let targetResizer = target.find(resizerClass);
-
-                    let dummyResizer = dummy.find(resizerClass);
-
-                    for (let cssProp in ['position', 'box-sizing', 'width', 'height', 'top', 'left', 'border', 'background-color', 'cursor']) {
-                        dummyResizer.css(cssProp, targetResizer.css(cssProp));
-                        console.log(resizerClass + " " + cssProp + ": " + targetResizer.css(cssProp));
-                    }
-                }
-                */
 
                 return dummy;
             }
@@ -1142,7 +1109,7 @@ module Garage {
 				}
 				if (!this.$currentTarget_ || !this.mouseMoving_) {
 					return;
-				}
+                }
 
 				var position = { x: event.pageX, y: event.pageY };
 
@@ -1156,14 +1123,14 @@ module Garage {
 			}
 
 			/**
-			 * アイテムの移動を行う
+			 * アイテムの移動を行い、位置を確定する
 			 */
             private _moveItem(position: IPosition, update?: boolean) {
 
 				var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
 				var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
 				if (deltaX === 0 && deltaY === 0) {
-					return;
+					//return;
 				}
                 var newX;
                 var newY;
