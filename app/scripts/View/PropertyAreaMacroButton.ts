@@ -693,11 +693,16 @@ module Garage {
                 let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
                 let $target = this.$el.find("#add-signal-btn");
 
-                //すべてのpullDownがうまっているときのみ、+をenableに、それ以外はdisable
+                //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
                 if (this.isAllSignalPullDownSelected()) {
                     $target.removeClass("disabled");
                 } else {
                     $target.addClass("disabled");
+                }
+
+                //設定できるマクロ最大数だった場合もdisable
+                if (this.defaultState.action.length >= MAX_NUM_MACRO_SIGNAL) {
+                    $target.removeClass("disabled");
                 }
 
             }
