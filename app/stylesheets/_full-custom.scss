@@ -220,7 +220,14 @@
                     &:active{
                         background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
                     }
+
+
+                    &.disabled {
+                        opacity:0.2;
+                       
+                    }
                 }
+
 
                 .signal-container-element{
                     margin-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_MARGIN_TOP;
