@@ -76,9 +76,13 @@ module Garage {
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++){
-                    
-                    let $target:JQuery = $($signalContainers[i])
-                    let order = parseInt(JQUtils.data($target, "signalOrder"), 10);
+
+                    //Actionの順番を取得。取得できない場合は次のループへ
+                    let $target: JQuery = $($signalContainers[i]);
+                    let order = this.getOrderFrom($target);
+                    if (order == null) {
+                        continue;
+                    }
 
                     //invervalを仮取得
                     let tmpInterval = $target.find("select.interval-input").val();
@@ -365,6 +369,29 @@ module Garage {
 
 
             }
+
+            /*
+            * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
+            * @param $target{JQuery} 対象となるJQuery
+            * @return {number} order情報 みつからない場合、undefinedを返す。
+            */
+            private getOrderFrom($target: JQuery): number {
+                let FUNCTION_NAME = TAG + "getOrderFrom";
+
+                if ($target == null) {
+                    console.warn(FUNCTION_NAME + "$target is null");
+                    return;
+                }
+
+                let result : number= parseInt(JQUtils.data($target, "signalOrder"), 10);
+
+                if (result != null) {
+                    return result;
+                } else {
+                    return undefined;
+                }
+            }
+
 
 
 		}
