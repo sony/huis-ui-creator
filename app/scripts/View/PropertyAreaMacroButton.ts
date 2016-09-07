@@ -200,8 +200,14 @@ module Garage {
                     id: this.defaultState.id,
                     order: order
                 }
+
+                //すでに、function選択用PullDownがある場合、削除する。
+                this.removeFunctionPullDown(order);
+
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(inputSignalData);
+
+                //remoeIdを選ぶとき、
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
@@ -579,6 +585,23 @@ module Garage {
             }
 
 
+            /*
+            * 設定したOrderのfunction用PullDownを消す。
+            * @param order {number}
+            */
+            private removeFunctionPullDown(order: number) {
+                let FUNCTION_NAME = TAG + "removeFunctionPullDown";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //対象orderのfunctionPullDown用コンテナの子供を削除する
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                let $targetFunctionPulllDownContainer : JQuery = $targetSignalContainer.find("#signal-function-container");
+                $targetFunctionPulllDownContainer.children().remove();
+            }
 
 
 
