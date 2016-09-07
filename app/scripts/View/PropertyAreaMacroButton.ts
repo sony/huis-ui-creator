@@ -47,7 +47,8 @@ module Garage {
                     "click #add-signal-btn": "onPlusBtnClick",
                     "change .interval-input": "onInvervalPullDownListChanged",
                     "change .state-action-input": "onActionPullDownListChanged",
-                    "change .remote-input":"onRemotePullDownListChanged"
+                    "change .remote-input": "onRemotePullDownListChanged",
+                    "change .function-input" : "onFunctionPulllDownListChanged"
                 };
             }
 
@@ -195,9 +196,18 @@ module Garage {
                     return;
                 }
 
+                let inputSignalData: ISignalData = {
+                    id: this.defaultState.id,
+                    order: order
+                }
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order);
+                this.renderFunctionsOf(inputSignalData);
+            }
 
+            //機能選択用のプルダウンが変更されたときに呼び出される
+            private onFunctionPulllDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
+                this.updateModel();
             }
 
             //+ボタンがクリックされた場合に呼び出される
@@ -338,11 +348,19 @@ module Garage {
                 //ベースとなるDOM描写する
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
                 $signalContainer.append($(templateSignal(signalData)));
-               
+
+                
+                //リモコンの表示を変更
+                //このorderの信号に登録されているremoteIdを取得し、表示
+                let remoteId: string = this.getRemoteIdByAction(signalData.action);
+                if (remoteId != null) {
+                    $signalContainer.find(".remote-input").val(remoteId);
+                }
+                
                 //Functions用のプルダウンを描画できるときは描画
                 let order = signalData.order;
                 if (order != null) {
-                    this.renderFunctionsOf(order);
+                    this.renderFunctionsOf(signalData);
                 }
 
             }
@@ -376,42 +394,34 @@ module Garage {
                 let $intervalDetail = $(templateInterval(signalData));
                 $intervalContainer.append($intervalDetail);
 
-                //それぞれの表示を変えていく。
-
                 //inverfalの表示を変更
                 if (signalData.action.interval) {
                     $targetSignalContainer.find("select.interval-input").val(signalData.action.interval.toString());
 
                 }
 
-                /*
-                //リモコンの表示を変更
-                if (signalData.action.code_db.a){
-                }
-                let tmpRemoteId = $target.find("select.remote-input").val();
-                if (tmpRemoteId == null) {
-                    continue;
-                }
+            
 
-                //functionを仮取得
-                let tmpFunction = $target.find("select.function-input").val();
-                if (tmpFunction == "none") {
-                    tmpFunction = null;
-                }*/
             }
 
             /*
             * 入力したorderのFunctionsを描画する。
             */
-            private renderFunctionsOf(order : number) {
+            private renderFunctionsOf(signalData : ISignalData) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
+                if (signalData == null) {
+                    console.warn("signalData is null");
+                    return;
+                }
+
+                let order = signalData.order;
                 if (order == null) {
                     console.warn("order is null");
                     return;
                 }
 
                 //targetとなるJQueryを取得
-                let $target : JQuery= this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
                     console.warn("$target is undefined");
                     return;
@@ -423,13 +433,33 @@ module Garage {
                     //インターバル用のテンプレートを読み込み
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-functions", this.templateItemDetailFile_);
-                    let signalData: ISignalData = {
+                    
+                    let inputSignalData: ISignalData = {
                         functions: functions,
-                        id: this.defaultState.id,
+                        id: signalData.id,
                         order: order
                     }
-                    let $functionsDetail = $(templateFunctions(signalData));
+                    let $functionsDetail = $(templateFunctions(inputSignalData));
                     $functionlContainer.append($functionsDetail);
+
+                    //inputにmodelがある場合、値を表示
+                    let action = signalData.action;
+                    if (action != null) {
+                        let $functionPullDown : JQuery= $functionlContainer.find(".function-input");
+
+                        //TODO:学習の場合care,hashMapがないので、
+                        if (action.code != null) {
+                            $functionPullDown.val(action.code_db.function);
+                        } else if (action.bluetooth_data != null) {
+                            $functionPullDown.val(action.bluetooth_data.bluetooth_data_content);
+                        } else if (action.code_db != null) {
+                            $functionPullDown.val(action.code_db.function);
+                        } else {
+                            //functionが取得できないが、
+                            console.warn("function is not found");
+                        }
+                       
+                    }
 
                     //Functionの文言を和訳
                     $functionlContainer.i18n();
@@ -511,6 +541,44 @@ module Garage {
                 //キャッシュで対応する。
                 return huisFiles.getMasterFunctions(remoteId);
             }
+
+            /*
+             * actionから、remoteIdを取得する
+             * @param action {IAction} : remoteIdを取得する情報源となるaction
+             * @return {string} : remoteId 見つからない場合、undefinedを返す。
+             */
+            private getRemoteIdByAction(action: IAction) : string{
+                let FUNCTION_NAME = TAG + "getRemoteIdByAction";
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+                let remoteId: string = undefined;
+
+                if (action != null) {
+                    let code = action.code;
+                    if (code != null) {
+                        remoteId = huisFiles.getRemoteIdByCode(code);
+                    }
+
+                    if (remoteId == null) {
+                        //codeでは取得できない場合、brand,
+                        let codeDb = action.code_db;
+                        if (codeDb != null) {
+                            let brand = codeDb.brand;
+                            let deviceType = codeDb.device_type;
+                            let modelNumber = codeDb.model_number
+
+                            remoteId = huisFiles.getRemoteIdByCodeDbElements(brand, deviceType, modelNumber);
+                        }
+                    }
+                }
+
+                return remoteId;
+
+            }
+
+
 
 
 
