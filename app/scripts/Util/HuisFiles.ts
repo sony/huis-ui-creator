@@ -715,6 +715,28 @@ module Garage {
                 return result;
             }
 
+            /*
+             * マクロで利用できるリモコンのリストを返す。
+             * @return {IRemoteInfo[]}
+             */
+            getSupportedRemoteInfoInMacro(): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_MACRO.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
 
             /*
             * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする

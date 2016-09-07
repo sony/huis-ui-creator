@@ -33,7 +33,7 @@ module Garage {
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
-                this.availableRemotelist = huisFiles.getSupportedRemoteInfo();
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
 
                 //stateIdはデフォルト値とする。
                 this.defaultState = this.model.state[this.model.default];

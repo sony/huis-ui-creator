@@ -683,7 +683,10 @@ declare module Garage {
      * PalletAreaで表示されないデバイスタイプ
      */
     var NON_SUPPORT_FACE_CATEGORY: string[];
-
+    /*
+    * Macroで利用できあいデバイスタイプ
+    */
+    var NON_SUPPORT_DEVICE_TYPE_IN_MACRO: string[];
 	/*
 	* CanvasAreaのグリッドサイズ
 	*/
