@@ -4232,6 +4232,14 @@ module Garage {
                 }
                 $detail.append(this.macroProperty.renderView())
 
+                //previewの情報を別途更新。
+                let $preview = this.$el.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                //テキストボタン、あるいは画像のどちらかを表示する。
+                this.toggleImagePreview(button.default);
+                
+
                 //モデルが更新されたときfullcustom側のmodelも更新する
                 //listento
                 this.listenTo(this.macroProperty.model, "change", (event: JQueryEventObject) => {
