@@ -89,7 +89,7 @@ module Garage {
                     //remoteIdを仮取得
                     let tmpRemoteId = $target.find("select.remote-input").val();
                     if (tmpRemoteId == null || tmpRemoteId == "none") {
-                        continue;
+                        tmpRemoteId = null;
                     }
 
                     //functionを仮取得
@@ -105,24 +105,28 @@ module Garage {
                         input: tmpInput,
                     };
 
-                    //codeを入力
-                    let tmpCode = null;
-                    //deviceInfo.functionCodeHashがある場合、codeを取得
-                    if (deviceInfo.functionCodeHash) {
-                        tmpCode = deviceInfo.functionCodeHash[tmpFunction];
-                    }
-                    if (tmpCode != null) {
-                        tmpAction.code = tmpCode;
-                    }
+                  
+                    if (deviceInfo) {
+                        //deviceInfo.functionCodeHashがある場合、codeを取
+                        //codeを入力
+                        let tmpCode = null;
 
-                    //codeDbを入力
-                    let tmpCodeDb: ICodeDB= null;
-                    if (deviceInfo.code_db) {
-                        tmpCodeDb = deviceInfo.code_db;
-                        tmpCodeDb.function = tmpFunction;
-                    }
-                    if (tmpCodeDb != null) {
-                        tmpAction.code_db = tmpCodeDb;
+                        if (deviceInfo.functionCodeHash) {
+                            tmpCode = deviceInfo.functionCodeHash[tmpFunction];
+                        }
+                        if (tmpCode != null) {
+                            tmpAction.code = tmpCode;
+                        }
+
+                        //codeDbを入力
+                        let tmpCodeDb: ICodeDB = null;
+                        if (deviceInfo.code_db) {
+                            tmpCodeDb = deviceInfo.code_db;
+                            tmpCodeDb.function = tmpFunction;
+                        }
+                        if (tmpCodeDb != null) {
+                            tmpAction.code_db = tmpCodeDb;
+                        }
                     }
 
                     tmpAction.interval = tmpInterval;
