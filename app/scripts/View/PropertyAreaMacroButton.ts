@@ -13,9 +13,10 @@ module Garage {
         //信号選択用のプルダウンを表示するための情報
         interface ISignalData {
             order: number; //マクロでの信号の順番
-            action: IAction; //表示するAction
+            action?: IAction; //表示するAction
             id: number;    // マクロボタンのStateId
-            remotesList : IRemoteInfo[] //現在利用可能なリモコンのリスト
+            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
+            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
         }
 
         export class PropertyAreaMacroButton extends Backbone.View<Model.ButtonItem> {
@@ -45,7 +46,8 @@ module Garage {
                 return {
                     "click #add-signal-btn": "onPlusBtnClick",
                     "change .interval-input": "onInvervalPullDownListChanged",
-                    "change .state-action-input" : "onActionPullDownListChanged"
+                    "change .state-action-input": "onActionPullDownListChanged",
+                    "change .remote-input":"onRemotePullDownListChanged"
                 };
             }
 
@@ -174,6 +176,28 @@ module Garage {
             private onActionPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
                 this.updateModel();
+            }
+
+            //リモコン選択用のプルダウンが変更されたときに呼ばれる
+            private onRemotePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onRemotePullDownListChanged";
+                let $target = $(event.currentTarget);
+                let remoteId = $target.val();
+
+                //remoteIdがない場合、処理を終了する。
+                if (remoteId == "none" || remoteId == null) {
+                    return;
+                }
+
+                // プルダウンに設定されている Actionの順番を取得
+                let order = this.getOrderFrom($target);
+                if (order == null) {
+                    return;
+                }
+
+                //Function選択用のPullダウンにFunctionを設定する。
+                this.renderFunctionsOf(order);
+
             }
 
             //+ボタンがクリックされた場合に呼び出される
@@ -311,8 +335,16 @@ module Garage {
                     return;
                 }
    
+                //ベースとなるDOM描写する
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
-                $signalContainer.append( $(templateSignal(signalData)));
+                $signalContainer.append($(templateSignal(signalData)));
+               
+                //Functions用のプルダウンを描画できるときは描画
+                let order = signalData.order;
+                if (order != null) {
+                    this.renderFunctionsOf(order);
+                }
+
             }
 
             /*
@@ -366,8 +398,46 @@ module Garage {
                 if (tmpFunction == "none") {
                     tmpFunction = null;
                 }*/
+            }
 
+            /*
+            * 入力したorderのFunctionsを描画する。
+            */
+            private renderFunctionsOf(order : number) {
+                let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
+                if (order == null) {
+                    console.warn("order is null");
+                    return;
+                }
 
+                //targetとなるJQueryを取得
+                let $target : JQuery= this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                if ($target == null || $target.length == 0) {
+                    console.warn("$target is undefined");
+                    return;
+                }
+
+                //Functionが存在してる場合にFunctionを表示。
+                let functions: string[] = this.getFunctionsOf(order);
+                if (functions != null) {
+                    //インターバル用のテンプレートを読み込み
+                    let $functionlContainer = $target.find("#signal-function-container");
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-functions", this.templateItemDetailFile_);
+                    let signalData: ISignalData = {
+                        functions: functions,
+                        id: this.defaultState.id,
+                        order: order
+                    }
+                    let $functionsDetail = $(templateFunctions(signalData));
+                    $functionlContainer.append($functionsDetail);
+
+                    //Functionの文言を和訳
+                    $functionlContainer.i18n();
+
+                    //プルダウンにJQueryMobileのスタイルをあてる
+                    $functionlContainer.trigger('create');
+                    
+                }
             }
 
             /*
@@ -390,6 +460,56 @@ module Garage {
                 } else {
                     return undefined;
                 }
+            }
+
+            /*
+            * 入力したorderの信号に登録されているremoteIdを取得する。
+            * 見つからなかった場合、undefinedを返す。
+            * @order{number} : remoeIdを取得したい信号の順番
+            * @{string} remoteId
+            */
+            private getRemoteIdOf(order: number): string{
+                let FUNCTION_NAME = TAG + "getRemoteIdOf";
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                let remoteId: string = null;
+                let $remotePullDown = this.$el.find(".remote-input[data-signal-order=\"" + order + "\"]");
+                if ($remotePullDown != null) {
+                    remoteId = $remotePullDown.val();
+                }
+
+                //"none"も見つからない扱いとする。
+                if (remoteId == null || remoteId == "none"){
+                    return undefined;
+                }
+
+                return remoteId;
+
+            }
+
+            /*
+            * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
+            * @param order {number} 信号リストを取得したい、マクロ信号の順番
+            * @return {string[]} 見つからなかった場合、undefinedを返す。
+            */
+            private getFunctionsOf(order : number) {
+                let FUNCTION_NAME = TAG + "getRemoteIdOf";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                }
+
+                let remoteId :string = this.getRemoteIdOf(order);
+                if (remoteId == null) {
+                    return;
+                }
+
+                //TODO：huisFilesで取得できない場合の処理(すでに削除されているなど)
+                //キャッシュで対応する。
+                return huisFiles.getMasterFunctions(remoteId);
             }
 
 

@@ -394,7 +394,7 @@
             <div id="signal-interval-container"></div>
 
             <div class="custom-select">
-                <select class="remote-input" id="select-macro-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" date-signal-order = "{{order}}">
+                <select class="remote-input" id="select-macro-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order = "{{order}}">
                     <option value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
                     {{#remotesList}}
                     <option value="{{remoteId}}" >{{face.name}}</option>
@@ -402,22 +402,31 @@
                 </select>
             </div>
 
+            <!--AFunction 選択用のテンプレート-->
+            <div id="signal-function-container"></div>
+
+        </div>
+	</script>
+
+    <!--マクロの信号選択用-->
+    <script type="text/template" id="template-property-macro-button-signal-functions">
+        <div class="signal-function-container-element">
             <div class="custom-select">
-                <select class="function-input" id="select-macro-signal-function-input-{{order}}" data-state-id="{{id}}" date-signal-order ="{{order}}" data-native-menu="false">
+                <select class="function-input" id="select-macro-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                     <option value="none" data-i18n="button.input.STR_PLEASE_INPUT_REMOTE">★信号を選択してください</option>
                     {{#functions}}
                     <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
                     {{/functions}}
                 </select>
             </div>
-
         </div>
-	</script>
+    </script>
+
 
     <!--マクロの信号間隔 調整用-->
     <script type="text/template" id="template-property-macro-button-signal-interval">
         <div class="signal-interval-container">
-            <div class="custom-select" date-signal-order="{{order}}">
+            <div class="custom-select" data-signal-order="{{order}}">
                 <select class="interval-input" id="select-macro-signal-interval-{{order}}" data-state-id="{{id}}" data-native-menu="false">
                     <option value="0.0" data-i18n="button.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
                     <option value="0.1" data-i18n="button.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
