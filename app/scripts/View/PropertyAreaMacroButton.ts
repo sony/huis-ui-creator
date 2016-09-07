@@ -243,13 +243,26 @@ module Garage {
 
                 
                 //テキストラベルのpullDownを変更する。
-                var $textSize = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
-                
+                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
                 if (labelSize != null) {
-                    $textSize.val(labelSize.toString());
+                    $textSizePullDown.val(labelSize.toString());
                 }
-                
-                let actions:IAction[] = state.action;
+
+                let actions: IAction[] = state.action;                
+                if (actions == null || actions.length == 0) {
+                    console.warn(FUNCTION_NAME + "acctions is null");
+                    return;
+                }
+
+                //ActionのPullDownを変更する。
+
+                //inputを読み取るアクションのIDは0とする。
+                //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
+                let TARGET_ACTION = 0;
+                var $actionPullDown: JQuery = this.$el.find(".state-action-input[data-state-id=\"" + state.id + "\"]");
+                if ($actionPullDown && actions[TARGET_ACTION]) {
+                    $actionPullDown.val(actions[TARGET_ACTION].input);
+                }
 
 
 				//最初の１シグナル分は特例で、追加する。
