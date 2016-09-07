@@ -492,7 +492,7 @@ module Garage {
 							if (code != null && code != undefined && code != " ") {
 								//学習によって登録された用 codeがある場合
 								functions.push(code_db.function);
-							}else if (code_db.db_codeset != " " || code_db.brand != " ") {
+							} else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
 								//プリセット用 db_codeset と brand が空白文字で。
 								functions.push(code_db.function);
 							} else {
@@ -617,7 +617,52 @@ module Garage {
 
 				return result;
 
-			}
+            }
+
+            /**
+             * 機器の master face に記述されている最初の bluetooth_data を取得する。
+             *
+             * @param remoteId {string} リモコンの remoteId
+             * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
+             */
+            getMasterBluetoothData(remoteId: string): IBluetoothData {
+                let masterFace: IGFace = this._getMasterFace(remoteId);
+                if (!masterFace) {
+                    console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
+                    return null;
+                }
+
+                let result: IStringStringHash = {};
+
+                var modules = masterFace.modules;
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                var bluetoothData = actions[l].bluetooth_data;
+                                if (bluetoothData) {
+                                    return $.extend(true, {}, bluetoothData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
 
 			/**
 			 * Common の face を取得する。
@@ -1158,7 +1203,10 @@ module Garage {
 						}
 						if (!_.isUndefined(action.code_db.model_number)) {
 							normalizedAction.code_db.model_number = action.code_db.model_number;
-						}
+                        }
+                        if (!_.isUndefined(action.bluetooth_data)) {
+                            normalizedAction.bluetooth_data = action.bluetooth_data;
+                        }
 					}
 					normalizedActions.push(normalizedAction);
 				});

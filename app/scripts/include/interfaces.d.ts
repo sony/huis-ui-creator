@@ -75,7 +75,11 @@ interface IAction {
 	 * データベースから引くためのIR信号
 	 */
     code_db?: ICodeDB;
-	[x: string]: any;
+    [x: string]: any;
+    /**
+     * Bluetooth通信用の情報
+     */
+    bluetooth_data?: IBluetoothData;
 }
 
 /**
@@ -107,6 +111,46 @@ interface ICodeDB {
 	 * 型番
 	 */
     model_number?: string;
+}
+
+/**
+ * @interface IBluetoothData
+ */
+interface IBluetoothData {
+    /**
+     * 通信相手のBluetooth機器の情報
+     */
+    bluetooth_device: IBluetoothDevice;
+    /**
+     * 通信するデータの内容（生データではなくfunction）
+     */
+    bluetooth_data_content: string;
+}
+
+/**
+ * @interface IBluetoothDevice
+ */
+interface IBluetoothDevice {
+    /**
+     * 管理されているBluetoothペアリング機器リストのID
+     */
+    bluetooth_device_id: number;
+    /**
+     * Bluetoothデバイスのアドレス
+     */
+    bluetooth_address: string;
+    /**
+     * Bluetoothプロトコルの種類
+     */
+    bluetooth_device_type: string;
+    /**
+     * Bluetoothの機器の種類
+     */
+    bluetooth_device_product_type: string;
+    /**
+     * Bluetoothデバイスの名前
+     */
+    bluetooth_device_name: string;
 }
 
 /**
@@ -222,7 +266,8 @@ interface IButtonDeviceInfo {
     id: string; // ボタン識別子
 	remoteName?: string;  // もともとのボタンのリモコン名
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
-	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+    code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+    bluetooth_data?: IBluetoothData; // Bluetooth通信用の情報
 	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
 }
 
@@ -615,12 +660,18 @@ declare module Garage {
 	var DEVICE_TYPE_AIR_CLEANER: string;
 	var DEVICE_TYPE_CUSOM: string;
 	var DEVICE_TYPE_FULL_CUSTOM: string;
-	var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_SPECIAL: string;
 
 	/**
-	* PalletAreaで表示されないデバイスタイプ
+	* DetailAreaの機能に表示されないデバイスタイプ
 	*/
-	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+    var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+
+    /**
+     * PalletAreaで表示されないデバイスタイプ
+     */
+    var NON_SUPPORT_FACE_CATEGORY: string[];
 
 	/*
 	* CanvasAreaのグリッドサイズ

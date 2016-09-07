@@ -406,7 +406,7 @@ module Garage {
 			private _listupFaces() {
 				// fullcustom と "Air conditioner" を除いた face 一覧を取得する
 				// "Air conditioner" のボタンの形式が Garage では扱えないもののため 
-				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special", "Bluetooth"] });
+                var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: Garage.NON_SUPPORT_FACE_CATEGORY });
 				// faces データから face 一覧を作成し、face list に追加する
 				var faceItemTemplate = Tools.Template.getJST("#template-face-item", this.templateFullCustomFile_);
 				$("#face-item-list").append($(faceItemTemplate({ faces: faces })));
@@ -698,6 +698,7 @@ module Garage {
 							let functions = huisFiles.getMasterFunctions(remoteId);
 							let codeDb = huisFiles.getMasterCodeDb(remoteId);
 							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                            let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
 							let remoteName = huisFiles.getFace(remoteId).name;
 
 							let deviceInfo: IButtonDeviceInfo = {
@@ -706,6 +707,10 @@ module Garage {
 								remoteName: remoteName,
 								code_db: codeDb
 							};
+
+                            if (bluetoothData != null) {
+                                deviceInfo.bluetooth_data = bluetoothData;
+                            }
 
                             if (functionCodeHash != null) {
                                 deviceInfo.functionCodeHash = functionCodeHash;
@@ -2740,14 +2745,18 @@ module Garage {
 					device_type: string,
 					db_codeset: string,
 					model_number: string,
-					functions: string[],
+                    functions: string[],
+                    bluetooth_data: IBluetoothData,
 					functionCodeHash: IStringStringHash,
 					remoteName:string;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
 					db_codeset = deviceInfo.code_db.db_codeset;
-					model_number = deviceInfo.code_db.model_number;
+                    model_number = deviceInfo.code_db.model_number;
+                    if (deviceInfo.bluetooth_data) {
+                        bluetooth_data = deviceInfo.bluetooth_data;
+                    }
 					if (deviceInfo.functionCodeHash){
 						functionCodeHash = deviceInfo.functionCodeHash;
 					}
@@ -2796,7 +2805,8 @@ module Garage {
 
 							let action: IAction = {
 								input: key,
-								code_db: codeDb
+                                code_db: codeDb,
+                                bluetooth_data: bluetooth_data,
 							};
 
 							
@@ -2805,11 +2815,7 @@ module Garage {
 								let code: string = functionCodeHash[value];
 								//codeがある場合は actionに登録する。
 								if (code != null) {
-									action = {
-										input: key,
-										code_db: codeDb,
-										code: code,
-									};
+                                    action.code = code;
 								}
 							}
 						
@@ -2829,7 +2835,8 @@ module Garage {
 							};
 							let action: IAction = {
 								input: "none",
-								code_db: codeDb
+                                code_db: codeDb,
+                                bluetooth_data: bluetooth_data,
 							};
 							actions.push(action);
 						}
@@ -4192,7 +4199,14 @@ module Garage {
 								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
 								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
 							}
-						}
+						} else if (deviceInfo.bluetooth_data != null) {
+                            //Bluetooth情報しかない場合
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                            if (remoteId != null) {
+                                deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
+                            }
+                        }
 
 
 						button.deviceInfo = deviceInfo;

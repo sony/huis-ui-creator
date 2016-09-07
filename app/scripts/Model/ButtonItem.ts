@@ -169,7 +169,8 @@ module Garage {
 								let code_db = action.code_db;
                                 let deviceInfo: IButtonDeviceInfo = {
                                     id: "",
-									code_db: code_db,
+                                    code_db: code_db,
+                                    bluetooth_data: (action.bluetooth_data) ? action.bluetooth_data : null,
 									functions: []
 								};
 								this.deviceInfo = deviceInfo;
