@@ -1265,7 +1265,7 @@ module Garage {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
 					}
-					if (action.interval) {
+					if (!_.isUndefined(action.interval)) {
 						normalizedAction.interval = action.interval;
 					}
 
