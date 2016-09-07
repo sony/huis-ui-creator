@@ -74,9 +74,10 @@
             "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
             "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
             "STR_EDIT_PROPERTY_TITLE_NON_MAKER": "--",
-            "STR_EDIT_PROPERTY_TITLE_LEARNED" :  "--"
-        },  
-        "canvas": { 
+            "STR_EDIT_PROPERTY_TITLE_LEARNED": "--",
+            "STR_EDIT_PROPERTY_TITLE_MACRO": "Macro Button"
+        },
+        "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
         }
     },
@@ -86,7 +87,7 @@
         "STR_HOME_INTRODUCTION_2": "あなた好み",
         "STR_HOME_INTRODUCTION_3": "のデザインに。"
     },
-    "splash": { 
+    "splash": {
         "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
     },
     "about": {
@@ -124,7 +125,36 @@
         "STR_TOAST_REDO": "やり直し",
         "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
     },
+    "remote": {
+        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択してください"
+    },
     "button": {
+        "interval": {
+            "STR_00_POINT_0_SECOND_AFTER": "0.0秒後",
+            "STR_00_POINT_1_SECOND_AFTER": "0.1秒後",
+            "STR_00_POINT_2_SECOND_AFTER": "0.2秒後",
+            "STR_00_POINT_3_SECOND_AFTER": "0.3秒後",
+            "STR_00_POINT_4_SECOND_AFTER": "0.4秒後",
+            "STR_00_POINT_5_SECOND_AFTER": "0.5秒後",
+            "STR_00_POINT_6_SECOND_AFTER": "0.6秒後",
+            "STR_00_POINT_7_SECOND_AFTER": "0.7秒後",
+            "STR_00_POINT_8_SECOND_AFTER": "0.8秒後",
+            "STR_00_POINT_9_SECOND_AFTER": "0.9秒後",
+            "STR_01_POINT_0_SECOND_AFTER": "1秒後",
+            "STR_02_POINT_0_SECOND_AFTER": "2秒後",
+            "STR_03_POINT_0_SECOND_AFTER": "3秒後",
+            "STR_04_POINT_0_SECOND_AFTER": "4秒後",
+            "STR_05_POINT_0_SECOND_AFTER": "5秒後",
+            "STR_06_POINT_0_SECOND_AFTER": "6秒後",
+            "STR_07_POINT_0_SECOND_AFTER": "7秒後",
+            "STR_08_POINT_0_SECOND_AFTER": "8秒後",
+            "STR_09_POINT_0_SECOND_AFTER": "9秒後",
+            "STR_10_POINT_0_SECOND_AFTER": "10秒後",
+            "STR_15_POINT_0_SECOND_AFTER": "15秒後",
+            "STR_20_POINT_0_SECOND_AFTER": "20秒後",
+            "STR_25_POINT_0_SECOND_AFTER": "25秒後",
+            "STR_30_POINT_0_SECOND_AFTER": "30秒後"
+        },
         "none": {
             "STR_REMOTE_BTN_NONE": "何もしない"
         },
@@ -133,6 +163,7 @@
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)"
         },
         "function": {
+            "STR_PLEASE_INPUT_REMOTE": "信号を選択",
             "STR_REMOTE_BTN_POWER_TOGGLE": "電源ON/OFF",
             "STR_REMOTE_BTN_POWER_ON": "電源ON",
             "STR_REMOTE_BTN_POWER_OFF": "電源OFF",

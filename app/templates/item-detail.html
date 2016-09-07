@@ -328,7 +328,7 @@
 
 
 		<h3 id="face-item-detail-title">
-			<span class="title-label">★Macro</span>
+            <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
 		</h3>
 
 
@@ -344,7 +344,7 @@
 			<div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
 				<div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
 				<div class="text-field-in-preview">
-					<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">★ラベルを編集</div></div>
+					<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
 					<input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
 
 					<div class="custom-select text-size-pulldown">
@@ -413,7 +413,7 @@
         <div class="signal-function-container-element">
             <div class="custom-select">
                 <select class="function-input" id="select-macro-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    <option value="none" data-i18n="button.input.STR_PLEASE_INPUT_REMOTE">★信号を選択してください</option>
+                    <option value="none" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
                     {{#functions}}
                     <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
                     {{/functions}}
@@ -428,30 +428,30 @@
         <div class="signal-interval-container">
             <div class="custom-select" data-signal-order="{{order}}">
                 <select class="interval-input" id="select-macro-signal-interval-{{order}}" data-state-id="{{id}}" data-native-menu="false">
-                    <option value="0.0" data-i18n="button.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
-                    <option value="0.1" data-i18n="button.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
-                    <option value="0.2" data-i18n="button.STR_00_POINT_2_SECOND_AFTER">★0.2秒後</option>
-                    <option value="0.3" data-i18n="button.STR_00_POINT_3_SECOND_AFTER">★0.3秒後</option>
-                    <option value="0.4" data-i18n="button.STR_00_POINT_4_SECOND_AFTER">★0.4秒後</option>
-                    <option value="0.5" data-i18n="button.STR_00_POINT_5_SECOND_AFTER">★0.5秒後</option>
-                    <option value="0.6" data-i18n="button.STR_00_POINT_6_SECOND_AFTER">★0.6秒後</option>
-                    <option value="0.7" data-i18n="button.STR_00_POINT_7_SECOND_AFTER">★0.7秒後</option>
-                    <option value="0.8" data-i18n="button.STR_00_POINT_8_SECOND_AFTER">★0.8秒後</option>
-                    <option value="0.9" data-i18n="button.STR_00_POINT_9_SECOND_AFTER">★0.9秒後</option>
-                    <option value="1" data-i18n="button.STR_01_POINT_0_SECOND_AFTER">★1秒後</option>
-                    <option value="2" data-i18n="button.STR_02_POINT_0_SECOND_AFTER">★2秒後</option>
-                    <option value="3" data-i18n="button.STR_03_POINT_0_SECOND_AFTER">★3秒後</option>
-                    <option value="4" data-i18n="button.STR_04_POINT_0_SECOND_AFTER">★4秒後</option>
-                    <option value="5" data-i18n="button.STR_05_POINT_0_SECOND_AFTER">★5秒後</option>
-                    <option value="6" data-i18n="button.STR_06_POINT_0_SECOND_AFTER">★6秒後</option>
-                    <option value="7" data-i18n="button.STR_07_POINT_0_SECOND_AFTER">★7秒後</option>
-                    <option value="8" data-i18n="button.STR_08_POINT_0_SECOND_AFTER">★8秒後</option>
-                    <option value="9" data-i18n="button.STR_09_POINT_0_SECOND_AFTER">★9秒後</option>
-                    <option value="10" data-i18n="button.STR_10_POINT_0_SECOND_AFTER">★10秒後</option>
-                    <option value="15" data-i18n="button.STR_15_POINT_0_SECOND_AFTER">★15秒後</option>
-                    <option value="20" data-i18n="button.STR_20_POINT_0_SECOND_AFTER">★20秒後</option>
-                    <option value="25" data-i18n="button.STR_25_POINT_0_SECOND_AFTER">★25秒後</option>
-                    <option value="30" data-i18n="button.STR_30_POINT_0_SECOND_AFTER">★30秒後</option>
+                    <option value="0.0" data-i18n="button.interval.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
+                    <option value="0.1" data-i18n="button.interval.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
+                    <option value="0.2" data-i18n="button.interval.STR_00_POINT_2_SECOND_AFTER">★0.2秒後</option>
+                    <option value="0.3" data-i18n="button.interval.STR_00_POINT_3_SECOND_AFTER">★0.3秒後</option>
+                    <option value="0.4" data-i18n="button.interval.STR_00_POINT_4_SECOND_AFTER">★0.4秒後</option>
+                    <option value="0.5" data-i18n="button.interval.STR_00_POINT_5_SECOND_AFTER">★0.5秒後</option>
+                    <option value="0.6" data-i18n="button.interval.STR_00_POINT_6_SECOND_AFTER">★0.6秒後</option>
+                    <option value="0.7" data-i18n="button.interval.STR_00_POINT_7_SECOND_AFTER">★0.7秒後</option>
+                    <option value="0.8" data-i18n="button.interval.STR_00_POINT_8_SECOND_AFTER">★0.8秒後</option>
+                    <option value="0.9" data-i18n="button.interval.STR_00_POINT_9_SECOND_AFTER">★0.9秒後</option>
+                    <option value="1" data-i18n="button.interval.STR_01_POINT_0_SECOND_AFTER">★1秒後</option>
+                    <option value="2" data-i18n="button.interval.STR_02_POINT_0_SECOND_AFTER">★2秒後</option>
+                    <option value="3" data-i18n="button.interval.STR_03_POINT_0_SECOND_AFTER">★3秒後</option>
+                    <option value="4" data-i18n="button.interval.STR_04_POINT_0_SECOND_AFTER">★4秒後</option>
+                    <option value="5" data-i18n="button.interval.STR_05_POINT_0_SECOND_AFTER">★5秒後</option>
+                    <option value="6" data-i18n="button.interval.STR_06_POINT_0_SECOND_AFTER">★6秒後</option>
+                    <option value="7" data-i18n="button.interval.STR_07_POINT_0_SECOND_AFTER">★7秒後</option>
+                    <option value="8" data-i18n="button.interval.STR_08_POINT_0_SECOND_AFTER">★8秒後</option>
+                    <option value="9" data-i18n="button.interval.STR_09_POINT_0_SECOND_AFTER">★9秒後</option>
+                    <option value="10" data-i18n="button.interval.STR_10_POINT_0_SECOND_AFTER">★10秒後</option>
+                    <option value="15" data-i18n="button.interval.STR_15_POINT_0_SECOND_AFTER">★15秒後</option>
+                    <option value="20" data-i18n="button.interval.STR_20_POINT_0_SECOND_AFTER">★20秒後</option>
+                    <option value="25" data-i18n="button.interval.STR_25_POINT_0_SECOND_AFTER">★25秒後</option>
+                    <option value="30" data-i18n="button.interval.STR_30_POINT_0_SECOND_AFTER">★30秒後</option>
                 </select>
             </div>
         </div>

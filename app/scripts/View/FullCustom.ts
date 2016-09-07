@@ -4239,6 +4239,7 @@ module Garage {
                 //テキストボタン、あるいは画像のどちらかを表示する。
                 this.toggleImagePreview(button.default);
                 
+                $detail.i18n();
 
                 //モデルが更新されたときfullcustom側のmodelも更新する
                 //TODO:maximum stackを解消する

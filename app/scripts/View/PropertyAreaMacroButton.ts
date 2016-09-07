@@ -384,6 +384,9 @@ module Garage {
                     this.renderFunctionsOf(signalData);
                 }
 
+                //言語対応
+                $signalContainer.i18n();
+
             }
 
             /*
@@ -418,10 +421,9 @@ module Garage {
                 //inverfalの表示を変更
                 if (signalData.action.interval) {
                     $targetSignalContainer.find("select.interval-input").val(signalData.action.interval.toString());
-
                 }
 
-
+                $targetSignalContainer.i18n();
 
             }
 
