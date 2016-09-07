@@ -231,8 +231,94 @@
 
                 .signal-container-element{
                     margin-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_MARGIN_TOP;
-                }
+                    position:relative;
+                    #delete-signal-area{
+                        z-index : 2;//pulldownより前に
+                        height:100%;
+                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
+                        transition-duration : 0.2s;
+                        position : absolute;
+                        right : 0px;
+                        top : 0px;
 
+                        .delete-signal{
+                            margin-left : auto;
+                            opacity:0;
+                            background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+
+                            &:hover, &:active{
+                                background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                            }
+                        }
+                        
+                        &:hover{
+                            .delete-signal{
+                                opacity:1.0;
+                            }
+                        }
+
+                        
+                    }
+
+                    
+                    #sort-button-area{
+                        z-index : 2;//pulldownより前に
+                        height:100%;
+                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
+                        //transition-duration : 0.2s;
+                        position : absolute;
+                        left : 0px;
+                        top : 0px;
+
+                        .sort-up-btn{
+                            margin-right : auto;
+                            opacity:0;
+                            background-color : white;
+                            background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                            
+                            &:hover, &:active{
+                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                            }
+
+                        }
+
+                        .sort-down-btn{
+                            margin-right : auto;
+                            opacity:0;
+                            background-color : white;//要削除
+                            background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+
+                            &:hover, &:active{
+                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                            }
+                        }
+
+                        &:hover{
+                             .sort-up-btn{
+                                opacity:1.0;
+                            }
+
+                            .sort-down-btn{
+                                opacity:1.0;
+                            }
+                        }
+                    }
+                }
             }
 
 

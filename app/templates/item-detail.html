@@ -391,6 +391,7 @@
 	<script type="text/template" id="template-property-macro-button-signal">
         <div class="signal-container-element" data-signal-order="{{order}}">
 
+
             <div id="signal-interval-container"></div>
 
             <div class="custom-select">
@@ -404,6 +405,17 @@
 
             <!--AFunction 選択用のテンプレート-->
             <div id="signal-function-container"></div>
+
+            <!--削除ボタン-->
+            <div id="delete-signal-area">
+                <div class="delete-signal" data-signal-order="{{order}}"></div>
+            </div>
+
+            <!--並び替えボタン-->
+            <div id="sort-button-area">
+                <div class="sort-up-btn" data-signal-order="{{order}}"></div>
+                <div class="sort-down-btn" data-signal-order="{{order}}"></div>
+            </div>
 
         </div>
 	</script>
