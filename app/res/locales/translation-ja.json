@@ -126,7 +126,7 @@
         "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
     },
     "remote": {
-        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択してください"
+        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
     },
     "button": {
         "interval": {
