@@ -21,6 +21,9 @@ module Garage {
 
         export class PropertyAreaMacroButton extends Backbone.View<Model.ButtonItem> {
 
+            //DOMのプルダウンの値ををベースにModelを更新する。
+            //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
+
             private templateItemDetailFile_: string;
             private actionsCount: number;
             private availableRemotelist: IRemoteInfo[];
@@ -56,9 +59,20 @@ module Garage {
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
-                    "click #delete-signal-area .delete-signal": "onDeleteButtonClick"
-
+                    "click #delete-signal-area .delete-signal": "onDeleteButtonClick",
+                    "click #sort-button-area .sort-up-btn": "onSortUpButtonClick",
+                    "click #sort-button-area .sort-down-btn": "oSortDownButtonClick"
                 };
+            }
+
+            //並び替え上ボタンが押されたときに呼ばれる
+            private onSortUpButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onSortUpButtonClick";
+            }
+
+            //並び替え下ボタンが押されたときに呼ばれる
+            private onSortDownButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onSortDownButtonClick";
             }
 
             //deleteボタンが押されたときに呼ばれる
