@@ -457,6 +457,7 @@ module Garage {
                 if (remoteId != null) {
                     $signalContainer.find(".remote-input[data-signal-order=\"" + signalData.order + "\"]").val(remoteId);
                 }
+                $signalContainer.trigger('create');
 
                 //Functions用のプルダウンを描画できるときは描画
                 let order = signalData.order;
@@ -504,6 +505,7 @@ module Garage {
                 }
 
                 $targetSignalContainer.i18n();
+                $targetSignalContainer.trigger('create');
 
             }
 
@@ -568,7 +570,7 @@ module Garage {
                     $functionlContainer.i18n();
 
                     //プルダウンにJQueryMobileのスタイルをあてる
-                    //$functionlContainer.trigger('create');
+                    $functionlContainer.trigger('create');
 
                 }
             }
