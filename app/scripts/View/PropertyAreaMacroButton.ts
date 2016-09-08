@@ -834,6 +834,20 @@ module Garage {
 
             }
 
+            /*
+             * 入力してorderの$signal-container-elementを返す。
+             * @param order{number} 入手したい$signal-container-elementの順番
+             * @return {JQuery} $signal-container-element
+             */ 
+            private getSignalContainerElementOf(order: number) {
+                let FUNCTION_NAME= TAG + "getSignalContainerElementOf";
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+                return this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+            }
+
         }
 	}
 }
