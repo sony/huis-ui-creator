@@ -95,7 +95,14 @@ module Garage {
                 //sort先（一つ上の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
-                this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+
+                if (this.isValidJQueryElement($nextTopSignalContainer)) {
+                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                    //情報を更新し、再描画
+                    this.updateModel();
+                    this.renderSignalContainers();
+                }
+
             }
 
             //並び替え下ボタンが押されたときに呼ばれる
@@ -114,6 +121,16 @@ module Garage {
                 if (order >= this.defaultState.action.length - 1) {
                     console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
                     return;
+                }
+
+                //sort先（一つ下の順番）のJqueryを取得.値を入れ替える。
+                let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
+                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
+                if (this.isValidJQueryElement($nextTopSignalContainer)) {
+                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                    //情報を更新し、再描画
+                    this.updateModel();
+                    this.renderSignalContainers();
                 }
                 
 
@@ -262,19 +279,19 @@ module Garage {
 
                     //invervalを仮取得
                     let tmpInterval: number = this.getInvervalFromPullDownOf(order);
-                    if (!this.isValidPullDownValue(tmpInterval)) {
+                    if (!this.isValidValue(tmpInterval)) {
                         tmpInterval = 0;
                     }
 
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
-                    if (!this.isValidPullDownValue(tmpRemoteId)) {
+                    if (!this.isValidValue(tmpRemoteId)) {
                         tmpRemoteId = null;
                     }
 
                     //functionを仮取得
                     let tmpFunction: string = this.getFunctionFromlPullDownOf(order);
-                    if (!this.isValidPullDownValue(tmpFunction)) {
+                    if (!this.isValidValue(tmpFunction)) {
                         tmpFunction = null;
                     }
 
@@ -578,20 +595,62 @@ module Garage {
                 //interval以外を描写
                 this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
 
-                let $targetSignalContainer = $signalContainer.find(".signal-container-element[data-signal-order=\"" + signalData.order + "\"]");
+                //intervalを描写
+                this.renderIntervalOf(signalData.order, signalData.action.interval);
+                
+
+            }
+
+
+            /*
+            * 指定したorderのIntervalをレンダリングする。
+            * @param order{number} マクロ信号の順番
+            * @param inputInterval?{number} プルダウンに代入する値 
+            */
+            private renderIntervalOf(order: number, inputInterval ?: number) {
+                let FUNCTION_NAME = TAG + "renderIntervalOf : ";
+                
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //inputIntervalがない場合、0として扱う
+                if (inputInterval == null) {
+                    inputInterval = 0;
+                }
+
+                
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+
+               
+
                 //インターバル用のテンプレートを読み込み
                 let $intervalContainer = $targetSignalContainer.find("#signal-interval-container");
+
+                //すでに存在した場合、一度削除する
+                $intervalContainer.children().remove();
+
+                //intervalのプルダウンを表示するには、orderとstateIdが必要
+                let signalData = {
+                    order: order,
+                    id : this.defaultState.id
+                }
+
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-interval", this.templateItemDetailFile_);
                 let $intervalDetail = $(templateInterval(signalData));
                 $intervalContainer.append($intervalDetail);
 
-                //inverfalの表示を変更
-                this.setIntervalPullDownOf(signalData.order, signalData.action.interval);
+                //inverfalの表示を変更 値がundefinedのとき0を代入する
+                if (!this.isValidValue(inputInterval)) {
+                    inputInterval = 0;
+                }
+                this.setIntervalPullDownOf(order, inputInterval);
 
                 $targetSignalContainer.i18n();
                 $targetSignalContainer.trigger('create');
-
             }
+
 
             /*
             * 入力したorderのFunctionsを描画する。
@@ -616,7 +675,7 @@ module Garage {
                     return;
                 }
 
-                //Functionが存在してる場合にFunctionを表示。
+                //FunctionプルダウンのDOMを表示。
                 let functions: string[] = this.getFunctionsOf(order);
                 if (functions != null) {
                     //インターバル用のテンプレートを読み込み
@@ -695,7 +754,7 @@ module Garage {
                 remoteId = $remotePullDown.val();
 
                 //"none"も見つからない扱いとする。
-                if (!this.isValidPullDownValue(remoteId)) {
+                if (!this.isValidValue(remoteId)) {
                     return undefined;
                 }
 
@@ -725,12 +784,11 @@ module Garage {
                 let inverval: number = null;
                 let $invervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
                 if ($invervalPullDown == null || $invervalPullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$invervalPullDown is invalid");
                     return;
                 }
 
                 inverval = parseFloat($invervalPullDown.val());
-                if (!this.isValidPullDownValue(inverval)) {
+                if (!this.isValidValue(inverval)) {
                     return undefined;
                 }
 
@@ -864,7 +922,7 @@ module Garage {
 
                 functionName = $functionPullDown.val();
 
-                if (!this.isValidPullDownValue(functionName)) {
+                if (!this.isValidValue(functionName)) {
                     return undefined;
                 }
 
@@ -974,7 +1032,7 @@ module Garage {
                     let $intervalPulllDown = $target.find("select.interval-input");
                     if ($intervalPulllDown.length != 0) {
                         let value = $intervalPulllDown.val();
-                        if (!this.isValidPullDownValue(value)) {
+                        if (!this.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -983,7 +1041,7 @@ module Garage {
                     let $remoteIdlPulllDown = $target.find("select.remote-input");
                     if ($remoteIdlPulllDown.length != 0) {
                         let value = $remoteIdlPulllDown.val();
-                        if (!this.isValidPullDownValue(value)) {
+                        if (!this.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -992,7 +1050,7 @@ module Garage {
                     let $functionlPulllDown = $target.find("select.function-input");
                     if ($functionlPulllDown.length != 0) {
                         let value = $functionlPulllDown.val();
-                        if (!this.isValidPullDownValue(value)) {
+                        if (!this.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -1003,18 +1061,27 @@ module Garage {
 
             }
 
-            // pulldownの値がmodel入力しても不正場合、falseを返す。
+            // 不正な値の場合、falseを返す。
             // 有効な場合、trueを返す。
-            private isValidPullDownValue(value): boolean {
+            private isValidValue(value): boolean {
                 let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
-
-                if (value == null ||
-                    value == "none" ||
-                    value == "") {
+                
+                if (value === null) {
                     return false;
-                } else {
+                } else if (value == "none") {
+                    return false;
+                } else if (value === "") {
+                    return false;
+                } else if (this.isNaN(value)) {
+                    return false;
+                }else {
                     return true;
                 }
+            }
+
+            //NaNか判定 Number.isNaNが使えないので代用
+            private isNaN(v) {
+                return v !== v;
             }
 
              /*
@@ -1104,6 +1171,11 @@ module Garage {
                     return;
                 }
 
+                //order1にorder2の情報を
+                this.setSignalInputsToPullDownOf(order1, signalInputs2);
+
+                //order2に、order1の情報を
+                this.setSignalInputsToPullDownOf(order2, signalInputs1);
             }
 
 
@@ -1121,17 +1193,17 @@ module Garage {
 
                 // invervalは見つからない場合、0として扱う。
                 let interval = this.getInvervalFromPullDownOf(order);
-                if (!this.isValidPullDownValue(interval)) {
+                if (!this.isValidValue(interval)) {
                     interval = 0;
                 }
 
                 let remoteId = this.getRemoteIdFromPullDownOf(order);
-                if (!this.isValidPullDownValue(remoteId)) {
+                if (!this.isValidValue(remoteId)) {
                     remoteId = undefined;
                 }
 
                 let functionName = this.getFunctionFromlPullDownOf(order);
-                if (!this.isValidPullDownValue(functionName)) {
+                if (!this.isValidValue(functionName)) {
                     functionName = undefined;
                 }
 
@@ -1143,6 +1215,35 @@ module Garage {
 
                 return result; 
             }
+
+            /*
+            * 入力したOrderのプルダウンの値を変更する。
+            * @param order{number} マクロ信号を順番で指定する。
+            * @param signalInputs{ISignalInputs}マクロ信号に設定する信号
+            */
+            private setSignalInputsToPullDownOf(order: number, signalInputs: ISignalInputs) {
+                let FUNCTION_NAME = TAG + "setSignalInputsToPullDownOf";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (signalInputs == null) {
+                    console.warn(FUNCTION_NAME + "signalInputs is null");
+                    return;
+                }
+
+                this.renderIntervalOf(order, signalInputs.interval);
+
+                this.setRemoteIdPullDownOf(order, signalInputs.remoteId);
+
+                //Function選択用のPullダウンを更新。
+                this.renderFunctionsOf(order, signalInputs.functionName);
+
+            }
+
+           
 
         }
 	}
