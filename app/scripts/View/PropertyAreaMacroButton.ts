@@ -164,9 +164,6 @@ module Garage {
                     return;
                 }
 
-                //すでに、function選択用PullDownがある場合、削除する。
-                this.removeFunctionPullDown(order);
-
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order);
 
@@ -601,7 +598,8 @@ module Garage {
 
             /*
             * 入力したorderのFunctionsを描画する。
-            * 
+            * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
+            * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
             */
             private renderFunctionsOf(order : number, functionName? : string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
@@ -610,6 +608,9 @@ module Garage {
                     console.warn("order is null");
                     return;
                 }
+
+                //すでに、function選択用PullDownがある場合、削除する。
+                this.removeFunctionPullDown(order);
 
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
