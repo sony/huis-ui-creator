@@ -1017,6 +1017,20 @@ module Garage {
                 }
             }
 
+             /*
+            * JQuery要素が有効か判定する
+            * @param $target{JQuery}判定対象
+            * @return {boolean} 有効な場合、true
+            */
+            private isValidJQueryElement($target: JQuery): boolean{
+                if ($target.length == 0 || $target == null) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+
             // +ボタンのenable disableを判定・コントロールする。
             private controlPlusButtonEnableDisable() {
                 let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
