@@ -212,12 +212,7 @@ module Garage {
                     }
 
                     //invervalを仮取得
-                    let tmpInterval = $target.find("select.interval-input").val();
-
-                    //最初の信号(order = 0)のinvervalは必ず0に
-                    if (order == 0) {
-                        tmpInterval = 0;
-                    }
+                    let tmpInterval: number = parseFloat($target.find("select.interval-input").val());
                     if (tmpInterval == null) {
                         tmpInterval = 0;
                     }
@@ -285,6 +280,11 @@ module Garage {
                             break;
                         }
                     }
+                }
+
+                //一番最初の信号のinvervalは必ず0に
+                if (actionsForUpdate.length > 0) {
+                    actionsForUpdate[0].interval = 0;
                 }
 
                 //マクロボタンのstateは、デフォルト一つとする。
