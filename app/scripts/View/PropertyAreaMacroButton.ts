@@ -61,18 +61,49 @@ module Garage {
                     "change select": "onAnyPulllDownChanged",
                     "click #delete-signal-area .delete-signal": "onDeleteButtonClick",
                     "click #sort-button-area .sort-up-btn": "onSortUpButtonClick",
-                    "click #sort-button-area .sort-down-btn": "oSortDownButtonClick"
+                    "click #sort-button-area .sort-down-btn": "onSortDownButtonClick"
                 };
             }
 
             //並び替え上ボタンが押されたときに呼ばれる
             private onSortUpButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortUpButtonClick";
+                let FUNCTION_NAME = TAG + "onSortUpButtonClick : ";
+
+                //ボタンが所属する信号の順番を取得
+                let $target = $(event.currentTarget);
+                let order = this.getOrderFrom($target);
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //一番上のボタンの場合、無視する
+                if (order == 0) {
+                    console.warn(FUNCTION_NAME + "up buttonn of first order signal is ignored");
+                    return;
+                }
+
             }
 
             //並び替え下ボタンが押されたときに呼ばれる
             private onSortDownButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortDownButtonClick";
+                let FUNCTION_NAME = TAG + "onSortDownButtonClick : ";
+                
+                //ボタンが所属する信号の順番を取得
+                let $target = $(event.currentTarget);
+                let order = this.getOrderFrom($target);
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //一番下のボタンの場合、無視する
+                if (order >= this.defaultState.action.length - 1) {
+                    console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
+                    return;
+                }
+                
+
             }
 
             //deleteボタンが押されたときに呼ばれる
