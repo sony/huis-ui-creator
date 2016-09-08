@@ -510,7 +510,7 @@ module Garage {
 
                 let remoteId: string = this.getRemoteIdByAction(signalData.action);
                 if (remoteId != null) {
-                    $signalContainer.find(".remote-input[data-signal-order=\"" + signalData.order + "\"]").val(remoteId);
+                    this.setRemoteIdPullDownOf(signalData.order, remoteId);
                 }
                
 
@@ -586,9 +586,7 @@ module Garage {
                 $intervalContainer.append($intervalDetail);
 
                 //inverfalの表示を変更
-                if (signalData.action.interval) {
-                    $targetSignalContainer.find("select.interval-input").val(signalData.action.interval.toString());
-                }
+                this.setIntervalPullDownOf(signalData.order, signalData.action.interval);
 
                 $targetSignalContainer.i18n();
                 $targetSignalContainer.trigger('create');
@@ -635,8 +633,7 @@ module Garage {
 
                     //inputにmodelがある場合、値を表示
                     if (functionName != null) {
-                        let $functionPullDown: JQuery = $functionlContainer.find(".function-input");
-                        $functionPullDown.val(functionName);
+                        this.setFunctionNamePullDownOf(order,functionName);
                     }
 
                     //Functionの文言を和訳
@@ -738,6 +735,104 @@ module Garage {
                 }
 
                 return inverval;
+            }
+
+            /*
+            * 入力したorderのInvervalプルダウンに、inputの値を代入する。
+            * order{number} ： マクロ信号の順番
+            * inputInterval{number} : プルダウンに設定する値。
+            */
+            private setIntervalPullDownOf(order : number, inputInterval : number) {
+                let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (inputInterval == null) {
+                    console.warn(FUNCTION_NAME + "inputInterval is null");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    return;
+                }
+
+                let $invervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
+                if ($invervalPullDown == null || $invervalPullDown.length == 0) {
+                    return;
+                }
+
+                $invervalPullDown.val(inputInterval.toString());
+
+            }
+
+
+            /*
+             * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
+             * order{number} ： マクロ信号の順番
+             * inputFunctionNameId{string} : プルダウンに設定する値。
+             */
+            private setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
+                let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (inputFunctionName == null) {
+                    console.warn(FUNCTION_NAME + "setFunctionNamePullDownOf is null");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $functionNamePullDown = $signalContainerElement.find(".function-input[data-signal-order=\"" + order + "\"]");
+                if ($functionNamePullDown == null || $functionNamePullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$functionNamePullDown is invalid");
+                    return;
+                }
+
+                $functionNamePullDown.val(inputFunctionName);
+            }
+
+
+            /*
+             * 入力したorderのremoteプルダウンに、inputの値を代入する。
+             * order{number} ： マクロ信号の順番
+             * inputRemoteId{string} : プルダウンに設定する値。
+             */
+            private setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
+                let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (inputRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "inputRemoteId is null");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
+                if ($remoteIdPullDown == null || $remoteIdPullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
+                    return;
+                }
+
+                $remoteIdPullDown.val(inputRemoteId);
+
             }
 
 
