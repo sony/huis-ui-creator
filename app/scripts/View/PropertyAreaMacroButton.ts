@@ -23,7 +23,6 @@ module Garage {
 
             private templateItemDetailFile_: string;
             private actionsCount: number;
-            private defaultStateID: number;
             private availableRemotelist: IRemoteInfo[];
             private defaultState: IGState; // マクロボタンDefaultのstate
 
@@ -57,8 +56,19 @@ module Garage {
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
-                    "click #delete-signal-area .delete-signal" : "onDeleteButtonClick"
+                    "click #delete-signal-area .delete-signal": "onDeleteButtonClick"
+
                 };
+            }
+
+            //deleteボタンが押されたときに呼ばれる
+            private onDeleteButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onDeleteButtonClick";
+                let $target = $(event.currentTarget);
+                let order = this.getOrderFrom($target);
+
+                this.deleteSignal(order);
+
             }
 
             //プルダウンのいずれかが変更されたときに呼ばれる
@@ -203,6 +213,11 @@ module Garage {
 
                     //invervalを仮取得
                     let tmpInterval = $target.find("select.interval-input").val();
+
+                    //最初の信号(order = 0)のinvervalは必ず0に
+                    if (order == 0) {
+                        tmpInterval = 0;
+                    }
                     if (tmpInterval == null) {
                         tmpInterval = 0;
                     }
@@ -342,25 +357,8 @@ module Garage {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
 
-
-                //最初の１シグナル分は特例で、追加する。
-                let $signalContainer = $macroContainer.find("#signals-container");
-                let signalData: ISignalData = {
-                    order: 0,
-                    action: actions[0],
-                    id: id,
-                    remotesList: this.availableRemotelist,
-                }
-                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
-
-                for (let i = 1; i < actions.length; i++) {
-                    signalData.order = i;
-                    signalData.action = actions[i];
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
-                }
-
-
-                this.controlPlusButtonEnableDisable();
+                this.renderSignalContainers();
+                
 
                 return $macroContainer;
 
@@ -373,6 +371,61 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// private method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            /*
+            * シグナル設定用のpulldownたちをすべてレンダリングする。
+            */
+            private renderSignalContainers() {
+                let FUNCTION_NAME = TAG + "renderSignalContainers";
+
+                let actions: IAction[] = this.defaultState.action;
+
+                //最初の１シグナル分は特例で、追加する。
+                let $signalContainer = this.$el.find("#signals-container");
+
+                //一度、すべて消す。
+                $signalContainer.children().remove();
+
+                let signalData: ISignalData = {
+                    order: 0,
+                    action: actions[0],
+                    id: this.defaultState.id,
+                    remotesList: this.availableRemotelist,
+                }
+                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+
+                for (let i = 1; i < actions.length; i++) {
+                    signalData.order = i;
+                    signalData.action = actions[i];
+                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                }
+
+
+                this.controlPlusButtonEnableDisable();
+            }
+            
+            /*
+            * 入力されたorderに設定されている信号を削除する
+            * @param order{number}: それぞれの信号に設定されている順番
+            */
+            private deleteSignal(order: number) {
+                let FUNCTION_NAME = TAG + "deleteSignal";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                $target.remove();
+
+                //消えた後のプルダウンの値に合わせてアップデート
+                this.updateModel();
+
+                //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                this.renderSignalContainers();
+
+            }
 
             /*
             * インターバルなしの一回文のシグナルのJQueryを取得する。
@@ -402,7 +455,7 @@ module Garage {
                 //このorderの信号に登録されているremoteIdを取得し、表示
                 let remoteId: string = this.getRemoteIdByAction(signalData.action);
                 if (remoteId != null) {
-                    $signalContainer.find(".remote-input").val(remoteId);
+                    $signalContainer.find(".remote-input[data-signal-order=\"" + signalData.order + "\"]").val(remoteId);
                 }
 
                 //Functions用のプルダウンを描画できるときは描画
@@ -515,7 +568,7 @@ module Garage {
                     $functionlContainer.i18n();
 
                     //プルダウンにJQueryMobileのスタイルをあてる
-                    $functionlContainer.trigger('create');
+                    //$functionlContainer.trigger('create');
 
                 }
             }
@@ -543,12 +596,12 @@ module Garage {
             }
 
             /*
-            * 入力したorderの信号に登録されているremoteIdを取得する。
+            * 入力したorderの信号に登録されているremoteIdをthis.Modelから取得する。
             * 見つからなかった場合、undefinedを返す。
             * @order{number} : remoeIdを取得したい信号の順番
             * @{string} remoteId
             */
-            private getRemoteIdOf(order: number): string {
+            private getRemoteIdPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getRemoteIdOf";
                 if (order == null) {
                     console.warn(FUNCTION_NAME + "order is null");
@@ -582,7 +635,7 @@ module Garage {
                     console.warn(FUNCTION_NAME + "order is null");
                 }
 
-                let remoteId: string = this.getRemoteIdOf(order);
+                let remoteId: string = this.getRemoteIdPullDownOf(order);
                 if (remoteId == null) {
                     return;
                 }
