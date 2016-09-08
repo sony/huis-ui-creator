@@ -164,18 +164,12 @@ module Garage {
                     return;
                 }
 
-                let inputSignalData: ISignalDataForDisplayPullDown = {
-                    id: this.defaultState.id,
-                    order: order
-                }
-
                 //すでに、function選択用PullDownがある場合、削除する。
                 this.removeFunctionPullDown(order);
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(inputSignalData);
+                this.renderFunctionsOf(order);
 
-                //remoeIdを選ぶとき、
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
@@ -511,6 +505,12 @@ module Garage {
 
                 //リモコンの表示を変更
                 //このorderの信号に登録されているremoteIdを取得し、表示
+                let action = signalData.action;
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+
                 let remoteId: string = this.getRemoteIdByAction(signalData.action);
                 if (remoteId != null) {
                     $signalContainer.find(".remote-input[data-signal-order=\"" + signalData.order + "\"]").val(remoteId);
@@ -519,14 +519,46 @@ module Garage {
 
                 //Functions用のプルダウンを描画できるときは描画
                 let order = signalData.order;
+                let functionName = this.getFunctionNameFromAction(action);
                 if (order != null) {
-                    this.renderFunctionsOf(signalData);
+                    this.renderFunctionsOf(order, functionName);
                 }
 
                 //言語対応
                 $signalContainer.i18n();
 
             }
+
+            /*
+            * アクションに設定されているFunctionNameを取得する
+            * @param action{IAction} : functionNameを抽出するAction
+            * @return {string} : functionName, 見つからない場合、 nullを返す。
+            */
+            private getFunctionNameFromAction(action: IAction): string {
+                let FUNCTION_NAME = TAG + "getFunctionNameFromAction : ";
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return null;
+                }
+
+                let result: string = null;
+
+                if (action.code != null) {
+                    //TODO:学習の場合care,hashMapがないので、ここでエラーになる。
+                    result = action.code_db.function;
+                } else if (action.bluetooth_data != null) {
+                    result = action.bluetooth_data.bluetooth_data_content;
+                } else if (action.code_db != null) {
+                    result = action.code_db.function;
+                } else {
+                    //functionが取得できない
+                    console.warn(FUNCTION_NAME + "function is not found");
+                }
+
+                return result;
+            }
+
 
             /*
             * インターバルつきの一回文のシグナルのJQueryを取得する。
@@ -569,15 +601,11 @@ module Garage {
 
             /*
             * 入力したorderのFunctionsを描画する。
+            * 
             */
-            private renderFunctionsOf(signalData: ISignalDataForDisplayPullDown) {
+            private renderFunctionsOf(order : number, functionName? : string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
-                if (signalData == null) {
-                    console.warn("signalData is null");
-                    return;
-                }
-
-                let order = signalData.order;
+                
                 if (order == null) {
                     console.warn("order is null");
                     return;
@@ -599,29 +627,16 @@ module Garage {
 
                     let inputSignalData: ISignalDataForDisplayPullDown = {
                         functions: functions,
-                        id: signalData.id,
+                        id: this.defaultState.id,
                         order: order
                     }
                     let $functionsDetail = $(templateFunctions(inputSignalData));
                     $functionlContainer.append($functionsDetail);
 
                     //inputにmodelがある場合、値を表示
-                    let action = signalData.action;
-                    if (action != null) {
+                    if (functionName != null) {
                         let $functionPullDown: JQuery = $functionlContainer.find(".function-input");
-
-                        //TODO:学習の場合care,hashMapがないので、
-                        if (action.code != null) {
-                            $functionPullDown.val(action.code_db.function);
-                        } else if (action.bluetooth_data != null) {
-                            $functionPullDown.val(action.bluetooth_data.bluetooth_data_content);
-                        } else if (action.code_db != null) {
-                            $functionPullDown.val(action.code_db.function);
-                        } else {
-                            //functionが取得できないが、
-                            console.warn("function is not found");
-                        }
-
+                        $functionPullDown.val(functionName);
                     }
 
                     //Functionの文言を和訳
