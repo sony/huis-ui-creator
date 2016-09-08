@@ -512,7 +512,7 @@ module Garage {
                 if (remoteId != null) {
                     $signalContainer.find(".remote-input[data-signal-order=\"" + signalData.order + "\"]").val(remoteId);
                 }
-                $signalContainer.trigger('create');
+               
 
                 //Functions用のプルダウンを描画できるときは描画
                 let order = signalData.order;
@@ -523,7 +523,7 @@ module Garage {
 
                 //言語対応
                 $signalContainer.i18n();
-
+                $signalContainer.trigger('create');
             }
 
             /*
@@ -550,7 +550,6 @@ module Garage {
                     result = action.code_db.function;
                 } else {
                     //functionが取得できない
-                    console.warn(FUNCTION_NAME + "function is not found");
                 }
 
                 return result;
