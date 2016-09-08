@@ -270,20 +270,20 @@ module Garage {
                     }
 
                     //invervalを仮取得
-                    let tmpInterval: number = parseFloat($target.find("select.interval-input").val());
-                    if (tmpInterval == null) {
+                    let tmpInterval: number = this.getInvervalFromPullDownOf(order);
+                    if (!this.isValidPullDownValue(tmpInterval)) {
                         tmpInterval = 0;
                     }
 
                     //remoteIdを仮取得
-                    let tmpRemoteId = $target.find("select.remote-input").val();
-                    if (tmpRemoteId == null || tmpRemoteId == "none") {
+                    let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
+                    if (!this.isValidPullDownValue(tmpRemoteId)) {
                         tmpRemoteId = null;
                     }
 
                     //functionを仮取得
-                    let tmpFunction = $target.find("select.function-input").val();
-                    if (tmpFunction == "none") {
+                    let tmpFunction: string = this.getFunctionFromlPullDownOf(order);
+                    if (!this.isValidPullDownValue(tmpFunction)) {
                         tmpFunction = null;
                     }
 
