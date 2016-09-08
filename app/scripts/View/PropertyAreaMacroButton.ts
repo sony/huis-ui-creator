@@ -839,7 +839,7 @@ module Garage {
              * @param order{number} 入手したい$signal-container-elementの順番
              * @return {JQuery} $signal-container-element
              */ 
-            private getSignalContainerElementOf(order: number) {
+            private getSignalContainerElementOf(order: number) :JQuery{
                 let FUNCTION_NAME= TAG + "getSignalContainerElementOf";
                 if (order == null) {
                     console.warn(FUNCTION_NAME + "order is null");
