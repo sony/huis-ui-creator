@@ -371,7 +371,7 @@ module Garage {
 
                 //マクロの基本情報を付与
                 // ボタンの state 情報を付加
-                var $macroContainer = this.$el.find("#macro-container");
+                var $macroContainer = this.$el.nextAll("#macro-container");
                 let macroData: any = {};
                 let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
 

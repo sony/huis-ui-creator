@@ -4263,7 +4263,7 @@ module Garage {
 			}
 
 
-            private updateButtonItemModel(event: Event) {
+            private updateButtonItemModel(event: JQueryEventObject) {
                 let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
 
                 console.log(FUNCTION_NAME + "count " + this.testCountBug);
