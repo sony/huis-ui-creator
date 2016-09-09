@@ -1066,7 +1066,7 @@ module Garage {
             private isValidValue(value): boolean {
                 let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
                 
-                if (value === null) {
+                if (value == null) {
                     return false;
                 } else if (value == "none") {
                     return false;
