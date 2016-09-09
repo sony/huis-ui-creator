@@ -67,9 +67,9 @@ module Garage {
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
-                    "click #delete-signal-area .delete-signal": "onDeleteButtonClick",
-                    "click #sort-button-area .sort-up-btn": "onSortUpButtonClick",
-                    "click #sort-button-area .sort-down-btn": "onSortDownButtonClick",
+                    "click .delete-signal": "onDeleteButtonClick",
+                    "click .sort-up-btn": "onSortUpButtonClick",
+                    "click .sort-down-btn": "onSortDownButtonClick",
                     "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
                     "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
 
