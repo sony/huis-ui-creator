@@ -4244,7 +4244,7 @@ module Garage {
                     this.listenTo(this.macroProperty.model.state, "change", this.updateButtonItemModel);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
-                    this.macroProperty.el = $buttonDetail;
+                    this.macroProperty.$el = $buttonDetail;
                 }
 
                 $detail.append(this.macroProperty.renderView())
