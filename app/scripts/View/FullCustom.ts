@@ -1560,7 +1560,13 @@ module Garage {
 					if (deviceInfo.remoteName) {
 						remoteInfo = deviceInfo.remoteName;
 					}
-				}
+                }
+
+                //マクロボタンの場合、リモコン名を特殊表記
+                if (this.isMacroButton(buttonModel.button)) {
+                    remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
+                }
+                
 
 				$tooltip.find(".remote-info").html(remoteInfo);
 
@@ -1628,11 +1634,14 @@ module Garage {
 
 				var stateNum = buttonModel.button.state.length;
 				var fucntions: string[] = [];
-				for (var i = 0; i < buttonModel.button.state.length; i++){
-					if (buttonModel.button.state[i].action[0]){
-						fucntions.push(buttonModel.button.state[i].action[0].code_db.function.toString());
+                for (var i = 0; i < buttonModel.button.state.length; i++){
+                    for (let j = 0; j < buttonModel.button.state[i].action.length;j++){
+                        if (buttonModel.button.state[i].action[j]) {
+                            fucntions.push(buttonModel.button.state[i].action[j].code_db.function.toString());
 
-					}
+                        }
+
+                    }
 				}
 
 				return fucntions;
