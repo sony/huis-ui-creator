@@ -243,6 +243,7 @@
 
                         .delete-signal{
                             margin-left : auto;
+                            transition: 0.2s;
                             opacity:0;
                             background-position:center;
                             background-repeat: no-repeat;
@@ -270,13 +271,13 @@
                         z-index : 2;//pulldownより前に
                         height:100%;
                         width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
-                        //transition-duration : 0.2s;
                         position : absolute;
                         left : 0px;
                         top : 0px;
 
                         .sort-up-btn{
                             margin-right : auto;
+                            transition: 0.3s;
                             opacity:0;
                             background-color : white;
                             background-position:center;
@@ -294,6 +295,7 @@
 
                         .sort-down-btn{
                             margin-right : auto;
+                            transition: 0.3s;
                             opacity:0;
                             background-color : white;//要削除
                             background-position:center;
