@@ -286,19 +286,14 @@
                 .signal-container-element{
                     margin-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_MARGIN_TOP;
                     position:relative;
-                    #delete-signal-area{
-                        z-index : 2;//pulldownより前に
-                        height:100%;
-                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
-                        transition-duration : 0.2s;
-                        position : absolute;
-                        right : 0px;
-                        top : 0px;
 
-                        .delete-signal{
-                            margin-left : auto;
+                    .delete-signal{
+                            z-index : 2;//pulldownより前に
+                            position : absolute;
                             transition: 0.2s;
                             opacity:0;
+                            right:0;
+                            top:0;
                             background-position:center;
                             background-repeat: no-repeat;
                             background-size: contain;
@@ -308,31 +303,20 @@
 
                             &:hover, &:active{
                                 background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
-                            }
-                        }
-                        
-                        &:hover{
-                            .delete-signal{
-                                opacity:1.0;
-                            }
-                        }
-
-                        
+                           }
                     }
+                        
+                    
 
                     
-                    #sort-button-area{
-                        z-index : 2;//pulldownより前に
-                        height:100%;
-                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
-                        position : absolute;
-                        left : 0px;
-                        top : 0px;
-
                         .sort-up-btn{
+                            z-index : 2;//pulldownより前に
+                            position : absolute;
                             margin-right : auto;
                             transition: 0.3s;
                             opacity:0;
+                            left:0;
+                            top:0;
                             background-color : white;
                             background-position:center;
                             background-repeat: no-repeat;
@@ -348,9 +332,13 @@
                         }
 
                         .sort-down-btn{
+                            position : absolute;
+                            z-index : 2;//pulldownより前に
                             margin-right : auto;
                             transition: 0.3s;
                             opacity:0;
+                            left:0;
+                            bottom:0;
                             background-color : white;//要削除
                             background-position:center;
                             background-repeat: no-repeat;
@@ -364,17 +352,8 @@
                             }
                         }
 
-                        &:hover{
-                             .sort-up-btn{
-                                opacity:1.0;
-                            }
-
-                            .sort-down-btn{
-                                opacity:1.0;
-                            }
-                        }
                     }
-                }
+                
             }
 
 

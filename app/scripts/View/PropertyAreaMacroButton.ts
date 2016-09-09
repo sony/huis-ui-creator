@@ -69,8 +69,40 @@ module Garage {
                     "change select": "onAnyPulllDownChanged",
                     "click #delete-signal-area .delete-signal": "onDeleteButtonClick",
                     "click #sort-button-area .sort-up-btn": "onSortUpButtonClick",
-                    "click #sort-button-area .sort-down-btn": "onSortDownButtonClick"
+                    "click #sort-button-area .sort-down-btn": "onSortDownButtonClick",
+                    "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
+                    "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
+
                 };
+            }
+
+            //信号の削除・並び替えエリアの上にマウスが乗った際の処理
+            private onSignalControllAreaMouseOn(event: Event) {
+                let FUNCTION_NAME = TAG + "onSignalControllAreaMouseOn";
+
+                //コントロールボタンを出現させる
+                let $target = $(event.currentTarget).find(".signal-control-btn");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity", "1.0");
+
+                    $(event.currentTarget).nextAll(".custom-select").trigger("moouseover");
+                }
+
+
+            }
+
+            //信号の削除・並び替えエリアの上からマウスが去った際の処理
+            private onSignalControllAreaMouseOut(event: Event) {
+                let FUNCTION_NAME = TAG + "onSignalControllAreaMouseOut";
+
+                //コントロールボタンを見えなくする
+                let $target = $(event.currentTarget).find(".signal-control-btn");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity", "0");
+
+                    $(event.currentTarget).nextAll(".custom-select").trigger("moouseout");
+                }
+
             }
 
             //並び替え上ボタンが押されたときに呼ばれる
