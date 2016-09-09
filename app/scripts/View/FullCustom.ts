@@ -4006,6 +4006,7 @@ module Garage {
 
                 //マクロ用のプロパティのインスタンスを削除
                 if (this.macroProperty != null) {
+                    this.macroProperty.unbind("updateModel", this.updateButtonItemModel, this);
                     this.macroProperty.remove();
                     this.macroProperty = null
                 }
@@ -4240,8 +4241,8 @@ module Garage {
                         model: button,
                     });
                     //モデルが更新されたときfullcustom側のmodelも更新する
-                    //TODO:maximum stackを解消する
-                    this.listenTo(this.macroProperty.model.state, "change", this.updateButtonItemModel);
+                    //this.listenTo(this.macroProperty.model, "change", this.updateButtonItemModel);
+                    this.macroProperty.bind("updateModel", this.updateButtonItemModel,this);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
                     this.macroProperty.$el = $buttonDetail;
@@ -4265,10 +4266,6 @@ module Garage {
 
             private updateButtonItemModel(event: JQueryEventObject) {
                 let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
-
-                console.log(FUNCTION_NAME + "count " + this.testCountBug);
-                this.testCountBug++;
-
 
                 let button: Model.ButtonItem = this.macroProperty.getModel();
                 if (button == null) {

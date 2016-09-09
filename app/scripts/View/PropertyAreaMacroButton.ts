@@ -360,6 +360,7 @@ module Garage {
                 states.push(this.defaultState);
 
                 this.model.state = states;
+                this.trigger("updateModel");
             }
 
             /*
