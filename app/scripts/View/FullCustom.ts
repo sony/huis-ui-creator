@@ -4243,7 +4243,8 @@ module Garage {
                     //TODO:maximum stackを解消する
                     this.listenTo(this.macroProperty.model.state, "change", this.updateButtonItemModel);
                 } else {
-                    this.macroProperty.$el = $buttonDetail;
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.macroProperty.el = $buttonDetail;
                 }
 
                 $detail.append(this.macroProperty.renderView())
