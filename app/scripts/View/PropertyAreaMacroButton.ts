@@ -35,7 +35,7 @@ module Garage {
             private templateItemDetailFile_: string;
             private actionsCount: number;
             private availableRemotelist: IRemoteInfo[];
-            private defaultStateId: number;
+            private defaultState: IGState; // マクロボタンDefaultのstate
 
 			/**
 			 * constructor
@@ -46,7 +46,7 @@ module Garage {
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
 
                 //stateIdはデフォルト値とする。
-                this.defaultStateId = this.model.default;
+                this.defaultState = this.model.state[this.model.default];
             }
 
 
@@ -118,7 +118,7 @@ module Garage {
                 }
 
                 //一番下のボタンの場合、無視する
-                if (order >= this.model.state[this.defaultStateId].action.length - 1) {
+                if (order >= this.defaultState.action.length - 1) {
                     console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
                     return;
                 }
@@ -208,12 +208,12 @@ module Garage {
                     input: tmpInput,
                     interval: DEFAULT_INTERVAL_MACRO,
                 };
-                let tmpOrder = this.model.state[this.defaultStateId].action.length;
+                let tmpOrder = this.defaultState.action.length;
 
                 let signalData: ISignalDataForDisplayPullDown = {
                     order: tmpOrder,
                     action: empltyAction,
-                    id: this.model.state[this.defaultStateId].id,
+                    id: this.defaultState.id,
                     remotesList: this.availableRemotelist,
                 };
 
@@ -354,10 +354,10 @@ module Garage {
                 }
 
                 //マクロボタンのstateは、デフォルト一つとする。
-                this.model.state[this.defaultStateId].action = actionsForUpdate;
+                this.defaultState.action = actionsForUpdate;
                 let states: IGState[] = [];
 
-                states.push(this.model.state[this.defaultStateId]);
+                states.push(this.defaultState);
 
                 this.model.state = states;
             }
@@ -375,8 +375,8 @@ module Garage {
                 let macroData: any = {};
                 let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
 
-                let state = this.model.state[this.defaultStateId];
-                let id: number = this.defaultStateId;
+                let state = this.defaultState;
+                let id: number = this.defaultState.id;
                 macroData.id = id;
 
 
@@ -444,7 +444,7 @@ module Garage {
             private renderSignalContainers() {
                 let FUNCTION_NAME = TAG + "renderSignalContainers";
 
-                let actions: IAction[] = this.model.state[this.defaultStateId].action;
+                let actions: IAction[] = this.defaultState.action;
 
                 //最初の１シグナル分は特例で、追加する。
                 let $signalContainer = this.$el.find("#signals-container");
@@ -455,7 +455,7 @@ module Garage {
                 let signalData: ISignalDataForDisplayPullDown = {
                     order: 0,
                     action: actions[0],
-                    id: this.defaultStateId,
+                    id: this.defaultState.id,
                     remotesList: this.availableRemotelist,
                 }
                 this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
@@ -634,7 +634,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id : this.defaultStateId
+                    id : this.defaultState.id
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-interval", this.templateItemDetailFile_);
@@ -684,7 +684,7 @@ module Garage {
 
                     let inputSignalData: ISignalDataForDisplayPullDown = {
                         functions: functions,
-                        id: this.defaultStateId,
+                        id: this.defaultState.id,
                         order: order
                     }
                     let $functionsDetail = $(templateFunctions(inputSignalData));
@@ -1111,7 +1111,7 @@ module Garage {
                 }
 
                 //設定できるマクロ最大数だった場合もdisable
-                if (this.model.state[this.defaultStateId].action.length >= MAX_NUM_MACRO_SIGNAL) {
+                if (this.defaultState.action.length >= MAX_NUM_MACRO_SIGNAL) {
                     $target.removeClass("disabled");
                 }
 
