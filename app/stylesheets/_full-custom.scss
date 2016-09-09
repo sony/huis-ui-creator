@@ -206,6 +206,60 @@
             font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
             color: $COLOR_PROPATY_AREA_TEXT;
 
+            .header{
+                display:flex;
+
+                #about-macro{
+                color: #555;
+                display: inline-block;                        /* インライン要素化 */
+
+                /* ツールチップ部分を隠す */
+                span{
+                    display: none;
+                }
+
+                &:hover{
+                    position: relative;
+                    color: #333;
+
+                    /* マウスオーバー時にツールチップを表示 */
+                    span{
+                        display: block;                  /* ボックス要素にする */
+                        position: absolute;            /* relativeからの絶対位置 */
+                        top: 25px;
+                        font-size: 90%;
+                        color: #fff;
+                        background-color: #51A2C1;
+                        width: 205px;
+                        padding: 5px;
+                        border-radius:3px;
+                        z-index:100;
+
+                        /* フキダシ部分を作成 */
+                        &:before{
+                            content:''; 
+                            display:block; 
+                            position:absolute;                         /* relativeからの絶対位置 */
+                            height:0; 
+                            width:0; 
+                            top:-13px; 
+                            left:15px;
+                            border:13px transparent solid; 
+                            border-right-width:0; 
+                            border-left-color:#51A2C1; 
+                            transform:rotate(270deg);            /* 傾きをつける */
+                            -webkit-transform:rotate(270deg);
+                            -o-transform:rotate(270deg);
+                            z-index:100;
+                        }
+
+                    }
+                }
+            }
+            }
+            
+
+
             #macro-container{
                 #add-signal-btn{
                     background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
