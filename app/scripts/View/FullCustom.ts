@@ -1114,41 +1114,15 @@ module Garage {
              * @param droppedPageModId 移動先ページの module ID
              */
             private _moveItemAcrossPage(droppedPageModId: string, position: IPosition) {
-                let newTargetModel = $.extend(true, {}, this.currentTargetModel_);
+                let newModel = this._cloneTargetModel(this.currentTargetModel_);
 
                 //座標計算
-                let relativePosition = this.getPointFromCanvas({ x: this.$currentTarget_.offset().left, y: this.$currentTarget_.offset().top }, droppedPageModId); //position, droppedPageModId);
-                
-                let targetArea: IArea;
-                switch (newTargetModel.type) {
-                    case "button":
-                        targetArea = newTargetModel.button.area;
-                        break;
-                    case "image":
-                        targetArea = newTargetModel.image.area;
-                        break;
-                    case "label":
-                        targetArea = newTargetModel.label.area;
-                        break;
-                    default:
-                        break;
-                }
-                targetArea.x = relativePosition.x;
-                targetArea.y = relativePosition.y;
+                let relativePosition = this.getPointFromCanvas({ x: this.$currentTarget_.offset().left, y: this.$currentTarget_.offset().top }, droppedPageModId); 
+                // 枠内補正＋グリッド補正　★★★★TBD★★★★
+                this._updateTargetModelArea(newModel, relativePosition.x, relativePosition.y, null, null);
 
-                console.debug("newTargetArea: " + targetArea.x + "-" + targetArea.y);
-                console.debug("oldTargetArea: " + (this.currentTargetModel_.button ? this.currentTargetModel_.button.area.x + "-" + this.currentTargetModel_.button.area.y : ""));
-                
                 //droppedPageに追加
-                let newItem = this.setNewItemOnCanvas(newTargetModel, droppedPageModId, 0);
-
-                //currentPageから削除
-                let delMemento = this._deleteCurrentTargetItem(false);
-
-                this.currentTargetModel_ = newTargetModel;
-
-                //表示更新
-                // model 状態を有効にする
+                let newItem = this.setNewItemOnCanvas(newModel, droppedPageModId, 0);
                 var addMemento: IMemento = {
                     target: newItem,
                     previousData: {
@@ -1158,13 +1132,17 @@ module Garage {
                         enabled: true
                     }
                 };
+
+                //currentPageから削除
+                let delMemento = this._deleteCurrentTargetItem(false);
+                
                 var mementoCommand = new MementoCommand(delMemento, addMemento);
                 var updatedItems = this.commandManager_.invoke(mementoCommand);
 
+                // 新しいItemの詳細エリア表示
+                this._setTarget(newItem);
                 this._updateItemElementsOnCanvas(updatedItems);
                 this._showDetailItemArea(this.currentTargetModel_);
-
-                this.changeColorOverlapedButtonsWithCurrentTargetButton();
             }
 
 
@@ -4085,6 +4063,24 @@ module Garage {
 				});
 			}
 
+            private _setTarget(target: ItemModel) {
+                this.$currentTarget_ = this._getItemElementByModel(target);
+                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+
+                // 選択状態にする
+                this.$currentTarget_.addClass("selected");
+
+                //ツールチップを非表示にする。
+                this.disableButtonInfoTooltip();
+
+                // リサイザーを追加
+                this._setResizer(this.$currentTarget_);
+
+                // 詳細編集エリアを表示
+                $("#face-item-detail-area").addClass("active");
+                this._showDetailItemArea(this.currentTargetModel_);
+            }
+
 			/**
 			 * ターゲットを外す
 			 */
@@ -4622,8 +4618,47 @@ module Garage {
 				}
             }
 
-            private _getItemModelArea(model: TargetModel) {
+            private _cloneTargetModel(model: TargetModel): TargetModel {
+                let clone: TargetModel = { type: model.type };
 
+                switch (clone.type) {
+                    case "button":
+                        clone.button = $.extend(true, {}, model.button);
+                        break;
+                    case "image":
+                        clone.image = $.extend(true, {}, model.image);
+                        break;
+                    case "label":
+                        clone.label = $.extend(true, {}, model.label);
+                        break;
+                    default:
+                        return null;
+                }
+
+                return clone;
+            }
+
+            private _updateTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
+                let target: IArea;
+                switch (model.type) {
+                    case "button":
+                        target = model.button.area;
+                        break;
+                    case "image":
+                        target = model.image.area;
+                        break;
+                    case "label":
+                        target = model.label.area;
+                        break;
+                    default:
+                        console.error("Invalid model type: " + model.type);
+                        return;
+                }
+
+                if (_.isNumber(x)) target.x = x;
+                if (_.isNumber(y)) target.y = y;
+                if (_.isNumber(w)) target.w = w;
+                if (_.isNumber(h)) target.h = h;
             }
 
 			/**
