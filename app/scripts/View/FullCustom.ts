@@ -76,7 +76,8 @@ module Garage {
             //マクロのプロパティView用
             private macroProperty: PropertyAreaMacroButton;
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
-            
+            private testCountBug: number;
+
 			/**
 			 * construnctor
 			 */
@@ -90,7 +91,7 @@ module Garage {
 			//! page initialization event
 			onInitialize(event: JQueryEventObject): void {
 				super.onInitialize(event);
-
+                this.testCountBug = 0;
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
@@ -3317,9 +3318,11 @@ module Garage {
 				var mementoCommand = new MementoCommand(memento);
 				this.commandManager_.invoke(mementoCommand);
 
+                var $detail = $("#face-item-detail");
+                $detail.children().remove();
+
 				this._updateItemElementOnCanvas(model);
-				var $detail = $("#face-item-detail");
-				$detail.children().remove();
+				
 				// DOM の削除
 				//this.$currentTarget_.remove();
 
@@ -4216,8 +4219,6 @@ module Garage {
 					return;
 				}
 
-                $detail.append('<div class = "macro-property-area"></div>');
-
                 var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
                 //var $buttonDetail = $(templateButton(this._macroButtonModel));
                 var $buttonDetail = $(templateButton(button));
@@ -4229,7 +4230,11 @@ module Garage {
                         el: $buttonDetail,
                         model: button,
                     });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    //TODO:maximum stackを解消する
+                    this.listenTo(this.macroProperty.model.state, "change", this.updateButtonItemModel);
                 }
+
                 $detail.append(this.macroProperty.renderView())
 
                 //previewの情報を別途更新。
@@ -4238,28 +4243,22 @@ module Garage {
                 this._updatePreviewInDetailArea(resolvedPath, $preview);
                 //テキストボタン、あるいは画像のどちらかを表示する。
                 this.toggleImagePreview(button.default);
-                
+
                 $detail.i18n();
-
-                //モデルが更新されたときfullcustom側のmodelも更新する
-                //TODO:maximum stackを解消する
-         
-                this.listenTo(this.macroProperty.model, "change", (event: JQueryEventObject) => {
-                    let macroButton: Model.ButtonItem = this.macroProperty.getModel();
-                    if (macroButton == null) {
-                        return;
-                    }
-
-                    this.updateButtonItemModel(macroButton);
-
-                });
-
-                
 			}
 
 
-            private updateButtonItemModel(button : Model.ButtonItem) {
-                let FUNCTION_NAME = TAG + "updateButtonItemModel";
+            private updateButtonItemModel(event: Event) {
+                let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
+
+                console.log(FUNCTION_NAME + "count " + this.testCountBug);
+                this.testCountBug++;
+
+
+                let button: Model.ButtonItem = this.macroProperty.getModel();
+                if (button == null) {
+                    return;
+                }
 
                 let currentButtonState = this.currentTargetButtonStates_;
                 let newButtonState = button.state;
@@ -4271,7 +4270,7 @@ module Garage {
                     nextData: { "state": newButtonState }
                 };
                 var mementoCommand = new MementoCommand(memento);
-                this.commandManager_.invoke(mementoCommand);   
+                this.commandManager_.invoke(mementoCommand);
             }
 
 
