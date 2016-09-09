@@ -326,65 +326,65 @@
 	<script type="text/template" id="template-macro-button-detail">
 		{{! マクロボタンの詳細情報エリア}}
 
+        <div id="macro-property-area">
+		    <h3 id="face-item-detail-title">
+                <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
+		    </h3>
 
-		<h3 id="face-item-detail-title">
-            <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
-		</h3>
 
-
-		<div id="macro-container"></div>
-
+		    <div id="macro-container"></div>
+        </div>
 
 	</script>
 
     <!--マクロ 基本ボタン情報表示用-->
 	<script type="text/template" id="template-property-macro-button">
-		<div class="macro-container">
-			<!-- プレビュー -->
-			<div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
-				<div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
-				<div class="text-field-in-preview">
-					<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
-					<input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+        <div class="macro-container" data-state-id="{{id}}">
+            <!-- プレビュー -->
+            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
+                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
+                <div class="text-field-in-preview">
+                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
+                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
 
-					<div class="custom-select text-size-pulldown">
-						<select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
-							<option value="12">12px</option>
-							<option value="14">14px</option>
-							<option value="16">16px</option>
-							<option value="18">18px</option>
-							<option value="20">20px</option>
-							<option value="23">23px</option>
-							<option value="28">28px</option>
-							<option value="30" selected>30px</option>
-							<option value="32">32px</option>
-							<option value="36">36px</option>
-							<option value="40">40px</option>
-							<option value="44">44px</option>
-							<option value="48">48px</option>
-							<option value="54">54px</option>
-							<option value="60">60px</option>
-							<option value="72">72px</option>
-							<option value="80">80px</option>
-							<option value="88">88px</option>
-							<option value="96">96px</option>
-						</select>
-					</div>
-				</div>
-			</div>
+                    <div class="custom-select text-size-pulldown">
+                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="23">23px</option>
+                            <option value="28">28px</option>
+                            <option value="30" selected>30px</option>
+                            <option value="32">32px</option>
+                            <option value="36">36px</option>
+                            <option value="40">40px</option>
+                            <option value="44">44px</option>
+                            <option value="48">48px</option>
+                            <option value="54">54px</option>
+                            <option value="60">60px</option>
+                            <option value="72">72px</option>
+                            <option value="80">80px</option>
+                            <option value="88">88px</option>
+                            <option value="96">96px</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-			<div class="custom-select">
-				<select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
-					<option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
-					<option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
-				</select>
-			</div>
+            <div class="custom-select">
+                <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
+                    <option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
+                    <option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
+                </select>
+            </div>
 
-			<div id="signals-container"></div>
+            <div id="signals-container"></div>
 
             <div id="add-signal-btn"></div>
 
-            </div>
+        </div>
 	</script>
 
     <!--マクロのリモコン信号選択用-->

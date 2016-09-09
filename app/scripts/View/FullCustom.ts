@@ -4233,6 +4233,8 @@ module Garage {
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     //TODO:maximum stackを解消する
                     this.listenTo(this.macroProperty.model.state, "change", this.updateButtonItemModel);
+                } else {
+                    this.macroProperty.$el = $buttonDetail;
                 }
 
                 $detail.append(this.macroProperty.renderView())
