@@ -399,7 +399,7 @@
 
                 <div class="custom-select">
                     <select class="remote-input" id="select-macro-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                        <option value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
+                        <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
                         {{#remotesList}}
                         <option value="{{remoteId}}">{{face.name}}</option>
                         {{/remotesList}}
@@ -425,7 +425,7 @@
         <div class="signal-function-container-element">
             <div class="custom-select">
                 <select class="function-input" id="select-macro-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    <option value="none" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
+                    <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
                     {{#functions}}
                     <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
                     {{/functions}}
