@@ -113,7 +113,12 @@ module Garage {
 		export class MementoCommand implements ICommand {
             private mementoList_: IMemento[];
 
-            constructor(...memento: IMemento[]) {
+            /**
+             * コマンドを生成する
+             * コマンドは複数設定可能で、初回実行/redo時は先頭から、undo時は末尾から順に処理される
+             * @param memento 
+             */
+            constructor(memento: IMemento[]) {
                 this.mementoList_ = memento;
 			}
 
