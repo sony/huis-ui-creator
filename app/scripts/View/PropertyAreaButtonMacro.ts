@@ -539,7 +539,7 @@ module Garage {
                 }
 
                 //ベースとなるDOM描写する
-                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal", this.templateItemDetailFile_);
+                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal", this.templateItemDetailFile_);
                 $signalContainer.append($(templateSignal(signalData)));
 
 
@@ -663,7 +663,7 @@ module Garage {
                     id : this.defaultState.id
                 }
 
-                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-interval", this.templateItemDetailFile_);
+                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.templateItemDetailFile_);
                 let $intervalDetail = $(templateInterval(signalData));
                 $intervalContainer.append($intervalDetail);
 
@@ -706,7 +706,7 @@ module Garage {
                 if (functions != null) {
                     //インターバル用のテンプレートを読み込み
                     let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-macro-button-signal-functions", this.templateItemDetailFile_);
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
 
                     let inputSignalData: ISignalDataForDisplayPullDown = {
                         functions: functions,
