@@ -244,76 +244,45 @@
 				</div>
 			</div>
 
-
-			<!-- ボタンのエリア
-			<div class="one-line-label">
-				<div class="label-button-state">位置</div>
-				<div class="label-button-state">サイズ</div>
-			</div>
-
-			<div class="one-line-label">
-				<div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
-				<div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
-			</div>
-			-->
-			<!-- 画像ファイル変更
-			<div class="property-state-image">
-				<h4>画像ファイル</h4>
-				<input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-				<button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
-			</div>
-			-->
-			<!-- テキスト
-			<div class="property-state-label">
-				<h4>テキスト</h4>
-				<input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-
-				<div class="custom-select text-size-pulldown">
-					<select class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
-						<option value="12">12px</option>
-						<option value="14">14px</option>
-						<option value="16">16px</option>
-						<option value="18">18px</option>
-						<option value="20">20px</option>
-						<option value="24">24px</option>
-						<option value="28">28px</option>
-						<option selected value="30">30px</option>
-						<option value="32">32px</option>
-						<option value="36">36px</option>
-						<option value="40">40px</option>
-						<option value="44">44px</option>
-						<option value="48">48px</option>
-						<option value="54">54px</option>
-						<option value="60">60px</option>
-						<option value="72">72px</option>
-						<option value="80">80px</option>
-						<option value="88">88px</option>
-						<option value="96">96px</option>
-					</select>
-				</div>
-			</div>-->
+           
+		
 			<!-- アクション -->
 			<div class="property-state-action">
 				<h4 id="button-state-label-action">★アクション</h4>
-				<!--jQueryMobileを動的に追加されたDOMに使用するためには、trigger("create")を呼び出す範囲指定が必要-->
-				<div class="custom-select">
-					<select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
-						<option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
-						<option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
-					</select>
-				</div>
-				<div class="custom-select">
-					<select class="state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false">
-						<option value="none" data-i18n="button.none.STR_REMOTE_BTN_NONE">★何もしない</option>
-						{{#functions}}
-						<option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-						{{/functions}}
-					</select>
-				</div>
 
+                <div id="signals-container"></div>
 			</div>
 		</div>
 	</script>
+
+    <!-- 通常のボタンの１信号分のDOM -->
+    <script type="text/template" id="template-property-button-signal-normal">
+
+        <div class="signal-container-element" data-signal-order="{{order}}">
+
+            <!--jQueryMobileを動的に追加されたDOMに使用するためには、trigger("create")を呼び出す範囲指定が必要-->
+            <div class="custom-select">
+                <select class="action-input state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                    <option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
+                    <option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
+                </select>
+            </div>
+
+            <div class="custom-select">
+                <select class="function-input state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
+                    <option value="none" data-i18n="button.none.STR_REMOTE_BTN_NONE">★何もしない</option>
+                    {{#functions}}
+                    <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                    {{/functions}}
+                </select>
+            </div>
+
+        </div>
+
+</script>
+	
+
+
 
     <!--マクロボタン用-->
 	<script type="text/template" id="template-macro-button-detail">
@@ -371,7 +340,7 @@
             </div>
 
             <div class="custom-select">
-                <select class="state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-native-menu="false">
+                <select class="action-input state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                     <option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
                     <option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
                 </select>

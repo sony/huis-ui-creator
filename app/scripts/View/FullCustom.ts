@@ -75,7 +75,11 @@ module Garage {
             private bindedLayoutPage = null;
             //マクロのプロパティView用
             private macroProperty: PropertyAreaButtonMacro;
+            //通常ボタンのプロパティView用
+            private buttonProperty: PropertyAreaButtonNormal;
+
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
+            
 
 			/**
 			 * construnctor
@@ -101,6 +105,7 @@ module Garage {
 
 					super.onPageShow(event, data);
                     this.macroProperty = null;
+                    this.buttonProperty = null;
 					this.newRemote_ = false;
 
 					this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -4002,6 +4007,14 @@ module Garage {
 				this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
+
+                //ボタン用のプロパティのインスタンスを削除
+                if (this.buttonProperty != null) {
+                    //this.buttonProperty.unbind("updateModel", this.updateButtonItemModel, this);
+                    this.buttonProperty.remove();
+                    this.buttonProperty = null
+                }
+
                 //マクロ用のプロパティのインスタンスを削除
                 if (this.macroProperty != null) {
                     this.macroProperty.unbind("updateModel", this.updateButtonItemModel, this);
@@ -4331,17 +4344,23 @@ module Garage {
 					}
 				}
 
-				
-
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-				var $buttonDetail = $(templateButton(button));
+                var $buttonDetail = $(templateButton(button));
 
-				// ボタンのエリア情報を付加
-				var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
-				var $areaContainer = $buttonDetail.nextAll("#area-container");
-				$areaContainer.append($(templateArea(button)));
-
+                //信号用のViewの初期化・更新
+                if (this.buttonProperty == null) {
+                    this.buttonProperty = new PropertyAreaButtonNormal({
+                        el: $buttonDetail,
+                        model: button,
+                    });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    //this.listenTo(this.buttonProperty.model, "change", this.updateButtonItemModel);
+                    this.buttonProperty.bind("updateModel", this.updateButtonItemModel, this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.buttonProperty.$el = $buttonDetail;
+                }
 
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
@@ -4402,9 +4421,22 @@ module Garage {
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
-                        // 文言あて・ローカライズ
-                        $stateDetail.i18n();
+                       
 
+                        //テキストラベルの大きさの設定値を反映する。
+                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                        if (!_.isUndefined(stateData.label)) {
+                            var textSizeString: string = stateData.label.size;
+                            $textSize.val(textSizeString);
+                        }
+
+                        //信号コンテナを描画
+                        $statesContainer.append(this.buttonProperty.renderViewState(state.id));
+
+                        // 文言あて・ローカライズ
+                        $statesContainer.i18n();
+
+                        /*
                         let actionList = state.actionList;
                         let alreadyMenuSet = false;
                         if (actionList) {
@@ -4417,14 +4449,9 @@ module Garage {
                                     alreadyMenuSet = true;
                                 }
                             }
-                        }
+                        }*/
 
-						//テキストラベルの大きさの設定値を反映する。
-						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
-						if (!_.isUndefined(stateData.label)) {
-							var textSizeString: string = stateData.label.size;
-							$textSize.val(textSizeString);
-						}
+						
 
                     });
                     

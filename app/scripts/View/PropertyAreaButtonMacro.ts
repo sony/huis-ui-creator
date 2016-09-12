@@ -207,7 +207,7 @@ module Garage {
                 }
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order);
+                this.renderFunctionsOf(order, this.defaultState.id);
 
             }
 
@@ -561,7 +561,7 @@ module Garage {
                 let order = signalData.order;
                 let functionName = this.getFunctionNameFromAction(action);
                 if (order != null) {
-                    this.renderFunctionsOf(order, functionName);
+                    this.renderFunctionsOf(order, this.defaultState.id,functionName);
                 }
 
                 //言語対応
@@ -569,36 +569,7 @@ module Garage {
                 $signalContainer.trigger('create');
             }
 
-            /*
-            * アクションに設定されているFunctionNameを取得する
-            * @param action{IAction} : functionNameを抽出するAction
-            * @return {string} : functionName, 見つからない場合、 nullを返す。
-            */
-            private getFunctionNameFromAction(action: IAction): string {
-                let FUNCTION_NAME = TAG + "getFunctionNameFromAction : ";
-
-                if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
-                    return null;
-                }
-
-                let result: string = null;
-
-                if (action.code != null) {
-                    //TODO:学習の場合care,hashMapがないので、ここでエラーになる。
-                    result = action.code_db.function;
-                } else if (action.bluetooth_data != null) {
-                    result = action.bluetooth_data.bluetooth_data_content;
-                } else if (action.code_db != null) {
-                    result = action.code_db.function;
-                } else {
-                    //functionが取得できない
-                }
-
-                return result;
-            }
-
-
+            
             /*
             * インターバルつきの一回文のシグナルのJQueryを取得する。
             * @param signalData{ISignalData} 表示する内容のアクション
@@ -679,116 +650,6 @@ module Garage {
 
 
             /*
-            * 入力したorderのFunctionsを描画する。
-            * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
-            * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
-            */
-            private renderFunctionsOf(order : number, functionName? : string) {
-                let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
-                
-                if (order == null) {
-                    console.warn("order is null");
-                    return;
-                }
-
-                //すでに、function選択用PullDownがある場合、削除する。
-                this.removeFunctionPullDown(order);
-
-                //targetとなるJQueryを取得
-                let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                if ($target == null || $target.length == 0) {
-                    console.warn("$target is undefined");
-                    return;
-                }
-
-                //FunctionプルダウンのDOMを表示。
-                let functions: string[] = this.getFunctionsOf(order);
-                if (functions != null) {
-                    //インターバル用のテンプレートを読み込み
-                    let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
-
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
-                        functions: functions,
-                        id: this.defaultState.id,
-                        order: order
-                    }
-                    let $functionsDetail = $(templateFunctions(inputSignalData));
-                    $functionlContainer.append($functionsDetail);
-
-                    //inputにmodelがある場合、値を表示
-                    if (functionName != null) {
-                        this.setFunctionNamePullDownOf(order,functionName);
-                    }
-
-                    //Functionの文言を和訳
-                    $functionlContainer.i18n();
-
-                    //プルダウンにJQueryMobileのスタイルをあてる
-                    $functionlContainer.trigger('create');
-
-                }
-            }
-
-            /*
-            * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
-            * @param $target{JQuery} 対象となるJQuery
-            * @return {number} order情報 みつからない場合、undefinedを返す。
-            */
-            private getOrderFrom($target: JQuery): number {
-                let FUNCTION_NAME = TAG + "getOrderFrom";
-
-                if ($target == null) {
-                    console.warn(FUNCTION_NAME + "$target is null");
-                    return;
-                }
-
-                let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
-
-                if (result != null) {
-                    return result;
-                } else {
-                    return undefined;
-                }
-            }
-
-            /*
-            * 入力したorderの信号に登録されているremoteIdをpulldownから取得する。
-            * 見つからなかった場合、undefinedを返す。
-            * @order{number} : remoeIdを取得したい信号の順番
-            * @{string} remoteId
-            */
-            private getRemoteIdFromPullDownOf(order: number): string {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-
-                let $signalContainerElement = this.getSignalContainerElementOf(order);
-                if ($signalContainerElement == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
-                    return;
-                }
-
-                let remoteId: string = null;
-                let $remotePullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if ($remotePullDown == null || $remotePullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$remotePullDown is invalid");
-                    return;
-                }
-                remoteId = $remotePullDown.val();
-
-                //"none"も見つからない扱いとする。
-                if (!this.isValidValue(remoteId)) {
-                    return undefined;
-                }
-
-                return remoteId;
-
-            }
-
-            /*
             * 入力したorderの信号に登録されているinvervalをpulldownから取得する。
             * 見つからなかった場合、undefinedを返す。
             * @order{number} : numberを取得したい信号の順番
@@ -821,6 +682,7 @@ module Garage {
                 return inverval;
             }
 
+
             /*
             * 入力したorderのInvervalプルダウンに、inputの値を代入する。
             * order{number} ： マクロ信号の順番
@@ -852,152 +714,6 @@ module Garage {
 
             }
 
-
-            /*
-             * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
-             * order{number} ： マクロ信号の順番
-             * inputFunctionNameId{string} : プルダウンに設定する値。
-             */
-            private setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
-                let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-
-                if (inputFunctionName == null) {
-                    console.warn(FUNCTION_NAME + "setFunctionNamePullDownOf is null");
-                    return;
-                }
-
-                let $signalContainerElement = this.getSignalContainerElementOf(order);
-                if ($signalContainerElement == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
-                    return;
-                }
-
-                let $functionNamePullDown = $signalContainerElement.find(".function-input[data-signal-order=\"" + order + "\"]");
-                if ($functionNamePullDown == null || $functionNamePullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$functionNamePullDown is invalid");
-                    return;
-                }
-
-                $functionNamePullDown.val(inputFunctionName);
-            }
-
-
-            /*
-             * 入力したorderのremoteプルダウンに、inputの値を代入する。
-             * order{number} ： マクロ信号の順番
-             * inputRemoteId{string} : プルダウンに設定する値。
-             */
-            private setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
-                let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-
-                if (inputRemoteId == null) {
-                    console.warn(FUNCTION_NAME + "inputRemoteId is null");
-                    return;
-                }
-
-                let $signalContainerElement = this.getSignalContainerElementOf(order);
-                if ($signalContainerElement == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
-                    return;
-                }
-
-                let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if ($remoteIdPullDown == null || $remoteIdPullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
-                    return;
-                }
-
-                $remoteIdPullDown.val(inputRemoteId);
-
-            }
-
-
-            /*
-            * 入力したorderの信号に登録されているfunctionをpulldownから取得する。
-            * 見つからなかった場合、undefinedを返す。
-            * @order{number} : functionを取得したい信号の順番
-            * @{string} functionName
-            */
-            private getFunctionFromlPullDownOf(order: number): string {
-                let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-
-                let $signalContainerElement = this.getSignalContainerElementOf(order);
-                if ($signalContainerElement == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
-                    return;
-                }
-
-                let functionName : string = null;
-                let $functionPullDown = $signalContainerElement.find(".function-input[data-signal-order=\"" + order + "\"]");
-                if ($functionPullDown == null || $functionPullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$functionPullDown is invalid");
-                    return;
-                }
-
-                functionName = $functionPullDown.val();
-
-                if (!this.isValidValue(functionName)) {
-                    return undefined;
-                }
-
-                return functionName;
-            }
-
-
-            /*
-            * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
-            * @param order {number} 信号リストを取得したい、マクロ信号の順番
-            * @return {string[]} 見つからなかった場合、undefinedを返す。
-            */
-            private getFunctionsOf(order: number) {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf";
-
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                }
-
-                let remoteId: string = this.getRemoteIdFromPullDownOf(order);
-                if (remoteId == null) {
-                    return;
-                }
-
-                //TODO：huisFilesで取得できない場合の処理(すでに削除されているなど)
-                //キャッシュで対応する。
-                return huisFiles.getMasterFunctions(remoteId);
-            }
-
-            
-
-
-            /*
-            * 設定したOrderのfunction用PullDownを消す。
-            * @param order {number}
-            */
-            private removeFunctionPullDown(order: number) {
-                let FUNCTION_NAME = TAG + "removeFunctionPullDown";
-
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-
-                //対象orderのfunctionPullDown用コンテナの子供を削除する
-                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-function-container");
-                $targetFunctionPulllDownContainer.children().remove();
-            }
 
             /*
             * 表示されているすべての信号登録用pulldownに情報が埋まっているか否かを返す。
@@ -1073,19 +789,7 @@ module Garage {
 
             }
 
-            /*
-             * 入力してorderの$signal-container-elementを返す。
-             * @param order{number} 入手したい$signal-container-elementの順番
-             * @return {JQuery} $signal-container-element
-             */ 
-            private getSignalContainerElementOf(order: number) :JQuery{
-                let FUNCTION_NAME= TAG + "getSignalContainerElementOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
-                }
-                return this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-            }
+           
 
             /*
             * 指定された二つのsignalContainerのinterval, remoteId, functionを入れ替える。
@@ -1195,7 +899,7 @@ module Garage {
                 this.setRemoteIdPullDownOf(order, signalInputs.remoteId);
 
                 //Function選択用のPullダウンを更新。
-                this.renderFunctionsOf(order, signalInputs.functionName);
+                this.renderFunctionsOf(order,this.defaultState.id, signalInputs.functionName);
 
             }
 
