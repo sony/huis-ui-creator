@@ -349,6 +349,15 @@ module Garage {
                         if (tmpCodeDb != null) {
                             tmpAction.code_db = tmpCodeDb;
                         }
+
+                        //bluetooth_dataを入力
+                        let tmpBluetoothData = null;
+                        if (deviceInfo.bluetooth_data != null) {
+                            tmpBluetoothData = deviceInfo.bluetooth_data;
+                        }
+                        if (tmpBluetoothData != null) {
+                            tmpAction.bluetooth_data = tmpBluetoothData;
+                        }
                     }
 
                     tmpAction.interval = tmpInterval;
