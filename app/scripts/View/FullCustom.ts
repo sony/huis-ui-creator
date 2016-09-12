@@ -4436,21 +4436,6 @@ module Garage {
                         // 文言あて・ローカライズ
                         $statesContainer.i18n();
 
-                        /*
-                        let actionList = state.actionList;
-                        let alreadyMenuSet = false;
-                        if (actionList) {
-                            // 「機能」が割り当てられている「入力」をメニューに表示されるようにする
-                            for (let input in actionList) {
-                                if (!alreadyMenuSet && actionList.hasOwnProperty(input) && actionList[input]) {
-                                    var action = actionList[input];
-                                    $stateDetail.find("#select-state-action-input-" + state.id).val(input);
-                                    $stateDetail.find("#select-state-action-function-" + state.id).val(action);
-                                    alreadyMenuSet = true;
-                                }
-                            }
-                        }*/
-
 						
 
                     });
