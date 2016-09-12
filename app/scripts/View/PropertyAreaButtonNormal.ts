@@ -8,26 +8,10 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyArea] ";
+		var TAG = "[Garage.View.PropertyAreaNormal] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
-        //プルダウンに入力できる情報
-        interface ISignalInputs {
-            interval: number;
-            remoteId: string;
-            functionName : string;
-        }
-
-        export class PropertyAreaButton extends PropertyAreaBase {
+      
+        export class PropertyAreaButtonNormal extends PropertyAreaButtonBase {
 
          
 			/**
@@ -61,7 +45,6 @@ module Garage {
              *保持しているモデルをプルダウンの内容に合わせてアップデートする。
              */
             updateModel() {
-                super.updateModel();
                 this.trigger("updateModel");
             }
 

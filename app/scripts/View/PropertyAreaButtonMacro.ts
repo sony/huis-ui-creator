@@ -8,7 +8,7 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyArea] ";
+		var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
 
         //信号選択用のプルダウンを表示するための情報
         //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
@@ -27,7 +27,7 @@ module Garage {
             functionName : string;
         }
 
-        export class PropertyAreaMacroButton extends PropertyAreaBase {
+        export class PropertyAreaButtonMacro extends PropertyAreaButtonBase {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。

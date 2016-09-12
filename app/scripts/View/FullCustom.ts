@@ -74,7 +74,7 @@ module Garage {
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
-            private macroProperty: PropertyAreaMacroButton;
+            private macroProperty: PropertyAreaButtonMacro;
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
             private testCountBug: number;
 
@@ -4236,7 +4236,7 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    this.macroProperty = new PropertyAreaMacroButton({
+                    this.macroProperty = new PropertyAreaButtonMacro({
                         el: $buttonDetail,
                         model: button,
                     });
