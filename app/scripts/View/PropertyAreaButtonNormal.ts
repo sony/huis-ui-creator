@@ -30,7 +30,12 @@ module Garage {
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-          
+            events() {
+                // Please add events
+                return {
+                  
+                };
+            }
 
 
 
@@ -48,6 +53,17 @@ module Garage {
                 this.trigger("updateModel");
             }
 
+            /*
+            * 保持しているモデルの内容でプルダウンを描画する
+            */
+            renderView(): JQuery {
+                let FUNCTION_NAME = TAG + "renderView";
+
+                
+
+                return
+
+            }
           
            
 
