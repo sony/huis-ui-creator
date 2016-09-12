@@ -33,10 +33,38 @@ module Garage {
             events() {
                 // Please add events
                 return {
+                    "click #add-signal-btn": "onPlusBtnClick",
                     "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged"
                 };
+            }
+
+            //+ボタンがクリックされた場合に呼び出される
+            private onPlusBtnClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onPlusBtnClick : ";
+
+                let $target = $(event.currentTarget);
+                if ($target.hasClass("disabled")) {
+                    return;
+                }
+              
+                let order = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let stateId = this.getStateIdFrom($target);
+              
+                //すでに、同じorderのDOMがない場合には追加
+                let $newSignalContainerElement = this.getSignalContainerElementOf(order);
+                if ($newSignalContainerElement.length == 0) {
+                    this.renderSignalContainerMin(order, stateId);
+                } else {
+                    console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
+                }
+
+                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                $('.custom-select').trigger('create');
+
+                this.controlPlusButtonEnableDisable();
+
             }
 
             //Actionを変更させたときに呼ばれる
@@ -49,15 +77,6 @@ module Garage {
                     return;
                 }
 
-                // プルダウンに設定されている Actionの順番を取得
-                let order = this.getOrderFrom($target);
-                if (order == null) {
-                    return;
-                }
-
-                let inputAction = $target.val();
-                this.removeFunctionPullDown(order);
-                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID);
                 this.updateModel(this.DEFAULT_STATE_ID);
 
             }
@@ -103,42 +122,13 @@ module Garage {
             renderViewState(stateId : number): JQuery {
                 let FUNCTION_NAME = TAG + "renderViewState";
 
-                let $signalsContainer: JQuery = this.$el.find("#signals-container");
-                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this.templateItemDetailFile_);
+                if (stateId == null) {
+                    console.warn(FUNCTION_NAME + "stateId is null");
+                    return;
+                }
 
-                let targetState :IState = this.model.state[stateId];
-
-                //TODO適切なactionIdを指定
-                let actionId : number = 0;
-                let targetAction: IAction = targetState.action[actionId];
-                let inputType = targetAction.input;
-                let functions = this.getFunctionsFromAction(targetAction);
-                let functionName = this.getFunctionNameFromAction(targetAction);
-                let remoteId = this.getRemoteIdByAction(targetAction);
-
-                //TODO適切なorderを指定
-                let order: number = 0;
-                let inputData = {
-                    id: stateId,
-                    order: order,
-                    input: inputType,
-                    functions: functions
-                };
-
-                let $signalDetail = $(templateSignal(inputData));
-                $signalsContainer.append($signalDetail);
+                return this.renderSignals(stateId);
                 
-                //actino設定用のpulldownをレンダリング
-                this.renderActionPulllDownOf(order, stateId, inputType);
-
-                //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, stateId, remoteId);
-
-                //function設定用pulldownをレンダリング
-                this.renderFunctionsOf(order, stateId, functionName);
-
-                return $signalsContainer;
-
             }
 
             updateModel(stateId : number) {
@@ -245,16 +235,36 @@ module Garage {
                     }
                 }
 
-                let tmpState: IGState = this.model.state[stateId];
+                let tmpState  = this.model.state[stateId];
+    
+                let newState: IGState = {
+                    id: tmpState.id,
+                    image: tmpState.image && tmpState.image ? tmpState.image : undefined,
+                    label: tmpState.label && tmpState.label ? tmpState.label : undefined,
+                    action: actionsForUpdate && 0 < actionsForUpdate.length ? actionsForUpdate : undefined,
+                    translate: tmpState.translate && 0 < tmpState.translate.length ? tmpState.translate : undefined
+                };
 
-                //マクロボタンのstateは、デフォルト一つとする。
-                tmpState.action = actionsForUpdate;
                 let states: IGState[] = [];
+                //全stateを更新。
+                for (let i = 0; i < this.model.state.length; i++){
+                    if (i == stateId) {
+                        states.push(newState);
+                    } else {
+                        states.push(this.model.state[i]);
+                    }
+                }
 
-                states.push(tmpState);
+
 
                 this.model.state = states;
+
+                //更新後の値で、+ボタンの有効・無効判定を行う。
+                this.controlPlusButtonEnableDisable();
+
                 this.trigger("updateModel");
+
+                
             }
 
 
@@ -262,6 +272,121 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// private method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            /*
+            * 信号プルダウンメニューたちをレンダリングする
+            * @param stateId{number} ターゲットとなるstateId
+            * @param $signalsContainer{JQuery} ベースとなるJQuery要素
+            */
+            private renderSignals(stateId: number){
+                let FUNCTION_NAME: string = TAG + "renderSignals : ";
+
+                if (stateId == null) {
+                    console.warn(FUNCTION_NAME + "stateId is null");
+                    return;
+                }
+
+                let actions: IAction[] = this.model.state[stateId].action;
+
+                if (actions == null || actions.length == 0) {
+                    console.warn(FUNCTION_NAME + "actions is invalid");
+                    return;
+                }
+
+                for (let i = 0; i < actions.length; i++) {
+                    let targetAction = actions[i];
+                    if (targetAction == null) {
+                        continue;
+                    }
+
+                    let actionInput: string = targetAction.input;
+                    let remoteId = this.getRemoteIdByAction(targetAction);
+                    let functionName = this.getFunctionNameFromAction(targetAction);
+
+                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
+
+                    //function設定用pulldownをレンダリング
+                    this.renderFunctionsOf(i, stateId, functionName);
+                }
+
+                this.controlPlusButtonEnableDisable();
+
+                return this.$el;
+
+            }
+
+            /*
+            * 信号のベースと必須のアクション選択プルダウン分をレンダリングする
+            * @param order{number}
+            * @param stateId{number}
+            * @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
+            * @param inputAction{string}
+            * @param remoteId?{string}
+            */
+            private renderSignalContainerMin(order: number, stateId: number, inputAction? : string, remoteId?:string) {
+                let FUNCTION_NAME: string = TAG + "renderSignalContainer";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (stateId == null) {
+                    console.warn(FUNCTION_NAME + "stateId is null");
+                    return;
+                }
+
+
+                let $signalsContainer: JQuery = this.$el.find("#signals-container");
+
+                if (!this.isValidJQueryElement($signalsContainer)) {
+                    console.warn(FUNCTION_NAME + "$signalsConteinr is invalid");
+                    return;
+                }
+
+                this.renderSignalContainerBase(order);
+                //actino設定用のpulldownをレンダリング
+                this.renderActionPulllDownOf(order, stateId, inputAction);
+                //remoteId設定用のpulldownをレンダリング
+                this.renderRemoteIdOf(order, stateId, remoteId);
+            }
+
+            /*
+            *  信号を描画するベースとなる部分をレンダリングする。
+            *  @param order{number}
+            *  @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
+            */
+            private renderSignalContainerBase(order: number) {
+                let FUNCTION_NAME = TAG + "renderSignalContainerBase : ";
+
+                let $signalsContainer: JQuery = this.$el.find("#signals-container");
+                if (!this.isValidJQueryElement($signalsContainer)) {
+                    console.warn(FUNCTION_NAME + "$signalsConteinr is invalid");
+                    return;
+                }
+
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (!this.isValidJQueryElement($signalsContainer)) {
+                    console.warn(FUNCTION_NAME + "$signalsConteinr is null");
+                    return;
+                }
+
+                //SignalContainerのベースをレンダリング
+                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this.templateItemDetailFile_);
+
+                let inputData = {
+                    order: order,
+                };
+
+                let $signalDetail = $(templateSignal(inputData));
+                $signalsContainer.append($signalDetail);
+
+            }
 
             /*
             * アクション設定用のpullldownMenuをレンダリングする
@@ -289,7 +414,7 @@ module Garage {
                     return;
                 }
 
-                //FunctionプルダウンのDOMを表示。
+                //ActionプルダウンのDOMを表示。
                 let $actionContainer = $target.find("#signal-action-container");
                 let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.templateItemDetailFile_);
 
@@ -386,6 +511,82 @@ module Garage {
                 
 
             }
+
+
+            /*
+            * 表示されているすべての信号登録用pulldownに情報が埋まっているか否かを返す。
+            */
+            private isAllSignalPullDownSelected() {
+                let FUNCTION_NAME = TAG + "isAllPullDownSelected";
+
+                //現状表示されている 各信号のJquery値を取得
+                let $signalContainers: JQuery = this.$el.find(".signal-container-element");
+
+                // 信号のJqueryがない場合、すべてが埋まっていると扱う
+                if ($signalContainers.length == 0) {
+                    return true;
+                }
+
+
+                //それぞのアクションのプルダウンの値を取得。
+                for (let i = 0; i < $signalContainers.length; i++) {
+                    let $target: JQuery = $($signalContainers[i]);
+
+                    //それぞれのプルダウンが存在し、利用不能な値が代入されている場合、false;
+
+                    //action
+                    let $actionPulllDown = $target.find("select.action-input");
+                    if ($actionPulllDown.length != 0) {
+                        let value = $actionPulllDown.val();
+                        if (!this.isValidValue(value)) {
+                            return false;
+                        }
+                    }
+
+                    //remoteId
+                    let $remoteIdlPulllDown = $target.find("select.remote-input");
+                    if ($remoteIdlPulllDown.length != 0) {
+                        let value = $remoteIdlPulllDown.val();
+                        if (!this.isValidValue(value)) {
+                            return false;
+                        }
+                    }
+
+                    //function
+                    let $functionlPulllDown = $target.find("select.function-input");
+                    if ($functionlPulllDown.length != 0) {
+                        let value = $functionlPulllDown.val();
+                        if (!this.isValidValue(value)) {
+                            return false;
+                        }
+                    }
+                }
+
+                //一回も無効な数値が判定されない ＝ すべて有効な値。としてtrue;
+                return true;
+
+            }
+
+
+            // +ボタンのenable disableを判定・コントロールする。
+            private controlPlusButtonEnableDisable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+                let $target = this.$el.find("#add-signal-btn");
+
+                //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
+                if (this.isAllSignalPullDownSelected()) {
+                    $target.removeClass("disabled");
+                } else {
+                    $target.addClass("disabled");
+                }
+
+                //設定できるマクロ最大数だった場合もdisable
+                if (this.model.state[this.DEFAULT_STATE_ID].action.length >= ACTION_INPUTS.length) {
+                    $target.removeClass("disabled");
+                }
+
+            }
+
            
 
         }

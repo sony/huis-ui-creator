@@ -95,6 +95,14 @@ module Garage {
         MAX_NUM_MACRO_SIGNAL = 63;
         DEFAULT_INTERVAL_MACRO = 0.4;
 
+        INPUT_TOUCH = "touch";
+        INPUT_LONGPRESS = "long_press";
+        INPUT_SWIPE_UP =  "swipe_up";
+        INPUT_SWIPE_RIGHT = "swipe_right";
+        INPUT_SWIPE_LEFT = "swipe_left";
+        INPUT_SWIPE_DOWN = "swipe_down";
+
+        ACTION_INPUTS = [INPUT_TOUCH,INPUT_LONGPRESS,INPUT_SWIPE_UP,INPUT_SWIPE_RIGHT,INPUT_SWIPE_LEFT,INPUT_SWIPE_DOWN];
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

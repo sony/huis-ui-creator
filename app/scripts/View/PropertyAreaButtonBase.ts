@@ -140,6 +140,28 @@ module Garage {
                 }
             }
 
+            /*
+             * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
+             * @param $target{JQuery} 対象となるJQuery
+             * @return {number} stateID みつからない場合、undefinedを返す。
+             */
+            protected getStateIdFrom($target: JQuery): number {
+                let FUNCTION_NAME = TAG + "getStateIdFrom";
+
+                if ($target == null) {
+                    console.warn(FUNCTION_NAME + "$target is null");
+                    return;
+                }
+
+                let result: number = parseInt(JQUtils.data($target, "stateId"), 10);
+
+                if (result != null) {
+                    return result;
+                } else {
+                    return undefined;
+                }
+            }
+
 
             /*
              * actionから、remoteIdを取得する

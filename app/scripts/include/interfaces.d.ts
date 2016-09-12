@@ -734,6 +734,16 @@ declare module Garage {
       * マクロを設定する際のデフォルトInverval秒数
       */
     var DEFAULT_INTERVAL_MACRO: number;
+    /*
+     * 設定できるアクションリスト
+     */
+    var ACTION_INPUTS: string[];
+    var INPUT_TOUCH: string;
+    var INPUT_LONGPRESS: string;
+    var INPUT_SWIPE_UP: string;
+    var INPUT_SWIPE_RIGHT: string;
+    var INPUT_SWIPE_LEFT: string;
+    var INPUT_SWIPE_DOWN: string;
 
 }
 
