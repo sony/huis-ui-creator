@@ -260,28 +260,31 @@
 
         <div class="signal-container-element" data-signal-order="{{order}}">
 
-            <!--jQueryMobileを動的に追加されたDOMに使用するためには、trigger("create")を呼び出す範囲指定が必要-->
-            <div class="custom-select">
-                <select class="action-input state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    <option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
-                    <option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
-                </select>
-            </div>
+            <!--アクション選択用のテンプレート-->
+            <div id="signal-action-container"></div>
 
-            <div class="custom-select">
-                <select class="function-input state-action-function" id="select-state-action-function-{{id}}" data-type="state-action" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                    <option value="none" data-i18n="button.none.STR_REMOTE_BTN_NONE">★何もしない</option>
-                    {{#functions}}
-                    <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-                    {{/functions}}
-                </select>
-            </div>
+            <!--リモコン選択プルダウン-->
+            <div id="signal-remote-container"></div>
+
+            <!--Function選択用のテンプレート-->
+            <div id="signal-function-container"></div>
 
         </div>
 
 </script>
 	
 
+    <!--アクション設定用-->
+    <script type="text/template" id="template-property-button-signal-action">
+        <div class="signal-action-container-element">
+            <div class="custom-select">
+                <select class="action-input state-action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                    <option value="touch" data-i18n="button.input.STR_ACTION_INPUT_TAP">★タップ</option>
+                    <option value="long_press" data-i18n="button.input.STR_ACTION_INPUT_LONG_PRESS">★長押し(連続発信)</option>
+                </select>
+            </div>
+        </div>
+    </script>
 
 
     <!--マクロボタン用-->
@@ -359,20 +362,13 @@
 
             <span class="orderIndicator">★信号{{order}}</span>
 
+                <!--インターバル選択プルダウン-->
                 <div id="signal-interval-container"></div>
 
-            
+                <!--リモコン選択プルダウン-->
+                <div id="signal-remote-container"></div>
 
-                <div class="custom-select">
-                    <select class="remote-input" id="select-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                        <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
-                        {{#remotesList}}
-                        <option value="{{remoteId}}">{{face.name}}</option>
-                        {{/remotesList}}
-                    </select>
-                </div>
-
-                <!--AFunction 選択用のテンプレート-->
+                <!--Function選択プルダウン-->
                 <div id="signal-function-container"></div>
 
                 <!--削除ボタン-->
@@ -385,6 +381,20 @@
 
         </div>
 	</script>
+
+    <!-- リモコン選択用 -->
+    <script type="text/template" id="template-property-button-signal-remote">
+        <div class="signal-remote-container-element">
+            <div class="custom-select">
+                <select class="remote-input" id="select-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
+                    <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
+                    {{#remotesList}}
+                    <option value="{{remoteId}}">{{face.name}}</option>
+                    {{/remotesList}}
+                </select>
+            </div>
+        </div>
+    </script>
 
     <!--信号選択用-->
     <script type="text/template" id="template-property-button-signal-functions">

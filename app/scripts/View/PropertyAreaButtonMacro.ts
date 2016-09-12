@@ -57,7 +57,7 @@ module Garage {
                 return {
                     "click #add-signal-btn": "onPlusBtnClick",
                     "change .interval-input": "onInvervalPullDownListChanged",
-                    "change .state-action-input": "onActionPullDownListChanged",
+                    "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
@@ -559,18 +559,18 @@ module Garage {
                     console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
-
-                let remoteId: string = this.getRemoteIdByAction(signalData.action);
-                if (remoteId != null) {
-                    this.setRemoteIdPullDownOf(signalData.order, remoteId);
-                }
-               
-
-                //Functions用のプルダウンを描画できるときは描画
                 let order = signalData.order;
-                let functionName = this.getFunctionNameFromAction(action);
                 if (order != null) {
-                    this.renderFunctionsOf(order, this.defaultState.id,functionName);
+                    let remoteId: string = this.getRemoteIdByAction(signalData.action);
+                    if (remoteId != null) {
+                        this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
+                    }
+  
+                    //Functions用のプルダウンを描画できるときは描画
+                    let functionName = this.getFunctionNameFromAction(action);
+                    if (functionName != null) {
+                        this.renderFunctionsOf(order, this.defaultState.id, functionName);
+                    }
                 }
 
                 //言語対応

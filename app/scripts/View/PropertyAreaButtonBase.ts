@@ -27,7 +27,7 @@ module Garage {
 
             protected templateItemDetailFile_: string;
             protected availableRemotelist: IRemoteInfo[];
-            private DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
+            protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
 
 			/**
 			 * constructor
@@ -51,12 +51,12 @@ module Garage {
             events() {
                 // Please add events
                 return {
-           
+
                 };
             }
 
 
-      
+
 
 
 
@@ -237,13 +237,87 @@ module Garage {
                 }
 
                 let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if ($remoteIdPullDown == null || $remoteIdPullDown.length == 0) {
+                if (!this.isValidJQueryElement($remoteIdPullDown)) {
                     console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
                     return;
                 }
 
                 $remoteIdPullDown.val(inputRemoteId);
 
+            }
+
+            /*
+            * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
+            * @param order{number}
+            */
+            protected removeRemoteIdPullDownOf(order: number) {
+                let FUNCTION_NAME = TAG + "removeRemoteIdPullDownOf";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //対象orderのfunctionPullDown用コンテナの子供を削除する
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
+                $targetFunctionPulllDownContainer.children().remove();
+            }
+
+            /*
+            * 入力したorderRemoteId用のプルダウンを描画する。
+            * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
+            * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
+            */
+            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
+                let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
+
+                if (order == null) {
+                    console.warn("order is null");
+                    return;
+                }
+
+                //すでに、function選択用PullDownがある場合、削除する。
+                this.removeRemoteIdPullDownOf(order);
+
+                //targetとなるJQueryを取得
+                let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                if ($target == null || $target.length == 0) {
+                    console.warn("$target is undefined");
+                    return;
+                }
+
+                //FunctionプルダウンのDOMを表示。
+                let remoteList : IRemoteInfo[] = this.availableRemotelist;
+                if (remoteList != null) {
+                    let $remoteContainer = $target.find("#signal-remote-container");
+                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.templateItemDetailFile_);
+
+                    if (stateId == null) {
+                        stateId = this.DEFAULT_STATE_ID;
+                    }
+
+                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                        id: stateId,
+                        order: order,
+                        remotesList: remoteList
+                    }
+
+                    let $functionsDetail = $(templateRemote(inputSignalData));
+                    $remoteContainer.append($functionsDetail);
+
+                    //inputにmodelがある場合、値を表示
+                    if (inputRemoteId != null) {
+                        this.setRemoteIdPullDownOf(order, inputRemoteId);
+                    }
+
+                    //Functionの文言を和訳
+                    $remoteContainer.i18n();
+
+                    //プルダウンにJQueryMobileのスタイルをあてる
+                    $remoteContainer.trigger('create');
+
+                }
             }
 
             /*
@@ -299,10 +373,6 @@ module Garage {
                 return huisFiles.getMasterFunctions(remoteId);
 
             }
-
-
-          
-
 
             /*
             * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
@@ -413,7 +483,6 @@ module Garage {
                 //FunctionプルダウンのDOMを表示。
                 let functions: string[] = this.getFunctionsOf(order);
                 if (functions != null) {
-                    //インターバル用のテンプレートを読み込み
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
 
@@ -468,9 +537,10 @@ module Garage {
             /*
            * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
            * @param order {number} 信号リストを取得したい、マクロ信号の順番
+           * @param stateId? {number} 信号リストを取得したい、ボタンのstate
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
-            protected getFunctionsOf(order: number) {
+            protected getFunctionsOf(order: number, stateId? : number) {
                 let FUNCTION_NAME = TAG + "getRemoteIdOf";
 
                 if (order == null) {
