@@ -2833,7 +2833,6 @@ module Garage {
 								}
 							}
 
-							//TODO:intervalがある場合、設定する。
 						
 
 							actions.push(action);
