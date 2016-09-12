@@ -967,27 +967,12 @@ module Garage {
 
 					var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
 					var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
+                    
+                    var newPosition = this._getGriddedPosition(deltaX, deltaY);
 
-                    var newX;
-                    var newY;
-
-                    //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                    if (this.gridSize_ === DEFAULT_GRID) {
-                        var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
-                        var BIAS_Y = 0
-
-                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
-                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
-
-                    } else {
-                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
-
-                    }
-
-					this.$currentTarget_.css({
-						"left": newX + "px",
-						"top": newY + "px"
+                    this.$currentTarget_.css({
+                        "left": newPosition.x + "px",
+                        "top": newPosition.y + "px"
                     });
 
                     //currentTargetの重なり判定
@@ -1057,7 +1042,7 @@ module Garage {
 			 */
             private _moveItem(position: IPosition) {
                 var fromPageModuleId = this._getCanvasPageModuleIdByPosition(this.mouseMoveStartPosition_);
-                var toPageModuleId = this._getCanvasPageModuleIdByPosition(position);
+                var toPageModuleId = this._getCanvasPageModuleIdByPosition(position);       //TBD: ページマタギ判定をonMainMouseMoveと統一
 
                 if (fromPageModuleId == toPageModuleId) {
                     // ページ内移動
@@ -1397,7 +1382,6 @@ module Garage {
 					click: () => {
                         var targetModels = this.commandManager_.undo();
                         this._updateItemElementsOnCanvas(targetModels);
-						//this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
 						this._loseTarget();
 					}
@@ -1410,7 +1394,6 @@ module Garage {
 					click: () => {
                         var targetModels = this.commandManager_.redo();
                         this._updateItemElementsOnCanvas(targetModels);
-						//this._updateItemElementOnCanvas(targetModel);
 						// 現在のターゲットを外す
 						this._loseTarget();
 					}
@@ -2758,6 +2741,10 @@ module Garage {
                 this._overlapButtonsExist();
             }
 
+            /**
+             * canvas 上にあるアイテムの要素に対して、表示の更新を行う
+             * @param targetModel {ItemModel[]} アイテム要素の表示更新の対象となる model の配列
+             */
             private _updateItemElementsOnCanvas(targetModels: ItemModel[]) {
                 if (!targetModels) {
                     return;
@@ -3529,6 +3516,35 @@ module Garage {
 
 				
 			}
+
+            private _getGriddedPosition(deltaX: number, deltaY: number): IPosition {
+                var newX;
+                var newY;
+
+                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+                if (this.gridSize_ === DEFAULT_GRID) {
+                    var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
+                    var BIAS_Y = 0
+
+                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
+
+                } else {
+                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
+                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
+                }
+
+                let canvasFaceMarginBottom = parseInt($('#face-canvas .face-page').css('margin-bottom'));
+                if (newY + this.$currentTarget_.height() / 2 < 0 - canvasFaceMarginBottom) {
+                    // 前ページ
+                    newY -= canvasFaceMarginBottom % this.gridSize_;
+                } else if (newY + this.$currentTarget_.height() / 2 > GRID_AREA_HEIGHT) {
+                    // 次ページ
+                    newY += canvasFaceMarginBottom % this.gridSize_;
+                }
+
+                return { x: newX, y: newY };
+            }
 
 			/**
 			 * 指定した area を検証し、妥当な area の値を返す。
@@ -4805,7 +4821,6 @@ module Garage {
                             if (event.ctrlKey) {
                                 var targetModels = this.commandManager_.undo();
                                 this._updateItemElementsOnCanvas(targetModels);
-                                //this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
 								event.preventDefault();
@@ -4815,7 +4830,6 @@ module Garage {
                             if (event.ctrlKey) {
                                 var targetModels = this.commandManager_.redo();
                                 this._updateItemElementsOnCanvas(targetModels);
-                                //this._updateItemElementOnCanvas(targetModel);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
 								event.preventDefault();

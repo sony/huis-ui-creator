@@ -111,27 +111,13 @@ module Garage {
 		}
 
 		export class MementoCommand implements ICommand {
-			/*
-            private target_: ItemModel;
-			private prev_: Object;
-			private next_: Object;
-            */
             private mementoList_: IMemento[];
 
             constructor(...memento: IMemento[]) {
                 this.mementoList_ = memento;
-
-                /*
-				this.target_ = memento.target;
-				this.prev_ = memento.previousData;
-				this.next_ = memento.nextData;
-                */
 			}
 
 			invoke(): ItemModel[] {
-				//this.prev_ = this.memento_.mementoData;
-				//this._setMemento(this.next_);
-				//return this.target_;
                 return this.redo();
 			}
 
@@ -141,12 +127,8 @@ module Garage {
                 // 配列末尾から実行
                 for (let i = this.mementoList_.length - 1; i >= 0; i--) {
                     let memento = this.mementoList_[i];
+                    this._setMemento(memento.target, memento.previousData);
                     updatedModels.push(memento.target);
-
-                    let keys = Object.keys(memento.previousData);
-                    keys.forEach((key) => {
-                        memento.target[key] = memento.previousData[key];
-                    });
                 }
 
                 return updatedModels;
@@ -158,26 +140,19 @@ module Garage {
                 // 配列先頭から実行
                 for (let i = 0; i < this.mementoList_.length; i++) {
                     let memento = this.mementoList_[i];
+                    this._setMemento(memento.target, memento.nextData);
                     updatedModels.push(memento.target);
-
-                    let keys = Object.keys(memento.nextData);
-                    keys.forEach((key) => {
-                        memento.target[key] = memento.nextData[key];
-                    });
                 }
 
                 return updatedModels;
 			}
 
-            /*
-			private _setMemento(mementoData: Object) {
+			private _setMemento(target: ItemModel, mementoData: Object) {
 				var keys = Object.keys(mementoData);
 				keys.forEach((key) => {
-					//this.target_.set(key, mementoData[key]);
-					this.target_[key] = mementoData[key];
+					target[key] = mementoData[key];
 				});
             }
-            */
 		}
 	}
 }
