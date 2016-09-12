@@ -539,7 +539,7 @@ module Garage {
                 }
 
                 //ベースとなるDOM描写する
-                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal", this.templateItemDetailFile_);
+                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
                 $signalContainer.append($(templateSignal(signalData)));
 
 
