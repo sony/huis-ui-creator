@@ -863,69 +863,67 @@ module Garage {
 			/**
 			 * フルカスタム編集画面での mousedown イベントのハンドリング
 			 */
-			private onMainMouseDown(event: Event) {
-				if (event.type !== "mousedown") {
-					console.error(TAG + "onMainMouseDown() Invalid event type: " + event.type);
-					return;
-				}
+            private onMainMouseDown(event: Event) {
+                if (event.type !== "mousedown") {
+                    console.error(TAG + "onMainMouseDown() Invalid event type: " + event.type);
+                    return;
+                }
 
-				this.selectedResizer_ = null;
+                this.selectedResizer_ = null;
 
-				var mousePosition: IPosition = {
-					x: event.pageX,
-					y: event.pageY
+                var mousePosition: IPosition = {
+                    x: event.pageX,
+                    y: event.pageY
                 };
 
-				// 直前に選択していたものと同一のアイテムを選択しているかチェック
-				var remainsTarget = this._remainsTarget(mousePosition);
-				// 選択しているリサイザーをチェック
-				var selectedResizer = this._checkResizerSelected(mousePosition);
-				// 詳細編集エリア上を選択しているかをチェック
-				var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
+                // 直前に選択していたものと同一のアイテムを選択しているかチェック
+                var remainsTarget = this._remainsTarget(mousePosition);
+                // 選択しているリサイザーをチェック
+                var selectedResizer = this._checkResizerSelected(mousePosition);
+                // 詳細編集エリア上を選択しているかをチェック
+                var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
 
-				// マウスポインター位置が、選択中のターゲット上は、
-				// ターゲットを外す
-				if (!remainsTarget && !selectedResizer && !overDetailArea) {
-					// 直前に選択されていたボタンの状態更新があれば行う
-					this._updateCurrentModelButtonStatesData();
-
-					// 現在のターゲットを外す
-					this._loseTarget();
-
-					//CanvasのFacePagesArea上でない場合は反応しない
-					if (this.isOnCanvasFacePagesArea(mousePosition)) {
-					// マウスポインター位置にアイテムがあれば取得する
-						let $target = this._getTarget(mousePosition);
-						if ($target) {
-                            this.setDragTarget($target);
-						} else {
-							// マウスポインター位置にアイテムが存在しない場合で、
-							// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
-							let $page = this._getTargetPageModule(mousePosition);
-							if ($page) {
-								// ページ背景の model の作成、もしくは既存のものを取得する
-								let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
-								this.currentTargetModel_ = {
-									type: "image",
-									image: backgroundImageModel
-								};
-								$("#face-item-detail-area").addClass("active");
-								// ページの背景の detail エリアを作成する
-								this._showDetailItemAreaOfPage($page);
-							}
-						}
-
-					}
-				}
-				if (remainsTarget) {
-					// 選択中のアイテムがボタンの場合、状態の更新を行う
+                // マウスポインター位置が、選択中のターゲット上は、
+                // ターゲットを外す
+                if (!remainsTarget && !selectedResizer && !overDetailArea) {
+                    // 直前に選択されていたボタンの状態更新があれば行う
                     this._updateCurrentModelButtonStatesData();
-				}
+
+                    // 現在のターゲットを外す
+                    this._loseTarget();
+
+                    //CanvasのFacePagesArea上でない場合は反応しない
+                    if (this.isOnCanvasFacePagesArea(mousePosition)) {
+                        // マウスポインター位置にアイテムがあれば取得する
+                        let $target = this._getTarget(mousePosition);
+                        if ($target) {
+                            this.setDragTarget($target);
+                        } else {
+                            // マウスポインター位置にアイテムが存在しない場合で、
+                            // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
+                            let $page = this._getTargetPageModule(mousePosition);
+                            if ($page) {
+                                // ページ背景の model の作成、もしくは既存のものを取得する
+                                let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
+                                this.currentTargetModel_ = {
+                                    type: "image",
+                                    image: backgroundImageModel
+                                };
+                                $("#face-item-detail-area").addClass("active");
+                                // ページの背景の detail エリアを作成する
+                                this._showDetailItemAreaOfPage($page);
+                            }
+                        }
+
+                    }
+                }
+                if (remainsTarget) {
+                    // 選択中のアイテムがボタンの場合、状態の更新を行う
+                    this._updateCurrentModelButtonStatesData();
+                }
                 if (selectedResizer) {
                     this.selectedResizer_ = selectedResizer;
                     console.log(this.selectedResizer_);
-                } else {
-                    this.setCurrentTargetDummy();
                 }
 
                 this.startDraggingCanvasItem(mousePosition);
@@ -954,11 +952,11 @@ module Garage {
                 // 詳細編集エリアを表示
                 $("#face-item-detail-area").addClass("active");
                 this._showDetailItemArea(this.currentTargetModel_);
-
-                // dummy表示
-                this.setCurrentTargetDummy();
             }
 
+            /**
+             * 対象アイテムのドラッグ中表示用ダミーを生成
+             */
             private setCurrentTargetDummy() {
                 if (!this.$currentTarget_ ||
                     this.$currentTargetDummy_) {
@@ -1009,6 +1007,10 @@ module Garage {
                         w: parseInt(this.$currentTarget_.css("width"), 10),
                         h: parseInt(this.$currentTarget_.css("height"), 10)
                     };
+
+                    if (!this.selectedResizer_) {
+                        this.setCurrentTargetDummy();
+                    }
 
                     if (!this._checkDetailItemAreaPosition(mousePosition)) {
                         this.mouseMoving_ = true;
@@ -1176,76 +1178,26 @@ module Garage {
 			 * アイテムの移動を行い、位置を確定する
 			 */
             private _moveItem(position: IPosition) {
-                var fromPageModuleId = this.$currentTarget_.parent().data("cid");// this._getCanvasPageModuleIdByPosition(this.mouseMoveStartPosition_.y);
-                var toPageModuleId = this._getCanvasPageByPosition(position.y).data("cid");//this._getCanvasPageModuleIdByPosition(position.y);
+                let fromPageModuleId: string = this.$currentTarget_.parent().data("cid");
+                let toPageModuleId  : string = this._getCanvasPageByDraggingPosition(position.y).data("cid");
+                let isCrossPageMoving: boolean = (fromPageModuleId != toPageModuleId);
 
-                if (fromPageModuleId == toPageModuleId) {
-                    // ページ内移動
-                    this._moveItemInPage(position);
-                } else {
-                    // ページ間移動
-                    this._moveItemAcrossPage(toPageModuleId, position);
-                }
-            }
+                let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
+                let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
-            /**
-             * 同一ページ内でのアイテム移動
-             */
-            private _moveItemInPage(position: IPosition) {
-                var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
-                var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
-                if (deltaX === 0 && deltaY === 0) {
+                if (!isCrossPageMoving) {
+                    // ページを跨がない場合は位置を更新して完了
+                    this._updateCurrentModelData("area", newArea);
+                    this._showDetailItemArea(this.currentTargetModel_);
                     return;
                 }
 
-                var newX;
-                var newY;
-
-                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                if (this.gridSize_ === DEFAULT_GRID) {
-                    var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
-                    var BIAS_Y = 0
-                    var MAX_X = $(".face-page").width() - BIAS_X_DEFAULT_GRID_LEFT;
-
-                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
-                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
-
-                    if (newX < BIAS_X) {
-                        newX = BIAS_X;
-                    } else if (newX + this.$currentTarget_.width() > MAX_X) {
-                        newX = MAX_X - this.$currentTarget_.width();
-                    }
-
-                } else {
-                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
-                }
-
-                // 新しい area の妥当性を検証し、調整済みの area を取得する
-                var newArea = this._validateArea({
-                    x: newX,
-                    y: newY
-                });
-                
-                this._updateCurrentModelData("area", newArea);
-                this._showDetailItemArea(this.currentTargetModel_);
-            }
-
-            /**
-             *
-             * @param droppedPageModId 移動先ページの module ID
-             */
-            private _moveItemAcrossPage(droppedPageModId: string, position: IPosition) {
                 let newModel = this._cloneTargetModel(this.currentTargetModel_);
 
-                //座標計算
-                //let relativePosition = this.getPointFromCanvas({ x: this.$currentTarget_.offset().left, y: this.$currentTarget_.offset().top }, droppedPageModId);
-                let relativePosition = this._getGriddedPosition(position, true);
-                // 枠内補正＋グリッド補正　★★★★TBD★★★★
-                this._updateTargetModelArea(newModel, relativePosition.x, relativePosition.y, null, null);
+                this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
 
-                //droppedPageに追加
-                let newItem = this.setNewItemOnCanvas(newModel, droppedPageModId, 0);
+                //移動先キャンバスページに追加
+                let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
                 var addMemento: IMemento = {
                     target: newItem,
                     previousData: {
@@ -1256,9 +1208,10 @@ module Garage {
                     }
                 };
 
-                //currentPageから削除
+                //元キャンバスページから削除
                 let delMemento = this._deleteCurrentTargetItem(false);
 
+                //追加と削除を1アクションとしてRedo･Undo履歴に追加
                 var mementoCommand = new MementoCommand([delMemento, addMemento]);
                 var updatedItems = this.commandManager_.invoke(mementoCommand);
 
@@ -1267,7 +1220,6 @@ module Garage {
                 this._updateItemElementsOnCanvas(updatedItems);
                 this._showDetailItemArea(this.currentTargetModel_);
             }
-
 
 			/**
 			 * アイテムのリサイズを行う
@@ -3719,19 +3671,18 @@ module Garage {
                     newY = Math.floor(ungriddedPosition.y / this.gridSize_) * this.gridSize_;
                 }
 
-
+                // アイテム元座標のキャンバス
                 var fromCanvas = this.$currentTarget_.parent();
-                // グリッド位置補正前の対象アイテムの中心座標が乗っているキャンバスを取得
-                //var hoverCanvas = this._getCanvasPageByPosition(fromCanvas.offset().top + (ungriddedPosition.y + (this.$currentTarget_.height() / 2)) / 2);
-                var hoverCanvas = this._getCanvasPageByPosition(mousePosition.y);
+                // グリッド位置補正前の対象アイテムの中心座標が乗っているキャンバス
+                var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
                 var fromCid = fromCanvas.data("cid");
-                var hoverCid = hoverCanvas.data("cid");
-                if (fromCid && hoverCid && fromCid != hoverCid) {
+                var pointedCid = pointedCanvas.data("cid");
+                if (fromCid && pointedCid && fromCid != pointedCid) {
                     // ページを跨ぐ場合グリッドのずれを補正
-                    newY += ((hoverCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
+                    newY += ((pointedCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
 
                     if (baseNewCanvas) {
-                        newY -= (hoverCanvas.offset().top - fromCanvas.offset().top) * 2;
+                        newY -= (pointedCanvas.offset().top - fromCanvas.offset().top) * 2;
                     }
                 }
 
@@ -4854,7 +4805,11 @@ module Garage {
                 return clone;
             }
 
-            private _updateTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
+            /**
+             * 対象モデルのAreaをtypeによらず変更する
+             * 有効でない値(undefinedなど)が設定されたパラメータは無視される
+             */
+            private _setTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
                 let target: IArea;
                 switch (model.type) {
                     case "button":
@@ -4914,7 +4869,11 @@ module Garage {
 
             }
 
-            private _getCanvasPageByPosition(positionY: number): JQuery {
+            /**
+             * 指定座標に対応するキャンバスのJQueryオブジェクトを返す
+             * @param positionY マウスのY座標
+             */
+            private _getCanvasPageByDraggingPosition(positionY: number): JQuery {
                 // 移動後のアイテム座標（元キャンバスページ基準）
                 let ungriddedPositionY = this.mouseMoveStartTargetPosition_.y + (positionY - this.mouseMoveStartPosition_.y) * 2;
                 // window基準のアイテム中心座標
@@ -4928,7 +4887,13 @@ module Garage {
                         return;
                     }
                 });
-                return canvas.find(".module-container");
+
+                if (canvas) {
+                    return canvas.find(".module-container");
+                } else {
+                    // 該当なしの場合は移動前のキャンバスを返す
+                    return this.$currentTarget_.parent();
+                }
             }
 
             /**
