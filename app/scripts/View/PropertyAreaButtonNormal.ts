@@ -36,8 +36,19 @@ module Garage {
                     "click #add-signal-btn": "onPlusBtnClick",
                     "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
-                    "change .function-input": "onFunctionPulllDownListChanged"
+                    "change .function-input": "onFunctionPulllDownListChanged",
+                    "click .delete-signal": "onDeleteButtonClick",
                 };
+            }
+
+            //deleteボタンが押されたときに呼ばれる
+            private onDeleteButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onDeleteButtonClick";
+                let $target = $(event.currentTarget);
+                let order = this.getOrderFrom($target);
+
+                this.deleteSignal(order);
+
             }
 
             //+ボタンがクリックされた場合に呼び出される
@@ -274,6 +285,47 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
+            * 現在、表示されているStateIdを取得する
+            */
+            private getStateId(): number {
+                let FUNCTION_NAME: string = TAG + "getStateId : ";
+
+                //+ボタンをstateIdを取得できるソースととる
+                let $sorce = this.$el.find("#add-signal-btn");
+
+                if (!this.isValidJQueryElement($sorce)) {
+                    console.warn(FUNCTION_NAME + "$source is invalid");
+                }
+
+                return parseInt(JQUtils.data($sorce, "stateId"), 10);
+            }
+
+            /*
+            * 入力されたorderに設定されている信号を削除する
+            * @param order{number}: それぞれの信号に設定されている順番
+            */
+            private deleteSignal(order: number) {
+                let FUNCTION_NAME = TAG + "deleteSignal";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                $target.remove();
+
+                let targetStateId = this.getStateId();
+
+                //消えた後のプルダウンの値に合わせてアップデート
+                this.updateModel(targetStateId);
+
+                //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                this.renderSignals(targetStateId);
+
+            }
+
+            /*
             * 信号プルダウンメニューたちをレンダリングする
             * @param stateId{number} ターゲットとなるstateId
             * @param $signalsContainer{JQuery} ベースとなるJQuery要素
@@ -292,6 +344,9 @@ module Garage {
                     console.warn(FUNCTION_NAME + "actions is invalid");
                     return;
                 }
+
+                //一度、全部削除する
+                this.$el.find("#signals-container").children().remove();
 
                 for (let i = 0; i < actions.length; i++) {
                     let targetAction = actions[i];
