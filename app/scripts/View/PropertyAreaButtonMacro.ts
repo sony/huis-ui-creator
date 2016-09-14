@@ -322,7 +322,10 @@ module Garage {
                         tmpFunction = null;
                     }
 
-                    let deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                    let deviceInfo = null;
+                    if (tmpRemoteId != null) {
+                        deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                    }
 
 
                     let tmpAction: IAction = {
@@ -330,7 +333,7 @@ module Garage {
                     };
 
 
-                    if (deviceInfo) {
+                    if (deviceInfo != null) {
                         //deviceInfo.functionCodeHashがある場合、codeを取
                         //codeを入力
                         let tmpCode = null;
@@ -571,9 +574,7 @@ module Garage {
 
                     //Functions用のプルダウンを描画できるときは描画
                     let functionName = this.getFunctionNameFromAction(action);
-                    if (functionName != null) {
-                        this.renderFunctionsOf(order, this.defaultState.id, functionName);
-                    }
+                    this.renderFunctionsOf(order, this.defaultState.id, functionName);
                 }
 
                 //言語対応
