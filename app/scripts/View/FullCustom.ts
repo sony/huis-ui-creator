@@ -4360,7 +4360,9 @@ module Garage {
                     this.buttonProperty.bind("updateModel", this.updateButtonItemModel, this);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.buttonProperty.undelegateEvents();
                     this.buttonProperty.$el = $buttonDetail;
+                    this.buttonProperty.delegateEvents();
                 }
 
 				// ボタンの state 情報を付加
