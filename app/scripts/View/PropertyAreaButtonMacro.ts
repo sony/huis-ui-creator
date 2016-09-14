@@ -438,6 +438,8 @@ module Garage {
                     labelSize = label.size;
                 }
 
+                macroData.actionList = ACTION_INPUTS;
+
                 let $macroDetail = $(templateMacro(macroData));
                 $macroContainer.append($macroDetail);
 
