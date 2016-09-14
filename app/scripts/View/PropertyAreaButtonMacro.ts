@@ -209,6 +209,8 @@ module Garage {
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order, this.defaultState.id);
 
+                this.updateModel();
+
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
