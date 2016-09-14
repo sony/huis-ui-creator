@@ -1766,9 +1766,7 @@ module Garage {
 			 */
 			private onItemPropertySelectChanged(event: Event) {
 				var $target = $(event.currentTarget);
-                if ($target.hasClass("state-action-input") || $target.hasClass("state-action-function")) {
-                    this._setButtonStateActionsBySelect($target);
-                } else if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
+                if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
                     this._setImageResizeModeBySelect($target);
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
@@ -3354,58 +3352,7 @@ module Garage {
 				//}
 			}
 
-			/**
-			 * 選択中のボタンのアクション設定を行う。
-			 * onItemPropertySelectChanged() から呼び出されることが前提。
-			 * 
-			 * @param $select {JQuery} onItemPropertySelectChanged の発火元となった select 要素の jQuery オブジェクト
-			 */
-			private _setButtonStateActionsBySelect($select: JQuery) {
-				if (!this.currentTargetButtonStates_) {
-					return;
-				}
-
-				let stateId = parseInt(JQUtils.data($select, "stateId"), 10); //$target.data("state-id");
-				if (_.isUndefined(stateId)) {
-					return;
-				}
-				let type: string = JQUtils.data($select, "type"); //$target.data("type");
-				if (_.isUndefined(type)) {
-					return;
-				}
-				let value: string = $select.val();
-
-				let stateDetail: IStateDetail = this.currentTargetButtonStates_[stateId];
-				if (_.isUndefined(stateDetail)) {
-					return;
-				}
-				let actionList = stateDetail.actionList;
-				if (_.isUndefined(actionList)) {
-					return;
-				}
-
-				switch (type) {
-					case "state-input":
-						{
-							let actionName = actionList[value];
-							if (!_.isUndefined(actionName)) {
-								$("#select-state-action-function-" + stateId).val(actionName).selectmenu('refresh');
-							}
-						}
-						break;
-
-					case "state-action":
-						{
-							let inputName = $("#select-state-action-input-" + stateId).val();
-							if (!_.isUndefined(inputName)) {
-								actionList[inputName] = value;
-								this.currentTargetButtonStatesUpdated_ = true;
-								this._updateCurrentModelButtonStatesData();
-							}
-						}
-						break;
-				}
-			}
+			
 
 			/**
 			 * 画像の resizeMode を設定する。
@@ -4554,47 +4501,6 @@ module Garage {
 				state.actionListTranslate = actionListTranslate;
 			}
 
-            /**
-            * 詳細編集エリアのステートのエリア情報をアップデート
-            * @param inputX: numer　X座標
-            * @param inputY: numer　Y座標
-            * @param inputW: numer　W座標
-            * @param inputH: numer　H座標
-            **/
-            private updateAreaInState(inputX: number, inputY: number, inputW: number, inputH: number) {
-
-                if (inputX === undefined) {
-                    console.log("updateAreaInState : inputX is undefined");
-                    return;
-                }
-
-                if (inputY === undefined) {
-                    console.log("updateAreaInState : inputY is undefined");
-                    return;
-                }
-
-                if (inputW === undefined) {
-                    console.log("updateAreaInState : inputW is undefined");
-                    return;
-                }
-
-                if (inputH === undefined) {
-                    console.log("updateAreaInState : inputH is undefined");
-                    return;
-                }
-
-                let $paramXY = $("#state-button-x-y");
-                var xStr: string = "X:";
-                var yStr: string = "   Y:";
-                var paramXYStr: string = xStr + inputX + yStr + inputY;
-                $paramXY.html(paramXYStr);
-
-                let $paramWH = $("#state-button-w-h");
-                var wStr: string = "W:";
-                var hStr: string = "   H:";
-                var paramWHStr: string = wStr + inputW + hStr + inputH;
-                $paramWH.html(paramWHStr);
-            }
 
 			/**
 			 * 指定した要素にひも付けられている model を取得
