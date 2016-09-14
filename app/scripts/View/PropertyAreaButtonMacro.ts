@@ -559,13 +559,14 @@ module Garage {
                     console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
+
+              
+
                 let order = signalData.order;
                 if (order != null) {
                     let remoteId: string = this.getRemoteIdByAction(signalData.action);
-                    if (remoteId != null) {
-                        this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
-                    }
-  
+                    this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
+
                     //Functions用のプルダウンを描画できるときは描画
                     let functionName = this.getFunctionNameFromAction(action);
                     if (functionName != null) {
