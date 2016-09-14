@@ -4251,8 +4251,7 @@ module Garage {
                         model: button,
                     });
                     //モデルが更新されたときfullcustom側のmodelも更新する
-                    //this.listenTo(this.macroProperty.model, "change", this.updateButtonItemModel);
-                    this.macroProperty.bind("updateModel", this.updateButtonItemModel,this);
+                    this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel,this);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
                     this.macroProperty.undelegateEvents();
@@ -4275,12 +4274,32 @@ module Garage {
                 $detail.i18n();
 			}
 
+            //マクロボタンのモデルが変更された際に呼び出される
+            private updateMacroButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.macroProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
 
-            private updateButtonItemModel(event: JQueryEventObject) {
+
+            //通常のボタンのモデルが変更された際に呼び出される
+            private updateNormalButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.buttonProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+           /*
+            * propertyエリアの情報が更新された際、ボタンのモデルを更新する
+            * @param button {Model.ButtonItem}
+            */
+            private updateButtonItemModel(button: Model.ButtonItem) {
                 let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
 
-                let button: Model.ButtonItem = this.macroProperty.getModel();
                 if (button == null) {
+                    console.warn(FUNCTION_NAME + "button is null");
                     return;
                 }
 
@@ -4356,8 +4375,7 @@ module Garage {
                         model: button,
                     });
                     //モデルが更新されたときfullcustom側のmodelも更新する
-                    //this.listenTo(this.buttonProperty.model, "change", this.updateButtonItemModel);
-                    this.buttonProperty.bind("updateModel", this.updateButtonItemModel, this);
+                    this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
                     this.buttonProperty.undelegateEvents();
