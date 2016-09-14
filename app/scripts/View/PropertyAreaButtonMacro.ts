@@ -256,6 +256,7 @@ module Garage {
                 $('.custom-select').trigger('create');
 
                 this.controlPlusButtonEnableDisable();
+                this.updateModel();
 
             }
 
