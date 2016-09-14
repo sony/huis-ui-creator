@@ -91,9 +91,10 @@ module Garage {
                     if (_.isArray(model.state)) {
 						filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
                             filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+                                //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
                                 return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " " && a.code_db.function !== "none" && a.bluetooth_data == null);
 							});
-							return (filtered_action.length > 0);
+							return (filtered_action.length >= s.action.length);
                         });
                         if (filtered_state.length > 0) {
                             return this;
