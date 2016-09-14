@@ -423,7 +423,8 @@ module Garage {
                 let inputData = {
                     id: stateId,
                     order: order,
-                    remotesList: this.availableRemotelist
+                    remotesList: this.availableRemotelist,
+                    actionList : ACTION_INPUTS
                 }
 
                 let $actionDetail = $(templateAction(inputData));
@@ -581,7 +582,7 @@ module Garage {
                 }
 
                 //設定できるマクロ最大数だった場合もdisable
-                if (this.model.state[this.DEFAULT_STATE_ID].action.length >= ACTION_INPUTS.length) {
+                if (this.model.state[this.DEFAULT_STATE_ID].action.length >= Object.keys(ACTION_INPUTS).length) {
                     $target.removeClass("disabled");
                 }
 

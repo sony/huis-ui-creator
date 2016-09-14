@@ -282,6 +282,15 @@ interface IStringStringHash {
 }
 
 /**
+* @interface
+* @brief ハッシュを疑似的に実現する
+*/
+interface IStringKeyValue {
+    key: string;
+    value: string;
+}
+
+/**
  * @interface IGLabel
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
@@ -737,13 +746,19 @@ declare module Garage {
     /*
      * 設定できるアクションリスト
      */
-    var ACTION_INPUTS: string[];
-    var INPUT_TOUCH: string;
-    var INPUT_LONGPRESS: string;
-    var INPUT_SWIPE_UP: string;
-    var INPUT_SWIPE_RIGHT: string;
-    var INPUT_SWIPE_LEFT: string;
-    var INPUT_SWIPE_DOWN: string;
+    var ACTION_INPUTS: IStringKeyValue[];
+    var ACTION_INPUT_TAP_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY: string;
+    var ACTION_INPUT_SWIPE_UP_KEY: string;
+    var ACTION_INPUT_SWIPE_RIGHT_KEY: string;
+    var ACTION_INPUT_SWIPE_LEFT_KEY: string;
+    var ACTION_INPUT_SWIPE_DOWN_KEY: string;
+    var ACTION_INPUT_TAP_VALUE: string;
+    var ACTION_INPUT_LONG_PRESS_VALUE: string;
+    var ACTION_INPUT_SWIPE_UP_VALUE: string;
+    var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
+    var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
+    var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
 
 }
 
