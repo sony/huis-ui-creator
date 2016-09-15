@@ -1185,6 +1185,26 @@ module Garage {
                 let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
+                if (!this._getTargetPageModule(this.mouseMoveStartPosition_)) {
+                    console.log("canvas: " + GRID_AREA_WIDTH + "-" + GRID_AREA_HEIGHT);
+                    console.log("item.x: " + newPosition.x + "～" + (newPosition.x + newArea.w));
+                    console.log("item.y: " + newPosition.y + "～" + (newPosition.y + newArea.h));
+
+                    // 開始位置がキャンバス外の場合＝パレットからの配置の場合
+                    if ((newPosition.x + newArea.w <= BIAS_X_DEFAULT_GRID_LEFT || newPosition.x >= GRID_AREA_WIDTH) ||
+                        (newPosition.y + newArea.h <= 0 || newPosition.y >= GRID_AREA_HEIGHT)) {
+                        // 現在位置がキャンバス外の場合はアイテム破棄
+
+                        let delMemento = this._deleteCurrentTargetItem(false);
+                        let delCommand = new MementoCommand([delMemento]);
+                        // 履歴に登録せずに実行
+                        let delModel = delCommand.invoke();
+                        this._updateItemElementsOnCanvas(delModel);
+
+                        return;
+                    }
+                }
+
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
                     this._updateCurrentModelData("area", newArea);
@@ -1192,6 +1212,7 @@ module Garage {
                     return;
                 }
 
+                // 元ページのモデルをコピーし移動先ページに追加
                 let newModel = this._cloneTargetModel(this.currentTargetModel_);
 
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
@@ -3436,6 +3457,7 @@ module Garage {
 
 			/**
 			 * 現在ターゲットとなっているアイテムを削除する
+             * @param doInvoke 削除処理を実行するかどうか。falseの場合は削除処理は行わず、そのコマンドのみを返す
 			 */
             private _deleteCurrentTargetItem(doInvoke: boolean = true): IMemento {
 				if (!this.$currentTarget_) {
