@@ -26,7 +26,6 @@ module Garage {
                         }
                     }
                 }
-
             }
 
             get(): IStringKeyValue[]{
@@ -35,35 +34,26 @@ module Garage {
 
             deleteByValue(inputValue: string) {
                 let FUNCTION_NAME = TAG + "deleteByValue : ";
-
                 if (inputValue == null) {
                     console.warn(FUNCTION_NAME + "inputValue is null");
                     return;
                 }
-
-
                 let result = this.array.filter((value, index: number) => {
                     return value.value != inputValue;
                 });
-
                 this.array = result;
-
             }
 
             deleteByKey(inputKey: string) {
                 let FUNCTION_NAME = TAG + "deleteByKey : ";
-
                 if (inputKey == null) {
                     console.warn(FUNCTION_NAME + "inputKey is null");
                     return;
                 }
-
                 let result = this.array.filter((value , index: number) => {
                     return value.key != inputKey;
                 });
-
                 this.array = result;
-
             }
 
             push(input: IStringKeyValue) {
@@ -75,17 +65,14 @@ module Garage {
             */
             getNegative(): IStringKeyValue[] {
                 let tmpResult: IStringKeyValue[] = $.extend(true, [], this.all);
-
-               
                 for (let i = 0; i < this.array.length; i++) {
                     tmpResult = tmpResult.filter((value, index: number) => {
                         return value.value != this.array[i].value;
                     });
                 }
-
                 return tmpResult;
-
             }
+
 
         }
 
@@ -150,6 +137,7 @@ module Garage {
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
+                    this.$el.find("#select-state-action-input-"+ stateId +"-" + order + "-button").focus();
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
@@ -172,6 +160,7 @@ module Garage {
                 }
 
                 this.updateModel(this.DEFAULT_STATE_ID);
+                this.renderSignals(this.DEFAULT_STATE_ID);
 
             }
 
