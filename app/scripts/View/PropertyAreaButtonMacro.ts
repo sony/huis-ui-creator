@@ -256,6 +256,7 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
+                this.changeColorDefaultValuePulldown();
                 this.controlPlusButtonEnableDisable();
                 this.updateModel();
 
