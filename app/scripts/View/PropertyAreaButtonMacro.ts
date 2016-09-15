@@ -212,12 +212,23 @@ module Garage {
 
                 this.updateModel();
 
+                //noneのoptionをもっていたとき,noneの選択肢を消すため表示を更新する。
+                if ($target.find(".default-value").length != 0) {
+                    this.renderSignalContainers();
+                }
+
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
                 this.updateModel();
+
+                let $target = $(event.currentTarget);
+                //noneのoptionをもっていたとき,noneの選択肢を消すため表示を更新する。
+                if ($target.find(".default-value").length != 0) {
+                    this.renderSignalContainers();
+                }
             }
 
             //+ボタンがクリックされた場合に呼び出される

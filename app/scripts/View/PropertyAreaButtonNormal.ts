@@ -192,12 +192,23 @@ module Garage {
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order, this.DEFAULT_STATE_ID);
                 this.updateModel(this.DEFAULT_STATE_ID);
+
+                //noneのoptionをもっていたとき,noneの選択肢を消す。
+                if ($target.find(".default-value").length != 0) {
+                    this.renderSignals(this.DEFAULT_STATE_ID);
+                }
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
                 this.updateModel(this.DEFAULT_STATE_ID);
+
+                let $target = $(event.currentTarget);
+                //noneのoptionをもっていたとき,noneの選択肢を消す。
+                if ($target.find(".default-value").length != 0) {
+                    this.renderSignals(this.DEFAULT_STATE_ID);
+                }
             }
 
 
@@ -575,6 +586,10 @@ module Garage {
                 //inputActionを入力していた場合、値を表示
                 if (inputAction != null) {
                     this.setInputAction(order, stateId, inputAction);
+                } else {
+                    let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.templateItemDetailFile_);
+                    $actionContainer.find("select").append(noneOption);
+                    this.setInputAction(order, stateId, "none");
                 }
 
                 //Functionの文言を和訳
@@ -646,8 +661,7 @@ module Garage {
                     return;
                 }
 
-                //"none"も見つからない扱いとする。
-                if (this.isValidValue(inputType)) {
+                if (inputType != null) {
                     $actionPullDown.val(inputType);
                 }
 

@@ -210,7 +210,6 @@
         <div class="signal-action-container-element">
             <div class="custom-select">
                 <select class="action-input" id="select-state-action-input-{{id}}-{{order}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">★操作を選択</option>
                     {{#actionList}}
                     <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
                     {{/actionList}}
@@ -218,94 +217,97 @@
             </div>
         </div>
     </script>
+    <!--アクションのnone用-->
+    <script type="text/template" id="template-property-button-signal-action-none-option">
+        <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">★操作を選択</option>
+    </script>
 
 
 
 
+        <!--マクロボタン用の詳細編集エリア-->
+        <script type="text/template" id="template-macro-button-detail">
+            {{! マクロボタンの詳細情報エリア}}
 
-    <!--マクロボタン用の詳細編集エリア-->
-	<script type="text/template" id="template-macro-button-detail">
-		{{! マクロボタンの詳細情報エリア}}
+            <div class="header">
+                <h3 id="face-item-detail-title">
+                    <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
 
-        <div class="header">
-		    <h3 id="face-item-detail-title">
-                <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
-                
-		    </h3>
-            <div id="about-macro">
-                マクロとは？
-                <span data-i18n="">★サンプル</span>
-            </div>
-        </div>
-
-		    <div id="macro-container"></div>
-
-	</script>
-
-
-
-
-
-    <!--マクロ 基本ボタン情報表示用テンプレート-->
-	<script type="text/template" id="template-property-macro-button">
-        <div class="macro-container" data-state-id="{{id}}">
-            <!-- プレビュー -->
-            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
-                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
-                <div class="text-field-in-preview">
-                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
-                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-
-                    <div class="custom-select text-size-pulldown">
-                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
-                            <option value="12">12px</option>
-                            <option value="14">14px</option>
-                            <option value="16">16px</option>
-                            <option value="18">18px</option>
-                            <option value="20">20px</option>
-                            <option value="23">23px</option>
-                            <option value="28">28px</option>
-                            <option value="30" selected>30px</option>
-                            <option value="32">32px</option>
-                            <option value="36">36px</option>
-                            <option value="40">40px</option>
-                            <option value="44">44px</option>
-                            <option value="48">48px</option>
-                            <option value="54">54px</option>
-                            <option value="60">60px</option>
-                            <option value="72">72px</option>
-                            <option value="80">80px</option>
-                            <option value="88">88px</option>
-                            <option value="96">96px</option>
-                        </select>
-                    </div>
+                </h3>
+                <div id="about-macro">
+                    マクロとは？
+                    <span data-i18n="">★サンプル</span>
                 </div>
             </div>
 
-            <div class="custom-select">
-                <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    {{#actionList}}
-                    <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                    {{/actionList}}
-                </select>
+            <div id="macro-container"></div>
+
+        </script>
+
+
+
+
+
+        <!--マクロ 基本ボタン情報表示用テンプレート-->
+        <script type="text/template" id="template-property-macro-button">
+            <div class="macro-container" data-state-id="{{id}}">
+                <!-- プレビュー -->
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
+                    <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
+                    <div class="text-field-in-preview">
+                        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
+                        <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+
+                        <div class="custom-select text-size-pulldown">
+                            <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
+                                <option value="12">12px</option>
+                                <option value="14">14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                                <option value="23">23px</option>
+                                <option value="28">28px</option>
+                                <option value="30" selected>30px</option>
+                                <option value="32">32px</option>
+                                <option value="36">36px</option>
+                                <option value="40">40px</option>
+                                <option value="44">44px</option>
+                                <option value="48">48px</option>
+                                <option value="54">54px</option>
+                                <option value="60">60px</option>
+                                <option value="72">72px</option>
+                                <option value="80">80px</option>
+                                <option value="88">88px</option>
+                                <option value="96">96px</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-select">
+                    <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                        {{#actionList}}
+                        <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                        {{/actionList}}
+                    </select>
+                </div>
+
+                <div id="signals-container"></div>
+
+                <div id="add-signal-btn"></div>
+
             </div>
-
-            <div id="signals-container"></div>
-
-            <div id="add-signal-btn"></div>
-
-        </div>
-	</script>
+        </script>
 
 
 
 
 
-    <!--マクロのリモコン1信号分のテンプレート-->
-	<script type="text/template" id="template-property-button-signal-macro">
-        <div class="signal-container-element" data-signal-order="{{order}}">
+        <!--マクロのリモコン1信号分のテンプレート-->
+        <script type="text/template" id="template-property-button-signal-macro">
+            <div class="signal-container-element" data-signal-order="{{order}}">
 
-            <span class="orderIndicator">★信号{{order}}</span>
+                <span class="orderIndicator">★信号{{order}}</span>
 
                 <!--インターバル選択プルダウン-->
                 <div id="signal-interval-container"></div>
@@ -327,97 +329,99 @@
                     <div class="sort-down-btn" data-signal-order="{{order}}"></div>
                 </div>
 
-        </div>
-	</script>
-
-
-
-
-
-    <!-- リモコン選択用のテンプレート -->
-    <script type="text/template" id="template-property-button-signal-remote">
-        <div class="signal-remote-container-element">
-            <div class="custom-select">
-                <select class="remote-input" id="select-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                    <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
-                    {{#remotesList}}
-                    <option value="{{remoteId}}">{{face.name}}</option>
-                    {{/remotesList}}
-                </select>
             </div>
-        </div>
-    </script>
+        </script>
 
 
 
 
 
-    <!--信号選択用プルダウンのテンプレート-->
-    <script type="text/template" id="template-property-button-signal-functions">
-        <div class="signal-function-container-element">
-            <div class="custom-select">
-                <select class="function-input" id="select-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                    <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
-                    {{#functions}}
-                    <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
-                    {{/functions}}
-                </select>
+        <!-- リモコン選択用のテンプレート -->
+        <script type="text/template" id="template-property-button-signal-remote">
+            <div class="signal-remote-container-element">
+                <div class="custom-select">
+                    <select class="remote-input" id="select-remote-input-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
+                        {{#remotesList}}
+                        <option value="{{remoteId}}">{{face.name}}</option>
+                        {{/remotesList}}
+                    </select>
+                </div>
             </div>
-        </div>
-    </script>
+        </script>
+        <script type="text/template" id="template-property-button-signal-remote-none-option">
+            <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
+        </script>
 
 
 
 
-
-    <!--マクロの信号間隔 調整用プルダウンのテンプレート-->
-    <script type="text/template" id="template-property-button-signal-interval">
-        <div class="signal-interval-container">
-            <div class="custom-select">
-
-                <select class="interval-input" id="select-macro-signal-interval-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                    <option value="0" data-i18n="button.interval.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
-                    <option value="100" data-i18n="button.interval.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
-                    <option value="200" data-i18n="button.interval.STR_00_POINT_2_SECOND_AFTER">★0.2秒後</option>
-                    <option value="300" data-i18n="button.interval.STR_00_POINT_3_SECOND_AFTER">★0.3秒後</option>
-                    <option value="400" data-i18n="button.interval.STR_00_POINT_4_SECOND_AFTER">★0.4秒後</option>
-                    <option value="500" data-i18n="button.interval.STR_00_POINT_5_SECOND_AFTER">★0.5秒後</option>
-                    <option value="600" data-i18n="button.interval.STR_00_POINT_6_SECOND_AFTER">★0.6秒後</option>
-                    <option value="700" data-i18n="button.interval.STR_00_POINT_7_SECOND_AFTER">★0.7秒後</option>
-                    <option value="800" data-i18n="button.interval.STR_00_POINT_8_SECOND_AFTER">★0.8秒後</option>
-                    <option value="900" data-i18n="button.interval.STR_00_POINT_9_SECOND_AFTER">★0.9秒後</option>
-                    <option value="1000" data-i18n="button.interval.STR_01_POINT_0_SECOND_AFTER">★1秒後</option>
-                    <option value="2000" data-i18n="button.interval.STR_02_POINT_0_SECOND_AFTER">★2秒後</option>
-                    <option value="3000" data-i18n="button.interval.STR_03_POINT_0_SECOND_AFTER">★3秒後</option>
-                    <option value="4000" data-i18n="button.interval.STR_04_POINT_0_SECOND_AFTER">★4秒後</option>
-                    <option value="5000" data-i18n="button.interval.STR_05_POINT_0_SECOND_AFTER">★5秒後</option>
-                    <option value="6000" data-i18n="button.interval.STR_06_POINT_0_SECOND_AFTER">★6秒後</option>
-                    <option value="7000" data-i18n="button.interval.STR_07_POINT_0_SECOND_AFTER">★7秒後</option>
-                    <option value="8000" data-i18n="button.interval.STR_08_POINT_0_SECOND_AFTER">★8秒後</option>
-                    <option value="9000" data-i18n="button.interval.STR_09_POINT_0_SECOND_AFTER">★9秒後</option>
-                    <option value="10000" data-i18n="button.interval.STR_10_POINT_0_SECOND_AFTER">★10秒後</option>
-                    <option value="15000" data-i18n="button.interval.STR_15_POINT_0_SECOND_AFTER">★15秒後</option>
-                    <option value="20000" data-i18n="button.interval.STR_20_POINT_0_SECOND_AFTER">★20秒後</option>
-                    <option value="25000" data-i18n="button.interval.STR_25_POINT_0_SECOND_AFTER">★25秒後</option>
-                    <option value="30000" data-i18n="button.interval.STR_30_POINT_0_SECOND_AFTER">★30秒後</option>
-
-                </select>
+        <!--信号選択用プルダウンのテンプレート-->
+        <script type="text/template" id="template-property-button-signal-functions">
+            <div class="signal-function-container-element">
+                <div class="custom-select">
+                    <select class="function-input" id="select-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                        {{#functions}}
+                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                        {{/functions}}
+                    </select>
+                </div>
             </div>
-        </div>
-    </script>
+        </script>
+        <script type="text/template" id="template-property-button-signal-functions-none-option">
+            <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
+        </script>
+
+
+
+
+        <!--マクロの信号間隔 調整用プルダウンのテンプレート-->
+        <script type="text/template" id="template-property-button-signal-interval">
+            <div class="signal-interval-container">
+                <div class="custom-select">
+
+                    <select class="interval-input" id="select-macro-signal-interval-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
+                        <option value="0" data-i18n="button.interval.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
+                        <option value="100" data-i18n="button.interval.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
+                        <option value="200" data-i18n="button.interval.STR_00_POINT_2_SECOND_AFTER">★0.2秒後</option>
+                        <option value="300" data-i18n="button.interval.STR_00_POINT_3_SECOND_AFTER">★0.3秒後</option>
+                        <option value="400" data-i18n="button.interval.STR_00_POINT_4_SECOND_AFTER">★0.4秒後</option>
+                        <option value="500" data-i18n="button.interval.STR_00_POINT_5_SECOND_AFTER">★0.5秒後</option>
+                        <option value="600" data-i18n="button.interval.STR_00_POINT_6_SECOND_AFTER">★0.6秒後</option>
+                        <option value="700" data-i18n="button.interval.STR_00_POINT_7_SECOND_AFTER">★0.7秒後</option>
+                        <option value="800" data-i18n="button.interval.STR_00_POINT_8_SECOND_AFTER">★0.8秒後</option>
+                        <option value="900" data-i18n="button.interval.STR_00_POINT_9_SECOND_AFTER">★0.9秒後</option>
+                        <option value="1000" data-i18n="button.interval.STR_01_POINT_0_SECOND_AFTER">★1秒後</option>
+                        <option value="2000" data-i18n="button.interval.STR_02_POINT_0_SECOND_AFTER">★2秒後</option>
+                        <option value="3000" data-i18n="button.interval.STR_03_POINT_0_SECOND_AFTER">★3秒後</option>
+                        <option value="4000" data-i18n="button.interval.STR_04_POINT_0_SECOND_AFTER">★4秒後</option>
+                        <option value="5000" data-i18n="button.interval.STR_05_POINT_0_SECOND_AFTER">★5秒後</option>
+                        <option value="6000" data-i18n="button.interval.STR_06_POINT_0_SECOND_AFTER">★6秒後</option>
+                        <option value="7000" data-i18n="button.interval.STR_07_POINT_0_SECOND_AFTER">★7秒後</option>
+                        <option value="8000" data-i18n="button.interval.STR_08_POINT_0_SECOND_AFTER">★8秒後</option>
+                        <option value="9000" data-i18n="button.interval.STR_09_POINT_0_SECOND_AFTER">★9秒後</option>
+                        <option value="10000" data-i18n="button.interval.STR_10_POINT_0_SECOND_AFTER">★10秒後</option>
+                        <option value="15000" data-i18n="button.interval.STR_15_POINT_0_SECOND_AFTER">★15秒後</option>
+                        <option value="20000" data-i18n="button.interval.STR_20_POINT_0_SECOND_AFTER">★20秒後</option>
+                        <option value="25000" data-i18n="button.interval.STR_25_POINT_0_SECOND_AFTER">★25秒後</option>
+                        <option value="30000" data-i18n="button.interval.STR_30_POINT_0_SECOND_AFTER">★30秒後</option>
+
+                    </select>
+                </div>
+            </div>
+        </script>
 
 
 
 
 
-    <!--エアコンの詳細編集エリア-->
-	<script type="text/template" id="template-property-button-state-ac">
-		<!-- Air Conditioner button has less items -->
-		<div class="state-container">
+        <!--エアコンの詳細編集エリア-->
+        <script type="text/template" id="template-property-button-state-ac">
+            <!-- Air Conditioner button has less items -->
+            <div class="state-container">
 
-		<!-- プレビュー -->
-		<div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+                <!-- プレビュー -->
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
 
-		</div>
-	</script>
+            </div>
+        </script>
 </article>

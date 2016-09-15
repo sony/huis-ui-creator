@@ -317,7 +317,7 @@ module Garage {
             * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
             */
             protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
-                let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
+                let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (order == null) {
                     console.warn("order is null");
@@ -334,7 +334,7 @@ module Garage {
                     return;
                 }
 
-                //FunctionプルダウンのDOMを表示。
+                //RemoteIdプルダウンのDOMを表示。
                 let remoteList : IRemoteInfo[] = this.availableRemotelist;
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
@@ -356,6 +356,10 @@ module Garage {
                     //inputにmodelがある場合、値を表示
                     if (inputRemoteId != null) {
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
+                    } else {
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
+                        $remoteContainer.find("select").append(noneOption);
+                        this.setRemoteIdPullDownOf(order, "none");
                     }
 
                     //Functionの文言を和訳
@@ -548,6 +552,10 @@ module Garage {
                     //inputにmodelがある場合、値を表示
                     if (functionName != null) {
                         this.setFunctionNamePullDownOf(order, functionName);
+                    } else {
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
+                        $functionlContainer.find("select").append(noneOption);
+                        this.setFunctionNamePullDownOf(order, "none");
                     }
 
                     //Functionの文言を和訳
