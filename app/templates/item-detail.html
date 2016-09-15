@@ -15,22 +15,6 @@
       
 
         <div id="states-container"></div>
-
-
-
-        {{#deviceInfo}}
-        {{#code_db}}
-
-        {{#model_number}}
-        <h4>型番</h4>
-        <div class="property-value">{{model_number}}</div>
-        {{/model_number}}
-
-        {{/code_db}}
-        {{/deviceInfo}}
-
-        {{! v1.0 では非対応}}
-        {{! <button id="add-state">状態を追加</button> }}
     </script>
 
 
@@ -47,25 +31,6 @@
 			<div id="edit-image-non-button-image"></div>
         </div>
 
-
-        <!-- ボタンのエリア 
-        <div class="one-line-label">
-            <div class="label-button-state">位置</div>
-            <div class="label-button-state">サイズ</div>
-        </div>
-        {{#area}}
-        <div class="one-line-label">
-            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
-            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
-        </div>
-        {{/area}}
-			-->
-
-        <!-- 画像ファイル 
-        <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button class="ui-btn inline" id="delete-background-image">削除</button>
-			-->
     </script>
 
 
@@ -110,48 +75,6 @@
 			</div>
 		</div>
 
-		
-        <!-- ボタンのエリア
-        <div class="one-line-label">
-            <div class="label-button-state">位置</div>
-            <div class="label-button-state">サイズ</div>
-        </div>
-        {{#area}}
-        <div class="one-line-label">
-            <div id="state-button-x-y" class="property-value info-button-state">X:{{x}}   Y:{{y}}</div>
-            <div id="state-button-w-h" class="property-value lnfo-button-state">W:{{w}}   H:{{h}}</div>
-        </div>
-        {{/area}}
-		-->
-
-		<!--
-        <h4>テキスト</h4>
-        <input class="property-value property-text-value" data-property="text" type="text" value="{{text}}" />
-        <div class="custom-select text-size-pulldown">
-            <select class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
-                <option value="12">12px</option>
-                <option value="14">14px</option>
-                <option value="16">16px</option>
-                <option value="18">18px</option>
-                <option selected value="20">20px</option>
-                <option value="24">24px</option>
-                <option value="28">28px</option>
-                <option value="30">30px</option>
-                <option value="32">32px</option>
-                <option value="36">36px</option>
-                <option value="40">40px</option>
-                <option value="44">44px</option>
-                <option value="48">48px</option>
-                <option value="54">54px</option>
-                <option value="60">60px</option>
-                <option value="72">72px</option>
-                <option value="80">80px</option>
-                <option value="88">88px</option>
-                <option value="96">96px</option>
-            </select>
-        </div>
-		-->
-
     </script>
 
 
@@ -169,14 +92,6 @@
 			<div id="edit-image-background"></div>
 			<div id="delete-background-image"></div>
         </div>
-
-
-
-        <!-- 画像ファイルのエリア
-        <h4>画像ファイル</h4>
-        <input id="refer-image" class="property-value page-background-src inline" type="text" {{#enabled}} value="{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/enabled}}" readonly="readonly" />
-        <button class ="ui-btn inline" id="delete-background-image">削除</button>
-		-->
         
     </script>
 
@@ -189,27 +104,6 @@
             <p class="inline property-value small">{{cid}}</p>
         </div>
     </script>
-
-
-
-
-    <script type="text/template" id="template-property-area">
-        <div id="property-area">
-            {{#area}}
-            <div>
-                <p class="inline property-title">位置</p>
-                <p class="inline property-title-sub">x: </p><p class="inline property-value">{{x}} </p>
-                <p class="inline property-title-sub">y: </p><p class="inline property-value">{{y}}</p>
-            </div>
-            <div>
-                <p class="inline property-title">サイズ</p>
-                <p class="inline property-title-sub">w: </p><p class="inline property-value">{{w}} </p>
-                <p class="inline property-title-sub">h: </p><p class="inline property-value">{{h}}</p>
-            </div>
-            {{/area}}
-        </div>
-    </script>
-
 
 
 
@@ -251,56 +145,7 @@
 				</div>
 
 
-						<!-- ボタンのエリア 
-						<div class="one-line-label">
-							<div class="label-button-state">位置</div>
-							<div class="label-button-state">サイズ</div>
-						</div>
-
-						<div class="one-line-label">
-							<div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
-							<div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
-						</div>
-						-->
-
-
-						<!-- 画像ファイル変更
-						<div class="property-state-image">
-							<h4>画像ファイル</h4>
-							<input class="property-value refer-state-image inline" type="text" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" readonly="readonly" data-state-id="{{id}}" />
-							<button class="delete-state-image ui-btn inline" data-state-id="{{id}}">削除</button>
-						</div>
-						-->
-
-						<!-- テキスト
-			<div class="property-state-label">
-				<h4>テキスト</h4>
-				<input class="property-value property-state-text-value" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
-
-				<div class="custom-select text-size-pulldown">
-					<select class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
-						<option value="12">12px</option>
-						<option value="14">14px</option>
-						<option value="16">16px</option>
-						<option value="18">18px</option>
-						<option value="20">20px</option>
-						<option value="24">24px</option>
-						<option value="28">28px</option>
-						<option selected value="30">30px</option>
-						<option value="32">32px</option>
-						<option value="36">36px</option>
-						<option value="40">40px</option>
-						<option value="44">44px</option>
-						<option value="48">48px</option>
-						<option value="54">54px</option>
-						<option value="60">60px</option>
-						<option value="72">72px</option>
-						<option value="80">80px</option>
-						<option value="88">88px</option>
-						<option value="96">96px</option>
-					</select>
-				</div>
-			</div>-->
+				
 						<!-- アクション -->
 						<div class="property-state-action">
 							<h4 id="button-state-label-action">★アクション</h4>
@@ -329,18 +174,6 @@
 
             <!-- プレビュー -->
             <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
-
-            <!-- ボタンのエリア 
-            <div class="one-line-label">
-                <div class="label-button-state">位置</div>
-                <div class="label-button-state">サイズ</div>
-            </div>
-
-            <div class="one-line-label">
-                <div id="state-button-x-y" class="property-value info-button-state">X:   Y:</div>
-                <div id="state-button-w-h" class="property-value lnfo-button-state">W:   H:</div>
-            </div>
-			-->
 
         </div>
     </script>
