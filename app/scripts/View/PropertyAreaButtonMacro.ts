@@ -175,6 +175,7 @@ module Garage {
             private onAnyPulllDownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
                 this.controlPlusButtonEnableDisable();
+                this.changeColorDefaultValuePulldown();
             }
 
             //Invervalのプルダウンが変更されたら呼ばれる
@@ -257,6 +258,8 @@ module Garage {
 
                 this.controlPlusButtonEnableDisable();
                 this.updateModel();
+
+
 
             }
 
@@ -511,6 +514,7 @@ module Garage {
 
 
                 this.controlPlusButtonEnableDisable();
+                this.changeColorDefaultValuePulldown();
             }
             
             /*

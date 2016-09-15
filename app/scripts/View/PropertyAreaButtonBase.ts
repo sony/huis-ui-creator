@@ -236,6 +236,31 @@ module Garage {
             }
 
             /*
+            * 入力したorderのremoteIdのプルダウンのJQuery要素を返す。
+            * @param order{number}
+            * @return {JQuery}
+            */
+            protected getPullDownJQueryElement(order : number):JQuery{
+                let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
+                if (!this.isValidJQueryElement($remoteIdPullDown)) {
+                    console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
+                    return;
+                }
+
+                return $remoteIdPullDown;
+            }
+
+
+
+            /*
           * 入力したorderのremoteプルダウンに、inputの値を代入する。
           * order{number} ： マクロ信号の順番
           * inputRemoteId{string} : プルダウンに設定する値。
@@ -577,6 +602,22 @@ module Garage {
                 //TODO：huisFilesで取得できない場合の処理(すでに削除されているなど)
                 //キャッシュで対応する。
                 return huisFiles.getMasterFunctions(remoteId);
+            }
+
+
+            // default-valueのpulldownの要素をfocus状態と同じ見た目にする
+            protected changeColorDefaultValuePulldown() {
+                let customSelects = this.$el.find(".custom-select");
+                let $customSelects = $(customSelects);
+                for (let i = 0; i < customSelects.length; i++){
+                    let value = $(customSelects[i]).find("select").val();
+                    if (value == "none") {
+                        $(customSelects[i]).find(".ui-btn").addClass("focus-visual");
+                    } else {
+                        $(customSelects[i]).find(".ui-btn").removeClass("focus-visual");
+                    }
+                }
+
             }
 
         }

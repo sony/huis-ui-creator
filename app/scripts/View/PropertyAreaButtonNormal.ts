@@ -108,7 +108,15 @@ module Garage {
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "click .delete-signal": "onDeleteButtonClick",
+                    "change select": "onAnyPulllDownChanged"
                 };
+            }
+
+            //プルダウンのいずれかが変更されたときに呼ばれる
+            private onAnyPulllDownChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
+                let $target = $(event.currentTarget).focusout();
+                this.changeColorDefaultValuePulldown();
             }
 
             //deleteボタンが押されたときに呼ばれる
@@ -137,7 +145,6 @@ module Garage {
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
-                    this.$el.find("#select-state-action-input-"+ stateId +"-" + order + "-button").focus();
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
@@ -145,6 +152,7 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
+                this.changeColorDefaultValuePulldown();
                 this.controlPlusButtonEnableDisable();
 
             }
@@ -439,6 +447,8 @@ module Garage {
                 }
 
                 this.controlPlusButtonEnableDisable();
+
+                this.changeColorDefaultValuePulldown();
 
                 return this.$el;
 
