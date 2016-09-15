@@ -76,7 +76,6 @@ module Garage {
             //マクロのプロパティView用
             private macroProperty: PropertyAreaMacroButton;
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
-            private testCountBug: number;
 
 			/**
 			 * construnctor
@@ -91,7 +90,6 @@ module Garage {
 			//! page initialization event
 			onInitialize(event: JQueryEventObject): void {
 				super.onInitialize(event);
-                this.testCountBug = 0;
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
