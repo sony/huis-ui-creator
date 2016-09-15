@@ -10,8 +10,89 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaNormal] ";
 
-      
+
+        class ActionInputStringKeyValueArray {
+            private all: IStringKeyValue[];
+            private array: IStringKeyValue[];
+            private TAG = "[ActionInputStringKeyValueArray]";
+
+            constructor(inputActionKeys: string[]) {
+                this.array = [];
+                this.all = $.extend(true,[],ACTION_INPUTS);
+                for (let i = 0; i < inputActionKeys.length; i++){
+                    for (let j = 0; j < this.all.length; j++){
+                        if (this.all[j].value == inputActionKeys[i]) {
+                            this.array.push({ key: this.all[j].key, value: this.all[j].value });
+                        }
+                    }
+                }
+
+            }
+
+            get(): IStringKeyValue[]{
+                return this.array;
+            }
+
+            deleteByValue(inputValue: string) {
+                let FUNCTION_NAME = TAG + "deleteByValue : ";
+
+                if (inputValue == null) {
+                    console.warn(FUNCTION_NAME + "inputValue is null");
+                    return;
+                }
+
+
+                let result = this.array.filter((value, index: number) => {
+                    return value.value != inputValue;
+                });
+
+                this.array = result;
+
+            }
+
+            deleteByKey(inputKey: string) {
+                let FUNCTION_NAME = TAG + "deleteByKey : ";
+
+                if (inputKey == null) {
+                    console.warn(FUNCTION_NAME + "inputKey is null");
+                    return;
+                }
+
+                let result = this.array.filter((value , index: number) => {
+                    return value.key != inputKey;
+                });
+
+                this.array = result;
+
+            }
+
+            push(input: IStringKeyValue) {
+                this.array.push(input);
+            }
+
+            /*
+            * 現在保持しているactionInput配列が入ってない ACTION_INPUTSを返す。
+            */
+            getNegative(): IStringKeyValue[] {
+                let tmpResult: IStringKeyValue[] = $.extend(true, [], this.all);
+
+               
+                for (let i = 0; i < this.array.length; i++) {
+                    tmpResult = tmpResult.filter((value, index: number) => {
+                        return value.value != this.array[i].value;
+                    });
+                }
+
+                return tmpResult;
+
+            }
+
+        }
+
+
         export class PropertyAreaButtonNormal extends PropertyAreaButtonBase {
+
+            private assignedInputActions: string[];
 
          
 			/**
@@ -19,6 +100,8 @@ module Garage {
 			 */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
+                this.assignedInputActions = [];
+                
             }
 
 
@@ -132,6 +215,8 @@ module Garage {
             */
             renderViewState(stateId : number): JQuery {
                 let FUNCTION_NAME = TAG + "renderViewState";
+
+                this.updateAssiendInputActionsFromModel(stateId);
 
                 if (stateId == null) {
                     console.warn(FUNCTION_NAME + "stateId is null");
@@ -272,7 +357,7 @@ module Garage {
 
                 //更新後の値で、+ボタンの有効・無効判定を行う。
                 this.controlPlusButtonEnableDisable();
-
+                this.updateAssiendInputActionsFromModel(stateId);
                 this.trigger("updateModel");
 
                 
@@ -473,13 +558,16 @@ module Garage {
                 let $actionContainer = $target.find("#signal-action-container");
                 let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.templateItemDetailFile_);
 
-                
+                //すでに入力されているinputは、表示しない。
+                let inputActionInputs: ActionInputStringKeyValueArray = new ActionInputStringKeyValueArray(this.assignedInputActions);
+                inputActionInputs.deleteByValue(inputAction);
+                let displayActionInputs: IStringKeyValue[] = inputActionInputs.getNegative();
 
                 let inputData = {
                     id: stateId,
                     order: order,
                     remotesList: this.availableRemotelist,
-                    actionList : ACTION_INPUTS
+                    actionList: displayActionInputs
                 }
 
                 let $actionDetail = $(templateAction(inputData));
@@ -643,7 +731,35 @@ module Garage {
 
             }
 
-           
+            /*
+            * 現在、入力されているinputActionを更新する
+            * this.assignedInputActionsを更新する。
+            * 描画より前に必要なため、Modelから取得する
+            */
+            private updateAssiendInputActionsFromModel(stateId : number) {
+                let FUNCTION_NAME = TAG + "updateAssiendInputActions : ";
+
+                if (stateId == null) {
+                    console.warn(FUNCTION_NAME + "stateId is null");
+                    return;
+                }
+
+                //初期化
+                this.assignedInputActions = [];
+
+                //現状表示されている 各信号のJquery値を取得
+                let targetActions = this.model.state[stateId].action;
+
+                if (targetActions == null || targetActions.length ==0) {
+                    return;
+                }
+
+                for (let i = 0; i<targetActions.length; i++){
+                    this.assignedInputActions.push(targetActions[i].input);
+                }
+
+            }
+
 
         }
 	}
