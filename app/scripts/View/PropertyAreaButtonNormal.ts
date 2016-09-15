@@ -725,7 +725,7 @@ module Garage {
 
                 //設定できるマクロ最大数だった場合もdisable
                 if (this.model.state[this.DEFAULT_STATE_ID].action.length >= Object.keys(ACTION_INPUTS).length) {
-                    $target.removeClass("disabled");
+                    $target.addClass("disabled");
                 }
 
             }

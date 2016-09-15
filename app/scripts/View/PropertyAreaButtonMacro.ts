@@ -805,7 +805,7 @@ module Garage {
 
                 //設定できるマクロ最大数だった場合もdisable
                 if (this.defaultState.action.length >= MAX_NUM_MACRO_SIGNAL) {
-                    $target.removeClass("disabled");
+                    $target.addClass("disabled");
                 }
 
             }
