@@ -1,4 +1,7 @@
 ﻿<article>
+
+
+    <!--ボタンアイテムの詳細情報エリア-->
 	<script type="text/template" id="template-button-detail">
 		{{! ボタンの詳細情報エリア}}
 
@@ -15,12 +18,10 @@
 
 
 
+    <!--画像アイテムの詳細情報エリア-->
 	<script type="text/template" id="template-image-detail">
-		{{! 画像アイテムの詳細情報エリア}}
 
 		<h3 id="face-item-detail-title">★Image<span class="property-cid"></span></h3>
-
-
 
 		<!-- プレビュー -->
 		<div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}">
@@ -33,10 +34,8 @@
 
 
 
-
-
+    <!-- ラベルアイテムの詳細情報エリア-->
 	<script type="text/template" id="template-label-detail">
-		{{! ラベルアイテムの詳細情報エリア}}
 
 		<h3 id="face-item-detail-title">★Lalel<span class="property-cid"></span></h3>
 
@@ -77,11 +76,10 @@
 
 
 
+    <!--背景画像の詳細編集エリア-->
 	<script type="text/template" id="template-page-background-detail">
 
 		<h3 id="face-item-detail-title">★Background<span class="property-cid"></span></h3>
-
-
 
 		<!-- プレビュー -->
 		<div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}">
@@ -94,6 +92,7 @@
 
 
 
+    <!--CID表示用のテンプレート-->
 	<script type="text/template" id="template-property-cid">
 		<div id="property-cid">
 			<p class="inline property-title">CID</p>
@@ -104,6 +103,8 @@
 
 
 
+
+    <!--アイテムの位置情報のテンプレート-->
 	<script type="text/template" id="template-property-area">
 		<div id="property-area">
 			{{#area}}
@@ -125,6 +126,7 @@
 
 
 
+    <!--通常ボタンのステート用のテンプレート-->
 	<script type="text/template" id="template-property-button-state">
 		<div class="state-container">
 
@@ -172,7 +174,11 @@
 		</div>
 	</script>
 
-    <!-- 通常のボタンの１信号分のDOM -->
+
+
+
+
+    <!-- 通常のボタンの１信号分のテンプレート -->
     <script type="text/template" id="template-property-button-signal-normal">
 
         <div class="signal-container-element" data-signal-order="{{order}}">
@@ -193,10 +199,13 @@
 
         </div>
 
-</script>
+    </script>
 	
 
-    <!--アクション設定用-->
+
+
+
+    <!--アクション設定用 プルダウンのテンプレート-->
     <script type="text/template" id="template-property-button-signal-action">
         <div class="signal-action-container-element">
             <div class="custom-select">
@@ -211,7 +220,10 @@
     </script>
 
 
-    <!--マクロボタン用-->
+
+
+
+    <!--マクロボタン用の詳細編集エリア-->
 	<script type="text/template" id="template-macro-button-detail">
 		{{! マクロボタンの詳細情報エリア}}
 
@@ -230,7 +242,11 @@
 
 	</script>
 
-    <!--マクロ 基本ボタン情報表示用-->
+
+
+
+
+    <!--マクロ 基本ボタン情報表示用テンプレート-->
 	<script type="text/template" id="template-property-macro-button">
         <div class="macro-container" data-state-id="{{id}}">
             <!-- プレビュー -->
@@ -281,7 +297,11 @@
         </div>
 	</script>
 
-    <!--マクロのリモコン信号コンテナ-->
+
+
+
+
+    <!--マクロのリモコン1信号分のテンプレート-->
 	<script type="text/template" id="template-property-button-signal-macro">
         <div class="signal-container-element" data-signal-order="{{order}}">
 
@@ -310,7 +330,11 @@
         </div>
 	</script>
 
-    <!-- リモコン選択用 -->
+
+
+
+
+    <!-- リモコン選択用のテンプレート -->
     <script type="text/template" id="template-property-button-signal-remote">
         <div class="signal-remote-container-element">
             <div class="custom-select">
@@ -324,7 +348,11 @@
         </div>
     </script>
 
-    <!--信号選択用-->
+
+
+
+
+    <!--信号選択用プルダウンのテンプレート-->
     <script type="text/template" id="template-property-button-signal-functions">
         <div class="signal-function-container-element">
             <div class="custom-select">
@@ -339,7 +367,10 @@
     </script>
 
 
-    <!--マクロの信号間隔 調整用-->
+
+
+
+    <!--マクロの信号間隔 調整用プルダウンのテンプレート-->
     <script type="text/template" id="template-property-button-signal-interval">
         <div class="signal-interval-container">
             <div class="custom-select">
@@ -375,6 +406,11 @@
         </div>
     </script>
 
+
+
+
+
+    <!--エアコンの詳細編集エリア-->
 	<script type="text/template" id="template-property-button-state-ac">
 		<!-- Air Conditioner button has less items -->
 		<div class="state-container">
