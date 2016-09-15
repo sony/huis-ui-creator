@@ -3673,7 +3673,7 @@ module Garage {
 
                 // アイテム元座標のキャンバス
                 var fromCanvas = this.$currentTarget_.parent();
-                // グリッド位置補正前の対象アイテムの中心座標が乗っているキャンバス
+                // グリッド位置補正前の対象アイテムが乗っているキャンバス
                 var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
                 var fromCid = fromCanvas.data("cid");
                 var pointedCid = pointedCanvas.data("cid");
@@ -3812,16 +3812,51 @@ module Garage {
 				if (currentTargetArea == null) {
 					console.warn(FUNCTION_NAME + "currentTargetArea is undefined");
 					return;
-				}
-
-                //同じページ内の重なっているボタンを取得
-                var moduleId = this._getCanvasPageModuleId();
-				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
-				if (!buttons) {
-					return ;
                 }
-                //currentTargetのみ、Modelの座標ではなく、cssの座標を用いる。
-                let overlapButtons = this.getOverlapButtonItems(buttons, currentTargetArea);
+
+                // 検査したボタン
+                let buttons: Model.ButtonItem[] = [];
+                // 重なっていたボタン
+                let overlapButtons: Model.ButtonItem[] = [];
+
+                let currentCanvasId = this.$currentTarget_.parent().data('cid');
+                let hoverCanvasId = this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, currentTargetArea.y, currentTargetArea.h).data('cid');
+                if (currentCanvasId != hoverCanvasId) {
+                    // 移動中のボタンが見た目上乗っているキャンバスページからの相対座標を取得
+                    let relativePosition = this.getPointFromCanvas({ x: this.$currentTarget_.offset().left, y: this.$currentTarget_.offset().top }, hoverCanvasId);
+                    currentTargetArea.x = relativePosition.x;
+                    currentTargetArea.y = relativePosition.y;
+                }
+
+                $('#face-canvas .module-container').each((index, elm) => {
+                    let canvasModuleId = $(elm).data('cid');
+                    if (!canvasModuleId) {
+                        return true; // JQuery.each()でのcontinue
+                    }
+
+                    let tmpButtons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(canvasModuleId);
+                    if (!tmpButtons) {
+                        return true;
+                    }
+
+                    if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
+                        // 移動中のボタンの元ページと現在位置のページが異なる場合、現在ページにモデルを仮追加する
+                        tmpButtons.push(this.currentTargetModel_.button);
+                    }
+
+                    // 移動中のボタンの元ページと現在位置のページが異なる場合、元ページのモデルを無視する
+                    let ignoreCurrentModel = (currentCanvasId != hoverCanvasId && canvasModuleId == currentCanvasId);
+
+                    let tmpOverlapButtons: Model.ButtonItem[] = this.getOverlapButtonItems(tmpButtons, currentTargetArea, ignoreCurrentModel);
+
+                    if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
+                        // 仮追加していたモデルを削除
+                        tmpButtons.pop();
+                    }
+
+                    $.merge(buttons, tmpButtons);
+                    $.merge(overlapButtons, tmpOverlapButtons);
+                });
 
                 //overlapButtonsがundefinedのとき、重なっているボタン数が0のとき、currentTargetModelを通常色に
                 if (overlapButtons == null || overlapButtons.length === 0) {
@@ -3831,13 +3866,14 @@ module Garage {
                 this.changeOverlapButtonsFrame(overlapButtons, buttons);
 			}
 
-			/*
+			/**
 			* 重なっているボタン配列をかえす。
 			* @param buttons {Model.ButtonItem} 対象となるボタンたち
 			* @param currentTargetArea? {IArea} currentTargetは特殊なボタンとして扱う。
+            * @param ignoreCurrentTarget {boolean} currentTargetを検査対象外とするかどうか
 			* @return {Model.ButtonItem}
 			*/
-			private getOverlapButtonItems(buttons:Model.ButtonItem[], currentTargetArea? :IArea): Model.ButtonItem[]{
+			private getOverlapButtonItems(buttons:Model.ButtonItem[], currentTargetArea? :IArea, ignoreCurrentTarget: boolean = false) {
 				let FUNCTION_NAME = TAG + "getOverlapButtonItems";
                 let overlapButtons: Model.ButtonItem[] = []; 
 				
@@ -3848,39 +3884,47 @@ module Garage {
 				let buttonCount = buttons.length;
 				if (buttonCount < 2) {
                     return overlapButtons;
-				}
+                }
 
 
 				// 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
 				
-				for (let i = 0; i < buttonCount - 1; i++) {
-					for (let j = i + 1; j < buttonCount; j++) {
+                for (let i = 0; i < buttonCount - 1; i++) {
+                    if (ignoreCurrentTarget && buttons[i].cid == this.currentTargetModel_.button.cid) {
+                        continue;
+                    }
+
+                    for (let j = i + 1; j < buttonCount; j++) {
+                        if (ignoreCurrentTarget && buttons[j].cid == this.currentTargetModel_.button.cid) {
+                            continue;
+                        }
+
 						let button1Area = buttons[i].area,
-							button2Area = buttons[j].area;
+                            button2Area = buttons[j].area;
+
 						//もし、currentTargetのbuttonの場合、areaはcurrentTargetAreaをつかう。
 						if (currentTargetArea) {
-							if (buttons[i].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[i].cid == this.currentTargetModel_.button.cid) {
 								button1Area = currentTargetArea;
 							}
 
-							if (buttons[j].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[j].cid == this.currentTargetModel_.button.cid) {
 								button2Area = currentTargetArea;
 							}
-						}
+                        }
+
 
 						// 両方のボタンが enabled 状態のときのみ判定
-						if (buttons[i].enabled && buttons[j].enabled) {
-							// 当たり判定
-							if (this.isOverlap(button1Area, button2Area)) {
-								//例外対象でなかったら配列に追加
-								overlapButtons.push(buttons[i]);
-								overlapButtons.push(buttons[j]);
-								
-
-							}
-						}
+                        if (buttons[i].enabled && buttons[j].enabled) {
+                            // 当たり判定
+                            if (this.isOverlap(button1Area, button2Area)) {
+                                //例外対象でなかったら配列に追加
+                                overlapButtons.push(buttons[i]);
+                                overlapButtons.push(buttons[j]);
+                            }
+                        }
 					}
-				}
+                }
 
 				return overlapButtons;
 
@@ -4870,19 +4914,37 @@ module Garage {
             }
 
             /**
-             * 指定座標に対応するキャンバスのJQueryオブジェクトを返す
+             * ドラッグ中のマウス座標から対応するキャンバスのJQueryオブジェクトを返す
              * @param positionY マウスのY座標
              */
             private _getCanvasPageByDraggingPosition(positionY: number): JQuery {
                 // 移動後のアイテム座標（元キャンバスページ基準）
-                let ungriddedPositionY = this.mouseMoveStartTargetPosition_.y + (positionY - this.mouseMoveStartPosition_.y) * 2;
-                // window基準のアイテム中心座標
-                let itemCenterY = this.$currentTarget_.parent().offset().top + (ungriddedPositionY + (this.$currentTarget_.height() / 2)) / 2;
+                let itemPositionY = this.mouseMoveStartTargetPosition_.y + (positionY - this.mouseMoveStartPosition_.y) * 2;
+                return this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, itemPositionY, this.$currentTarget_.height());
+            }
 
+            /**
+             * アイテムの情報から該当するキャンバスのJQueryオブジェクトを返す
+             *
+             * @param baseCanvasPositionY アイテムの置かれているキャンバスのY座標
+             * @param itemRelPositionY アイテムの置かれているキャンバス上での相対Y座標
+             * @param itemHeight アイテムの縦幅
+             */
+            private _getCanvasPageByItemArea(baseCanvasPositionY: number, itemRelPositionY: number, itemHeight: number) {
+                let itemCenterY = baseCanvasPositionY + (itemRelPositionY + (itemHeight / 2)) / 2;
+
+                return this._getCanvasPageByPointY(itemCenterY);
+            }
+
+            /**
+             * 指定のY座標がどのキャンバスページに該当する検査し、該当するキャンバスのJQueryオブジェクトを返す
+             * 
+             */
+            private _getCanvasPageByPointY(pointY: number): JQuery {
                 let canvas;
                 $('#face-canvas .face-page').each(function (index) {
-                    if (itemCenterY >= $(this).offset().top &&
-                        itemCenterY <= $(this).offset().top + $(this).height()) {
+                    if (pointY >= $(this).offset().top &&
+                        pointY <= $(this).offset().top + $(this).height()) {
                         canvas = $(this);
                         return;
                     }
@@ -4891,7 +4953,7 @@ module Garage {
                 if (canvas) {
                     return canvas.find(".module-container");
                 } else {
-                    // 該当なしの場合は移動前のキャンバスを返す
+                    // 該当なしの場合は現在のキャンバスを返す
                     return this.$currentTarget_.parent();
                 }
             }
