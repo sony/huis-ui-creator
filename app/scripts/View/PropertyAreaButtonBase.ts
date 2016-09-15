@@ -612,9 +612,9 @@ module Garage {
                 for (let i = 0; i < customSelects.length; i++){
                     let value = $(customSelects[i]).find("select").val();
                     if (value == "none") {
-                        $(customSelects[i]).find(".ui-btn").addClass("focus-visual");
+                        //$(customSelects[i]).find(".ui-btn").addClass("focus-visual");
                     } else {
-                        $(customSelects[i]).find(".ui-btn").removeClass("focus-visual");
+                        //$(customSelects[i]).find(".ui-btn").removeClass("focus-visual");
                     }
                 }
 
