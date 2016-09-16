@@ -763,14 +763,7 @@ module Garage {
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
-                targetModel = $.extend(true, {}, targetModel);
-
-                if (setOnEventPosition) {
-                    var itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                }
-
                 var model: ItemModel;
-
                 switch (targetModel.type) {
                     case "button":
                         if (targetModel.button) {
@@ -797,42 +790,41 @@ module Garage {
                             }
                             targetModel.button.deviceInfo = deviceInfo;
 
-                            if (setOnEventPosition) {
-                                targetModel.button.area.x = itemPosition.x;
-                                targetModel.button.area.y = itemPosition.y - moduleOffsetY_pallet;
-                            }
-
                             model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
                         }
                         break;
 
                     case "image":
                         if (targetModel.image) {
-                            if (setOnEventPosition) {
-                                targetModel.image.area.x = itemPosition.x;
-                                targetModel.image.area.y = itemPosition.y - moduleOffsetY_pallet;
-                            }
-
                             model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
                                     // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
                                     // このタイミングで CSS を更新
-                                    this._updateItemElementOnCanvas(model);
-                                });
+                                this._updateItemElementOnCanvas(model);
+                                // 読み込み完了時にダミー表示位置がずれるので再表示
+                                this.moveCurrentTargetDummy();
+                            });
                         }
                         break;
 
                     case "label":
                         if (targetModel.label) {
-                            if (setOnEventPosition) {
-                                targetModel.label.area.x = itemPosition.x;
-                                targetModel.label.area.y = itemPosition.y - moduleOffsetY_pallet;
-                            }
-
                             model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
                         }
                         break;
 
                     default:
+                }
+
+                if (setOnEventPosition) {
+                    // 追加した要素に対して位置を設定
+                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
+                    let newElement: JQuery = this._getItemElementByModel(model);
+                    newElement.css({
+                        "left": itemPosition.x + "px",
+                        "top": itemPosition.y + "px"
+                    });
+                    let newTarget: TargetModel = this._getItemModel(newElement);
+                    this._setTargetModelArea(newTarget, itemPosition.x, itemPosition.y, null, null);
                 }
                 
                 return model;
@@ -1187,9 +1179,6 @@ module Garage {
 
                 if (!this._getTargetPageModule(this.mouseMoveStartPosition_)) {
                     // 開始位置がキャンバス外の場合＝パレットからの配置の場合
-                    console.log("canvas: " + GRID_AREA_WIDTH + "-" + GRID_AREA_HEIGHT);
-                    console.log("item.x: " + newPosition.x + "～" + (newPosition.x + newArea.w));
-                    console.log("item.y: " + newPosition.y + "～" + (newPosition.y + newArea.h));
 
                     if ((newPosition.x + newArea.w <= BIAS_X_DEFAULT_GRID_LEFT || newPosition.x >= GRID_AREA_WIDTH) ||
                         (newPosition.y + newArea.h <= 0 || newPosition.y >= GRID_AREA_HEIGHT)) {
@@ -1214,11 +1203,10 @@ module Garage {
 
                 // 元ページのモデルをコピーし移動先ページに追加
                 let newModel = this._cloneTargetModel(this.currentTargetModel_);
-
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
-
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
+
                 var addMemento: IMemento = {
                     target: newItem,
                     previousData: {
