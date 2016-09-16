@@ -1186,11 +1186,11 @@ module Garage {
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
                 if (!this._getTargetPageModule(this.mouseMoveStartPosition_)) {
+                    // 開始位置がキャンバス外の場合＝パレットからの配置の場合
                     console.log("canvas: " + GRID_AREA_WIDTH + "-" + GRID_AREA_HEIGHT);
                     console.log("item.x: " + newPosition.x + "～" + (newPosition.x + newArea.w));
                     console.log("item.y: " + newPosition.y + "～" + (newPosition.y + newArea.h));
 
-                    // 開始位置がキャンバス外の場合＝パレットからの配置の場合
                     if ((newPosition.x + newArea.w <= BIAS_X_DEFAULT_GRID_LEFT || newPosition.x >= GRID_AREA_WIDTH) ||
                         (newPosition.y + newArea.h <= 0 || newPosition.y >= GRID_AREA_HEIGHT)) {
                         // 現在位置がキャンバス外の場合はアイテム破棄
@@ -3841,13 +3841,14 @@ module Garage {
                 // 重なっていたボタン
                 let overlapButtons: Model.ButtonItem[] = [];
 
-                let currentCanvasId = this.$currentTarget_.parent().data('cid');
-                let hoverCanvasId = this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, currentTargetArea.y, currentTargetArea.h).data('cid');
+                let currentCanvas = this.$currentTarget_.parent();
+                let currentCanvasId = currentCanvas.data('cid');
+                let hoverCanvas = this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, currentTargetArea.y, currentTargetArea.h);
+                let hoverCanvasId = hoverCanvas.data('cid');
                 if (currentCanvasId != hoverCanvasId) {
-                    // 移動中のボタンが見た目上乗っているキャンバスページからの相対座標を取得
-                    let relativePosition = this.getPointFromCanvas({ x: this.$currentTarget_.offset().left, y: this.$currentTarget_.offset().top }, hoverCanvasId);
-                    currentTargetArea.x = relativePosition.x;
-                    currentTargetArea.y = relativePosition.y;
+                    // 移動中のボタンは移動前にいたキャンバス上の座標なので
+                    // 現在位置のキャンバス上の座標を設定するために高さを調整
+                    currentTargetArea.y = currentTargetArea.y - (hoverCanvas.offset().top - currentCanvas.offset().top) * 2;
                 }
 
                 $('#face-canvas .module-container').each((index, elm) => {
@@ -3940,6 +3941,8 @@ module Garage {
                         if (buttons[i].enabled && buttons[j].enabled) {
                             // 当たり判定
                             if (this.isOverlap(button1Area, button2Area)) {
+                                //console.log("1: " + button1Area.x + "-" + (button1Area.x + button1Area.w) + ":" + button1Area.y + "-" + (button1Area.y + button1Area.h));
+                                //console.log("2: " + button2Area.x + "-" + (button2Area.x + button2Area.w) + ":" + button2Area.y + "-" + (button2Area.y + button2Area.h));
                                 //例外対象でなかったら配列に追加
                                 overlapButtons.push(buttons[i]);
                                 overlapButtons.push(buttons[j]);
