@@ -1170,8 +1170,8 @@ module Garage {
 			 * アイテムの移動を行い、位置を確定する
 			 */
             private _moveItem(position: IPosition) {
-                let fromPageModuleId: string = this.$currentTarget_.parent().data("cid");
-                let toPageModuleId  : string = this._getCanvasPageByDraggingPosition(position.y).data("cid");
+                let fromPageModuleId: string = JQUtils.data(this.$currentTarget_.parent(), "cid");
+                let toPageModuleId  : string = JQUtils.data(this._getCanvasPageByDraggingPosition(position.y), "cid");
                 let isCrossPageMoving: boolean = (fromPageModuleId != toPageModuleId);
 
                 let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
@@ -3685,8 +3685,8 @@ module Garage {
                 var fromCanvas = this.$currentTarget_.parent();
                 // グリッド位置補正前の対象アイテムが乗っているキャンバス
                 var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
-                var fromCid = fromCanvas.data("cid");
-                var pointedCid = pointedCanvas.data("cid");
+                var fromCid = JQUtils.data(fromCanvas, "cid");
+                var pointedCid = JQUtils.data(pointedCanvas, "cid");
                 if (fromCid && pointedCid && fromCid != pointedCid) {
                     // ページを跨ぐ場合グリッドのずれを補正
                     newY += ((pointedCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
@@ -3830,9 +3830,9 @@ module Garage {
                 let overlapButtons: Model.ButtonItem[] = [];
 
                 let currentCanvas = this.$currentTarget_.parent();
-                let currentCanvasId = currentCanvas.data('cid');
+                let currentCanvasId = JQUtils.data(currentCanvas, "cid");
                 let hoverCanvas = this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, currentTargetArea.y, currentTargetArea.h);
-                let hoverCanvasId = hoverCanvas.data('cid');
+                let hoverCanvasId = JQUtils.data(hoverCanvas, "cid");
                 if (currentCanvasId != hoverCanvasId) {
                     // 移動中のボタンは移動前にいたキャンバス上の座標なので
                     // 現在位置のキャンバス上の座標を設定するために高さを調整
@@ -3840,7 +3840,7 @@ module Garage {
                 }
 
                 $('#face-canvas .module-container').each((index, elm) => {
-                    let canvasModuleId = $(elm).data('cid');
+                    let canvasModuleId = JQUtils.data($(elm), "cid");
                     if (!canvasModuleId) {
                         return true; // JQuery.each()でのcontinue
                     }
