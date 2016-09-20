@@ -730,7 +730,8 @@ module Garage {
             }
 
             /**
-             * 対象キャンバスから指定位置までの相対座標を取得
+             * 対象キャンバスから指定位置までの相対座標を取得。
+             * 起点とするキャンバスIDを指定しなかった場合は現在のページを使用する。
              * @param position 画面上の座標
              * @param moduleId 起点にするキャンバスの module ID。未指定の場合は現在のページのキャンバスを使用する。
              */
@@ -762,6 +763,13 @@ module Garage {
                 // 現在ターゲットとなっているページを追加先とする
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
+
+                if (setOnEventPosition) {
+                    // モデルのクローンを生成してから位置を設定
+                    targetModel = this._cloneTargetModel(targetModel);
+                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
+                    this._setTargetModelArea(targetModel, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                }
 
                 var model: ItemModel;
                 switch (targetModel.type) {
@@ -814,38 +822,30 @@ module Garage {
 
                     default:
                 }
-
-                if (setOnEventPosition) {
-                    // 追加した要素に対して位置を設定
-                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                    let newElement: JQuery = this._getItemElementByModel(model);
-                    newElement.css({
-                        "left": itemPosition.x + "px",
-                        "top": itemPosition.y + "px"
-                    });
-                    let newTarget: TargetModel = this._getItemModel(newElement);
-                    this._setTargetModelArea(newTarget, itemPosition.x, itemPosition.y, null, null);
-                }
                 
                 return model;
             }
 
             /**
+             * アイテムをキャンバスに追加
              *
+             * @param item {TargetModel} 追加するアイテムのモデル
+             * @param canvasModuleId {string} 追加するキャンバスの moduleID
+             * @param moduleOffsetY {number} module の y 座標の offset
              */
-            private setNewItemOnCanvas(item: TargetModel, canvasModId: string, moduleOffsetY: number): ItemModel {
+            private setNewItemOnCanvas(item: TargetModel, canvasModuleId: string, moduleOffsetY: number): ItemModel {
                 let newModel: ItemModel;
                 switch (item.type) {
                     case "button":
-                        return this.faceRenderer_canvas_.addButton(item.button, canvasModId, moduleOffsetY);
+                        return this.faceRenderer_canvas_.addButton(item.button, canvasModuleId, moduleOffsetY);
                     case "image":
-                        return this.faceRenderer_canvas_.addImage(item.image, canvasModId, moduleOffsetY, () => {
+                        return this.faceRenderer_canvas_.addImage(item.image, canvasModuleId, moduleOffsetY, () => {
                             // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
                             // このタイミングで CSS を更新
                             this._updateItemElementOnCanvas(newModel);
                         });
                     case "label":
-                        return this.faceRenderer_canvas_.addLabel(item.label, canvasModId, moduleOffsetY);
+                        return this.faceRenderer_canvas_.addLabel(item.label, canvasModuleId, moduleOffsetY);
                     default:
                         console.error("setItemOnCanvas: invalid ItemModel.type " + item.type);
                         return;
@@ -923,6 +923,8 @@ module Garage {
 
             /**
              * Canvas上のドラッグ対象を設定
+             *
+             * @param target {JQuery} ドラッグ対象
              */
             private setDragTarget(target: JQuery) {
                 target.focus();
@@ -984,7 +986,10 @@ module Garage {
             }
 
             /**
-             * Canvas上のドラッグ対象をドラッグ状態にする
+             * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
+             *
+             * @param mousePosition {IPosition} マウス座標
+             * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
              */
             private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
@@ -1017,6 +1022,7 @@ module Garage {
 
 			/*
 			* 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
+            *
 			* @param mousePosition : IPosition マウスポインター
 			* @return result : boolean  CanvasAreaのFacePagesAreaの上の場合true, 違う場合false
 			*/
@@ -3782,16 +3788,6 @@ module Garage {
 				}
             }
 
-            private _isOutOfCanvas(area: IArea): boolean {
-                return (area.x < BIAS_X_DEFAULT_GRID_LEFT                            ||
-                        area.y < 0                                                   ||
-                        area.w <= 0                                                  ||
-                        area.h <= 0                                                  ||
-                        area.x + area.w > GRID_AREA_WIDTH + BIAS_X_DEFAULT_GRID_LEFT ||
-                        area.y + area.h > GRID_AREA_HEIGHT);
-            }
-
-
 
 			/*
 			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
@@ -4842,6 +4838,13 @@ module Garage {
 				}
             }
 
+            /**
+             * TargetModelのクローンを生成
+             * typeが不正だった場合はnullを返す
+             *
+             * @param model {TargetModel} 基にするTargetModel
+             * @return 生成したTargetModel
+             */
             private _cloneTargetModel(model: TargetModel): TargetModel {
                 let clone: TargetModel = { type: model.type };
 
@@ -4864,7 +4867,13 @@ module Garage {
 
             /**
              * 対象モデルのAreaをtypeによらず変更する
-             * 有効でない値(undefinedなど)が設定されたパラメータは無視される
+             * 有効でない値(undefinedなど)が設定されたパラメータは無視され、更新されない
+             *
+             * @param model {TargetModel}
+             * @param x {number} x座標
+             * @param y {number} y座標
+             * @param w {number} width
+             * @param h {number} height
              */
             private _setTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
                 let target: IArea;
