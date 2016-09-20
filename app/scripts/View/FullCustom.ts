@@ -2289,32 +2289,24 @@ module Garage {
 				let gmodules = this.faceRenderer_canvas_.getModules();
 				let remoteId = this.faceRenderer_canvas_.getRemoteId();
 				let faceName: string = $("#input-face-name").val();
-				if (!faceName) {
-					let response = electronDialog.showMessageBox({
-						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME"),
-						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-						title: PRODUCT_NAME,
-					});
+                if (!faceName) {
+                    let response = this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME"));
 					if (response === 0) {
 						//テキストフィールドにフォーカス
 						var $remoteName: JQuery = $("#input-face-name");
 						this.setFocusAndMoveCursorToEnd($remoteName);
 					}
-					$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
 				}
 				let overlapButtonError = this._overlapButtonsExist();
-				if (overlapButtonError) {
-					electronDialog.showMessageBox({
-						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP")
-						+ overlapButtonError,
-						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-						title: PRODUCT_NAME,
-					});
-					$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                if (overlapButtonError) {
+                    this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP") + overlapButtonError);
 					return;
+                }
+                let multipleBluetoothDevError = this._multipleBluetoothDevicesExist();
+                if (multipleBluetoothDevError) {
+                    this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES") + multipleBluetoothDevError);
+                    return;
                 }
 
                 this.buttonDeviceInfoCache.save(gmodules);
@@ -2346,7 +2338,23 @@ module Garage {
 							$("#button-edit-done").prop("disabled", false);
 					}
 				});
-			}
+            }
+
+            /**
+             * 保存前のバリデーションエラーダイアログを表示
+             * @param errorMessage ダイアログに表示する文言
+             * @return {number} ダイアログでクリックされたボタンのインデックス
+             */
+            private _showSaveErrorDialog(errorMessage: string): number {
+                let result = electronDialog.showMessageBox({
+                    type: "error",
+                    message: errorMessage,
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+                $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                return result;
+            }
 
 
 			/**
@@ -3733,7 +3741,62 @@ module Garage {
 				}
 
 				return result;
-			}
+            }
+
+            /**
+             * 複数のBluetoothデバイスが使用されていないかをチェックする。
+             *
+             * @return {string} エラー文言。単一のBluetoothデバイスしか存在しない場合は空文字が返る。
+             */ 
+            private _multipleBluetoothDevicesExist(): string {
+                let usedBluetoothDevices: IBluetoothDevice[] = [];
+                let pageCount = this.faceRenderer_canvas_.getPageCount();
+                for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+                    let pageModuleId = this._getCanvasPageModuleId(pageIndex);
+
+                    if (!pageModuleId) {
+                        continue;
+                    }
+                    let buttons = this.faceRenderer_canvas_.getButtons(pageModuleId);
+
+                    for (let button of buttons) {
+                        if (button.enabled &&
+                            button.deviceInfo &&
+                            button.deviceInfo.bluetooth_data &&
+                            button.deviceInfo.bluetooth_data.bluetooth_device) {
+
+                            if (!this._containsBluetoothDevice(usedBluetoothDevices, button.deviceInfo.bluetooth_data.bluetooth_device)) {
+                                usedBluetoothDevices.push(button.deviceInfo.bluetooth_data.bluetooth_device);
+                            }
+                        }
+                    }
+                }
+
+                if (usedBluetoothDevices.length <= 1) {
+                    return "";
+                } else {
+                    // 仮
+                    return usedBluetoothDevices.length.toString();
+                }
+            }
+
+            /**
+             * Bluetoothデバイスのリストに対象Bluetoothデバイスが含まれているか検査する
+             *
+             * @param devices Bluetoothデバイスのリスト
+             * @param target 検査対象のBluetoothデバイス
+             * @return {boolean} devices内にtargetと同一のBluetoothデバイスが含まれている場合はtrue、そうでない場合はfalse
+             */
+            private _containsBluetoothDevice(devices: IBluetoothDevice[], target: IBluetoothDevice): boolean {
+                for (let device of devices) {
+                    if (device.bluetooth_address === target.bluetooth_address) {
+                        return true;
+                    }
+                }
+
+                console.log("New BluetoothDevice. address: " + target.bluetooth_address);
+                return false;
+            }
 
 			/**
 			 * 画面上の位置にあるアイテムを取得する。
