@@ -96,9 +96,7 @@ module Garage {
 
 						// 出力先のパスが指定されている場合は、ファイル出力を行う
 						if (dstPath) {
-							if (dstPath.indexOf(' ') !== -1) {
-								dstPath = OffscreenEditor.getEncodedPath(dstPath);
-							}
+
 							// Buffer オブジェクトを使用して、base64 デコーディング
 							let buffer = new Buffer(imageDataUrl.split("base64,")[1], "base64");
 

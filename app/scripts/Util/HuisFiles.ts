@@ -1300,7 +1300,7 @@ module Garage {
 							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
-						let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+						let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext);
 						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
 						let newFileFullPath: string;
