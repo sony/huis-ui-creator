@@ -2495,9 +2495,10 @@ module Garage {
 								}
 
 								// 画像のロードが完了してから表示を更新する
-								let img = new Image();
+                                let img = new Image();
+                                img.src = resolvedPath;
 								img.onload = () => {
-									$target.css("background-image", "url(" + resolvedPath + ")");
+									$target.css("background-image", 'url("' + resolvedPath + '")');
 									// 詳細編集エリアの画像ファイルパス名を更新
 									let path = targetModel["resizeOriginal"];
 									if (!path) {
@@ -2507,7 +2508,7 @@ module Garage {
 									// 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
 								};
-								img.src = resolvedPath;
+								
 
 							}
 							break;
@@ -2565,7 +2566,7 @@ module Garage {
 									// 画像のロードが完了してから表示を更新する
 									let img = new Image();
 									img.onload = () => {
-										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
+										$target.css("background-image", 'url("' + resolvedOriginalPath + '")');
 
 
 										// プレビュー部分の更新
@@ -2703,7 +2704,7 @@ module Garage {
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
 				if (imagePath != HUIS_REMOTEIMAGES_ROOT
 					&& imagePath != "") {
-					$preview.css("background-image", "url(" + imagePath + ")");
+					$preview.css("background-image", 'url("' + imagePath + '")');
 					let previewWidth = $preview.width();
 					let img = new Image();
 					img.src = imagePath;
@@ -3161,10 +3162,11 @@ module Garage {
 										top: "0",
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
-										backgroundImage: value ? "url(" + value + ")" : "none"
+										backgroundImage: value ? 'url("' + value + '")' : "none"
 									});
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
+                                    let img = new Image();
+                                    img.src = value;
 									img.onload = () => {
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
@@ -3175,7 +3177,7 @@ module Garage {
 										this.toggleImagePreview(stateId);
 
 									};
-									img.src = value;
+									
 									
                                     //$preview.css("background-image", value ? "url('" + value + "')": "none");
 
