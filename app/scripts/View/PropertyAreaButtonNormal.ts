@@ -115,8 +115,6 @@ module Garage {
             //プルダウンのいずれかが変更されたときに呼ばれる
             private onAnyPulllDownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
-                let $target = $(event.currentTarget).focusout();
-                this.changeColorDefaultValuePulldown();
             }
 
             //deleteボタンが押されたときに呼ばれる
@@ -152,7 +150,6 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
-                this.changeColorDefaultValuePulldown();
                 this.controlPlusButtonEnableDisable();
 
             }
@@ -458,9 +455,6 @@ module Garage {
                 }
 
                 this.controlPlusButtonEnableDisable();
-
-                this.changeColorDefaultValuePulldown();
-
                 return this.$el;
 
             }
