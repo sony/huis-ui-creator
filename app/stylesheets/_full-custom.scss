@@ -299,6 +299,19 @@
                     width:$SIZE_PROPATY_ARAE_PULL_DOWN_WIDTH;   
                 }
 
+                .orderIndicator{
+                    width : 28px;
+                    font-family:$FONT_SIZE_PROPATY_MAIN_TEXT;
+                    position:absolute;
+                    height:100%;
+
+                    //縦中央揃え
+                    display:flex;
+                    justify-content: center;
+                    align-items:center;
+                    
+                }
+
                 #delete-signal-area{
                     z-index : 2;//pulldownより前に
                     height:100%;

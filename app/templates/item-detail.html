@@ -291,6 +291,7 @@
                     </div>
                 </div>
 
+                <h4 id="button-state-label-action">★アクション</h4>
                 <div class="custom-select">
                     <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                         {{#actionList}}
@@ -314,7 +315,7 @@
         <script type="text/template" id="template-property-button-signal-macro">
             <div class="signal-container-element" data-signal-order="{{order}}">
 
-                <span class="orderIndicator">★信号{{order}}</span>
+                <span class="orderIndicator">{{order_plus_one}}</span>
 
                 <!--インターバル選択プルダウン-->
                 <div id="signal-interval-container"></div>

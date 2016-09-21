@@ -571,9 +571,13 @@ module Garage {
                     return;
                 }
 
+                let inputData: any = signalData;
+                let zeroPaddingNum = ('0' + (signalData.order + 1)).slice(-2);
+                inputData.order_plus_one = zeroPaddingNum;
+
                 //ベースとなるDOM描写する
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
-                $signalContainer.append($(templateSignal(signalData)));
+                $signalContainer.append($(templateSignal(inputData)));
 
 
                 //リモコンの表示を変更
