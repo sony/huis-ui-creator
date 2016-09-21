@@ -295,12 +295,13 @@
                 position:relative;
 
                 .custom-select{
-                    margin:0 auto;
-                    width:$SIZE_PROPATY_ARAE_PULL_DOWN_WIDTH;   
+                    margin-left : $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
+                    margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+                    width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
                 }
 
                 .orderIndicator{
-                    width : 28px;
+                    width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
                     font-family:$FONT_SIZE_PROPATY_MAIN_TEXT;
                     position:absolute;
                     height:100%;
@@ -320,6 +321,7 @@
                     position : absolute;
                     right : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
                     top : 0px;
+                    display:flex;
 
                         .delete-signal{background-position:center;
                             background-repeat: no-repeat;
@@ -327,10 +329,10 @@
                             transition: 0.2s;
                             opacity:0;
                             margin-left:auto;
-                            
+                            align-self:center;
 					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+					        width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
+					        height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
                             &:hover, &:active{
                                 background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
@@ -348,51 +350,60 @@
                     #sort-button-area{
                         z-index : 2;//pulldownより前に
                         height:100%;
-                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
+                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
                         position : absolute;
                         left : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
                         top : 0px;
+                        display:flex;
 
-                        .sort-up-btn{
-                            margin-right : auto;
-                            transition: 0.3s;
-                            opacity:0;
-                            left:0;
-                            top:0;
-                            background-color : white;
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                        .sort-btns{
+
+                            position:relative;
+                            align-self:center;
+                            margin-left: auto;
+                            .sort-up-btn{
+                                
+                                margin-right : auto;
+                                transition: 0.3s;
+                                opacity:0;
+                                left:0;
+                                top:0;
+                                background-color : white;
+                                background-position:center;
+                                background-repeat: no-repeat;
+                                background-size: contain;
+					            background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
+					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
                             
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                                &:hover, &:active{
+                                    background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                                }
+
                             }
 
-                        }
 
+                            .sort-down-btn{
+                                margin-right : auto;
+                                transition: 0.3s;
+                                opacity:0;
+                                left:0;
+                                bottom:0;
+                                background-color : white;//要削除
+                                background-position:center;
+                                background-repeat: no-repeat;
+                                background-size: contain;
+					            background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
+					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
+                                margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
 
-                        .sort-down-btn{
-                            margin-right : auto;
-                            transition: 0.3s;
-                            opacity:0;
-                            left:0;
-                            bottom:0;
-                            background-color : white;//要削除
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
-
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                                &:hover, &:active{
+                                    background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                                }
                             }
-
                         }
+                        
 
                         &:hover{
                              .sort-up-btn{
