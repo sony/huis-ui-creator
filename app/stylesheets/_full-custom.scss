@@ -213,52 +213,60 @@
                 display:flex;
 
                 #about-macro{
-                color: #555;
-                display: inline-block;                        /* インライン要素化 */
+                    height : $SIZE_PROPERTY_AREA_MACRO_ABOUT_HEIGHT;
+                    width : $SIZE_PROPERTY_AREA_MACRO_ABOUT_WIDTH;
+                    align-self:center;
+                    margin-left:auto;
+                    //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT;
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    display: inline-block;           // インライン要素化
 
-                /* ツールチップ部分を隠す */
-                span{
-                    display: none;
-                }
+                    // ツールチップ部分を隠す
+                    .popup{
+                        display: none;
+                    }
+                    
+                    &:hover{
+                        position: relative;
+                        
 
-                &:hover{
-                    position: relative;
-                    color: #333;
-
-                    /* マウスオーバー時にツールチップを表示 */
-                    span{
-                        display: block;                  /* ボックス要素にする */
-                        position: absolute;            /* relativeからの絶対位置 */
-                        top: 25px;
-                        font-size: 90%;
-                        color: #fff;
-                        background-color: #51A2C1;
-                        width: 205px;
-                        padding: 5px;
-                        border-radius:3px;
-                        z-index:100;
-
-                        /* フキダシ部分を作成 */
-                        &:before{
-                            content:''; 
-                            display:block; 
-                            position:absolute;                         /* relativeからの絶対位置 */
-                            height:0; 
-                            width:0; 
-                            top:-13px; 
-                            left:15px;
-                            border:13px transparent solid; 
-                            border-right-width:0; 
-                            border-left-color:#51A2C1; 
-                            transform:rotate(270deg);            /* 傾きをつける */
-                            -webkit-transform:rotate(270deg);
-                            -o-transform:rotate(270deg);
+                        //マウスオーバー時にツールチップを表示
+                        .popup{
+                            display:block;
+                            top:30px;
+                            position:absolute;
+                            right:0;
                             z-index:100;
-                        }
+                            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+                            
 
+                            .component{
+                                position:relative;
+                                #popup-arrow{
+                                    margin-left:auto;
+			                        margin-right:$SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
+                                }
+
+                                p{
+                                    margin:0;
+                                    position:absolute;
+                                    z-index:-1;
+                                    padding:$SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
+                                    background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+			                        border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+			                        box-sizing:border-box;
+                                    display: block;      // ボックス要素にする
+                                    color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                                    font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
+                                    font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+                                }
+                            }
+                        }
                     }
                 }
-            }
             }
             
 
@@ -300,13 +308,13 @@
                     right : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
                     top : 0px;
 
-                        .delete-signal{
+                        .delete-signal{background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
                             transition: 0.2s;
                             opacity:0;
                             margin-left:auto;
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
+                            
 					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
 					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
 					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
@@ -650,7 +658,7 @@
     }
 
     //画像編集ボタンのpopup
-    #edit-image-popup{
+        #edit-image-popup{
         position:relative;
         box-shadow:none;
         text-shadow:none;

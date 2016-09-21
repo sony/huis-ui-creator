@@ -75,7 +75,9 @@
             "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
             "STR_EDIT_PROPERTY_TITLE_NON_MAKER": "--",
             "STR_EDIT_PROPERTY_TITLE_LEARNED": "--",
-            "STR_EDIT_PROPERTY_TITLE_MACRO": "Macro Button"
+            "STR_EDIT_PROPERTY_TITLE_MACRO": "Macro Button",
+            "STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE": "マクロとは？",
+            "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT":"連続して複数種類の信号を発信できる機能です。"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
