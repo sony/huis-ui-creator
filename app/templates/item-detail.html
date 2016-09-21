@@ -193,7 +193,7 @@
             <div id="signal-function-container"></div>
 
             <!--削除ボタン-->
-            <div id="delete-signal-area">
+            <div class="delete-signal-area">
                 <div class="delete-signal" data-signal-order="{{order}}"></div>
             </div>
 
@@ -292,19 +292,19 @@
                 </div>
 
                 <h4 id="button-state-label-action">★アクション</h4>
-                <div class="custom-select">
-                    <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                        {{#actionList}}
-                        <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                        {{/actionList}}
-                    </select>
-                </div>
-
+                    <div class="custom-select">
+                        <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                            {{#actionList}}
+                            <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                            {{/actionList}}
+                        </select>
+                    </div>
+                    
                 <div id="signals-container"></div>
-
+    
                 <div id="add-signal-btn"></div>
 
-            </div>
+                </div>
         </script>
 
 
@@ -313,18 +313,21 @@
 
         <!--マクロのリモコン1信号分のテンプレート-->
         <script type="text/template" id="template-property-button-signal-macro">
-            <div class="signal-container-element" data-signal-order="{{order}}">
+            <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
 
-                <span class="orderIndicator">{{order_plus_one}}</span>
+                <div class="signals">
+                    <span class="orderIndicator">{{order_plus_one}}</span>
 
-                <!--インターバル選択プルダウン-->
-                <div id="signal-interval-container"></div>
+                    <!--インターバル選択プルダウン-->
+                    <div id="signal-interval-container"></div>
 
-                <!--リモコン選択プルダウン-->
-                <div id="signal-remote-container"></div>
+                    <!--リモコン選択プルダウン-->
+                    <div id="signal-remote-container"></div>
 
-                <!--Function選択プルダウン-->
-                <div id="signal-function-container"></div>
+                    <!--Function選択プルダウン-->
+                    <div id="signal-function-container"></div>
+
+                </div>
 
                 <!--削除ボタン-->
                 <div class="delete-signal-area" id="delete-signal-area-{{order}}">
