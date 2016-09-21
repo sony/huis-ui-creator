@@ -525,10 +525,13 @@ module Garage {
 
                 let inputData = {
                     order: order,
+                    order_plus_one:order+1
                 };
 
                 let $signalDetail = $(templateSignal(inputData));
                 $signalsContainer.append($signalDetail);
+
+                $signalsContainer.i18n();
 
             }
 

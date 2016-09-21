@@ -165,11 +165,16 @@
 
 			<!-- アクション -->
 			<div class="property-state-action">
-				<h4 id="button-state-label-action">★アクション</h4>
                 <div id="signals-container" ></div>
 			</div>
 
-            <div id="add-signal-btn" data-state-id="{{id}}"></div>
+
+            <div class="add-btn-container">
+                <div id="add-signal-btn" data-state-id="{{id}}">
+                    <div class="btn-image"></div>
+                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">★操作を追加</span>
+                </div>
+            </div>
 
 		</div>
 	</script>
@@ -181,7 +186,9 @@
     <!-- 通常のボタンの１信号分のテンプレート -->
     <script type="text/template" id="template-property-button-signal-normal">
 
-        <div class="signal-container-element" data-signal-order="{{order}}">
+        <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
+
+            <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</span><span>{{order_plus_one}}</span></h4>
 
             <!--アクション選択用のテンプレート-->
             <div id="signal-action-container"></div>
@@ -291,7 +298,7 @@
                     </div>
                 </div>
 
-                <h4 id="button-state-label-action">★アクション</h4>
+                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</h4>
                     <div class="custom-select">
                         <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                             {{#actionList}}
@@ -302,8 +309,12 @@
                     
                 <div id="signals-container"></div>
     
-                <div id="add-signal-btn"></div>
-
+                <div class="add-btn-container">
+                    <div id="add-signal-btn">
+                        <div class="btn-image"></div>
+                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">★操作を追加</span>
+                    </div>
+                </div>
                 </div>
         </script>
 

@@ -260,8 +260,8 @@
 			                        box-sizing:border-box;
                                     display: block;      // ボックス要素にする
                                     color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-                                    font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
-                                    font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+                                    font-family:$FONT_FAMILY_PROPATY_POPUP;
+                                    font-size:$FONT_SIZE_PROPATY_POPUP;
                                 }
                             }
                         }
@@ -270,24 +270,51 @@
             }
             
 
-        #add-signal-btn{
-            background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
-            margin : 0 auto;
-            height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
-            width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
+        .add-btn-container{
+            display:flex;
+            margin-left:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
+            margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+
+                #add-signal-btn{
+                    display:inline-flex;
+                    height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
+                    margin : 0 auto;
+
+                    .btn-image{
+                        margin-right:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
+                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+                        background-position:center;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
+                        width:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_WIDTH;
+                    }
           
-            &:hover{
-                background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
-            }
+                    span{
+                        align-self:center;
+                        color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                        font-family:$FONT_FAMILY_TEXT_BUTTON;
+                        font-size:$FONT_SIZE_TEXT_BUTTON;
+                    }
 
-            &:active{
-                background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
-            }
+                    &:hover{
+                        .btn-iamge{
+                            background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+                        }
+                    }
 
-            &.disabled {
-                opacity:0.2;
-            }
-         }
+                    &:active{
+                        .btn-image{
+                            background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
+                        }
+                    }
+
+                    &.disabled {
+                        opacity:0.2;
+                    }
+                }
+        }
+        
 
         #signals-container{
             padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
@@ -725,8 +752,8 @@
             padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
             padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
             color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-            font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
-            font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+            font-family:$FONT_FAMILY_PROPATY_POPUP;
+            font-size:$FONT_SIZE_PROPATY_POPUP;
             background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
 			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
 			box-sizing:border-box;
