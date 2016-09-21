@@ -935,6 +935,28 @@ module Garage {
 
             }
 
+            /*
+            * 何も設定されていない、マクロを表示する際、プルダウンをアクセント表示
+            */
+            focusFirstPulldown() {
+                let FUNCTION_NAME = TAG + "focusFirstPulldown";
+
+                //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
+                //remoteId設定用プルダウンをフォーカスする。
+                let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                let remoteIdOrder0 = this.getRemoteIdFromPullDownOf(0);
+
+                let functionOrder0 = this.getFunctionFromlPullDownOf(0);
+
+               
+                if (ActionNum <= 1 && !this.isValidValue(remoteIdOrder0) && !this.isValidValue(functionOrder0)) {
+                    this.$el.find("#select-remote-input-0").focus();
+                }
+
+               
+            }
+
            
 
         }

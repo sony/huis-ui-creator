@@ -871,7 +871,12 @@ module Garage {
 
 						//preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
 						//そのため、preventDefault直後にフォーカスを設定しなおす。
-						this.$el.focus();
+                        this.$el.focus();
+                        if (this.macroProperty != null){
+                            //フォーカスの寿命の関係で、このタイミングで
+                            this.macroProperty.focusFirstPulldown();
+                        }
+                        
 					}
 				}
 			}

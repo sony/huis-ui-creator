@@ -240,7 +240,7 @@ module Garage {
             * @param order{number}
             * @return {JQuery}
             */
-            protected getPullDownJQueryElement(order : number):JQuery{
+            protected getRemoteIdPullDownJQueryElement(order : number):JQuery{
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
