@@ -313,7 +313,7 @@
                     
                 }
 
-                #delete-signal-area{
+                .delete-signal-area{
                     z-index : 2;//pulldownより前に
                     height:100%;
                     width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
@@ -329,6 +329,7 @@
                             transition: 0.2s;
                             opacity:0;
                             margin-left:auto;
+                            margin-right:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
                             align-self:center;
 					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
 					        width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
@@ -347,7 +348,16 @@
 
                      }
 
-                    #sort-button-area{
+                #sort-button-area-0{
+                    .sort-up-btn{
+                        display:none;
+                        }
+                    .sort-down-btn{
+                        margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP_ORDER_0;
+                        }
+                }
+
+                    .sort-button-area{
                         z-index : 2;//pulldownより前に
                         height:100%;
                         width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
