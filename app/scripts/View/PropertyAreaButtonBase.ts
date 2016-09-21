@@ -613,20 +613,6 @@ module Garage {
             }
 
 
-            // default-valueのpulldownの要素をfocus状態と同じ見た目にする
-            protected changeColorDefaultValuePulldown() {
-                let customSelects = this.$el.find(".custom-select");
-                let $customSelects = $(customSelects);
-                for (let i = 0; i < customSelects.length; i++){
-                    let value = $(customSelects[i]).find("select").val();
-                    if (value == "none") {
-                        //$(customSelects[i]).find(".ui-btn").addClass("focus-visual");
-                    } else {
-                        //$(customSelects[i]).find(".ui-btn").removeClass("focus-visual");
-                    }
-                }
-
-            }
 
         }
 	}
