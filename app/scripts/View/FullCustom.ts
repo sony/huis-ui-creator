@@ -4062,8 +4062,20 @@ module Garage {
 							let resizeMode = targetModel.image.resizeMode;
 							if (resizeMode) {
 								$(".image-resize-mode").val(resizeMode);
-							}
-							this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
+                            }
+
+
+                            //オリジナルのパスがある場合は、そちらを表示。
+                            //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
+                            if (targetModel.image.resizeResolvedOriginalPath){
+                                this._updatePreviewInDetailArea(targetModel.image.resizeResolvedOriginalPath, $("#property-image-preview"));
+                            } else if(targetModel.image.resolvedPath){
+                                this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
+                            }
+
+
+
+							
 							//テキストをローカライズ
 							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
