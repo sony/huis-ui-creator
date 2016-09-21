@@ -39,7 +39,7 @@
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1": "\nページ ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2": " に重なり合っているボタンが ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3": " 個あります。",
-            "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES": "",
+            "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES": "★複数のBluetooth機器が設定されています。登録可能なBluetooth機器は１つのみです。",
             "STR_DIALOG_MESSAGE_ALERT_DISCONNECT": "HUIS REMOTE CONTROLLERとの接続が解除されました。\nアプリを終了します。",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_1": "リモコンを作成できません。\nHUIS REMOTE CONTROLLERに登録できるリモコンは",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_2": "個までです。\n不要なリモコンを削除してください。",

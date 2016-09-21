@@ -2295,17 +2295,21 @@ module Garage {
 						//テキストフィールドにフォーカス
 						var $remoteName: JQuery = $("#input-face-name");
 						this.setFocusAndMoveCursorToEnd($remoteName);
-					}
+                    }
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
 				}
 				let overlapButtonError = this._overlapButtonsExist();
                 if (overlapButtonError) {
                     this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP") + overlapButtonError);
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 					return;
                 }
-                let multipleBluetoothDevError = this._multipleBluetoothDevicesExist();
+                // Bluetoothデバイスが複数設定されている場合はエラー
+                let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist();
                 if (multipleBluetoothDevError) {
-                    this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES") + multipleBluetoothDevError);
+                    this._showSaveErrorDialog(multipleBluetoothDevError);
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                     return;
                 }
 
@@ -2352,7 +2356,6 @@ module Garage {
                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                     title: PRODUCT_NAME,
                 });
-                $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                 return result;
             }
 
@@ -3744,13 +3747,34 @@ module Garage {
             }
 
             /**
-             * 複数のBluetoothデバイスが使用されていないかをチェックする。
+             * 複数のBluetoothデバイスが使用されていないかをチェックし、
+             * 使用されている場合はエラー文言を、そうでない場合は空文字を返す。
              *
-             * @return {string} エラー文言。単一のBluetoothデバイスしか存在しない場合は空文字が返る。
+             * @return {string} エラー文言。１つ以下のBluetoothデバイスしか存在しない場合は空文字が返る。
              */ 
-            private _multipleBluetoothDevicesExist(): string {
-                let usedBluetoothDevices: IBluetoothDevice[] = [];
+            private _checkMultipleBluetoothDevicesExist(): string {
+                let invalidButton: Model.ButtonItem[] = this._getInvalidButtonsCausedByMultiBluetoothDevices();
+
+                if (invalidButton.length <= 1) {
+                    return "";
+                } else {
+                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES");
+                }
+            }
+
+            /**
+             * 全ボタンに対して複数のBluetoothデバイスが使用されているか検査し、
+             * 使用されている場合はBluetoothデバイスを含むボタンのリストを返し、
+             * 1つ以下のデバイスしか使用されていない場合は長さ0の配列を返す。
+             */
+            private _getInvalidButtonsCausedByMultiBluetoothDevices(): Model.ButtonItem[] {
+                // bluetooth_deviceを含むボタンのリスト
+                let bluetoothButtons: Model.ButtonItem[] = [];
+                // 含まれている bluetooth_device のリスト
+                let bluetoothDevices: IBluetoothDevice[] = [];
+
                 let pageCount = this.faceRenderer_canvas_.getPageCount();
+                // 全ページの全ボタンを走査
                 for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
                     let pageModuleId = this._getCanvasPageModuleId(pageIndex);
 
@@ -3764,19 +3788,21 @@ module Garage {
                             button.deviceInfo &&
                             button.deviceInfo.bluetooth_data &&
                             button.deviceInfo.bluetooth_data.bluetooth_device) {
+                            // bluetoothを含む場合とりあえず登録
+                            bluetoothButtons.push(button);
 
-                            if (!this._containsBluetoothDevice(usedBluetoothDevices, button.deviceInfo.bluetooth_data.bluetooth_device)) {
-                                usedBluetoothDevices.push(button.deviceInfo.bluetooth_data.bluetooth_device);
+                            let target: IBluetoothDevice = button.deviceInfo.bluetooth_data.bluetooth_device;
+                            if (!this._containsBluetoothDevice(bluetoothDevices, target)) {
+                                bluetoothDevices.push(target);
                             }
                         }
                     }
                 }
 
-                if (usedBluetoothDevices.length <= 1) {
-                    return "";
+                if (bluetoothDevices.length <= 1) {
+                    return [];
                 } else {
-                    // 仮
-                    return usedBluetoothDevices.length.toString();
+                    return bluetoothButtons;
                 }
             }
 
@@ -3787,14 +3813,15 @@ module Garage {
              * @param target 検査対象のBluetoothデバイス
              * @return {boolean} devices内にtargetと同一のBluetoothデバイスが含まれている場合はtrue、そうでない場合はfalse
              */
-            private _containsBluetoothDevice(devices: IBluetoothDevice[], target: IBluetoothDevice): boolean {
+            private _containsBluetoothDevice(devices: IBluetoothDevice[], targetDevice: IBluetoothDevice): boolean {
                 for (let device of devices) {
-                    if (device.bluetooth_address === target.bluetooth_address) {
+                    // bluetooth_addressが同じならば同一デバイスと見なす
+                    if (device.bluetooth_address == targetDevice.bluetooth_address) {
                         return true;
                     }
                 }
 
-                console.log("New BluetoothDevice. address: " + target.bluetooth_address);
+                console.log("New BluetoothDevice. address: " + targetDevice.bluetooth_address);
                 return false;
             }
 
