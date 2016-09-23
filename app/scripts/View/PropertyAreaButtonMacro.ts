@@ -483,6 +483,10 @@ module Garage {
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
+                //一度、ここで、jQueryMoblieのレイアウトをあてる。
+                $macroContainer.i18n();
+                $macroContainer.find('.custom-select').trigger('create');
+               
 
                 this.renderSignalContainers();
                 
