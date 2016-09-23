@@ -6,6 +6,11 @@
         overflow: overlay;
     }
 
+    .fade-in{
+        transition-duration: 0.2s;
+        opacity:1;
+    }
+
      .ui-header{
         #button-edit-done{
             background-image:$PATH_IMG_SAVE_BTN_NORMAL;
@@ -472,6 +477,7 @@
                         }
 
                         //エリアをhoverして、表示
+                        &.show,
                         &:hover{
                             .delete-signal{
                                 opacity:1.0;
@@ -566,7 +572,7 @@
                             }
                         }
                         
-
+                        &.show,
                         &:hover{
                              .sort-up-btn{
                                 opacity:1.0;

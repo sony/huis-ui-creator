@@ -612,8 +612,34 @@ module Garage {
                 return huisFiles.getMasterFunctions(remoteId);
             }
 
+           
+            /*
+           * ＋ボタンを押下する際のアニメーション. 
+           * @param order{number} 出現するdom のorder
+           */
+            protected animateAddButton(order: number) {
+                let FUNCTINO_NAME = TAG + "animateAddButton : ";
+                let ANIMATINO_DURATION = 1000; //  アニメーションの時間[ms]
 
 
+                if (!this.isValidValue(order)) {
+                    console.warn(FUNCTINO_NAME + "order is invalid");
+                    return;
+                }
+
+                let $target = this.getSignalContainerElementOf(order);
+                $target.find(".delete-signal-area").addClass("show");
+                $target.find(".sort-button-area").addClass("show");
+
+                setTimeout(
+                    () => {
+                        $target.find(".delete-signal-area").removeClass("show");;
+                        $target.find(".sort-button-area").removeClass("show");
+                    }
+                    , ANIMATINO_DURATION
+                );
+
+            }
         }
 	}
 }

@@ -264,12 +264,15 @@ module Garage {
                     this.renderSignalDetailWithInterval(signalData, $signalContainer);
                     this.updateModel();
                     this.renderSignalContainers();
+
+                    //削除とソートボタンをちら見する。
+                    this.animateAddButton(tmpOrder);   
+                    
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                //$('.custom-select').trigger('create');
+                
 
                 this.controlPlusButtonEnable();
                 
