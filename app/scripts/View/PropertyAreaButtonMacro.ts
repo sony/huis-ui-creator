@@ -243,7 +243,7 @@ module Garage {
                 }
 
                 let $signalContainer = this.$el.find("#signals-container");
-                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
                 let empltyAction: IAction = {
                     input: tmpInput,
@@ -312,7 +312,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -476,12 +476,11 @@ module Garage {
                 }
 
                 //ActionのPullDownを変更する。
-
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".state-action-input[data-state-id=\"" + state.id + "\"]");
-                if ($actionPullDown && actions[TARGET_ACTION]) {
+                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.id + "\"]");
+                if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
 
