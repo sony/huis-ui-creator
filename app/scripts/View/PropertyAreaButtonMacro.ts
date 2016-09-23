@@ -177,7 +177,7 @@ module Garage {
 
                 
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
             }
 
             //Invervalのプルダウンが変更されたら呼ばれる
@@ -262,17 +262,17 @@ module Garage {
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                    this.updateModel();
+                    this.renderSignalContainers();
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
+                //$('.custom-select').trigger('create');
 
-                this.controlPlusButtonEnableDisable();
-                this.updateModel();
-
-
+                this.controlPlusButtonEnable();
+                
 
             }
 
@@ -523,12 +523,98 @@ module Garage {
                     signalData.order = i;
                     signalData.action = actions[i];
                     this.renderSignalDetailWithInterval(signalData, $signalContainer);
+
+                    //最後のorderのとき、並び替えしたボタンを非表示にする。
+                    if (i == actions.length - 1) {
+                        let sortAreaLastOrder : JQuery = this.$el.find("#sort-button-area-" + i);
+                        if (this.isValidJQueryElement(sortAreaLastOrder)) {
+                            sortAreaLastOrder.addClass("last-order");
+                        }
+                    }
+                }
+                
+                this.renderSpecialElementDependingSignalNum();
+
+                this.controlPlusButtonEnable();
+            }
+
+
+            /*
+            * 信号が1つしかない場合、signalの要素を削除する。2つ以上あるとき、どっとラインを描画する。
+            */
+            private renderSpecialElementDependingSignalNum() {
+                let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
+                if (signalLength <= 1) {
+                    //ドットを削除
+                    this.$el.find("#order-indicator-dot-0").remove();
+
+                    //削除エリアを削除
+                    this.$el.find("#sort-button-area-0").remove();
+
+                    //並び替えボタンエリアを削除
+                    this.$el.find("#delete-signal-area-0").remove();
+                    
+                } else {//２つ以上ある場合、dot線を描画。
+                    this.renderDotLine();
+                }
+
+            }
+
+            /*
+            * 信号間を横断するドット線をレンダリングする。
+            */
+            private renderDotLine() {
+                let FUNCTION_NAME = TAG + "renderDotLine()";
+
+                //order0のドットの位置を取得
+                let $dotFirstOrder = this.$el.find("#order-indicator-dot-0");
+                let firstOrderY: number = null;
+                let firstOrderBottom: number = null;
+                if (this.isValidJQueryElement($dotFirstOrder)) {
+                    firstOrderY = $dotFirstOrder.offset().top;
+                    firstOrderBottom = firstOrderY + $dotFirstOrder.outerHeight(true);
+                }
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //orderMaxのどったの位置を取得
+                let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
+                let lastOrderY = null;
+                if (this.isValidJQueryElement($dotLastOrder)) {
+                    lastOrderY = $dotLastOrder.offset().top;
+                }
+
+                //その差分をdot線の長さとする
+                if (this.isValidValue(firstOrderY) && this.isValidValue(firstOrderBottom) && this.isValidValue(lastOrderY)) {
+                    
+                    //templateからdomを読み込み,domを描写
+                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.templateItemDetailFile_);
+                    let $signalsContainer = this.$el.find("#signals-container");
+                    $signalsContainer.append($(templateDotLine()));
+
+                    let dotLineLength = lastOrderY - firstOrderY;
+                    let $dotLine = this.$el.find(".dot-line");
+                    if (this.isValidJQueryElement($dotLine)) {
+                        $dotLine.height(dotLineLength);
+
+                        //order0のドットの開始点に合わせる。
+                        let dotLineOffsetLeft = $dotLine.offset().left;
+                        $dotLine.offset({
+                            top: firstOrderBottom,
+                            left: dotLineOffsetLeft
+                        });
+                    }
                 }
 
 
-                this.controlPlusButtonEnableDisable();
+
             }
-            
+
+
             /*
             * 入力されたorderに設定されている信号を削除する
             * @param order{number}: それぞれの信号に設定されている順番
@@ -807,8 +893,8 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+            private controlPlusButtonEnable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
@@ -818,9 +904,13 @@ module Garage {
                     $target.addClass("disabled");
                 }
 
-                //設定できるマクロ最大数だった場合もdisable
-                if (this.defaultState.action.length >= MAX_NUM_MACRO_SIGNAL) {
-                    $target.addClass("disabled");
+                let $signalContainers: JQuery = this.$el.find(".signal-container-element");
+
+                //設定できるマクロ最大数だった場合、表示すらしない。
+                if (this.isValidJQueryElement($signalContainers) && $signalContainers.length >= MAX_NUM_MACRO_SIGNAL) {
+                    $target.addClass("gone");
+                } else {
+                    $target.removeClass("gone");
                 }
 
             }

@@ -150,7 +150,7 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
 
             }
 
@@ -361,7 +361,7 @@ module Garage {
                 this.model.state = states;
 
                 //更新後の値で、+ボタンの有効・無効判定を行う。
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
                 this.updateAssiendInputActionsFromModel(stateId);
                 this.trigger("updateModel");
 
@@ -454,9 +454,25 @@ module Garage {
                     this.renderFunctionsOf(i, stateId, functionName);
                 }
 
-                this.controlPlusButtonEnableDisable();
+                this.renderSomeElementIfOneSignalOnlyExist();
+                this.controlPlusButtonEnable();
                 return this.$el;
 
+            }
+
+            /*
+           * 信号が1つしかない場合、signalの要素を削除する
+           */
+            private renderSomeElementIfOneSignalOnlyExist() {
+                let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
+                if (signalLength <= 1) {
+                    //削除エリアを削除
+                    this.$el.find("#sort-button-area-0").remove();
+                }
             }
 
             /*
@@ -723,7 +739,7 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
+            private controlPlusButtonEnable() {
                 let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
                 let $target = this.$el.find("#add-signal-btn");
 
@@ -734,9 +750,13 @@ module Garage {
                     $target.addClass("disabled");
                 }
 
-                //設定できるマクロ最大数だった場合もdisable
-                if (this.model.state[this.DEFAULT_STATE_ID].action.length >= Object.keys(ACTION_INPUTS).length) {
-                    $target.addClass("disabled");
+                let $signalContainers: JQuery = this.$el.find(".signal-container-element");
+
+                //設定できるアクションの最大数だった場合、表示すらしない。
+                if (this.isValidJQueryElement($signalContainers) &&  $signalContainers.length >= Object.keys(ACTION_INPUTS).length) {
+                    $target.addClass("gone");
+                } else {
+                    $target.removeClass("gone");
                 }
 
             }

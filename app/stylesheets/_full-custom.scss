@@ -321,6 +321,10 @@
                     }
 
 
+                    &.gone{
+                      display:none;  
+                    }
+
                     &.disabled{
                         opacity:0.2;
                         &:hover{
@@ -358,10 +362,19 @@
         //最上段のプルダウンのかたまりは、ボーダーなし。
         #signal-container-element-0{
              border-top:none;
-             .dot-line{
-                 //border-left : 2px dotted
-             }
         }
+                        
+        //プルダウンの左側に出現するdot線
+        .dot-line{
+            background-size: 2px 2px;
+            height: 1px;
+            border-left : 2px dotted $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE;
+            height:100%;
+            top:0;
+            left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE;
+            position:absolute;                 
+        }
+        
 
         //普通の信号時の、previewとプルダウンの間のマージン
         .property-state-action{
@@ -388,17 +401,26 @@
                 }
 
                 .order-indicator-container{
-                    background-color:$COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
                     position:absolute;
                     height:100%;
                     margin-left:$SIEE_PROPERTY_AREA_MACRO_SIGNAL_INDICATOR_MARGN_LEFT;
 
-                    .order-indicator-dot{
+                    .dot-container{
+                        z-index:3;
                         margin-right:$SIZE_PROPERTY_AREA_MACRO_DOT_MARGIN_RIGHT;
+                        background-color:$COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
                         width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
-                        height:$SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
-                        border-radius:$SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
-                        background-color:$COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
+                        height:$SIZE_PROPERTY_AREA_MACRO_DOT_CONTAINER_HEIGHT;
+                        display:flex;
+                        .order-indicator-dot{
+                            display:flex;
+                            align-self:center;
+                            width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                            height:$SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
+                            border-radius:$SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
+                            background-color:$COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
+                        }
+
                     }
 
                     //縦中央揃え
@@ -466,6 +488,17 @@
                         }
                     .sort-down-btn{
                         margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP_ORDER_0;
+                        }
+                }
+
+                
+                //一番下のソート上ぼおたんは非表示{
+                .sort-button-area.last-order {
+                     .sort-up-btn{
+                         margin-bottom:$SIZE_PROPERTY_AREAMACRO_SORT_UP_BUTTON_MARGIN_BOTTOM_LAST_ORDER;
+                        }
+                    .sort-down-btn{
+                        display:none;
                         }
                 }
 
