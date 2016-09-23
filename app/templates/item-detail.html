@@ -310,7 +310,12 @@
                     </select>
                 </div>
                     
-                <div id="signals-container"></div>
+                <!--信号用プルダウンたちが入るスペース-->
+                <div id="signals-container">
+                    <!--プルダウンの左側に出現するdot-->
+                    <div class="dot-line"></div>
+
+                </div>
     
                 <div class="add-btn-container">
                     <div id="add-signal-btn">
@@ -330,8 +335,10 @@
             <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
 
                 <div class="signals">
-                    <span class="orderIndicator">{{order_plus_one}}</span>
-
+                    <div class="order-indicator-container">
+                        <div class="order-indicator-dot"></div>
+                        <span class="order-indicator-number">{{order_plus_one}}</span>
+                    </div>
                     <!--インターバル選択プルダウン-->
                     <div id="signal-interval-container"></div>
 

@@ -342,7 +342,7 @@
         //信号セット用プルダウンセット
         .signal-container-element{
                 box-sizing:border-box;
-                border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_EDIT_MACRO_BORDER;
+                border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
                 padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
                 padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
                 position:relative;
@@ -353,19 +353,34 @@
                     width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
                 }
 
-                //マクロの信号順番
-                .orderIndicator{
-                    width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
-                    font-family:$FONT_SIZE_PROPATY_MAIN_TEXT;
+                .order-indicator-container{
+                    background-color:$COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
                     position:absolute;
                     height:100%;
+                    margin-left:$SIEE_PROPERTY_AREA_MACRO_SIGNAL_INDICATOR_MARGN_LEFT;
+
+                    .order-indicator-dot{
+                        margin-right:$SIZE_PROPERTY_AREA_MACRO_DOT_MARGIN_RIGHT;
+                        width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                        height:$SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
+                        border-radius:$SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
+                        background-color:$COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
+                    }
 
                     //縦中央揃え
                     display:flex;
                     justify-content: center;
                     align-items:center;
-                    
+
+                    //マクロの信号順番
+                    .order-indicator-number{
+                        text-align:center;
+                        width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
+                        font-family:$FONT_FAMILY_PROPATY_MAIN_TEXT;
+                        font-size:$FONT_SIZE_PROPATY_MAIN_TEXT
+                    }
                 }
+                
 
                 //信号deleteボタン用のarea
                 .delete-signal-area{
