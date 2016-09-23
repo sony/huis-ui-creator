@@ -189,21 +189,21 @@
         <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
 
             <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</span><span>{{order_plus_one}}</span></h4>
+            <div class="signals">
+                <!--アクション選択用のテンプレート-->
+                <div id="signal-action-container"></div>
 
-            <!--アクション選択用のテンプレート-->
-            <div id="signal-action-container"></div>
+                <!--リモコン選択プルダウン-->
+                <div id="signal-remote-container"></div>
 
-            <!--リモコン選択プルダウン-->
-            <div id="signal-remote-container"></div>
+                <!--Function選択用のテンプレート-->
+                <div id="signal-function-container"></div>
 
-            <!--Function選択用のテンプレート-->
-            <div id="signal-function-container"></div>
-
-            <!--削除ボタン-->
-            <div class="delete-signal-area">
-                <div class="delete-signal" data-signal-order="{{order}}"></div>
+                <!--削除ボタン-->
+                <div class="delete-signal-area">
+                    <div class="delete-signal" data-signal-order="{{order}}"></div>
+                </div>
             </div>
-
         </div>
 
     </script>

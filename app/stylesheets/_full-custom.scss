@@ -218,7 +218,7 @@
                     align-self:center;
                     margin-left:auto;
                     //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
-                    background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT;
+                    background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL;
                     background-position:center;
                     background-repeat: no-repeat;
                     background-size: contain;
@@ -230,6 +230,7 @@
                     }
                     
                     &:hover{
+                         background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER;
                         position: relative;
                         
 
@@ -276,6 +277,8 @@
             margin-left:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
             margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
 
+            
+
                 #add-signal-btn{
                     display:inline-flex;
                     height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
@@ -283,7 +286,7 @@
 
                     .btn-image{
                         margin-right:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
-                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+                        background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
                         background-position:center;
                         background-repeat: no-repeat;
                         background-size: contain;
@@ -292,27 +295,54 @@
                     }
           
                     span{
-                        align-self:center;
-                        color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                        line-height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_LINE_HEIGHT;
+                        color:$COLOR_BUTTON2_NORMAL;
                         font-family:$FONT_FAMILY_TEXT_BUTTON;
                         font-size:$FONT_SIZE_TEXT_BUTTON;
+
                     }
 
                     &:hover{
-                        .btn-iamge{
-                            background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+                        .btn-image{
+                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_HOVER;
+                        }
+                        span{
+                            color:$COLOR_BUTTON2_HOVER;
                         }
                     }
 
                     &:active{
                         .btn-image{
-                            background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
+                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_ACTIVE;
+                        }
+                        span{
+                            color:$COLOR_BUTTON2_PRESED;
                         }
                     }
 
-                    &.disabled {
+
+                    &.disabled{
                         opacity:0.2;
-                    }
+                        &:hover{
+                            .btn-image{
+                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                            }
+                            span{
+                                color:$COLOR_BUTTON2_NORMAL;
+                            }
+                        }
+
+                        &:active{
+                            .btn-image{
+                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                            }
+                            span{
+                                color:$COLOR_BUTTON2_NORMAL;
+                            }
+                        }   
+
+            }
+
                 }
         }
         
@@ -328,6 +358,9 @@
         //最上段のプルダウンのかたまりは、ボーダーなし。
         #signal-container-element-0{
              border-top:none;
+             .dot-line{
+                 //border-left : 2px dotted
+             }
         }
 
         //普通の信号時の、previewとプルダウンの間のマージン
@@ -394,7 +427,8 @@
                     top : 0px;
                     display:flex;
 
-                        .delete-signal{background-position:center;
+                        .delete-signal{
+                            background-position:center;
                             background-repeat: no-repeat;
                             background-size: contain;
                             transition: 0.2s;
@@ -402,15 +436,20 @@
                             margin-left:auto;
                             margin-right:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
                             align-self:center;
-					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+					        background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
 					        width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
 					        height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                            &:hover{
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER;
+                            }
+                            
+                            &:active{
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_ACTIVE;
                            }
                         }
 
+                        //エリアをhoverして、表示
                         &:hover{
                             .delete-signal{
                                 opacity:1.0;
@@ -456,12 +495,16 @@
                                 background-position:center;
                                 background-repeat: no-repeat;
                                 background-size: contain;
-					            background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
 					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
 					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
                             
-                                &:hover, &:active{
-                                    background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                                &:hover{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER;
+                                }
+                                    
+                                &:active{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_ACTIVE;
                                 }
 
                             }
@@ -477,13 +520,17 @@
                                 background-position:center;
                                 background-repeat: no-repeat;
                                 background-size: contain;
-					            background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
 					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
 					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
                                 margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
 
-                                &:hover, &:active{
-                                    background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                                &:hover{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_HOVER;
+                                } 
+                                
+                                &:active{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
                                 }
                             }
                         }
