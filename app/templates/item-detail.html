@@ -298,14 +298,17 @@
                     </div>
                 </div>
 
+                <div class="button-macro-action-container-element">
                 <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</h4>
-                    <div class="custom-select">
-                        <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
-                            {{#actionList}}
-                            <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                            {{/actionList}}
-                        </select>
-                    </div>
+                </div>
+
+                <div class="custom-select">
+                    <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                        {{#actionList}}
+                        <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                        {{/actionList}}
+                    </select>
+                </div>
                     
                 <div id="signals-container"></div>
     

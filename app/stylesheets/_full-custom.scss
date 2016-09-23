@@ -324,12 +324,23 @@
             position:relative;
         }
 
+        //最上段のプルダウンのかたまりは、ボーダーなし。
         #signal-container-element-0{
              border-top:none;
         }
 
-            .signal-container-element{
+        //普通の信号時の、previewとプルダウンの間のマージン
+        .property-state-action{
+            margin-top:$SIZE_PROPATY_AREA_ACTION_CONTAINER_MARGIN_TOP;
+        }
 
+        //マクロボタンのpreviewとアクション設定pulldownとの間のマージン
+        .button-macro-action-container-element{
+            margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+        }
+
+        //信号セット用プルダウンセット
+        .signal-container-element{
                 box-sizing:border-box;
                 border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_EDIT_MACRO_BORDER;
                 padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
@@ -342,6 +353,7 @@
                     width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
                 }
 
+                //マクロの信号順番
                 .orderIndicator{
                     width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
                     font-family:$FONT_SIZE_PROPATY_MAIN_TEXT;
@@ -355,6 +367,7 @@
                     
                 }
 
+                //信号deleteボタン用のarea
                 .delete-signal-area{
                     z-index : 2;//pulldownより前に
                     height:100%;
@@ -390,6 +403,8 @@
 
                      }
 
+
+                //一番上のソートボタンは非表示
                 #sort-button-area-0{
                     .sort-up-btn{
                         display:none;
@@ -399,7 +414,8 @@
                         }
                 }
 
-                    .sort-button-area{
+                //マクロの信号並び替えボタンエリア
+                .sort-button-area{
                         z-index : 2;//pulldownより前に
                         height:100%;
                         width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
@@ -560,8 +576,6 @@
 
             h4 {
                 margin:0;
-                margin-top:8px;
-                margin-bottom:4px;
                 font-size: $FONT_SIZE_PROPATY_H4;
             }
 
@@ -592,7 +606,6 @@
 
             #property-image-preview,
             .property-state-image-preview {
-                margin-bottom:$SIZE_PROPATY_AREA_PREVIEW_MARING_BOTTOM;
                 box-sizing:border-box;
                 position:relative;
                 background-position:center;
