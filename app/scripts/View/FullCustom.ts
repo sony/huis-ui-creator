@@ -4680,9 +4680,7 @@ module Garage {
                     return;
                 }
 
-                //$target.css("background-image", 'url("' + imageUrl + '")');
-                $target.css("background-image", "url(" + encodeURI(imageUrl) + ")");
-                
+                $target.css("background-image", 'url("' + imageUrl + '")');                
 
             }
 
