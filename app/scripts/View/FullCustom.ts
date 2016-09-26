@@ -1799,7 +1799,7 @@ module Garage {
 			/**
 			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
-			private onBackgroundClicked(event: Event) {
+            private onEditImageBackgroundClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
 				this.startEditButtonImage($target, imageType);
