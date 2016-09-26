@@ -517,7 +517,7 @@ module Garage {
                     id: this.defaultState.id,
                     remotesList: this.availableRemotelist,
                 }
-                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+                this.renderSignalDetailWithoutInterval(signalData.order, signalData.action, $signalContainer);
 
                 for (let i = 1; i < actions.length; i++) {
                     signalData.order = i;
@@ -554,15 +554,21 @@ module Garage {
 
             /*
             * インターバルなしの一回文のシグナルのJQueryを取得する。
-            * @param signalData{ISignalData} 表示する内容のアクション
+            * @param order{nuber} 表示する信号のorder
+            * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {JQuery}appendして描画するためのJQuery
             */
-            private renderSignalDetailWithoutInterval(signalData: ISignalDataForDisplayPullDown, $signalContainer: JQuery) {
+            private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (signalData == null) {
-                    console.warn(FUNCTION_NAME + "signalData is null");
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
 
@@ -571,30 +577,21 @@ module Garage {
                     return;
                 }
 
+                let inputDataForRender: any = {
+                    order : order
+                }
+
                 //ベースとなるDOM描写する
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
-                $signalContainer.append($(templateSignal(signalData)));
+                $signalContainer.append($(templateSignal(inputDataForRender)));
 
+                
+                let remoteId: string = this.getRemoteIdByAction(action);
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
 
-                //リモコンの表示を変更
-                //このorderの信号に登録されているremoteIdを取得し、表示
-                let action = signalData.action;
-                if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
-                    return;
-                }
-
-              
-
-                let order = signalData.order;
-                if (order != null) {
-                    let remoteId: string = this.getRemoteIdByAction(signalData.action);
-                    this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
-
-                    //Functions用のプルダウンを描画できるときは描画
-                    let functionName = this.getFunctionNameFromAction(action);
-                    this.renderFunctionsOf(order, this.defaultState.id, functionName);
-                }
+                //Functions用のプルダウンを描画できるときは描画
+                let functionName = this.getFunctionNameFromAction(action);
+                this.renderFunctionsOf(order, this.defaultState.id, functionName);
 
                 //言語対応
                 $signalContainer.i18n();
@@ -622,7 +619,7 @@ module Garage {
                 }
 
                 //interval以外を描写
-                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+                this.renderSignalDetailWithoutInterval(signalData.order,signalData.action , $signalContainer);
 
                 //intervalを描写
                 this.renderIntervalOf(signalData.order, signalData.action.interval);
