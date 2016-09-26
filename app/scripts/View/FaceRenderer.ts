@@ -179,15 +179,15 @@ module Garage {
 			}
 
             /**
-             * 画像アイテムをコピーする
+             * 画像アイテムを追加する。画像のコピーは発生しない。
              * @param image {Model.ImageItem} [in] 追加する画像アイテムの model
 			 * @param image {string} [in] 追加する画像アイテムのパス。パスを指定した場合は、ページの背景として追加される。
 			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 * @return {Model.ImageItem} 新しく作成された model
 			 */
-            copyImage(image: Model.ImageItem, moduleId: string, offsetY: number) {
-                return this.moduleView_.copyImage(image, moduleId, offsetY);
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number) {
+                return this.moduleView_.addImageWithoutCopy(image, moduleId, offsetY);
             }
 
 			/**

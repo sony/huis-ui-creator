@@ -664,13 +664,13 @@ module Garage {
 
 
             /**
-			 * 画像アイテムを追加する。
+			 * 画像アイテムを追加する。画像のコピーは発生しない。
 			 * 
 			 * @param image {Model.ImageItem} [in] 追加する画像アイテムの元となる model
 			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 */
-            copyImage(image: Model.ImageItem, moduleId: string, offsetY: number): Model.ImageItem {
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number): Model.ImageItem {
                 if (!offsetY) {
                     offsetY = 0;
                 }

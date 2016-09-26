@@ -723,7 +723,7 @@ module Garage {
 
 					case "image":
 						if (targetModel.image) {
-							model = this.faceRenderer_canvas_.copyImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
+							model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
 						}
 						break;
 
@@ -1799,7 +1799,7 @@ module Garage {
 			/**
 			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
-			private onEditImageBackgroundClicked(event: Event) {
+			private onBackgroundClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
 				this.startEditButtonImage($target, imageType);
