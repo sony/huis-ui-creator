@@ -3172,7 +3172,8 @@ module Garage {
 									// 画像のロードが完了してから表示を更新する
                                     let img = new Image();
                                     img.src = value;
-									img.onload = () => {
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
 										this._updatePreviewInDetailArea(value, $preview);
