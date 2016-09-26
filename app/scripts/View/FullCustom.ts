@@ -2561,8 +2561,8 @@ module Garage {
 								if (resolvedOriginalPath) {
 									// 画像のロードが完了してから表示を更新する
 									let img = new Image();
-									img.onload = () => {
-										$target.css("background-image", 'url("' + resolvedOriginalPath + '")');
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
 
 										// プレビュー部分の更新
@@ -2699,8 +2699,8 @@ module Garage {
 
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
 				if (imagePath != HUIS_REMOTEIMAGES_ROOT
-					&& imagePath != "") {
-					$preview.css("background-image", 'url("' + imagePath + '")');
+                    && imagePath != "") {
+                    this.setBackgroundImageUrlInCSS($preview, imagePath);
 					let previewWidth = $preview.width();
 					let img = new Image();
 					img.src = imagePath;
@@ -3158,8 +3158,16 @@ module Garage {
 										top: "0",
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
-										backgroundImage: value ? 'url("' + value + '")' : "none"
-									});
+                                    });
+
+
+                                    let inputUrl: string = value;
+                                    if (inputUrl == null) {
+                                        inputUrl = "none";
+                                    }    
+                                    this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
+
+
 									// 画像のロードが完了してから表示を更新する
                                     let img = new Image();
                                     img.src = value;
@@ -3175,8 +3183,6 @@ module Garage {
 									};
 									
 									
-                                    //$preview.css("background-image", value ? "url('" + value + "')": "none");
-
 								}
 								break;
 							case "resizeMode":
@@ -4655,7 +4661,33 @@ module Garage {
                 }
             }
 
-		}
+            /*
+             * ターゲットのCSSの背景にURLを設定する。そのときURLは、有効になるように加工される
+             * @param $target{JQuery} 背景を設定する対象の JQuery
+             * @param url{String} backgroundに設定する画像のurl
+             */
+            private setBackgroundImageUrlInCSS($target: JQuery, imageUrl: string) {
+                let FUNCTION_NAME = TAG + "setBackgroundImageUrlInCSS : ";
+
+                if ($target == null) {
+                    console.warn(FUNCTION_NAME + "$target is null");
+                    return;
+                }
+
+                if (imageUrl == null) {
+                    console.warn(FUNCTION_NAME + "imageUrl is null");
+                    return;
+                }
+
+                $target.css("background-image", 'url("' + imageUrl + '")');
+
+
+            }
+
+        }
+
+        
+
 
 		var View = new FullCustom();
 
