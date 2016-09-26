@@ -87,16 +87,52 @@ module Garage {
                     return;
                 }
 
+                let targetOrder = order - 1;
+
 
                 //sort先（一つ上の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
                 if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
-                    //情報を更新し、再描画
-                    this.updateModel();
-                    this.renderSignalContainers();
+
+                    //もし、$nextTopSignalContainerが一番上のプルダウンなら、
+                    //プルダウンを一度追加して、 自身のintervalを消してからアニメ
+                    if ((targetOrder) == 0) {
+                        //レイアウト崩れを防ぐため、高さは維持する。
+                        let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
+                        let tmpHeightNext = $nextTopSignalContainer.find(".signals").outerHeight();
+
+                        this.renderIntervalOf(0);
+                        this.setIntervalPullDownOf(0, 0);
+
+                        this.removeIntervalPullDown(order);
+
+                        $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
+                        $nextTopSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+                    }
+
+                    //もし、remoteIdのプルダウンが未入力の場合
+                    //funtionのプルダウンを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
+                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(order))) {
+                        if (this.availableRemotelist[0] != null) {
+                            this.setRemoteIdPullDownOf(order, this.availableRemotelist[0].remoteId);
+                            this.renderFunctionsOf(order);
+                            $thisOrderSignalContainer.trigger('create');
+                        }
+                    }
+
+
+
+                    let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
+                    this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextTopSignalContainer.find(".pulldowns"), duration);
+
+                    setTimeout(() => {
+                        this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                        //情報を更新し、再描画
+                        this.updateModel();
+                        this.renderSignalContainers();
+                    }, duration);
                 }
 
             }
@@ -119,14 +155,48 @@ module Garage {
                     return;
                 }
 
+                let targetOrder = order + 1;
+
                 //sort先（一つ下の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
-                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
+                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(targetOrder);
                 if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
-                    //情報を更新し、再描画
-                    this.updateModel();
-                    this.renderSignalContainers();
+
+                    //もし、$thisOrderSignalContainerが一番上のプルダウンなら、
+                    //プルダウンを一度追加して$nextTopSignalContainerのintervalを消してからアニメ。
+                    if (order == 0) {
+                        //レイアウト崩れを防ぐため、高さは維持する。
+                        let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
+                        let tmpHeightNext = $nextTopSignalContainer.find(".signals").outerHeight();
+                        
+                        this.renderIntervalOf(0);
+                        this.setIntervalPullDownOf(0, 0);
+
+                        this.removeIntervalPullDown(targetOrder);
+                        $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
+                        $nextTopSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+                    }
+
+                    //もし、入れ替え対象のremoteIdのプルダウンが未入力の場合
+                    //functionpulldownを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
+                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(targetOrder))) {
+                        if (this.availableRemotelist[0] != null) {
+                            this.setRemoteIdPullDownOf(targetOrder, this.availableRemotelist[0].remoteId);
+                            this.renderFunctionsOf(targetOrder);
+                            $nextTopSignalContainer.trigger('create');
+                        }
+                    }
+
+
+                    let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
+                    this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextTopSignalContainer.find(".pulldowns"), duration);
+                    setTimeout(() => {
+                        this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                        //情報を更新し、再描画
+                        this.updateModel();
+                        this.renderSignalContainers();
+                    }, duration);
+                    
                 }
                 
 
@@ -1023,12 +1093,28 @@ module Garage {
                
                 if (ActionNum <= 1 && !this.isValidValue(remoteIdOrder0) && !this.isValidValue(functionOrder0)) {
                     this.$el.find("#select-remote-input-0").focus();
-                }
-
-               
+                }  
             }
 
-           
+            /*
+            * 設定したOrderのinverfal用PullDownを消す。
+            * @param order {number}
+            */
+            private removeIntervalPullDown(order: number) {
+                let FUNCTION_NAME = TAG + "removeIntervalPullDown";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //対象orderのfunctionPullDown用コンテナの子供を削除する
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
+                $targetFunctionPulllDownContainer.children().remove();
+            }
+
+
 
         }
 	}

@@ -759,7 +759,10 @@ declare module Garage {
     var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
     var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
     var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
-
+    /*
+    * マクロボタンの順番交換アニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
 }
 
 

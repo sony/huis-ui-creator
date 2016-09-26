@@ -116,6 +116,7 @@ module Garage {
         ACTION_INPUTS.push({ key: ACTION_INPUT_SWIPE_LEFT_KEY, value: ACTION_INPUT_SWIPE_LEFT_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_SWIPE_DOWN_KEY, value: ACTION_INPUT_SWIPE_DOWN_VALUE });
 
+        DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

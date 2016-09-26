@@ -640,6 +640,82 @@ module Garage {
                 );
 
             }
+
+
+            /*
+             * 対象のJQueryのoffset座標系でのpositionを取得する
+             * 
+             */
+            protected getPosition($target: JQuery): IPosition{
+                let FUNCTION_NAME = TAG + "getPosition : ";
+
+                if (!this.isValidJQueryElement($target) || $target.offset() == null) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                let resultPosition: IPosition =
+                    {
+                        x: $target.offset().left,
+                        y: $target.offset().top
+                    }
+
+                if (resultPosition == null) {
+                    console.warn(FUNCTION_NAME + "resultPosition is null");
+                }
+
+                return resultPosition
+            }
+
+
+            /*
+             * 対象のdomの位置を入れ替えるアニメーションをする。
+             * @param $target1 {JQuery}
+             * @param $target2 {JQuery}
+             * @param duration {number} アニメーションの期間 [ms]
+             */
+            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration : number) {
+                let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
+                
+
+                if (!this.isValidJQueryElement($target1)) {
+                    console.warn(FUNCTION_NAME + "$target1 is invalid");
+                    return;
+                }
+
+                if (!this.isValidJQueryElement($target2)) {
+                    console.warn(FUNCTION_NAME + "$target2 is invalid");
+                    return;
+                }
+
+                let target1Position: IPosition = this.getPosition($target1);
+                let target2Position: IPosition = this.getPosition($target2);
+
+                let tmpTarget1Duration = $target1.css("transition-duration");
+                let tmpTarget2Duration = $target2.css("transition-duration");
+
+                //durationをセット。
+                $target1.css("transition-duration", duration / 1000 + "s");
+                $target2.css("transition-duration", duration / 1000 + "s");
+                
+                //移動
+                $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");
+                $target2.css("transform", "translateX(" + (target1Position.x - target2Position.x) + "px)");
+                $target1.css("transform", "translateY(" + (target2Position.y - target1Position.y) + "px)");
+                $target2.css("transform", "translateY(" + (target1Position.y - target2Position.y) + "px)");
+
+                setTimeout(()=>{
+                    //durationをセット。
+                    $target1.css("transition-duration", tmpTarget1Duration);
+                    $target2.css("transition-duration", tmpTarget2Duration);
+                },duration);
+
+
+
+
+            }
+
+
         }
 	}
 }
