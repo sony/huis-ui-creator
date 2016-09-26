@@ -2493,8 +2493,9 @@ module Garage {
 								// 画像のロードが完了してから表示を更新する
                                 let img = new Image();
                                 img.src = resolvedPath;
-								img.onload = () => {
-									$target.css("background-image", 'url("' + resolvedPath + '")');
+                                img.onload = () => {
+                                    this.setBackgroundImageUrlInCSS($target, resolvedPath);
+
 									// 詳細編集エリアの画像ファイルパス名を更新
 									let path = targetModel["resizeOriginal"];
 									if (!path) {
