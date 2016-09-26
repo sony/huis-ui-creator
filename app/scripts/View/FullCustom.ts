@@ -1640,6 +1640,7 @@ module Garage {
 					return;	
 				}
 
+                //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
 				var stateNum = buttonModel.button.state.length;
 				var fucntions: string[] = [];
                 for (var i = 0; i < buttonModel.button.state.length; i++){
