@@ -10,16 +10,6 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
         //プルダウンに入力できる情報
         interface ISignalInputs {
             interval: number;
@@ -251,17 +241,10 @@ module Garage {
                 };
                 let tmpOrder = this.defaultState.action.length;
 
-                let signalData: ISignalDataForDisplayPullDown = {
-                    order: tmpOrder,
-                    action: empltyAction,
-                    id: this.defaultState.id,
-                    remotesList: this.availableRemotelist,
-                };
-
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                    this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
@@ -510,19 +493,10 @@ module Garage {
 
                 //一度、すべて消す。
                 $signalContainer.children().remove();
-
-                let signalData: ISignalDataForDisplayPullDown = {
-                    order: 0,
-                    action: actions[0],
-                    id: this.defaultState.id,
-                    remotesList: this.availableRemotelist,
-                }
-                this.renderSignalDetailWithoutInterval(signalData.order, signalData.action, $signalContainer);
-
-                for (let i = 1; i < actions.length; i++) {
-                    signalData.order = i;
-                    signalData.action = actions[i];
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                for (let i = 0; i < actions.length; i++) {
+                    let order = i;
+                    let action = actions[i];
+                    this.renderSignalDetailWithInterval(order, action, $signalContainer);
                 }
 
 
@@ -598,20 +572,28 @@ module Garage {
                 $signalContainer.trigger('create');
             }
 
-            
+
+
             /*
             * インターバルつきの一回文のシグナルのJQueryを取得する。
-            * @param signalData{ISignalData} 表示する内容のアクション
+            * @param order{nuber} 表示する信号のorder
+            * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {JQuery}appendして描画するためのJQuery
             */
-            private renderSignalDetailWithInterval(signalData: ISignalDataForDisplayPullDown, $signalContainer: JQuery) {
+            private renderSignalDetailWithInterval(order : number, action: IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (signalData == null) {
-                    console.warn(FUNCTION_NAME + "signalData is null");
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
                     return;
                 }
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+
 
                 if ($signalContainer == null) {
                     console.warn(FUNCTION_NAME + "$signalContainer is null");
@@ -619,10 +601,10 @@ module Garage {
                 }
 
                 //interval以外を描写
-                this.renderSignalDetailWithoutInterval(signalData.order,signalData.action , $signalContainer);
+                this.renderSignalDetailWithoutInterval(order, action , $signalContainer);
 
                 //intervalを描写
-                this.renderIntervalOf(signalData.order, signalData.action.interval);
+                this.renderIntervalOf(order, action.interval);
                 
 
             }
