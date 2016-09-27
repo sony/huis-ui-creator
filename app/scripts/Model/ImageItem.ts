@@ -5,6 +5,7 @@
 module Garage {
 	export module Model {
 		var TAG = "[Garage.Model.ImageItem] ";
+        import JQUtils = Util.JQueryUtils;
 
 		export class ImageItem extends Backbone.Model implements IGImage, ItemModel {
 
@@ -85,9 +86,20 @@ module Garage {
 				return this.get("resolvedPath");
 			}
 
-			set resolvedPath(val: string) {
-				this.set("resolvedPath", val);
+            set resolvedPath(val: string) {
+
+                this.resolvedPathCSS = JQUtils.encodeUriValidInWindowsAndCSS(val);
+
+                this.set("resolvedPath", val);
 			}
+
+            get resolvedPathCSS(): string {
+                return this.get("resolvedPathCSS");
+            }
+
+            set resolvedPathCSS(val: string) {
+                this.set("resolvedPathCSS", val);
+            }
 
 			get properties(): string[]{
 				return ["enabled", "area", "path", "resizeMode"];
@@ -216,7 +228,8 @@ module Garage {
 
 			get resizeResolvedOriginalPath(): string {
 				let garageExtensions = this.garageExtensions;
-				if (garageExtensions) {
+                if (garageExtensions) {
+
 					if (garageExtensions.resolvedOriginalPath) {
 						return garageExtensions.resolvedOriginalPath;
 					} else {
@@ -230,12 +243,22 @@ module Garage {
 
 			set resizeResolvedOriginalPath(val: string) {
 				let garageExtensions = this.garageExtensions;
-				if (garageExtensions) {
-					garageExtensions.resolvedOriginalPath = val;
-					this.garageExtensions = garageExtensions;
-				}
-				this.set("resizeResolvedOriginalPath", val);
+                if (garageExtensions) {
+                    garageExtensions.resolvedOriginalPath = val;
+                    this.garageExtensions = garageExtensions;
+                }
+
+                this.set("resizeResolvedOriginalPath", val);
 			}
+
+            get resizeResolvedOriginalPathCSS(): string {
+                //resizeResolvedOriginalPathCSSは、Windows用のパスを、CSSが読み取れるようにエンコードされた形。
+                return JQUtils.encodeUriValidInWindowsAndCSS(this.resizeResolvedOriginalPath);
+            }
+
+            set resizeResolvedOriginalPathCSS(val: string) {
+                this.set("resizeResolvedOriginalPathCSS", val);
+            }
 
 			get resized(): boolean {
 				return this.get("resized");

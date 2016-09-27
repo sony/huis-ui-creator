@@ -367,14 +367,16 @@ interface IGImage {
 	version?: string;
 	area?: IArea;
     path: string;
-	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
+    resolvedPath?: string; //<!image.path を絶対パスに変換したもの
+    resolvedPathCSS?: string;//CSSで表示できる状態のパス
 	garageExtensions?: IGGarageImageExtensions;
 	areaRatio?: IGAreaRatio;
 	pageBackground?: boolean;
 	resized?: boolean; //<!リサイズが行われたかどうか
 	resizeMode?: string;
 	resizeOriginal?: string;
-	resizeResolvedOriginalPath?: string;
+    resizeResolvedOriginalPath?: string;
+    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
 	[x: string]: any;
 }
 

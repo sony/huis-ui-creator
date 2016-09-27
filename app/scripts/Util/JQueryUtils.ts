@@ -6,7 +6,8 @@ module Garage {
 			all?: boolean; //! true を指定した場合、すべての要素の deta 属性に値を入れる。それ以外の場合は、先頭の要素の data 属性に値を入れる。
 		}
 
-		export class JQueryUtils {
+        export class JQueryUtils {
+            static TAG = "JQueryUtils";
 
 			/**
 			 * jQuery オブジェクトで選択された DOM の data 属性を取得する。
@@ -44,7 +45,32 @@ module Garage {
 				} else {
 					return $elem.get(0).dataset[key];
 				}
-			}
+            }
+
+            /*
+              * CSSのURLが解釈できず、Windowsでは使用可能な文字を、CSSでも有効な文字に変換して返す。
+              * @param url{string} cssのbackground-imageに設定する画像のurl
+              * @return {string} CSSでも解釈可能なURL
+              */
+            static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
+                    return;
+                }
+
+                let tmpUrl: string = encodeURI(inputUrl);
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("\\#", "g");
+                tmpUrl = tmpUrl.replace(regExp1, "%23");
+
+                var regExp2 = new RegExp("\\'", "g");
+                tmpUrl = tmpUrl.replace(regExp2, "%27");
+                return tmpUrl;
+            }
+
+
 		}
 	}
 } 
