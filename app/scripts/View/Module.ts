@@ -704,8 +704,11 @@ module Garage {
                 newArea = $.extend(true, {}, image.area);
                 newArea.y += offsetY;
                 newImage.area = newArea;
+
                 // 画像の path を出力先の remoteId のディレクトリーになるように指定
                 newImage.path = image.path;
+                newImage.resolvedPath = image.resolvedPath;
+
 
                 //バージョン情報をもっている場合、引き継ぐ
                 if (image.version != null) {
