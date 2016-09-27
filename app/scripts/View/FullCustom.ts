@@ -2550,7 +2550,7 @@ module Garage {
 							{
                                 let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
 
-                                //CSS対応でない場合、
+                                //CSS対応のresizeResolvedOriginalPathCSSがない場合
                                 if (resolvedOriginalPath == null) {
                                     resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
                                 }
@@ -3162,7 +3162,7 @@ module Garage {
                                     });
 
 
-                                    let inputUrl: string = JQUtils.encodeUriValidInWindowsAndCSS(value);
+                                    let inputUrl: string = JQUtils.enccodeUriValidInCSS(value);
                                     if (inputUrl == null) {
                                         inputUrl = "none";
                                     }    
@@ -4141,7 +4141,7 @@ module Garage {
 					if (resizeMode) {
 						$(".image-resize-mode").val(resizeMode);
                     }
-                    let inputURL = JQUtils.encodeUriValidInWindowsAndCSS(backgroundModel.resolvedPath);
+                    let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
                     this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"), true);
 				} else {
 					let $pageBackgroundDetail = $(templatePageBackground({}));

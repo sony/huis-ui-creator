@@ -47,15 +47,59 @@ module Garage {
 				}
             }
 
+
+            static enccodeUriValidInCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]enccodeUriValidInCSS : inputUrl is null");
+                    return;
+                }
+
+                //ダミーの変数、マック対応時に動的に入手
+                let isWindows = true;
+                let isMac = false;
+
+                if (isWindows) {
+                    return this.encodeUriValidInWindowsAndCSS(inputUrl);
+                } else if (isMac) {
+                    return this.encodeUriValidInMacAndCSS(inputUrl);
+                }
+
+            }
+
             /*
               * CSSのURLが解釈できず、Windowsでは使用可能な文字を、CSSでも有効な文字に変換して返す。
               * @param url{string} cssのbackground-imageに設定する画像のurl
               * @return {string} CSSでも解釈可能なURL
               */
-            static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
+            private static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
                     console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
+                    return;
+                }
+
+                let tmpUrl: string = encodeURI(inputUrl);
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("\\#", "g");
+                tmpUrl = tmpUrl.replace(regExp1, "%23");
+
+                var regExp2 = new RegExp("\\'", "g");
+                tmpUrl = tmpUrl.replace(regExp2, "%27");
+                return tmpUrl;
+            }
+
+
+            /*
+              * CSSのURLが解釈できず、Macでは使用可能な文字を、CSSでも有効な文字に変換して返す。
+              * @param url{string} cssのbackground-imageに設定する画像のurl
+              * @return {string} CSSでも解釈可能なURL
+              */
+            private static encodeUriValidInMacAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]encodeUriValidInMacAndCSS : inputUrl is null");
                     return;
                 }
 
