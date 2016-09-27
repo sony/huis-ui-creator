@@ -2491,8 +2491,7 @@ module Garage {
                                 let img = new Image();
                                 img.src = resolvedPath;
                                 img.onload = () => {
-                                    //ここは、一度エンコードされている可能性があるので、setBackgroundImageUrlInCSSを使わない。
-                                    $target.css("background-image", "url('" + resolvedPath + "')");
+                                    this.setBackgroundImageUrlInCSS($target, resolvedPath);
 									// 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
 								};
@@ -2549,10 +2548,19 @@ module Garage {
 
 						case "resizeOriginal":
 							{
-								let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
+                                let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
+
+                                //CSS対応でない場合、
+                                if (resolvedOriginalPath == null) {
+                                    resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
+                                }
+
 								if (resolvedOriginalPath) {
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
+                                    let img = new Image();
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
                                     img.onload = () => {
                                         this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
@@ -2560,9 +2568,7 @@ module Garage {
 										// プレビュー部分の更新
                                         this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
                                     };
-                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                        img.src = resolvedOriginalPath;
-                                    }
+                                    
 								}
 							}
 							break;

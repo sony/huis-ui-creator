@@ -510,29 +510,6 @@ module Garage {
 
 
             /*
-             * ターゲットのCSSの背景にURLを設定する。そのときURLは、有効になるように加工される
-             * @param $target{JQuery} 背景を設定する対象の JQuery
-             * @param url{String} backgroundに設定する画像のurl
-             */
-            protected setBackgroundImageUrlInCSSWithEncord($target: JQuery, imageUrl: string) {
-                let FUNCTION_NAME = TAG_BASE + "setBackgroundImageUrlInCSS : ";
-
-                if ($target == null) {
-                    console.warn(FUNCTION_NAME + "$target is null");
-                    return;
-                }
-
-                if (imageUrl == null) {
-                    console.warn(FUNCTION_NAME + "imageUrl is null");
-                    return;
-                }
-
-                imageUrl = JQUtils.encodeUriValidInWindowsAndCSS(imageUrl);
-                this.setBackgroundImageUrlInCSS($target, imageUrl);
-
-            }
-
-            /*
              * ターゲットのCSSの背景にURLを設定する。
              * @param $target{JQuery} 背景を設定する対象の JQuery
              * @param url{String} backgroundに設定する画像のurl
