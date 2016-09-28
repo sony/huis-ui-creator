@@ -4357,6 +4357,8 @@ module Garage {
                 };
                 var mementoCommand = new MementoCommand(memento);
                 this.commandManager_.invoke(mementoCommand);
+
+                this.$el.focus();
             }
 
 

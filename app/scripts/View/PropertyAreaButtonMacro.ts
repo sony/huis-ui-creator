@@ -128,7 +128,6 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
-                        this.$el.focus();
 
                     }, duration);
                 }
@@ -193,7 +192,6 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
-                        this.$el.focus();
 
                     }, duration);
  
@@ -214,7 +212,6 @@ module Garage {
                 }
 
                 this.deleteSignal(order);
-                this.$el.focus();
 
             }
 
@@ -228,7 +225,6 @@ module Garage {
             private onInvervalPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
                 this.updateModel();
-                this.$el.focus();
 
             }
 
@@ -236,8 +232,6 @@ module Garage {
             private onActionPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
                 this.updateModel();
-                this.$el.focus();
-
             }
 
             //リモコン選択用のプルダウンが変更されたときに呼ばれる
@@ -268,8 +262,6 @@ module Garage {
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignalContainers();
                 }
-                this.$el.focus();
-
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
@@ -282,8 +274,6 @@ module Garage {
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignalContainers();
                 }
-                this.$el.focus();
-
             }
 
             //+ボタンがクリックされた場合に呼び出される
@@ -323,11 +313,7 @@ module Garage {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
-                
-
                 this.controlPlusButtonEnable();
-                this.$el.focus();
-
 
             }
 

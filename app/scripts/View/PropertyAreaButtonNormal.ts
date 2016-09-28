@@ -163,9 +163,8 @@ module Garage {
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-
+                this.updateModel(this.DEFAULT_STATE_ID);
                 this.controlPlusButtonEnable();
-
             }
 
             //Actionを変更させたときに呼ばれる
