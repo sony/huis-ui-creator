@@ -83,10 +83,10 @@ module Garage {
 
                 //sort先（一つ上の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
-                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
+                let $nextAboveSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
-                if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                if (this.isValidJQueryElement($nextAboveSignalContainer)) {
+                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextAboveSignalContainer);
                     //情報を更新し、再描画
                     this.updateModel();
                     this.renderSignalContainers();
@@ -114,9 +114,9 @@ module Garage {
 
                 //sort先（一つ下の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
-                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
-                if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
+                let $nextBelowSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
+                if (this.isValidJQueryElement($nextBelowSignalContainer)) {
+                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextBelowSignalContainer);
                     //情報を更新し、再描画
                     this.updateModel();
                     this.renderSignalContainers();
