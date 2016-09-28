@@ -220,7 +220,7 @@
                 #about-macro{
                     height : $SIZE_PROPERTY_AREA_MACRO_ABOUT_HEIGHT;
                     width : $SIZE_PROPERTY_AREA_MACRO_ABOUT_WIDTH;
-                    align-self:center;
+                    margin-top: $SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_TOP;
                     margin-left:auto;
                     //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
                     background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL;
