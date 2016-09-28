@@ -10,16 +10,7 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaButtonBase] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
+       
         export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -356,7 +347,7 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         id: stateId,
                         order: order,
                         remotesList: remoteList
@@ -555,7 +546,7 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         functions: functions,
                         id: stateId,
                         order: order
