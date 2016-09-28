@@ -124,8 +124,8 @@ module Garage {
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
 
-                if (!(_.isNumber(result))) {
-                    console.warn(FUNCTION_NAME + "result is not number");
+                if (! this.isValidOrder(result)) {
+                    console.warn(FUNCTION_NAME + "result is invalid");
                     return undefined;
                 }
 
