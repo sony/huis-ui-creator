@@ -387,7 +387,6 @@ module Garage {
                 let result: string = null;
 
                 if (action.code != null) {
-                    //TODO:学習の場合care,hashMapがないので、ここでエラーになる。
                     result = action.code_db.function;
                 } else if (action.bluetooth_data != null) {
                     result = action.bluetooth_data.bluetooth_data_content;
