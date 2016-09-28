@@ -723,6 +723,7 @@ module Garage {
                 if (target) {
                     this.setDragTarget(target);
                     this.startDraggingCanvasItem(mousePosition, true);
+                    // onMainMouseDown呼び出しの防止
                     event.stopPropagation();
                 } else {
                     console.log("target not found. mousePosition: " + mousePosition.x + ", " + mousePosition.y);
@@ -747,9 +748,9 @@ module Garage {
 
             /**
              * Pallet上のItemをCanvasに追加
-             *
-             * @param event
-             * @param mousePosition Itemを追加するmouse座標
+             * 
+             * @param event {Event}
+             * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
             private setPalletItemOnCanvas(event: Event, setOnEventPosition: boolean = false): ItemModel {
@@ -764,6 +765,7 @@ module Garage {
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
+                // イベント発生位置にアイテム座標を補正
                 if (setOnEventPosition) {
                     // モデルのクローンを生成してから位置を設定
                     targetModel = this._cloneTargetModel(targetModel);
@@ -993,6 +995,8 @@ module Garage {
              */
             private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
+
+                    // ドラッグ開始位置の保存
                     this.mouseMoveStartPosition_ = mousePosition;
                     this.mouseMoveStartTargetPosition_ = {
                         x: parseInt(this.$currentTarget_.css("left"), 10),
@@ -1006,6 +1010,7 @@ module Garage {
                     };
 
                     if (!this.selectedResizer_) {
+                        // サイズ変更でなければダミーを表示
                         this.setCurrentTargetDummy();
                     }
 
@@ -3629,38 +3634,8 @@ module Garage {
 				
 			}
 
-            /*
-            private _getCurrentTargetCanvasModuleId(mousePosition: IPosition) {
-                let distance: IPosition = {
-                    x: mousePosition.x - this.mouseMoveStartPosition_.x,
-                    y: mousePosition.y - this.mouseMoveStartPosition_.y
-                }
-
-                let itemCenter =
-                    (this.mouseMoveStartPosition_.y + (mousePosition.y - this.mouseMoveStartPosition_.y) * 2) +     // 移動距離から算出する現在位置
-                    (parseInt(this.$currentTarget_.css("height")) / 2);                                             // アイテムの高さの中央
-
-                // アイテムの中心点（高さのみ）を含むキャンバスを検索
-                let pageIndex = -1;
-                $('#face-canvas .face-page').each(function (index) {
-                    if (itemCenter >= $(this).offset().top &&
-                        itemCenter <= $(this).offset().top + $(this).height()) {
-                        pageIndex = index;
-                        return;
-                    }
-                });
-
-                if (pageIndex >= 0) {
-                    return this._getCanvasPageModuleId(pageIndex);
-                } else {
-                    // 高さの合うキャンバスが無ければ現在のキャンバスを返す
-                    return this._getCanvasPageModuleId();
-                }
-            }
-            */
-
             /**
-             * マウス座標から現在ドラッグ中アイテムを表示する座標を算出する
+             * 元のアイテム座標からグリッド位置に合わせて補正されたアイテム座標を返す
              * @param mousePosition
              * @param baseNewCanvas アイテムがページを跨いで移動する際に移動後のキャンバスページを基準にするかどうか。falseの場合はドラッグ開始時のキャンバスを基準にした座標を返す。
              */
@@ -3781,8 +3756,6 @@ module Garage {
 						area.h = GRID_AREA_HEIGHT;
 						area.y = 0;
                     } else {
-                        //別ページへ追加
-                        //カレントから削除
 						area.y = GRID_AREA_HEIGHT - area.h;
 					}
 				}
@@ -4283,6 +4256,9 @@ module Garage {
 				});
 			}
 
+            /**
+             * 現在の操作対象アイテムを設定
+             */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
                 this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
@@ -4938,6 +4914,7 @@ module Garage {
             /**
              * ドラッグ中のマウス座標から対応するキャンバスのJQueryオブジェクトを返す
              * @param positionY マウスのY座標
+             * @return キャンバスのJQueryオブジェクト
              */
             private _getCanvasPageByDraggingPosition(positionY: number): JQuery {
                 // 移動後のアイテム座標（元キャンバスページ基準）
@@ -4951,8 +4928,9 @@ module Garage {
              * @param baseCanvasPositionY アイテムの置かれているキャンバスのY座標
              * @param itemRelPositionY アイテムの置かれているキャンバス上での相対Y座標
              * @param itemHeight アイテムの縦幅
+             * @return キャンバスのJQueryオブジェクト
              */
-            private _getCanvasPageByItemArea(baseCanvasPositionY: number, itemRelPositionY: number, itemHeight: number) {
+            private _getCanvasPageByItemArea(baseCanvasPositionY: number, itemRelPositionY: number, itemHeight: number): JQuery {
                 let itemCenterY = baseCanvasPositionY + (itemRelPositionY + (itemHeight / 2)) / 2;
 
                 return this._getCanvasPageByPointY(itemCenterY);
@@ -4960,7 +4938,8 @@ module Garage {
 
             /**
              * 指定のY座標がどのキャンバスページに該当する検査し、該当するキャンバスのJQueryオブジェクトを返す
-             * 
+             * @param pointY {number} Y座標
+             * @return キャンバスのJQueryオブジェクト
              */
             private _getCanvasPageByPointY(pointY: number): JQuery {
                 let canvas;
@@ -4979,33 +4958,6 @@ module Garage {
                     return this.$currentTarget_.parent();
                 }
             }
-
-            /**
-             * ドラッグドロップされたアイテムのドロップ先キャンバスページの module ID を取得する。
-             * 該当するキャンバスが無い場合は現在対象となっているキャンバスの module ID を取得する。
-             * @param positionY ドロップされたマウスのY座標
-             */
-            /*
-            private _getCanvasPageModuleIdByPosition(positionY: number): string {
-                
-                // face-canvas face-pages-are内かどうか（表示上のキャンバス外の場合はcanvas-face-page上であっても外扱い）
-
-                let pageIndex = -1;
-                $('#face-canvas .face-page').each(function(index) {
-                    if (positionY >= $(this).offset().top &&
-                        positionY <= $(this).offset().top + $(this).height()) {
-                        pageIndex = index;
-                        return;
-                    }
-                });
-
-                if (pageIndex >= 0) {
-                    return this._getCanvasPageModuleId(pageIndex);
-                } else {
-                    return this._getCanvasPageModuleId();
-                }
-            }
-            */
 
             private _syncPcToHuisAndBack(noWarn?: Boolean) {
                 if (!noWarn) {
