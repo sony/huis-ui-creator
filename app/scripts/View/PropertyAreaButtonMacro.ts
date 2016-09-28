@@ -12,6 +12,7 @@ module Garage {
 
         //プルダウンに入力できる情報
         interface ISignalInputs {
+            order: number;
             interval: number;
             remoteId: string;
             functionName : string;
@@ -808,45 +809,42 @@ module Garage {
                     return;
                 }
 
-                if ($signalContainer2 == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainer2 is null");
-                    return;
-                }
+
+                let signalInputs1 = this.getSignalInputs($signalContainer1);
+                let signalInputs2 = this.getSignalInputs($signalContainer2);
+
+                //order1にorder2の情報を
+                this.setSignalInputsToPullDownOf(signalInputs1.order, signalInputs2);
+
+                //order2に、order1の情報を
+                this.setSignalInputsToPullDownOf(signalInputs2.order, signalInputs1);
+            }
+
+
+            /*
+            *  $signalContainerを入力して、その中に格納されているプルダウンの値を取得する。
+            *  @param $signalContainer{JQuery} プルダウンの値を取得したいコンテナのJQuery
+            *  @return {ISignalInputs}プルダウンに入ってる値。
+            */
+            private getSignalInputs($signalContainer: JQuery): ISignalInputs {
+                let FUNCTION_NAME = TAG + "getSignalInputs : ";
 
                 //情報の交換に必要な情報を取得
-                let order1 = this.getOrderFrom($signalContainer1);
+                let order = this.getOrderFrom($signalContainer);
 
-                if (!this.isValidOrder(order1)) {
+                if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order1 is invalid");
                     return;
                 }
 
-                let signalInputs1 : ISignalInputs = this.getSignalnput(order1);
-                if (signalInputs1 == null) {
-                    console.warn(FUNCTION_NAME + "signalInputs1 is null");
+                let signalInputs: ISignalInputs = this.getSignalnput(order);
+                if (signalInputs == null) {
+                    console.warn(FUNCTION_NAME + "signalInputs is null");
                     return;
                 }
 
-                let order2 = this.getOrderFrom($signalContainer2);
-
-                if (!this.isValidOrder(order2)) {
-                    console.warn(FUNCTION_NAME + "order2 is invalid");
-                    return;
-                }
-
-                let signalInputs2: ISignalInputs = this.getSignalnput(order2);
-                if (signalInputs2 == null) {
-                    console.warn(FUNCTION_NAME + "signalInputs2 is null");
-                    return;
-                }
-
-                //order1にorder2の情報を
-                this.setSignalInputsToPullDownOf(order1, signalInputs2);
-
-                //order2に、order1の情報を
-                this.setSignalInputsToPullDownOf(order2, signalInputs1);
+                return signalInputs;
             }
-
 
             /*
             * 指定したorderのプルダウンに入力されている情報を取得する。
@@ -878,6 +876,7 @@ module Garage {
                 }
 
                 let result: ISignalInputs = {
+                    order : order,
                     interval : interval,
                     remoteId: remoteId,
                     functionName: functionName,
