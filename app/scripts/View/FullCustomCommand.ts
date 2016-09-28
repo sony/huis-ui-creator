@@ -31,7 +31,7 @@ module Garage {
 			 * @param command {MementoCommand} 実行するコマンド
 			 * @return {boolean} true:成功 / false:失敗
 			 */
-			invoke(command: MementoCommand): ItemModel {
+			invoke(command: MementoCommand): ItemModel[] {
 				// max stack に達した場合はエラー
 				if (!_.isUndefined(this.maxStack_) && this.maxStack_ <= this.undoStack_.length) {
 					return null;
@@ -46,7 +46,7 @@ module Garage {
 			/**
 			 * コマンドを取り消す。
 			 */
-			undo(): ItemModel {
+			undo(): ItemModel[] {
 				if (!this.canUndo()) {
 					return null;
 				}
@@ -59,7 +59,7 @@ module Garage {
 			/**
 			 * undo() で取り消したコマンドを再度実行する。
 			 */
-			redo(): ItemModel {
+			redo(): ItemModel[] {
 				if (!this.canRedo()) {
 					return null;
 				}
@@ -111,39 +111,53 @@ module Garage {
 		}
 
 		export class MementoCommand implements ICommand {
-			private target_: ItemModel;
-			private prev_: Object;
-			private next_: Object;
+            private mementoList_: IMemento[];
 
-			constructor(memento: IMemento) {
-				this.target_ = memento.target;
-				this.prev_ = memento.previousData;
-				this.next_ = memento.nextData;
+            /**
+             * コマンドを生成する
+             * コマンドは複数設定可能で、初回実行/redo時は先頭から、undo時は末尾から順に処理される
+             * @param memento 
+             */
+            constructor(memento: IMemento[]) {
+                this.mementoList_ = memento;
 			}
 
-			invoke(): ItemModel {
-				//this.prev_ = this.memento_.mementoData;
-				this._setMemento(this.next_);
-				return this.target_;
+			invoke(): ItemModel[] {
+                return this.redo();
 			}
 
-			undo(): ItemModel {
-				this._setMemento(this.prev_);
-				return this.target_;
+            undo(): ItemModel[] {
+                let updatedModels: ItemModel[] = [];
+
+                // 配列末尾から実行
+                for (let i = this.mementoList_.length - 1; i >= 0; i--) {
+                    let memento = this.mementoList_[i];
+                    this._setMemento(memento.target, memento.previousData);
+                    updatedModels.push(memento.target);
+                }
+
+                return updatedModels;
 			}
 
-			redo(): ItemModel {
-				this._setMemento(this.next_);
-				return this.target_;
+            redo(): ItemModel[] {
+                let updatedModels: ItemModel[] = [];
+
+                // 配列先頭から実行
+                for (let i = 0; i < this.mementoList_.length; i++) {
+                    let memento = this.mementoList_[i];
+                    this._setMemento(memento.target, memento.nextData);
+                    updatedModels.push(memento.target);
+                }
+
+                return updatedModels;
 			}
 
-			private _setMemento(mementoData: Object) {
+			private _setMemento(target: ItemModel, mementoData: Object) {
 				var keys = Object.keys(mementoData);
 				keys.forEach((key) => {
-					//this.target_.set(key, mementoData[key]);
-					this.target_[key] = mementoData[key];
+					target[key] = mementoData[key];
 				});
-			}
+            }
 		}
 	}
 }
