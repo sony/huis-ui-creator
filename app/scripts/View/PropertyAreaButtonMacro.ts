@@ -69,8 +69,9 @@ module Garage {
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -101,11 +102,11 @@ module Garage {
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
-
                 //一番下のボタンの場合、無視する
                 if (order >= this.defaultState.action.length - 1) {
                     console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
@@ -130,6 +131,11 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onDeleteButtonClick";
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
 
                 this.deleteSignal(order);
 
@@ -169,7 +175,9 @@ module Garage {
 
                 // プルダウンに設定されている Actionの順番を取得
                 let order = this.getOrderFrom($target);
-                if (order == null) {
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -214,6 +222,11 @@ module Garage {
                     interval: DEFAULT_INTERVAL_MACRO,
                 };
                 let tmpOrder = this.defaultState.action.length;
+
+                if (!this.isValidOrder(tmpOrder)) {
+                    console.warn(FUNCTION_NAME + "tmpOrder is invalid");
+                    return;
+                }
 
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
@@ -353,7 +366,9 @@ module Garage {
                     //Actionの順番を取得。取得できない場合は次のループへ
                     let $target: JQuery = $($signalContainers[i]);
                     let order = this.getOrderFrom($target);
-                    if (order == null) {
+
+                    if (!this.isValidOrder(order)) {
+                        console.warn(FUNCTION_NAME + "order is invalid");
                         continue;
                     }
 
@@ -486,8 +501,8 @@ module Garage {
             private deleteSignal(order: number) {
                 let FUNCTION_NAME = TAG + "deleteSignal";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -512,8 +527,8 @@ module Garage {
             private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -560,8 +575,8 @@ module Garage {
             private renderSignalDetailWithInterval(order : number, action: IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -594,8 +609,8 @@ module Garage {
             private renderIntervalOf(order: number, inputInterval ?: number) {
                 let FUNCTION_NAME = TAG + "renderIntervalOf : ";
                 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -644,8 +659,9 @@ module Garage {
             */
             private getInvervalFromPullDownOf(order: number): number {
                 let FUNCTION_NAME = TAG + "getInvervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -677,8 +693,9 @@ module Garage {
             */
             private setIntervalPullDownOf(order : number, inputInterval : number) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -784,37 +801,41 @@ module Garage {
             * @param $signalContainer2{JQuery} 値を交換する信号コンテナのJQuery1
             */
             private exchangeSignalValueSignals($signalContainer1: JQuery, $signalContainer2: JQuery) {
-                let FUNCTIONNAME = TAG + "exchangeSignalValueSignals : ";
+                let FUNCTION_NAME = TAG + "exchangeSignalValueSignals : ";
                 if ($signalContainer1 == null) {
-                    console.warn(FUNCTIONNAME + "$signalContainer1 is null");
+                    console.warn(FUNCTION_NAME + "$signalContainer1 is null");
                     return;
                 }
 
                 if ($signalContainer2 == null) {
-                    console.warn(FUNCTIONNAME + "$signalContainer2 is null");
+                    console.warn(FUNCTION_NAME + "$signalContainer2 is null");
                     return;
                 }
 
                 //情報の交換に必要な情報を取得
                 let order1 = this.getOrderFrom($signalContainer1);
-                if (order1 == null) {
-                    console.warn(FUNCTIONNAME + "order1 is null");
+
+                if (!this.isValidOrder(order1)) {
+                    console.warn(FUNCTION_NAME + "order1 is invalid");
                     return;
                 }
+
                 let signalInputs1 : ISignalInputs = this.getSignalnput(order1);
                 if (signalInputs1 == null) {
-                    console.warn(FUNCTIONNAME + "signalInputs1 is null");
+                    console.warn(FUNCTION_NAME + "signalInputs1 is null");
                     return;
                 }
 
                 let order2 = this.getOrderFrom($signalContainer2);
-                if (order2 == null) {
-                    console.warn(FUNCTIONNAME + "order2 is null");
+
+                if (!this.isValidOrder(order2)) {
+                    console.warn(FUNCTION_NAME + "order2 is invalid");
                     return;
                 }
+
                 let signalInputs2: ISignalInputs = this.getSignalnput(order2);
                 if (signalInputs2 == null) {
-                    console.warn(FUNCTIONNAME + "signalInputs2 is null");
+                    console.warn(FUNCTION_NAME + "signalInputs2 is null");
                     return;
                 }
 
@@ -833,8 +854,9 @@ module Garage {
             */
             private getSignalnput(order: number): ISignalInputs{
                 let FUNCTION_NAME = TAG + "getSignalnput";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -871,8 +893,8 @@ module Garage {
             private setSignalInputsToPullDownOf(order: number, signalInputs: ISignalInputs) {
                 let FUNCTION_NAME = TAG + "setSignalInputsToPullDownOf";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
