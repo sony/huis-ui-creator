@@ -128,6 +128,8 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
+                        this.$el.focus();
+
                     }, duration);
                 }
 
@@ -191,10 +193,12 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
+                        this.$el.focus();
+
                     }, duration);
  
                 }
-                
+
 
             }
 
@@ -210,15 +214,13 @@ module Garage {
                 }
 
                 this.deleteSignal(order);
+                this.$el.focus();
 
             }
 
             //プルダウンのいずれかが変更されたときに呼ばれる
             private onAnyPulllDownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
-
-                
-
                 this.controlPlusButtonEnable();
             }
 
@@ -226,12 +228,16 @@ module Garage {
             private onInvervalPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
                 this.updateModel();
+                this.$el.focus();
+
             }
 
             //Actionを変更させたときに呼ばれる
             private onActionPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
                 this.updateModel();
+                this.$el.focus();
+
             }
 
             //リモコン選択用のプルダウンが変更されたときに呼ばれる
@@ -262,6 +268,7 @@ module Garage {
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignalContainers();
                 }
+                this.$el.focus();
 
             }
 
@@ -275,6 +282,8 @@ module Garage {
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignalContainers();
                 }
+                this.$el.focus();
+
             }
 
             //+ボタンがクリックされた場合に呼び出される
@@ -317,7 +326,8 @@ module Garage {
                 
 
                 this.controlPlusButtonEnable();
-                
+                this.$el.focus();
+
 
             }
 
