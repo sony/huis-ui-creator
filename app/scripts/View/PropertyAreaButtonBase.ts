@@ -133,6 +133,11 @@ module Garage {
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
 
+                if (!(_.isNumber(result))) {
+                    console.warn(FUNCTION_NAME + "result is not number");
+                    return undefined;
+                }
+
                 if (result != null) {
                     return result;
                 } else {
