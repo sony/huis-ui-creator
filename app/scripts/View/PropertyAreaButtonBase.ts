@@ -10,16 +10,7 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaButtonBase] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
+       
         export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -82,7 +73,7 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             //NaNか判定 Number.isNaNが使えないので代用
-            protected isNaN(v) {
+            protected isNaN(v) :boolean{
                 return v !== v;
             }
 
@@ -132,6 +123,11 @@ module Garage {
                 }
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
+
+                if (! this.isValidOrder(result)) {
+                    console.warn(FUNCTION_NAME + "result is invalid");
+                    return undefined;
+                }
 
                 if (result != null) {
                     return result;
@@ -207,8 +203,9 @@ module Garage {
          */
             protected getRemoteIdFromPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getRemoteIdOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -243,6 +240,11 @@ module Garage {
             protected getRemoteIdPullDownJQueryElement(order : number):JQuery{
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
                 if ($signalContainerElement == null) {
                     console.warn(FUNCTION_NAME + "$signalContainerElement is null");
@@ -267,8 +269,9 @@ module Garage {
           */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -300,8 +303,8 @@ module Garage {
             protected removeRemoteIdPullDownOf(order: number) {
                 let FUNCTION_NAME = TAG + "removeRemoteIdPullDownOf";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -319,8 +322,8 @@ module Garage {
             protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
-                if (order == null) {
-                    console.warn("order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -344,7 +347,7 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         id: stateId,
                         order: order,
                         remotesList: remoteList
@@ -387,7 +390,6 @@ module Garage {
                 let result: string = null;
 
                 if (action.code != null) {
-                    //TODO:学習の場合care,hashMapがないので、ここでエラーになる。
                     result = action.code_db.function;
                 } else if (action.bluetooth_data != null) {
                     result = action.bluetooth_data.bluetooth_data_content;
@@ -432,8 +434,9 @@ module Garage {
             */
             protected setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
                 let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -464,10 +467,12 @@ module Garage {
             */
             protected getSignalContainerElementOf(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getSignalContainerElementOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
+
                 return this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
             }
 
@@ -479,8 +484,8 @@ module Garage {
             */
             protected getFunctionFromlPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -516,8 +521,8 @@ module Garage {
             protected renderFunctionsOf(order: number, stateId? : number, functionName?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
-                if (order == null) {
-                    console.warn("order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -541,7 +546,7 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         functions: functions,
                         id: stateId,
                         order: order
@@ -576,8 +581,8 @@ module Garage {
             protected removeFunctionPullDown(order: number) {
                 let FUNCTION_NAME = TAG + "removeFunctionPullDown";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -596,11 +601,13 @@ module Garage {
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
             protected getFunctionsOf(order: number, stateId? : number) {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf";
+                let FUNCTION_NAME = TAG + "getRemoteIdOf : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
                 }
+
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
@@ -611,9 +618,8 @@ module Garage {
                 //キャッシュで対応する。
                 return huisFiles.getMasterFunctions(remoteId);
             }
-
-           
-            /*
+          
+          /*
            * ＋ボタンを押下する際のアニメーション. 
            * @param order{number} 出現するdom のorder
            */
@@ -709,12 +715,39 @@ module Garage {
                     $target1.css("transition-duration", tmpTarget1Duration);
                     $target2.css("transition-duration", tmpTarget2Duration);
                 },duration);
-
-
-
-
             }
 
+
+
+            /*
+             * orderの違反をチェックする。
+             * order {number} チェックするorder情報
+             * @return true:orderとして有効、false:orderとして利用不可。
+             */
+            protected isValidOrder(order: number):boolean {
+                let FUNCTION_NAME = TAG + "isValidOrder : ";
+
+                //値として利用できるかチェック
+                if (!this.isValidValue(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return false;
+                }
+
+                //0未満の値は不正
+                if (order < 0) {
+                    console.warn(FUNCTION_NAME + "order is negative");
+                    return false;
+                }
+
+                //最大値より多いと不正
+                if (order > MAX_NUM_MACRO_SIGNAL) {
+                    console.warn(FUNCTION_NAME + "order is over maxium value");
+                    return false;
+                }
+
+                return true;
+
+            }
 
         }
 	}

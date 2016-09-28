@@ -123,6 +123,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 this.deleteSignal(order);
 
             }
@@ -137,6 +142,12 @@ module Garage {
                 }
               
                 let order = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 let stateId = this.getStateIdFrom($target);
               
                 //すでに、同じorderのDOMがない場合には追加
@@ -185,7 +196,9 @@ module Garage {
 
                 // プルダウンに設定されている Actionの順番を取得
                 let order = this.getOrderFrom($target);
-                if (order == null) {
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -256,7 +269,9 @@ module Garage {
                     //Actionの順番を取得。取得できない場合は次のループへ
                     let $target: JQuery = $($signalContainers[i]);
                     let order = this.getOrderFrom($target);
-                    if (order == null) {
+
+                    if (!this.isValidOrder(order)) {
+                        console.warn(FUNCTION_NAME + "order is invalid");
                         continue;
                     }
 
@@ -400,9 +415,9 @@ module Garage {
             private deleteSignal(order: number) {
                 let FUNCTION_NAME = TAG + "deleteSignal";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
@@ -489,9 +504,9 @@ module Garage {
             private renderSignalContainerMin(order: number, stateId: number, inputAction? : string, remoteId?:string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (stateId == null) {
@@ -528,10 +543,9 @@ module Garage {
                     return;
                 }
 
-
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (!this.isValidJQueryElement($signalsContainer)) {
@@ -563,9 +577,9 @@ module Garage {
             private renderActionPulllDownOf(order: number,stateId:number, inputAction? : string) {
                 let FUNCTION_NAME: string = TAG + "renderActionPulllDownOf : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (stateId == null) {
@@ -623,9 +637,9 @@ module Garage {
             private getInputAction(order: number) {
                 let FUNCTION_NAME = TAG + "getInputAction : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
@@ -659,9 +673,9 @@ module Garage {
             private setInputAction(order: number, stateId: number, inputType: string) {
                 let FUNCTION_NAME = TAG + "setInputAction : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                
@@ -743,7 +757,7 @@ module Garage {
 
             // +ボタンのenable disableを判定・コントロールする。
             private controlPlusButtonEnable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
