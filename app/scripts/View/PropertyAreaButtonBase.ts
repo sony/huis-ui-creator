@@ -483,7 +483,7 @@ module Garage {
             * @{string} functionName
             */
             protected getFunctionFromlPullDownOf(order: number): string {
-                let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf";
+                let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf : ";
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
@@ -498,7 +498,8 @@ module Garage {
                 let functionName: string = null;
                 let $functionPullDown = $signalContainerElement.find(".function-input[data-signal-order=\"" + order + "\"]");
                 if ($functionPullDown == null || $functionPullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$functionPullDown is invalid");
+                    //正常系でも、functionPulldownがない場合はあり得る。
+                    //console.warn(FUNCTION_NAME + "$functionPullDown is invalid");
                     return;
                 }
 
