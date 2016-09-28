@@ -52,8 +52,8 @@ module Garage {
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
                     "click .delete-signal": "onDeleteButtonClick",
-                    "click .sort-up-btn": "onSortUpButtonClick",
-                    "click .sort-down-btn": "onSortDownButtonClick",
+                    "click .sort-up-btn": "onMoveUpOrderButtonClick",
+                    "click .sort-down-btn": "onMoveDownOrderButtonClick",
                     "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
                     "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
                 };
@@ -63,8 +63,8 @@ module Garage {
       
 
             //並び替え上ボタンが押されたときに呼ばれる
-            private onSortUpButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortUpButtonClick : ";
+            private onMoveUpOrderButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onMoveUpOrderButtonClick : ";
 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
@@ -95,8 +95,8 @@ module Garage {
             }
 
             //並び替え下ボタンが押されたときに呼ばれる
-            private onSortDownButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortDownButtonClick : ";
+            private onMoveDownOrderButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onMoveDownOrderButtonClick : ";
                 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
