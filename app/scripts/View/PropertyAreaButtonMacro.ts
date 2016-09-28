@@ -551,7 +551,7 @@ module Garage {
 
 
             /*
-            * インターバルつきの一回文のシグナルのJQueryを取得する。
+            * インターバルつきの一回分のシグナルを描画する。
             * @param order{nuber} 表示する信号のorder
             * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
