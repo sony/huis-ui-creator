@@ -360,8 +360,9 @@ module Garage {
                     if (inputRemoteId != null) {
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
                     } else {
+                        //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
-                        $remoteContainer.find("select").append(noneOption);
+                        $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none");
                     }
 
@@ -559,8 +560,9 @@ module Garage {
                     if (functionName != null) {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
+                        //値がない場合、初期値をrender
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
-                        $functionlContainer.find("select").append(noneOption);
+                        $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
 

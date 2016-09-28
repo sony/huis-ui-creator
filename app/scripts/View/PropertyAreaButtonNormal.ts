@@ -618,8 +618,9 @@ module Garage {
                 if (inputAction != null) {
                     this.setInputAction(order, stateId, inputAction);
                 } else {
+                    //値が入力されていない場合、初期状態を描画
                     let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.templateItemDetailFile_);
-                    $actionContainer.find("select").append(noneOption);
+                    $actionContainer.find("select").prepend(noneOption);
                     this.setInputAction(order, stateId, "none");
                 }
 

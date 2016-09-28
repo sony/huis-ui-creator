@@ -180,7 +180,6 @@ module Garage {
                         if (this.availableRemotelist[0] != null) {
                             this.setRemoteIdPullDownOf(targetOrder, this.availableRemotelist[0].remoteId);
                             this.renderFunctionsOf(targetOrder);
-                            $nextBelowSignalContainer.trigger('create');
                         }
                     }
 
