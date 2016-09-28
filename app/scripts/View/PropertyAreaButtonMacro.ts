@@ -491,7 +491,7 @@ module Garage {
                 }
 
                 let labelSize: number = null;
-                if (state.label) {
+                if (state.label != null && state.label.length != 0) {
                     let label: IGLabel = state.label[0];
                     macroData.label = label;
                     labelSize = label.size;
