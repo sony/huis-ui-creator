@@ -73,7 +73,7 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             //NaNか判定 Number.isNaNが使えないので代用
-            protected isNaN(v) {
+            protected isNaN(v) :boolean{
                 return v !== v;
             }
 
