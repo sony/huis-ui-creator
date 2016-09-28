@@ -310,8 +310,8 @@ module Garage {
 
                 //対象orderのfunctionPullDown用コンテナの子供を削除する
                 let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
-                $targetFunctionPulllDownContainer.children().remove();
+                let $targetFunctionPullDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
+                $targetFunctionPullDownContainer.children().remove();
             }
 
             /*
