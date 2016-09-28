@@ -248,7 +248,15 @@ module Garage {
                 
             }
 
-            updateModel(stateId : number) {
+            
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// private method
+            /////////////////////////////////////////////////////////////////////////////////////////
+
+            private updateModel(stateId: number) {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
 
@@ -279,7 +287,7 @@ module Garage {
                     if (!this.isValidValue(tmpInput)) {
                         tmpInput = null;
                     }
-                   
+
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
                     if (!this.isValidValue(tmpRemoteId)) {
@@ -324,13 +332,13 @@ module Garage {
 
                         //bluetooth_dataを入力
                         let tmpBluetoothData = null
-                        if (deviceInfo.bluetooth_data != null){
+                        if (deviceInfo.bluetooth_data != null) {
                             tmpBluetoothData = deviceInfo.bluetooth_data;
                         }
                         if (tmpBluetoothData != null) {
                             tmpAction.bluetooth_data = tmpBluetoothData;
                         }
-                        
+
                     }
 
                     tmpActionsWithOrder[order] = tmpAction;
@@ -354,8 +362,8 @@ module Garage {
                     }
                 }
 
-                let tmpState  = this.model.state[stateId];
-    
+                let tmpState = this.model.state[stateId];
+
                 let newState: IGState = {
                     id: tmpState.id,
                     image: tmpState.image && tmpState.image ? tmpState.image : undefined,
@@ -366,7 +374,7 @@ module Garage {
 
                 let states: IGState[] = [];
                 //全stateを更新。
-                for (let i = 0; i < this.model.state.length; i++){
+                for (let i = 0; i < this.model.state.length; i++) {
                     if (i == stateId) {
                         states.push(newState);
                     } else {
@@ -383,14 +391,8 @@ module Garage {
                 this.updateAssiendInputActionsFromModel(stateId);
                 this.trigger("updateModel");
 
-                
+
             }
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////////////
-            ///// private method
-            /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
             * 現在、表示されているStateIdを取得する
