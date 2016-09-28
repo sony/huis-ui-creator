@@ -722,8 +722,18 @@ module Garage {
 						break;
 
 					case "image":
-						if (targetModel.image) {
-							model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
+                        if (targetModel.image) {
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+
+                            if (remoteId == "common") {
+                                model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
+                                    // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
+                                    // このタイミングで CSS を更新
+                                    this._updateItemElementOnCanvas(model);
+                                });
+                            } else {
+                                model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
+                            }
 						}
 						break;
 

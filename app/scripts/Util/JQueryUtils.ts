@@ -72,7 +72,7 @@ module Garage {
               * @param url{string} cssのbackground-imageに設定する画像のurl
               * @return {string} CSSでも解釈可能なURL
               */
-            private static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
+            static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
                     console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
@@ -96,7 +96,7 @@ module Garage {
               * @param url{string} cssのbackground-imageに設定する画像のurl
               * @return {string} CSSでも解釈可能なURL
               */
-            private static encodeUriValidInMacAndCSS(inputUrl: string): string {
+            static encodeUriValidInMacAndCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
                     console.warn("[JQueryUtils]encodeUriValidInMacAndCSS : inputUrl is null");
