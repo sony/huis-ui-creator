@@ -467,7 +467,7 @@ module Garage {
                 //最初の１シグナル分は特例で、追加する。
                 let $signalContainer = this.$el.find("#signals-container");
 
-                //一度、すべて消す。
+                //一度、すべて消してから、すべての信号を描画しなおす。
                 $signalContainer.children().remove();
                 for (let i = 0; i < actions.length; i++) {
                     let order = i;
