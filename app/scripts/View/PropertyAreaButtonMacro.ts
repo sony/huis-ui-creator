@@ -87,7 +87,7 @@ module Garage {
                 let $nextAboveSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
                 if (this.isValidJQueryElement($nextAboveSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextAboveSignalContainer);
+                    this.exchangeSignalValues($thisOrderSignalContainer, $nextAboveSignalContainer);
                     //情報を更新し、再描画
                     this.updateModel();
                     this.renderSignalContainers();
@@ -117,7 +117,7 @@ module Garage {
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextBelowSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
                 if (this.isValidJQueryElement($nextBelowSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextBelowSignalContainer);
+                    this.exchangeSignalValues($thisOrderSignalContainer, $nextBelowSignalContainer);
                     //情報を更新し、再描画
                     this.updateModel();
                     this.renderSignalContainers();
@@ -800,8 +800,9 @@ module Garage {
             * @param $signalContainer1{JQuery} 値を交換する信号コンテナのJQuery1
             * @param $signalContainer2{JQuery} 値を交換する信号コンテナのJQuery1
             */
-            private exchangeSignalValueSignals($signalContainer1: JQuery, $signalContainer2: JQuery) {
-                let FUNCTION_NAME = TAG + "exchangeSignalValueSignals : ";
+            private exchangeSignalValues($signalContainer1: JQuery, $signalContainer2: JQuery) {
+                let FUNCTION_NAME = TAG + "exchangeSignalValues : ";
+
                 if ($signalContainer1 == null) {
                     console.warn(FUNCTION_NAME + "$signalContainer1 is null");
                     return;
