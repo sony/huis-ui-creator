@@ -147,7 +147,7 @@ module Garage {
 
                 
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
             }
 
             //Invervalのプルダウンが変更されたら呼ばれる
@@ -239,7 +239,7 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
                 this.updateModel();
 
 
@@ -491,7 +491,7 @@ module Garage {
                 }
 
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
             }
             
             /*
@@ -775,8 +775,8 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+            private controlPlusButtonEnable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable

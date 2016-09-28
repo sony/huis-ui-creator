@@ -161,7 +161,7 @@ module Garage {
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
 
             }
 
@@ -376,7 +376,7 @@ module Garage {
                 this.model.state = states;
 
                 //更新後の値で、+ボタンの有効・無効判定を行う。
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
                 this.updateAssiendInputActionsFromModel(stateId);
                 this.trigger("updateModel");
 
@@ -469,7 +469,7 @@ module Garage {
                     this.renderFunctionsOf(i, stateId, functionName);
                 }
 
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
                 return this.$el;
 
             }
@@ -734,8 +734,8 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+            private controlPlusButtonEnable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
