@@ -1016,6 +1016,8 @@ module Garage {
 
                     if (!this._checkDetailItemAreaPosition(mousePosition)) {
                         this.mouseMoving_ = true;
+                        this.$currentTargetDummy_.addClass("moving-item");
+                        this.$currentTarget_.addClass("moving-item");
                         event.preventDefault();
 
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
@@ -1173,7 +1175,9 @@ module Garage {
 					this._resizeItem(position, true);
 				} else { // それ以外の場合は、アイテムの移動
 					this._moveItem(position);
-				}
+                }
+
+                this.$currentTarget_.removeClass("moving-item");
 				this.mouseMoving_ = false;
 			}
 
@@ -4624,7 +4628,7 @@ module Garage {
 				var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 				var $areaContainer = $buttonDetail.nextAll("#area-container");
 				$areaContainer.append($(templateArea(button)));
-
+                
 
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
