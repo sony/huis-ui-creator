@@ -620,7 +620,15 @@ module Garage {
 						materialsRootPath: HUIS_FILES_DIRECTORY
 					}
 				});
-				this.faceRenderer_pallet_.render();
+                this.faceRenderer_pallet_.render();
+
+                //マスターフェースを表示する。Commonの場合は、無視
+                let isMasterFace : boolean = true;
+                let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
+                if (masterFace != null) {
+                    this.faceRenderer_pallet_.addFace(masterFace);
+                }
+               
 
 				//それぞれのボタンにtitleを追加
 				this.addTitleToEachItemInPallet();

@@ -11,7 +11,9 @@ module Garage {
 
 			private face_: IGFace;
 			private moduleView_: Module;
-			private type_: string;
+            private type_: string;
+            private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
+
 			//private template_: Tools.JST;
 			/**
 			 * constructor
@@ -48,7 +50,8 @@ module Garage {
 							name: remoteId + "_page_0" // 暫定
 						}]
 					};
-				}
+                }
+                this.$facePlane_ = null;
 				this.type_ = options.attributes["type"];
 			}
 
@@ -65,7 +68,51 @@ module Garage {
 				}
 
 				return this;
-			}
+            }
+
+            /*
+            * すでに描画されているFaceに追加で描画する
+            */
+            addFace(inputFace: IGFace) {
+                let FUNCTION_NAME = TAG + "addFace : ";
+                switch (this.type_) {
+                    case "canvas":
+                        console.warn(FUNCTION_NAME + "canvas is not support");
+                        break;
+
+                    default:
+                        this.addFaceAsPlain(inputFace);
+                        break;
+                }
+            }
+
+
+            /*
+            * すでに描画されているFaceに追加で描画する。Canvas以外用。
+            */
+            private addFaceAsPlain(inputFace: IGFace) {
+                let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
+               
+                if (this.$facePlane_ == null) {
+                    var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
+                    var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
+                    this.$facePlane_ = $(template());
+                }
+               
+                this.moduleView_ = new Module({
+                    el: this.$facePlane_,
+                    attributes: {
+                        remoteId: inputFace.remoteId,
+                        modules: inputFace.modules,
+                        materialsRootPath: HUIS_FILES_ROOT
+                    }
+                });
+                this.moduleView_.render();
+
+                this.$el.append(this.$facePlane_);
+
+            }
+
 
 			/**
 			 * face 内のページ数を取得する。
@@ -288,10 +335,10 @@ module Garage {
 			private _renderAsPlain() {
 				var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
 				var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
-				var $facePlain = $(template());
+                this.$facePlane_ = $(template());
 
 				this.moduleView_ = new Module({
-					el: $facePlain,
+                    el: this.$facePlane_,
 					attributes: {
 						remoteId: this.face_.remoteId,
 						modules: this.face_.modules,
@@ -300,7 +347,7 @@ module Garage {
 				});
 				this.moduleView_.render();
 
-				this.$el.append($facePlain);
+                this.$el.append(this.$facePlane_);
 			}
 
 		}
