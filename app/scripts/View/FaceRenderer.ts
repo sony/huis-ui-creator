@@ -98,17 +98,10 @@ module Garage {
                     var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
                     this.$facePlane_ = $(template());
                 }
-               
-                this.moduleView_ = new Module({
-                    el: this.$facePlane_,
-                    attributes: {
-                        remoteId: inputFace.remoteId,
-                        modules: inputFace.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
-                this.moduleView_.render();
 
+                this.moduleView_.addModuleInNewFacePages(inputFace.modules);
+
+           
                 this.$el.append(this.$facePlane_);
 
             }

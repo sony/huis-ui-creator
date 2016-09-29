@@ -57,55 +57,8 @@ module Garage {
 				this.$facePages_ = [];
 				var modules: Model.Module[] = [];
 				for (var i = 0, l = modulesData.length; i < l; i++) {
-					let moduleData: IGModule = modulesData[i];
-					let moduleModel: Model.Module = new Model.Module();
-					moduleModel.set("area", moduleData.area);
-					moduleModel.name = moduleData.name;
-					moduleModel.remoteId = moduleData.remoteId;
-					moduleModel.pageIndex = moduleData.pageIndex;
-					moduleModel.offsetY = moduleData.offsetY;
-
-					// モジュール内に button があったら、ButtonItem View を生成
-					if (moduleData.button) {
-						moduleModel.set("button", moduleData.button);
-						this.buttonViews_.push(new ButtonItem({
-							attributes: {
-								buttons: moduleData.button,
-								materialsRootPath: this.materialsRootPath_,
-								remoteId: moduleData.remoteId
-							}
-						}));
-					} else {
-						this.buttonViews_.push(null);
-					}
-
-					// モジュール内に label があったら、LabelItem View を生成
-					if (moduleData.label) {
-						moduleModel.set("label", moduleData.label);
-						this.labelViews_.push(new LabelItem({
-							attributes: {
-								labels: moduleData.label,
-								materialsRootPath: this.materialsRootPath_
-							}
-						}));
-					} else {
-						this.labelViews_.push(null);
-					}
-
-					// モジュール内に image があったら、ImageItem View を生成
-					if (moduleData.image) {
-						moduleModel.set("image", moduleData.image);
-						this.imageViews_.push(new ImageItem({
-							attributes: {
-								images: moduleData.image,
-								materialsRootPath: this.materialsRootPath_,
-								remoteId: moduleData.remoteId
-							}
-						}));
-					} else {
-						this.imageViews_.push(null);
-					}
-
+					
+                    let moduleModel = this.getModuleModel(modulesData[i]);
 					moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
 
 					modules.push(moduleModel);
@@ -821,6 +774,85 @@ module Garage {
 				var gmodule: IGModule = $.extend(true, {}, moduleModel);
 				return gmodule;
 			}
+
+
+            /*
+            * IGModuleから、Model.Moduleを取得する。
+            */
+            
+            private getModuleModel(gmodule: IGModule): Model.Module {
+                let moduleData: IGModule = gmodule;
+                let moduleModel: Model.Module = new Model.Module();
+                moduleModel.set("area", moduleData.area);
+                moduleModel.name = moduleData.name;
+                moduleModel.remoteId = moduleData.remoteId;
+                moduleModel.pageIndex = moduleData.pageIndex;
+                moduleModel.offsetY = moduleData.offsetY;
+
+                // モジュール内に button があったら、ButtonItem View を生成
+                if (moduleData.button) {
+                    moduleModel.set("button", moduleData.button);
+                    this.buttonViews_.push(new ButtonItem({
+                        attributes: {
+                            buttons: moduleData.button,
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: moduleData.remoteId
+                        }
+                    }));
+                } else {
+                    this.buttonViews_.push(null);
+                }
+
+                // モジュール内に label があったら、LabelItem View を生成
+                if (moduleData.label) {
+                    moduleModel.set("label", moduleData.label);
+                    this.labelViews_.push(new LabelItem({
+                        attributes: {
+                            labels: moduleData.label,
+                            materialsRootPath: this.materialsRootPath_
+                        }
+                    }));
+                } else {
+                    this.labelViews_.push(null);
+                }
+
+                // モジュール内に image があったら、ImageItem View を生成
+                if (moduleData.image) {
+                    moduleModel.set("image", moduleData.image);
+                    this.imageViews_.push(new ImageItem({
+                        attributes: {
+                            images: moduleData.image,
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: moduleData.remoteId
+                        }
+                    }));
+                } else {
+                    this.imageViews_.push(null);
+                }
+
+                return moduleModel;
+            }
+
+
+
+            addModuleInNewFacePages(inputModules: IGModule[]) {
+                let FUNCTION_NAME = TAG + "addModules : ";
+
+                if (inputModules == null) {
+                    console.warn(FUNCTION_NAME + "inputModules is null");
+                    return;
+                }
+                let modulesModels: Model.Module[] = [];
+
+                for (var i = 0, l = inputModules.length; i < l; i++) {
+                    //ページカウントは、すでに記述されているページに追加する
+                    inputModules[i].pageIndex = this.collection.length+1;
+                    modulesModels.push(this.getModuleModel(inputModules[i]));
+                }
+
+                this.collection.add(modulesModels);
+            }
+
 
 			private _getModuleIndex(id: string): number {
 				var moduleIndex = -1;
