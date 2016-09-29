@@ -371,13 +371,15 @@
                         
         //プルダウンの左側に出現するdot線
         .dot-line{
-            background-size: 2px 2px;
-            height: 1px;
-            border-left : 2px dotted $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE;
+            background-image: linear-gradient(to bottom, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_WIDTH, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_HEIGHT, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_MARING);
+            background-size: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_HEIGHT;
+            background-position: top;
+            background-repeat: repeat-y;
+            width:$SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH;
             height:100%;
             top:0;
-            left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE;
-            position:absolute;                 
+            left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_MARGIN_LEFT;
+            position:absolute;      
         }
         
 
