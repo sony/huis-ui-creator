@@ -76,7 +76,11 @@ module Garage {
             private bindedLayoutPage = null;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
-            
+
+            private palletItemMouseDownCount: number = 0;
+            private clickedPalletItem: JQuery;
+            private palletItemDoubleClickResetTimer;
+
 			/**
 			 * construnctor
 			 */
@@ -676,12 +680,13 @@ module Garage {
 			/**
 			 * パレット内のアイテムをダブルクリック
 			 */
-            /*
-            private onPalletItemDblClick(event: Event) {
-                let newItem: ItemModel = this.setPalletItemOnCanvas(event);
+            private onPalletItemDblClick() {
+                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem);
 
-                if (!newItem) return;
-
+                if (!newItem) {
+                    console.error("failed to add new PalletItem");
+                    return;
+                }
                 // model 状態を有効にする
                 var memento: IMemento = {
                     target: newItem,
@@ -692,18 +697,19 @@ module Garage {
                         enabled: true
                     }
                 };
-                var mementoCommand = new MementoCommand(memento);
-                this.commandManager_.invoke(mementoCommand);
+                var mementoCommand = new MementoCommand([memento]);
+                let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
-                this._updateItemElementOnCanvas(newItem);
+                this._updateItemElementsOnCanvas(updatedItem);
 			}
-            */
 
             /**
              * パレット内のアイテム上でマウス押下
              * 対象アイテムをCanvasに追加しドラッグ状態にする
              */
             private onPalletItemMouseDown(event: Event) {
+                this.countPalletItemClick(event);
+
                 this.selectedResizer_ = null;
 
                 // 直前に選択されていたボタンの状態更新があれば行う
@@ -712,7 +718,7 @@ module Garage {
                 // 現在のターゲットを外す
                 this._loseTarget();
 
-                let newItem: ItemModel = this.setPalletItemOnCanvas(event, true);
+                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), true);
                 this._updateItemElementOnCanvas(newItem);
                 
                 var mousePosition: IPosition = {
@@ -728,6 +734,64 @@ module Garage {
                 } else {
                     console.log("target not found. mousePosition: " + mousePosition.x + ", " + mousePosition.y);
                 }
+            }
+
+            /**
+             * パレットアイテムのクリック数を計測する。
+             * @param event {Event} パレットアイテムのイベントオブジェクト
+             */
+            private countPalletItemClick(event: Event) {
+                if (event.type === "mousedown") {
+                    let currentTarget: JQuery = $(event.currentTarget);
+                    if (!this.clickedPalletItem ||                                                              // クリック対象未設定 または
+                        JQUtils.data(this.clickedPalletItem, "cid") !== JQUtils.data(currentTarget, "cid")) {   // 直前のクリックと対象が異なる場合
+                        // ダブルクリック判定を初期化して開始
+                        this.startPalletItemClickCount(currentTarget);
+                    }
+
+                    this.palletItemMouseDownCount++;
+                }
+            }
+
+            /**
+             * イベントがダブルクリックかどうか検査する。
+             * @param event {Event} イベントオブジェクト
+             * @return ダブルクリックの場合はtrue、そうでない場合はfalse
+             */
+            private isDoubleClick(event: Event): boolean {
+                if (event.type === "mouseup") {
+                    if (this.palletItemMouseDownCount >= 2) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+
+            /**
+             * パレットアイテムのダブルクリック検知用クリック数カウンタを初期化し、カウントを開始する。
+             * @param target {JQuery} パレットアイテムのJQueryオブジェクト
+             */
+            private startPalletItemClickCount(target: JQuery) {
+                this.clearPalletItemClickCount(this);
+                this.clickedPalletItem = target;
+                this.palletItemDoubleClickResetTimer = setTimeout(this.clearPalletItemClickCount, DOUBLE_CLICK_TIME_MS, this);
+            }
+
+            /**
+             * パレットアイテムのダブルクリック検知関連変数を初期状態にする。
+             * @param fullCustom {FullCustom} FullCustomオブジェクト
+             */
+            private clearPalletItemClickCount(fullCustom: FullCustom) {
+                // setTimeout から呼ばれた場合スコープが異なるため this は使用しない
+
+                if (fullCustom.palletItemDoubleClickResetTimer) {
+                    clearInterval(fullCustom.palletItemDoubleClickResetTimer);
+                    fullCustom.palletItemDoubleClickResetTimer = null;
+                }
+                fullCustom.palletItemMouseDownCount = 0;
+                fullCustom.clickedPalletItem = null;
             }
 
             /**
@@ -753,8 +817,8 @@ module Garage {
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(event: Event, setOnEventPosition: boolean = false): ItemModel {
-                var $target = $(event.currentTarget);
+            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): ItemModel {
+                var $target = target;
                 var $parent = $target.parent();
                 var targetModel = this._getItemModel($target, "pallet");
                 if (!targetModel) {
@@ -1174,7 +1238,12 @@ module Garage {
 				} else { // それ以外の場合は、アイテムの移動
 					this._moveItem(position);
 				}
-				this.mouseMoving_ = false;
+                this.mouseMoving_ = false;
+
+                if (this.isDoubleClick(event)) {
+                    this.onPalletItemDblClick();
+                    this.clearPalletItemClickCount(this);
+                }
 			}
 
 			/**

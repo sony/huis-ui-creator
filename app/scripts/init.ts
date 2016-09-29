@@ -89,7 +89,9 @@ module Garage {
 		MARGIN_MOUSEMOVABLE_RIGHT = 50;
 		MARGIN_MOUSEMOVALBE_BOTTOM = 50;
 
-		TARGET_ALL_STATE = 999;
+        TARGET_ALL_STATE = 999;
+
+        DOUBLE_CLICK_TIME_MS = 500;
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

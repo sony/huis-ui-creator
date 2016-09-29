@@ -707,7 +707,11 @@ declare module Garage {
 	/*
 	 * ステートの内容を変更する際の特殊 ID
 	 */
-	var TARGET_ALL_STATE : number;
+    var TARGET_ALL_STATE: number;
+    /*
+     * ダブルクリックの待ち受け時間
+     */
+    var DOUBLE_CLICK_TIME_MS: number;
 
 }
 
