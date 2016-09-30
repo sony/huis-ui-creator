@@ -98,9 +98,11 @@ module Garage {
 						// 出力先のパスが指定されている場合は、ファイル出力を行う
                         if (dstPath) {
 
+
+                            let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
                             //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
                             //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
-                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1){
+                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
                                 dstPath = this.getEncodedPath(dstPath);
                             }
 
