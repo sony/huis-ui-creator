@@ -884,4 +884,40 @@
         }
 
     }
+
+    // ドラッグ中アイテムのダミー表示
+    #face-dummy-area {
+        position: absolute;
+        transform: scale(0.5);
+        transform-origin: left top;
+        z-index: 101;
+        
+        .item {
+            background-color:$COLOR_DUMMY_ITEM_BACKGROUND;
+        }
+
+        .item-resizer {
+            position: absolute;
+            box-sizing:border-box;
+            width: $SIZE_CANVAS_ITEM_RESIZER_WIDTH;
+            height: $SIZE_CANVAS_ITEM_RESIZER_HEIGHT;
+            border: $SIZE_CANVAS_ITEM_RESIZER_THICKNESS solid $COLOR_LIGHT_GREEN;
+
+            background-color: $SIZE_CANVAS_ITEM_BACKGROUND;
+
+            &.left-top {
+                cursor:nw-resize;
+            }
+            &.right-top {
+                cursor:ne-resize;
+            }
+            &.right-bottom {
+                cursor: se-resize;
+            }
+            &.left-bottom {
+                cursor: sw-resize;
+            }
+         }
+            
+    }
 }
