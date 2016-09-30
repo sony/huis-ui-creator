@@ -727,7 +727,7 @@ module Garage {
                 };
                 let target = this._getTarget(mousePosition);
                 if (target) {
-                    this.setDragTarget(target);
+                    this.setDragTarget(target, false);
                     this.startDraggingCanvasItem(mousePosition, true);
                     // onMainMouseDown呼び出しの防止
                     event.stopPropagation();
@@ -991,8 +991,9 @@ module Garage {
              * Canvas上のドラッグ対象を設定
              *
              * @param target {JQuery} ドラッグ対象
+             * @param showDetailItemArea {boolean} 詳細編集エリアを表示するかどうか
              */
-            private setDragTarget(target: JQuery) {
+            private setDragTarget(target: JQuery, showDetailItemArea: boolean = true) {
                 target.focus();
                 console.log("target " + JQUtils.data(target, "cid")); //$target.data("cid"));
                 this.$currentTarget_ = target;
@@ -1009,9 +1010,11 @@ module Garage {
                 // リサイザーを追加
                 this._setResizer(this.$currentTarget_);
 
-                // 詳細編集エリアを表示
-                $("#face-item-detail-area").addClass("active");
-                this._showDetailItemArea(this.currentTargetModel_);
+                if (showDetailItemArea) {
+                    // 詳細編集エリアを表示
+                    $("#face-item-detail-area").addClass("active");
+                    this._showDetailItemArea(this.currentTargetModel_);
+                }
             }
 
             /**
