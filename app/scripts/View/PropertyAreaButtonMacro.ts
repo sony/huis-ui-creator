@@ -72,6 +72,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                //二重発火を防止用。actingの場合はこの段階で無視。
+                if ($target.hasClass("acting")) {
+                    return;
+                }
+
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
@@ -91,6 +96,9 @@ module Garage {
                 let $nextAboveSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
                 if (this.isValidJQueryElement($nextAboveSignalContainer)) {
+
+                    //二重発火を防止用。
+                    $target.addClass("acting");
 
                     //もし、$nextTopSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して、 自身のintervalを消してからアニメ
@@ -142,6 +150,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                //二重発火を防止用。actingの場合はこの段階で無視。
+                if ($target.hasClass("acting")) {
+                    return;
+                }
+
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
@@ -158,6 +171,9 @@ module Garage {
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextBelowSignalContainer: JQuery = this.getSignalContainerElementOf(targetOrder);
                 if (this.isValidJQueryElement($nextBelowSignalContainer)) {
+
+                    //二重発火を防止用。
+                    $target.addClass("acting");
 
                     //もし、$thisOrderSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して$nextTopSignalContainerのintervalを消してからアニメ。
