@@ -52,6 +52,16 @@
 				}
 			}
 
+            function getRegExpResolved(inputString: string): string {
+                inputString = inputString.replace(/\$/g, '\\$');
+                inputString = inputString.replace(/\./g, '\\.');
+                inputString = inputString.replace(/\(/g, '\\(');
+                inputString = inputString.replace(/\)/g, '\\)');
+                inputString = inputString.replace(/\^/g, '\\^');
+
+                return inputString;
+            }
+
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
@@ -64,7 +74,10 @@
 				let proc = () => {
 					if (dirs.length <= 0) {
 						// 相対パス化
-						let re = new RegExp(dirPath + "/*");
+                        // 正規表現の特殊文字をエスケープ
+                        let dirPathForRegExp = getRegExpResolved(dirPath);
+
+                        let re = new RegExp(dirPathForRegExp + "/*");
 						pathes.forEach((p: string, i: number, pathes: string[]) => {
 							pathes[i] = p.replace(re, "");
 						});
