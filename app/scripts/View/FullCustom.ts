@@ -634,6 +634,9 @@ module Garage {
                     $facePallet.find("#face-pages-area").append($separator);
 
                     this.faceRenderer_pallet_.addFace(masterFace);
+
+                    //テキストをローカライズ
+                    $facePallet.i18n();
                 }
 
 				//それぞれのボタンにtitleを追加
