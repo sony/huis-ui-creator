@@ -138,8 +138,8 @@ module Garage {
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 * @return {Model.ButtonItem} 新しく作成された model
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
-				return this.moduleView_.addButton(button, moduleId, offsetY);
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number, callback?: Function): Model.ButtonItem {
+                return this.moduleView_.addButton(button, moduleId, offsetY, callback);
 			}
 
 			/**

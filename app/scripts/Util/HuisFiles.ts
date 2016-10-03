@@ -17,11 +17,6 @@ module Garage {
 			modules: any[];
 		}
 
-		interface IRemoteInfo {
-			remoteId: string;
-			face: IGFace;
-			mastarFace?: IGFace;
-		}
 
 		interface IWaitingRisizeImage {
 			src: string; //! リサイズの original のパス。(PC 上のフルパス)
@@ -213,7 +208,13 @@ module Garage {
 				var remoteInfos: IRemoteInfo[] = this.remoteInfos_;
 				if (!remoteInfos || !_.isArray(remoteInfos)) {
 					return null;
-				}
+                }
+
+                // Commonの場合はMasterFaceがないので、faceを返す。
+                if (remoteId == "common") {
+                    return this.commonRemoteInfo_.face;
+                }
+
 				for (let i = 0, l = remoteInfos.length; i < l; i++) {
 					if (remoteInfos[i].remoteId === remoteId) {
 						if (master) {
@@ -689,6 +690,84 @@ module Garage {
 				return 0;
 				
 			}
+
+
+            /**
+            * 利用できるリモコンのリストを返す
+            * @return {IRemoteInfo[]}
+            */
+            getSupportedRemoteInfo(): IRemoteInfo[]{
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteNameList :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result :IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++){
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
+
+            /*
+             * マクロで利用できるリモコンのリストを返す。
+             * @return {IRemoteInfo[]}
+             */
+            getSupportedRemoteInfoInMacro(): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_MACRO.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
+
+            /*
+            * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
+            */
+            getDeviceInfo(remoteId): IButtonDeviceInfo {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getDevieInfo:";
+
+                if (remoteId == null) {
+                    console.warn(FUNCTION_NAME + "remoteId is null");
+                    return;
+                }
+
+                let functions = this.getMasterFunctions(remoteId);
+                let codeDb = this.getMasterCodeDb(remoteId);
+                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let remoteName = huisFiles.getFace(remoteId).name;
+
+                let deviceInfo: IButtonDeviceInfo = {
+                    id: "",
+                    functions: functions,
+                    remoteName: remoteName,
+                    code_db: codeDb
+                };
+
+
+                if (functionCodeHash != null) {
+                    deviceInfo.functionCodeHash = functionCodeHash;
+                }
+
+                return deviceInfo;
+            }
 
 
 			/**
@@ -1208,6 +1287,10 @@ module Garage {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
 					}
+					if (!_.isUndefined(action.interval)) {
+						normalizedAction.interval = action.interval;
+					}
+
 					normalizedActions.push(normalizedAction);
 				});
 
@@ -1352,6 +1435,12 @@ module Garage {
 				if (!_.isArray(this.remoteInfos_)) {
 					return null;
 				}
+
+				// Commonの場合はMasterFaceがないので、faceを返す。
+				if (remoteId == "common") {
+					return this.commonRemoteInfo_.face;
+				}
+
 
 				// 指定した remoteId の情報を取得する
 				var targetRemoteInfos = this.remoteInfos_.filter((remoteInfo) => {

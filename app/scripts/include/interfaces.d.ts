@@ -75,6 +75,7 @@ interface IAction {
 	 * データベースから引くためのIR信号
 	 */
     code_db?: ICodeDB;
+	interval?: number; // マクロ時の送信間隔。
     [x: string]: any;
     /**
      * Bluetooth通信用の情報
@@ -167,6 +168,7 @@ interface IStateTranslate {
 	 */
     next: number;
 }
+
 
 /**
  * @interface IGState
@@ -277,6 +279,15 @@ interface IButtonDeviceInfo {
  */
 interface IStringStringHash {
 	[key: string]: string;
+}
+
+/**
+* @interface
+* @brief ハッシュを疑似的に実現する
+*/
+interface IStringKeyValue {
+    key: string;
+    value: string;
 }
 
 /**
@@ -499,6 +510,15 @@ interface DialogProps {
 	id: string; //<! 表示するダイアログ DOM の id
 	options: CDP.UI.DialogOptions;
 }
+/*
+* @inteface IRemoteInfo
+* brief HuisFilesでおもに利用するリモコンの基礎情報
+*/
+interface IRemoteInfo {
+    remoteId: string;
+    face: IGFace;
+    mastarFace?: IGFace;
+}
 
 //declare const enum EFaceCategory {
 //	TV,
@@ -674,7 +694,10 @@ declare module Garage {
      * PalletAreaで表示されないデバイスタイプ
      */
     var NON_SUPPORT_FACE_CATEGORY: string[];
-
+    /*
+    * Macroで利用できあいデバイスタイプ
+    */
+    var NON_SUPPORT_DEVICE_TYPE_IN_MACRO: string[];
 	/*
 	* CanvasAreaのグリッドサイズ
 	*/
@@ -709,8 +732,35 @@ declare module Garage {
 	/*
 	 * ステートの内容を変更する際の特殊 ID
 	 */
-	var TARGET_ALL_STATE : number;
-
+    var TARGET_ALL_STATE: number;
+    /*
+     * マクロに登録できる信号の最大数
+     */
+    var MAX_NUM_MACRO_SIGNAL : number;
+    /*
+     * マクロを設定する際のデフォルトInverval秒数[ms]
+     */
+    var DEFAULT_INTERVAL_MACRO: number;
+    /*
+     * 設定できるアクションリスト
+     */
+    var ACTION_INPUTS: IStringKeyValue[];
+    var ACTION_INPUT_TAP_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY: string;
+    var ACTION_INPUT_SWIPE_UP_KEY: string;
+    var ACTION_INPUT_SWIPE_RIGHT_KEY: string;
+    var ACTION_INPUT_SWIPE_LEFT_KEY: string;
+    var ACTION_INPUT_SWIPE_DOWN_KEY: string;
+    var ACTION_INPUT_TAP_VALUE: string;
+    var ACTION_INPUT_LONG_PRESS_VALUE: string;
+    var ACTION_INPUT_SWIPE_UP_VALUE: string;
+    var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
+    var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
+    var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
+    /*
+    * マクロボタンの順番交換アニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
 }
 
 

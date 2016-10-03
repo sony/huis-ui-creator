@@ -255,6 +255,10 @@ body {
                     text-align:left;
                 }
                
+                .default-value{
+                    color:$COLOR_PROPATY_ARAE_EDIT_PULL_DOWN_DEFAULT_TEXT;
+                }
+
                 background:$COLOR_PULL_DOWM_BACKGROUMD;
                 
                 background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
@@ -268,8 +272,12 @@ body {
                     border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
                 }
 
-                &:focus{                   
-                    -webkit-appearance: none;
+                
+                }
+
+           .ui-btn.focus-visual,
+           .ui-btn:focus{
+                -webkit-appearance: none;
                     padding-left : $SIZE_PULL_DOWN_FOCUS_PADDING_LEFT;
                     padding-right : $SIZE_PULL_DOWM_PADDING_RIGHT;
                     background-position: right $SIZE_PULL_DOWN_IMG_POSITION_X_FOCUS top $SIZE_PULL_DOWN_IMG_POSITION_Y_FOCUS;
@@ -277,10 +285,8 @@ body {
                     //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
                     outline:none;
                     border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
-                }
+           }
 
-       
-                }
             }
 
             //pull down menu‚Ì‘I‘ðŽˆ
