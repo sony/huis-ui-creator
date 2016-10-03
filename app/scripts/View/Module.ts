@@ -418,11 +418,7 @@ module Garage {
 					this.buttonViews_[moduleIndex] = buttonView;
 				}
 
-                var newButton = this._copyButtonItem(button, module, offsetY, (result) => {
-                    if (callback) {
-                        callback(result);
-                    }
-                });
+                var newButton = this._copyButtonItem(button, module, offsetY);
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -457,7 +453,7 @@ module Garage {
 			/**
 			 * ButtonItem をコピーする
 			 */
-            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number, callback?: Function): Model.ButtonItem {
+            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
 				if (!offsetY) {
 					offsetY = 0;
 				}
@@ -520,27 +516,7 @@ module Garage {
 					}
 
                     if (srcState.image) {
-                        if (srcButton.remoteId == "common") {
-                            newState.image = $.extend(true, [], srcState.image);
-                            // 新しい model を追加する
-                            let srcImage = $.extend(true, {}, srcState.image[0]);
-                            let newImage = $.extend(true, {}, srcImage);
-                            
-                            newImage.path = srcImage.path;
-                            newImage.resolvedPath = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, newImage.path)).replace(/\\/g, "/");
-                            newImage.resizeOriginal = srcImage.path;
-
-                            // 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
-                            if (srcImage.resolvedPath && fs.existsSync(srcImage.resolvedPath) && !fs.existsSync(newImage.resolvedPath)) {
-                                Model.OffscreenEditor.editImage(srcImage.resolvedPath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done((result) => {
-                                    if (callback) {
-                                        callback(result);
-                                    }
-                                });
-                            }
-                            newState.image[0] = newImage;
-
-                        }else if (_.isArray(srcState.image)) {
+                        if (_.isArray(srcState.image)) {
 							newState.image = $.extend(true, [], srcState.image);
 						} else {
 							newState.image = [$.extend(true, {}, srcState.image)];
