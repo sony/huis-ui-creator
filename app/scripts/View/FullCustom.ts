@@ -3636,7 +3636,16 @@ module Garage {
 					$pageContainer.remove();
 
 					// 現在のターゲットを外す
-					this._loseTarget();
+                    this._loseTarget();
+
+                    
+                    // CommandManager の初期化
+                    if (this.commandManager_) {
+                        this.commandManager_.reset();
+                    } else {
+                        this.commandManager_ = new CommandManager();
+                    }
+
 					return;
 				} else {
 					return;
