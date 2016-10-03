@@ -398,7 +398,7 @@ module Garage {
 			 * @param moduleId {string} [in] ボタンの追加先となる module の ID
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number, callback?: Function): Model.ButtonItem {
 				var moduleIndex = this._getModuleIndex(moduleId);
 				if (moduleIndex < 0) {
 					console.log(TAG + "module not found");
@@ -418,7 +418,11 @@ module Garage {
 					this.buttonViews_[moduleIndex] = buttonView;
 				}
 
-				var newButton = this._copyButtonItem(button, module, offsetY);
+                var newButton = this._copyButtonItem(button, module, offsetY, (result) => {
+                    if (callback) {
+                        callback(result);
+                    }
+                });
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -453,7 +457,7 @@ module Garage {
 			/**
 			 * ButtonItem をコピーする
 			 */
-			private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
+            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number, callback?: Function): Model.ButtonItem {
 				if (!offsetY) {
 					offsetY = 0;
 				}
@@ -499,7 +503,7 @@ module Garage {
 					};
 					newState.active = srcState.active;
 
-					if (srcState.action) {
+                    if (srcState.action) {
 						if (_.isArray(srcState.action)) {
 							newState.action = $.extend(true, [], srcState.action);
 						} else {
@@ -515,11 +519,39 @@ module Garage {
 						}
 					}
 
-					if (srcState.image) {
-						if (_.isArray(srcState.image)) {
+                    if (srcState.image) {
+                        if (srcButton.remoteId == "common") {
+                            newState.image = $.extend(true, [], srcState.image);
+                            // 新しい model を追加する
+                            let srcImage = $.extend(true, {}, srcState.image[0]);
+                            let newImage = $.extend(true, {}, srcImage);
+                            
+                            newImage.path = srcImage.path;
+                            newImage.resolvedPath = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, newImage.path)).replace(/\\/g, "/");
+                            newImage.resizeOriginal = srcImage.path;
+
+                            // 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
+                            if (srcImage.resolvedPath && fs.existsSync(srcImage.resolvedPath) && !fs.existsSync(newImage.resolvedPath)) {
+                                Model.OffscreenEditor.editImage(srcImage.resolvedPath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done((result) => {
+                                    if (callback) {
+                                        callback(result);
+                                    }
+                                });
+                            }
+                            newState.image[0] = newImage;
+
+                        }else if (_.isArray(srcState.image)) {
 							newState.image = $.extend(true, [], srcState.image);
 						} else {
 							newState.image = [$.extend(true, {}, srcState.image)];
+						}
+					}
+
+					if (srcState.label) {
+						if (_.isArray(srcState.label)) {
+							newState.label = $.extend(true, [], srcState.label);
+						} else {
+							newState.label = [$.extend(true, {}, srcState.label)];
 						}
 					}
 
@@ -652,9 +684,9 @@ module Garage {
 
 				// 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
 				if (srcImagePath && fs.existsSync(srcImagePath) && !fs.existsSync(newImage.resolvedPath)) {
-					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done(() => {
+					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done((result) => {
 						if (callback) {
-							callback();
+							callback(result);
 						}
 					});
 				}
