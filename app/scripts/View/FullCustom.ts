@@ -95,6 +95,7 @@ module Garage {
 			//! page initialization event
 			onInitialize(event: JQueryEventObject): void {
 				super.onInitialize(event);
+
 				this.faceListScrollLeft_ = 0;
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
@@ -156,6 +157,7 @@ module Garage {
 					//html上の文言をローカライズ
 					$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
 					$("#button-add-page").html($.i18n.t("edit.canvas.STR_EDIT_CANVAS_NEW_PAGE_BTN"));
+
 				});
 			}
 
@@ -801,6 +803,7 @@ module Garage {
                                 deviceInfo.bluetooth_data = bluetoothData;
                             }
                             if (functionCodeHash != null) {
+
                                 deviceInfo.functionCodeHash = functionCodeHash;
 							}
 
@@ -814,17 +817,37 @@ module Garage {
 						break;
 
 
-                    case "image":
+					case "image":
                         if (targetModel.image) {
-                            model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+
+                            if (remoteId == "common") {
+                                model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
                                     // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
                                     // このタイミングで CSS を更新
+                                    this._updateItemElementOnCanvas(model);
+                                });
+                            } else {
+                                model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
+                            }
+						}
+						break;
+
+                    case "image":
+                    if (targetModel.image) {
+                        let remoteId = this.faceRenderer_pallet_.getRemoteId();
+
+                        if (remoteId == "common") {
+                            model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
+                                // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
+                                // このタイミングで CSS を更新
                                 this._updateItemElementOnCanvas(model);
-                                // 読み込み完了時にダミー表示位置がずれるので再表示
                                 this.moveCurrentTargetDummy();
                             });
+                        } else {
+                            model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
                         }
-                        break;
+                    }
 
                     case "label":
                         if (targetModel.label) {
@@ -975,7 +998,6 @@ module Garage {
 
                 this.$currentTargetDummy_ = dummy;
             }
-
 
             /**
              * ドラッグ対象アイテムのCanvas外表示用ダミーを生成
@@ -1996,7 +2018,7 @@ module Garage {
 			/**
 			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
-			private onEditImageBackgroundClicked(event: Event) {
+            private onEditImageBackgroundClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
 				this.startEditButtonImage($target, imageType);
@@ -2692,22 +2714,14 @@ module Garage {
 
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
-								let resolvedPath = targetModel["resizeResolvedOriginalPath"];
+                                let resolvedPath = this.getValidPathOfImageItemForCSS(targetModel);
 
-								if (!resolvedPath || resolvedPath == HUIS_REMOTEIMAGES_ROOT) {
-									resolvedPath = targetModel["resolvedPath"];
-								}
-
+                                
 								// 画像のロードが完了してから表示を更新する
-								let img = new Image();
-								img.onload = () => {
-									$target.css("background-image", "url(" + resolvedPath + ")");
-									// 詳細編集エリアの画像ファイルパス名を更新
-									let path = targetModel["resizeOriginal"];
-									if (!path) {
-										path = targetModel["path"];
-									}
-									$("#refer-image").val(path);
+                                let img = new Image();
+                                img.src = resolvedPath;
+                                img.onload = () => {
+                                    this.setBackgroundImageUrlInCSS($target, resolvedPath);
 									// 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
 
@@ -2717,7 +2731,7 @@ module Garage {
                                         // ロード中にダミーが消される可能性を考慮
                                     }
 								};
-								img.src = resolvedPath;
+								
 
 							}
 							break;
@@ -2770,20 +2784,27 @@ module Garage {
 
 						case "resizeOriginal":
 							{
-								let resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
+                                let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
+
+                                //CSS対応のresizeResolvedOriginalPathCSSがない場合
+                                if (resolvedOriginalPath == null) {
+                                    resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
+                                }
+
 								if (resolvedOriginalPath) {
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
-									img.onload = () => {
-										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
+                                    let img = new Image();
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
 
 										// プレビュー部分の更新
                                         this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
                                     };
-                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                        img.src = resolvedOriginalPath;
-                                    }
+                                    
 								}
 							}
 							break;
@@ -2908,9 +2929,10 @@ module Garage {
 
             /**
             * 詳細設定エリアのプレビューの画像を更新する
+            * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
             */
-            private _updatePreviewInDetailArea(imagePath : string, $preview, isBackground? : boolean) {
-                if (imagePath == undefined) {
+            private _updatePreviewInDetailArea(resolvedImagePathForCSS : string, $preview, isBackground? : boolean) {
+                if (resolvedImagePathForCSS == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
 					return;
                 }
@@ -2924,13 +2946,15 @@ module Garage {
 					isBackground = false;
 				}
 
+            
+
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
-				if (imagePath != HUIS_REMOTEIMAGES_ROOT
-					&& imagePath != "") {
-					$preview.css("background-image", "url(" + imagePath + ")");
+                if (resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
+                    && resolvedImagePathForCSS != "") {
+                    this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
 					let previewWidth = $preview.width();
 					let img = new Image();
-					img.src = imagePath;
+                    img.src = resolvedImagePathForCSS;
 					let imgWidth = img.width;
 					let imgHeight = img.height;
 					previewHeight = imgHeight * (previewWidth / imgWidth);
@@ -3042,7 +3066,6 @@ module Garage {
                                     action.code = code;
 								}
 							}
-
 						
 
 							actions.push(action);
@@ -3386,24 +3409,32 @@ module Garage {
 										top: "0",
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
-										backgroundImage: value ? "url(" + value + ")" : "none"
-									});
+                                    });
+
+
+                                    let inputUrl: string = JQUtils.enccodeUriValidInCSS(value);
+                                    if (inputUrl == null) {
+                                        inputUrl = "none";
+                                    }    
+                                    this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
+
+
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
-									img.onload = () => {
+                                    let img = new Image();
+                                    img.src = inputUrl;
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-										this._updatePreviewInDetailArea(value, $preview);
+                                        this._updatePreviewInDetailArea(inputUrl, $preview);
 
 
 										//画像が存在するとき、テキストEdit機能を非表示にする
 										this.toggleImagePreview(stateId);
 
 									};
-									img.src = value;
 									
-                                    //$preview.css("background-image", value ? "url('" + value + "')": "none");
-
+									
 								}
 								break;
 							case "resizeMode":
@@ -4474,8 +4505,14 @@ module Garage {
 							let resizeMode = targetModel.image.resizeMode;
 							if (resizeMode) {
 								$(".image-resize-mode").val(resizeMode);
-							}
-							this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
+                            }
+
+
+                            //オリジナルのパスがある場合は、そちらを表示。
+                            //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
+                            let inputURL = this.getValidPathOfImageItemForCSS(targetModel.image);
+                            this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
+							
 							//テキストをローカライズ
 							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
@@ -4538,8 +4575,9 @@ module Garage {
 					let resizeMode = backgroundModel.resizeMode;
 					if (resizeMode) {
 						$(".image-resize-mode").val(resizeMode);
-					}
-					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"), true);
+                    }
+                    let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"), true);
 				} else {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
@@ -4830,8 +4868,8 @@ module Garage {
                
                 //previewの情報を別途更新。
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
-                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
-                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                var inputURL = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(inputURL, $preview);
                 //テキストボタン、あるいは画像のどちらかを表示する。
 				this.toggleImagePreview(button.default);
 
@@ -5209,7 +5247,12 @@ module Garage {
                 }
             }
 
-		}
+         
+
+        }
+
+        
+
 
 		var View = new FullCustom();
 
