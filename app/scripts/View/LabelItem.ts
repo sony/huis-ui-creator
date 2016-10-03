@@ -2,7 +2,8 @@
 
 module Garage {
 	export module View {
-		import Tools = CDP.Tools;
+        import Tools = CDP.Tools;
+        import JQUtils = Util.JQueryUtils;
 		var TAG = "[Garage.View.LabelItem] ";
 
 		export class LabelItem extends Backbone.View<Model.LabelItem> {
@@ -74,9 +75,13 @@ module Garage {
 				this.collection.each((item: Model.LabelItem, index: number) => {
 					let label: IGLabel = $.extend(true, {}, item);
 					//label.resolvedColor = this._getResolvedColor(label.color);
-					//HUISに表示すると、75%分の大きさになるため、表示上あわせる。
-					let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
-					modelForDisplay.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+
+					//HUISとGarageで大きさが異なるために表示用に補正する。
+                    let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
+
+                    modelForDisplay.size = JQUtils.getOffsetTextLabelSize(label.size);
+
+
 					modelForDisplay.resolvedColor = item.resolvedColor;
 					this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
 				});
@@ -105,8 +110,8 @@ module Garage {
 				var label: IGLabel = $.extend(true, {}, model);
 				label.resolvedColor = model.resolvedColor;
 				let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
-				//HUISに表示すると、75%分の大きさになるため、表示用あわせる。
-				modelForDisplay.size = Math.round(label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+				//HUISとGarageで大きさが異なるために表示用に補正する。
+                modelForDisplay.size = JQUtils.getOffsetTextLabelSize(label.size);
 				this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
 			}
 		}
