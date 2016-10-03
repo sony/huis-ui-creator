@@ -66,7 +66,10 @@ module Garage {
 						};
 						if (imageModel.resolvedPath) {
 							image.resolvedPath = imageModel.resolvedPath;
-						}
+                        }
+                        if (imageModel.resolvedPathCSS) {
+                            image.resolvedPathCSS = imageModel.resolvedPathCSS;
+                        }
 						if (imageModel.garageExtensions) {
 							image.garageExtensions = $.extend(true, {}, imageModel.garageExtensions);
 						}
@@ -78,7 +81,10 @@ module Garage {
 						}
 						if (imageModel.resizeResolvedOriginalPath) {
 							image.resizeResolvedOriginalPath = imageModel.resizeResolvedOriginalPath;
-						}
+                        }
+                        if (imageModel.resizeResolvedOriginalPathCSS) {
+                            image.resizeResolvedOriginalPathCSS = imageModel.resizeResolvedOriginalPathCSS;
+                        }
 						if (imageModel.areaRatio) {
 							image.areaRatio = $.extend(true, {}, imageModel.areaRatio);
 						}

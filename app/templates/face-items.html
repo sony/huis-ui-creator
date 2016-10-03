@@ -31,7 +31,7 @@
 			<div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
 				{{#image}}
 				<!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
-				<div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
+				<div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
 				{{/image}}
 				{{^image}}
 				<div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
@@ -54,7 +54,7 @@
     </script>
 
     <script type="text-template" id="template-image-item">
-        <div class="image-item item{{#pageBackground}} background{{/pageBackground}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPath}} background-image:url('{{resizeResolvedOriginalPath}}');{{/resizeResolvedOriginalPath}}{{^garageExtensions}}{{#resolvedPath}} background-image:url('{{resolvedPath}}');{{/resolvedPath}}{{/garageExtensions}}">
+        <div class="image-item item{{#pageBackground}} background{{/pageBackground}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}">
         </div>
     </script>
 </article>

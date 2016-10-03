@@ -668,7 +668,76 @@ module Garage {
 				}
 
 				return newImage;
-			}
+            }
+
+
+            /**
+			 * 画像アイテムを追加する。画像のコピーは発生しない。
+			 * 
+			 * @param image {Model.ImageItem} [in] 追加する画像アイテムの元となる model
+			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
+			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
+			 */
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number): Model.ImageItem {
+                if (!offsetY) {
+                    offsetY = 0;
+                }
+
+                var moduleIndex = this._getModuleIndex(moduleId);
+                if (moduleIndex < 0) {
+                    console.log(TAG + "module not found");
+                    return null;
+                }
+                var module = this.collection.at(moduleIndex);
+
+                var imageView = this.imageViews_[moduleIndex];
+                if (!imageView) {
+                    imageView = new ImageItem({
+                        attributes: {
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: module.remoteId
+                        }
+                    });
+                    this.imageViews_[moduleIndex] = imageView;
+                }
+
+                // 新しい model を追加する
+                var newImage = new Model.ImageItem({
+                    materialsRootPath: this.materialsRootPath_,
+                    remoteId: module.remoteId
+                });
+
+                var newArea: IArea;
+                // image が string の場合は、image をパスとして扱う
+                newArea = $.extend(true, {}, image.area);
+                newArea.y += offsetY;
+                newImage.area = newArea;
+
+                // 画像の path を出力先の remoteId のディレクトリーになるように指定
+                newImage.path = image.path;
+                newImage.resolvedPath = image.resolvedPath;
+
+
+                //バージョン情報をもっている場合、引き継ぐ
+                if (image.version != null) {
+                    newImage.version = image.version;
+                }
+
+                //最後に書き出されるようにするため、resizedはtrueにする。
+                newImage.resized = true;
+
+                // 所属する module の要素を取得し、View に set する
+                var $module = this.$el.find("[data-cid='" + moduleId + "']");
+                imageView.setElement($module);
+                if (newImage.pageBackground) {
+                    // 背景の場合、先頭に追加する
+                    imageView.collection.add(newImage, { at: 0 });
+                } else {
+                    imageView.collection.add(newImage);
+                }
+
+                return newImage;
+            }
 
 			/**
 			 * 画像アイテムを削除する。

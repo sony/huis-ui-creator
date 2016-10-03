@@ -86,19 +86,26 @@ module Garage {
 				}
 
 				console.log(TAG + "before editImage src: " + imageSrc);
+                let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
 
 				// 画像のロード
-				OffscreenEditor.loadTexture(imageSrc)
+                OffscreenEditor.loadTexture(loadPath)
 					.done((texture: PIXI.Texture) => {
 						let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
 
 						renderer.destroy(true);
 
 						// 出力先のパスが指定されている場合は、ファイル出力を行う
-						if (dstPath) {
-							if (dstPath.indexOf(' ') !== -1) {
-								dstPath = OffscreenEditor.getEncodedPath(dstPath);
-							}
+                        if (dstPath) {
+
+
+                            let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
+                            //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
+                            //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
+                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
+                                dstPath = this.getEncodedPath(dstPath);
+                            }
+
 							// Buffer オブジェクトを使用して、base64 デコーディング
 							let buffer = new Buffer(imageDataUrl.split("base64,")[1], "base64");
 
