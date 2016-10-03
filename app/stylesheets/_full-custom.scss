@@ -6,6 +6,11 @@
         overflow: overlay;
     }
 
+    .fade-in{
+        transition-duration: 0.2s;
+        opacity:1;
+    }
+
      .ui-header{
         #button-edit-done{
             background-image:$PATH_IMG_SAVE_BTN_NORMAL;
@@ -195,6 +200,9 @@
             box-sizing:border-box;
         }
 
+        #face-item-detail-area{
+            overflow-x:hidden;
+        }
         #face-item-detail {
             position: relative;
             width:$SIZE_PROPATY_AREA_INNNER_WIDTH;
@@ -210,151 +218,378 @@
                 display:flex;
 
                 #about-macro{
-                color: #555;
-                display: inline-block;                        /* インライン要素化 */
+                    height : $SIZE_PROPERTY_AREA_MACRO_ABOUT_HEIGHT;
+                    width : $SIZE_PROPERTY_AREA_MACRO_ABOUT_WIDTH;
+                    margin-top: $SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_TOP;
+                    margin-left:auto;
+                    //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL;
+                    background-position:center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    display: inline-block;           // インライン要素化
 
-                /* ツールチップ部分を隠す */
-                span{
-                    display: none;
-                }
+                    // ツールチップ部分を隠す
+                    .popup{
+                        display: none;
+                    }
+                    
+                    &:hover{
+                         background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER;
+                        position: relative;
+                        
 
-                &:hover{
-                    position: relative;
-                    color: #333;
-
-                    /* マウスオーバー時にツールチップを表示 */
-                    span{
-                        display: block;                  /* ボックス要素にする */
-                        position: absolute;            /* relativeからの絶対位置 */
-                        top: 25px;
-                        font-size: 90%;
-                        color: #fff;
-                        background-color: #51A2C1;
-                        width: 205px;
-                        padding: 5px;
-                        border-radius:3px;
-                        z-index:100;
-
-                        /* フキダシ部分を作成 */
-                        &:before{
-                            content:''; 
-                            display:block; 
-                            position:absolute;                         /* relativeからの絶対位置 */
-                            height:0; 
-                            width:0; 
-                            top:-13px; 
-                            left:15px;
-                            border:13px transparent solid; 
-                            border-right-width:0; 
-                            border-left-color:#51A2C1; 
-                            transform:rotate(270deg);            /* 傾きをつける */
-                            -webkit-transform:rotate(270deg);
-                            -o-transform:rotate(270deg);
+                        //マウスオーバー時にツールチップを表示
+                        .popup{
+                            display:block;
+                            top:30px;
+                            position:absolute;
+                            right:0;
                             z-index:100;
-                        }
+                            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+                            
 
+                            .component{
+                                position:relative;
+                                #popup-arrow{
+                                    margin-left:auto;
+			                        margin-right:$SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
+                                }
+
+                                p{
+                                    margin:0;
+                                    position:absolute;
+                                    z-index:-1;
+                                    padding:$SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
+                                    background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+			                        border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+			                        box-sizing:border-box;
+                                    display: block;      // ボックス要素にする
+                                    color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                                    font-family:$FONT_FAMILY_PROPATY_POPUP;
+                                    font-size:$FONT_SIZE_PROPATY_POPUP;
+                                }
+                            }
+                        }
                     }
                 }
-            }
             }
             
 
+        .add-btn-container{
+            margin-top:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_CONTAINER_MARING_TOP;
+            display:flex;
+            margin-left:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
+            margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
 
-            #macro-container{
+            
+
                 #add-signal-btn{
-                    background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
+                    display:inline-flex;
+                    height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
                     margin : 0 auto;
-                    height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
-                    width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
+
+                    .btn-image{
+                        margin-right:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
+                        background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                        background-position:center;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
+                        width:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_WIDTH;
+                    }
           
+                    span{
+                        line-height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_LINE_HEIGHT;
+                        color:$COLOR_BUTTON2_NORMAL;
+                        font-family:$FONT_FAMILY_TEXT_BUTTON;
+                        font-size:$FONT_SIZE_TEXT_BUTTON;
+
+                    }
+
                     &:hover{
-                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
+                        .btn-image{
+                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_HOVER;
+                        }
+                        span{
+                            color:$COLOR_BUTTON2_HOVER;
+                        }
                     }
 
                     &:active{
-                        background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
+                        .btn-image{
+                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_ACTIVE;
+                        }
+                        span{
+                            color:$COLOR_BUTTON2_PRESED;
+                        }
                     }
 
 
-                    &.disabled {
+                    &.gone{
+                      display:none;  
+                    }
+
+                    &.disabled{
                         opacity:0.2;
-                       
-                    }
+                        &:hover{
+                            .btn-image{
+                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                            }
+                            span{
+                                color:$COLOR_BUTTON2_NORMAL;
+                            }
+                        }
+
+                        &:active{
+                            .btn-image{
+                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                            }
+                            span{
+                                color:$COLOR_BUTTON2_NORMAL;
+                            }
+                        }   
+
+            }
+
+                }
+        }
+        
+
+        #signals-container{
+            padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
+        }
+
+        .signals{
+            position:relative;
+        }
+
+        //最上段のプルダウンのかたまりは、ボーダーなし。
+        #signal-container-element-0{
+             border-top:none;
+        }
+                        
+        //プルダウンの左側に出現するdot線
+        .dot-line{
+            background-image: linear-gradient(to bottom, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_WIDTH, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_HEIGHT, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_MARING);
+            background-size: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_HEIGHT;
+            background-position: top;
+            background-repeat: repeat-y;
+            width:$SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH;
+            height:100%;
+            top:0;
+            left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_MARGIN_LEFT;
+            position:absolute;      
+        }
+        
+
+        //普通の信号時の、previewとプルダウンの間のマージン
+        .property-state-action{
+            margin-top:$SIZE_PROPATY_AREA_ACTION_CONTAINER_MARGIN_TOP;
+        }
+
+        //マクロボタンのpreviewとアクション設定pulldownとの間のマージン
+        .button-macro-action-container-element{
+            margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+        }
+
+        //信号セット用プルダウンセット
+        .signal-container-element{
+                box-sizing:border-box;
+                border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
+                padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
+                padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
+                position:relative;
+
+                .custom-select{
+                    margin-left : $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
+                    margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+                    width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
                 }
 
+                .order-indicator-container{
+                    position:absolute;
+                    height:100%;
+                    margin-left:$SIEE_PROPERTY_AREA_MACRO_SIGNAL_INDICATOR_MARGN_LEFT;
 
-                .signal-container-element{
-                    margin-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_MARGIN_TOP;
-                    position:relative;
+                    .dot-container{
+                        z-index:3;
+                        margin-right:$SIZE_PROPERTY_AREA_MACRO_DOT_MARGIN_RIGHT;
+                        background-color:$COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
+                        width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                        height:$SIZE_PROPERTY_AREA_MACRO_DOT_CONTAINER_HEIGHT;
+                        display:flex;
+                        .order-indicator-dot{
+                            display:flex;
+                            align-self:center;
+                            width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                            height:$SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
+                            border-radius:$SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
+                            background-color:$COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
+                        }
 
-                    .delete-signal{
-                            z-index : 2;//pulldownより前に
-                            position : absolute;
+                    }
+
+                    //縦中央揃え
+                    display:flex;
+                    justify-content: center;
+                    align-items:center;
+
+                    //マクロの信号順番
+                    .order-indicator-number{
+                        text-align:center;
+                        width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
+                        font-family:$FONT_FAMILY_PROPATY_MAIN_TEXT;
+                        font-size:$FONT_SIZE_PROPATY_MAIN_TEXT
+                    }
+                }
+                
+
+                //信号deleteボタン用のarea
+                .delete-signal-area{
+                    z-index : 2;//pulldownより前に
+                    height:100%;
+                    width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
+                    transition-duration : 0.2s;
+                    position : absolute;
+                    right : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                    top : 0px;
+                    display:flex;
+
+                        .delete-signal{
+                            background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
                             transition: 0.2s;
                             opacity:0;
-                            right:0;
-                            top:0;
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-					        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                            margin-left:auto;
+                            margin-right:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
+                            align-self:center;
+					        background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
+					        width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
+					        height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
-                           }
-                    }
-                        
-                    
-
-                    
-                        .sort-up-btn{
-                            z-index : 2;//pulldownより前に
-                            position : absolute;
-                            margin-right : auto;
-                            transition: 0.3s;
-                            opacity:0;
-                            left:0;
-                            top:0;
-                            background-color : white;
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                            &:hover{
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER;
+                            }
                             
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_UP;
-                            }
-
+                            &:active{
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_ACTIVE;
+                           }
                         }
 
-                        .sort-down-btn{
-                            position : absolute;
-                            z-index : 2;//pulldownより前に
-                            margin-right : auto;
-                            transition: 0.3s;
-                            opacity:0;
-                            left:0;
-                            bottom:0;
-                            background-color : white;//要削除
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-					        background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
-					        width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					        height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                        //エリアをhoverして、表示
+                        &.show,
+                        &:hover{
+                            .delete-signal{
+                                opacity:1.0;
+                            }
+                        }
 
-                            &:hover, &:active{
-                                background-image:$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                     }
+
+
+                //一番上のソートボタンは非表示
+                #sort-button-area-0{
+                    .sort-up-btn{
+                        display:none;
+                        }
+                    .sort-down-btn{
+                        margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP_ORDER_0;
+                        }
+                }
+
+                
+                //一番下のソート上ぼおたんは非表示{
+                .sort-button-area.last-order {
+                     .sort-up-btn{
+                         margin-bottom:$SIZE_PROPERTY_AREAMACRO_SORT_UP_BUTTON_MARGIN_BOTTOM_LAST_ORDER;
+                        }
+                    .sort-down-btn{
+                        display:none;
+                        }
+                }
+
+                //マクロの信号並び替えボタンエリア
+                .sort-button-area{
+                        z-index : 2;//pulldownより前に
+                        height:100%;
+                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
+                        position : absolute;
+                        left : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                        top : 0px;
+                        display:flex;
+
+                        .sort-btns{
+
+                            position:relative;
+                            align-self:center;
+                            margin-left: auto;
+                            .sort-up-btn{
+                                
+                                margin-right : auto;
+                                transition: 0.3s;
+                                opacity:0;
+                                left:0;
+                                top:0;
+                                background-position:center;
+                                background-repeat: no-repeat;
+                                background-size: contain;
+					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
+					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
+					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
+                            
+                                &:hover{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER;
+                                }
+                                    
+                                &:active{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_ACTIVE;
+                                }
+
+                            }
+
+
+                            .sort-down-btn{
+                                margin-right : auto;
+                                transition: 0.3s;
+                                opacity:0;
+                                left:0;
+                                bottom:0;
+                                background-position:center;
+                                background-repeat: no-repeat;
+                                background-size: contain;
+					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
+					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
+					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
+                                margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
+
+                                &:hover{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_HOVER;
+                                } 
+                                
+                                &:active{
+                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
+                                }
+                            }
+                        }
+                        
+                        &.show,
+                        &:hover{
+                             .sort-up-btn{
+                                opacity:1.0;
+                            }
+
+                            .sort-down-btn{
+                                opacity:1.0;
                             }
                         }
 
                     }
+
+                 }
                 
-            }
+            
 
 
 
@@ -443,8 +678,6 @@
 
             h4 {
                 margin:0;
-                margin-top:8px;
-                margin-bottom:4px;
                 font-size: $FONT_SIZE_PROPATY_H4;
             }
 
@@ -475,7 +708,6 @@
 
             #property-image-preview,
             .property-state-image-preview {
-                margin-bottom:$SIZE_PROPATY_AREA_PREVIEW_MARING_BOTTOM;
                 box-sizing:border-box;
                 position:relative;
                 background-position:center;
@@ -617,7 +849,7 @@
     }
 
     //画像編集ボタンのpopup
-    #edit-image-popup{
+        #edit-image-popup{
         position:relative;
         box-shadow:none;
         text-shadow:none;
@@ -635,8 +867,8 @@
             padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
             padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
             color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-            font-family:$FONT_FAMILY_PROPATY_EDIT_IMAGE_POPUP;
-            font-size:$FONT_SIZE_PROPATY_EDIT_IMAGE_POPUP;
+            font-family:$FONT_FAMILY_PROPATY_POPUP;
+            font-size:$FONT_SIZE_PROPATY_POPUP;
             background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
 			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
 			box-sizing:border-box;

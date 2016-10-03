@@ -75,8 +75,12 @@ module Garage {
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
-            private macroProperty: PropertyAreaMacroButton;
+            private macroProperty: PropertyAreaButtonMacro;
+            //通常ボタンのプロパティView用
+            private buttonProperty: PropertyAreaButtonNormal;
+
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
+            
 
 			/**
 			 * construnctor
@@ -102,6 +106,7 @@ module Garage {
 
 					super.onPageShow(event, data);
                     this.macroProperty = null;
+                    this.buttonProperty = null;
 					this.newRemote_ = false;
 
 					this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -797,12 +802,17 @@ module Garage {
                             }
                             if (functionCodeHash != null) {
                                 deviceInfo.functionCodeHash = functionCodeHash;
-                            }
-                            targetModel.button.deviceInfo = deviceInfo;
+							}
 
-                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                        break;
+							targetModel.button.deviceInfo = deviceInfo;
+                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet, (result) => {
+                                // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
+                                // このタイミングで CSS を更新
+                                this._updateItemElementOnCanvas(model);
+                            });
+						}
+						break;
+
 
                     case "image":
                         if (targetModel.image) {
@@ -966,6 +976,7 @@ module Garage {
                 this.$currentTargetDummy_ = dummy;
             }
 
+
             /**
              * ドラッグ対象アイテムのCanvas外表示用ダミーを生成
              * @param target ドラッグ対象アイテム
@@ -1019,8 +1030,12 @@ module Garage {
                         event.preventDefault();
 
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
-                        //そのため、preventDefault直後にフォーカスを設定しなおす。
+						//そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
+                        if (this.macroProperty != null){
+                            //フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
+                            this.macroProperty.focusFirstPulldown();
+                        }
                     }
                 }
             }
@@ -1800,6 +1815,7 @@ module Garage {
 					return;	
 				}
 
+                //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
 				var stateNum = buttonModel.button.state.length;
 				var fucntions: string[] = [];
                 for (var i = 0; i < buttonModel.button.state.length; i++){
@@ -1931,9 +1947,7 @@ module Garage {
 			 */
 			private onItemPropertySelectChanged(event: Event) {
 				var $target = $(event.currentTarget);
-                if ($target.hasClass("state-action-input") || $target.hasClass("state-action-function")) {
-                    this._setButtonStateActionsBySelect($target);
-                } else if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
+                if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
                     this._setImageResizeModeBySelect($target);
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
@@ -3029,7 +3043,6 @@ module Garage {
 								}
 							}
 
-							//TODO:intervalがある場合、設定する。
 						
 
 							actions.push(action);
@@ -3531,11 +3544,13 @@ module Garage {
 
                     this._updateItemElementOnCanvas(model);
                 }
+
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
 				this._updateItemElementOnCanvas(model);
-				
+                return memento;
+
 				// DOM の削除
 				//this.$currentTarget_.remove();
 
@@ -3556,58 +3571,7 @@ module Garage {
 				//}
 			}
 
-			/**
-			 * 選択中のボタンのアクション設定を行う。
-			 * onItemPropertySelectChanged() から呼び出されることが前提。
-			 * 
-			 * @param $select {JQuery} onItemPropertySelectChanged の発火元となった select 要素の jQuery オブジェクト
-			 */
-			private _setButtonStateActionsBySelect($select: JQuery) {
-				if (!this.currentTargetButtonStates_) {
-					return;
-				}
-
-				let stateId = parseInt(JQUtils.data($select, "stateId"), 10); //$target.data("state-id");
-				if (_.isUndefined(stateId)) {
-					return;
-				}
-				let type: string = JQUtils.data($select, "type"); //$target.data("type");
-				if (_.isUndefined(type)) {
-					return;
-				}
-				let value: string = $select.val();
-
-				let stateDetail: IStateDetail = this.currentTargetButtonStates_[stateId];
-				if (_.isUndefined(stateDetail)) {
-					return;
-				}
-				let actionList = stateDetail.actionList;
-				if (_.isUndefined(actionList)) {
-					return;
-				}
-
-				switch (type) {
-					case "state-input":
-						{
-							let actionName = actionList[value];
-							if (!_.isUndefined(actionName)) {
-								$("#select-state-action-function-" + stateId).val(actionName).selectmenu('refresh');
-							}
-						}
-						break;
-
-					case "state-action":
-						{
-							let inputName = $("#select-state-action-input-" + stateId).val();
-							if (!_.isUndefined(inputName)) {
-								actionList[inputName] = value;
-								this.currentTargetButtonStatesUpdated_ = true;
-								this._updateCurrentModelButtonStatesData();
-							}
-						}
-						break;
-				}
-			}
+			
 
 			/**
 			 * 画像の resizeMode を設定する。
@@ -4399,6 +4363,14 @@ module Garage {
 				this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
+
+                //ボタン用のプロパティのインスタンスを削除
+                if (this.buttonProperty != null) {
+                    //this.buttonProperty.unbind("updateModel", this.updateButtonItemModel, this);
+                    this.buttonProperty.remove();
+                    this.buttonProperty = null
+                }
+
                 //マクロ用のプロパティのインスタンスを削除
                 if (this.macroProperty != null) {
                     this.macroProperty.unbind("updateModel", this.updateButtonItemModel, this);
@@ -4631,16 +4603,17 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    this.macroProperty = new PropertyAreaMacroButton({
+                    this.macroProperty = new PropertyAreaButtonMacro({
                         el: $buttonDetail,
                         model: button,
                     });
                     //モデルが更新されたときfullcustom側のmodelも更新する
-                    //this.listenTo(this.macroProperty.model, "change", this.updateButtonItemModel);
-                    this.macroProperty.bind("updateModel", this.updateButtonItemModel,this);
+                    this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel,this);
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.macroProperty.undelegateEvents();
                     this.macroProperty.$el = $buttonDetail;
+                    this.macroProperty.delegateEvents();
                 }
 
                 $detail.append(this.macroProperty.renderView())
@@ -4655,15 +4628,39 @@ module Garage {
                 //ボタンステートを入力
                 this.currentTargetButtonStates_ = button.state;
 
+
+                //初期状態の場合、最初のプルダウンをフォーカス。
+                this.macroProperty.focusFirstPulldown();
+
                 $detail.i18n();
 			}
 
+            //マクロボタンのモデルが変更された際に呼び出される
+            private updateMacroButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.macroProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
 
-            private updateButtonItemModel(event: JQueryEventObject) {
+
+            //通常のボタンのモデルが変更された際に呼び出される
+            private updateNormalButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.buttonProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+           /*
+            * propertyエリアの情報が更新された際、ボタンのモデルを更新する
+            * @param button {Model.ButtonItem}
+            */
+            private updateButtonItemModel(button: Model.ButtonItem) {
                 let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
 
-                let button: Model.ButtonItem = this.macroProperty.getModel();
                 if (button == null) {
+                    console.warn(FUNCTION_NAME + "button is null");
                     return;
                 }
 
@@ -4678,6 +4675,8 @@ module Garage {
                 };
                 var mementoCommand = new MementoCommand([memento]);
                 this.commandManager_.invoke(mementoCommand);
+
+                this.$el.focus();
             }
 
 
@@ -4728,17 +4727,24 @@ module Garage {
 					}
 				}
 
-				
-
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-				var $buttonDetail = $(templateButton(button));
+                var $buttonDetail = $(templateButton(button));
 
-				// ボタンのエリア情報を付加
-				var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
-				var $areaContainer = $buttonDetail.nextAll("#area-container");
-				$areaContainer.append($(templateArea(button)));
-
+                //信号用のViewの初期化・更新
+                if (this.buttonProperty == null) {
+                    this.buttonProperty = new PropertyAreaButtonNormal({
+                        el: $buttonDetail,
+                        model: button,
+                    });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.buttonProperty.undelegateEvents();
+                    this.buttonProperty.$el = $buttonDetail;
+                    this.buttonProperty.delegateEvents();
+                }
 
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
@@ -4799,55 +4805,29 @@ module Garage {
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
+                       
+
+                        //テキストラベルの大きさの設定値を反映する。
+                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                        if (!_.isUndefined(stateData.label)) {
+                            var textSizeString: string = stateData.label.size;
+                            $textSize.val(textSizeString);
+                        }
+
+                        //信号コンテナを描画
+                        $statesContainer.append(this.buttonProperty.renderViewState(state.id));
+
                         // 文言あて・ローカライズ
-                        $stateDetail.i18n();
+                        $statesContainer.i18n();
 
-                        if (resizeMode) {
-                            $stateDetail.find(".state-image-resize-mode[data-state-id=\"" + stateData.id + "\"]").val(resizeMode);
-                        }
-
-                        let actionList = state.actionList;
-                        let alreadyMenuSet = false;
-                        if (actionList) {
-                            // 「機能」が割り当てられている「入力」をメニューに表示されるようにする
-                            for (let input in actionList) {
-                                if (!alreadyMenuSet && actionList.hasOwnProperty(input) && actionList[input]) {
-                                    var action = actionList[input];
-                                    $stateDetail.find("#select-state-action-input-" + state.id).val(input);
-                                    $stateDetail.find("#select-state-action-function-" + state.id).val(action);
-                                    alreadyMenuSet = true;
-                                }
-                            }
-                        }
-
-						//テキストラベルの大きさの設定値を反映する。
-						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
-						if (!_.isUndefined(stateData.label)) {
-							var textSizeString: string = stateData.label.size;
-							$textSize.val(textSizeString);
-						}
+						
 
                     });
                     
 				}
-
 				
                 $detail.append($buttonDetail);
-
-				let $makerName = $(".button-info-brand-and-type").find(".brand_name");
-
-				//ブランド名が空の場合,メーカー名情報がない旨に変換
-				if ($makerName.text() == " ") {
-					if (button.state[0].action[0].code != null) {
-						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LEARNED"));
-					} else {
-						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_NON_MAKER"));
-					}
-				}
-
-
-                //x,y情報を別途　記入
-                this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
+               
                 //previewの情報を別途更新。
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
                 var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
@@ -4937,47 +4917,6 @@ module Garage {
 				state.actionListTranslate = actionListTranslate;
 			}
 
-            /**
-            * 詳細編集エリアのステートのエリア情報をアップデート
-            * @param inputX: numer　X座標
-            * @param inputY: numer　Y座標
-            * @param inputW: numer　W座標
-            * @param inputH: numer　H座標
-            **/
-            private updateAreaInState(inputX: number, inputY: number, inputW: number, inputH: number) {
-
-                if (inputX === undefined) {
-                    console.log("updateAreaInState : inputX is undefined");
-                    return;
-                }
-
-                if (inputY === undefined) {
-                    console.log("updateAreaInState : inputY is undefined");
-                    return;
-                }
-
-                if (inputW === undefined) {
-                    console.log("updateAreaInState : inputW is undefined");
-                    return;
-                }
-
-                if (inputH === undefined) {
-                    console.log("updateAreaInState : inputH is undefined");
-                    return;
-                }
-
-                let $paramXY = $("#state-button-x-y");
-                var xStr: string = "X:";
-                var yStr: string = "   Y:";
-                var paramXYStr: string = xStr + inputX + yStr + inputY;
-                $paramXY.html(paramXYStr);
-
-                let $paramWH = $("#state-button-w-h");
-                var wStr: string = "W:";
-                var hStr: string = "   H:";
-                var paramWHStr: string = wStr + inputW + hStr + inputH;
-                $paramWH.html(paramWHStr);
-            }
 
 			/**
 			 * 指定した要素にひも付けられている model を取得

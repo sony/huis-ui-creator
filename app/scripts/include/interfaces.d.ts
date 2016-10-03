@@ -282,6 +282,15 @@ interface IStringStringHash {
 }
 
 /**
+* @interface
+* @brief ハッシュを疑似的に実現する
+*/
+interface IStringKeyValue {
+    key: string;
+    value: string;
+}
+
+/**
  * @interface IGLabel
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
@@ -727,14 +736,29 @@ declare module Garage {
      */
     var MAX_NUM_MACRO_SIGNAL : number;
     /*
-     * マクロを設定する際のデフォルトInverval秒数
+     * マクロを設定する際のデフォルトInverval秒数[ms]
      */
     var DEFAULT_INTERVAL_MACRO: number;
-     /*
-      * マクロを設定する際のデフォルトInverval秒数
-      */
-    var DEFAULT_INTERVAL_MACRO: number;
-
+    /*
+     * 設定できるアクションリスト
+     */
+    var ACTION_INPUTS: IStringKeyValue[];
+    var ACTION_INPUT_TAP_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY: string;
+    var ACTION_INPUT_SWIPE_UP_KEY: string;
+    var ACTION_INPUT_SWIPE_RIGHT_KEY: string;
+    var ACTION_INPUT_SWIPE_LEFT_KEY: string;
+    var ACTION_INPUT_SWIPE_DOWN_KEY: string;
+    var ACTION_INPUT_TAP_VALUE: string;
+    var ACTION_INPUT_LONG_PRESS_VALUE: string;
+    var ACTION_INPUT_SWIPE_UP_VALUE: string;
+    var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
+    var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
+    var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
+    /*
+    * マクロボタンの順番交換アニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
 }
 
 
