@@ -11,6 +11,9 @@ module Garage {
 		var TAG = "[Garage.View.PropertyAreaNormal] ";
 
 
+        //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
+        //すでに登録されているアクションは、pulldownに表示できないようにするため
+        //すでに登録されているアクションを記憶する。
         class ActionSelecctor {
             private all: IStringKeyValue[];
             private array: IStringKeyValue[];
