@@ -11,10 +11,10 @@ module Garage {
 		var TAG = "[Garage.View.PropertyAreaNormal] ";
 
 
-        class ActionInputStringKeyValueArray {
+        class ActionSelecctor {
             private all: IStringKeyValue[];
             private array: IStringKeyValue[];
-            private TAG = "[ActionInputStringKeyValueArray]";
+            private TAG = "[ActionSelecctor]";
 
             constructor(inputActionKeys: string[]) {
                 this.array = [];
@@ -63,7 +63,7 @@ module Garage {
             /*
             * 現在保持しているactionInput配列が入ってない ACTION_INPUTSを返す。
             */
-            getNegative(): IStringKeyValue[] {
+            getNotSelected(): IStringKeyValue[] {
                 let tmpResult: IStringKeyValue[] = $.extend(true, [], this.all);
                 for (let i = 0; i < this.array.length; i++) {
                     tmpResult = tmpResult.filter((value, index: number) => {
@@ -600,9 +600,9 @@ module Garage {
                 let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.templateItemDetailFile_);
 
                 //すでに入力されているinputは、表示しない。
-                let inputActionInputs: ActionInputStringKeyValueArray = new ActionInputStringKeyValueArray(this.assignedInputActions);
-                inputActionInputs.deleteByValue(inputAction);
-                let displayActionInputs: IStringKeyValue[] = inputActionInputs.getNegative();
+                let actionSelector: ActionSelecctor = new ActionSelecctor(this.assignedInputActions);
+                actionSelector.deleteByValue(inputAction);
+                let displayActionInputs: IStringKeyValue[] = actionSelector.getNotSelected();
 
                 let inputData = {
                     id: stateId,
