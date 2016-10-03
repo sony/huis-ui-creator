@@ -126,6 +126,9 @@
         "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
     },
     "button": {
+        "text_button": { 
+            "STR_REMOTE_BTN_TEXT_BTN_DEFAULT": "TEXT BUTTON"
+        },
         "none": {
             "STR_REMOTE_BTN_NONE": "何もしない"
         },

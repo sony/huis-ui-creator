@@ -2025,6 +2025,11 @@ module Garage {
 				let $textField: JQuery = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
 
 				let textInTextFiled: string = $textField.val();
+                
+                if (textInTextFiled == null || textInTextFiled == "") {
+                    textInTextFiled = $.i18n.t("button.text_button.STR_REMOTE_BTN_TEXT_BTN_DEFAULT");
+                    $textField.val(textInTextFiled);
+                }
 
 				this._updateCurrentModelStateData(TARGET_ALL_STATE,
 					{
