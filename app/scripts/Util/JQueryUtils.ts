@@ -114,6 +114,38 @@ module Garage {
                 return tmpUrl;
             }
 
+            /*
+			* テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+            static getOffsetTextButtonSize(textsize: number): number {
+                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextSize :";
+
+                if (textsize == null) {
+                    console.error(FUNCTION_NAME + "textsize is null");
+                    return 0;
+                }
+
+                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC);
+            }
+
+			/*
+			* テキストラベルの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+            static getOffsetTextLabelSize(textsize: number): number {
+                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextLabelSize :";
+
+                if (textsize == null) {
+                    console.error(FUNCTION_NAME + "textsize is null");
+                    return 0;
+                }
+
+                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
+            }
+
 
 		}
 	}
