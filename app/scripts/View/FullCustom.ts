@@ -2954,7 +2954,7 @@ module Garage {
 										let keys = Object.keys(props);
 										keys.forEach((key) => {
 											let value = props[key];
-											this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, buttonW, buttonH);
+                                            this.updateButtonOnCanvas(stateId, key, value, targetState, $targetStateElem, buttonW, buttonH);
 										});
 									});
 								}
@@ -3385,7 +3385,7 @@ module Garage {
 
 						}
 						let currentStateId = targetState.id;
-						this.updateButtonOnCustom(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
+                        this.updateButtonOnCanvas(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
 					
 					});
@@ -3412,7 +3412,7 @@ module Garage {
 			*  @buttonAreaW{number} 変更対象のボタンのW
 			*  @buttonAreaH{number} 変更対象のボタンのH
 			*/
-			private updateButtonOnCustom(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
+			private updateButtonOnCanvas(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
 					// canvas 上のスタイルと詳細エリアの更新
 						switch (key) {
 							case "text":
