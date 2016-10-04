@@ -329,7 +329,11 @@ module Garage {
 
 				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
 					let remoteId = this.remoteList_[i].remote_id;
-					let face = this.getFace(remoteId);
+                    let face = this.getFace(remoteId);
+                    if (!face) {
+                        // 新規作成時
+                        continue;
+                    }
 					let codesMaster: string[] = this.getMasterCodes(remoteId);
 					let deviceType = face.category;
 
@@ -752,6 +756,13 @@ module Garage {
                 let functions = this.getMasterFunctions(remoteId);
                 let codeDb = this.getMasterCodeDb(remoteId);
                 let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+
+                let face = huisFiles.getFace(remoteId);
+                if (face == null) {
+                    console.warn(FUNCTION_NAME + "face not found. remoteID: " + remoteId);
+                    return;
+                }
+
                 let remoteName = huisFiles.getFace(remoteId).name;
 
                 let deviceInfo: IButtonDeviceInfo = {
