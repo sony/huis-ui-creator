@@ -39,6 +39,7 @@
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1": "\nページ ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2": " に重なり合っているボタンが ",
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3": " 個あります。",
+            "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES": "★複数のBluetooth機器が設定されています。登録可能なBluetooth機器は１つのみです。",
             "STR_DIALOG_MESSAGE_ALERT_DISCONNECT": "HUIS REMOTE CONTROLLERとの接続が解除されました。\nアプリを終了します。",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_1": "リモコンを作成できません。\nHUIS REMOTE CONTROLLERに登録できるリモコンは",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_2": "個までです。\n不要なリモコンを削除してください。",
@@ -69,16 +70,23 @@
             "STR_EDIT_PROPERTY_TITLE_IMAGE": "Image",
             "STR_EDIT_PROPERTY_TITLE_LABEL": "Label",
             "STR_EDIT_PROPERTY_TITLE_BUTTON": "Button",
-            "STR_EDIT_PROPERTY_LABEL_ACTION": "アクション",
+            "STR_EDIT_PROPERTY_LABEL_ACTION": "操作",
             "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
             "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
             "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
             "STR_EDIT_PROPERTY_TITLE_NON_MAKER": "--",
             "STR_EDIT_PROPERTY_TITLE_LEARNED": "--",
-            "STR_EDIT_PROPERTY_TITLE_MACRO": "Macro Button"
+            "STR_EDIT_PROPERTY_TITLE_MACRO": "Macro Button",
+            "STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE": "マクロとは？",
+            "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT": "連続して複数種類の信号を発信できる機能です。",
+            "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
+            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
+        },
+        "pallet": { 
+            "STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS" : "すべてのボタン"
         }
     },
     "home": {
@@ -129,6 +137,9 @@
         "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
     },
     "button": {
+        "text_button": {
+            "STR_REMOTE_BTN_TEXT_BTN_DEFAULT": "TEXT BUTTON"
+        },
         "interval": {
             "STR_00_POINT_0_SECOND_AFTER": "0.0秒後",
             "STR_00_POINT_1_SECOND_AFTER": "0.1秒後",
@@ -162,11 +173,11 @@
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
         "input": {
-            "STR_PLEASE_INPUT_ACTION" : "操作を選択", 
+            "STR_PLEASE_INPUT_ACTION": "操作を選択",
             "STR_ACTION_INPUT_TAP": "タップ",
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)",
-            "STR_ACTION_INPUT_SWIPE_UP":"上フリック",
-            "STR_ACTION_INPUT_SWIPE_RIGHT" : "右フリック",
+            "STR_ACTION_INPUT_SWIPE_UP": "上フリック",
+            "STR_ACTION_INPUT_SWIPE_RIGHT": "右フリック",
             "STR_ACTION_INPUT_SWIPE_LEFT": "左フリック",
             "STR_ACTION_INPUT_SWIPE_DOWN": "下フリック"
         },

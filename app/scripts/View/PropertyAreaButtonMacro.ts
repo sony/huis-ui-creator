@@ -10,18 +10,9 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
         //プルダウンに入力できる情報
         interface ISignalInputs {
+            order: number;
             interval: number;
             remoteId: string;
             functionName : string;
@@ -62,51 +53,32 @@ module Garage {
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "change select": "onAnyPulllDownChanged",
                     "click .delete-signal": "onDeleteButtonClick",
-                    "click .sort-up-btn": "onSortUpButtonClick",
-                    "click .sort-down-btn": "onSortDownButtonClick",
+                    "click .sort-up-btn": "onMoveUpOrderButtonClick",
+                    "click .sort-down-btn": "onMoveDownOrderButtonClick",
                     "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
                     "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
                 };
             }
 
 
-           
-
-            //信号の削除・並び替えエリアの上にマウスが乗った際の処理
-            private onSignalControllAreaMouseOn(event: Event) {
-                let FUNCTION_NAME = TAG + "onSignalControllAreaMouseOn";
-                //コントロールボタンを出現させる
-                let $target = $(event.currentTarget).find(".signal-control-btn");
-                if (this.isValidJQueryElement($target)) {
-                    $target.css("opacity", "1.0");
-                }
 
 
-            }
-
-            //信号の削除・並び替えエリアの上からマウスが去った際の処理
-            private onSignalControllAreaMouseOut(event: Event) {
-                let FUNCTION_NAME = TAG + "onSignalControllAreaMouseOut";
-
-                //コントロールボタンを見えなくする
-                let $target = $(event.currentTarget).find(".signal-control-btn");
-                if (this.isValidJQueryElement($target)) {
-                    $target.css("opacity", "0");
-
-                    $(event.currentTarget).nextAll(".custom-select").trigger("moouseout");
-                }
-
-            }
 
             //並び替え上ボタンが押されたときに呼ばれる
-            private onSortUpButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortUpButtonClick : ";
+            private onMoveUpOrderButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onMoveUpOrderButtonClick : ";
 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                //二重発火を防止用。actingの場合はこの段階で無視。
+                if ($target.hasClass("acting")) {
+                    return;
+                }
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -116,48 +88,130 @@ module Garage {
                     return;
                 }
 
+                let targetOrder = order - 1;
+
 
                 //sort先（一つ上の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
-                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
+                let $nextAboveSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
-                if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
-                    //情報を更新し、再描画
-                    this.updateModel();
-                    this.renderSignalContainers();
+                if (this.isValidJQueryElement($nextAboveSignalContainer)) {
+
+                    //二重発火を防止用。
+                    $target.addClass("acting");
+
+                    //もし、$nextTopSignalContainerが一番上のプルダウンなら、
+                    //プルダウンを一度追加して、 自身のintervalを消してからアニメ
+                    if ((targetOrder) == 0) {
+                        //レイアウト崩れを防ぐため、高さは維持する。
+                        let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
+                        let tmpHeightNext = $nextAboveSignalContainer.find(".signals").outerHeight();
+
+                        this.renderIntervalOf(0);
+                        this.setIntervalPullDownOf(0, 0);
+
+                        this.removeIntervalPullDown(order);
+
+                        $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
+                        $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+                    }
+
+                    //もし、remoteIdのプルダウンが未入力の場合
+                    //funtionのプルダウンを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
+                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(order))) {
+                        if (this.availableRemotelist[0] != null) {
+                            this.setRemoteIdPullDownOf(order, this.availableRemotelist[0].remoteId);
+                            this.renderFunctionsOf(order);
+                            $thisOrderSignalContainer.trigger('create');
+                        }
+                    }
+
+
+
+                    let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
+                    this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextAboveSignalContainer.find(".pulldowns"), duration);
+
+                    setTimeout(() => {
+                        this.exchangeSignalValues($thisOrderSignalContainer, $nextAboveSignalContainer);
+                        //情報を更新し、再描画
+                        this.updateModel();
+                        this.renderSignalContainers();
+
+                    }, duration);
                 }
 
             }
 
             //並び替え下ボタンが押されたときに呼ばれる
-            private onSortDownButtonClick(event: Event) {
-                let FUNCTION_NAME = TAG + "onSortDownButtonClick : ";
+            private onMoveDownOrderButtonClick(event: Event) {
+                let FUNCTION_NAME = TAG + "onMoveDownOrderButtonClick : ";
                 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                //二重発火を防止用。actingの場合はこの段階で無視。
+                if ($target.hasClass("acting")) {
                     return;
                 }
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
                 //一番下のボタンの場合、無視する
                 if (order >= this.defaultState.action.length - 1) {
                     console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
                     return;
                 }
 
+                let targetOrder = order + 1;
+
                 //sort先（一つ下の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
-                let $nextTopSignalContainer: JQuery = this.getSignalContainerElementOf(order + 1);
-                if (this.isValidJQueryElement($nextTopSignalContainer)) {
-                    this.exchangeSignalValueSignals($thisOrderSignalContainer, $nextTopSignalContainer);
-                    //情報を更新し、再描画
-                    this.updateModel();
-                    this.renderSignalContainers();
+                let $nextBelowSignalContainer: JQuery = this.getSignalContainerElementOf(targetOrder);
+                if (this.isValidJQueryElement($nextBelowSignalContainer)) {
+
+                    //二重発火を防止用。
+                    $target.addClass("acting");
+
+                    //もし、$thisOrderSignalContainerが一番上のプルダウンなら、
+                    //プルダウンを一度追加して$nextTopSignalContainerのintervalを消してからアニメ。
+                    if (order == 0) {
+                        //レイアウト崩れを防ぐため、高さは維持する。
+                        let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
+                        let tmpHeightNext = $nextBelowSignalContainer.find(".signals").outerHeight();
+                        
+                        this.renderIntervalOf(0);
+                        this.setIntervalPullDownOf(0, 0);
+
+                        this.removeIntervalPullDown(targetOrder);
+                        $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
+                        $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+                    }
+
+                    //もし、入れ替え対象のremoteIdのプルダウンが未入力の場合
+                    //functionpulldownを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
+                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(targetOrder))) {
+                        if (this.availableRemotelist[0] != null) {
+                            this.setRemoteIdPullDownOf(targetOrder, this.availableRemotelist[0].remoteId);
+                            this.renderFunctionsOf(targetOrder);
+                        }
+                    }
+
+
+                    let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
+                    this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextBelowSignalContainer.find(".pulldowns"), duration);
+                    setTimeout(() => {
+                        this.exchangeSignalValues($thisOrderSignalContainer, $nextBelowSignalContainer);
+                        //情報を更新し、再描画
+                        this.updateModel();
+                        this.renderSignalContainers();
+
+                    }, duration);
+ 
                 }
-                
+
 
             }
 
@@ -167,6 +221,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 this.deleteSignal(order);
 
             }
@@ -174,16 +233,14 @@ module Garage {
             //プルダウンのいずれかが変更されたときに呼ばれる
             private onAnyPulllDownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
-
-                
-
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
             }
 
             //Invervalのプルダウンが変更されたら呼ばれる
             private onInvervalPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
                 this.updateModel();
+
             }
 
             //Actionを変更させたときに呼ばれる
@@ -205,7 +262,9 @@ module Garage {
 
                 // プルダウンに設定されている Actionの順番を取得
                 let order = this.getOrderFrom($target);
-                if (order == null) {
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -218,7 +277,6 @@ module Garage {
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignalContainers();
                 }
-
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
@@ -243,7 +301,7 @@ module Garage {
                 }
 
                 let $signalContainer = this.$el.find("#signals-container");
-                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
                 let empltyAction: IAction = {
                     input: tmpInput,
@@ -251,28 +309,26 @@ module Garage {
                 };
                 let tmpOrder = this.defaultState.action.length;
 
-                let signalData: ISignalDataForDisplayPullDown = {
-                    order: tmpOrder,
-                    action: empltyAction,
-                    id: this.defaultState.id,
-                    remotesList: this.availableRemotelist,
-                };
+                if (!this.isValidOrder(tmpOrder)) {
+                    console.warn(FUNCTION_NAME + "tmpOrder is invalid");
+                    return;
+                }
 
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                    this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
+                    this.updateModel();
+                    this.renderSignalContainers();
+
+                    //削除とソートボタンをちら見する。
+                    this.animateAddButton(tmpOrder);   
+                    
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
-
-                this.controlPlusButtonEnableDisable();
-                this.updateModel();
-
-
+                this.controlPlusButtonEnable();
 
             }
 
@@ -292,10 +348,94 @@ module Garage {
                 return this.model;
             }
 
+
+
+            /*
+            * 保持しているモデルの内容でプルダウンを描画する
+            */
+            renderView(): JQuery {
+                let FUNCTION_NAME = TAG + ":renderView : ";
+
+
+                //マクロの基本情報を付与
+                // ボタンの state 情報を付加
+                var $macroContainer = this.$el.nextAll("#macro-container");
+                let macroData: any = {};
+                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
+
+                let state = this.defaultState;
+                let id: number = this.defaultState.id;
+                macroData.id = id;
+
+
+                let resizeMode: string;
+
+                if (state.image) {
+                    macroData.image = state.image[0];
+                    let garageImageExtensions = state.image[0].garageExtensions;
+                    if (garageImageExtensions) {
+                        resizeMode = garageImageExtensions.resizeMode;
+                    }
+                }
+
+                let labelSize: number = null;
+                if (state.label != null && state.label.length != 0) {
+                    let label: IGLabel = state.label[0];
+                    macroData.label = label;
+                    labelSize = label.size;
+                }
+
+                macroData.actionList = ACTION_INPUTS;
+
+                let $macroDetail = $(templateMacro(macroData));
+                $macroContainer.append($macroDetail);
+
+
+                //テキストラベルのpullDownを変更する。
+                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
+                if (labelSize != null) {
+                    $textSizePullDown.val(labelSize.toString());
+                }
+
+                let actions: IAction[] = state.action;
+                if (actions == null || actions.length == 0) {
+                    console.warn(FUNCTION_NAME + "acctions is null");
+                    return;
+                }
+
+                //ActionのPullDownを変更する。
+                //inputを読み取るアクションのIDは0とする。
+                //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
+                let TARGET_ACTION = 0;
+                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.id + "\"]");
+                if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
+                    $actionPullDown.val(actions[TARGET_ACTION].input);
+                }
+                //一度、ここで、jQueryMoblieのレイアウトをあてる。
+                $macroContainer.i18n();
+                $macroContainer.find('.custom-select').trigger('create');
+               
+
+                this.renderSignalContainers();
+                
+
+                return $macroContainer;
+
+            }
+
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// private method
+            /////////////////////////////////////////////////////////////////////////////////////////
+
             /*
              *保持しているモデルをプルダウンの内容に合わせてアップデートする。
              */
-            updateModel() {
+
+            private updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 //orderをkeyとしたActionのハッシュを作成。
@@ -309,7 +449,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(".state-action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -317,7 +457,9 @@ module Garage {
                     //Actionの順番を取得。取得できない場合は次のループへ
                     let $target: JQuery = $($signalContainers[i]);
                     let order = this.getOrderFrom($target);
-                    if (order == null) {
+
+                    if (!this.isValidOrder(order)) {
+                        console.warn(FUNCTION_NAME + "order is invalid");
                         continue;
                     }
 
@@ -430,83 +572,6 @@ module Garage {
                 this.trigger("updateModel");
             }
 
-            /*
-            * 保持しているモデルの内容でプルダウンを描画する
-            */
-            renderView(): JQuery {
-                let FUNCTION_NAME = TAG + ":renderView : ";
-
-
-                //マクロの基本情報を付与
-                // ボタンの state 情報を付加
-                var $macroContainer = this.$el.nextAll("#macro-container");
-                let macroData: any = {};
-                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
-
-                let state = this.defaultState;
-                let id: number = this.defaultState.id;
-                macroData.id = id;
-
-
-                let resizeMode: string;
-
-                if (state.image) {
-                    macroData.image = state.image[0];
-                    let garageImageExtensions = state.image[0].garageExtensions;
-                    if (garageImageExtensions) {
-                        resizeMode = garageImageExtensions.resizeMode;
-                    }
-                }
-
-                let labelSize: number = null;
-                if (state.label) {
-                    let label: IGLabel = state.label[0];
-                    macroData.label = label;
-                    labelSize = label.size;
-                }
-
-                macroData.actionList = ACTION_INPUTS;
-
-                let $macroDetail = $(templateMacro(macroData));
-                $macroContainer.append($macroDetail);
-
-
-                //テキストラベルのpullDownを変更する。
-                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
-                if (labelSize != null) {
-                    $textSizePullDown.val(labelSize.toString());
-                }
-
-                let actions: IAction[] = state.action;
-                if (actions == null || actions.length == 0) {
-                    console.warn(FUNCTION_NAME + "acctions is null");
-                    return;
-                }
-
-                //ActionのPullDownを変更する。
-
-                //inputを読み取るアクションのIDは0とする。
-                //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
-                let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".state-action-input[data-state-id=\"" + state.id + "\"]");
-                if ($actionPullDown && actions[TARGET_ACTION]) {
-                    $actionPullDown.val(actions[TARGET_ACTION].input);
-                }
-
-                this.renderSignalContainers();
-                
-
-                return $macroContainer;
-
-            }
-
-
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////////////
-            ///// private method
-            /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
             * シグナル設定用のpulldownたちをすべてレンダリングする。
@@ -519,27 +584,110 @@ module Garage {
                 //最初の１シグナル分は特例で、追加する。
                 let $signalContainer = this.$el.find("#signals-container");
 
-                //一度、すべて消す。
+                //一度、すべて消してから、すべての信号を描画しなおす。
                 $signalContainer.children().remove();
 
-                let signalData: ISignalDataForDisplayPullDown = {
-                    order: 0,
-                    action: actions[0],
-                    id: this.defaultState.id,
-                    remotesList: this.availableRemotelist,
-                }
-                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+                //一番最初の信号は、intervalは描画しない。
+                let firstOrder: number = 0;
+                let firstAction: IAction = actions[0];
+                this.renderSignalDetailWithoutInterval(firstOrder, firstAction, $signalContainer);
 
                 for (let i = 1; i < actions.length; i++) {
-                    signalData.order = i;
-                    signalData.action = actions[i];
-                    this.renderSignalDetailWithInterval(signalData, $signalContainer);
+                    let order = i;
+                    let action = actions[i];
+                    this.renderSignalDetailWithInterval(order, action, $signalContainer);
+
+                    //最後のorderのとき、並び替えしたボタンを非表示にする。
+                    if (i == actions.length - 1) {
+                        let sortAreaLastOrder : JQuery = this.$el.find("#sort-button-area-" + i);
+                        if (this.isValidJQueryElement(sortAreaLastOrder)) {
+                            sortAreaLastOrder.addClass("last-order");
+                        }
+                    }
+                }
+                
+                this.renderSpecialElementDependingSignalNum();
+
+                this.controlPlusButtonEnable();
+            }
+
+
+            /*
+            * 信号が1つしかない場合、signalの要素を削除する。2つ以上あるとき、どっとラインを描画する。
+            */
+            private renderSpecialElementDependingSignalNum() {
+                let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
+                if (signalLength <= 1) {
+                    //ドットを削除
+                    this.$el.find("#order-indicator-dot-0").remove();
+
+                    //削除エリアを削除
+                    this.$el.find("#sort-button-area-0").remove();
+
+                    //並び替えボタンエリアを削除
+                    this.$el.find("#delete-signal-area-0").remove();
+                    
+                } else {//２つ以上ある場合、dot線を描画。
+                    this.renderDotLine();
+                }
+
+            }
+
+            /*
+            * 信号間を横断するドット線をレンダリングする。
+            */
+            private renderDotLine() {
+                let FUNCTION_NAME = TAG + "renderDotLine()";
+
+                //order0のドットの位置を取得
+                let $dotFirstOrder = this.$el.find("#order-indicator-dot-0");
+                let firstOrderY: number = null;
+                let firstOrderBottom: number = null;
+                if (this.isValidJQueryElement($dotFirstOrder)) {
+                    firstOrderY = $dotFirstOrder.offset().top;
+                    firstOrderBottom = firstOrderY + $dotFirstOrder.outerHeight(true);
+                }
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //orderMaxのどったの位置を取得
+                let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
+                let lastOrderY = null;
+                if (this.isValidJQueryElement($dotLastOrder)) {
+                    lastOrderY = $dotLastOrder.offset().top;
+                }
+
+                //その差分をdot線の長さとする
+                if (this.isValidValue(firstOrderY) && this.isValidValue(firstOrderBottom) && this.isValidValue(lastOrderY)) {
+                    
+                    //templateからdomを読み込み,domを描写
+                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.templateItemDetailFile_);
+                    let $signalsContainer = this.$el.find("#signals-container");
+                    $signalsContainer.append($(templateDotLine()));
+
+                    let dotLineLength = lastOrderY - firstOrderY;
+                    let $dotLine = this.$el.find(".dot-line");
+                    if (this.isValidJQueryElement($dotLine)) {
+                        $dotLine.height(dotLineLength);
+
+                        //order0のドットの開始点に合わせる。
+                        let dotLineOffsetLeft = $dotLine.offset().left;
+                        $dotLine.offset({
+                            top: firstOrderBottom,
+                            left: dotLineOffsetLeft
+                        });
+                    }
                 }
 
 
-                this.controlPlusButtonEnableDisable();
+
             }
-            
+
+
             /*
             * 入力されたorderに設定されている信号を削除する
             * @param order{number}: それぞれの信号に設定されている順番
@@ -547,8 +695,8 @@ module Garage {
             private deleteSignal(order: number) {
                 let FUNCTION_NAME = TAG + "deleteSignal";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -565,15 +713,21 @@ module Garage {
 
             /*
             * インターバルなしの一回文のシグナルのJQueryを取得する。
-            * @param signalData{ISignalData} 表示する内容のアクション
+            * @param order{nuber} 表示する信号のorder
+            * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {JQuery}appendして描画するためのJQuery
             */
-            private renderSignalDetailWithoutInterval(signalData: ISignalDataForDisplayPullDown, $signalContainer: JQuery) {
+            private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (signalData == null) {
-                    console.warn(FUNCTION_NAME + "signalData is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
 
@@ -582,50 +736,52 @@ module Garage {
                     return;
                 }
 
+
+                let zeroPaddingNum = ('0' + (order + 1)).slice(-2);
+                let inputDataForRender: any = {
+                    order: order,
+                    order_plus_one: zeroPaddingNum
+                }
+
                 //ベースとなるDOM描写する
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
-                $signalContainer.append($(templateSignal(signalData)));
+                $signalContainer.append($(templateSignal(inputDataForRender)));
 
+                
+                let remoteId: string = this.getRemoteIdByAction(action);
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
 
-                //リモコンの表示を変更
-                //このorderの信号に登録されているremoteIdを取得し、表示
-                let action = signalData.action;
-                if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
-                    return;
-                }
-
-              
-
-                let order = signalData.order;
-                if (order != null) {
-                    let remoteId: string = this.getRemoteIdByAction(signalData.action);
-                    this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
-
-                    //Functions用のプルダウンを描画できるときは描画
-                    let functionName = this.getFunctionNameFromAction(action);
-                    this.renderFunctionsOf(order, this.defaultState.id, functionName);
-                }
+                //Functions用のプルダウンを描画できるときは描画
+                let functionName = this.getFunctionNameFromAction(action);
+                this.renderFunctionsOf(order, this.defaultState.id, functionName);
 
                 //言語対応
                 $signalContainer.i18n();
                 $signalContainer.trigger('create');
             }
 
-            
+
+
             /*
-            * インターバルつきの一回文のシグナルのJQueryを取得する。
-            * @param signalData{ISignalData} 表示する内容のアクション
+            * インターバルつきの一回分のシグナルを描画する。
+            * @param order{nuber} 表示する信号のorder
+            * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {JQuery}appendして描画するためのJQuery
             */
-            private renderSignalDetailWithInterval(signalData: ISignalDataForDisplayPullDown, $signalContainer: JQuery) {
+            private renderSignalDetailWithInterval(order : number, action: IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (signalData == null) {
-                    console.warn(FUNCTION_NAME + "signalData is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+
 
                 if ($signalContainer == null) {
                     console.warn(FUNCTION_NAME + "$signalContainer is null");
@@ -633,10 +789,10 @@ module Garage {
                 }
 
                 //interval以外を描写
-                this.renderSignalDetailWithoutInterval(signalData, $signalContainer);
+                this.renderSignalDetailWithoutInterval(order, action , $signalContainer);
 
                 //intervalを描写
-                this.renderIntervalOf(signalData.order, signalData.action.interval);
+                this.renderIntervalOf(order, action.interval);
                 
 
             }
@@ -650,8 +806,8 @@ module Garage {
             private renderIntervalOf(order: number, inputInterval ?: number) {
                 let FUNCTION_NAME = TAG + "renderIntervalOf : ";
                 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -700,8 +856,9 @@ module Garage {
             */
             private getInvervalFromPullDownOf(order: number): number {
                 let FUNCTION_NAME = TAG + "getInvervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -733,8 +890,9 @@ module Garage {
             */
             private setIntervalPullDownOf(order : number, inputInterval : number) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -814,8 +972,8 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+            private controlPlusButtonEnable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
@@ -825,9 +983,13 @@ module Garage {
                     $target.addClass("disabled");
                 }
 
-                //設定できるマクロ最大数だった場合もdisable
-                if (this.defaultState.action.length >= MAX_NUM_MACRO_SIGNAL) {
-                    $target.addClass("disabled");
+                let $signalContainers: JQuery = this.$el.find(".signal-container-element");
+
+                //設定できるマクロ最大数だった場合、表示すらしない。
+                if (this.isValidJQueryElement($signalContainers) && $signalContainers.length >= MAX_NUM_MACRO_SIGNAL) {
+                    $target.addClass("gone");
+                } else {
+                    $target.removeClass("gone");
                 }
 
             }
@@ -839,48 +1001,50 @@ module Garage {
             * @param $signalContainer1{JQuery} 値を交換する信号コンテナのJQuery1
             * @param $signalContainer2{JQuery} 値を交換する信号コンテナのJQuery1
             */
-            private exchangeSignalValueSignals($signalContainer1: JQuery, $signalContainer2: JQuery) {
-                let FUNCTIONNAME = TAG + "exchangeSignalValueSignals : ";
+            private exchangeSignalValues($signalContainer1: JQuery, $signalContainer2: JQuery) {
+                let FUNCTION_NAME = TAG + "exchangeSignalValues : ";
+
                 if ($signalContainer1 == null) {
-                    console.warn(FUNCTIONNAME + "$signalContainer1 is null");
+                    console.warn(FUNCTION_NAME + "$signalContainer1 is null");
                     return;
                 }
 
-                if ($signalContainer2 == null) {
-                    console.warn(FUNCTIONNAME + "$signalContainer2 is null");
-                    return;
-                }
 
-                //情報の交換に必要な情報を取得
-                let order1 = this.getOrderFrom($signalContainer1);
-                if (order1 == null) {
-                    console.warn(FUNCTIONNAME + "order1 is null");
-                    return;
-                }
-                let signalInputs1 : ISignalInputs = this.getSignalnput(order1);
-                if (signalInputs1 == null) {
-                    console.warn(FUNCTIONNAME + "signalInputs1 is null");
-                    return;
-                }
-
-                let order2 = this.getOrderFrom($signalContainer2);
-                if (order2 == null) {
-                    console.warn(FUNCTIONNAME + "order2 is null");
-                    return;
-                }
-                let signalInputs2: ISignalInputs = this.getSignalnput(order2);
-                if (signalInputs2 == null) {
-                    console.warn(FUNCTIONNAME + "signalInputs2 is null");
-                    return;
-                }
+                let signalInputs1 = this.getSignalInputs($signalContainer1);
+                let signalInputs2 = this.getSignalInputs($signalContainer2);
 
                 //order1にorder2の情報を
-                this.setSignalInputsToPullDownOf(order1, signalInputs2);
+                this.setSignalInputsToPullDownOf(signalInputs1.order, signalInputs2);
 
                 //order2に、order1の情報を
-                this.setSignalInputsToPullDownOf(order2, signalInputs1);
+                this.setSignalInputsToPullDownOf(signalInputs2.order, signalInputs1);
             }
 
+
+            /*
+            *  $signalContainerを入力して、その中に格納されているプルダウンの値を取得する。
+            *  @param $signalContainer{JQuery} プルダウンの値を取得したいコンテナのJQuery
+            *  @return {ISignalInputs}プルダウンに入ってる値。
+            */
+            private getSignalInputs($signalContainer: JQuery): ISignalInputs {
+                let FUNCTION_NAME = TAG + "getSignalInputs : ";
+
+                //情報の交換に必要な情報を取得
+                let order = this.getOrderFrom($signalContainer);
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order1 is invalid");
+                    return;
+                }
+
+                let signalInputs: ISignalInputs = this.getSignalnput(order);
+                if (signalInputs == null) {
+                    console.warn(FUNCTION_NAME + "signalInputs is null");
+                    return;
+                }
+
+                return signalInputs;
+            }
 
             /*
             * 指定したorderのプルダウンに入力されている情報を取得する。
@@ -889,8 +1053,9 @@ module Garage {
             */
             private getSignalnput(order: number): ISignalInputs{
                 let FUNCTION_NAME = TAG + "getSignalnput";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -911,6 +1076,7 @@ module Garage {
                 }
 
                 let result: ISignalInputs = {
+                    order : order,
                     interval : interval,
                     remoteId: remoteId,
                     functionName: functionName,
@@ -927,8 +1093,8 @@ module Garage {
             private setSignalInputsToPullDownOf(order: number, signalInputs: ISignalInputs) {
                 let FUNCTION_NAME = TAG + "setSignalInputsToPullDownOf";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -963,12 +1129,28 @@ module Garage {
                
                 if (ActionNum <= 1 && !this.isValidValue(remoteIdOrder0) && !this.isValidValue(functionOrder0)) {
                     this.$el.find("#select-remote-input-0").focus();
-                }
-
-               
+                }  
             }
 
-           
+            /*
+            * 設定したOrderのinverfal用PullDownを消す。
+            * @param order {number}
+            */
+            private removeIntervalPullDown(order: number) {
+                let FUNCTION_NAME = TAG + "removeIntervalPullDown";
+
+                if (order == null) {
+                    console.warn(FUNCTION_NAME + "order is null");
+                    return;
+                }
+
+                //対象orderのfunctionPullDown用コンテナの子供を削除する
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
+                $targetFunctionPulllDownContainer.children().remove();
+            }
+
+
 
         }
 	}

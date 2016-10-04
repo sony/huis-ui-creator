@@ -17,16 +17,15 @@
 
 
 
-
     <!--画像アイテムの詳細情報エリア-->
 	<script type="text/template" id="template-image-detail">
 
 		<h3 id="face-item-detail-title">★Image<span class="property-cid"></span></h3>
 
-		<!-- プレビュー -->
-		<div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}">
-			<div id="edit-image-non-button-image"></div>
-		</div>
+        <!-- プレビュー -->
+        <div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
+            <div id="edit-image-non-button-image"></div>
+        </div>
 
 	</script>
 
@@ -81,8 +80,8 @@
 
 		<h3 id="face-item-detail-title">★Background<span class="property-cid"></span></h3>
 
-		<!-- プレビュー -->
-		<div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}');{{/enabled}}">
+        <!-- プレビュー -->
+        <div id="property-image-preview" {{#enabled}}style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
 			<div id="edit-image-background"></div>
 			<div id="delete-background-image"></div>
 		</div>
@@ -97,28 +96,6 @@
 		<div id="property-cid">
 			<p class="inline property-title">CID</p>
 			<p class="inline property-value small">{{cid}}</p>
-		</div>
-	</script>
-
-
-
-
-
-    <!--アイテムの位置情報のテンプレート-->
-	<script type="text/template" id="template-property-area">
-		<div id="property-area">
-			{{#area}}
-			<div>
-				<p class="inline property-title">位置</p>
-				<p class="inline property-title-sub">x: </p><p class="inline property-value">{{x}} </p>
-				<p class="inline property-title-sub">y: </p><p class="inline property-value">{{y}}</p>
-			</div>
-			<div>
-				<p class="inline property-title">サイズ</p>
-				<p class="inline property-title-sub">w: </p><p class="inline property-value">{{w}} </p>
-				<p class="inline property-title-sub">h: </p><p class="inline property-value">{{h}}</p>
-			</div>
-			{{/area}}
 		</div>
 	</script>
 
@@ -165,11 +142,16 @@
 
 			<!-- アクション -->
 			<div class="property-state-action">
-				<h4 id="button-state-label-action">★アクション</h4>
                 <div id="signals-container" ></div>
 			</div>
 
-            <div id="add-signal-btn" data-state-id="{{id}}"></div>
+
+            <div class="add-btn-container">
+                <div id="add-signal-btn" data-state-id="{{id}}">
+                    <div class="btn-image"></div>
+                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">★操作を追加</span>
+                </div>
+            </div>
 
 		</div>
 	</script>
@@ -181,22 +163,24 @@
     <!-- 通常のボタンの１信号分のテンプレート -->
     <script type="text/template" id="template-property-button-signal-normal">
 
-        <div class="signal-container-element" data-signal-order="{{order}}">
+        <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
 
-            <!--アクション選択用のテンプレート-->
-            <div id="signal-action-container"></div>
+            <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</span><span>{{order_plus_one}}</span></h4>
+            <div class="signals">
+                <!--アクション選択用のテンプレート-->
+                <div id="signal-action-container"></div>
 
-            <!--リモコン選択プルダウン-->
-            <div id="signal-remote-container"></div>
+                <!--リモコン選択プルダウン-->
+                <div id="signal-remote-container"></div>
 
-            <!--Function選択用のテンプレート-->
-            <div id="signal-function-container"></div>
+                <!--Function選択用のテンプレート-->
+                <div id="signal-function-container"></div>
 
-            <!--削除ボタン-->
-            <div id="delete-signal-area">
-                <div class="delete-signal" data-signal-order="{{order}}"></div>
+                <!--削除ボタン-->
+                <div class="delete-signal-area" id="delete-signal-area-{{order}}">
+                    <div class="delete-signal" data-signal-order="{{order}}"></div>
+                </div>
             </div>
-
         </div>
 
     </script>
@@ -235,8 +219,15 @@
 
                 </h3>
                 <div id="about-macro">
-                    マクロとは？
-                    <span data-i18n="">★サンプル</span>
+                    <div class="popup">
+                        <div class="component">
+                            <div id="popup-arrow"></div>
+                            <p>
+                                <span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE">★マクロとは？</span>
+                                <br><span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT">★マクロとは？</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -252,7 +243,7 @@
         <script type="text/template" id="template-property-macro-button">
             <div class="macro-container" data-state-id="{{id}}">
                 <!-- プレビュー -->
-                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}">
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}">
                     <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
                     <div class="text-field-in-preview">
                         <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
@@ -284,6 +275,10 @@
                     </div>
                 </div>
 
+                <div class="button-macro-action-container-element">
+                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</h4>
+                </div>
+
                 <div class="custom-select">
                     <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                         {{#actionList}}
@@ -291,44 +286,69 @@
                         {{/actionList}}
                     </select>
                 </div>
+                    
+                <!--信号用プルダウンたちが入るスペース-->
+                <div id="signals-container">
+                </div>
 
-                <div id="signals-container"></div>
-
-                <div id="add-signal-btn"></div>
-
-            </div>
+                <div class="add-btn-container">
+                    <div id="add-signal-btn">
+                        <div class="btn-image"></div>
+                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">★操作を追加</span>
+                    </div>
+                </div>
+                </div>
         </script>
 
 
 
 
 
-        <!--マクロのリモコン1信号分のテンプレート-->
-        <script type="text/template" id="template-property-button-signal-macro">
-            <div class="signal-container-element" data-signal-order="{{order}}">
+    <!--プルダウンの左側に出現するdot線-->
+    <script type="text/template" id="template-macro-signal-dot-line">
+        <div class="dot-line"></div>
+    </script>
 
-                <span class="orderIndicator">★信号{{order}}</span>
 
-                <!--インターバル選択プルダウン-->
-                <div id="signal-interval-container"></div>
 
-                <!--リモコン選択プルダウン-->
-                <div id="signal-remote-container"></div>
 
-                <!--Function選択プルダウン-->
-                <div id="signal-function-container"></div>
 
-                <!--削除ボタン-->
-                <div id="delete-signal-area">
-                    <div class="delete-signal" data-signal-order="{{order}}"></div>
+    <!--マクロのリモコン1信号分のテンプレート-->
+    <script type="text/template" id="template-property-button-signal-macro">
+            <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
+
+                <div class="signals">
+                    <div class="order-indicator-container">
+                        <div class="dot-container">
+                            <div class="order-indicator-dot" id="order-indicator-dot-{{order}}"></div>
+                        </div>
+                        <span class="order-indicator-number">{{order_plus_one}}</span>
+                    </div>
+                    <div class="pulldowns">
+                        <!--インターバル選択プルダウン-->
+                        <div id="signal-interval-container"></div>
+
+                        <!--リモコン選択プルダウン-->
+                        <div id="signal-remote-container"></div>
+
+                        <!--Function選択プルダウン-->
+                        <div id="signal-function-container"></div>
+                    </div>
+
+                    <!--削除ボタン-->
+                    <div class="delete-signal-area" id="delete-signal-area-{{order}}">
+                        <div class="delete-signal" data-signal-order="{{order}}"></div>
+                    </div>
+
+                    <!--並び替えボタン-->
+                    <div class="sort-button-area" id="sort-button-area-{{order}}">
+                        <div class="sort-btns">
+                            <div class="sort-up-btn" data-signal-order="{{order}}"></div>
+                            <div class="sort-down-btn" data-signal-order="{{order}}"></div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <!--並び替えボタン-->
-                <div id="sort-button-area">
-                    <div class="sort-up-btn" data-signal-order="{{order}}"></div>
-                    <div class="sort-down-btn" data-signal-order="{{order}}"></div>
-                </div>
-
             </div>
         </script>
 
@@ -420,7 +440,7 @@
             <div class="state-container">
 
                 <!-- プレビュー -->
-                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPath}}{{resizeResolvedOriginalPath}}{{/resizeResolvedOriginalPath}}{{^resizeResolvedOriginalPath}}{{resolvedPath}}{{/resizeResolvedOriginalPath}}{{/image}}');" data-state-id="{{id}}"></div>
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}"></div>
 
             </div>
         </script>

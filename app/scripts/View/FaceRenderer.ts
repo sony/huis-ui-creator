@@ -11,7 +11,9 @@ module Garage {
 
 			private face_: IGFace;
 			private moduleView_: Module;
-			private type_: string;
+            private type_: string;
+            private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
+
 			//private template_: Tools.JST;
 			/**
 			 * constructor
@@ -48,7 +50,8 @@ module Garage {
 							name: remoteId + "_page_0" // 暫定
 						}]
 					};
-				}
+                }
+                this.$facePlane_ = null;
 				this.type_ = options.attributes["type"];
 			}
 
@@ -65,7 +68,44 @@ module Garage {
 				}
 
 				return this;
-			}
+            }
+
+            /*
+            * すでに描画されているFaceに追加で描画する
+            */
+            addFace(inputFace: IGFace) {
+                let FUNCTION_NAME = TAG + "addFace : ";
+                switch (this.type_) {
+                    case "canvas":
+                        console.warn(FUNCTION_NAME + "canvas is not support");
+                        break;
+
+                    default:
+                        this.addFaceAsPlain(inputFace);
+                        break;
+                }
+            }
+
+
+            /*
+            * すでに描画されているFaceに追加で描画する。Canvas以外用。
+            */
+            private addFaceAsPlain(inputFace: IGFace) {
+                let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
+               
+                if (this.$facePlane_ == null) {
+                    var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
+                    var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
+                    this.$facePlane_ = $(template());
+                }
+
+                this.moduleView_.addModuleInNewFacePages(inputFace.modules);
+
+           
+                this.$el.append(this.$facePlane_);
+
+            }
+
 
 			/**
 			 * face 内のページ数を取得する。
@@ -138,8 +178,8 @@ module Garage {
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 * @return {Model.ButtonItem} 新しく作成された model
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
-				return this.moduleView_.addButton(button, moduleId, offsetY);
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
+                return this.moduleView_.addButton(button, moduleId, offsetY);
 			}
 
 			/**
@@ -178,6 +218,18 @@ module Garage {
 				return this.moduleView_.addImage(image, moduleId, offsetY, callback);
 			}
 
+            /**
+             * 画像アイテムを追加する。画像のコピーは発生しない。
+             * @param image {Model.ImageItem} [in] 追加する画像アイテムの model
+			 * @param image {string} [in] 追加する画像アイテムのパス。パスを指定した場合は、ページの背景として追加される。
+			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
+			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
+			 * @return {Model.ImageItem} 新しく作成された model
+			 */
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number) {
+                return this.moduleView_.addImageWithoutCopy(image, moduleId, offsetY);
+            }
+
 			/**
 			 * 画像アイテムを削除する。
 			 * 
@@ -210,6 +262,8 @@ module Garage {
 			addLabel(label: Model.LabelItem, moduleId: string, offsetY?: number): Model.LabelItem {
 				return this.moduleView_.addLabel(label, moduleId, offsetY);
 			}
+
+
 
 			/**
 			 * ラベルを削除する。
@@ -288,10 +342,10 @@ module Garage {
 			private _renderAsPlain() {
 				var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
 				var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
-				var $facePlain = $(template());
+                this.$facePlane_ = $(template());
 
 				this.moduleView_ = new Module({
-					el: $facePlain,
+                    el: this.$facePlane_,
 					attributes: {
 						remoteId: this.face_.remoteId,
 						modules: this.face_.modules,
@@ -300,7 +354,7 @@ module Garage {
 				});
 				this.moduleView_.render();
 
-				this.$el.append($facePlain);
+                this.$el.append(this.$facePlane_);
 			}
 
 		}

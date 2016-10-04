@@ -11,25 +11,21 @@
 			"x": 8,
 			"y": 0,
 			"w": 464,
-			"h": 87
+			"h": 116
 		},
 		"name": "STR_BUTTON_MACRO",
 		"default": 0,
 		"state": [{
 			"id": 0,
-			"label": [{
-				"area": {
-					"x": 0,
-					"y": 0,
-					"w": 464,
-					"h": 87
-				},
-				"text": "MACRO BUTTON",
-				"color": 0,
-				"font_weight": "bold",
-				"font": "SST",
-				"size": 30
-			}],
+			"image": [{
+		        "area": {
+			        "x": 0,
+			        "y": 0,
+			        "w": 464,
+			        "h": 116
+		        },
+		        "path": "btn_image_macro.png"
+	        }],
 			"action": [{
 				"input": "touch",
 				"code_db": {

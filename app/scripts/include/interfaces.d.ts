@@ -382,14 +382,16 @@ interface IGImage {
 	version?: string;
 	area?: IArea;
     path: string;
-	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
+    resolvedPath?: string; //<!image.path を絶対パスに変換したもの
+    resolvedPathCSS?: string;//CSSで表示できる状態のパス
 	garageExtensions?: IGGarageImageExtensions;
 	areaRatio?: IGAreaRatio;
 	pageBackground?: boolean;
 	resized?: boolean; //<!リサイズが行われたかどうか
 	resizeMode?: string;
 	resizeOriginal?: string;
-	resizeResolvedOriginalPath?: string;
+    resizeResolvedOriginalPath?: string;
+    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
 	[x: string]: any;
 }
 
@@ -736,16 +738,16 @@ declare module Garage {
 	 */
     var TARGET_ALL_STATE: number;
     /*
+     * ダブルクリックの待ち受け時間
+     */
+    var DOUBLE_CLICK_TIME_MS: number;
+    /*
      * マクロに登録できる信号の最大数
      */
     var MAX_NUM_MACRO_SIGNAL : number;
     /*
-     * マクロを設定する際のデフォルトInverval秒数
+     * マクロを設定する際のデフォルトInverval秒数[ms]
      */
-    var DEFAULT_INTERVAL_MACRO: number;
-     /*
-      * マクロを設定する際のデフォルトInverval秒数
-      */
     var DEFAULT_INTERVAL_MACRO: number;
     /*
      * 設定できるアクションリスト
@@ -763,7 +765,10 @@ declare module Garage {
     var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
     var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
     var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
-
+    /*
+    * マクロボタンの順番交換アニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
 }
 
 

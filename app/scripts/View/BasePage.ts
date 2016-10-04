@@ -9,6 +9,7 @@ module Garage {
         import UI = CDP.UI;
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
+        import JQUtils = Util.JQueryUtils;
 
 		let TAG_BASE: string = "[Garage.View.BasePage] ";
 
@@ -505,7 +506,65 @@ module Garage {
 				}
 
 				return false;
-			}
+            }
+
+
+            /*
+             * ターゲットのCSSの背景にURLを設定する。
+             * @param $target{JQuery} 背景を設定する対象の JQuery
+             * @param url{String} backgroundに設定する画像のurl
+             */
+            protected setBackgroundImageUrlInCSS($target: JQuery, imageUrl: string) {
+                let FUNCTION_NAME = TAG_BASE + "setBackgroundImageUrlInCSS : ";
+
+                if ($target == null) {
+                    console.warn(FUNCTION_NAME + "$target is null");
+                    return;
+                }
+
+                if (imageUrl == null) {
+                    console.warn(FUNCTION_NAME + "imageUrl is null");
+                    return;
+                }
+
+                //mac対策のため、シングルクォーテーションで囲む
+                $target.css("background-image", "url('" + imageUrl + "')");
+
+            }
+
+
+            /*
+             * ImageItemから、CSSを描画に必要なパスを取得する。
+             * @param model{Model.ImageItem} CSSに表示したい画像モデル
+             */
+            protected getValidPathOfImageItemForCSS(model:ItemModel) :string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfImageItemForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+                let inputPath = null;
+                //有効なパスを優先順位順にサーチ
+                if (model["resizeResolvedOriginalPathCSS"]) {
+                    inputPath = model["resizeResolvedOriginalPathCSS"];
+                } else if (model["resolvedPathCSS"]) {
+                    inputPath = model["resolvedPathCSS"]
+                } else if (model["resizeResolvedOriginalPath"]) {
+                    inputPath = model["resizeResolvedOriginalPath"];
+                } else if (model["resolvedPath"]) {
+                    inputPath = model["resolvedPath"];
+                }
+
+                if (inputPath != null) {
+                    return inputPath;
+                } else {
+                    console.error(FUNCTION_NAME + "model " + model.cid + "not have valid path");
+                    return;
+                }
+            }
+
 
 
 

@@ -114,6 +114,29 @@ module Garage {
                 var windowHeight = innerHeight;
             }
 
+            /*
+            * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
+            */
+            private syncCommonImages(callback?: Function) {
+                let FUNCTION_NAME = TAG + "syncCommonImages : ";
+
+                let src = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                let dst = HUIS_REMOTEIMAGES_ROOT;//コピー先
+
+                //copyしてcallbackを実行
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                let syncProgress = syncTask._copyCommonImages(src, dst, (err) => {
+                    if (err) {
+                        this.showDialogNotConnectWithHuis(err);
+                    } else if (callback) {//同期成功。 
+                        callback();
+                    }
+                });
+
+
+
+            }
+
 
             private syncWithHUIS(callback?: Function) {
                 if (!HUIS_ROOT_PATH) {
@@ -128,7 +151,7 @@ module Garage {
                         // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                         Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
                             // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
-                            this.doSync(true, callback);                          
+                            this.doSync(true, callback);
                         });
                     } else {
                         // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
@@ -151,26 +174,32 @@ module Garage {
 
                 let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
-                        // エラーダイアログの表示
-                        // [TODO] エラー内容に応じて表示を変更するべき
-                        // [TODO] 文言は仮のもの
-                        electronDialog.showMessageBox({
-                            type: "error",
-                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
-							title: PRODUCT_NAME,
-                        });
-
-                        app.exit(0);
-                    } else {
+                        this.showDialogNotConnectWithHuis(err);
+                    } else {//同期成功。
                         // 同期後に改めて、HUIS ファイルの parse を行う
                         huisFiles.init(HUIS_FILES_ROOT);
                         console.log("Complete!!!");
-                        if (callback) {
-                            callback();
-                        }
+                       
+                        this.syncCommonImages(callback);
                     }
                 });
             };
+
+
+            private showDialogNotConnectWithHuis(err) {
+                // エラーダイアログの表示
+                // [TODO] エラー内容に応じて表示を変更するべき
+                // [TODO] 文言は仮のもの
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+                    title: PRODUCT_NAME,
+                });
+
+                app.exit(0);
+            }
+
+
 
         }
 

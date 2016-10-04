@@ -11,10 +11,13 @@ module Garage {
 		var TAG = "[Garage.View.PropertyAreaNormal] ";
 
 
-        class ActionInputStringKeyValueArray {
+        //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
+        //すでに登録されているアクションは、pulldownに表示できないようにするため
+        //すでに登録されているアクションを記憶する。
+        class ActionSelecctor {
             private all: IStringKeyValue[];
             private array: IStringKeyValue[];
-            private TAG = "[ActionInputStringKeyValueArray]";
+            private TAG = "[ActionSelecctor]";
 
             constructor(inputActionKeys: string[]) {
                 this.array = [];
@@ -63,7 +66,7 @@ module Garage {
             /*
             * 現在保持しているactionInput配列が入ってない ACTION_INPUTSを返す。
             */
-            getNegative(): IStringKeyValue[] {
+            getNotSelected(): IStringKeyValue[] {
                 let tmpResult: IStringKeyValue[] = $.extend(true, [], this.all);
                 for (let i = 0; i < this.array.length; i++) {
                     tmpResult = tmpResult.filter((value, index: number) => {
@@ -123,6 +126,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 this.deleteSignal(order);
 
             }
@@ -137,21 +145,29 @@ module Garage {
                 }
               
                 let order = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 let stateId = this.getStateIdFrom($target);
               
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
+
+                    //削除をちら見する。
+                    this.animateAddButton(order);
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-
-                this.controlPlusButtonEnableDisable();
-
+                this.updateModel(this.DEFAULT_STATE_ID);
+                this.controlPlusButtonEnable();
             }
 
             //Actionを変更させたときに呼ばれる
@@ -182,7 +198,9 @@ module Garage {
 
                 // プルダウンに設定されている Actionの順番を取得
                 let order = this.getOrderFrom($target);
-                if (order == null) {
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -232,7 +250,15 @@ module Garage {
                 
             }
 
-            updateModel(stateId : number) {
+            
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
+            ///// private method
+            /////////////////////////////////////////////////////////////////////////////////////////
+
+            private updateModel(stateId: number) {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
 
@@ -253,7 +279,9 @@ module Garage {
                     //Actionの順番を取得。取得できない場合は次のループへ
                     let $target: JQuery = $($signalContainers[i]);
                     let order = this.getOrderFrom($target);
-                    if (order == null) {
+
+                    if (!this.isValidOrder(order)) {
+                        console.warn(FUNCTION_NAME + "order is invalid");
                         continue;
                     }
 
@@ -261,7 +289,7 @@ module Garage {
                     if (!this.isValidValue(tmpInput)) {
                         tmpInput = null;
                     }
-                   
+
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
                     if (!this.isValidValue(tmpRemoteId)) {
@@ -316,13 +344,13 @@ module Garage {
 
                         //bluetooth_dataを入力
                         let tmpBluetoothData = null
-                        if (deviceInfo.bluetooth_data != null){
+                        if (deviceInfo.bluetooth_data != null) {
                             tmpBluetoothData = deviceInfo.bluetooth_data;
                         }
                         if (tmpBluetoothData != null) {
                             tmpAction.bluetooth_data = tmpBluetoothData;
                         }
-                        
+
                     }
 
                     tmpActionsWithOrder[order] = tmpAction;
@@ -346,8 +374,8 @@ module Garage {
                     }
                 }
 
-                let tmpState  = this.model.state[stateId];
-    
+                let tmpState = this.model.state[stateId];
+
                 let newState: IGState = {
                     id: tmpState.id,
                     image: tmpState.image && tmpState.image ? tmpState.image : undefined,
@@ -358,7 +386,7 @@ module Garage {
 
                 let states: IGState[] = [];
                 //全stateを更新。
-                for (let i = 0; i < this.model.state.length; i++){
+                for (let i = 0; i < this.model.state.length; i++) {
                     if (i == stateId) {
                         states.push(newState);
                     } else {
@@ -371,18 +399,12 @@ module Garage {
                 this.model.state = states;
 
                 //更新後の値で、+ボタンの有効・無効判定を行う。
-                this.controlPlusButtonEnableDisable();
+                this.controlPlusButtonEnable();
                 this.updateAssiendInputActionsFromModel(stateId);
                 this.trigger("updateModel");
 
-                
+
             }
-
-
-
-            /////////////////////////////////////////////////////////////////////////////////////////
-            ///// private method
-            /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
             * 現在、表示されているStateIdを取得する
@@ -407,9 +429,9 @@ module Garage {
             private deleteSignal(order: number) {
                 let FUNCTION_NAME = TAG + "deleteSignal";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
@@ -464,9 +486,25 @@ module Garage {
                     this.renderFunctionsOf(i, stateId, functionName);
                 }
 
-                this.controlPlusButtonEnableDisable();
+                this.renderSomeElementIfOneSignalOnlyExist();
+                this.controlPlusButtonEnable();
                 return this.$el;
 
+            }
+
+            /*
+           * 信号が1つしかない場合、signalの要素を削除する
+           */
+            private renderSomeElementIfOneSignalOnlyExist() {
+                let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
+                if (signalLength <= 1) {
+                    //削除エリアを削除
+                    this.$el.find("#sort-button-area-0").remove();
+                }
             }
 
             /*
@@ -480,9 +518,9 @@ module Garage {
             private renderSignalContainerMin(order: number, stateId: number, inputAction? : string, remoteId?:string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (stateId == null) {
@@ -519,10 +557,9 @@ module Garage {
                     return;
                 }
 
-
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (!this.isValidJQueryElement($signalsContainer)) {
@@ -535,10 +572,13 @@ module Garage {
 
                 let inputData = {
                     order: order,
+                    order_plus_one:order+1
                 };
 
                 let $signalDetail = $(templateSignal(inputData));
                 $signalsContainer.append($signalDetail);
+
+                $signalsContainer.i18n();
 
             }
 
@@ -551,9 +591,9 @@ module Garage {
             private renderActionPulllDownOf(order: number,stateId:number, inputAction? : string) {
                 let FUNCTION_NAME: string = TAG + "renderActionPulllDownOf : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 if (stateId == null) {
@@ -573,9 +613,9 @@ module Garage {
                 let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.templateItemDetailFile_);
 
                 //すでに入力されているinputは、表示しない。
-                let inputActionInputs: ActionInputStringKeyValueArray = new ActionInputStringKeyValueArray(this.assignedInputActions);
-                inputActionInputs.deleteByValue(inputAction);
-                let displayActionInputs: IStringKeyValue[] = inputActionInputs.getNegative();
+                let actionSelector: ActionSelecctor = new ActionSelecctor(this.assignedInputActions);
+                actionSelector.deleteByValue(inputAction);
+                let displayActionInputs: IStringKeyValue[] = actionSelector.getNotSelected();
 
                 let inputData = {
                     id: stateId,
@@ -591,8 +631,9 @@ module Garage {
                 if (inputAction != null) {
                     this.setInputAction(order, stateId, inputAction);
                 } else {
+                    //値が入力されていない場合、初期状態を描画
                     let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.templateItemDetailFile_);
-                    $actionContainer.find("select").append(noneOption);
+                    $actionContainer.find("select").prepend(noneOption);
                     this.setInputAction(order, stateId, "none");
                 }
 
@@ -611,9 +652,9 @@ module Garage {
             private getInputAction(order: number) {
                 let FUNCTION_NAME = TAG + "getInputAction : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
@@ -647,9 +688,9 @@ module Garage {
             private setInputAction(order: number, stateId: number, inputType: string) {
                 let FUNCTION_NAME = TAG + "setInputAction : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
-                    return;
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;;
                 }
 
                
@@ -730,8 +771,8 @@ module Garage {
 
 
             // +ボタンのenable disableを判定・コントロールする。
-            private controlPlusButtonEnableDisable() {
-                let FUNCTINO_NAME = TAG + "controlPlusButtonEnableDisable";
+            private controlPlusButtonEnable() {
+                let FUNCTINO_NAME = TAG + "controlPlusButtonEnable";
                 let $target = this.$el.find("#add-signal-btn");
 
                 //すべてのpullDownがうまっているとき、+をenableに、それ以外はdisable
@@ -741,9 +782,13 @@ module Garage {
                     $target.addClass("disabled");
                 }
 
-                //設定できるマクロ最大数だった場合もdisable
-                if (this.model.state[this.DEFAULT_STATE_ID].action.length >= Object.keys(ACTION_INPUTS).length) {
-                    $target.addClass("disabled");
+                let $signalContainers: JQuery = this.$el.find(".signal-container-element");
+
+                //設定できるアクションの最大数だった場合、表示すらしない。
+                if (this.isValidJQueryElement($signalContainers) &&  $signalContainers.length >= Object.keys(ACTION_INPUTS).length) {
+                    $target.addClass("gone");
+                } else {
+                    $target.removeClass("gone");
                 }
 
             }

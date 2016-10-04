@@ -10,16 +10,7 @@ module Garage {
 
 		var TAG = "[Garage.View.PropertyAreaButtonBase] ";
 
-        //信号選択用のプルダウンを表示するための情報
-        //TODO:余計な情報もある、必要な情報だけに整理したほうがよい。
-        interface ISignalDataForDisplayPullDown {
-            order: number; //マクロでの信号の順番
-            action?: IAction; //表示するAction
-            id: number;    // マクロボタンのStateId
-            remotesList?: IRemoteInfo[]; //リモコン選択用プルダウンに表示するためのリスト
-            functions?: string[]; //Function選択用プルダウンに表示するためのリスト
-        }
-
+       
         export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -82,7 +73,7 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             //NaNか判定 Number.isNaNが使えないので代用
-            protected isNaN(v) {
+            protected isNaN(v) :boolean{
                 return v !== v;
             }
 
@@ -132,6 +123,11 @@ module Garage {
                 }
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
+
+                if (! this.isValidOrder(result)) {
+                    console.warn(FUNCTION_NAME + "result is invalid");
+                    return undefined;
+                }
 
                 if (result != null) {
                     return result;
@@ -213,8 +209,9 @@ module Garage {
          */
             protected getRemoteIdFromPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getRemoteIdOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -249,6 +246,11 @@ module Garage {
             protected getRemoteIdPullDownJQueryElement(order : number):JQuery{
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
                 if ($signalContainerElement == null) {
                     console.warn(FUNCTION_NAME + "$signalContainerElement is null");
@@ -273,8 +275,9 @@ module Garage {
           */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -306,15 +309,15 @@ module Garage {
             protected removeRemoteIdPullDownOf(order: number) {
                 let FUNCTION_NAME = TAG + "removeRemoteIdPullDownOf";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
                 //対象orderのfunctionPullDown用コンテナの子供を削除する
                 let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
-                $targetFunctionPulllDownContainer.children().remove();
+                let $targetFunctionPullDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
+                $targetFunctionPullDownContainer.children().remove();
             }
 
             /*
@@ -325,8 +328,8 @@ module Garage {
             protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
-                if (order == null) {
-                    console.warn("order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -378,7 +381,7 @@ module Garage {
                     }
                     
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         id: stateId,
                         order: order,
                         remotesList: remoteList
@@ -394,8 +397,9 @@ module Garage {
                         // リモコンがHuisFilesに存在せずキャッシュのみ存在する場合
                         this.setRemoteIdPullDownOf(order, deviceInfo.id);
                     } else {
+                        //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
-                        $remoteContainer.find("select").append(noneOption);
+                        $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none");
                     }
 
@@ -424,7 +428,6 @@ module Garage {
                 let result: string = null;
 
                 if (action.code != null) {
-                    //TODO:学習の場合care,hashMapがないので、ここでエラーになる。
                     result = action.code_db.function;
                 } else if (action.bluetooth_data != null) {
                     result = action.bluetooth_data.bluetooth_data_content;
@@ -474,8 +477,9 @@ module Garage {
             */
             protected setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
                 let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -506,10 +510,12 @@ module Garage {
             */
             protected getSignalContainerElementOf(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getSignalContainerElementOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
+
                 return this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
             }
 
@@ -520,9 +526,9 @@ module Garage {
             * @{string} functionName
             */
             protected getFunctionFromlPullDownOf(order: number): string {
-                let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf";
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf : ";
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -535,7 +541,8 @@ module Garage {
                 let functionName: string = null;
                 let $functionPullDown = $signalContainerElement.find(".function-input[data-signal-order=\"" + order + "\"]");
                 if ($functionPullDown == null || $functionPullDown.length == 0) {
-                    console.warn(FUNCTION_NAME + "$functionPullDown is invalid");
+                    //正常系でも、functionPulldownがない場合はあり得る。
+                    //console.warn(FUNCTION_NAME + "$functionPullDown is invalid");
                     return;
                 }
 
@@ -558,8 +565,8 @@ module Garage {
             protected renderFunctionsOf(order: number, stateId? : number, functionName?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
-                if (order == null) {
-                    console.warn("order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -583,7 +590,7 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
-                    let inputSignalData: ISignalDataForDisplayPullDown = {
+                    let inputSignalData = {
                         functions: functions,
                         id: stateId,
                         order: order
@@ -595,8 +602,9 @@ module Garage {
                     if (functionName != null) {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
+                        //値がない場合、初期値をrender
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
-                        $functionlContainer.find("select").append(noneOption);
+                        $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
 
@@ -618,8 +626,8 @@ module Garage {
             protected removeFunctionPullDown(order: number) {
                 let FUNCTION_NAME = TAG + "removeFunctionPullDown";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
@@ -638,11 +646,13 @@ module Garage {
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
             protected getFunctionsOf(order: number, stateId? : number) {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf";
+                let FUNCTION_NAME = TAG + "getRemoteIdOf : ";
 
-                if (order == null) {
-                    console.warn(FUNCTION_NAME + "order is null");
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
                 }
+
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
@@ -663,8 +673,136 @@ module Garage {
                     }
                 }
             }
+          
+          /*
+           * ＋ボタンを押下する際のアニメーション. 
+           * @param order{number} 出現するdom のorder
+           */
+            protected animateAddButton(order: number) {
+                let FUNCTINO_NAME = TAG + "animateAddButton : ";
+                let ANIMATINO_DURATION = 1000; //  アニメーションの時間[ms]
 
 
+                if (!this.isValidValue(order)) {
+                    console.warn(FUNCTINO_NAME + "order is invalid");
+                    return;
+                }
+
+                let $target = this.getSignalContainerElementOf(order);
+                $target.find(".delete-signal-area").addClass("show");
+                $target.find(".sort-button-area").addClass("show");
+
+                setTimeout(
+                    () => {
+                        $target.find(".delete-signal-area").removeClass("show");;
+                        $target.find(".sort-button-area").removeClass("show");
+                    }
+                    , ANIMATINO_DURATION
+                );
+
+            }
+
+
+            /*
+             * 対象のJQueryのoffset座標系でのpositionを取得する
+             * 
+             */
+            protected getPosition($target: JQuery): IPosition{
+                let FUNCTION_NAME = TAG + "getPosition : ";
+
+                if (!this.isValidJQueryElement($target) || $target.offset() == null) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                let resultPosition: IPosition =
+                    {
+                        x: $target.offset().left,
+                        y: $target.offset().top
+                    }
+
+                if (resultPosition == null) {
+                    console.warn(FUNCTION_NAME + "resultPosition is null");
+                }
+
+                return resultPosition
+            }
+
+
+            /*
+             * 対象のdomの位置を入れ替えるアニメーションをする。
+             * @param $target1 {JQuery}
+             * @param $target2 {JQuery}
+             * @param duration {number} アニメーションの期間 [ms]
+             */
+            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration : number) {
+                let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
+                
+
+                if (!this.isValidJQueryElement($target1)) {
+                    console.warn(FUNCTION_NAME + "$target1 is invalid");
+                    return;
+                }
+
+                if (!this.isValidJQueryElement($target2)) {
+                    console.warn(FUNCTION_NAME + "$target2 is invalid");
+                    return;
+                }
+
+                let target1Position: IPosition = this.getPosition($target1);
+                let target2Position: IPosition = this.getPosition($target2);
+
+                let tmpTarget1Duration = $target1.css("transition-duration");
+                let tmpTarget2Duration = $target2.css("transition-duration");
+
+                //durationをセット。
+                $target1.css("transition-duration", duration / 1000 + "s");
+                $target2.css("transition-duration", duration / 1000 + "s");
+                
+                //移動
+                $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");
+                $target2.css("transform", "translateX(" + (target1Position.x - target2Position.x) + "px)");
+                $target1.css("transform", "translateY(" + (target2Position.y - target1Position.y) + "px)");
+                $target2.css("transform", "translateY(" + (target1Position.y - target2Position.y) + "px)");
+
+                setTimeout(()=>{
+                    //durationをセット。
+                    $target1.css("transition-duration", tmpTarget1Duration);
+                    $target2.css("transition-duration", tmpTarget2Duration);
+                },duration);
+            }
+
+
+
+            /*
+             * orderの違反をチェックする。
+             * order {number} チェックするorder情報
+             * @return true:orderとして有効、false:orderとして利用不可。
+             */
+            protected isValidOrder(order: number):boolean {
+                let FUNCTION_NAME = TAG + "isValidOrder : ";
+
+                //値として利用できるかチェック
+                if (!this.isValidValue(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return false;
+                }
+
+                //0未満の値は不正
+                if (order < 0) {
+                    console.warn(FUNCTION_NAME + "order is negative");
+                    return false;
+                }
+
+                //最大値より多いと不正
+                if (order > MAX_NUM_MACRO_SIGNAL) {
+                    console.warn(FUNCTION_NAME + "order is over maxium value");
+                    return false;
+                }
+
+                return true;
+
+            }
 
         }
 	}
