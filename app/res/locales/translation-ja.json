@@ -90,7 +90,7 @@
         }
     },
     "home": {
-        "STR_HOME_TITLE": "HOME",
+        "STR_HOME_TITLE": "ホーム",
         "STR_HOME_INTRODUCTION_1": "HUIS REMOTE CONTROLLERを<br>",
         "STR_HOME_INTRODUCTION_2": "あなた好み",
         "STR_HOME_INTRODUCTION_3": "のデザインに。"
@@ -176,10 +176,10 @@
             "STR_PLEASE_INPUT_ACTION": "操作を選択",
             "STR_ACTION_INPUT_TAP": "タップ",
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)",
-            "STR_ACTION_INPUT_SWIPE_UP": "上フリック",
-            "STR_ACTION_INPUT_SWIPE_RIGHT": "右フリック",
-            "STR_ACTION_INPUT_SWIPE_LEFT": "左フリック",
-            "STR_ACTION_INPUT_SWIPE_DOWN": "下フリック"
+            "STR_ACTION_INPUT_FLICK_UP": "上フリック",
+            "STR_ACTION_INPUT_FLICK_RIGHT": "右フリック",
+            "STR_ACTION_INPUT_FLICK_LEFT": "左フリック",
+            "STR_ACTION_INPUT_FLICK_DOWN": "下フリック"
         },
         "function": {
             "STR_PLEASE_INPUT_REMOTE": "信号を選択",
