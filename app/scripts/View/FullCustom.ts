@@ -3466,9 +3466,9 @@ module Garage {
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
                                     });
+                                    
 
-
-                                    let inputUrl: string = JQUtils.enccodeUriValidInCSS(value);
+                                    let inputUrl: string = this.getValidPathOfIGImageForCSS(targetState.image[0]);
                                     if (inputUrl == null) {
                                         inputUrl = "none";
                                     }    
