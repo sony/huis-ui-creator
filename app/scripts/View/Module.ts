@@ -398,7 +398,7 @@ module Garage {
 			 * @param moduleId {string} [in] ボタンの追加先となる module の ID
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number, callback?: Function): Model.ButtonItem {
 				var moduleIndex = this._getModuleIndex(moduleId);
 				if (moduleIndex < 0) {
 					console.log(TAG + "module not found");
@@ -418,7 +418,7 @@ module Garage {
 					this.buttonViews_[moduleIndex] = buttonView;
 				}
 
-				var newButton = this._copyButtonItem(button, module, offsetY);
+                var newButton = this._copyButtonItem(button, module, offsetY);
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -453,7 +453,7 @@ module Garage {
 			/**
 			 * ButtonItem をコピーする
 			 */
-			private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
+            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
 				if (!offsetY) {
 					offsetY = 0;
 				}
@@ -499,7 +499,7 @@ module Garage {
 					};
 					newState.active = srcState.active;
 
-					if (srcState.action) {
+                    if (srcState.action) {
 						if (_.isArray(srcState.action)) {
 							newState.action = $.extend(true, [], srcState.action);
 						} else {
@@ -515,11 +515,19 @@ module Garage {
 						}
 					}
 
-					if (srcState.image) {
-						if (_.isArray(srcState.image)) {
+                    if (srcState.image) {
+                        if (_.isArray(srcState.image)) {
 							newState.image = $.extend(true, [], srcState.image);
 						} else {
 							newState.image = [$.extend(true, {}, srcState.image)];
+						}
+					}
+
+					if (srcState.label) {
+						if (_.isArray(srcState.label)) {
+							newState.label = $.extend(true, [], srcState.label);
+						} else {
+							newState.label = [$.extend(true, {}, srcState.label)];
 						}
 					}
 
@@ -652,15 +660,84 @@ module Garage {
 
 				// 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
 				if (srcImagePath && fs.existsSync(srcImagePath) && !fs.existsSync(newImage.resolvedPath)) {
-					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done(() => {
+					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done((result) => {
 						if (callback) {
-							callback();
+							callback(result);
 						}
 					});
 				}
 
 				return newImage;
-			}
+            }
+
+
+            /**
+			 * 画像アイテムを追加する。画像のコピーは発生しない。
+			 * 
+			 * @param image {Model.ImageItem} [in] 追加する画像アイテムの元となる model
+			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
+			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
+			 */
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number): Model.ImageItem {
+                if (!offsetY) {
+                    offsetY = 0;
+                }
+
+                var moduleIndex = this._getModuleIndex(moduleId);
+                if (moduleIndex < 0) {
+                    console.log(TAG + "module not found");
+                    return null;
+                }
+                var module = this.collection.at(moduleIndex);
+
+                var imageView = this.imageViews_[moduleIndex];
+                if (!imageView) {
+                    imageView = new ImageItem({
+                        attributes: {
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: module.remoteId
+                        }
+                    });
+                    this.imageViews_[moduleIndex] = imageView;
+                }
+
+                // 新しい model を追加する
+                var newImage = new Model.ImageItem({
+                    materialsRootPath: this.materialsRootPath_,
+                    remoteId: module.remoteId
+                });
+
+                var newArea: IArea;
+                // image が string の場合は、image をパスとして扱う
+                newArea = $.extend(true, {}, image.area);
+                newArea.y += offsetY;
+                newImage.area = newArea;
+
+                // 画像の path を出力先の remoteId のディレクトリーになるように指定
+                newImage.path = image.path;
+                newImage.resolvedPath = image.resolvedPath;
+
+
+                //バージョン情報をもっている場合、引き継ぐ
+                if (image.version != null) {
+                    newImage.version = image.version;
+                }
+
+                //最後に書き出されるようにするため、resizedはtrueにする。
+                newImage.resized = true;
+
+                // 所属する module の要素を取得し、View に set する
+                var $module = this.$el.find("[data-cid='" + moduleId + "']");
+                imageView.setElement($module);
+                if (newImage.pageBackground) {
+                    // 背景の場合、先頭に追加する
+                    imageView.collection.add(newImage, { at: 0 });
+                } else {
+                    imageView.collection.add(newImage);
+                }
+
+                return newImage;
+            }
 
 			/**
 			 * 画像アイテムを削除する。

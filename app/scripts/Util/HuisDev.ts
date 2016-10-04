@@ -52,6 +52,16 @@
 				}
 			}
 
+            function getRegExpResolved(inputString: string): string {
+                inputString = inputString.replace(/\$/g, '\\$');
+                inputString = inputString.replace(/\./g, '\\.');
+                inputString = inputString.replace(/\(/g, '\\(');
+                inputString = inputString.replace(/\)/g, '\\)');
+                inputString = inputString.replace(/\^/g, '\\^');
+
+                return inputString;
+            }
+
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
@@ -64,7 +74,10 @@
 				let proc = () => {
 					if (dirs.length <= 0) {
 						// 相対パス化
-						let re = new RegExp(dirPath + "/*");
+                        // 正規表現の特殊文字をエスケープ
+                        let dirPathForRegExp = getRegExpResolved(dirPath);
+
+                        let re = new RegExp(dirPathForRegExp + "/*");
 						pathes.forEach((p: string, i: number, pathes: string[]) => {
 							pathes[i] = p.replace(re, "");
 						});
@@ -341,7 +354,43 @@
 					}).fail((err) => {
 						callback(err);
 					});
-				}
+                }
+
+                /*
+                * srcRootDirのファイルを dstRootDirにコピーする。
+                * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
+                */
+                _copyCommonImages(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                    this._isCanceled = false;
+                    var errorValue: Error = null; 
+
+                    setTimeout(() => {
+                        this._compDirs(srcRootDir, dstRootDir)  // Directory間の差分を取得
+                            .then((diffInfo: IDiffInfo) => {
+                                // TODO: ディスクの容量チェック
+
+                                var df = $.Deferred();
+                                // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                                var copyTargetFiles = diffInfo.diff;
+                                copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                                this._copyFiles(srcRootDir, dstRootDir, copyTargetFiles)
+                                    .then(() => {
+                                        df.resolve(diffInfo.dir2Extra);
+                                    })
+                                    .fail((err) => {
+                                        df.reject(err);
+                                    });
+                                return CDP.makePromise(df);
+                            }).then(() => {
+                                callback(null);	// 成功
+                            }).fail((err) => {
+                                callback(err);
+                            });
+                    }, 100);
+
+                    return { cancel: this._cancel };
+                }
+
 
 				private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
 					let df = $.Deferred<Error>();
