@@ -80,7 +80,7 @@
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE": "マクロとは？",
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT": "連続して複数種類の信号を発信できる機能です。",
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
-            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION" : "操作を追加"
+            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
@@ -134,6 +134,9 @@
         "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
     },
     "button": {
+        "text_button": {
+            "STR_REMOTE_BTN_TEXT_BTN_DEFAULT": "TEXT BUTTON"
+        },
         "interval": {
             "STR_00_POINT_0_SECOND_AFTER": "0.0秒後",
             "STR_00_POINT_1_SECOND_AFTER": "0.1秒後",
@@ -167,11 +170,11 @@
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
         "input": {
-            "STR_PLEASE_INPUT_ACTION" : "操作を選択", 
+            "STR_PLEASE_INPUT_ACTION": "操作を選択",
             "STR_ACTION_INPUT_TAP": "タップ",
             "STR_ACTION_INPUT_LONG_PRESS": "長押し(連続発信)",
-            "STR_ACTION_INPUT_SWIPE_UP":"上フリック",
-            "STR_ACTION_INPUT_SWIPE_RIGHT" : "右フリック",
+            "STR_ACTION_INPUT_SWIPE_UP": "上フリック",
+            "STR_ACTION_INPUT_SWIPE_RIGHT": "右フリック",
             "STR_ACTION_INPUT_SWIPE_LEFT": "左フリック",
             "STR_ACTION_INPUT_SWIPE_DOWN": "下フリック"
         },
