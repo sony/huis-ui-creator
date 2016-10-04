@@ -4777,6 +4777,9 @@ module Garage {
                 var mementoCommand = new MementoCommand([memento]);
                 this.commandManager_.invoke(mementoCommand);
 
+                //this.currentTargetButtonStates_を更新する。 commandManagerの状態と一致するようにする。
+                this.currentTargetButtonStates_ = newButtonState;
+
                 this.$el.focus();
             }
 
