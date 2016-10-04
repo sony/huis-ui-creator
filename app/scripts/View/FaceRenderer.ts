@@ -138,8 +138,8 @@ module Garage {
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 * @return {Model.ButtonItem} 新しく作成された model
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
-				return this.moduleView_.addButton(button, moduleId, offsetY);
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number, callback?: Function): Model.ButtonItem {
+                return this.moduleView_.addButton(button, moduleId, offsetY, callback);
 			}
 
 			/**
@@ -178,6 +178,18 @@ module Garage {
 				return this.moduleView_.addImage(image, moduleId, offsetY, callback);
 			}
 
+            /**
+             * 画像アイテムを追加する。画像のコピーは発生しない。
+             * @param image {Model.ImageItem} [in] 追加する画像アイテムの model
+			 * @param image {string} [in] 追加する画像アイテムのパス。パスを指定した場合は、ページの背景として追加される。
+			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
+			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
+			 * @return {Model.ImageItem} 新しく作成された model
+			 */
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number) {
+                return this.moduleView_.addImageWithoutCopy(image, moduleId, offsetY);
+            }
+
 			/**
 			 * 画像アイテムを削除する。
 			 * 
@@ -210,6 +222,8 @@ module Garage {
 			addLabel(label: Model.LabelItem, moduleId: string, offsetY?: number): Model.LabelItem {
 				return this.moduleView_.addLabel(label, moduleId, offsetY);
 			}
+
+
 
 			/**
 			 * ラベルを削除する。
