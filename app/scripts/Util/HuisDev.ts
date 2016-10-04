@@ -354,7 +354,43 @@
 					}).fail((err) => {
 						callback(err);
 					});
-				}
+                }
+
+                /*
+                * srcRootDirのファイルを dstRootDirにコピーする。
+                * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
+                */
+                _copyCommonImages(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                    this._isCanceled = false;
+                    var errorValue: Error = null; 
+
+                    setTimeout(() => {
+                        this._compDirs(srcRootDir, dstRootDir)  // Directory間の差分を取得
+                            .then((diffInfo: IDiffInfo) => {
+                                // TODO: ディスクの容量チェック
+
+                                var df = $.Deferred();
+                                // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                                var copyTargetFiles = diffInfo.diff;
+                                copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                                this._copyFiles(srcRootDir, dstRootDir, copyTargetFiles)
+                                    .then(() => {
+                                        df.resolve(diffInfo.dir2Extra);
+                                    })
+                                    .fail((err) => {
+                                        df.reject(err);
+                                    });
+                                return CDP.makePromise(df);
+                            }).then(() => {
+                                callback(null);	// 成功
+                            }).fail((err) => {
+                                callback(err);
+                            });
+                    }, 100);
+
+                    return { cancel: this._cancel };
+                }
+
 
 				private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
 					let df = $.Deferred<Error>();
