@@ -84,6 +84,9 @@
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
+        },
+        "pallet": { 
+            "STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS" : "すべてのボタン"
         }
     },
     "home": {

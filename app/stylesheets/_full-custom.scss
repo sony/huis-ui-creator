@@ -1085,8 +1085,33 @@
                 padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
                 background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
                 
+                .face-master-separator {
+                    margin-top : $SIZE_PALLET_SEPARATOR_MARGIN_TOP;
+                    width:100%;
+                    height:$SIZE_PALLET_SEPARATOR_HEGHT;
+                    background-color : $COLOR_PALLET_SEPARATOR_BACKGROUND;
+                    
+                    .separate-text{
+                        padding-top:$SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
 
-                //box-shadow: 0 0 30px rgba(0,0,0,0.6);
+                        .border-line{
+                            border : $SIZE_PALLET_SEPARATOR_BORDER_THICKNESS solid $COLOR_PALLET_SEPARATOR_BORDER;
+                            align-self:center;                
+                        }
+
+                        span{
+                            display:block;
+                            margin-top : $SIZE_PALLET_SEPARATOR_SPAN_MARGIN_TOP;
+                            text-shadow:none;
+                            color : $COLOR_PALLET_SEPARATOR_TEXT;
+                            text-align:center;
+                            font-size: $FONT_SIZE_PALLET_SEPARATOR;
+				            font-family:$FONT_FAMILY_LIGHT;
+                        }
+                    }
+
+                }
+
 
                 .button-item{
                         border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;

@@ -630,7 +630,24 @@ module Garage {
 						materialsRootPath: HUIS_FILES_DIRECTORY
 					}
 				});
-				this.faceRenderer_pallet_.render();
+                this.faceRenderer_pallet_.render();
+
+                //マスターフェースを表示する。Commonの場合は、無視
+                let isMasterFace: boolean = true;
+                let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
+                if (masterFace != null) {
+
+                    //マスターフェースとの境界線にセパレーターを描画
+                    let templateFile = CDP.Framework.toUrl("/templates/face-items.html");
+                    let template: Tools.JST = Tools.Template.getJST("#template-separator-face-and-master", templateFile);
+                    let $separator = $(template());
+                    $facePallet.find("#face-pages-area").append($separator);
+
+                    this.faceRenderer_pallet_.addFace(masterFace);
+
+                    //テキストをローカライズ
+                    $facePallet.i18n();
+                }
 
 				//それぞれのボタンにtitleを追加
 				this.addTitleToEachItemInPallet();
