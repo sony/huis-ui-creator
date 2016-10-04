@@ -123,26 +123,17 @@ module Garage {
                 let src = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
                 let dst = HUIS_REMOTEIMAGES_ROOT;//コピー先
 
-                    // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
-                Util.HuisDev.hasDiffAsync(src, dst, null, (result: boolean) => {
-
-                    if (result) {
-                        //差分がある場合、copyしてcallbackを実行
-                        let syncTask = new Util.HuisDev.FileSyncTask();
-                        let syncProgress = syncTask._copyCommonImages(src, dst, (err) => {
-                            if (err) {
-                                this.showDialogNotConnectWithHuis(err);
-                            } else if (callback) {//同期成功。 
-                                callback();
-                            }
-                        });
-                    } else if (callback != null) {
-                        //差分がない場合、そのままcallbacknを実行
+                //copyしてcallbackを実行
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                let syncProgress = syncTask._copyCommonImages(src, dst, (err) => {
+                    if (err) {
+                        this.showDialogNotConnectWithHuis(err);
+                    } else if (callback) {//同期成功。 
                         callback();
                     }
-
-
                 });
+
+
 
             }
 
