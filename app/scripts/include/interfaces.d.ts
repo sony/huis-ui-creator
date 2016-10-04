@@ -734,6 +734,10 @@ declare module Garage {
 	 */
     var TARGET_ALL_STATE: number;
     /*
+     * ダブルクリックの待ち受け時間
+     */
+    var DOUBLE_CLICK_TIME_MS: number;
+    /*
      * マクロに登録できる信号の最大数
      */
     var MAX_NUM_MACRO_SIGNAL : number;
