@@ -3467,8 +3467,6 @@ module Garage {
                                         this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                                        this._updatePreviewInDetailArea(inputUrl, $preview);
-
 
 										//画像が存在するとき、テキストEdit機能を非表示にする
 										this.toggleImagePreview(stateId);
