@@ -399,8 +399,8 @@
         .signal-container-element{
             .separate-line{
                 position:absolute;
-                margin-left : 13.3px;
-                width:216px;
+                margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
+                width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
                 top:0;
                 border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
             }
