@@ -1121,6 +1121,8 @@ module Garage {
 
                     if (!this._checkDetailItemAreaPosition(mousePosition)) {
                         this.mouseMoving_ = true;
+                        this.$currentTargetDummy_.addClass("moving-item");
+                        this.$currentTarget_.addClass("moving-item");
                         event.preventDefault();
 
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
@@ -1252,13 +1254,15 @@ module Garage {
 					this._resizeItem(position, true);
 				} else { // それ以外の場合は、アイテムの移動
 					this._moveItem(position);
-				}
-                this.mouseMoving_ = false;
+                }
 
+                this.$currentTarget_.removeClass("moving-item");
+                this.mouseMoving_ = false;
                 if (this.isDoubleClick(event)) {
                     this.onPalletItemDblClick();
                     this.clearPalletItemClickCount(this);
                 }
+
 			}
 
 			/**
@@ -4826,6 +4830,7 @@ module Garage {
 
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
+
                 var $buttonDetail = $(templateButton(button));
 
                 //信号用のViewの初期化・更新
