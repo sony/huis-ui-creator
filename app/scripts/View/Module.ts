@@ -437,11 +437,6 @@ module Garage {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
 
-				// button.deviceInfo のコピー
-				if (srcButton.deviceInfo) {
-					newButton.deviceInfo = $.extend(true, {}, srcButton.deviceInfo);
-				}
-
 				// button.state のコピー
 				var srcStates = srcButton.state;
 				var newStates: IGState[] = [];

@@ -81,6 +81,10 @@ interface IAction {
      * Bluetooth通信用の情報
      */
     bluetooth_data?: IBluetoothData;
+    /**
+	 * ボタンがひも付けられている機器の情報
+	 */
+    deviceInfo?: IButtonDeviceInfo;
 }
 
 /**
@@ -230,10 +234,6 @@ interface IGButton {
 	 * 現在の state.id
 	 */
 	currentStateId: number;
-	/**
-	 * ボタンがひも付けられている機器の情報
-	 */
-	deviceInfo?: IButtonDeviceInfo;
 	[x: string]: any;
 }
 

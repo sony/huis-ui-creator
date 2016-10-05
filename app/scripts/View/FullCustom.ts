@@ -883,13 +883,19 @@ module Garage {
                                 deviceInfo.bluetooth_data = bluetoothData;
                             }
                             if (functionCodeHash != null) {
-
                                 deviceInfo.functionCodeHash = functionCodeHash;
-							}
+                            }
 
-							targetModel.button.deviceInfo = deviceInfo;
+                            // 機器情報を全てのactionにセット
+                            for (let state of targetModel.button.state) {
+                                if (!state.action) continue;
+
+                                for (let action of state.action) {
+                                    action.deviceInfo = deviceInfo;
+                                }
+                            }
                             model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-						}
+                        }
 						break;
 
 
@@ -1121,7 +1127,9 @@ module Garage {
 
                     if (!this._checkDetailItemAreaPosition(mousePosition)) {
                         this.mouseMoving_ = true;
-                        this.$currentTargetDummy_.addClass("moving-item");
+                        if (this.$currentTargetDummy_) {
+                            this.$currentTargetDummy_.addClass("moving-item");
+                        }
                         this.$currentTarget_.addClass("moving-item");
                         event.preventDefault();
 
@@ -1893,7 +1901,9 @@ module Garage {
 				var fucntions: string[] = [];
                 for (var i = 0; i < buttonModel.button.state.length; i++){
                     for (let j = 0; j < buttonModel.button.state[i].action.length;j++){
-                        if (buttonModel.button.state[i].action[j]) {
+                        if (buttonModel.button.state[i].action[j] &&
+                            buttonModel.button.state[i].action[j].code_db &&
+                            buttonModel.button.state[i].action[j].code_db.function) {
                             fucntions.push(buttonModel.button.state[i].action[j].code_db.function.toString());
 
                         }
@@ -1906,7 +1916,8 @@ module Garage {
 			}
 
 			/*
-			* ボタンのデバイスタイプを取得
+			* ボタンの先頭に設定されている操作のデバイスタイプを取得
+            * 操作が一つも設定されていない場合は空文字を返す
 			* @ $button : JQuery デバイスタイプを取得したいボタンのJquery要素
 			* @ return : string  デバイスタイプ
 			*/
@@ -1928,16 +1939,25 @@ module Garage {
 				if (buttonModel.type !== "button") {
 					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
 					return;
-				}
+                }
 
-
-				return buttonModel.button.state[0].action[0].code_db.device_type.toString();
-
+                if (buttonModel.button &&
+                    buttonModel.button.state &&
+                    buttonModel.button.state[0] &&
+                    buttonModel.button.state[0].action &&
+                    buttonModel.button.state[0].action[0] &&
+                    buttonModel.button.state[0].action[0].code_db &&
+                    buttonModel.button.state[0].action[0].code_db.device_type) {
+                    return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+                } else {
+                    return "";
+                }
 			}
 
 
-			/*
-			* ボタンのリモコン名を取得
+			/**
+			* ボタンの機器情報を取得。
+            * ボタンに複数の機器情報が設定されていても、state、actionの最初に設定されているdeviceInfoを返す。
 			* @ $button : JQuery ボタンのJquery要素
 			* @ return : string  リモコン名
 			*/
@@ -1961,13 +1981,16 @@ module Garage {
 					return;
 				}
 
-				let deviceInfo: IButtonDeviceInfo= buttonModel.button.deviceInfo;
-				if (deviceInfo == null) {
-					console.warn(FUNCTION_NAME + "deviceInfo is not button model");
-					return;
-				}
-
-				return deviceInfo;
+                if (buttonModel.button &&
+                    buttonModel.button.state &&
+                    buttonModel.button.state[0] &&
+                    buttonModel.button.state[0].action &&
+                    buttonModel.button.state[0].action[0] &&
+                    buttonModel.button.state[0].action[0].deviceInfo) {
+                    return buttonModel.button.state[0].action[0].deviceInfo;
+                } else {
+                    return;
+                }
 			}
 
 
@@ -3039,12 +3062,17 @@ module Garage {
 				// 更新がない場合は何もしない
 				if (!this.currentTargetButtonStatesUpdated_) {
 					return;
-				}
+                }
+                // this.currentTargetButtonStatesUpdated_ を true にするルートが現状存在しないため
+                // 以下のコードが実行されることはないはず
 
+                console.error("unexpected path to _updateCurrentModelButtonStateData()");
+
+                /*
 				var button = this.currentTargetModel_.button;
 
 				// ボタンにひも付けられている機器の情報を取得
-				var deviceInfo = button.deviceInfo;
+                var deviceInfo = button.deviceInfo;
 				var brand: string,
 					device_type: string,
 					db_codeset: string,
@@ -3084,7 +3112,7 @@ module Garage {
 					if (targetState.length < 1) {
 						targetState = null;
 					}
-					var actionList = stateDetail.actionList;
+                    var actionList = stateDetail.actionList;
 					
 
 					if (actionList) {
@@ -3092,12 +3120,11 @@ module Garage {
 						for (let key in actionList) {
 							if (!key) {
 								continue;
-							}
+                            }
 							let value: string = actionList[key];
 							if (_.isUndefined(value) || value === "none") {
 								continue;
 							}
-							
 							let codeDb: ICodeDB = {
 								function: value,
 								brand: brand,
@@ -3112,7 +3139,7 @@ module Garage {
                                 code_db: codeDb,
                                 bluetooth_data: bluetooth_data,
 							};
-
+                            
 							
 							//このFunctionに登録されているaction/code を取得する。
 							if (functionCodeHash != undefined) {
@@ -3125,12 +3152,11 @@ module Garage {
 						
 
 							actions.push(action);
-							
 						}
 
 						//アクションが一つもない場合、actionが空のボタンにする。
 						if (actions != undefined && actions.length == 0) {
-							let codeDb: ICodeDB = {
+                            let codeDb: ICodeDB = {
 								function: "none",
 								brand: brand,
 								device_type: device_type,
@@ -3189,6 +3215,7 @@ module Garage {
 				var mementoCommand = new MementoCommand([memento]);
 				this.commandManager_.invoke(mementoCommand);
 
+                */
 				this.currentTargetButtonStatesUpdated_ = false;
 			}
 
@@ -4139,18 +4166,33 @@ module Garage {
                         continue;
                     }
                     let buttons = this.faceRenderer_canvas_.getButtons(pageModuleId);
+                    if (!buttons) {
+                        continue;
+                    }
 
                     for (let button of buttons) {
-                        if (button.enabled &&
-                            button.deviceInfo &&
-                            button.deviceInfo.bluetooth_data &&
-                            button.deviceInfo.bluetooth_data.bluetooth_device) {
-                            // bluetoothを含む場合とりあえず登録
-                            bluetoothButtons.push(button);
+                        if (!button.state ||
+                            !button.enabled) {
+                            continue;
+                        }
 
-                            let target: IBluetoothDevice = button.deviceInfo.bluetooth_data.bluetooth_device;
-                            if (!this._containsBluetoothDevice(bluetoothDevices, target)) {
-                                bluetoothDevices.push(target);
+                        for (let state of button.state) {
+                            if (!state.action) {
+                                continue;
+                            }
+
+                            for (let action of state.action) {
+                                if (action.deviceInfo &&
+                                    action.deviceInfo.bluetooth_data &&
+                                    action.deviceInfo.bluetooth_data.bluetooth_device) {
+                                    // bluetoothを含む場合とりあえず登録
+                                    bluetoothButtons.push(button);
+
+                                    let target: IBluetoothDevice = action.deviceInfo.bluetooth_data.bluetooth_device;
+                                    if (!this._containsBluetoothDevice(bluetoothDevices, target)) {
+                                        bluetoothDevices.push(target);
+                                    }
+                                }
                             }
                         }
                     }
@@ -4793,43 +4835,48 @@ module Garage {
 				}
 
 				// masterFunctions が未取得の場合は取得する
-				let deviceInfo = button.deviceInfo;
-				if (deviceInfo) {
-					if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
-						let codeDb = deviceInfo.code_db;
-						let codes: string[] = this.getCodesFrom(button);
+                for (let state of button.state) {
+                    if (!state.action) continue;
 
+                    for (let action of state.action) {
+                        if (!action.deviceInfo) continue;
 
-						if (codeDb.brand != " " && codeDb.brand != undefined && 
-							codeDb.device_type != " " && codeDb.device_type != undefined &&
-							codeDb.model_number != " " && codeDb.device_type != undefined) {
-							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-							let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-							deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
-							deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                        let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
 
-						} else if(codes != null){
-							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
-							let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
-							if (remoteId != null) {
-								deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
-								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
-							}
-						} else if (deviceInfo.bluetooth_data != null) {
-                            //Bluetooth情報しかない場合
-                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
-                            if (remoteId != null) {
+                        if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
+                            let codeDb = deviceInfo.code_db;
+                            let codes: string[] = this.getCodesFrom(button);
+
+                            if (codeDb.brand != " " && codeDb.brand != undefined &&
+                                codeDb.device_type != " " && codeDb.device_type != undefined &&
+                                codeDb.model_number != " " && codeDb.device_type != undefined) {
+                                //codeDbの情報がそろっている場合、codeDbからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                                deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
                                 deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-                                deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
+
+                            } else if (codes != null) {
+                                //codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
+                                if (remoteId != null) {
+                                    deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                                }
+                            } else if (deviceInfo.bluetooth_data != null) {
+                                //Bluetooth情報しかない場合
+                                let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                                if (remoteId != null) {
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
+                                }
                             }
+
+                            action.deviceInfo = deviceInfo;
+
                         }
-
-
-						button.deviceInfo = deviceInfo;
-						
-					}
-				}
+                    }
+                }
 
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
@@ -4856,12 +4903,29 @@ module Garage {
 				this.currentTargetButtonStates_ = button.state;
                 if (this.currentTargetButtonStates_) {
                     let templateState: Tools.JST = null;
+
+                    // エアコンの有無を検査
+                    let containsAircon: boolean = false;
+                    for (let state of button.state) {
+                        if (!state.action) continue;
+
+                        for (let action of state.action) {
+                            if (!action.deviceInfo || !action.deviceInfo.code_db || !action.deviceInfo.code_db.device_type) continue;
+
+                            if (action.deviceInfo.code_db.device_type == "Air conditioner") {
+                                containsAircon = true;
+                            }
+                        }
+                    }
+
+                    if (containsAircon) {
                     // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
-                    if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
+                        // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
                     } else {
                         templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
                     }
+
 
                     // HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
                     // もしレンジ外を指している場合はレンジ内の最初に見つかった要素をdefaultとして一時的に設定し直す
@@ -4869,23 +4933,23 @@ module Garage {
 
                     var checkedArray: IStateDetail[] = [];
 
-                    if (button.deviceInfo) {
-                        checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
-                            return (
-                                (button.default == state.id) &&
-                                (((state.image != null) && (state.image[0] != null)) ||
-                                 ((state.label != null) && (state.label[0] != null)) )
-                                   );
-                        });
+                    checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
+                        return (
+                            (button.default == state.id) &&
+                            (((state.image != null) && (state.image[0] != null)) ||
+                                ((state.label != null) && (state.label[0] != null)))
+                        );
+                    });
                    
-                        if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                            button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
-                        }
+                    if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
+                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
                     }
+
+
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
-                       
+
                         stateData.id = state.id;
                         let resizeMode: string;
                         if (state.image) {
@@ -4898,19 +4962,23 @@ module Garage {
                         if (state.label) {
                             stateData.label = state.label[0];
                         }
-                        if (button.deviceInfo && button.deviceInfo.functions) {
-                            stateData.functions = button.deviceInfo.functions;
+
+                        if (state.action &&
+                            state.action[0] &&
+                            state.action[0].deviceInfo &&
+                            state.action[0].deviceInfo.functions) {
+                            stateData.functions = state.action[0].deviceInfo.functions;
                         }
 
                         this._setActionListToState(state);
 
-						if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
+                        if (this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
                             if (state.id != button.default) return;
                         }
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
-                       
+
 
                         //テキストラベルの大きさの設定値を反映する。
                         var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
@@ -4925,7 +4993,7 @@ module Garage {
                         // 文言あて・ローカライズ
                         $statesContainer.i18n();
 
-						
+
 
                     });
                     

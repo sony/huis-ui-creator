@@ -36,13 +36,19 @@ module Garage {
                     if (!gmodule.button) continue;
 
                     for (let gbutton of gmodule.button) {
-                        if (!gbutton.area) continue;
+                        if (!gbutton.area || !gbutton.state) continue;
 
-                        let cache = this.find(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y);
+                        for (let stateIndex = 0; stateIndex < gbutton.state.length; stateIndex++) {
+                            if (!gbutton.state[stateIndex].action) continue;
 
-                        if (cache) {
-                            // 参照を直接更新
-                            gbutton.deviceInfo = cache;
+                            for (let actionIndex = 0; actionIndex < gbutton.state[stateIndex].action.length; actionIndex++) {
+                                let cache = this.find(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
+
+                                if (cache) {
+                                    // 参照を直接更新
+                                    gbutton.state[stateIndex].action[actionIndex].deviceInfo = cache;
+                                }
+                            }
                         }
                     }
                 }
@@ -50,14 +56,14 @@ module Garage {
             }
 
             /**
-             * 渡されたページ番号、x座標、y座標から一致するIButtonDeviceInfoを返却
+             * 渡されたページ番号、x座標、y座標、stateインデックス番号、actionインデックス番号から一致するIButtonDeviceInfoを返却
              * 一致するものが無い場合はnullを返却
              */
-            private find(cache: IButtonDeviceInfo[], page: number, x: number, y: number): IButtonDeviceInfo {
+            private find(cache: IButtonDeviceInfo[], page: number, x: number, y: number, stateIndex: number, actionIndex: number): IButtonDeviceInfo {
                 for (let buttonDeviceInfo of cache) {
-                    let id: string = ButtonDeviceInfoCache.createId(page, x, y);
+                    let searchId: string = ButtonDeviceInfoCache.createId(page, x, y, stateIndex, actionIndex);
 
-                    if (buttonDeviceInfo.id == id) {
+                    if (buttonDeviceInfo.id === searchId) {
                         return buttonDeviceInfo;
                     }
                 }
@@ -67,13 +73,15 @@ module Garage {
 
             /**
              * ButtonDeviceInfoCacheのIDを生成
-             * @param page ボタンのあるページ番号
-             * @param x    ボタンのx座標
-             * @param y    ボタンのy座標
+             * @param page        {number} ボタンのあるページ番号
+             * @param x           {number} ボタンのx座標
+             * @param y           {number} ボタンのy座標
+             * @param stateIndex  {number} stateのインデックス番号
+             * @param actionIndex {number} actionのインデックス番号
              * @return IDの文字列
              */
-            private static createId(page: number, x: number, y: number): string {
-                return page + "-" + x + "-" + y;
+            private static createId(page: number, x: number, y: number, stateIndex: number, actionIndex: number): string {
+                return page + "-" + x + "-" + y + "-" + stateIndex + "-" + actionIndex;
             }
 
             /**
@@ -86,8 +94,19 @@ module Garage {
                     if (!gmodule.button) continue;
 
                     for (let gbutton of gmodule.button) {
-                        gbutton.deviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y);
-                        newList.push(gbutton.deviceInfo);
+                        if (!gbutton.state) continue;
+
+                        for (let stateIndex = 0; stateIndex < gbutton.state.length; stateIndex++) {
+                            if (!gbutton.state[stateIndex].action) continue;
+
+                            for (let actionIndex = 0; actionIndex < gbutton.state[stateIndex].action.length; actionIndex++) {
+                                let targetDeviceInfo = gbutton.state[stateIndex].action[actionIndex].deviceInfo;
+                                if (!targetDeviceInfo) continue;
+
+                                targetDeviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
+                                newList.push(targetDeviceInfo);
+                            }
+                        }
                     }
                 }
 

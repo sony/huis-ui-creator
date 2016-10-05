@@ -303,7 +303,15 @@ module Garage {
                     }
 
                     let deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-
+                    if (!deviceInfo) {
+                        try {
+                            // HuisFilesに存在しない場合はキャッシュを使用
+                            deviceInfo = this.model.state[0].action[order].deviceInfo;
+                        } catch (e) {
+                            // キャッシュもなかった場合
+                            console.warn(FUNCTION_NAME + "deviceInfo not found");
+                        }
+                    }
 
                     let tmpAction: IAction = {
                         input: tmpInput,
@@ -314,6 +322,8 @@ module Garage {
                         //deviceInfo.functionCodeHashがある場合、codeを取
                         //codeを入力
                         let tmpCode = null;
+
+                        tmpAction.deviceInfo = deviceInfo;
 
                         if (deviceInfo.functionCodeHash) {
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
@@ -527,7 +537,7 @@ module Garage {
                 }
 
                 this.renderSignalContainerBase(order);
-                //actino設定用のpulldownをレンダリング
+                //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
                 this.renderRemoteIdOf(order, stateId, remoteId);
