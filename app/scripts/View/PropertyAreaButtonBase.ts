@@ -673,18 +673,14 @@ module Garage {
 
                 //durationを設定,対象を透明に
                 let tmpTargetDuration = $target.css("transition-duration");
+                let tmpTargetMarginBottom = parseInt ($target.css("transition-duration").replace("px",""),10);
                 this.setAnimationDuration($target, duration / 1000);
                 $target.css("opacity", "0");
-
-                let $moveTarget = $target.nextAll();
-                this.setAnimationDuration($moveTarget, duration / 1000);
-                let tmpMoveTargetMargin = $target.css("margin-top");
-                $moveTarget.css("margin-top",  ((-1) * $target.outerHeight(true)) + "px");
+                $target.css("margin-bottom", tmpTargetMarginBottom - $target.outerHeight(true) + "px");
 
                 setTimeout(() => {
                     //durationを元に戻す。
                     $target.css("transition-duration", tmpTargetDuration);
-                    $moveTarget.css("margin-top", tmpMoveTargetMargin);
 
                     if (callback) {
                         callback();

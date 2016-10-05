@@ -319,16 +319,18 @@ module Garage {
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
                     this.updateModel();
-                    this.renderSignalContainers();
-
+                    
                     //削除とソートボタンをちら見する。
-                    this.animateAddButton(tmpOrder);   
+                    this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
+                        this.renderSignalContainers();
+                        this.controlPlusButtonEnable();
+                    });   
                     
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
-                this.controlPlusButtonEnable();
+                
 
             }
 
@@ -1173,7 +1175,6 @@ module Garage {
                 this.setAnimationDuration($dotLine, duration/1000);
 
                 $dotLine.outerHeight(dotLineHeight - $targetSignalContainer.outerHeight(true));
-                $dotLine.css("transform", "translateY(" + ( $targetSignalContainer.outerHeight(true)) + "px)");
 
                 this.animateDeleteSignalContainer(order, duration, callback);
 
