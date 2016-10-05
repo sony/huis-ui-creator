@@ -545,6 +545,36 @@ module Garage {
                     return;
                 }
 
+                return this.getValidPathForCSS(model);
+            }
+
+
+            /*
+             * ImageItemから、CSSを描画に必要なパスを取得する。
+             * @param model{Model.ImageItem} CSSに表示したい画像モデル
+             */
+            protected getValidPathOfIGImageForCSS(model: IGImage): string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfIGImageForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+                return this.getValidPathForCSS(model);
+            }
+
+
+
+            private getValidPathForCSS(model) {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+
                 let inputPath = null;
                 //有効なパスを優先順位順にサーチ
                 if (model["resizeResolvedOriginalPathCSS"]) {
@@ -563,9 +593,8 @@ module Garage {
                     console.error(FUNCTION_NAME + "model " + model.cid + "not have valid path");
                     return;
                 }
+
             }
-
-
 
 
         }

@@ -751,16 +751,16 @@ declare module Garage {
     var ACTION_INPUTS: IStringKeyValue[];
     var ACTION_INPUT_TAP_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY: string;
-    var ACTION_INPUT_SWIPE_UP_KEY: string;
-    var ACTION_INPUT_SWIPE_RIGHT_KEY: string;
-    var ACTION_INPUT_SWIPE_LEFT_KEY: string;
-    var ACTION_INPUT_SWIPE_DOWN_KEY: string;
+    var ACTION_INPUT_FLICK_UP_KEY: string;
+    var ACTION_INPUT_FLICK_RIGHT_KEY: string;
+    var ACTION_INPUT_FLICK_LEFT_KEY: string;
+    var ACTION_INPUT_FLICK_DOWN_KEY: string;
     var ACTION_INPUT_TAP_VALUE: string;
     var ACTION_INPUT_LONG_PRESS_VALUE: string;
-    var ACTION_INPUT_SWIPE_UP_VALUE: string;
-    var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
-    var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
-    var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
+    var ACTION_INPUT_FLICK_UP_VALUE: string;
+    var ACTION_INPUT_FLICK_RIGHT_VALUE: string;
+    var ACTION_INPUT_FLICK_LEFT_VALUE: string;
+    var ACTION_INPUT_FLICK_DOWN_VALUE: string;
     /*
     * マクロボタンの順番交換アニメの長さ[ms]
     */
