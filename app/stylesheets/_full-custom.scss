@@ -395,15 +395,26 @@
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
         }
 
+        #macro-container{
+            .signal-container-element{
+                .separate-line{
+                    margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
+                    width:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
+                }
+            }
+        }
+
         //信号セット用プルダウンセット
         .signal-container-element{
             .separate-line{
                 position:absolute;
-                margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
                 width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
                 top:0;
                 border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
             }
+
+
+
 
                 box-sizing:border-box;
                
