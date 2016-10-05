@@ -635,7 +635,7 @@ module Garage {
                 //マスターフェースを表示する。Commonの場合は、無視
                 let isMasterFace: boolean = true;
                 let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
-                if (masterFace != null) {
+                if (masterFace != null && remoteId != "common") {
 
                     //マスターフェースとの境界線にセパレーターを描画
                     let templateFile = CDP.Framework.toUrl("/templates/face-items.html");
