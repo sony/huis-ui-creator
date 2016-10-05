@@ -762,12 +762,10 @@ module Garage {
                     return;
                 }
 
-                let remoteName = huisFiles.getFace(remoteId).name;
-
                 let deviceInfo: IButtonDeviceInfo = {
                     id: "",
                     functions: functions,
-                    remoteName: remoteName,
+                    remoteName: face.name,
                     code_db: codeDb
                 };
 
