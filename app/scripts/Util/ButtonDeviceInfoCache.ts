@@ -42,7 +42,7 @@ module Garage {
                             if (!gbutton.state[stateIndex].action) continue;
 
                             for (let actionIndex = 0; actionIndex < gbutton.state[stateIndex].action.length; actionIndex++) {
-                                let cache = this.findButtonDeviceInfoList(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
+                                let cache = this.find(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
 
                                 if (cache) {
                                     // 参照を直接更新
@@ -56,10 +56,10 @@ module Garage {
             }
 
             /**
-             * 渡されたページ番号、x座標、y座標から一致するIButtonDeviceInfoを返却
+             * 渡されたページ番号、x座標、y座標、stateインデックス番号、actionインデックス番号から一致するIButtonDeviceInfoを返却
              * 一致するものが無い場合はnullを返却
              */
-            private findButtonDeviceInfoList(cache: IButtonDeviceInfo[], page: number, x: number, y: number, stateIndex: number, actionIndex: number): IButtonDeviceInfo {
+            private find(cache: IButtonDeviceInfo[], page: number, x: number, y: number, stateIndex: number, actionIndex: number): IButtonDeviceInfo {
                 for (let buttonDeviceInfo of cache) {
                     let searchId: string = ButtonDeviceInfoCache.createId(page, x, y, stateIndex, actionIndex);
 

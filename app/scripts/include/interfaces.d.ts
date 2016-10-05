@@ -234,10 +234,6 @@ interface IGButton {
 	 * 現在の state.id
 	 */
 	currentStateId: number;
-	/**
-	 * ボタンがひも付けられている機器の情報
-	 */
-	//deviceInfo?: IButtonDeviceInfo;
 	[x: string]: any;
 }
 

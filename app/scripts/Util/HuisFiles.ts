@@ -331,7 +331,6 @@ module Garage {
 					let remoteId = this.remoteList_[i].remote_id;
                     let face = this.getFace(remoteId);
                     if (!face) {
-                        // 新規作成時
                         continue;
                     }
 					let codesMaster: string[] = this.getMasterCodes(remoteId);

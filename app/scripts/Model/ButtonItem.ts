@@ -186,15 +186,6 @@ module Garage {
 				this._setStateItemsArea(this.area);
 			}
 
-            /*
-			get deviceInfo(): IButtonDeviceInfo {
-				return this.get("deviceInfo");
-			}
-
-			set deviceInfo(val: IButtonDeviceInfo) {
-				this.set("deviceInfo", val);
-			}
-            */
 
 			/**
 			 * 変更可能なプロパティーの一覧

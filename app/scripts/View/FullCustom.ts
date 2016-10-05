@@ -883,22 +883,19 @@ module Garage {
                                 deviceInfo.bluetooth_data = bluetoothData;
                             }
                             if (functionCodeHash != null) {
-
                                 deviceInfo.functionCodeHash = functionCodeHash;
-							}
+                            }
 
-                            try {
-                                // 機器情報を全てのactionにセット
-                                for (let state of targetModel.button.state) {
-                                    for (let action of state.action) {
-                                        action.deviceInfo = deviceInfo;
-                                    }
+                            // 機器情報を全てのactionにセット
+                            for (let state of targetModel.button.state) {
+                                if (!state.action) continue;
+
+                                for (let action of state.action) {
+                                    action.deviceInfo = deviceInfo;
                                 }
-                            } catch (e) {
-                                console.error("action[0] not found: " + e);
                             }
                             model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-						}
+                        }
 						break;
 
 
@@ -1942,11 +1939,17 @@ module Garage {
 				if (buttonModel.type !== "button") {
 					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
 					return;
-				}
+                }
 
-                try {
+                if (buttonModel.button &&
+                    buttonModel.button.state &&
+                    buttonModel.button.state[0] &&
+                    buttonModel.button.state[0].action &&
+                    buttonModel.button.state[0].action[0] &&
+                    buttonModel.button.state[0].action[0].code_db &&
+                    buttonModel.button.state[0].action[0].code_db.device_type) {
                     return buttonModel.button.state[0].action[0].code_db.device_type.toString();
-                } catch (e) {
+                } else {
                     return "";
                 }
 			}
@@ -3069,7 +3072,7 @@ module Garage {
 				var button = this.currentTargetModel_.button;
 
 				// ボタンにひも付けられている機器の情報を取得
-                var deviceInfo: IButtonDeviceInfo = button.deviceInfo;
+                var deviceInfo = button.deviceInfo;
 				var brand: string,
 					device_type: string,
 					db_codeset: string,
@@ -3109,7 +3112,7 @@ module Garage {
 					if (targetState.length < 1) {
 						targetState = null;
 					}
-                    var actionList:IActionList = stateDetail.actionList;
+                    var actionList = stateDetail.actionList;
 					
 
 					if (actionList) {
@@ -4902,7 +4905,7 @@ module Garage {
                     let templateState: Tools.JST = null;
 
                     // エアコンの有無を検査
-                    let containsAirCon: boolean = false;
+                    let containsAircon: boolean = false;
                     for (let state of button.state) {
                         if (!state.action) continue;
 
@@ -4910,12 +4913,12 @@ module Garage {
                             if (!action.deviceInfo || !action.deviceInfo.code_db || !action.deviceInfo.code_db.device_type) continue;
 
                             if (action.deviceInfo.code_db.device_type == "Air conditioner") {
-                                containsAirCon = true;
+                                containsAircon = true;
                             }
                         }
                     }
 
-                    if (containsAirCon) {
+                    if (containsAircon) {
                     // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
                         // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
