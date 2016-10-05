@@ -502,8 +502,7 @@
                         }
 
                         //エリアをhoverして、表示
-                        &.show,
-                        &:hover{
+                        &.show{
                             .delete-signal{
                                 opacity:1.0;
                             }
@@ -597,8 +596,7 @@
                             }
                         }
                         
-                        &.show,
-                        &:hover{
+                        &.show{
                              .sort-up-btn{
                                 opacity:1.0;
                             }

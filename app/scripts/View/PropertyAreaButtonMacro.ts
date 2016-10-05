@@ -55,8 +55,8 @@ module Garage {
                     "click .delete-signal": "onDeleteButtonClick",
                     "click .sort-up-btn": "onMoveUpOrderButtonClick",
                     "click .sort-down-btn": "onMoveDownOrderButtonClick",
-                    "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
-                    "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
+                    "mouseenter .signal-container-element": "onHoverInSignalContainer",
+                    "mouseleave .signal-container-element": "onHoverOutSignalContainer"
                 };
             }
 

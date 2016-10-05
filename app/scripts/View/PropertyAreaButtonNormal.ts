@@ -111,7 +111,9 @@ module Garage {
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
                     "click .delete-signal": "onDeleteButtonClick",
-                    "change select": "onAnyPulllDownChanged"
+                    "change select": "onAnyPulllDownChanged",
+                    "mouseenter .signal-container-element": "onHoverInSignalContainer",
+                    "mouseleave .signal-container-element": "onHoverOutSignalContainer"
                 };
             }
 
