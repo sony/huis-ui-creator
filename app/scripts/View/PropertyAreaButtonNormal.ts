@@ -421,19 +421,24 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
-                let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                $target.remove();
+                //アニメーション
+                this.animateDeleteSignalContainer(order, DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER,
+                    () => {
+                        let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                        $target.remove();
 
-                let targetStateId = this.getStateId();
+                        let targetStateId = this.getStateId();
 
-                //消えた後のプルダウンの値に合わせてアップデート
-                this.updateModel(targetStateId);
+                        //消えた後のプルダウンの値に合わせてアップデート
+                        this.updateModel(targetStateId);
 
-                //アップデートされたモデルに合わせてプルダウン部をレンダリング
-                this.renderSignals(targetStateId);
+                        //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                        this.renderSignals(targetStateId);
+
+                    });
 
             }
 

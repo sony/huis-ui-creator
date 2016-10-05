@@ -652,6 +652,73 @@ module Garage {
 
 
             /*
+             * deleteボタンを押した際のアニメーション
+             * @param order{number} 削除するdom のorder
+             * duration{number} アニメーションにかかる時間[ms]
+             * callback{Function} アニメーション後に実行する処理
+             */
+            protected animateDeleteSignalContainer(order: number, duration: number, callback?: Function) {
+                let FUNCTION_NAME = TAG + "animateDeleteSignalContainer : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $target = this.getSignalContainerElementOf(order);
+                if (!this.isValidJQueryElement($target)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                //durationを設定,対象を透明に
+                let tmpTargetDuration = $target.css("transition-duration");
+                this.setAnimationDuration($target, duration / 1000);
+                $target.css("opacity", "0");
+
+                let $moveTarget = $target.nextAll();
+                this.setAnimationDuration($moveTarget, duration / 1000);
+                let tmpMoveTargetMargin = $target.css("margin-top");
+                $moveTarget.css("margin-top",  ((-1) * $target.outerHeight(true)) + "px");
+
+                setTimeout(() => {
+                    //durationを元に戻す。
+                    $target.css("transition-duration", tmpTargetDuration);
+                    $moveTarget.css("margin-top", tmpMoveTargetMargin);
+
+                    if (callback) {
+                        callback();
+                    }
+
+                }, duration);
+
+            }
+
+
+            /*
+            * アニメーションのdurationを設定する。
+            * $target{JQuery} アニメーションを設定する対象
+            * duration{number} アニメーションにかかる時間[ms]
+            */
+            protected setAnimationDuration($target: JQuery, duration: number) {
+                let FUNCTION_NAME = TAG + "setAnimationDuration : ";
+
+                if (!this.isValidJQueryElement($target)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                if (!this.isValidValue(duration)) {
+                    console.warn(FUNCTION_NAME + "duration is invalid");
+                    return;
+                }
+
+                $target.css("transition-duration", duration + "s");
+
+            }
+
+
+            /*
              * 対象のJQueryのoffset座標系でのpositionを取得する
              * 
              */
@@ -704,8 +771,9 @@ module Garage {
                 let tmpTarget2Duration = $target2.css("transition-duration");
 
                 //durationをセット。
-                $target1.css("transition-duration", duration / 1000 + "s");
-                $target2.css("transition-duration", duration / 1000 + "s");
+                this.setAnimationDuration($target1, duration / 1000);
+                this.setAnimationDuration($target2, duration / 1000);
+
                 
                 //移動
                 $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");

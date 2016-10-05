@@ -690,14 +690,20 @@ module Garage {
                 }
 
                 let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                $target.remove();
 
-                //消えた後のプルダウンの値に合わせてアップデート
-                this.updateModel();
+                //アニメーション
+                this.animateDeleteSignalContainerAndDotLine(order, DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER, () => {
+                    $target.remove();
 
-                //アップデートされたモデルに合わせてプルダウン部をレンダリング
-                this.renderSignalContainers();
+                    //消えた後のプルダウンの値に合わせてアップデート
+                    this.updateModel();
 
+                    //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                    this.renderSignalContainers();
+
+                });
+
+                
             }
 
             /*
@@ -1139,6 +1145,39 @@ module Garage {
                 $targetFunctionPulllDownContainer.children().remove();
             }
 
+
+
+            /*
+             * deleteボタンを押した際のアニメーション
+             * @param order{number} 削除するdom のorder
+             * duration{number} アニメーションにかかる時間[ms]
+             * callback{Function} アニメーション後に実行する処理
+             */
+            private animateDeleteSignalContainerAndDotLine(order : number, duration : number, callback? :Function) {
+                let FUNCTION_NAME = TAG + "animateDeleteSignalContainer : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+                if (!this.isValidJQueryElement($targetSignalContainer)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                //dotlineをsignalContainer 1個分、短くする
+                let $dotLine = this.$el.find(".dot-line");
+                let dotLineHeight = $dotLine.outerHeight(true);
+                this.setAnimationDuration($dotLine, duration/1000);
+
+                $dotLine.outerHeight(dotLineHeight - $targetSignalContainer.outerHeight(true));
+                $dotLine.css("transform", "translateY(" + ( $targetSignalContainer.outerHeight(true)) + "px)");
+
+                this.animateDeleteSignalContainer(order, duration, callback);
+
+            }
 
 
         }

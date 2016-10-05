@@ -765,6 +765,10 @@ declare module Garage {
     * マクロボタンの順番交換アニメの長さ[ms]
     */
     var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
+    /*
+    * 信号を削除する際のアニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER: number;
 }
 
 
