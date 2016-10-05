@@ -209,7 +209,7 @@
             margin-left:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
             margin-right:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
             margin-top:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
-            margin-bottom:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            margin-bottom:0;
             text-shadow: none;
             font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
             color: $COLOR_PROPATY_AREA_TEXT;
@@ -366,7 +366,9 @@
 
         //最上段のプルダウンのかたまりは、ボーダーなし。
         #signal-container-element-0{
-             border-top:none;
+            .separate-line{
+               display:none; 
+            }
         }
                         
         //プルダウンの左側に出現するdot線
@@ -395,8 +397,16 @@
 
         //信号セット用プルダウンセット
         .signal-container-element{
-                box-sizing:border-box;
+            .separate-line{
+                position:absolute;
+                margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
+                width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
+                top:0;
                 border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
+            }
+
+                box-sizing:border-box;
+               
                 padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
                 padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
                 position:relative;
