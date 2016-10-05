@@ -157,17 +157,19 @@ module Garage {
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
+                    //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                    $('.custom-select').trigger('create');
+                    this.updateModel(this.DEFAULT_STATE_ID);
+                    this.controlPlusButtonEnable();
 
                     //削除をちら見する。
-                    this.animateAddButton(order);
+                    this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER);
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
 
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
-                this.updateModel(this.DEFAULT_STATE_ID);
-                this.controlPlusButtonEnable();
+                
+                
             }
 
             //Actionを変更させたときに呼ばれる

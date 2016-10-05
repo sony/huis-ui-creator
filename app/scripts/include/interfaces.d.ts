@@ -769,6 +769,14 @@ declare module Garage {
     * 信号を削除する際のアニメの長さ[ms]
     */
     var DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER: number;
+    /*
+     * 信号を追加する際のアニメの長さ[ms]
+     */
+    var DURATION_ANIMATION_ADD_SIGNAL_CONTAINER: number;
+    /*
+    * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
+    */
+    var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
 }
 
 

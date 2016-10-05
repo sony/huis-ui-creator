@@ -120,6 +120,8 @@ module Garage {
 
         DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
         DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER = 500;
+        DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
+        DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

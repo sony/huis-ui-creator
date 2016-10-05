@@ -625,10 +625,10 @@ module Garage {
           /*
            * ＋ボタンを押下する際のアニメーション. 
            * @param order{number} 出現するdom のorder
+           * @param duration{number} アニメーションのduration
            */
-            protected animateAddButton(order: number) {
+            protected animateAddButton(order: number, duration:number, callback? : Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
-                let ANIMATINO_DURATION = 1000; //  アニメーションの時間[ms]
 
 
                 if (!this.isValidValue(order)) {
@@ -637,15 +637,38 @@ module Garage {
                 }
 
                 let $target = this.getSignalContainerElementOf(order);
+
+                //アニメがうまくいかないので、この位置でaddClass
+                $target.addClass("before-add-animation");
+
                 $target.find(".delete-signal-area").addClass("show");
                 $target.find(".sort-button-area").addClass("show");
 
+                //addボタン押下後、下から上に移動しながらフィードイン
+                let tmpSignalContainerDuration = $target.css("transition-duration");
+
+                this.setAnimationDuration($target, duration / 1000);
+                $target.removeClass("before-add-animation");
+                
+                
                 setTimeout(
                     () => {
                         $target.find(".delete-signal-area").removeClass("show");;
                         $target.find(".sort-button-area").removeClass("show");
                     }
-                    , ANIMATINO_DURATION
+                    , DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS
+                );
+
+                setTimeout(
+                    () => {
+                        $target.css("transition-duration", tmpSignalContainerDuration);
+
+                        if (callback) {
+                            callback();
+                        }
+
+                    }
+                    , duration
                 );
 
             }

@@ -319,11 +319,11 @@ module Garage {
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
                     this.updateModel();
-                    
+                    this.controlPlusButtonEnable();
+
                     //削除とソートボタンをちら見する。
                     this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
                         this.renderSignalContainers();
-                        this.controlPlusButtonEnable();
                     });   
                     
                 } else {
