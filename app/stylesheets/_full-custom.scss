@@ -395,8 +395,13 @@
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
         }
 
+        //マクロの信号セット用プルダウンセット
         #macro-container{
             .signal-container-element{
+ 
+                padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
+                padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
+
                 .separate-line{
                     margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
                     width:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
@@ -406,6 +411,7 @@
 
         //信号セット用プルダウンセット
         .signal-container-element{
+
             .separate-line{
                 position:absolute;
                 width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
@@ -413,13 +419,9 @@
                 border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
             }
 
-
-
-
-                box-sizing:border-box;
-               
-                padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
-                padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
+                box-sizing:border-box;   
+                padding-top:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_TOP;
+                padding-bottom:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_BOTTOM;
                 position:relative;
 
                 .custom-select{
