@@ -1116,7 +1116,7 @@
                         padding-top:$SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
 
                         .border-line{
-                            border : $SIZE_PALLET_SEPARATOR_BORDER_THICKNESS solid $COLOR_PALLET_SEPARATOR_BORDER;
+                            border-top : $SIZE_PALLET_SEPARATOR_BORDER_THICKNESS solid $COLOR_PALLET_SEPARATOR_BORDER;
                             align-self:center;                
                         }
 
