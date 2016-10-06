@@ -437,11 +437,6 @@ module Garage {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
 
-				// button.deviceInfo のコピー
-				if (srcButton.deviceInfo) {
-					newButton.deviceInfo = $.extend(true, {}, srcButton.deviceInfo);
-				}
-
 				// button.state のコピー
 				var srcStates = srcButton.state;
 				var newStates: IGState[] = [];
@@ -923,11 +918,13 @@ module Garage {
 
                 for (var i = 0, l = inputModules.length; i < l; i++) {
                     //ページカウントは、すでに記述されているページに追加する
-                    inputModules[i].pageIndex = this.collection.length+1;
-                    modulesModels.push(this.getModuleModel(inputModules[i]));
+                    let moduleModel = this.getModuleModel(inputModules[i]);
+                    moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
+                    modulesModels.push(moduleModel);
                 }
-
-                this.collection.add(modulesModels);
+                (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
+                
+                
             }
 
 

@@ -55,8 +55,8 @@ module Garage {
                     "click .delete-signal": "onDeleteButtonClick",
                     "click .sort-up-btn": "onMoveUpOrderButtonClick",
                     "click .sort-down-btn": "onMoveDownOrderButtonClick",
-                    "mouseover .signal-container-element": "onSignalControllAreaMouseOn",
-                    "mouseout .signal-container-element": "onSignalControllAreaMouseOut"
+                    "mouseenter .signal-container-element": "onHoverInSignalContainer",
+                    "mouseleave .signal-container-element": "onHoverOutSignalContainer"
                 };
             }
 
@@ -486,6 +486,15 @@ module Garage {
                     let deviceInfo = null;
                     if (tmpRemoteId != null) {
                         deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                        if (!deviceInfo) {
+                            try {
+                                // HuisFilesに存在しない場合はキャッシュを使用
+                                deviceInfo = this.model.state[0].action[order].deviceInfo;
+                            } catch (e) {
+                                // キャッシュもなかった場合
+                                console.warn(FUNCTION_NAME + "deviceInfo not found");
+                            }
+                        }
                     }
 
 
@@ -498,6 +507,8 @@ module Garage {
                         //deviceInfo.functionCodeHashがある場合、codeを取
                         //codeを入力
                         let tmpCode = null;
+
+                        tmpAction.deviceInfo = deviceInfo;
 
                         if (deviceInfo.functionCodeHash) {
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
@@ -617,10 +628,10 @@ module Garage {
                     this.$el.find("#order-indicator-dot-0").remove();
 
                     //削除エリアを削除
-                    this.$el.find("#sort-button-area-0").remove();
+                    this.$el.find("#delete-signal-area-0").remove();
 
                     //並び替えボタンエリアを削除
-                    this.$el.find("#delete-signal-area-0").remove();
+                    this.$el.find("#sort-button-area-0").remove();                    
                     
                 } else {//２つ以上ある場合、dot線を描画。
                     this.renderDotLine();

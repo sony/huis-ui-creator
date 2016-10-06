@@ -42,14 +42,29 @@ module Garage {
             events() {
                 // Please add events
                 return {
-
+                    
                 };
             }
 
+            //signalContainerがマウスオーバーされたときに呼び出される
+            protected onHoverInSignalContainer(event: Event) {
+                let FUNCTION_NAME = TAG + "onHoverInSignalContainer";
 
+                let $target = $(event.currentTarget).find(".signal-control-button");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity","1");
+                }
+            }
 
+            //signalContainerがマウスオーバーが外されたときに呼び出される
+            protected onHoverOutSignalContainer(event: Event) {
+                let FUNCTION_NAME = TAG + "onHoverOutSignalContainer";
 
-
+                let $target = $(event.currentTarget).find(".signal-control-button");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity", "0");
+                }
+            }
 
 
 
@@ -173,6 +188,12 @@ module Garage {
                 let remoteId: string = undefined;
 
                 if (action != null) {
+                    if (action.deviceInfo &&
+                        action.deviceInfo.code_db) {
+                        let codeDb = action.deviceInfo.code_db;
+                        return huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                    }
+
                     let code = action.code;
                     if (code != null) {
                         remoteId = huisFiles.getRemoteIdByCode(code);
@@ -262,7 +283,7 @@ module Garage {
 
 
 
-            /*
+            /**
           * 入力したorderのremoteプルダウンに、inputの値を代入する。
           * order{number} ： マクロ信号の順番
           * inputRemoteId{string} : プルダウンに設定する値。
@@ -338,7 +359,7 @@ module Garage {
                 }
 
                 //RemoteIdプルダウンのDOMを表示。
-                let remoteList : IRemoteInfo[] = this.availableRemotelist;
+                let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
                     let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.templateItemDetailFile_);
@@ -346,6 +367,34 @@ module Garage {
                     if (stateId == null) {
                         stateId = this.DEFAULT_STATE_ID;
                     }
+
+                    let deviceInfo: IButtonDeviceInfo;
+                    if (this.model.state[0].action.length > order &&
+                        this.model.state[0].action[order].deviceInfo &&
+                        this.model.state[0].action[order].deviceInfo.remoteName !== "Special") {
+                        var existCachedDeviceInfo: boolean = true;
+
+                        deviceInfo = this.model.state[0].action[order].deviceInfo;
+
+                        // 該当actionに設定されているリモコンがHuisFilesに存在するか確認
+                        var existRemote: boolean = false;
+                        for (let remote of remoteList) {
+                            if (remote.face &&
+                                remote.face.name &&
+                                deviceInfo.remoteName &&
+                                remote.face.name == deviceInfo.remoteName) {
+                                existRemote = true;
+                                break;
+                            }
+                        }
+
+                        if (!existRemote && deviceInfo) {
+                            // 該当リモコンがHuisFilesに残っていないのでリストに追加
+                            // remoteId は存在しないので代わりに deviceInfo.id を設定
+                            remoteList.unshift({ remoteId: deviceInfo.id, face: { remoteId: deviceInfo.id, name: deviceInfo.remoteName, category: deviceInfo.code_db.device_type, modules: null } });
+                        }
+                    }
+                    
 
                     let inputSignalData = {
                         id: stateId,
@@ -359,6 +408,9 @@ module Garage {
                     //inputにmodelがある場合、値を表示
                     if (inputRemoteId != null) {
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
+                    } else if (!existRemote && existCachedDeviceInfo) {
+                        // リモコンがHuisFilesに存在せずキャッシュのみ存在する場合
+                        this.setRemoteIdPullDownOf(order, deviceInfo.id);
                     } else {
                         //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
@@ -409,7 +461,7 @@ module Garage {
              * @param action{IAction} : functionNameを抽出するAction
              * @return {string[]} : functions, 見つからない場合、 nullを返す。
              */
-            protected getFunctionsFromAction(action : IAction) {
+            protected getFunctionsFromAction(action: IAction) {
                 let FUNCTION_NAME = TAG + "getFunctionsFromAction : ";
 
                 if (action == null) {
@@ -422,9 +474,14 @@ module Garage {
                     return;
                 }
 
-                //TODO：huisFilesで取得できない場合の処理(すでに削除されているなど)
-                //キャッシュで対応する。
-                return huisFiles.getMasterFunctions(remoteId);
+                if (action.deviceInfo.functions == null ||
+                    action.deviceInfo.functions.length == 0) {
+                    // functionsが無い場合はHuisFilesから検索
+                    let functions: string[] = huisFiles.getMasterFunctions(remoteId);
+                    action.deviceInfo.functions = functions;
+                }
+
+                return action.deviceInfo.functions;
 
             }
 
@@ -617,9 +674,19 @@ module Garage {
                     return;
                 }
 
-                //TODO：huisFilesで取得できない場合の処理(すでに削除されているなど)
-                //キャッシュで対応する。
-                return huisFiles.getMasterFunctions(remoteId);
+                let functions = huisFiles.getMasterFunctions(remoteId);
+
+                if (functions) {
+                    return functions;
+                } else {
+                    try {
+                        // HuisFilesに存在しない場合はキャッシュから表示
+                        return this.model.state[0].action[order].deviceInfo.functions;
+                    } catch (e) {
+                        // キャッシュもない場合
+                        return;
+                    }
+                }
             }
           
           /*
