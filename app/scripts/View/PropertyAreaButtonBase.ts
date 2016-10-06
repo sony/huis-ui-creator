@@ -410,7 +410,16 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
                     } else if (!existRemote && existCachedDeviceInfo) {
                         // リモコンがHuisFilesに存在せずキャッシュのみ存在する場合
-                        this.setRemoteIdPullDownOf(order, deviceInfo.id);
+                        let cacheRemoteId = deviceInfo.id;
+                        if (this.isValidValue(cacheRemoteId)) {
+                            this.setRemoteIdPullDownOf(order, deviceInfo.id);
+                        } else {
+                            //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                            let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
+                            $remoteContainer.find("select").prepend(noneOption);
+                            this.setRemoteIdPullDownOf(order, "none");
+                        }
+                        
                     } else {
                         //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
@@ -614,7 +623,7 @@ module Garage {
                     $functionlContainer.append($functionsDetail);
 
                     //inputにmodelがある場合、値を表示
-                    if (functionName != null) {
+                    if (this.isValidValue(functionName)) {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
