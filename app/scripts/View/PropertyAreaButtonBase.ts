@@ -405,13 +405,15 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    //inputにmodelがある場合、値を表示
-                    if (inputRemoteId != null) {
-                        this.setRemoteIdPullDownOf(order, inputRemoteId);
-                    } else if (!existRemote && existCachedDeviceInfo) {
+                    
+                    if (!existRemote && existCachedDeviceInfo) {
                         // リモコンがHuisFilesに存在せずキャッシュのみ存在する場合
+                        //キャッシュの信号入れ替えに対応するため、最優先で判定
                         this.setRemoteIdPullDownOf(order, deviceInfo.id);
-                    } else {
+                    } else if (inputRemoteId != null) {
+                        //inputにmodelがある場合、値を表示
+                        this.setRemoteIdPullDownOf(order, inputRemoteId);
+                    } else{
                         //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
                         $remoteContainer.find("select").prepend(noneOption);
