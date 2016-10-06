@@ -1333,33 +1333,77 @@ module Garage {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
 					switch (this.selectedResizer_) {
-						case "left-top":
-							newArea.x += deltaX;
-							newArea.y += deltaY;
-							newArea.w -= deltaX;
-							newArea.h -= deltaY;
-							break;
+                        case "left-top":
+                            if (deltaX >= baseArea.w - this.gridSize_) {
+                                newArea.w = this.gridSize_;
+                                newArea.x += (baseArea.w > this.gridSize_) ? baseArea.w - this.gridSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
 
-						case "right-top":
-							newArea.y += deltaY;
-							newArea.w += deltaX;
-							newArea.h -= deltaY;
-							break;
+                            if (deltaY >= baseArea.h - this.gridSize_) {
+                                newArea.h = this.gridSize_;
+                                newArea.y += (baseArea.h > this.gridSize_) ? baseArea.h - this.gridSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
 
-						case "right-bottom":
-							newArea.w += deltaX;
-							newArea.h += deltaY;
-							break;
+                            break;
 
-						case "left-bottom":
-							newArea.x += deltaX;
-							newArea.w -= deltaX;
-							newArea.h += deltaY;
-							break;
+                        case "right-top":
+                            if (-deltaX >= baseArea.w - this.gridSize_) {
+                                newArea.w = this.gridSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
 
-						default:
-							;
-					}
+                            if (deltaY >= baseArea.h - this.gridSize_) {
+                                newArea.h = this.gridSize_;
+                                newArea.y += (baseArea.h > this.gridSize_) ? baseArea.h - this.gridSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
+
+                            break;
+
+                        case "right-bottom":
+                            if (-deltaX >= baseArea.w - this.gridSize_) {
+                                newArea.w = this.gridSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.gridSize_) {
+                                newArea.h = this.gridSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        case "left-bottom":
+                            if (deltaX >= baseArea.w - this.gridSize_) {
+                                newArea.w = this.gridSize_;
+                                newArea.x += (baseArea.w > this.gridSize_) ? baseArea.w - this.gridSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.gridSize_) {
+                                newArea.h = this.gridSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        default:
+                            ;
+                    }
+
+
 
 					//グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
