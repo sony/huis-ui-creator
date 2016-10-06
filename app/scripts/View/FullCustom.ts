@@ -2421,17 +2421,26 @@ module Garage {
 						let editedImageName = path.basename(editedImage.path);
 						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
 
+                        let resolvedPath = editedImage.path.replace(/\\/g, "/");
 
 						//このバージョンでは、すべてのステートの画像を変更する。
 						this._updateCurrentModelStateData(TARGET_ALL_STATE, {
 							"path": editedImagePath,
-							"resolved-path": editedImage.path.replace(/\\/g, "/"),
+                            "resolved-path": resolvedPath,
 							"resizeOriginal": editedImagePath,
 							"text":""
 						});
 
 						// テキストエリアの文字表示をアップデート
 						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
+
+                        //previewを更新する
+                        let inputURL = JQUtils.enccodeUriValidInCSS(resolvedPath);
+                        let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+                        this._updatePreviewInDetailArea(inputURL, $preview);
+                        
+                        
 
 						//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
 						//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
@@ -3481,7 +3490,7 @@ module Garage {
                                     });
 
                                     let inputUrl: string = null;
-                                    if (targetState.image!= null && targetState.image[0] != null) {
+                                    if (targetState.image != null && targetState.image[0] != null) {
                                         inputUrl = this.getValidPathOfIGImageForCSS(targetState.image[0]);
                                     }
 
