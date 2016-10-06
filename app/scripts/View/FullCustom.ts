@@ -635,7 +635,7 @@ module Garage {
                 //マスターフェースを表示する。Commonの場合は、無視
                 let isMasterFace: boolean = true;
                 let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
-                if (masterFace != null) {
+                if (masterFace != null && remoteId != "common") {
 
                     //マスターフェースとの境界線にセパレーターを描画
                     let templateFile = CDP.Framework.toUrl("/templates/face-items.html");
@@ -908,21 +908,7 @@ module Garage {
                         }
 						break;
 
-                    case "image":
-                    if (targetModel.image) {
-                        let remoteId = this.faceRenderer_pallet_.getRemoteId();
-
-                        if (remoteId == "common") {
-                            model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
-                                // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
-                                // このタイミングで CSS を更新
-                                this._updateItemElementOnCanvas(model);
-                                this.moveCurrentTargetDummy();
-                            });
-                        } else {
-                            model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                    }
+                 
 
                     case "label":
                         if (targetModel.label) {
