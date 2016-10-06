@@ -165,7 +165,9 @@ module Garage {
                     this.controlPlusButtonEnable();
 
                     //削除をちら見する。
-                    this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER);
+                    this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
+                        this.renderSignals(this.DEFAULT_STATE_ID);
+                    });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
