@@ -71,6 +71,7 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
+            private minItemSize_: number;
             private isTextBoxFocused: Boolean;
 
             private bindedLayoutPage = null;
@@ -103,6 +104,7 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
+                this.minItemSize_ = DEFAULT_GRID;
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -1334,17 +1336,17 @@ module Garage {
 
 					switch (this.selectedResizer_) {
                         case "left-top":
-                            if (deltaX >= baseArea.w - this.gridSize_) {
-                                newArea.w = this.gridSize_;
-                                newArea.x += (baseArea.w > this.gridSize_) ? baseArea.w - this.gridSize_ : 0;
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
                             } else {
                                 newArea.x += deltaX;
                                 newArea.w -= deltaX;
                             }
 
-                            if (deltaY >= baseArea.h - this.gridSize_) {
-                                newArea.h = this.gridSize_;
-                                newArea.y += (baseArea.h > this.gridSize_) ? baseArea.h - this.gridSize_ : 0;
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
                             } else {
                                 newArea.y += deltaY;
                                 newArea.h -= deltaY;
@@ -1353,15 +1355,15 @@ module Garage {
                             break;
 
                         case "right-top":
-                            if (-deltaX >= baseArea.w - this.gridSize_) {
-                                newArea.w = this.gridSize_;
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
                             } else {
                                 newArea.w += deltaX;
                             }
 
-                            if (deltaY >= baseArea.h - this.gridSize_) {
-                                newArea.h = this.gridSize_;
-                                newArea.y += (baseArea.h > this.gridSize_) ? baseArea.h - this.gridSize_ : 0;
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
                             } else {
                                 newArea.y += deltaY;
                                 newArea.h -= deltaY;
@@ -1370,30 +1372,30 @@ module Garage {
                             break;
 
                         case "right-bottom":
-                            if (-deltaX >= baseArea.w - this.gridSize_) {
-                                newArea.w = this.gridSize_;
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
                             } else {
                                 newArea.w += deltaX;
                             }
 
-                            if (-deltaY >= baseArea.h - this.gridSize_) {
-                                newArea.h = this.gridSize_;
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
                             } else {
                                 newArea.h += deltaY;
                             }
                             break;
 
                         case "left-bottom":
-                            if (deltaX >= baseArea.w - this.gridSize_) {
-                                newArea.w = this.gridSize_;
-                                newArea.x += (baseArea.w > this.gridSize_) ? baseArea.w - this.gridSize_ : 0;
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
                             } else {
                                 newArea.x += deltaX;
                                 newArea.w -= deltaX;
                             }
 
-                            if (-deltaY >= baseArea.h - this.gridSize_) {
-                                newArea.h = this.gridSize_;
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
                             } else {
                                 newArea.h += deltaY;
                             }
