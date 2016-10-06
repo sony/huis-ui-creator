@@ -3479,12 +3479,16 @@ module Garage {
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
                                     });
-                                    
 
-                                    let inputUrl: string = this.getValidPathOfIGImageForCSS(targetState.image[0]);
+                                    let inputUrl: string = null;
+                                    if (targetState.image!= null && targetState.image[0] != null) {
+                                        inputUrl = this.getValidPathOfIGImageForCSS(targetState.image[0]);
+                                    }
+
                                     if (inputUrl == null) {
                                         inputUrl = "none";
                                     }    
+
                                     this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
 
 
