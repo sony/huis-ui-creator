@@ -71,6 +71,7 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
+            private minItemSize_: number;
             private isTextBoxFocused: Boolean;
 
             private bindedLayoutPage = null;
@@ -103,6 +104,7 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
+                this.minItemSize_ = DEFAULT_GRID;
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -1333,33 +1335,77 @@ module Garage {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
 					switch (this.selectedResizer_) {
-						case "left-top":
-							newArea.x += deltaX;
-							newArea.y += deltaY;
-							newArea.w -= deltaX;
-							newArea.h -= deltaY;
-							break;
+                        case "left-top":
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
 
-						case "right-top":
-							newArea.y += deltaY;
-							newArea.w += deltaX;
-							newArea.h -= deltaY;
-							break;
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
 
-						case "right-bottom":
-							newArea.w += deltaX;
-							newArea.h += deltaY;
-							break;
+                            break;
 
-						case "left-bottom":
-							newArea.x += deltaX;
-							newArea.w -= deltaX;
-							newArea.h += deltaY;
-							break;
+                        case "right-top":
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
 
-						default:
-							;
-					}
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
+
+                            break;
+
+                        case "right-bottom":
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        case "left-bottom":
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        default:
+                            ;
+                    }
+
+
 
 					//グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
