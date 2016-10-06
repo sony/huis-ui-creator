@@ -1297,9 +1297,9 @@ module Garage {
                     } else {
                         normalizedAction.code_db = {
                             function: "none",
-                            brand: "",
-                            device_type: "",
-                            db_codeset: ""
+                            brand: " ",
+                            device_type: " ",
+                            db_codeset: " "
                         }
                     }
                     if (!_.isUndefined(action.interval)) {
