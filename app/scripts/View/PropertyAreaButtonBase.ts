@@ -643,10 +643,11 @@ module Garage {
 
                 $target.find(".delete-signal-area").addClass("show");
                 $target.find(".sort-button-area").addClass("show");
+                //並び替え下ボタンは、非表示
+                $target.find(".sort-button-area").addClass("last-order");
 
                 //addボタン押下後、下から上に移動しながらフィードイン
                 let tmpSignalContainerDuration = $target.css("transition-duration");
-
                 this.setAnimationDuration($target, duration / 1000);
                 $target.removeClass("before-add-animation");
                 
