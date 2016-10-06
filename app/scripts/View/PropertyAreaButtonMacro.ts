@@ -1169,6 +1169,27 @@ module Garage {
                     return;
                 }
 
+                //orderが0のとき order1のintervalのプルダウンと境界線も非表示にする
+                if (order == 0) {
+                    let targetOrder = 1;
+                    if (this.isValidOrder(targetOrder)) {
+                        let $orderOneSignalContainer = this.getSignalContainerElementOf(targetOrder);
+                        let tmpDuration = $orderOneSignalContainer.css("transition-duration");
+                        this.setAnimationDuration($orderOneSignalContainer, duration / 1000);
+
+                        //invervalを非表示
+                        this.removeIntervalPullDown(targetOrder);
+
+                        //境界線を非表示
+                        $orderOneSignalContainer.find(".separate-line").css("opacity","0");
+
+                        setTimeout(() => {
+                            $orderOneSignalContainer.css("transition-duration", tmpDuration);
+                        }, duration)
+                    }
+                }
+
+
                 //dotlineをsignalContainer 1個分、短くする
                 let $dotLine = this.$el.find(".dot-line");
                 let dotLineHeight = $dotLine.outerHeight(true);
