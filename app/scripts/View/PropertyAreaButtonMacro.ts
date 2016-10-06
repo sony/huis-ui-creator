@@ -1191,12 +1191,7 @@ module Garage {
                         //invervalを非表示
                         this.removeIntervalPullDown(targetOrder);
 
-                        //境界線を非表示
-                        $orderOneSignalContainer.find(".separate-line").css("opacity","0");
-
-                        setTimeout(() => {
-                            $orderOneSignalContainer.css("transition-duration", tmpDuration);
-                        }, duration)
+                  
                     }
                 }
 

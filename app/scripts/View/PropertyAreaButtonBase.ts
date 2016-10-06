@@ -762,6 +762,21 @@ module Garage {
                     return;
                 }
 
+                //orderが0のとき order1のintervalのプルダウンと境界線も非表示にする
+                if (order == 0) {
+                    let targetOrder = 1;
+                    if (this.isValidOrder(targetOrder)) {
+                        let $orderOneSignalContainer = this.getSignalContainerElementOf(targetOrder);
+                        let tmpDuration = $orderOneSignalContainer.css("transition-duration");
+                        this.setAnimationDuration($orderOneSignalContainer, duration / 1000);
+
+                        //境界線を非表示
+                        $orderOneSignalContainer.find(".separate-line").css("opacity", "0");
+
+                    }
+                }
+
+
                 //durationを設定,対象を透明に
                 let tmpTargetDuration = $target.css("transition-duration");
                 let tmpTargetMarginBottom = parseInt ($target.css("transition-duration").replace("px",""),10);
