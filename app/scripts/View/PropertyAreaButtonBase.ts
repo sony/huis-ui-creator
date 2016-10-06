@@ -42,14 +42,29 @@ module Garage {
             events() {
                 // Please add events
                 return {
-
+                    
                 };
             }
 
+            //signalContainerがマウスオーバーされたときに呼び出される
+            protected onHoverInSignalContainer(event: Event) {
+                let FUNCTION_NAME = TAG + "onHoverInSignalContainer";
 
+                let $target = $(event.currentTarget).find(".signal-control-button");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity","1");
+                }
+            }
 
+            //signalContainerがマウスオーバーが外されたときに呼び出される
+            protected onHoverOutSignalContainer(event: Event) {
+                let FUNCTION_NAME = TAG + "onHoverOutSignalContainer";
 
-
+                let $target = $(event.currentTarget).find(".signal-control-button");
+                if (this.isValidJQueryElement($target)) {
+                    $target.css("opacity", "0");
+                }
+            }
 
 
 
