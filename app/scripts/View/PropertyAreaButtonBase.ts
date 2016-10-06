@@ -692,10 +692,10 @@ module Garage {
           /*
            * ＋ボタンを押下する際のアニメーション. 
            * @param order{number} 出現するdom のorder
+           * @param duration{number} アニメーションのduration
            */
-            protected animateAddButton(order: number) {
+            protected animateAddButton(order: number, duration:number, callback? : Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
-                let ANIMATINO_DURATION = 1000; //  アニメーションの時間[ms]
 
 
                 if (!this.isValidValue(order)) {
@@ -704,16 +704,103 @@ module Garage {
                 }
 
                 let $target = this.getSignalContainerElementOf(order);
+
+                //アニメがうまくいかないので、この位置でaddClass
+                $target.addClass("before-add-animation");
+
                 $target.find(".delete-signal-area").addClass("show");
                 $target.find(".sort-button-area").addClass("show");
+                //並び替え下ボタンは、非表示
+                $target.find(".sort-button-area").addClass("last-order");
 
+                //addボタン押下後、下から上に移動しながらフィードイン
+                let tmpSignalContainerDuration = $target.css("transition-duration");
+                this.setAnimationDuration($target, duration / 1000);
+                $target.removeClass("before-add-animation");
+                
+                
                 setTimeout(
                     () => {
                         $target.find(".delete-signal-area").removeClass("show");;
                         $target.find(".sort-button-area").removeClass("show");
                     }
-                    , ANIMATINO_DURATION
+                    , DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS
                 );
+
+                setTimeout(
+                    () => {
+                        $target.css("transition-duration", tmpSignalContainerDuration);
+
+                        if (callback) {
+                            callback();
+                        }
+
+                    }
+                    , duration
+                );
+
+            }
+
+
+            /*
+             * deleteボタンを押した際のアニメーション
+             * @param order{number} 削除するdom のorder
+             * duration{number} アニメーションにかかる時間[ms]
+             * callback{Function} アニメーション後に実行する処理
+             */
+            protected animateDeleteSignalContainer(order: number, duration: number, callback?: Function) {
+                let FUNCTION_NAME = TAG + "animateDeleteSignalContainer : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $target = this.getSignalContainerElementOf(order);
+                if (!this.isValidJQueryElement($target)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                //durationを設定,対象を透明に
+                let tmpTargetDuration = $target.css("transition-duration");
+                let tmpTargetMarginBottom = parseInt ($target.css("transition-duration").replace("px",""),10);
+                this.setAnimationDuration($target, duration / 1000);
+                $target.css("opacity", "0");
+                $target.css("margin-bottom", tmpTargetMarginBottom - $target.outerHeight(true) + "px");
+
+                setTimeout(() => {
+                    //durationを元に戻す。
+                    $target.css("transition-duration", tmpTargetDuration);
+
+                    if (callback) {
+                        callback();
+                    }
+
+                }, duration);
+
+            }
+
+
+            /*
+            * アニメーションのdurationを設定する。
+            * $target{JQuery} アニメーションを設定する対象
+            * duration{number} アニメーションにかかる時間[ms]
+            */
+            protected setAnimationDuration($target: JQuery, duration: number) {
+                let FUNCTION_NAME = TAG + "setAnimationDuration : ";
+
+                if (!this.isValidJQueryElement($target)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                if (!this.isValidValue(duration)) {
+                    console.warn(FUNCTION_NAME + "duration is invalid");
+                    return;
+                }
+
+                $target.css("transition-duration", duration + "s");
 
             }
 
@@ -771,8 +858,9 @@ module Garage {
                 let tmpTarget2Duration = $target2.css("transition-duration");
 
                 //durationをセット。
-                $target1.css("transition-duration", duration / 1000 + "s");
-                $target2.css("transition-duration", duration / 1000 + "s");
+                this.setAnimationDuration($target1, duration / 1000);
+                this.setAnimationDuration($target2, duration / 1000);
+
                 
                 //移動
                 $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");

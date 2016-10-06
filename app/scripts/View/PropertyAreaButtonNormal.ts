@@ -159,17 +159,19 @@ module Garage {
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
+                    //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+                    $('.custom-select').trigger('create');
+                    this.updateModel(this.DEFAULT_STATE_ID);
+                    this.controlPlusButtonEnable();
 
                     //削除をちら見する。
-                    this.animateAddButton(order);
+                    this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER);
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
                 }
 
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
-                this.updateModel(this.DEFAULT_STATE_ID);
-                this.controlPlusButtonEnable();
+                
+                
             }
 
             //Actionを変更させたときに呼ばれる
@@ -433,19 +435,24 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
-                let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                $target.remove();
+                //アニメーション
+                this.animateDeleteSignalContainer(order, DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER,
+                    () => {
+                        let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                        $target.remove();
 
-                let targetStateId = this.getStateId();
+                        let targetStateId = this.getStateId();
 
-                //消えた後のプルダウンの値に合わせてアップデート
-                this.updateModel(targetStateId);
+                        //消えた後のプルダウンの値に合わせてアップデート
+                        this.updateModel(targetStateId);
 
-                //アップデートされたモデルに合わせてプルダウン部をレンダリング
-                this.renderSignals(targetStateId);
+                        //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                        this.renderSignals(targetStateId);
+
+                    });
 
             }
 

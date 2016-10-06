@@ -319,16 +319,18 @@ module Garage {
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
                     this.updateModel();
-                    this.renderSignalContainers();
+                    this.controlPlusButtonEnable();
 
                     //削除とソートボタンをちら見する。
-                    this.animateAddButton(tmpOrder);   
+                    this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
+                        this.renderSignalContainers();
+                    });   
                     
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
 
-                this.controlPlusButtonEnable();
+                
 
             }
 
@@ -701,14 +703,20 @@ module Garage {
                 }
 
                 let $target = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                $target.remove();
 
-                //消えた後のプルダウンの値に合わせてアップデート
-                this.updateModel();
+                //アニメーション
+                this.animateDeleteSignalContainerAndDotLine(order, DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER, () => {
+                    $target.remove();
 
-                //アップデートされたモデルに合わせてプルダウン部をレンダリング
-                this.renderSignalContainers();
+                    //消えた後のプルダウンの値に合わせてアップデート
+                    this.updateModel();
 
+                    //アップデートされたモデルに合わせてプルダウン部をレンダリング
+                    this.renderSignalContainers();
+
+                });
+
+                
             }
 
             /*
@@ -1150,6 +1158,59 @@ module Garage {
                 $targetFunctionPulllDownContainer.children().remove();
             }
 
+
+
+            /*
+             * deleteボタンを押した際のアニメーション
+             * @param order{number} 削除するdom のorder
+             * duration{number} アニメーションにかかる時間[ms]
+             * callback{Function} アニメーション後に実行する処理
+             */
+            private animateDeleteSignalContainerAndDotLine(order : number, duration : number, callback? :Function) {
+                let FUNCTION_NAME = TAG + "animateDeleteSignalContainer : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+                if (!this.isValidJQueryElement($targetSignalContainer)) {
+                    console.warn(FUNCTION_NAME + "$target is invalid");
+                    return;
+                }
+
+                //orderが0のとき order1のintervalのプルダウンと境界線も非表示にする
+                if (order == 0) {
+                    let targetOrder = 1;
+                    if (this.isValidOrder(targetOrder)) {
+                        let $orderOneSignalContainer = this.getSignalContainerElementOf(targetOrder);
+                        let tmpDuration = $orderOneSignalContainer.css("transition-duration");
+                        this.setAnimationDuration($orderOneSignalContainer, duration / 1000);
+
+                        //invervalを非表示
+                        this.removeIntervalPullDown(targetOrder);
+
+                        //境界線を非表示
+                        $orderOneSignalContainer.find(".separate-line").css("opacity","0");
+
+                        setTimeout(() => {
+                            $orderOneSignalContainer.css("transition-duration", tmpDuration);
+                        }, duration)
+                    }
+                }
+
+
+                //dotlineをsignalContainer 1個分、短くする
+                let $dotLine = this.$el.find(".dot-line");
+                let dotLineHeight = $dotLine.outerHeight(true);
+                this.setAnimationDuration($dotLine, duration/1000);
+
+                $dotLine.outerHeight(dotLineHeight - $targetSignalContainer.outerHeight(true));
+
+                this.animateDeleteSignalContainer(order, duration, callback);
+
+            }
 
 
         }

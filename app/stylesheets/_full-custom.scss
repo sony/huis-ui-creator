@@ -412,6 +412,13 @@
         //信号セット用プルダウンセット
         .signal-container-element{
 
+            //信号を追加時のアニメーション
+               &.before-add-animation{
+                   opacity:0;
+                   margin-top : $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_HEIGHT_WHEN_ADD;
+               }
+
+           
             .separate-line{
                 position:absolute;
                 width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
