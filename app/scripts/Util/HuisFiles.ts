@@ -355,14 +355,13 @@ module Garage {
 				return null;
 			}
 
-			/*
+			/**
 			* 同じbrand, deviceType, modelNumberをもつリモコンのremoteIdを取得する。
 			* @param brand{string} 機器のブランド
 			* @param deviceType{string} 機器のタイプ
 			* @param modelNumber{string} 機器のモデルナンバー
 			* @return remoteId{string}リモコンのID
 			*/
-
 			getRemoteIdByCodeDbElements(brand, deviceType, modelNumber):string {
 				let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
 	
@@ -379,7 +378,28 @@ module Garage {
 				}
 
 				return null;
-			}
+            }
+
+            /**
+             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
+             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
+             */
+            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
+
+                for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+                    let remoteId = this.remoteList_[i].remote_id;
+                    let bluetoothData = this.getMasterBluetoothData(remoteId);
+                    if (bluetoothData &&
+                        bluetoothData.bluetooth_device &&
+                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address) {
+                        return remoteId;
+                    }
+                }
+
+                return null;
+            }
 
 			/**
 			 * 機器の master face に記述されている最初の code を取得する。
@@ -755,6 +775,7 @@ module Garage {
                 let functions = this.getMasterFunctions(remoteId);
                 let codeDb = this.getMasterCodeDb(remoteId);
                 let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let bluetoothData = this.getMasterBluetoothData(remoteId);
 
                 let face = huisFiles.getFace(remoteId);
                 if (face == null) {
@@ -768,7 +789,9 @@ module Garage {
                     remoteName: face.name,
                     code_db: codeDb
                 };
-
+                if (bluetoothData) {
+                    deviceInfo.bluetooth_data = bluetoothData;
+                }
 
                 if (functionCodeHash != null) {
                     deviceInfo.functionCodeHash = functionCodeHash;

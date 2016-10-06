@@ -528,11 +528,12 @@ module Garage {
                         }
 
                         //bluetooth_dataを入力
-                        let tmpBluetoothData = null;
+                        let tmpBluetoothData: IBluetoothData = null;
                         if (deviceInfo.bluetooth_data != null) {
                             tmpBluetoothData = deviceInfo.bluetooth_data;
                         }
                         if (tmpBluetoothData != null) {
+                            tmpBluetoothData.bluetooth_data_content = tmpFunction;
                             tmpAction.bluetooth_data = tmpBluetoothData;
                         }
                     }
