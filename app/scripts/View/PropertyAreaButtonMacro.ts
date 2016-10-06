@@ -1113,7 +1113,7 @@ module Garage {
 
                 this.renderIntervalOf(order, signalInputs.interval);
 
-                this.setRemoteIdPullDownOf(order, signalInputs.remoteId);
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,signalInputs.remoteId);
 
                 //Function選択用のPullダウンを更新。
                 this.renderFunctionsOf(order,this.defaultState.id, signalInputs.functionName);
