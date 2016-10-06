@@ -1271,39 +1271,46 @@ module Garage {
 			private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
 				var normalizedActions: IAction[] = [];
 
-				actions.forEach((action: IAction) => {
-					let normalizedAction: IAction = {
-						input: action.input
-					};
-					if (action.code) {
-						normalizedAction.code = action.code;
-					}
-					if (action.code_db) {
-						normalizedAction.code_db = {
-							function: action.code_db.function,
-							brand: action.code_db.brand,
-							device_type: action.code_db.device_type,
-							db_codeset: action.code_db.db_codeset
-						};
-						if (!_.isUndefined(action.code_db.db_device_id)) {
-							normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
-						}
-						if (!_.isUndefined(action.code_db.model_number)) {
-							normalizedAction.code_db.model_number = action.code_db.model_number;
+                actions.forEach((action: IAction) => {
+                    let normalizedAction: IAction = {
+                        input: (action.input) ? action.input : "none"
+                    };
+                    if (action.code) {
+                        normalizedAction.code = action.code;
+                    }
+                    if (action.code_db) {
+                        normalizedAction.code_db = {
+                            function: (action.code_db.function) ? action.code_db.function : "none",
+                            brand: action.code_db.brand,
+                            device_type: action.code_db.device_type,
+                            db_codeset: action.code_db.db_codeset
+                        };
+                        if (!_.isUndefined(action.code_db.db_device_id)) {
+                            normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
+                        }
+                        if (!_.isUndefined(action.code_db.model_number)) {
+                            normalizedAction.code_db.model_number = action.code_db.model_number;
                         }
                         if (!_.isUndefined(action.bluetooth_data)) {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
-					}
-					if (!_.isUndefined(action.interval)) {
-						normalizedAction.interval = action.interval;
-					}
+                    } else {
+                        normalizedAction.code_db = {
+                            function: "none",
+                            brand: "",
+                            device_type: "",
+                            db_codeset: ""
+                        }
+                    }
+                    if (!_.isUndefined(action.interval)) {
+                        normalizedAction.interval = action.interval;
+                    }
 
-					normalizedActions.push(normalizedAction);
-				});
+                    normalizedActions.push(normalizedAction);
+                });
 
 				return normalizedActions;
-			}
+            }
 
 			/**
 			 * button.state.translate データから module 化に不要なものを間引く
