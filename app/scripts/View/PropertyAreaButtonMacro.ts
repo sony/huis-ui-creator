@@ -626,10 +626,10 @@ module Garage {
                     this.$el.find("#order-indicator-dot-0").remove();
 
                     //削除エリアを削除
-                    this.$el.find("#sort-button-area-0").remove();
+                    this.$el.find("#delete-signal-area-0").remove();
 
                     //並び替えボタンエリアを削除
-                    this.$el.find("#delete-signal-area-0").remove();
+                    this.$el.find("#sort-button-area-0").remove();                    
                     
                 } else {//２つ以上ある場合、dot線を描画。
                     this.renderDotLine();

@@ -490,6 +490,9 @@ module Garage {
 
                 this.renderSomeElementIfOneSignalOnlyExist();
                 this.controlPlusButtonEnable();
+
+                this.renderSpecialElementDependingSignalNum();
+
                 return this.$el;
 
             }
@@ -823,6 +826,25 @@ module Garage {
                 }
 
             }
+
+
+            /*
+           * 信号が1つしかない場合、signalのある要素を削除する
+           */
+            private renderSpecialElementDependingSignalNum() {
+                let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
+
+                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                //actionが1つしかない場合、削除ボタンtを削除。
+                if (signalLength <= 1) {
+
+                    //削除エリアを削除
+                    this.$el.find("#delete-signal-area-0").remove();
+                }
+
+            }
+
 
 
         }
