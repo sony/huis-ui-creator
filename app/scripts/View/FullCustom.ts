@@ -744,6 +744,10 @@ module Garage {
                 this._loseTarget();
 
                 let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), true);
+                if (!newItem) {
+                    console.error("Failed to add the pallet item to the canvas.");
+                    return;
+                }
                 this._updateItemElementOnCanvas(newItem);
                 
                 var mousePosition: IPosition = {
@@ -3952,10 +3956,6 @@ module Garage {
 					w: parseInt(this.$currentTarget_.css("width"), 10),
 					h: parseInt(this.$currentTarget_.css("height"), 10)
 				}
-				if (currentTargetArea == null) {
-					console.warn(FUNCTION_NAME + "currentTargetArea is undefined");
-					return;
-                }
 
                 // 検査したボタン
                 let buttons: Model.ButtonItem[] = [];

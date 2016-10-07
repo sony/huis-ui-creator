@@ -116,7 +116,7 @@ module Garage {
            * @return {boolean} 有効な場合、true
            */
             protected isValidJQueryElement($target: JQuery): boolean {
-                if ($target.length == 0 || $target == null) {
+                if ($target == null || $target.length == 0) {
                     return false;
                 } else {
                     return true;
@@ -834,10 +834,6 @@ module Garage {
                         x: $target.offset().left,
                         y: $target.offset().top
                     }
-
-                if (resultPosition == null) {
-                    console.warn(FUNCTION_NAME + "resultPosition is null");
-                }
 
                 return resultPosition
             }
