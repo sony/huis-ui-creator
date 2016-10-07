@@ -448,7 +448,6 @@
 											fs.rmdirSync(filePath);
 											console.log("rmdirSync: " + file);
                                         } else {
-                                            // ローカルのボタンデバイス情報のキャッシュファイルは削除対象外
 											fs.unlinkSync(filePath);
 											console.log("unlinkSync: " + file);
 										}
