@@ -4201,22 +4201,21 @@ module Garage {
              * @return {string} エラー文言。１つ以下のBluetoothデバイスしか存在しない場合は空文字が返る。
              */ 
             private _checkMultipleBluetoothDevicesExist(): string {
-                let invalidButton: Model.ButtonItem[] = this._getInvalidButtonsCausedByMultiBluetoothDevices();
+                let bluetoothDevices: IBluetoothDevice[] = this._getBluetoothDevicesInAllButtons();
 
-                if (invalidButton.length <= 1) {
+                if (bluetoothDevices.length <= 1) {
                     return "";
                 } else {
-                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + invalidButton.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
+                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
                 }
             }
 
             /**
-             * 全ボタンに対して複数のBluetoothデバイスが使用されているか検査し、
-             * 使用されている場合はBluetoothデバイスを含むボタンのリストを返し、
-             * 1つ以下のデバイスしか使用されていない場合は長さ0の配列を返す。
+             * 全ボタンに対して登録されているBluetoothデバイスのリストを返す
              */
-            private _getInvalidButtonsCausedByMultiBluetoothDevices(): Model.ButtonItem[] {
+            private _getBluetoothDevicesInAllButtons(): IBluetoothDevice[] {
                 // bluetooth_deviceを含むボタンのリスト
+                // 現在は使われていないが、後に該当するボタンの色変更などが必要になった場合に備えて残す
                 let bluetoothButtons: Model.ButtonItem[] = [];
                 // 含まれている bluetooth_device のリスト
                 let bluetoothDevices: IBluetoothDevice[] = [];
@@ -4262,11 +4261,7 @@ module Garage {
                     }
                 }
 
-                if (bluetoothDevices.length <= 1) {
-                    return [];
-                } else {
-                    return bluetoothButtons;
-                }
+                return bluetoothDevices;
             }
 
             /**
