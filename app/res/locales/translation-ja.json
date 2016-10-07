@@ -932,7 +932,7 @@
             "STR_REMOTE_BTN_KEYBOARD_CURSOR_RIGHT":"キーボード カーソル右",
             "STR_REMOTE_BTN_KEYBOARD_DOLLAR":"キーボード $",
             "STR_REMOTE_BTN_KEYBOARD_DOT":"キーボード ・",
-            "STR_REMOTE_BTN_KEYBOARD_DOUBLE_QUOTE": "キーボード &quot;",
+            "STR_REMOTE_BTN_KEYBOARD_DOUBLE_QUOTE": "キーボード ”",
             "STR_REMOTE_BTN_KEYBOARD_ENGLISH_JAPANEASE":"キーボード 言語切替",
             "STR_REMOTE_BTN_KEYBOARD_ENTER":"キーボード エンター",
             "STR_REMOTE_BTN_KEYBOARD_EQUAL":"キーボード =",
