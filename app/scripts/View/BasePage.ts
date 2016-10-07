@@ -265,10 +265,8 @@ module Garage {
                     $overflow.popup("close");
                 });
 
-				//オプションのテキストのローカライズ
-				$("#command-delete-remote").html($.i18n.t("option_menu.STR_OPTION_MENU_DELTE_REMOTE"));
-				$("#command-visit-help").html($.i18n.t("option_menu.STR_OPTION_MENU_HELP"));
-				$("#command-about-this").html($.i18n.t("app.name") + $.i18n.t("option_menu.STR_OPTION_MENU_ABOUT"));
+                $overflow.i18n();
+
 
                 return;
             }
@@ -596,6 +594,20 @@ module Garage {
 
             }
 
+            /*
+             * リモコンをエクスポートする
+             * @param remoteId{string} エクスポートするリモコンのID
+             */
+            protected exportRemote(remoteId: string) {
+                //TODO エクスポート処理
+            }
+
+            /*
+             * リモコンをインポートする
+             */
+            protected importRemote() {
+                //TODO インポート処理
+            }
 
         }
     }

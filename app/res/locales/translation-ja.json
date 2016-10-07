@@ -85,8 +85,8 @@
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
         },
-        "pallet": { 
-            "STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS" : "すべてのボタン"
+        "pallet": {
+            "STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS": "すべてのボタン"
         }
     },
     "home": {
@@ -114,12 +114,15 @@
             "STR_CONTEXT_GRID_SIZE_64PX": "64px"
         },
         "STR_CONTEXT_DELETE_REMOTE": "リモコンを削除",
+        "STR_CONTEXT_EXPORT_REMOTE": "リモコンをエクスポート",
         "STR_CONTEXT_DELETE_ITEM": "削除",
         "STR_CONTEXT_DELETE_PAGE": "ページを削除",
         "STR_CONTEXT_UNDO": "元に戻す",
         "STR_CONTEXT_REDO": "やり直し"
     },
     "option_menu": {
+        "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
+        "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート", 
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
         "STR_OPTION_MENU_ABOUT": " のバージョン情報"
