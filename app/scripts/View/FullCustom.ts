@@ -4164,7 +4164,7 @@ module Garage {
 					let overlapButtons: Model.ButtonItem[] = this.getOverlapButtonItems(buttons);
 
                     if (0 < overlapButtons.length) {
-                        result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2") + overlapButtons.length + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3");
+                        result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2");
                     }
 
                     this.changeOverlapButtonsFrame(overlapButtons, buttons);
@@ -4187,7 +4187,7 @@ module Garage {
                 if (invalidButton.length <= 1) {
                     return "";
                 } else {
-                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES");
+                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + invalidButton.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
                 }
             }
 
