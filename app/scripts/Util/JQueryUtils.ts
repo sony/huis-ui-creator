@@ -61,9 +61,12 @@ module Garage {
 
                 if (isWindows) {
                     return this.encodeUriValidInWindowsAndCSS(inputUrl);
-                } else if (isMac) {
+                }
+                /*
+                else if (isMac) {
                     return this.encodeUriValidInMacAndCSS(inputUrl);
                 }
+                */
 
             }
 

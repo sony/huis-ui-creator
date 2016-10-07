@@ -385,8 +385,8 @@ module Garage {
 
                 let newState: IGState = {
                     id: tmpState.id,
-                    image: tmpState.image && tmpState.image ? tmpState.image : undefined,
-                    label: tmpState.label && tmpState.label ? tmpState.label : undefined,
+                    image: (tmpState && tmpState.image) ? tmpState.image : undefined,
+                    label: (tmpState && tmpState.label) ? tmpState.label : undefined,
                     action: actionsForUpdate && 0 < actionsForUpdate.length ? actionsForUpdate : undefined,
                     translate: tmpState.translate && 0 < tmpState.translate.length ? tmpState.translate : undefined
                 };
