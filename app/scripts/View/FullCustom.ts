@@ -4547,14 +4547,14 @@ module Garage {
 
                 //ボタン用のプロパティのインスタンスを削除
                 if (this.buttonProperty != null) {
-                    //this.buttonProperty.unbind("updateModel", this.updateButtonItemModel, this);
+                    this.buttonProperty.unbind("updateModel", this.updateNormalButtonItemModel, this);
                     this.buttonProperty.remove();
                     this.buttonProperty = null
                 }
 
                 //マクロ用のプロパティのインスタンスを削除
                 if (this.macroProperty != null) {
-                    this.macroProperty.unbind("updateModel", this.updateButtonItemModel, this);
+                    this.macroProperty.unbind("updateModel", this.updateMacroButtonItemModel, this);
                     this.macroProperty.remove();
                     this.macroProperty = null
                 }
