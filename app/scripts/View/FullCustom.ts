@@ -1293,6 +1293,13 @@ module Garage {
                     }
                 }
 
+                if (this.mouseMoveStartTargetPosition_.x == newPosition.x &&
+                    this.mouseMoveStartTargetPosition_.y == newPosition.y) {
+                    // 位置に変更がない（アイテム選択のみ）の場合は何もしない
+                    // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
+                    return;
+                }
+
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
                     this._updateCurrentModelData("area", newArea);
