@@ -4187,7 +4187,7 @@ module Garage {
                 if (invalidButton.length <= 1) {
                     return "";
                 } else {
-                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES");
+                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + invalidButton.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
                 }
             }
 
