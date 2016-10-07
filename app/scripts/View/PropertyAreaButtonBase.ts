@@ -193,6 +193,8 @@ module Garage {
                         let codeDb = action.deviceInfo.code_db;
                         remoteId =  huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
                     }
+
+                    // code_dbで見つからない場合、codeで検索
                     let code = action.code;
                     if (remoteId == null && code != null){
                         remoteId = huisFiles.getRemoteIdByCode(code);
