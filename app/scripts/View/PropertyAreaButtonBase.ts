@@ -188,6 +188,11 @@ module Garage {
                 let remoteId: string = undefined;
 
                 if (action != null) {
+                    if (action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device) {
+                        return huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
+                    }
+
                     if (action.deviceInfo &&
                         action.deviceInfo.code_db) {
                         let codeDb = action.deviceInfo.code_db;

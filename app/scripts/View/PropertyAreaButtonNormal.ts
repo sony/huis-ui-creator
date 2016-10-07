@@ -354,6 +354,7 @@ module Garage {
                             tmpBluetoothData = deviceInfo.bluetooth_data;
                         }
                         if (tmpBluetoothData != null) {
+                            tmpBluetoothData.bluetooth_data_content = tmpFunction;
                             tmpAction.bluetooth_data = tmpBluetoothData;
                         }
 
