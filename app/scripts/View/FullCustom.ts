@@ -2648,9 +2648,7 @@ module Garage {
                     return;
                 }
 
-                this.buttonDeviceInfoCache.save(gmodules);
-
-				huisFiles.updateFace(remoteId, faceName, gmodules)
+				huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
 					.always(() => {
 						garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
 						if (HUIS_ROOT_PATH) {
