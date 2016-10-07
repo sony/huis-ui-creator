@@ -3001,16 +3001,27 @@ module Garage {
 										let image = targetState.image;
 										props["resolved-path"] = "null";
 										if (image != null) {
-											if (image[0] != null) {
-												let resolvedPath = image[0].resolvedPath;
-												if (resolvedPath != null) {
-													props["resolved-path"] = resolvedPath;
-												}
+                                            if (image[0] != null) {
+                                                //表示用なので、CSS
+                                                //originalPathを優先。ない場合は、resolved-pathを仕様。
+                                                let resizeOriginal = image[0].resizeResolvedOriginalPathCSS;
+                                                if (resizeOriginal != null) {
+                                                    props["resizeResolvedOriginalPath"] = resizeOriginal;
+                                                } else {
+                                                    let resolvedPath = image[0].resolvedPathCSS;
+                                                    if (resolvedPath != null) {
+                                                        props["resolved-path"] = resolvedPath;
+                                                    }
+                                                }
+
+												
 
 												let resizeMode = image[0].resizeMode;
 												if (resizeMode != null) {
 													props["resizeMode"] = resizeMode;
-												}
+                                                }
+
+                                                
 											}
 											
 										}
@@ -3523,7 +3534,9 @@ module Garage {
 									let $input = $(".refer-state-image[data-state-id=\"" + stateId + "\"]");
 									$input.val(value);
 								}
-								break;
+                                break;
+
+                            case "resizeResolvedOriginalPath":
 							case "resolved-path":
 								{
 									//let image = targetState.image[0];
@@ -3536,9 +3549,10 @@ module Garage {
                                     });
 
                                     let inputUrl: string = null;
-                                    if (targetState.image != null && targetState.image[0] != null) {
-                                        inputUrl = this.getValidPathOfIGImageForCSS(targetState.image[0]);
-                                    }
+                                   
+                                    inputUrl = JQUtils.enccodeUriValidInCSS(value);
+                                    
+
 
                                     if (inputUrl == null) {
                                         inputUrl = "none";
