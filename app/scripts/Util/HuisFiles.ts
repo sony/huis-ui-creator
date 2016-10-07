@@ -928,7 +928,7 @@ module Garage {
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[]): IPromise<void> {
+			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -974,7 +974,9 @@ module Garage {
 					this.updateRemoteList();
 
 					df.resolve();
-				});
+                });
+
+                cache.save(gmodules);
 
 				return promise;
 

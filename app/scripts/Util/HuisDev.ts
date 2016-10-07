@@ -430,7 +430,7 @@
 					let df = $.Deferred<Error>();
 					let promise = CDP.makePromise(df);
 
-					let files = targetFiles.slice();
+					let files = this._filterDeviceInfoCache(dstRootDir, targetFiles.slice());
 
 					let proc = () => {
 						let file: string;
@@ -441,14 +441,13 @@
 							try {
 								this._checkCancel();
                                 let filePath = getAbsPath(dstRootDir, file);
-                                // ローカルのボタンデバイス情報のキャッシュファイルは削除対象外
-                                if (fs.existsSync(filePath) && filePath.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1) {
+                                if (fs.existsSync(filePath)) {
 									let fileStat = fs.lstatSync(filePath);
 									if (fileStat) {
 										if (fileStat.isDirectory()) {
 											fs.rmdirSync(filePath);
 											console.log("rmdirSync: " + file);
-										} else {
+                                        } else {
 											fs.unlinkSync(filePath);
 											console.log("unlinkSync: " + file);
 										}
@@ -492,6 +491,64 @@
 					return CDP.makePromise(df);
 				}
 
+                /**
+                 * 削除対象のファイルリストから残すべきキャッシュファイルのパスを除外したリストを返す
+                 * @param dstRootDir {string} 
+                 * @param files {string[]} 削除対象ファイルリスト
+                 * @return 
+                 */
+                private _filterDeviceInfoCache(dstRootDir: string, files: string[]): string[] {
+                    // キャッシュファイルのリスト
+                    let cacheList = files.filter((file) => {
+                        return (file.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) != -1)
+                    });
+
+                    if (cacheList.length <= 0) {
+                        console.log("cache file not found");
+                        return files;
+                    }
+                    console.log("↓↓↓↓ cache list ↓↓↓↓");
+                    cacheList.forEach((val) => { console.log(val); });
+                    console.log("↑↑↑↑ cache list ↑↑↑↑");
+
+                    // 削除対象外とするキャッシュのリスト
+                    let cacheListToBeLeft = cacheList.filter((cache) => {
+                        let cachePath = getAbsPath(dstRootDir, cache);
+
+                        // キャッシュの上位フォルダが存在する場合は削除対象
+                        return !files.some((file) => {
+                            let path = getAbsPath(dstRootDir, file);
+                            if (fs.existsSync(path)) {
+                                let fileStat = fs.lstatSync(path);
+                                if (fileStat &&
+                                    fileStat.isDirectory() &&
+                                    cachePath.indexOf(path) != -1) {
+                                    // キャッシュの上位フォルダの場合はtrue
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        });
+                    });
+
+                    if (cacheListToBeLeft.length <= 0) {
+                        console.log("↓↓↓↓ left cache not found ↓↓↓↓");
+                        files.forEach((val) => { console.log(val); });
+                        console.log("↑↑↑↑ left cache not found ↑↑↑↑");
+                        return files;
+                    }
+                    console.log("↓↓↓↓ cache to be left list ↓↓↓↓");
+                    cacheListToBeLeft.forEach((val) => { console.log(val); });
+                    console.log("↑↑↑↑ cache to be left list ↑↑↑↑");
+
+                    // 削除対象リストから削除対象外キャッシュを除外
+                    return files.filter((file) => {
+                        return !cacheListToBeLeft.some((leftCache) => {
+                            return (leftCache == file);
+                        });
+                    });
+                }
 			}
 
 			/**
