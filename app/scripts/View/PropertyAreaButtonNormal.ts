@@ -312,7 +312,7 @@ module Garage {
                     if (!deviceInfo) {
                         try {
                             // HuisFilesに存在しない場合はキャッシュを使用
-                            deviceInfo = this.model.state[0].action[order].deviceInfo;
+                            deviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
                         } catch (e) {
                             // キャッシュもなかった場合
                             console.warn(FUNCTION_NAME + "deviceInfo not found");
