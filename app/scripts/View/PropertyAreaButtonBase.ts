@@ -923,7 +923,7 @@ module Garage {
 
                 if (!this.isValidValue(remoteId)) {
                     console.warn(FUNCTION_NAME + "remoteId is invalid");
-                    return;
+                    return null;
                 }
 
 
