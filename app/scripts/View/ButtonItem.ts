@@ -101,7 +101,9 @@ module Garage {
                             });
 							return (filtered_action.length >= s.action.length);
                         });
-                        if (filtered_state.length > 0) {
+
+                        //filterされた数と、総数が一致 : 有効なstateが一つもない場合 このボタンは無効とする。
+                        if (model.state.length == filtered_state.length) {
                             return this;
                         }
                     }
