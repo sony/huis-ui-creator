@@ -116,18 +116,6 @@ module Garage {
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
                     }
 
-                    //もし、remoteIdのプルダウンが未入力の場合
-                    //funtionのプルダウンを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
-                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(order))) {
-                        if (this.availableRemotelist[0] != null) {
-                            this.setRemoteIdPullDownOf(order, this.availableRemotelist[0].remoteId);
-                            this.renderFunctionsOf(order);
-                            $thisOrderSignalContainer.trigger('create');
-                        }
-                    }
-
-
-
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
                     this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextAboveSignalContainer.find(".pulldowns"), duration);
 
@@ -189,16 +177,6 @@ module Garage {
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
                     }
-
-                    //もし、入れ替え対象のremoteIdのプルダウンが未入力の場合
-                    //functionpulldownを表示してから、アニメ。初期入力値は、remoteInfoList[0]とする。
-                    if (!this.isValidValue(this.getRemoteIdFromPullDownOf(targetOrder))) {
-                        if (this.availableRemotelist[0] != null) {
-                            this.setRemoteIdPullDownOf(targetOrder, this.availableRemotelist[0].remoteId);
-                            this.renderFunctionsOf(targetOrder);
-                        }
-                    }
-
 
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
                     this.exchangeJQueryPositionAnimation($thisOrderSignalContainer.find(".pulldowns"), $nextBelowSignalContainer.find(".pulldowns"), duration);
@@ -318,6 +296,19 @@ module Garage {
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
+
+                    //一個と同じ remoteIdを入力
+                    let prevOrder = tmpOrder - 1;
+                    if (this.isValidOrder(prevOrder)) {
+                        let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
+
+                        if (this.isValidValue(prevRemoteId)) {
+                            this.renderRemoteIdOf(tmpOrder, this.DEFAULT_STATE_ID,prevRemoteId);
+                            this.renderFunctionsOf(tmpOrder);
+                        }
+                    }
+
+
                     this.updateModel();
                     this.controlPlusButtonEnable();
 
