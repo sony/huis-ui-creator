@@ -210,7 +210,7 @@ module Garage {
                         }
                     }
 
-                    //キャッシュからremoteIdを取得
+                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
                     if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
                         remoteId = action.deviceInfo.id;       
                     }
@@ -927,7 +927,7 @@ module Garage {
                 }
 
 
-                //modelのアクション中のdeviceInf
+                //modelのアクション中のdeviceInfo
                 for (let action of this.model.state[this.DEFAULT_STATE_ID].action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
