@@ -127,6 +127,9 @@ module Garage {
         //初期値。splashスクリーンで値をいれる。
         RC_VERSION = null;
 
+        HUIS_RC_VERSION_AVAILABLE_IMPORT_EXPORT = "3.1.2";
+        GARAGE_VERSION_AVAILABLE_IMPORT_EXPORT = "2.0.0";
+
 
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)

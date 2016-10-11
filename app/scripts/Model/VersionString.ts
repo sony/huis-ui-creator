@@ -6,9 +6,9 @@ module Garage {
         var TAG = "[Garage.Model.VersionString] ";
 
         export class VersionString {
-            private majorVersion: number;
-            private minorVersion: number;
-
+            private major: number;
+            private minor: number;
+            private build: number;
 
             constructor(stringVersion: string) {
                 let FUNCTION_NAME = TAG + ": constructor : ";
@@ -19,22 +19,27 @@ module Garage {
                 }
 
                 let separateString: string[] = stringVersion.split(".");
-                let majorVersionInput: number = parseInt(separateString[0]);
-                let minorVersionInput: number = parseInt(separateString[1]);
-                let otherInfo: number = parseInt(separateString[2]);
+                let major: number = parseInt(separateString[0]);
+                let minor: number = parseInt(separateString[1]);
+                let build: number = parseInt(separateString[2]);
+                let otherInfo: number = parseInt(separateString[3]);
 
-                if (otherInfo) {
-                    console.warn(FUNCTION_NAME + "there is otherInfo");
+
+                this.major = major;
+                this.minor = minor;
+
+                if (build != null) {
+                    this.build = build;
+                } else {
+                    this.build = null;
                 }
-
-                this.majorVersion = majorVersionInput;
-                this.minorVersion = minorVersionInput;
             }
 
+
 			/*
-			* 入力の ModelVersionより古いバージョンのとき、trueを返す。
+			* 入力の ModelVersionより古いバージョンのとき、trueを返す。同じ場合はfalse
 			* @param counterPart : ModuleVersion 　比較対象のModelVersion
-			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse
+			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse。同じバージョンのとき,false;
 			*/
             public isOlderThan(counterPart: VersionString) {
 
@@ -46,19 +51,33 @@ module Garage {
                 }
 
                 //majorバージョンが同じとき、minorバージョンで比べる。
-                if (this.majorVersion === counterPart.getMajorVersion()) {
+                if (this.major === counterPart.getMajor()) {
 
-                    //minorバージョンで比べる。
-                    if (this.minorVersion < counterPart.getMinorVersion()) {//minorVersion値が少ない　＝＝　古い
+                    if (this.minor === counterPart.getMinor()) {
+
+                        //majorバージョンも、minorバージョンも同じとき、ビルド番号を比べる。
+                        if (this.build != null && counterPart.getBuild() != null) {
+
+                            if (this.build < counterPart.getBuild()) {//buildNumber値が少ない　＝＝　古い
+                                return true;
+                            } else {
+                                return false;
+                            }
+
+                        } else {
+                            //ビルド番号がないとき、同じバージョンと扱う。
+                            return false;//同じバージョンのときはfalse 
+                        }
+
+                    }else if (this.minor < counterPart.getMinor()) {//minorVersion値が少ない　＝＝　古い
                         return true;
                     } else {
                         return false;
                     }
 
-                } else {
-
+                } else {   
                     //majorバージョンで比べる。
-                    if (this.majorVersion < counterPart.getMajorVersion()) {//majorVersion値が少ない　＝＝　古い
+                    if (this.major < counterPart.getMajor()) {//majorVersion値が少ない　＝＝　古い
                         return true;
                     } else {
                         return false;
@@ -73,26 +92,36 @@ module Garage {
             public getVersionString(): string {
                 let FUNCTION_NAME = TAG + ": getVersionString : ";
 
-                if (this.majorVersion == null) {
-                    console.warn(FUNCTION_NAME + "majorVersion is null ");
+                if (this.major == null) {
+                    console.warn(FUNCTION_NAME + "major is null ");
                     return null;
                 }
 
-                if (this.minorVersion == null) {
-                    console.log(FUNCTION_NAME + "minorVersion is null");
+                if (this.minor == null) {
+                    console.log(FUNCTION_NAME + "minor is null");
                     return null;
                 }
 
-                return this.majorVersion + "." + this.minorVersion;
+                if (this.build != null) {
+                    return this.major + "." + this.minor + "." + this.build;
+                }else{
+                    return this.major + "." + this.minor;
+                }
+
             }
 
-            public getMajorVersion(): number {
-                return this.majorVersion;
+            public getMajor(): number {
+                return this.major;
             }
 
-            public getMinorVersion(): number {
-                return this.minorVersion;
+            public getMinor(): number {
+                return this.minor;
             }
+
+            public getBuild(): number {
+                return this.build;
+            }
+
 
         }
 	}

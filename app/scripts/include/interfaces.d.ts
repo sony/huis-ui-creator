@@ -785,6 +785,14 @@ declare module Garage {
     * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
     */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
+    /*
+    * インポートエクスポートがつかえるようになるHUIS本体のバージョン
+    */
+    var HUIS_RC_VERSION_AVAILABLE_IMPORT_EXPORT: string;
+    /*
+     * インポート・エクスポートがつかえるようになるGarageのバージョン
+     */
+    var GARAGE_VERSION_AVAILABLE_IMPORT_EXPORT: string;
 }
 
 

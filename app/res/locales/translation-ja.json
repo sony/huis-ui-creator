@@ -23,7 +23,17 @@
     "edit": {
         "title": "★TODO"
     },
-    "dialog": {
+    "hp": {
+        "url": "http://huis.jp/",
+        "update": {
+            "rc": {
+                "url": "http://huis.jp/support/update/?prd=rmt-controller"
+            },
+            "app": { 
+                "url": "http://huis.jp/support/update/?prd=ui-creator"
+            }
+        }
+    },"dialog": {
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
@@ -51,7 +61,12 @@
             "STR_DIALOG_MESSAGE_ERROR_NO_REMOTE_IN_HUIS": "リモコンを新規作成できません。\n先にHUIS REMOTE CONTROLLERでリモコンを登録してください。",
             "STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1": "画像の読み込みに失敗しました。\n画像の容量が大き過ぎます。\n",
             "STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2": "Mバイト以下の画像を選択してください。",
-            "STR_DAIALOG_ALERT_DELTE_PAGE": "ページを削除すると元に戻せません。\n削除しますか？"
+            "STR_DAIALOG_ALERT_DELTE_PAGE": "ページを削除すると元に戻せません。\n削除しますか？",
+            "STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_1": "HUIS REMOTE CONTROLLERのバージョンが古いため、アプリを利用できません。\n",
+            "STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_2": "からアップデートファイルをダウンロードしてHUIS REMOTE CONTROLLERをバージョン",
+            "STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3": "以上にしてください。"
+
+
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
