@@ -11,7 +11,7 @@
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
-
+/// <reference path="../Model/VersionString.ts" />
 /**
  * @interface IArea
  * @brief アイテムの領域

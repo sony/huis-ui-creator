@@ -2,7 +2,7 @@
 
 module Garage {
 	export module Util {
-		import IPromise = CDP.IPromise;
+        import IPromise = CDP.IPromise;
 		//import makePromise = CDP.makePromise;
 		//import OffscreenEditor = Model.OffscreenEditor;
 
@@ -24,97 +24,7 @@ module Garage {
 			params: Model.IImageResizeParams;
 		}
 
-		class ModuleVersion {
-			private CLASS_NAME = TAGS.HuisFiles + " : ModuleVersion : "; 
-			private majorVersion: number;
-			private minorVersion: number;
-
-
-			constructor(stringVersion: string) {
-				let FUNCTION_NAME = this.CLASS_NAME + ": constructor : ";
-			
-				if (!stringVersion) {
-					console.warn(FUNCTION_NAME + "stringVersion is undefined");
-					return;
-				}
-
-				let separateString: string[] = stringVersion.split(".");
-				let majorVersionInput: number = parseInt(separateString[0]);
-				let minorVersionInput: number = parseInt(separateString[1]);
-				let otherInfo: number = parseInt(separateString[2]);
-
-				if (otherInfo) {
-					console.warn(FUNCTION_NAME + "there is otherInfo");
-				}
-
-				this.majorVersion = majorVersionInput;
-				this.minorVersion = minorVersionInput;
-			}
-
-			/*
-			* 入力の ModelVersionより古いバージョンのとき、trueを返す。
-			* @param counterPart : ModuleVersion 　比較対象のModelVersion
-			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse
-			*/
-			public isOlderThan(counterPart: ModuleVersion) {
-
-				let FUNCTION_NAME = this.CLASS_NAME + ": isOlderThan() : ";
-
-				if(!counterPart) {
-					console.warn(FUNCTION_NAME + "counterPart is undefined");
-					return;
-				}
-
-				//majorバージョンが同じとき、minorバージョンで比べる。
-				if (this.majorVersion === counterPart.getMajorVersion()) {
-
-					//minorバージョンで比べる。
-					if (this.minorVersion < counterPart.getMinorVersion()) {//minorVersion値が少ない　＝＝　古い
-						return true;
-					} else {
-						return false;
-					}
-
-				} else {
-
-					//majorバージョンで比べる。
-					if (this.majorVersion < counterPart.getMajorVersion()) {//majorVersion値が少ない　＝＝　古い
-						return true;
-					} else {
-						return false;
-					}
-
-				}
-			}
-
-			/*
-			* X.Yの形で、ModuleVersionの値を返す　ex) 1.2
-			*/
-			public getVersionString(): string {
-				let FUNCTION_NAME = this.CLASS_NAME + ": getVersionString : ";
-
-				if (this.majorVersion == null) {
-					console.warn(FUNCTION_NAME + "majorVersion is null ");
-					return null;
-				}
-
-				if (this.minorVersion == null) {
-					console.log(FUNCTION_NAME + "minorVersion is null");
-					return null;
-				}
-
-				return this.majorVersion + "." + this.minorVersion;
-			}
-
-			public getMajorVersion(): number {
-				return this.majorVersion;
-			}
-
-			public getMinorVersion(): number {
-				return this.minorVersion;
-			}
-
-		}
+		
 
 
 		/**
@@ -1124,8 +1034,8 @@ module Garage {
 					return null;
 				}
 
-				let versions: ModuleVersion[] = this.getVersions(gModule.button, gModule.image, gModule.label);
-				let oldestVersion :ModuleVersion= this.getOldestVersionOf(versions);
+                let versions: Model.VersionString[] = this.getVersions(gModule.button, gModule.image, gModule.label);
+                let oldestVersion: Model.VersionString= this.getOldestVersionOf(versions);
 
 				if (oldestVersion != null) {
 					let oldestVersionString: string = oldestVersion.getVersionString();
@@ -1141,7 +1051,7 @@ module Garage {
 			* @param versions : string[]
 			* return :string 最古のボタンバージョン
 			*/
-			private getOldestVersionOf(versions: ModuleVersion[]):ModuleVersion {
+            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOldestVersionOfGButton : ";
 
 				if (versions == undefined) {
@@ -1149,7 +1059,7 @@ module Garage {
 					return;
 				}
 
-				let oldestVersion :ModuleVersion= null;
+                let oldestVersion: Model.VersionString= null;
 
 				for (let i = 0; i < versions.length; i++){
 					oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
@@ -1165,18 +1075,18 @@ module Garage {
 			* @param labels ? : IGLabels
 			* return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
 			*/
-			private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): ModuleVersion[] {
+            private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): Model.VersionString[] {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getVersions : ";
 				if (!buttons && !images && !labels) {
 					console.warn(FUNCTION_NAME + "no inputs");
 					return;
 				}
-				let result: ModuleVersion[] = [];
+                let result: Model.VersionString[] = [];
 
 				if (buttons) {
 					for (let i = 0; i < buttons.length; i++){
 						if (buttons[i].version) {
-							result.push(new ModuleVersion(buttons[i].version));
+							result.push(new Model.VersionString(buttons[i].version));
 						}
 					}
 				}
@@ -1184,7 +1094,7 @@ module Garage {
 				if (images) {
 					for (let i = 0; i < images.length; i++) {
 						if (images[i].version) {
-							result.push(new ModuleVersion(images[i].version));
+                            result.push(new Model.VersionString(images[i].version));
 						}
 					}
 				}
@@ -1192,7 +1102,7 @@ module Garage {
 				if (labels) {
 					for (let i = 0; i < labels.length; i++) {
 						if (labels[i].version) {
-							result.push(new ModuleVersion(labels[i].version));
+                            result.push(new Model.VersionString(labels[i].version));
 						}
 					}
 				}
@@ -1207,7 +1117,7 @@ module Garage {
 			* @param version2 :string 比較対象のバージョン情報２
 			* return より番号が若い方のバージョン情報 : string
 			*/
-			private getOlderVersionOf(version1: ModuleVersion, version2: ModuleVersion): ModuleVersion {
+            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOlderVersion : ";
 
 				if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
