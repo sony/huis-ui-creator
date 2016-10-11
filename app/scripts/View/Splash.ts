@@ -48,6 +48,9 @@ module Garage {
                         app.quit();
                     }
                 })();
+
+                this.getRcVersionFromDevice();
+
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
                 }); // 同期が完了したらHomeに遷移する
@@ -132,11 +135,28 @@ module Garage {
                         callback();
                     }
                 });
-
-
-
             }
 
+
+            /*
+            * app versionを接続しているHUISから取得する。
+            */
+            private getRcVersionFromDevice(callback?: Function) {
+                let FUNCTION_NAME = TAG + "getRcVersionFromDevice : ";
+                try {
+                    RC_VERSION = fs.readFileSync(RC_VERSION_FILE_NAME, 'utf8');
+                } catch (err) {
+                    console.error(FUNCTION_NAME + "erro occur : " + err);
+                }
+
+                //HUIS RCとバージョン不一致の判定
+                if (RC_VERSION != null) {
+                    console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
+                    //Garageのバージョンが1.4.0以上で
+                    //HUIS RCのバージョンが3.1 以下の場合、ダイアログを出す。
+                }
+
+            }
 
             private syncWithHUIS(callback?: Function) {
                 if (!HUIS_ROOT_PATH) {

@@ -123,6 +123,12 @@ module Garage {
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
 
+        //接続しているHUISリモコンのバージョンを取得
+        //初期値。splashスクリーンで値をいれる。
+        RC_VERSION = null;
+
+
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
@@ -237,7 +243,11 @@ module Garage {
 	var initCheck = (callback?: Function) => {
 		HUIS_ROOT_PATH = null;
 		while (!HUIS_ROOT_PATH) {
-			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+            HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+
+            //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
+            RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+
             if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
                 let dirs = null;
                 while (dirs == null) {
