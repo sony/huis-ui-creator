@@ -150,20 +150,16 @@ module Garage {
                 }
 
                 let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
-                let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
 
-                //インポート・エクスポートが可能になったバージョン
-                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_AVAILABLE_IMPORT_EXPORT);
-                let garageVersionAvailableImportExport = new Model.VersionString(GARAGE_VERSION_AVAILABLE_IMPORT_EXPORT);
+                //このバージョンのGarageに必要になるHUISのバージョン
+                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
 
                 //HUIS RCとバージョン不一致の判定
                 if (RC_VERSION != null) {
                     console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
-                    console.log(FUNCTION_NAME + "Garage version is " + APP_VERSION);
 
-                    //Garageはimportを使えるのにバージョンなのに, HUIS RCはimportを使えないバージョンのときダイアログを出す。
-                    if (!garageVersion.isOlderThan(garageVersionAvailableImportExport) &&
-                        rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
+                    //HUIS RCはimportを使えないバージョンのときダイアログを出す。
+                    if (rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
                         this.showHuisRcVersionIsOldDialog();
                     }
                 } else {//RC_VERSIONがない場合もダイアログを表示。
