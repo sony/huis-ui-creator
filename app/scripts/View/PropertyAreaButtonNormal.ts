@@ -160,6 +160,18 @@ module Garage {
                 if ($newSignalContainerElement.length == 0) {
                     this.renderSignalContainerMin(order, stateId);
                     //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
+
+                    //一個と同じ remoteIdを入力
+                    let prevOrder = order - 1;
+                    if (this.isValidOrder(prevOrder)) {
+                        let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
+
+                        if (this.isValidValue(prevRemoteId)) {
+                            this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,prevRemoteId);
+                            this.renderFunctionsOf(order);
+                        }
+                    }
+
                     $('.custom-select').trigger('create');
                     this.updateModel(this.DEFAULT_STATE_ID);
                     this.controlPlusButtonEnable();
