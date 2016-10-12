@@ -843,6 +843,10 @@ module Garage {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
+                if (isToImport == null) {
+                    isToImport = false;
+                }
+
 				var moduleCount = gmodules.length;
 				let modules: IModule[] = [];
 				var moduleNames: string[] = [];
@@ -864,9 +868,12 @@ module Garage {
 				fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
 				// サイズ変更を行った画像を一括でリサイズする
-				this._resizeImages().always(() => {
+                this._resizeImages().always(() => {
+
 					// 不要な画像を削除
-					this._removeUnnecessaryImages(remoteId, modules);
+                    if (!isToImport) {
+                        this._removeUnnecessaryImages(remoteId, modules);
+                    }
 
 					/* remotelist.ini ファイルを更新 */
 

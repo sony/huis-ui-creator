@@ -35,6 +35,7 @@ module Garage {
                 electronDialog.showOpenFileDialog(
                     options,
                     (fileName: string[]) => {
+                        //TODO:tmpへのコピーが完了してから、covert
                         this.copyTargetFiles(fileName[0]);
                         this.convertByNewRemoteIdInfo();
                         
@@ -50,7 +51,6 @@ module Garage {
             private readDecompressedFile() :IGFace{
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
-                //TODO:展開時に、remoteIdを取得。
                 //展開されたファイルのもともとのremoteId
                 let targetRemoteId: string = this.getDecompressedRemoteId();
 
@@ -77,6 +77,8 @@ module Garage {
 
                 //TODO:targetFilePathのファイルをすべて、 filePathDecompressionFileにコピー
             }
+
+
 
             /*
              * 展開されたファイルのフォルダ名から、圧縮前のremoteIdを取得する
@@ -148,7 +150,21 @@ module Garage {
 
                 }
 
-                this.writeConvertedFiles(convertedFace);
+                //コピー元のファイルパス ：展開されたリモコン のremoteImages
+                let oldRemoteId: string = this.getDecompressedRemoteId();
+                let src: string = path.join(this.filePathDecompressionFile, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
+                //コピー先のファイルパス : HuisFiles以下のremoteImages
+                let dst: string = path.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId).replace(/\\/g, "/");
+                if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(dst);
+                }
+                //画像をコピー
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                syncTask.copyFilesSimply(src, dst, () => {
+                    this.writeConvertedFiles(convertedFace);
+                });
+
+                
             }
 
 
