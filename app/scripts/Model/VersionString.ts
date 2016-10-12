@@ -2,13 +2,15 @@
 
 
 module Garage {
-	export module Model {
+    export module Model {
+        import JQUtils = Util.JQueryUtils;
         var TAG = "[Garage.Model.VersionString] ";
 
         export class VersionString {
             private major: number;
             private minor: number;
             private build: number;
+            private otherinfo: string;
 
             constructor(stringVersion: string) {
                 let FUNCTION_NAME = TAG + ": constructor : ";
