@@ -49,7 +49,7 @@ module Garage {
                     }
                 })();
 
-                this.getRcVersionFromDevice();
+                this.checkRcVersionFromDevice();
 
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
@@ -139,10 +139,10 @@ module Garage {
 
 
             /*
-            * app versionを接続しているHUISから取得する。
+            * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
             */
-            private getRcVersionFromDevice(callback?: Function) {
-                let FUNCTION_NAME = TAG + "getRcVersionFromDevice : ";
+            private checkRcVersionFromDevice(callback?: Function) {
+                let FUNCTION_NAME = TAG + "checkRcVersionFromDevice : ";
                 try {
                     RC_VERSION = fs.readFileSync(RC_VERSION_FILE_NAME, 'utf8');
                 } catch (err) {
@@ -180,7 +180,7 @@ module Garage {
                         type: "error",
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_1") +
                         $.i18n.t("hp.update.rc.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_2") +
-                        HUIS_RC_VERSION_AVAILABLE_IMPORT_EXPORT + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
+                        HUIS_RC_VERSION_REQUIRED + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
                     }
