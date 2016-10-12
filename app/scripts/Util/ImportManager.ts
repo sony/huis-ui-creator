@@ -266,7 +266,7 @@ module Garage {
                 if (dirname == null || dirname == ".") {
                     result = inputPath;
                 } else if (dirname != null) {//親のフォルダがある場合、親フォルダ名をnewRemoteIdに
-                    result = newRemoteId + "/" + basename + "/" + extname;
+                    result = newRemoteId + "/" + basename;
                 }
 
                 return result ;
