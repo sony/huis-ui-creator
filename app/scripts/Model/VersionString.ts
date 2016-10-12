@@ -24,17 +24,37 @@ module Garage {
                 let major: number = parseInt(separateString[0]);
                 let minor: number = parseInt(separateString[1]);
                 let build: number = parseInt(separateString[2]);
-                let otherInfo: number = parseInt(separateString[3]);
+                let otherInfo: string = separateString[3];
 
 
+                if (JQUtils.isNaN(major) || major == null) {
+                    console.warn(FUNCTION_NAME + "major is invalid");
+                    return;
+                }
                 this.major = major;
+
+                //minorを代入
+                if (JQUtils.isNaN(major) || minor == null) {
+                    console.warn(FUNCTION_NAME + "minor is invalid");
+                    return;
+                }
                 this.minor = minor;
 
-                if (build != null) {
+              
+                //build を代入
+                if (build != null && !JQUtils.isNaN(build)) {
                     this.build = build;
                 } else {
                     this.build = null;
                 }
+
+                //otherInfoを代入
+                if (otherInfo != null) {
+                    this.otherinfo = otherInfo;
+                } else {
+                    this.otherinfo = null;
+                }
+
             }
 
 
