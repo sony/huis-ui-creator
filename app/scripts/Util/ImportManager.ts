@@ -5,7 +5,6 @@ module Garage {
         let TAG = "[ImportManager]";
         export class ImportManager {
 
-            private remoteId ;
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
             
 
@@ -37,6 +36,7 @@ module Garage {
                     options,
                     (fileName: string[]) => {
                         this.copyTargetFiles(fileName[0]);
+                        this.convertByNewRemoteIdInfo();
                         
                     }
                 );
@@ -111,16 +111,171 @@ module Garage {
             /*
              * ファイル・フォルダ・モジュールのうち、ふるいremoteIdが書かれた箇所を新しいremoteIdに書き換える。
              */
-            convertToNewRemoteIdInfo() {
+            convertByNewRemoteIdInfo() {
+
+                let FUNCTION_NAME = TAG + "convertByNewRemoteIdInfo : ";
+
                 //新しいremoteIdを取得
                 //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
-                this.remoteId = huisFiles.createNewRemoteId();
+                let newRemoteId = huisFiles.createNewRemoteId();
 
                 let face: IGFace = this.readDecompressedFile();
+                let convertedFace: IGFace = $.extend(true, {}, face);
+
+                //face名を変更
+                convertedFace.remoteId = newRemoteId;
+
+                //module内の情報を更新
+                for (let i = 0; i < convertedFace.modules.length; i++){
+
+                    //module内のremoteIdを更新
+                    convertedFace.modules[i].remoteId = newRemoteId;
+
+                    //module名を変更。
+                    let newModuleName: string = null;
+                    let moduleNameSeparate: string[] = face.modules[i].name.split("_");
+                    let oldRemoteId: string = moduleNameSeparate[0];
+                    let stringPage: string = moduleNameSeparate[1];
+                    let pageNum: string = moduleNameSeparate[2];
+                    newModuleName = newRemoteId + "_" + stringPage + "_" + pageNum;
+                    convertedFace.modules[i].name = newModuleName;
+
+                    //module内のbuttonのimageのfilePathを変更。
+                    convertedFace.modules[i].button = this.convertButtonsFilePath(convertedFace.modules[i].button, newRemoteId);
+
+                    //module内のimageのfilePathを変更。
+                    convertedFace.modules[i].image = this.convertImagesFilePath(convertedFace.modules[i].image, newRemoteId);
+
+                }
+
+                this.writeConvertedFiles(convertedFace);
+            }
+
+
+
+            /*
+             * IGImage内のpathをを新しいremoteIdのものに変更する。
+             * @param gimages{IGImage[]} pathを変更する対象
+             * @param newRemoteId{string} 変更後のpathに入力するremoteId
+             * @return {IGImages[]} pathを変更した後のIGImages
+             */
+            private convertImagesFilePath(gimages : IGImage[], newRemoteId : string):IGImage[]{
+                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+
+                if (gimages == null || gimages.length == 0) {
+                    console.warn(FUNCTION_NAME + "gimages is invalid");
+                    return;
+                }
+
+                if (newRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "newRemoteId is invalid");
+                    return;
+                }
+
+                let result: IGImage[] = $.extend(true, [], gimages);;
+
+                for (let i = 0; i < result.length; i++){
+                    result[i].path = this.converFilePath(result[i].path, newRemoteId);
+                    let extensions = result[i].garageExtensions;
+                    if (extensions != null) {
+                        extensions.original = this.converFilePath(extensions.original, newRemoteId);;
+                        extensions.resolvedOriginalPath = this.converFilePath(extensions.resolvedOriginalPath, newRemoteId);
+                        result[i].garageExtensions = extensions;
+                    }
+                }
+
+                return result;
+            }
+
+
+
+            /*
+             * IGButton内のIGImageのpathを新しいremoteIdのものに変更する。
+             * @param gbuttons{IGButton[]} pathを変更する対象
+             * @param newRemoteId{string} 変更後のpathに入力するremoteId
+             * @return {IGImages[]} pathを変更した後のIGImages
+             */
+            private convertButtonsFilePath(gbuttons: IGButton[], newRemoteId: string): IGButton[] {
+                let FUNCTION_NAME: string = TAG + "convertButtonFilePath : ";
+
+                if (gbuttons == null || gbuttons.length == 0) {
+                    console.warn(FUNCTION_NAME + "gbuttons is invalid");
+                    return;
+                }
+
+                if (newRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "newRemoteId is invalid");
+                    return;
+                }
+
+
+                let result: IGButton[] = $.extend(true, [], gbuttons);
+                for (let i = 0; i < result.length; i++){
+                    if (result[i].state != null && result[i].state.length >  0){
+                        for (let j = 0; j < result[i].state.length; j++) {
+                            result[i].state[j].image = this.convertImagesFilePath(result[i].state[j].image, newRemoteId);
+                        }
+                    }
+                }
+                
+                return result;
+            }
+
+            /*
+             * pathを新しいremoteIdのものに変更する。親のフォルダの名前を古いremoteIdから新しいremoteIdにする。
+             * @param inputPath{string} もともとのパス
+             * @param newRemoteId{string} 変更後のpathに入力するremoteId
+             * @return {string} 変更後のpath.失敗したとき、nullを返す。変換する親のフォルダがないときそのまま返す。
+             */
+            private converFilePath(inputPath: string, newRemoteId: string): string{
+                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+
+                if (inputPath == null ) {
+                    console.warn(FUNCTION_NAME + "inputPath is invalid");
+                    return null;
+                }
+
+                if (newRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "newRemoteId is invalid");
+                    return null;
+                }
+
+                let basename = path.basename(inputPath);
+                let extname = path.extname(inputPath);
+                let dirname = path.dirname(inputPath);
+
+                let result: string = null;
+                //親のフォルダがない場合、そのまま返す。
+                // 親のフォルダがない場合、dirnameが"."となる
+                if (dirname == null || dirname == ".") {
+                    result = inputPath;
+                } else if (dirname != null) {//親のフォルダがある場合、親フォルダ名をnewRemoteIdに
+                    result = newRemoteId + "/" + basename + "/" + extname;
+                }
+
+                return result ;
 
             }
 
-          
+            
+
+
+
+            /*
+             * 情報を書き換えたリモコンを書き出す
+             * @param convertedFace {IGFace} 情報を書き換えられた
+             */
+            private writeConvertedFiles(convertedFace: IGFace) {
+                let FUNCTION_NAME = TAG + "writeConvertedFiles : ";
+
+                if (convertedFace == null) {
+                    console.warn(FUNCTION_NAME + "convertedFace is invalid");
+                    return;
+                }
+
+
+                huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true);
+            }
 		}
 	}
 } 

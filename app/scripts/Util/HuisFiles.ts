@@ -837,8 +837,9 @@ module Garage {
 			 * @param remoteId {string} 更新または新規作成する face の remote ID
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param isToImport {boolean} importのために利用するときtrue: それ以外のとき、false
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache): IPromise<void> {
+			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImport? : boolean): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -886,8 +887,10 @@ module Garage {
 					df.resolve();
                 });
 
-                cache.save(gmodules);
-
+                if (cache != null) {
+                    cache.save(gmodules);
+                }
+                
 				return promise;
 
 			}
