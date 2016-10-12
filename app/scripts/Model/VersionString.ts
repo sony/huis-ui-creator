@@ -56,7 +56,7 @@ module Garage {
                     if (this.minor === counterPart.getMinor()) {
 
                         //majorバージョンも、minorバージョンも同じとき、ビルド番号を比べる。
-                        if (this.build != null && counterPart.getBuild() != null) {
+                        if (this.build != null || counterPart.getBuild() != null) {
 
                             if (this.build < counterPart.getBuild()) {//buildNumber値が少ない　＝＝　古い
                                 return true;
