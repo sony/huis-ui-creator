@@ -360,7 +360,7 @@
                 * srcRootDirのファイルを dstRootDirにコピーする。
                 * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
                 */
-                _copyCommonImages(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
                     this._isCanceled = false;
                     var errorValue: Error = null; 
 
