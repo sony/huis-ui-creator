@@ -788,11 +788,8 @@ declare module Garage {
     /*
     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
     */
-    var HUIS_RC_VERSION_AVAILABLE_IMPORT_EXPORT: string;
-    /*
-     * インポート・エクスポートがつかえるようになるGarageのバージョン
-     */
-    var GARAGE_VERSION_AVAILABLE_IMPORT_EXPORT: string;
+    var HUIS_RC_VERSION_REQUIRED: string;
+    
 }
 
 
