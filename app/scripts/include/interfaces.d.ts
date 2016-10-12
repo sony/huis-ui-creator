@@ -11,7 +11,7 @@
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
-
+/// <reference path="../Model/VersionString.ts" />
 /**
  * @interface IArea
  * @brief アイテムの領域
@@ -540,7 +540,15 @@ declare module Garage {
 	/*
 	* HUIS UI CREATOR のバージョン
 	*/
-	var APP_VERSION:string;
+    var APP_VERSION: string;
+   /*
+	* 接続しているHUIS REMOTE CONTROLLER のバージョン
+	*/
+    var RC_VERSION: string;
+    /*
+     * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
+     */
+    var RC_VERSION_FILE_NAME: string;
 	/**
 	 * Util.ElectronDialog のインスタンス
 	 */
@@ -777,6 +785,11 @@ declare module Garage {
     * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
     */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
+    /*
+    * インポートエクスポートがつかえるようになるHUIS本体のバージョン
+    */
+    var HUIS_RC_VERSION_REQUIRED: string;
+    
 }
 
 

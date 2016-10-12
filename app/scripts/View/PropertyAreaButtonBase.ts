@@ -87,11 +87,7 @@ module Garage {
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            //NaNか判定 Number.isNaNが使えないので代用
-            protected isNaN(v) :boolean{
-                return v !== v;
-            }
-
+         
             // 不正な値の場合、falseを返す。
             // 有効な場合、trueを返す。
             protected isValidValue(value): boolean {
@@ -103,7 +99,7 @@ module Garage {
                     return false;
                 } else if (value === "") {
                     return false;
-                } else if (this.isNaN(value)) {
+                } else if (JQUtils.isNaN(value)) {
                     return false;
                 } else {
                     return true;

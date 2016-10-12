@@ -48,6 +48,9 @@ module Garage {
                         app.quit();
                     }
                 })();
+
+                this.checkRcVersionFromDevice();
+
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
                 }); // 同期が完了したらHomeに遷移する
@@ -132,11 +135,58 @@ module Garage {
                         callback();
                     }
                 });
+            }
 
 
+            /*
+            * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
+            */
+            private checkRcVersionFromDevice(callback?: Function) {
+                let FUNCTION_NAME = TAG + "checkRcVersionFromDevice : ";
+                try {
+                    RC_VERSION = fs.readFileSync(RC_VERSION_FILE_NAME, 'utf8');
+                } catch (err) {
+                    console.error(FUNCTION_NAME + "erro occur : " + err);
+                }
+
+                let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
+
+                //このバージョンのGarageに必要になるHUISのバージョン
+                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
+
+                //HUIS RCとバージョン不一致の判定
+                if (RC_VERSION != null) {
+                    console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
+
+                    //HUIS RCはimportを使えないバージョンのときダイアログを出す。
+                    if (rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
+                        this.showHuisRcVersionIsOldDialog();
+                    }
+                } else {//RC_VERSIONがない場合もダイアログを表示。
+                    this.showHuisRcVersionIsOldDialog();
+                }
 
             }
 
+
+            /*
+            * HUIS本体のバージョンが古い場合のダイアログを表示
+            */
+            private showHuisRcVersionIsOldDialog() {
+
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_1") +
+                        $.i18n.t("hp.update.rc.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_2") +
+                        HUIS_RC_VERSION_REQUIRED + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
 
             private syncWithHUIS(callback?: Function) {
                 if (!HUIS_ROOT_PATH) {

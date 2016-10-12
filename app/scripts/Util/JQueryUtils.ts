@@ -152,6 +152,13 @@ module Garage {
             }
 
 
+            //NaNか判定 Number.isNaNが使えないので代用
+            static isNaN(v): boolean {
+                return v !== v;
+            }
+
+
+
 		}
 	}
 } 
