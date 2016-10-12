@@ -790,7 +790,14 @@ declare module Garage {
     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
     */
     var HUIS_RC_VERSION_REQUIRED: string;
-    
+    /*
+     * インポート・エクスポート する際に仕様する拡張子
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE : string;
+    /*
+     * インポート・エクスポート用拡張子の日本語の説明
+     */
+    var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
 }
 
 

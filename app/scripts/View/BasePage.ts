@@ -616,7 +616,15 @@ module Garage {
                 if (canCreateResult == 0) {
                     //TODO:インポート処理
                     let importManager = new Util.ImportManager();
-                    importManager.readDecompressedFile();
+                    
+                    //インポートするファイルをダイアログから、取得。
+                    importManager.showSelectFileDialog(
+                        () => {
+                            //TODO:コールバックを定義
+                        }
+                    );
+                    
+                    //importManager.convertToNewRemoteIdInfo();
 
                 } else if (canCreateResult == -1){
                     this.showLimitRemoteNumDialog();

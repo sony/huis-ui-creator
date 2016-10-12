@@ -129,6 +129,9 @@ module Garage {
 
         HUIS_RC_VERSION_REQUIRED = "3.1.2";
 
+        //インポート・エクスポート用の拡張子
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");

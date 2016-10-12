@@ -7,25 +7,47 @@ module Garage {
 
             private remoteId ;
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
-            private face: IGFace;
+            
 
             /*
             *コンストラクター
             */
             constructor() {
-
-                //新しいremoteIdを取得
-                //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
-                this.remoteId = huisFiles.createNewRemoteId();
+                
 
                 // zipされたファイルは appData/Garage/tmp に展開されると想定
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "tmp").replace(/\\/g, "/");
-
-              
             }
 
 
-            readDecompressedFile() {
+            /*
+            * ファイルを読み込むダイアログを表示する。
+            */
+            showSelectFileDialog(callback? : Function) {
+                var options: Util.ElectronOpenFileDialogOptions = {
+                    properties: ["openFile"],
+                    filters: [
+                        { name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] },
+                    ],
+                    title: PRODUCT_NAME, // Electron uses Appname as the default title
+                };
+
+                // 画像ファイルを開く
+                electronDialog.showOpenFileDialog(
+                    options,
+                    (fileName: string[]) => {
+                        this.copyTargetFiles(fileName[0]);
+                        
+                    }
+                );
+            }
+
+
+            /*
+             * 展開されたインポートファイルから、face情報を読み取る。
+             * @return {IGFace} インポートされたリモコンのface情報
+             */
+            private readDecompressedFile() :IGFace{
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 //TODO:展開時に、remoteIdを取得。
@@ -36,13 +58,15 @@ module Garage {
                 let facePath = path.join(this.filePathDecompressionFile, targetRemoteId, targetRemoteId + ".face").replace(/\\/g, "/");
 
                 //対象のデータをIGFaceとして読み込み
-                this.face = huisFiles.parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
+                return huisFiles.parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
             }
-           
+          
+
+
             /*
-            * インポート対象のファイルを、一時的な作業directoryにコピーする
-            * @param targetFilePath{string} インポート対象として指定されたファイルのパス
-            */
+             * インポート対象のファイルを、一時的な作業directoryにコピーする
+             * @param targetFilePath{string} インポート対象として指定されたファイルのパス
+             */
             copyTargetFiles(targetFilePath: string) {
                 let FUNCTION_NAME = TAG + "copyTargetFiles : ";
 
@@ -52,7 +76,6 @@ module Garage {
                 }
 
                 //TODO:targetFilePathのファイルをすべて、 filePathDecompressionFileにコピー
-
             }
 
             /*
@@ -83,6 +106,20 @@ module Garage {
 
                 return remoteId;
             }
+
+
+            /*
+             * ファイル・フォルダ・モジュールのうち、ふるいremoteIdが書かれた箇所を新しいremoteIdに書き換える。
+             */
+            convertToNewRemoteIdInfo() {
+                //新しいremoteIdを取得
+                //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
+                this.remoteId = huisFiles.createNewRemoteId();
+
+                let face: IGFace = this.readDecompressedFile();
+
+            }
+
           
 		}
 	}
