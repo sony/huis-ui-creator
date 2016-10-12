@@ -71,6 +71,7 @@ module Garage {
 					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
+                    "click #command-import-remote": "onOptionImport",
                     // ショートカットキー
                     //"keydown": "_onKeyDown",
 					// コンテキストメニュー
@@ -82,6 +83,15 @@ module Garage {
 				this._renderFaceList();
 				return this;
 			}
+
+            /*
+            * オプションの「リモコンをインポート」を押した際の処理
+            */
+            private onOptionImport(event: Event) {
+                this.importRemote();
+
+            }
+
 
 			/**
 			 * Home 画面の初期化
@@ -325,6 +335,15 @@ module Garage {
 				if ($face.length) {
 					this.remoteIdToDelete = $face.data("remoteid");
                     if (this.remoteIdToDelete) {
+
+                        let remoteIdToExport = $face.data("remoteid");
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                            click: () => {
+                                this.exportRemote(remoteIdToExport); // true で警告なし
+                            }
+                        }));
+
 						this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {

@@ -240,9 +240,12 @@ module Garage {
 					"contextmenu": "onContextMenu",
 
                     // プルダウンメニューのリスト
+                    "click #command-export-remote": "_onCommandExportRemote",
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
+                    
+
 
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin input[type='text']": "_onTextBoxFocusIn",
@@ -254,6 +257,15 @@ module Garage {
 				// Please add your code
 				return this;
 			}
+
+            /*
+             * オプションメニューの「リモコンをエクスポート」を押したさいの処理
+
+             */
+            private _onCommandExportRemote(event: Event) {
+                let remoteId = this.faceRenderer_canvas_.getRemoteId();
+                this.exportRemote(remoteId);
+            }
 
 
 			/*
