@@ -615,6 +615,9 @@ module Garage {
 
                 if (canCreateResult == 0) {
                     //TODO:インポート処理
+                    let importManager = new Util.ImportManager();
+                    importManager.readDecompressedFile();
+
                 } else if (canCreateResult == -1){
                     this.showLimitRemoteNumDialog();
                 }

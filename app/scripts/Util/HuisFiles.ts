@@ -96,7 +96,7 @@ module Garage {
 					let rootDirectory = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
 					console.log("rootDirectory=" + rootDirectory);
 
-					let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
+					let commonFace = this.parseFace(facePath, remoteId, rootDirectory);
 					this.commonRemoteInfo_ = {
 						remoteId: remoteId,
 						face: commonFace,
@@ -1501,8 +1501,8 @@ module Garage {
 					let remoteId = this.remoteList_[i].remote_id;
 					let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
 					let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-					let face: IGFace = this._parseFace(facePath, remoteId);
-					let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
+					let face: IGFace = this.parseFace(facePath, remoteId);
+					let masterFace: IGFace = this.parseFace(masterFacePath, remoteId);
 
 					if (face != undefined && remoteId != undefined) {
 						if (masterFace != undefined){
@@ -1524,10 +1524,12 @@ module Garage {
 				return remoteInfos;
 			}
 
+
+
 			/**
 			 * 指定したパスの face を parse する
 			 */
-			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+			public parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
 					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
