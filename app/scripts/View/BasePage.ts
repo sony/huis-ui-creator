@@ -607,7 +607,36 @@ module Garage {
              */
             protected importRemote() {
                 //TODO インポート処理
+                //リモコン数の上限になっていないか判定
+
+                let FUNCTION_NAME = TAG_BASE + "importRemote : ";
+
+                let canCreateResult = huisFiles.canCreateNewRemote();
+
+                if (canCreateResult == 0) {
+                    //TODO:インポート処理
+                } else if (canCreateResult == -1){
+                    this.showLimitRemoteNumDialog();
+                }
+
             }
+
+
+            /*
+             * リモコン数の上限に達していて、新規追加できない場合のダイアログを表示
+             */
+            protected showLimitRemoteNumDialog() {
+                let FUNCTION_NAME = TAG_BASE + "showLimitRemoteNumDialog : ";
+
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+
+            }
+
 
         }
     }
