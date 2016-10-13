@@ -1012,10 +1012,10 @@ module Garage {
 				}
 
 				if (gmodule.button) {
-					module.button = this._normalizeButtons(gmodule.button, remoteId);
+                    module.button = this._normalizeButtons(gmodule.button, remoteId, outputDirPath);
 				}
 				if (gmodule.image) {
-					module.image = this._normalizeImages(gmodule.image, remoteId);
+                    module.image = this._normalizeImages(gmodule.image, remoteId, outputDirPath);
 				}
 				if (gmodule.label) {
 					module.label = this._normalizeLabels(gmodule.label);
@@ -1164,15 +1164,16 @@ module Garage {
 
 			/**
 			 * Button データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _normalizeButtons(buttons: IGButton[], remoteId: string): IButton[] {
+            private _normalizeButtons(buttons: IGButton[], remoteId: string, outputDirPath?:string): IButton[] {
 				var normalizedButtons: IButton[] = [];
 
 				for (let i = 0, l = buttons.length; i < l; i++) {
 					let button: IGButton = buttons[i];
 					let normalizedButton: IButton = {
 						area: button.area,
-						state: this._normalizeButtonStates(button.state, remoteId)
+                        state: this._normalizeButtonStates(button.state, remoteId, outputDirPath)
 					};
 					if (button.default != null) {
 						normalizedButton.default = button.default;
@@ -1188,8 +1189,9 @@ module Garage {
 
 			/**
 			 * button.state データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _normalizeButtonStates(states: IGState[], remoteId: string): IState[] {
+            private _normalizeButtonStates(states: IGState[], remoteId: string, outputDirPath? :string): IState[] {
 				var normalizedStates: IState[] = [];
 
 				states.forEach((state: IGState) => {
@@ -1198,7 +1200,7 @@ module Garage {
 					};
 
 					if (state.image) {
-						normalizedState.image = this._normalizeImages(state.image, remoteId);
+                        normalizedState.image = this._normalizeImages(state.image, remoteId, outputDirPath);
 					}
 					if (state.label) {
 						normalizedState.label = this._normalizeLabels(state.label);
@@ -1316,8 +1318,9 @@ module Garage {
 			 * また、リモコン編集時に画像のリサイズが発生している場合は、
 			 * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
 			 * リサイズ処理自体はここでは行わない。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
 			 */
-			private _normalizeImages(images: IGImage[], remoteId: string): IImage[] {
+			private _normalizeImages(images: IGImage[], remoteId: string, outputDirPath? :string ): IImage[] {
 				var normalizedImages: IImage[] = [];
 
 				images.forEach((image) => {
@@ -1339,33 +1342,43 @@ module Garage {
 
 					// 編集画面でサイズ変更が行われていたら、リサイズ用に path を変更しておく。
 					// リサイズ処理はここでは行わない。
-					if (image.resized) {
+                    if (image.resized) {
+
 						// リサイズ後のファイル名を作る。
 						// "image.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
 						// 例) "image_w200_h150_stretch.png"
 						let originalPath = garageExtensions.original;
 						let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
 						if (!resolvedOriginalPath) {
-							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                            resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
                         let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
 						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
-						let newFileFullPath: string;
+                        let newFileFullPath: string;
+
+                        let newDirPath = parsedPath.dir;
+                        if (outputDirPath != null) {
+                            newDirPath = path.join(outputDirPath,"remoteimages").replace(/\\/g, "/");;
+                        }
+
 						// original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
-						if (originalPath.indexOf("/") === -1) {
-							newFileFullPath = path.join(parsedPath.dir, remoteId, newFileName).replace(/\\/g, "/");
+                        // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
+                        if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
+                            newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
 						} else {
-							newFileFullPath = path.join(parsedPath.dir, newFileName).replace(/\\/g, "/");
+                            newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
 						}
 						// editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
 						// 補正は拡張子の付け替え。
 						newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
 
+                        
+
 						normalizedImage = {
 							area: image.area,
-							path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
+                            path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
 						};
 
 						// リサイズ待機リストに追加
