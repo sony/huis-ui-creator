@@ -138,7 +138,41 @@ module Garage {
                 //対象のデータをIGFaceとして読み込み
                 return huisFiles.parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
             }
-          
+
+
+            /*
+             * インポート対象のキャッシュを読み込む,HuisFilesのしたに書き出す
+             * @param newRemoteId{string} 書き出し時のremoteId
+             * @return キャッシュファイルがないときnullを変えす。
+             */
+            private copyCache(newRemoteId:string) {
+                let FUNCITON_NAME = TAG + "readCache : ";
+
+                if (newRemoteId == null) {
+                    console.warn(FUNCITON_NAME + "newRemoteId is invalid");
+                    return null;
+                }
+
+                try {
+                    //インポート対象のキャッシュファイルを読み込み先
+                    let cacheReadFilePath = path.join(this.filePathDecompressionFile,this.decompressedRemoteId, this.decompressedRemoteId + "_buttondeviceinfo.cache");
+              
+                    //コピー先のファイルパスを作成
+                    let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
+                    if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
+                        fs.mkdirSync(outputDirectoryPath);
+                    }
+                    let outputFilePath: string = path.join(outputDirectoryPath, newRemoteId + "_buttondeviceinfo.cache");
+
+                    
+
+                    fs.copySync(cacheReadFilePath, outputFilePath);
+                } catch (err) {
+                    console.error(FUNCITON_NAME + "error occur : " + err);
+                    return null;
+                }
+                
+            }
 
 
             /*
@@ -238,6 +272,10 @@ module Garage {
                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(dst);
                 }
+
+                //キャッシュファイルをコピー
+                this.copyCache(newRemoteId);
+
                 //画像をコピー
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 try{
