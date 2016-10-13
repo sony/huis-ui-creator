@@ -60,7 +60,6 @@ module Garage {
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile).done(() => {
                              //成功時の処理
-                             this.deleteTmpFolder();
                          }).fail(() => {
                              //失敗時の処理
                          });
@@ -77,7 +76,8 @@ module Garage {
             */
             deleteTmpFolder() {
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
-                 
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                syncTask.deleteDirectory(this.filePathBeforeCompressionFile);
             }
 
             /*
