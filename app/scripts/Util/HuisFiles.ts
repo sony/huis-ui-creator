@@ -897,7 +897,10 @@ module Garage {
 					df.resolve();
                 });
 
-                cache.save(gmodules);
+                if (cache != null){
+                    cache.save(gmodules);
+                }
+                
 
 				return promise;
 
@@ -1345,7 +1348,8 @@ module Garage {
 
 					// 編集画面でサイズ変更が行われていたら、リサイズ用に path を変更しておく。
 					// リサイズ処理はここでは行わない。
-                    if (image.resized) {
+                    // outputDirPathがある場合は必ずする。
+                    if (image.resized || outputDirPath != null) {
 
 						// リサイズ後のファイル名を作る。
 						// "image.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
@@ -1354,6 +1358,7 @@ module Garage {
 						let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
 						if (!resolvedOriginalPath) {
                             resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                            garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
                         let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
