@@ -163,7 +163,7 @@ module Garage {
                         this.showHuisRcVersionIsOldDialog();
                     }
                 } else {//RC_VERSIONがない場合もダイアログを表示。
-                    //this.showHuisRcVersionIsOldDialog();
+                    //this.showHuisRcVersionIsOldDialog();★★★★★★★ debug ★★★★★★★★
                 }
 
             }

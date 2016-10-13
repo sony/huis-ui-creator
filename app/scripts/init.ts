@@ -138,7 +138,16 @@ module Garage {
 			fs.mkdirSync(HUIS_FILES_ROOT);
 		}
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
+        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
+
+        HUIS_WORK_DIR = path.join(GARAGE_FILES_ROOT, "temp").replace(/\\/g, "/");
+
+        HUIS_WORK_IMPORT_DIR = path.join(HUIS_WORK_DIR, "import").replace(/\\/g, "/");
+
+        HUIS_WORK_EXPORT_DIR = path.join(HUIS_WORK_DIR, "export").replace(/\\/g, "/");
+
+        HUIS_REMOTE_FILE_EXTENSION = "hsrc";
+
 		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 
 		REMOTE_BACKGROUND_WIDTH = 540;
@@ -204,7 +213,8 @@ module Garage {
 			"garage.util.huisdev",
 			"garage.util.miscutil",
 			"garage.util.garagefiles",
-			"garage.util.jqutils"],
+            "garage.util.jqutils",
+            "garage.util.zipmanager"],
 			() => {
 				try {
 					electronDialog = new Util.ElectronDialog();

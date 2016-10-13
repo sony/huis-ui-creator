@@ -10,6 +10,7 @@ module Garage {
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
         import JQUtils = Util.JQueryUtils;
+        import ZipManager = Util.ZipManager;
 
 		let TAG_BASE: string = "[Garage.View.BasePage] ";
 
@@ -601,8 +602,7 @@ module Garage {
             protected exportRemote(remoteId: string) {
                 var options: Util.ElectronSaveFileDialogOptions = {
                     title: PRODUCT_NAME,
-                    filters: [{ name: "HUIS リモートファイル", extensions: ["zip"] }]
-                    //filters: [{ name: "HUIS リモートファイル", extensions: ["huisrc"] }]
+                    filters: [{ name: "HUIS リモートファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }]
                 };
 
                 let files = huisFiles.getRemoteFiles(remoteId);
@@ -615,7 +615,7 @@ module Garage {
                 electronDialog.showSaveFileDialog(
                     options,
                     (dstFile) => {
-                        this.createZip(files, huisFiles.getHuisFilesRoot(), dstFile);
+                        ZipManager.compress(files, huisFiles.getHuisFilesRoot(), dstFile);
                     }
                 );
                         
@@ -627,63 +627,24 @@ module Garage {
             protected importRemote() {
                 var options: Util.ElectronOpenFileDialogOptions = {
                     properties: ["openFile"],
-                    filters: [
-                        { name: "HUIS リモートファイル（仮）", extensions: ["huisrc"] },
-                    ],
+                    filters: [{ name: "HUIS リモコンファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }],
                     title: PRODUCT_NAME, // Electron uses Appname as the default title
                 };
 
                 // 画像ファイルを開く
                 electronDialog.showOpenFileDialog(
                     options,
-                    (file) => {
-                        alert("import: " + file);
+                    (files) => {
+                        if (!files ||
+                            files.length != 1) {
+                            return;
+                        }
+                        ZipManager.decompress(files[0], HUIS_WORK_IMPORT_DIR);
                     }
                 );
             }
 
 
-
-            private createZip(files: string[], srcRoot: string, dstFile: string) {
-                zip.createWriter(new zip.BlobWriter(""), (writer) => {
-                    if (!files || files.length <= 0) return;
-                    let index: number = 0;
-
-                    function next() {
-                        let filePath = path.resolve(srcRoot, files[index]);
-                        let fileData: NodeBuffer = fs.readFileSync(filePath);
-                        let fileBlob = new Blob([fileData]);
-
-                        writer.add(files[index], new zip.BlobReader(fileBlob), () => {
-                            index++;
-
-                            if (index < files.length) {
-                                next();
-                            } else {
-                                writer.close((blob) => {
-                                    let reader = new FileReader();
-                                    reader.onload = function () {
-                                        let result = new Uint8Array(reader.result);
-                                        let buf = new Buffer(result.length);
-                                        for (let i = 0; i < result.length; i++) {
-                                            buf.writeUInt8(result[i], i);
-                                        }
-
-                                        fs.writeFileSync(dstFile, buf);
-                                        alert("done");
-                                    };
-                                    reader.readAsArrayBuffer(blob);
-                                });
-                            }
-                        });
-                    }
-
-                    next();
-                },
-                    () => {
-                        alert("create zip errored");
-                    });
-            }
 
         }
     }

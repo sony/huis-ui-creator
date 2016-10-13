@@ -45,6 +45,7 @@ module Config {
 			"garage.util.garagefiles": "scripts/Util/GarageFiles",
             "garage.util.jqutils": "scripts/Util/JQueryUtils",
             "garage.util.buttondeviceinfocache": "scripts/Util/ButtonDeviceInfoCache",
+            "garage.util.zipmanager": "scripts/Util/ZipManager",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
 			"garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
 
