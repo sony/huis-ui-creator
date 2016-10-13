@@ -837,8 +837,9 @@ module Garage {
 			 * @param remoteId {string} 更新または新規作成する face の remote ID
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, outputDirPath? : string): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -847,7 +848,7 @@ module Garage {
 				var moduleNames: string[] = [];
 				// module ファイルの更新
 				for (let i = 0; i < moduleCount; i++) {
-					let moduleInfo = this._updateModule(remoteId, gmodules[i]);
+                    let moduleInfo = this._updateModule(remoteId, gmodules[i], outputDirPath);
 					modules.push(moduleInfo.module);
 					moduleNames.push(moduleInfo.name);
 				}
@@ -859,7 +860,14 @@ module Garage {
 					modules: moduleNames
 				};
 
-				var faceFilePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
+
+                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
+
+                //ファイルパスの指定がある場合、書き出し先を変更する。
+                if (outputDirPath != null) {
+                    faceFilePath = path.join(outputDirPath, remoteId, remoteId + ".face");
+                }
+
 				fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
 				// サイズ変更を行った画像を一括でリサイズする
@@ -985,8 +993,9 @@ module Garage {
 			 * module ファイルを更新する。
 			 * 指定された module が存在しない場合は、新規作成する。
 			 * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _updateModule(remoteId: string, gmodule: IGModule): {module: IModule, name: string} {
+			private _updateModule(remoteId: string, gmodule: IGModule, outputDirPath ? :string): {module: IModule, name: string} {
 				// IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
 
 				
@@ -1012,7 +1021,14 @@ module Garage {
 					module.label = this._normalizeLabels(gmodule.label);
 				}
 
-				var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", gmodule.name + ".module");
+                var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", gmodule.name + ".module");
+
+                //ファイルパスの指定がある場合、書き出し先を変更する。
+                if (outputDirPath != null) {
+                    moduleFilePath = path.join(outputDirPath, remoteId, "modules", gmodule.name + ".module");
+                }
+
+
 				fs.outputJSONSync(moduleFilePath, module, { spaces: 2 });
 
 				return {

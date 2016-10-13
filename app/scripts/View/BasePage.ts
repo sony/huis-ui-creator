@@ -597,9 +597,13 @@ module Garage {
             /*
              * リモコンをエクスポートする
              * @param remoteId{string} エクスポートするリモコンのID
+             * @param faceName{string}:リモコン名
+             * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
              */
-            protected exportRemote(remoteId: string) {
+            protected exportRemote(remoteId: string, faceName, gmodules:IGModule[]) {
                 //TODO エクスポート処理
+                let exportManager: Util.ExportManager = new Util.ExportManager(remoteId);
+                exportManager.outputTemporaryFolder(faceName, gmodules);
             }
 
             /*

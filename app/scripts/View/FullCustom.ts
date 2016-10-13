@@ -263,8 +263,11 @@ module Garage {
 
              */
             private _onCommandExportRemote(event: Event) {
+                let gmodules = this.faceRenderer_canvas_.getModules();
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
-                this.exportRemote(remoteId);
+                let faceName: string = $("#input-face-name").val();
+
+                this.exportRemote(remoteId, faceName, gmodules);
             }
 
 
