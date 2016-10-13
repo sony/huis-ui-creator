@@ -12,6 +12,7 @@
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Util/ZipManager.ts" />
+/// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /**
@@ -627,7 +628,11 @@ declare module Garage {
 	/**
 	 * HUIS と PC の差分チェック中のダイアログのパラメーター
 	 */
-	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    /**
+     * 処理が完了してから、ダイアログが消えるまでの時間
+     */
+    var DURATION_DIALOG_CLOSE : number;
 	/**
 	 * ページの背景の領域
 	 */
@@ -794,20 +799,23 @@ declare module Garage {
     /**
      * 作業用フォルダ
      */
-    var HUIS_WORK_DIR: string;
+//    var HUIS_WORK_DIR: string;
     /**
      * インポート処理用作業フォルダ
      */
-    var HUIS_WORK_IMPORT_DIR: string;
+//    var HUIS_WORK_IMPORT_DIR: string;
     /**
      * エクスポート処理用作業フォルダ
      */
-    var HUIS_WORK_EXPORT_DIR: string;
-    /**
-     * インポートエクスポート用のHUISリモコンファイルの拡張子
+//    var HUIS_WORK_EXPORT_DIR: string;
+    /*
+     * インポート・エクスポート する際に仕様する拡張子
      */
-    var HUIS_REMOTE_FILE_EXTENSION: string;
-    
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE : string;
+    /*
+     * インポート・エクスポート用拡張子の日本語の説明
+     */
+    var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
 }
 
 

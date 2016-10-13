@@ -4,7 +4,17 @@ module Garage {
     export module Util {
         export class ZipManager {
 
-            static compress(files: string[], srcRoot: string, dstFile: string) {
+            /**
+             * 指定ファイルをzip圧縮する
+             * @param files {string[]} 対象ファイル（srcRootからの相対パス）
+             * @param srcRoot {string} filesの基準となるフォルダパス（フルパス）
+             * @param dstFile {string} 出力するファイル名（フルパス）
+             */
+            static compress(files: string[], srcRoot: string, dstFile: string): CDP.IPromise<void> {
+                console.log("start zip: " + srcRoot + " -> " + dstFile);
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
                 zip.createWriter(new zip.BlobWriter(""), (writer) => {
                     if (!files || files.length <= 0) return;
                     let index: number = 0;
@@ -21,7 +31,8 @@ module Garage {
                                 next();
                             } else {
                                 writer.close((blob) => {
-                                    ZipManager.saveBlobToFile(blob, dstFile);
+                                    let saveTask = ZipManager.saveBlobToFile(blob, dstFile);
+                                    saveTask.done(() => { df.resolve() });
                                 });
                             }
                         });
@@ -32,6 +43,8 @@ module Garage {
                     () => {
                         alert("create zip errored");
                     });
+
+                return promise;
             }
 
             /**
@@ -39,7 +52,10 @@ module Garage {
              * @param blob {Blob}
              * @param dstFile {string} 出力ファイル名（フルパス）
              */
-            private static saveBlobToFile(blob: Blob, dstFile: string) {
+            private static saveBlobToFile(blob: Blob, dstFile: string): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
                 let dir = path.dirname(dstFile);
                 if (!fs.existsSync(dir)) {
                     console.log("mkdirs: " + dir);
@@ -55,9 +71,12 @@ module Garage {
                     }
 
                     fs.writeFileSync(dstFile, buf);
-                    alert("create file: " + dstFile);//★★
+                    console.log("create file: " + dstFile);
+                    df.resolve();
                 };
                 reader.readAsArrayBuffer(blob);
+
+                return promise;
             }
 
 
@@ -66,7 +85,11 @@ module Garage {
              * @param zipFile {string} zipファイル（フルパス）
              * @param dstDir {string} 解凍先フォルダ（フルパス）
              */
-            static decompress(zipFile: string, dstDir: string) {
+            static decompress(zipFile: string, dstDir: string): CDP.IPromise<void> {
+                console.log("start unzip: " + zipFile + " -> " + dstDir);
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
                 let fileData: NodeBuffer = fs.readFileSync(zipFile);
                 let fileBlob = new Blob([fileData]);
 
@@ -75,12 +98,15 @@ module Garage {
                         for (let entry of entries) {
                             entry.getData(new zip.BlobWriter(""), (blob) => {
                                 if (!entry.directory) {
-                                    ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename));
+                                    let saveTask = ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename));
+                                    saveTask.done(() => { df.resolve() });
                                 }
                             });
                         }
                     });
                 });
+
+                return promise;
             }
 
 

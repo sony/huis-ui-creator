@@ -600,11 +600,6 @@ module Garage {
              * @param remoteId{string} エクスポートするリモコンのID
              */
             protected exportRemote(remoteId: string) {
-                var options: Util.ElectronSaveFileDialogOptions = {
-                    title: PRODUCT_NAME,
-                    filters: [{ name: "HUIS リモートファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }] //★★ translation-ja？
-                };
-
                 let files = huisFiles.getRemoteFiles(remoteId);
                 if (!files ||
                     files.length <= 0) {
@@ -612,40 +607,82 @@ module Garage {
                     return;
                 }
 
+                let options: Util.ElectronSaveFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                };
                 electronDialog.showSaveFileDialog(
                     options,
                     (dstFile) => {
-                        ZipManager.compress(files, huisFiles.getHuisFilesRoot(), dstFile);
+                        this.export(files, dstFile);
                     }
                 );
-                        
             }
+
+
+            protected importRemote(callback?: Function) {
+                //TODO インポート処理
+                //リモコン数の上限になっていないか判定
+
+                let FUNCTION_NAME = TAG_BASE + "importRemote : ";
+
+                let canCreateResult = huisFiles.canCreateNewRemote();
+
+                if (canCreateResult == 0) {
+
+
+                    this.closeAllPopups();
+
+                    let importManager = new Util.ImportManager();
+
+                    //インポートするファイルをダイアログから、取得。
+                    importManager.showSelectFileDialog(
+                        () => {
+                            //TODO:コールバックを定義
+                            if (callback) {
+                                callback();
+                            }
+                        }
+                    );
+
+                    importManager.exec(callback);
+
+                } else if (canCreateResult == -1) {
+                    this.showLimitRemoteNumDialog();
+                }
+
+            }
+
 
             /*
-             * リモコンをインポートする
+             * リモコン数の上限に達していて、新規追加できない場合のダイアログを表示
              */
-            protected importRemote() {
-                var options: Util.ElectronOpenFileDialogOptions = {
-                    properties: ["openFile"],
-                    filters: [{ name: "HUIS リモコンファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }], //★★ translation-ja？
-                    title: PRODUCT_NAME, // Electron uses Appname as the default title
-                };
+            protected showLimitRemoteNumDialog() {
+                let FUNCTION_NAME = TAG_BASE + "showLimitRemoteNumDialog : ";
 
-                // 画像ファイルを開く
-                electronDialog.showOpenFileDialog(
-                    options,
-                    (files) => {
-                        if (!files ||
-                            files.length != 1) {
-                            return;
-                        }
-                        ZipManager.decompress(files[0], HUIS_WORK_IMPORT_DIR);
-                    }
-                );
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+
             }
 
 
 
+            // 仮
+            private export(files: string[], dstFile) {
+                console.log("export to " + dstFile);
+                let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
+                });
+                dialog.show();
+
+                let exportTask = ZipManager.compress(files, huisFiles.getHuisFilesRoot(), dstFile);
+                exportTask.then(() => { dialog.close() });
+            }
         }
     }
 }

@@ -39,7 +39,9 @@ module Garage {
 			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
-		}
+        }
+
+        DURATION_DIALOG_CLOSE = 3000;
 
 		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.758;
 		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.758;
@@ -129,6 +131,9 @@ module Garage {
 
         HUIS_RC_VERSION_REQUIRED = "3.1.2";
 
+        //インポート・エクスポート用の拡張子
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -139,12 +144,6 @@ module Garage {
 		}
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
         HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
-
-        HUIS_WORK_DIR = path.join(GARAGE_FILES_ROOT, "temp").replace(/\\/g, "/");
-        HUIS_WORK_IMPORT_DIR = path.join(HUIS_WORK_DIR, "import").replace(/\\/g, "/");
-        HUIS_WORK_EXPORT_DIR = path.join(HUIS_WORK_DIR, "export").replace(/\\/g, "/");
-
-        HUIS_REMOTE_FILE_EXTENSION = "hsrc";
 
 		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 

@@ -96,7 +96,7 @@ module Garage {
 					let rootDirectory = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
 					console.log("rootDirectory=" + rootDirectory);
 
-					let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
+					let commonFace = this.parseFace(facePath, remoteId, rootDirectory);
 					this.commonRemoteInfo_ = {
 						remoteId: remoteId,
 						face: commonFace,
@@ -890,10 +890,15 @@ module Garage {
 			 * @param remoteId {string} 更新または新規作成する face の remote ID
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param isToImport {boolean} importのために利用するときtrue: それ以外のとき、false
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache): IPromise<void> {
+			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImport? : boolean): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
+
+                if (isToImport == null) {
+                    isToImport = false;
+                }
 
 				var moduleCount = gmodules.length;
 				let modules: IModule[] = [];
@@ -916,9 +921,12 @@ module Garage {
 				fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
 				// サイズ変更を行った画像を一括でリサイズする
-				this._resizeImages().always(() => {
+                this._resizeImages().always(() => {
+
 					// 不要な画像を削除
-					this._removeUnnecessaryImages(remoteId, modules);
+                    if (!isToImport) {
+                        this._removeUnnecessaryImages(remoteId, modules);
+                    }
 
 					/* remotelist.ini ファイルを更新 */
 
@@ -939,8 +947,10 @@ module Garage {
 					df.resolve();
                 });
 
-                cache.save(gmodules);
-
+                if (cache != null) {
+                    cache.save(gmodules);
+                }
+                
 				return promise;
 
 			}
@@ -1554,8 +1564,8 @@ module Garage {
 					let remoteId = this.remoteList_[i].remote_id;
 					let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
 					let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-					let face: IGFace = this._parseFace(facePath, remoteId);
-					let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
+					let face: IGFace = this.parseFace(facePath, remoteId);
+					let masterFace: IGFace = this.parseFace(masterFacePath, remoteId);
 
 					if (face != undefined && remoteId != undefined) {
 						if (masterFace != undefined){
@@ -1577,10 +1587,12 @@ module Garage {
 				return remoteInfos;
 			}
 
+
+
 			/**
 			 * 指定したパスの face を parse する
 			 */
-			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+			public parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
 					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
