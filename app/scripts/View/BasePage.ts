@@ -605,7 +605,7 @@ module Garage {
             /*
              * リモコンをインポートする
              */
-            protected importRemote() {
+            protected importRemote(callback? : Function) {
                 //TODO インポート処理
                 //リモコン数の上限になっていないか判定
 
@@ -614,17 +614,24 @@ module Garage {
                 let canCreateResult = huisFiles.canCreateNewRemote();
 
                 if (canCreateResult == 0) {
+
+                    
+                    this.closeAllPopups();
+
                     //TODO:インポート処理
                     let importManager = new Util.ImportManager();
-                    
+                    /*
                     //インポートするファイルをダイアログから、取得。
                     importManager.showSelectFileDialog(
                         () => {
                             //TODO:コールバックを定義
+                    if(callback){
+                        callback();
+                    }
                         }
-                    );
+                    );*/
                     
-                    //importManager.convertToNewRemoteIdInfo();
+                    importManager.exec(callback);
 
                 } else if (canCreateResult == -1){
                     this.showLimitRemoteNumDialog();

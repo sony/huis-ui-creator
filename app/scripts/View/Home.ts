@@ -88,7 +88,16 @@ module Garage {
             * オプションの「リモコンをインポート」を押した際の処理
             */
             private onOptionImport(event: Event) {
-                this.importRemote();
+
+             
+                this.importRemote(() => {
+                    //インポートが完了したら、再描画する。
+                    huisFiles.init(HUIS_FILES_ROOT);
+                    this._calculateFaceListWidth();
+                    this._renderFaceList();
+                });
+               
+
 
             }
 

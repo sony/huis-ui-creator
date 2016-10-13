@@ -626,7 +626,11 @@ declare module Garage {
 	/**
 	 * HUIS と PC の差分チェック中のダイアログのパラメーター
 	 */
-	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    /**
+     * 処理が完了してから、ダイアログが消えるまでの時間
+     */
+    var DURATION_DIALOG_CLOSE : number;
 	/**
 	 * ページの背景の領域
 	 */

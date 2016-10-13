@@ -3,6 +3,8 @@
 module Garage {
 	export module Util {
         let TAG = "[ImportManager]";
+        import IPromise = CDP.IPromise;
+
         export class ImportManager {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
@@ -15,7 +17,7 @@ module Garage {
                 
 
                 // zipされたファイルは appData/Garage/tmp に展開されると想定
-                this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "tmp").replace(/\\/g, "/");
+                this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
             }
 
 
@@ -42,6 +44,81 @@ module Garage {
                     }
                 );
             }
+
+            /*
+            * インポートを実行する
+            * @param callback{Function}インポート実行後に処理されるcallback
+            */
+            exec(callback?: Function) {
+
+               
+               
+                let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING")
+                });
+                dialog.show().css("color", "white");
+          
+
+                this.convertByNewRemoteIdInfo().done(() => {
+                    this.syncToHuis().done(() => {
+
+                        if (callback) {
+                            callback();
+                        }
+
+                        // ダイアログが閉じられたら、コールバックを呼び出し終了
+                        var $dialog = $(".spinner-dialog");
+                        var $spinner = $("#common-dialog-center-spinner");
+
+                        $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                        $spinner.css("background-image", 'url("../res/images/icon_done.png")');
+                        $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE"));
+
+                        setTimeout(() => {
+                          
+
+                            if (dialog) {
+                                dialog.close();
+                            }
+                        },DURATION_DIALOG_CLOSE);
+                            
+                    });
+                });
+               
+            }
+
+
+            /*
+            * HUISと同期する。
+            */
+            syncToHuis(): IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                if (HUIS_ROOT_PATH) {
+                    let syncTask = new Util.HuisDev.FileSyncTask();
+                    syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, false, null, null, (err) => {
+                        
+                        if (err) {
+                            // [TODO] エラー値のハンドリング
+                            electronDialog.showMessageBox({
+                                type: "error",
+                                message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
+                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                                title: PRODUCT_NAME,
+                            });
+                            df.fail();
+                        } else {
+                            df.resolve();
+                        }
+                    });
+                }
+
+                return promise;
+
+            }
+
 
 
             /*
@@ -113,7 +190,9 @@ module Garage {
             /*
              * ファイル・フォルダ・モジュールのうち、ふるいremoteIdが書かれた箇所を新しいremoteIdに書き換える。
              */
-            convertByNewRemoteIdInfo() {
+            private convertByNewRemoteIdInfo(): IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
                 let FUNCTION_NAME = TAG + "convertByNewRemoteIdInfo : ";
 
@@ -160,10 +239,22 @@ module Garage {
                 }
                 //画像をコピー
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                syncTask.copyFilesSimply(src, dst, () => {
-                    this.writeConvertedFiles(convertedFace);
-                });
+                try{
+                    syncTask.copyFilesSimply(src, dst, () => {
+                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true).done(() => {
+                            df.resolve();
+                        }).fail(() => {
+                            df.fail();
+                        });
+                       
+                    });
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
+                    df.fail();
+                }
+                
 
+                return promise;
                 
             }
 
@@ -273,25 +364,6 @@ module Garage {
 
             }
 
-            
-
-
-
-            /*
-             * 情報を書き換えたリモコンを書き出す
-             * @param convertedFace {IGFace} 情報を書き換えられた
-             */
-            private writeConvertedFiles(convertedFace: IGFace) {
-                let FUNCTION_NAME = TAG + "writeConvertedFiles : ";
-
-                if (convertedFace == null) {
-                    console.warn(FUNCTION_NAME + "convertedFace is invalid");
-                    return;
-                }
-
-
-                huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true);
-            }
 		}
 	}
 } 

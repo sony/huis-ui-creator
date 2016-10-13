@@ -39,7 +39,9 @@ module Garage {
 			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
-		}
+        }
+
+        DURATION_DIALOG_CLOSE = 3000;
 
 		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.758;
 		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.758;
