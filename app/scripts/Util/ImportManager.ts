@@ -9,23 +9,28 @@ module Garage {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
             private decompressedRemoteId: string; //解答されたインポート対象のリモコンのID
+            private hasBluetooth: boolean; //bluetoothのボタンを持っているか否か
+            private hasAirconditioner: boolean;//Air conditionerのボタンを持っているか否か
 
             /*
             *コンストラクター
             */
             constructor() {
-                
+
 
                 // zipされたファイルは appData/Garage/tmp に展開されると想定
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
-                this.decompressedRemoteId = this.getDecompressedRemoteId(); 
+                this.decompressedRemoteId = this.getDecompressedRemoteId();
+                this.hasAirconditioner = null;
+                this.hasBluetooth = null;
+
             }
 
 
             /*
             * ファイルを読み込むダイアログを表示する。
             */
-            showSelectFileDialog(callback? : Function) {
+            showSelectFileDialog(callback?: Function) {
                 var options: Util.ElectronOpenFileDialogOptions = {
                     properties: ["openFile"],
                     filters: [
@@ -77,13 +82,16 @@ module Garage {
                         $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE"));
 
                         setTimeout(() => {
-                          
+                            dialog.close();
 
-                            if (dialog) {
-                                dialog.close();
-                            }
-                        },DURATION_DIALOG_CLOSE);
+                            //すぐにダイアログを表示すると、インポートの進捗ダイアログが消えないので、100ms待つ
+                            setTimeout(() => {
+                                this.showCautionDialog();
+                            }, 100);
+
                             
+                        }, DURATION_DIALOG_CLOSE);
+
                     });
                 });
                
@@ -126,7 +134,7 @@ module Garage {
              * 展開されたインポートファイルから、face情報を読み取る。
              * @return {IGFace} インポートされたリモコンのface情報
              */
-            private readDecompressedFile() :IGFace{
+            private readDecompressedFile(): IGFace {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 //展開されたファイルのもともとのremoteId
@@ -145,7 +153,7 @@ module Garage {
              * @param newRemoteId{string} 書き出し時のremoteId
              * @return キャッシュファイルがないときnullを変えす。
              */
-            private copyCache(newRemoteId:string) {
+            private copyCache(newRemoteId: string) {
                 let FUNCITON_NAME = TAG + "readCache : ";
 
                 if (newRemoteId == null) {
@@ -155,8 +163,8 @@ module Garage {
 
                 try {
                     //インポート対象のキャッシュファイルを読み込み先
-                    let cacheReadFilePath = path.join(this.filePathDecompressionFile,this.decompressedRemoteId, this.decompressedRemoteId + "_buttondeviceinfo.cache");
-              
+                    let cacheReadFilePath = path.join(this.filePathDecompressionFile, this.decompressedRemoteId, this.decompressedRemoteId + "_buttondeviceinfo.cache");
+
                     //コピー先のファイルパスを作成
                     let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
@@ -197,7 +205,7 @@ module Garage {
              * 圧縮前のフォルダ名がremoteIdを表している。
              * @return {string} 展開されたリモコンのremoteIdを返す。みつからない場合nullを返す。
              */
-            private getDecompressedRemoteId(): string{
+            private getDecompressedRemoteId(): string {
                 let FUNCTION_NAME = TAG + "getDecompressedRemoteId : ";
 
                 let remoteId = null;
@@ -242,7 +250,7 @@ module Garage {
                 convertedFace.remoteId = newRemoteId;
 
                 //module内の情報を更新
-                for (let i = 0; i < convertedFace.modules.length; i++){
+                for (let i = 0; i < convertedFace.modules.length; i++) {
 
                     //module内のremoteIdを更新
                     convertedFace.modules[i].remoteId = newRemoteId;
@@ -263,6 +271,10 @@ module Garage {
                     convertedFace.modules[i].image = this.convertImagesFilePath(convertedFace.modules[i].image, newRemoteId);
 
                 }
+
+                //インポートしたリモコンが注意が必要なカテゴリーを持っているかチェック
+                this.hasBluetooth = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_BT);
+                this.hasAirconditioner = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_AC);
 
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
                 let oldRemoteId: string = this.decompressedRemoteId;
@@ -294,7 +306,122 @@ module Garage {
                 
 
                 return promise;
-                
+
+            }
+
+
+            /*
+            * Face中にエアコンの入力したカテゴリーボタンがあるときかチェックする
+            * @param inputModule {IGFace} チェック対象
+            * @param category{string} チェックしたい対象カテゴリー
+            * @return {boolean} カテゴリを含んでいるときtrue 含んでいないとき、false;
+            */
+            private isIncludeSpecificCategoryButton(face: IGFace, category : string): boolean{
+                let FUNCTION_NAME = TAG + "isIncludeAircondition : ";
+
+                if (face == null) {
+                    console.warn(FUNCTION_NAME + "face is invalid");
+                }
+
+                if (category == null) {
+                    console.warn(FUNCTION_NAME + "category is invalid");
+                }
+
+                //モジュールがひとつもないとき含んでいないとみなす。
+                let targetModules: IGModule[] = face.modules;
+                if (targetModules == null || targetModules.length == 0) {
+                    return false;
+                }
+
+                for (let i = 0; i < targetModules.length; i++){
+
+                    //ターゲットのボタンがないとき、次のmoduleをチェック。
+                    let targetButtons: IGButton[] = targetModules[i].button;
+                    if (targetButtons == null || targetButtons.length == 0) {
+                        continue;
+                    }
+                    for (let j = 0; j < targetButtons.length; j++){
+
+                        //ターゲットのステートがないとき、次のボタンをチェック
+                        let targetStates:IGState[] = targetButtons[j].state;
+                        if (targetStates == null || targetStates.length == 0) {
+                            continue;
+                        }
+                        for (let k = 0; k < targetStates.length; k++){
+
+                            //ターゲットのアクションがないとき、次のステートをチェック
+                            let targetActions = targetStates[k].action;
+                            if (targetActions == null || targetActions.length == 0) {
+                                continue;
+                            }
+                            for (let l = 0; l < targetActions.length; l++){
+
+                                let targetAction = targetActions[l];
+                                if (targetAction != null) {
+                                    //入力したカテゴリと一致するdevice_typeがあるときtrueを返す。
+                                    if (targetAction.code_db != null
+                                        && targetAction.code_db.device_type != null
+                                        && targetAction.code_db.device_type == category) {
+                                        return true;
+                                    }//end if
+
+                                    //categoryがbluetoothのときは特殊対応bluetooth_dataがあるとき、true
+                                    if (category == DEVICE_TYPE_BT
+                                        && targetAction.bluetooth_data != null) {
+                                        return true;
+                                    }
+
+                                }//end if
+
+                                
+
+                            }//end for(l)
+                        }//end for(k)
+                    }//end for(j)
+                }//end for(i)
+
+                return false;
+            }
+
+
+            /*
+            * インポート後のユーザーに対しての諸注意をダイアログで知らせる。
+            */
+            private showCautionDialog() {
+                let FUNCTION_NAME = TAG + "showCautionDialog :";
+
+                ///チェックすべき項目がない場合、エラーを表示
+                if (this.hasAirconditioner == null) {
+                    console.error(FUNCTION_NAME + "hasAirconditioner is null");
+                    console.error(FUNCTION_NAME + "please check imported remote whether those category button exist");
+                    this.hasAirconditioner = false;
+                }
+                if (this.hasBluetooth == null) {
+                    console.error(FUNCTION_NAME + "hasBluetooth is null");
+                    console.error(FUNCTION_NAME + "please check imported remote whether those category button exist");
+                    this.hasBluetooth = false;
+                }
+
+
+                let dialogMessage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_IMPORT_AFTER");
+
+                //エアコンを含むとき、メッセージを追加
+                if (this.hasAirconditioner) {
+                    dialogMessage += $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_IMPORT_AFTER_AC");
+                }
+
+                //Bluetoothを含むとき、メッセージを追加
+                if (this.hasAirconditioner) {
+                    dialogMessage += $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_IMPORT_AFTER_BT");
+                }
+
+
+                    electronDialog.showMessageBox({
+                        type: "info",
+                        message: dialogMessage,
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                        title: PRODUCT_NAME,
+                    });
             }
 
 
