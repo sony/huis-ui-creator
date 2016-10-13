@@ -837,9 +837,10 @@ module Garage {
 			 * @param remoteId {string} 更新または新規作成する face の remote ID
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, outputDirPath? : string): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImportExport?:boolean, outputDirPath? : string): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -873,8 +874,10 @@ module Garage {
 				// サイズ変更を行った画像を一括でリサイズする
 				this._resizeImages().always(() => {
 					// 不要な画像を削除
-					this._removeUnnecessaryImages(remoteId, modules);
-
+                    if (!isToImportExport) {
+                        this._removeUnnecessaryImages(remoteId, modules);
+                    }
+	
 					/* remotelist.ini ファイルを更新 */
 
 					// remoteList 内に、remoteId が含まれているかをチェック。

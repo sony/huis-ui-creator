@@ -30,7 +30,7 @@ module Garage {
 
 
                  //現在のfaceを書き出す。
-                 huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, this.filePathBeforeCompressionFile).done(() => {
+                 huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true,this.filePathBeforeCompressionFile).done(() => {
                      //成功時の処理
 
                  }).fail(() => {
