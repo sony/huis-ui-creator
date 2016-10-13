@@ -45,7 +45,8 @@ module Config {
             "garage.util.jqutils": "scripts/Util/JQueryUtils",
             "garage.util.buttondeviceinfocache": "scripts/Util/ButtonDeviceInfoCache",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
-			"garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
+            "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
+            "garage.view.exportmanager": "scripts/View/ExportManager",
 
 			/* <ATELIERMARKUP type="require-module-path" /> */
 			// internal lib modules
