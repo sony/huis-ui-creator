@@ -796,18 +796,6 @@ declare module Garage {
     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
     */
     var HUIS_RC_VERSION_REQUIRED: string;
-    /**
-     * 作業用フォルダ
-     */
-//    var HUIS_WORK_DIR: string;
-    /**
-     * インポート処理用作業フォルダ
-     */
-//    var HUIS_WORK_IMPORT_DIR: string;
-    /**
-     * エクスポート処理用作業フォルダ
-     */
-//    var HUIS_WORK_EXPORT_DIR: string;
     /*
      * インポート・エクスポート する際に仕様する拡張子
      */
