@@ -602,7 +602,7 @@ module Garage {
             protected exportRemote(remoteId: string) {
                 var options: Util.ElectronSaveFileDialogOptions = {
                     title: PRODUCT_NAME,
-                    filters: [{ name: "HUIS リモートファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }]
+                    filters: [{ name: "HUIS リモートファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }] //★★ translation-ja？
                 };
 
                 let files = huisFiles.getRemoteFiles(remoteId);
@@ -627,7 +627,7 @@ module Garage {
             protected importRemote() {
                 var options: Util.ElectronOpenFileDialogOptions = {
                     properties: ["openFile"],
-                    filters: [{ name: "HUIS リモコンファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }],
+                    filters: [{ name: "HUIS リモコンファイル", extensions: [HUIS_REMOTE_FILE_EXTENSION] }], //★★ translation-ja？
                     title: PRODUCT_NAME, // Electron uses Appname as the default title
                 };
 

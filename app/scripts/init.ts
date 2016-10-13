@@ -141,9 +141,7 @@ module Garage {
         HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
 
         HUIS_WORK_DIR = path.join(GARAGE_FILES_ROOT, "temp").replace(/\\/g, "/");
-
         HUIS_WORK_IMPORT_DIR = path.join(HUIS_WORK_DIR, "import").replace(/\\/g, "/");
-
         HUIS_WORK_EXPORT_DIR = path.join(HUIS_WORK_DIR, "export").replace(/\\/g, "/");
 
         HUIS_REMOTE_FILE_EXTENSION = "hsrc";
