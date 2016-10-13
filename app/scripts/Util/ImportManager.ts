@@ -8,7 +8,7 @@ module Garage {
         export class ImportManager {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
-            
+            private decompressedRemoteId: string; //解答されたインポート対象のリモコンのID
 
             /*
             *コンストラクター
@@ -18,6 +18,7 @@ module Garage {
 
                 // zipされたファイルは appData/Garage/tmp に展開されると想定
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
+                this.decompressedRemoteId = this.getDecompressedRemoteId(); 
             }
 
 
@@ -129,7 +130,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 //展開されたファイルのもともとのremoteId
-                let targetRemoteId: string = this.getDecompressedRemoteId();
+                let targetRemoteId: string = this.decompressedRemoteId;
 
                 //読み込み対象のファイルの.faceファイルのパス
                 let facePath = path.join(this.filePathDecompressionFile, targetRemoteId, targetRemoteId + ".face").replace(/\\/g, "/");
@@ -230,7 +231,7 @@ module Garage {
                 }
 
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                let oldRemoteId: string = this.getDecompressedRemoteId();
+                let oldRemoteId: string = this.decompressedRemoteId;
                 let src: string = path.join(this.filePathDecompressionFile, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
                 //コピー先のファイルパス : HuisFiles以下のremoteImages
                 let dst: string = path.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId).replace(/\\/g, "/");
