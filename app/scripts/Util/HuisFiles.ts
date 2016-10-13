@@ -1363,7 +1363,7 @@ module Garage {
 
                         let newDirPath = parsedPath.dir;
                         if (outputDirPath != null) {
-                            newDirPath = path.join(outputDirPath,"remoteimages").replace(/\\/g, "/");;
+                            newDirPath = path.join(outputDirPath, remoteId,"remoteimages").replace(/\\/g, "/");;
                         }
 
 						// original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする

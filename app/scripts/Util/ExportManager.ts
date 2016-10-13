@@ -37,12 +37,9 @@ module Garage {
                     //失敗時の処理
                  });
 
-                 //remoteimagesを変換する。
-
-                 //remoteimagesをコピーする。
-
-                 //cacheをコピーする
              }
+
+            
 
 		}
 	}
