@@ -2,6 +2,7 @@
 /// <reference path="../../modules/include/node.d.ts" />
 /// <reference path="../../modules/include/fs-extra.d.ts" />
 /// <reference path="../../modules/include/pixi.d.ts" />
+/// <reference path="../../modules/include/zip.js.d.ts" />
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />

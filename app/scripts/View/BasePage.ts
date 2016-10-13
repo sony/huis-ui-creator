@@ -599,14 +599,90 @@ module Garage {
              * @param remoteId{string} エクスポートするリモコンのID
              */
             protected exportRemote(remoteId: string) {
-                //TODO エクスポート処理
+                var options: Util.ElectronSaveFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: "HUIS リモートファイル", extensions: ["zip"] }]
+                    //filters: [{ name: "HUIS リモートファイル", extensions: ["huisrc"] }]
+                };
+
+                let files = huisFiles.getRemoteFiles(remoteId);
+                if (!files ||
+                    files.length <= 0) {
+                    // TODO
+                    return;
+                }
+
+                electronDialog.showSaveFileDialog(
+                    options,
+                    (dstFile) => {
+                        this.createZip(files, huisFiles.getHuisFilesRoot(), dstFile);
+                    }
+                );
+                        
             }
 
             /*
              * リモコンをインポートする
              */
             protected importRemote() {
-                //TODO インポート処理
+                var options: Util.ElectronOpenFileDialogOptions = {
+                    properties: ["openFile"],
+                    filters: [
+                        { name: "HUIS リモートファイル（仮）", extensions: ["huisrc"] },
+                    ],
+                    title: PRODUCT_NAME, // Electron uses Appname as the default title
+                };
+
+                // 画像ファイルを開く
+                electronDialog.showOpenFileDialog(
+                    options,
+                    (file) => {
+                        alert("import: " + file);
+                    }
+                );
+            }
+
+
+
+            private createZip(files: string[], srcRoot: string, dstFile: string) {
+                zip.createWriter(new zip.BlobWriter(""), (writer) => {
+                    if (!files || files.length <= 0) return;
+                    let index: number = 0;
+
+                    function next() {
+                        let filePath = path.resolve(srcRoot, files[index]);
+                        let fileData: NodeBuffer = fs.readFileSync(filePath);
+                        let fileBlob = new Blob([fileData]);
+
+                        writer.add(files[index], new zip.BlobReader(fileBlob), () => {
+                            index++;
+
+                            if (index < files.length) {
+                                next();
+                            } else {
+                                writer.close((blob) => {
+                                    let reader = new FileReader();
+                                    reader.onload = function () {
+                                        let result = new Uint8Array(reader.result);
+                                        let buf = new Buffer(result.length);
+                                        for (let i = 0; i < result.length; i++) {
+                                            buf.writeUInt8(result[i], i);
+                                        }
+
+                                        fs.writeFileSync(dstFile, buf);
+                                        alert("done");
+                                    };
+                                    reader.readAsArrayBuffer(blob);
+                                });
+                            }
+                        });
+                    }
+
+                    next();
+                },
+                    () => {
+                        alert("create zip errored");
+                    });
             }
 
         }

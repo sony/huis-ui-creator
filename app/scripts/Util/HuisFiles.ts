@@ -104,7 +104,60 @@ module Garage {
 				}
 
 				return true;
-			}
+            }
+
+            /**
+             * HUISファイルが置かれているルートフォルダのパスを取得する
+             * @return {string} HUISファイルのルートフォルダパス
+             */
+            getHuisFilesRoot(): string {
+                return this.huisFilesRoot_;
+            }
+
+            /**
+             * 指定されたリモコンの設定ファイルが置かれているフォルダのパスを取得する
+             * @param remoteId {string}
+             * @return {string} リモコンの設定ファイル保存フォルダパス
+             */
+            getRemoteRoot(remoteId: string): string {
+                return path.join(this.huisFilesRoot_, remoteId);
+            }
+
+            /**
+             * 指定されたリモコンの全設定ファイルパスを取得する
+             * パスはHUISファイルのルートからの相対パスで記述される
+             *
+             */
+            getRemoteFiles(remoteId: string): string[] {
+                let remoteRoot = this.getRemoteRoot(remoteId);
+                if (!fs.existsSync(remoteRoot)) {
+                    return;
+                }
+
+                let files: string[] = this.getFiles(remoteRoot);
+                files = files.concat(this.getFiles(path.join(HUIS_REMOTEIMAGES_ROOT, remoteId)));
+
+                for (let i = 0; i < files.length; i++) {
+                    files[i] = path.relative(this.huisFilesRoot_, files[i]);
+                }
+
+                return files;
+            }
+
+            private getFiles(targetPath): string[] {
+                let stat = fs.lstatSync(targetPath);
+                if (!stat.isDirectory()) {
+                    return [targetPath];
+                }
+
+                let tmpPath: string[] = [];
+                let children: string[] = fs.readdirSync(targetPath);
+                for (let child of children) {
+                    tmpPath = tmpPath.concat(this.getFiles(path.join(targetPath, child)));
+                }
+
+                return tmpPath;
+            }
 
 			/**
 			 * 指定した remoteId とひも付けられた face を取得する。
