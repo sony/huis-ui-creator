@@ -57,7 +57,7 @@ module Garage {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
                     title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING")
                 });
-                dialog.show().css("color", "white");
+                dialog.show();
           
 
                 this.convertByNewRemoteIdInfo().done(() => {
