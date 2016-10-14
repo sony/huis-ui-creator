@@ -126,6 +126,15 @@
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\spinner_medium.png" />
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\spinner_small.png" />
     <Content Include="app\modules\sony\cdp\stylesheets\images\commonctrl\thm_selected.png" />
+    <Content Include="app\modules\zip\scripts\deflate.js" />
+    <Content Include="app\modules\zip\scripts\deflate.min.js" />
+    <Content Include="app\modules\zip\scripts\inflate.js" />
+    <Content Include="app\modules\zip\scripts\inflate.min.js" />
+    <Content Include="app\modules\zip\scripts\z-worker.js" />
+    <Content Include="app\modules\zip\scripts\z-worker.min.js" />
+    <Content Include="app\modules\zip\scripts\zip.js" />
+    <Content Include="app\modules\zip\scripts\zip.min.js" />
+    <Content Include="app\modules\zip\scripts\_info.txt" />
     <Content Include="app\res\images\btn_arrow_left_hover.png" />
     <Content Include="app\res\images\btn_arrow_left_normal.png" />
     <Content Include="app\res\images\btn_arrow_left_pressed.png" />
@@ -255,6 +264,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
     <TypeScriptCompile Include="app\scripts\app.ts" />
     <Content Include="app\scripts\app.js">
       <DependentUpon>app.ts</DependentUpon>
@@ -285,9 +295,9 @@
     <TypeScriptCompile Include="app\scripts\Util\GarageFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
-    <TypeScriptCompile Include="app\scripts\Util\ImportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />

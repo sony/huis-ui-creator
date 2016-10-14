@@ -16,7 +16,10 @@ module Garage {
 		export interface ElectronSaveFileDialogOptions {
 			title?: string;
 			defaultPath?: string;
-			filters?: string[];
+            filters?: {
+                name: string;
+                extensions: string[];
+            }[];
 		}
 
 		export interface ElectronMessageBoxOptions {

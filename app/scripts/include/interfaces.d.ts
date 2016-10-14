@@ -2,6 +2,7 @@
 /// <reference path="../../modules/include/node.d.ts" />
 /// <reference path="../../modules/include/fs-extra.d.ts" />
 /// <reference path="../../modules/include/pixi.d.ts" />
+/// <reference path="../../modules/include/zip.js.d.ts" />
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
@@ -10,7 +11,7 @@
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
-/// <reference path="../Util/ImportManager.ts" />
+/// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /**

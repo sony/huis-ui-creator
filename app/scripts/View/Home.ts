@@ -88,15 +88,7 @@ module Garage {
             * オプションの「リモコンをインポート」を押した際の処理
             */
             private onOptionImport(event: Event) {
-
-             
-                this.importRemote(() => {
-                    //インポートが完了したら、再描画する。
-                    huisFiles.init(HUIS_FILES_ROOT);
-                    this._calculateFaceListWidth();
-                    this._renderFaceList();
-                });
-               
+                this.importRemote();
 
 
             }
@@ -260,7 +252,12 @@ module Garage {
 						title: PRODUCT_NAME,
 					});
 				} else if (canCreateResult == -1) {
-                    this.showLimitRemoteNumDialog();
+                    electronDialog.showMessageBox({
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                        title: PRODUCT_NAME,
+                    });
 				} else {
 					console.warn("no alert dialog in _onCreateNewRemote()");
 				}
