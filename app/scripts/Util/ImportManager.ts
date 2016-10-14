@@ -68,6 +68,7 @@ module Garage {
                             return this.syncToHuis();
                         }).then(() => {
 
+                            // 同期が完了したら、コールバックを呼び出し終了
                             if (callback) {
                                 callback();
                             }
@@ -75,7 +76,7 @@ module Garage {
                             //一時フォルダを削除する。
                             this.deleteTmpFolder();
 
-                            // ダイアログが閉じられたら、コールバックを呼び出し終了
+                            //完了を示すダイアログにする。
                             var $dialog = $(".spinner-dialog");
                             var $spinner = $("#common-dialog-center-spinner");
 
@@ -154,7 +155,6 @@ module Garage {
                 
 
                 console.error(functionName + err);
-                // [TODO] エラー値のハンドリング
                 electronDialog.showMessageBox({
                     type: "error",
                     message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
