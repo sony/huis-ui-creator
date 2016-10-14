@@ -52,8 +52,8 @@ module Garage {
                         dialog.show();
 
                        
-                        
-                        let importTask = ZipManager.decompress(files[0], this.filePathDecompressionFile).done(() => {
+                        //リモコンファイルを展開する。
+                        ZipManager.decompress(files[0], this.filePathDecompressionFile).done(() => {
                             
                             
 
