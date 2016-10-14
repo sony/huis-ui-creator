@@ -14,7 +14,6 @@ module Garage {
              * @param エクスポート対象のリモコンのremoteId
              */
              constructor(remoteId :string) {
-                 // zipされたファイルは一時的に appData/ Garage / export / 00XX に展開されると想定
                  this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
                  this.targetRemoteId = remoteId;
             }

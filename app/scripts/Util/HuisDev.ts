@@ -315,7 +315,9 @@
 					return { cancel: this._cancel };
 				}
 
-                // destRootDirの中身を、srcRootDirの中身と同期させる関数
+                // 対象のフォルダを中身ごと削除する
+                // @param targetDirectoryPath{string} 削除するフォルダ
+                // @param callback{(err: Error)=>void} 削除後に実行するコールバック
                 public deleteDirectory(targetDirectoryPath: string, callback?: (err: Error) => void) {
                     let emptyDirectory = path.join(GARAGE_FILES_ROOT, "empty").replace(/\\/g, "/");
                     if (!fs.existsSync(emptyDirectory)) {// 存在しない場合フォルダを作成。
