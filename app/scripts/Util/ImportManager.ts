@@ -8,7 +8,6 @@ module Garage {
         export class ImportManager {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
-            private decompressedRemoteId: string; //解答されたインポート対象のリモコンのID
             private hasBluetooth: boolean; //bluetoothのボタンを持っているか否か
             private hasAirconditioner: boolean;//Air conditionerのボタンを持っているか否か
 
@@ -18,80 +17,99 @@ module Garage {
             constructor() {
 
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
-                this.decompressedRemoteId = this.getDecompressedRemoteId();
                 this.hasAirconditioner = null;
                 this.hasBluetooth = null;
 
             }
 
 
-            /*
-            * ファイルを読み込むダイアログを表示する。
-            */
-            showSelectFileDialog(callback?: Function) {
-                var options: Util.ElectronOpenFileDialogOptions = {
-                    properties: ["openFile"],
-                    filters: [
-                        { name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] },
-                    ],
-                    title: PRODUCT_NAME, // Electron uses Appname as the default title
-                };
-
-                // 画像ファイルを開く
-                electronDialog.showOpenFileDialog(
-                    options,
-                    (fileName: string[]) => {
-                        this.copyTargetFiles(fileName[0]);
-                        this.convertByNewRemoteIdInfo();
-                        
-                    }
-                );
-            }
+        
 
             /*
             * インポートを実行する
             * @param callback{Function}インポート実行後に処理されるcallback
             */
             exec(callback?: Function) {
+                let FUNCTION_NAME = TAG + "exec : ";
 
-               
-               
-                let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
-                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                    title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING")
-                });
-                dialog.show();
-          
-
-                this.convertByNewRemoteIdInfo().done(() => {
-                    this.syncToHuis().done(() => {
-
-                        if (callback) {
-                            callback();
+                //インポーt先のダイアログを表示する。
+                let options: Util.ElectronOpenFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                };
+                electronDialog.showOpenFileDialog(
+                    options,
+                    (files) => {
+                        if (!files ||
+                            files.length != 1) {
+                            return;
                         }
+                        
+                        let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
+                            src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                            title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING")
+                        });
+                        dialog.show();
 
-                        // ダイアログが閉じられたら、コールバックを呼び出し終了
-                        var $dialog = $(".spinner-dialog");
-                        var $spinner = $("#common-dialog-center-spinner");
-
-                        $spinner.removeClass("spinner");//アイコンが回転しないようにする。
-                        $spinner.css("background-image", 'url("../res/images/icon_done.png")');
-                        $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE"));
-
-                        setTimeout(() => {
-                            dialog.close();
-
-                            //すぐにダイアログを表示すると、インポートの進捗ダイアログが消えないので、100ms待つ
-                            setTimeout(() => {
-                                this.showCautionDialog();
-                            }, 100);
-
+                       
+                        
+                        let importTask = ZipManager.decompress(files[0], this.filePathDecompressionFile).done(() => {
                             
-                        }, DURATION_DIALOG_CLOSE);
+                            
 
-                    });
-                });
-               
+                            //展開されたフォルダのファイルパス
+                            let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");;
+
+                            //展開されたリモコンのremoteIdを取得
+                            let decompressedRemoteId = this.getDecompressedRemoteId(dirPath);
+                            return this.convertByNewRemoteIdInfo(dirPath, decompressedRemoteId);
+                        }).then(() => {
+                            //HUISと同期
+                            return this.syncToHuis();
+                        }).then(() => {
+
+                            if (callback) {
+                                callback();
+                            }
+
+                            //一時フォルダを削除する。
+                            this.deleteTmpFolder();
+
+                            // ダイアログが閉じられたら、コールバックを呼び出し終了
+                            var $dialog = $(".spinner-dialog");
+                            var $spinner = $("#common-dialog-center-spinner");
+
+                            $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                            $spinner.css("background-image", 'url("../res/images/icon_done.png")');
+                            $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE"));
+
+                            setTimeout(() => {
+                                dialog.close();
+
+                                //すぐにダイアログを表示すると、インポートの進捗ダイアログが消えないので、100ms待つ
+                                setTimeout(() => {
+                                    this.showCautionDialog();
+                                }, 100);
+
+
+                            }, DURATION_DIALOG_CLOSE);
+                        }).fail((err: Error) => {
+                            this.showErrorDialog(err, FUNCTION_NAME);
+                            dialog.close();
+                        })
+                           
+                        
+                    } );
+            }
+
+
+            /*
+            * エクスポートにつかう一時ファイルを削除する。
+            */
+            deleteTmpFolder() {
+                let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                syncTask.deleteDirectory(this.filePathDecompressionFile);
             }
 
 
@@ -99,6 +117,7 @@ module Garage {
             * HUISと同期する。
             */
             syncToHuis(): IPromise<void> {
+                let FUNCTION_NAME = TAG + "syncToHuis : ";
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
@@ -107,13 +126,8 @@ module Garage {
                     syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, false, null, null, (err) => {
                         
                         if (err) {
-                            // [TODO] エラー値のハンドリング
-                            electronDialog.showMessageBox({
-                                type: "error",
-                                message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
-                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                                title: PRODUCT_NAME,
-                            });
+
+                            this.showErrorDialog(err, FUNCTION_NAME);
                             df.fail();
                         } else {
                             df.resolve();
@@ -126,31 +140,61 @@ module Garage {
             }
 
 
+            /*
+             * 失敗時のダイアログを表示する。
+             * err {Error} エラー内容
+             * functionName {string} エラーが発生したfunction名
+             */
+            private showErrorDialog(err: Error, functionName:string) {
+                
+
+                console.error(functionName + err);
+                // [TODO] エラー値のハンドリング
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+
+            }
+
 
             /*
              * 展開されたインポートファイルから、face情報を読み取る。
+             * @param  dirPath{string} .faceファイルが格納されているフォルダのパス。
+             * @param  decompressedRemoteId{string} 展開されたリモコンのremoteId
              * @return {IGFace} インポートされたリモコンのface情報
              */
-            private readDecompressedFile(): IGFace {
+            private readDecompressedFile(dirPath:string, decompressedRemoteId:string): IGFace {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
-                //展開されたファイルのもともとのremoteId
-                let targetRemoteId: string = this.decompressedRemoteId;
+                if (dirPath == null) {
+                    console.warn(FUNCTION_NAME + "dir is invalid");
+                    return;
+                }
+
+                if (decompressedRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "remoteId is invalid");
+                    return;
+                }
 
                 //読み込み対象のファイルの.faceファイルのパス
-                let facePath = path.join(this.filePathDecompressionFile, targetRemoteId, targetRemoteId + ".face").replace(/\\/g, "/");
+                let facePath = path.join(dirPath, decompressedRemoteId, decompressedRemoteId + ".face").replace(/\\/g, "/");
 
                 //対象のデータをIGFaceとして読み込み
-                return huisFiles._parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
+                return huisFiles._parseFace(facePath, decompressedRemoteId, dirPath);
             }
 
 
             /*
              * インポート対象のキャッシュをコピーする
+             * @param dirPath{string} キャッシュファイルがあるフォルダのパス
+             * @param oldRemoteId{string} コピー元のキャッシュファイルのremoteId
              * @param newRemoteId{string} 書き出し時のremoteId
              * @return キャッシュファイルがないときnullを変えす。
              */
-            private copyCache(newRemoteId: string) {
+            private copyCache(dirPath:string, newRemoteId: string, oldRemoteId:string) {
                 let FUNCITON_NAME = TAG + "readCache : ";
 
                 if (newRemoteId == null) {
@@ -158,9 +202,14 @@ module Garage {
                     return null;
                 }
 
+                if (oldRemoteId == null) {
+                    console.warn(FUNCITON_NAME + "oldRemoteId is invalid");
+                    return null;
+                }
+
                 try {
                     //インポート対象のキャッシュファイルを読み込み先
-                    let cacheReadFilePath = path.join(this.filePathDecompressionFile, this.decompressedRemoteId, this.decompressedRemoteId + "_buttondeviceinfo.cache");
+                    let cacheReadFilePath = path.join(dirPath, oldRemoteId, oldRemoteId + "_buttondeviceinfo.cache");
 
                     //コピー先のファイルパスを作成
                     let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
@@ -200,23 +249,24 @@ module Garage {
             /*
              * 展開されたファイルのフォルダ名から、圧縮前のremoteIdを取得する
              * 圧縮前のフォルダ名がremoteIdを表している。
+             * @param dirPathDecompressedFile{string} 展開されたフォルダ名のパス
              * @return {string} 展開されたリモコンのremoteIdを返す。みつからない場合nullを返す。
              */
-            private getDecompressedRemoteId(): string {
+            private getDecompressedRemoteId(dirPathDecompressedFile : string): string {
                 let FUNCTION_NAME = TAG + "getDecompressedRemoteId : ";
 
                 let remoteId = null;
-                let names = fs.readdirSync(this.filePathDecompressionFile);
+                let names = fs.readdirSync(dirPathDecompressedFile);
 
                 //ひとつもファイル・フォルダがみつからない場合
                 if (names.length < 0) {
-                    console.warn(FUNCTION_NAME + "there is no file in " + this.filePathDecompressionFile);
+                    console.warn(FUNCTION_NAME + "there is no file in " + dirPathDecompressedFile);
                     return null;
                 }
 
                 //ファイル・フォルダが一つ以外の場合、(フォーマット的にはremoteIdと同名のフォルダがひとつあるのみなはず)
                 if (names.length != 1) {
-                    console.warn(FUNCTION_NAME + "there is too many file in " + this.filePathDecompressionFile);
+                    console.warn(FUNCTION_NAME + "there is too many file in " + dirPathDecompressedFile);
                     return null;
                 } else if (names.length == 1) {
                     //フォルダ名から、remoteIdを取得する。
@@ -229,8 +279,10 @@ module Garage {
 
             /*
              * ファイル・フォルダ・モジュールのうち、ふるいremoteIdが書かれた箇所を新しいremoteIdに書き換える。
+             * @param dirPath {string} 展開されたフォルダのパス
+             * @param decompressRemoteId {string} 展開されたリモコンのremoteId
              */
-            private convertByNewRemoteIdInfo(): IPromise<void> {
+            private convertByNewRemoteIdInfo(dirPath: string, decompressRemoteId:string): IPromise<void> {
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
@@ -240,7 +292,8 @@ module Garage {
                 //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
                 let newRemoteId = huisFiles.createNewRemoteId();
 
-                let face: IGFace = this.readDecompressedFile();
+
+                let face: IGFace = this.readDecompressedFile(dirPath, decompressRemoteId);
                 let convertedFace: IGFace = $.extend(true, {}, face);
 
                 //face名を変更
@@ -274,8 +327,8 @@ module Garage {
                 this.hasAirconditioner = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_AC);
 
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                let oldRemoteId: string = this.decompressedRemoteId;
-                let src: string = path.join(this.filePathDecompressionFile, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
+                let oldRemoteId: string = decompressRemoteId;
+                let src: string = path.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
                 //コピー先のファイルパス : HuisFiles以下のremoteImages
                 let dst: string = path.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId).replace(/\\/g, "/");
                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
@@ -283,7 +336,7 @@ module Garage {
                 }
 
                 //キャッシュファイルをコピー
-                this.copyCache(newRemoteId);
+                this.copyCache(dirPath, newRemoteId, decompressRemoteId);
 
                 //画像をコピー
                 let syncTask = new Util.HuisDev.FileSyncTask();
