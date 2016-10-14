@@ -50,7 +50,19 @@ module Garage {
                          console.time("export");
                          this.export(dstFile).then(() => {
                              console.timeEnd("export");
-                             dialog.close();
+
+                             //完了を示すダイアログにする。
+                             var $dialog = $(".spinner-dialog");
+                             var $spinner = $("#common-dialog-center-spinner");
+
+                             $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                             $spinner.css("background-image", 'url("../res/images/icon_done.png")');
+                             $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE"));
+
+                             setTimeout(() => {
+                                 dialog.close();
+
+                             }, DURATION_DIALOG_CLOSE);
                          });
                      }
                  );

@@ -441,7 +441,9 @@
                                     callback(null);	// 成功
                                 }
                             }).fail((err) => {
-                                callback(err);
+                                if (callback) {
+                                    callback(err);	// 成功
+                                }
                             });
                     }, 100);
 

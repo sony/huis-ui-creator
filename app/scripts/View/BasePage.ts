@@ -608,32 +608,17 @@ module Garage {
 
 
             protected importRemote(callback?: Function) {
-                //TODO インポート処理
-                this.import();
-            }
-
-
-
-            /**
-             * 仮
-             */
-            private import() {
-                let options: Util.ElectronOpenFileDialogOptions = {
-                    title: PRODUCT_NAME,
-                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
-                };
-                electronDialog.showOpenFileDialog(
-                    options,
-                    (files) => {
-                        if (!files ||
-                            files.length != 1) {
-                            return;
-                        }
-
-                        let importTask = ZipManager.decompress(files[0], path.join(GARAGE_FILES_ROOT, "import"));
+                let importManager = new Util.ImportManager();
+                importManager.exec(() => {
+                    if (callback) {
+                        callback();
                     }
-                );
+                });
+
             }
+
+
+
         }
     }
 }
