@@ -15,6 +15,7 @@
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
+/// <reference path="../Util/ImportManager.ts" />
 
 /**
  * @interface IArea
