@@ -93,7 +93,9 @@ module Garage {
 
 
                             }, DURATION_DIALOG_CLOSE);
-                        }).fail((err: Error) => {
+                       }).fail((err: Error) => {
+                            //失敗時、一時ファイルを削除する。
+                            this.deleteTmpFolder();
                             this.showErrorDialog(err, FUNCTION_NAME);
                             dialog.close();
                         })
@@ -109,7 +111,10 @@ module Garage {
             deleteTmpFolder() {
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                syncTask.deleteDirectory(this.filePathDecompressionFile);
+                if (fs.existsSync(this.filePathDecompressionFile)) {
+                    syncTask.deleteDirectory(this.filePathDecompressionFile);
+
+                }
             }
 
 
