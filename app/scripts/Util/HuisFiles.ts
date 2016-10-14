@@ -1527,7 +1527,7 @@ module Garage {
 			/**
 			 * 指定したパスの face を parse する
 			 */
-			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+			_parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
 					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");

@@ -141,7 +141,7 @@ module Garage {
                 let facePath = path.join(this.filePathDecompressionFile, targetRemoteId, targetRemoteId + ".face").replace(/\\/g, "/");
 
                 //対象のデータをIGFaceとして読み込み
-                return huisFiles.parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
+                return huisFiles._parseFace(facePath, targetRemoteId, this.filePathDecompressionFile);
             }
 
 
