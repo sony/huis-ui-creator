@@ -55,7 +55,7 @@ module Garage {
                  //画像をコピー
                  let syncTask = new Util.HuisDev.FileSyncTask();
                  try {
-                     syncTask._copyCommonImages(src, dst, () => {
+                     syncTask.copyFilesSimply(src, dst, () => {
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile).done(() => {
                              //成功時の処理
