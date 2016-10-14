@@ -435,9 +435,13 @@
                                     });
                                 return CDP.makePromise(df);
                             }).then(() => {
-                                callback(null);	// 成功
+                                if (callback){
+                                    callback(null);	// 成功
+                                }
                             }).fail((err) => {
-                                callback(err);
+                                if (callback) {
+                                    callback(err);	// 成功
+                                }
                             });
                     }, 100);
 
