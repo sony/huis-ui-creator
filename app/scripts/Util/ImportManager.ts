@@ -17,8 +17,6 @@ module Garage {
             */
             constructor() {
 
-
-                // zipされたファイルは appData/Garage/tmp に展開されると想定
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
                 this.decompressedRemoteId = this.getDecompressedRemoteId();
                 this.hasAirconditioner = null;
@@ -43,7 +41,6 @@ module Garage {
                 electronDialog.showOpenFileDialog(
                     options,
                     (fileName: string[]) => {
-                        //TODO:tmpへのコピーが完了してから、covert
                         this.copyTargetFiles(fileName[0]);
                         this.convertByNewRemoteIdInfo();
                         
@@ -149,7 +146,7 @@ module Garage {
 
 
             /*
-             * インポート対象のキャッシュを読み込む,HuisFilesのしたに書き出す
+             * インポート対象のキャッシュをコピーする
              * @param newRemoteId{string} 書き出し時のremoteId
              * @return キャッシュファイルがないときnullを変えす。
              */
@@ -217,7 +214,7 @@ module Garage {
                     return null;
                 }
 
-                //ファイル・フォルダが一つ以上ある場合、(フォーマット的にはremoteIdと同名のフォルダがひとつあるのみなはず)
+                //ファイル・フォルダが一つ以外の場合、(フォーマット的にはremoteIdと同名のフォルダがひとつあるのみなはず)
                 if (names.length != 1) {
                     console.warn(FUNCTION_NAME + "there is too many file in " + this.filePathDecompressionFile);
                     return null;
@@ -365,7 +362,7 @@ module Garage {
                                         return true;
                                     }//end if
 
-                                    //categoryがbluetoothのときは特殊対応bluetooth_dataがあるとき、true
+                                    //categoryがbluetoothのときは特殊対応。bluetooth_dataがあるとき、true
                                     if (category == DEVICE_TYPE_BT
                                         && targetAction.bluetooth_data != null) {
                                         return true;
