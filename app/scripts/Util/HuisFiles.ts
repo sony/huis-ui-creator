@@ -838,7 +838,7 @@ module Garage {
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache): IPromise<void> {
+			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImport : boolean = false): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -1527,7 +1527,7 @@ module Garage {
 			/**
 			 * 指定したパスの face を parse する
 			 */
-			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+			_parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
 					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
