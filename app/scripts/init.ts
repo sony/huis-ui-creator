@@ -39,7 +39,9 @@ module Garage {
 			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
-		}
+        }
+
+        DURATION_DIALOG_CLOSE = 3000;
 
 		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.758;
 		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.758;
@@ -129,6 +131,9 @@ module Garage {
 
         HUIS_RC_VERSION_REQUIRED = "3.1.2";
 
+        //インポート・エクスポート用の拡張子
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -205,7 +210,8 @@ module Garage {
 			"garage.util.huisdev",
 			"garage.util.miscutil",
 			"garage.util.garagefiles",
-			"garage.util.jqutils"],
+            "garage.util.jqutils",
+            "garage.util.zipmanager"],
 			() => {
 				try {
 					electronDialog = new Util.ElectronDialog();

@@ -128,7 +128,7 @@ module Garage {
 
                 //copyしてcallbackを実行
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                let syncProgress = syncTask._copyCommonImages(src, dst, (err) => {
+                let syncProgress = syncTask.copyFilesSimply(src, dst, (err) => {
                     if (err) {
                         this.showDialogNotConnectWithHuis(err);
                     } else if (callback) {//同期成功。 

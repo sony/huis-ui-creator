@@ -24,7 +24,8 @@ module Config {
 			"jquery.mobile": "modules/jquery/scripts/jquery.mobile",
 			"modernizr": "modules/modernizr/scripts/modernizr",
 			"underscore": "modules/underscore/scripts/underscore",
-			"pixi": "modules/pixi/scripts/pixi",
+            "pixi": "modules/pixi/scripts/pixi",
+            "zip": "modules/zip/scripts/zip",
 
 			// cdp modules
 			"cdp.core": "modules/sony/cdp/scripts/cdp.core",
@@ -44,6 +45,8 @@ module Config {
 			"garage.util.garagefiles": "scripts/Util/GarageFiles",
             "garage.util.jqutils": "scripts/Util/JQueryUtils",
             "garage.util.buttondeviceinfocache": "scripts/Util/ButtonDeviceInfoCache",
+            "garage.util.zipmanager": "scripts/Util/ZipManager",
+            "garage.util.importmanager": "scripts/Util/ImportManager",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
             "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
             "garage.view.exportmanager": "scripts/View/ExportManager",
@@ -59,6 +62,11 @@ module Config {
 
 		shim: {
 			/* <ATELIERMARKUP type="require-shim" /> */
+            "zip": {
+                init: function () {
+                    zip.workerScriptsPath = requireConfig.baseUrl + "modules/zip/scripts/";
+                }
+            },
 		},
 	};
 	// global export
