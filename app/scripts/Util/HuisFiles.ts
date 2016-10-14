@@ -839,13 +839,9 @@ module Garage {
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
              * @param isToImport {boolean} importのために利用するときtrue: それ以外のとき、false
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImport? : boolean): IPromise<void> {
+			updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImport : boolean = false): IPromise<void> {
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
-
-                if (isToImport == null) {
-                    isToImport = false;
-                }
 
 				var moduleCount = gmodules.length;
 				let modules: IModule[] = [];
