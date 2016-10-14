@@ -40,10 +40,12 @@ module Garage {
                                 next();
                             } else {
                                 writer.close((blob) => {
-                                    let saveTask = ZipManager.saveBlobToFile(blob, dstFile);
-                                    saveTask
-                                        .done(() => { df.resolve() })
-                                        .fail((err) => { df.reject(err) });
+                                    ZipManager.saveBlobToFile(blob, dstFile)
+                                        .done(() => {
+                                            df.resolve()
+                                        }).fail((err) => {
+                                            df.reject(err)
+                                        });
                                 });
                             }
                         });
@@ -53,6 +55,7 @@ module Garage {
                 },
                     () => {
                         alert("create zip errored");
+                        df.reject();
                     });
 
                 return promise;
@@ -94,8 +97,7 @@ module Garage {
                         df.resolve();
                     } catch (e) {
                         console.error("failed to write: " + dstFile);
-                        console.error(e);
-                        df.reject("failed to write: " + dstFile);
+                        df.reject();
                     }
                 };
                 reader.readAsArrayBuffer(blob);
@@ -129,28 +131,61 @@ module Garage {
                 zip.createReader(new zip.BlobReader(fileBlob), (reader) => {
                     reader.getEntries((entries) => {
                         if (entries.length <= 0) {
+                            console.log("nothing to decompress");
                             df.resolve();
                             return;
                         }
 
-                        for (let entry of entries) {
-                            entry.getData(new zip.BlobWriter(""), (blob) => {
-                                if (!entry.directory) {
-                                    let saveTask = ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename));
-                                    saveTask
-                                        .done(() => { df.resolve() })
-                                        .fail((err) => { df.reject(err) });
-                                    
-                                }
-                            });
+                        let saveTasks = new Array <JQueryPromise<void>>(entries.length);
+
+                        for (let i = 0; i < entries.length; i++) {
+                            let entry = entries[i];
+
+                            saveTasks[i] = ZipManager.decompressOneFile(entry, dstDir);
                         }
+
+                        $.when.apply($, saveTasks)
+                            .done(() => {
+                                console.log("finish decompress");
+                                df.resolve();
+                            }).fail(() => {
+                                console.log("failed to decompress");
+                                df.reject();
+                            });
                     });
                 });
 
                 return promise;
             }
 
+            /**
+             * zipエントリーの1ファイルを出力する
+             * @param entry {zip.Entry} 出力するzipエントリー
+             * @param dstDir {string} 出力先の基準フォルダ
+             */
+            private static decompressOneFile(entry: zip.Entry, dstDir: string): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
+                if (entry.directory) {
+                    console.log("skop decompress: " + entry.filename);
+                    df.resolve();
+                    return promise;
+                }
+
+                entry.getData(new zip.BlobWriter(""), (blob) => {
+
+                    ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename))
+                        .done(() => {
+                            console.log("succeeded to decompress: " + entry.filename);
+                            df.resolve();
+                        }).fail(() => {
+                            df.reject();
+                        });
+                });
+
+                return promise;
+            }
         }
     }
 }

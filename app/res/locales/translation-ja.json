@@ -68,7 +68,8 @@
             "STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING": "インポート中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE": "インポートしました。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER": "インポートされたリモコンのボタンは、エクスポートされた際の機器が登録されています。\n実際にお使いになる前に、ボタンの信号設定を変更してください。",
-            "STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING":  "エクスポート中です。",
+            "STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING": "エクスポート中です。",
+            "STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE":  "エクスポートしました。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER_AC": "\nエアコンのボタンはそのままでは利用できません。ボタンを一度削除して、登録済みのエアコンのボタンを配置してください。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。"
 

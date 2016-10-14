@@ -362,7 +362,9 @@
                             df.resolve();
                             return CDP.makePromise(df);
                         }).then(() => {
-                            callback(null);	// 成功
+                            if (callback) {
+                                callback(null);	// 成功
+                            }
                         }).fail((err) => {
                             callback(err);
                         });
@@ -435,7 +437,7 @@
                                     });
                                 return CDP.makePromise(df);
                             }).then(() => {
-                                if (callback){
+                                if (callback) {
                                     callback(null);	// 成功
                                 }
                             }).fail((err) => {

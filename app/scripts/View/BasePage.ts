@@ -601,30 +601,9 @@ module Garage {
              * @param faceName{string}:リモコン名
              * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
              */
-            protected exportRemote(remoteId: string, faceName, gmodules:IGModule[]) {
-                //TODO エクスポート処理
-                let exportManager: Util.ExportManager = new Util.ExportManager(remoteId);
-                exportManager.outputTemporaryFolder(faceName, gmodules);
-                let files = [];//huisFiles.getRemoteFiles(remoteId);
-                if (!files ||
-                    files.length <= 0) {
-                    // TODO
-                    return;
-                }
-
-                let options: Util.ElectronSaveFileDialogOptions = {
-                    title: PRODUCT_NAME,
-                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
-                };
-                electronDialog.showSaveFileDialog(
-                    options,
-                    (dstFile) => {
-                        if (!dstFile) {
-                            return;
-                        }
-                        this.export(files, dstFile);
-                    }
-                );
+            protected exportRemote(remoteId: string, faceName: string, gmodules: IGModule[]) {
+                let exportManager: Util.ExportManager = new Util.ExportManager(remoteId, faceName, gmodules);
+                exportManager.exec();
             }
 
 
@@ -640,24 +619,6 @@ module Garage {
 
 
 
-            /**
-             * エクスポート処理（仮）★★★★
-             * @param files {string[]} エクスポート対象ファイルパス（HUISファイルルートからの相対パス）
-             * @param dstFile {string} 出力ファイル（フルパス）
-             */
-            private export(files: string[], dstFile: string) {
-                console.log("export to " + dstFile);
-                let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
-                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                    title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
-                });
-                dialog.show();
-
-                let exportTask = ZipManager.compress(files, HUIS_FILES_ROOT, dstFile);
-                exportTask.then(() => { dialog.close() });
-            }
-
-           
         }
     }
 }
