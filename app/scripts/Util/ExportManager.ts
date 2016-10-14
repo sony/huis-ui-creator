@@ -50,7 +50,7 @@ module Garage {
                  }
 
                  //キャッシュファイルをコピー
-                 this.copyCache();
+                 this.copyCache(targetRemoteIdFolderPath);
 
                  //画像をコピー
                  let syncTask = new Util.HuisDev.FileSyncTask();
@@ -80,18 +80,19 @@ module Garage {
             }
 
             /*
-            * インポート対象のキャッシュを読み込む,HuisFilesのしたに書き出す
+            * エクスポート対象のキャッシュを一時フォルダにコピーする。
+            * @param コピー先のフォルダ
             * @return キャッシュファイルがないときnullを変えす。
             */
-            private copyCache() {
+            private copyCache(filePath : string) {
                 let FUNCITON_NAME = TAG + "readCache : ";
 
                 try {
                     //エクスポート対象のキャッシュファイルを読み込み先
                     let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.targetRemoteId, this.targetRemoteId + "_buttondeviceinfo.cache");
 
-                    //コピー先のファイルパスを作成
-                    let outputDirectoryPath: string = path.join(this.filePathBeforeCompressionFile, this.targetRemoteId).replace(/\\/g, "/");
+                    //コピー先に書き出す作成
+                    let outputDirectoryPath: string = filePath;
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(outputDirectoryPath);
                     }
