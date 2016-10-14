@@ -2,6 +2,7 @@
 /// <reference path="../../modules/include/node.d.ts" />
 /// <reference path="../../modules/include/fs-extra.d.ts" />
 /// <reference path="../../modules/include/pixi.d.ts" />
+/// <reference path="../../modules/include/zip.js.d.ts" />
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
@@ -10,6 +11,7 @@
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
+/// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /**
@@ -625,7 +627,11 @@ declare module Garage {
 	/**
 	 * HUIS と PC の差分チェック中のダイアログのパラメーター
 	 */
-	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    /**
+     * 処理が完了してから、ダイアログが消えるまでの時間
+     */
+    var DURATION_DIALOG_CLOSE : number;
 	/**
 	 * ページの背景の領域
 	 */
@@ -789,7 +795,14 @@ declare module Garage {
     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
     */
     var HUIS_RC_VERSION_REQUIRED: string;
-    
+    /*
+     * インポート・エクスポート する際に仕様する拡張子
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE : string;
+    /*
+     * インポート・エクスポート用拡張子の日本語の説明
+     */
+    var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
 }
 
 
