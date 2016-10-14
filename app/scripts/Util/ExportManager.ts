@@ -36,7 +36,7 @@ module Garage {
                      fs.mkdirSync(targetRemoteIdFolderPath);
                  }
 
-                 let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, "remoteimages").replace(/\\/g, "/");
+                 let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
                  if (!fs.existsSync(targetRemoteIdRemoteimagesFolderPath)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(targetRemoteIdRemoteimagesFolderPath);
                  }
@@ -44,7 +44,7 @@ module Garage {
                  //コピー元のファイルパス ：展開されたリモコン のremoteImages
                  let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.targetRemoteId).replace(/\\/g, "/");
                  //コピー先のファイルパス : HuisFiles以下のremoteImages
-                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.targetRemoteId, "remoteimages", this.targetRemoteId).replace(/\\/g, "/");
+                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.targetRemoteId, REMOTE_IMAGES_DIRRECOTORY_NAME, this.targetRemoteId).replace(/\\/g, "/");
 
                  if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(dst);
