@@ -263,8 +263,11 @@ module Garage {
 
              */
             private _onCommandExportRemote(event: Event) {
+                let gmodules = this.faceRenderer_canvas_.getModules();
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
-                this.exportRemote(remoteId);
+                let faceName: string = $("#input-face-name").val();
+
+                this.exportRemote(remoteId, faceName, gmodules);
             }
 
 
@@ -2427,7 +2430,7 @@ module Garage {
 				// image.path には remoteimages 起点の画像パスを指定する。
 				var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
 				// face ディレクトリ内に配置されるべき画像のパスを取得
-				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", imagePath)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, imagePath)).replace(/\\/g, "/");
 				// 画像を face ディレクトリ内にコピー
 				// 画像のリサイズとグレースケール化
 				Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
@@ -2481,7 +2484,7 @@ module Garage {
 				var image = targetState.image[0];
 				image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
 				// resolvedPath ( [HUIS_FILES_ROOT]/[remoteId]/imageName)
-				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", image.path)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, image.path)).replace(/\\/g, "/");
 				image.resolvedPath = resolvedPath;
 				// 画像のリサイズとグレースケール化
 				Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)

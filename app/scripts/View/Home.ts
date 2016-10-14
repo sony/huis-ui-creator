@@ -90,7 +90,6 @@ module Garage {
             private onOptionImport(event: Event) {
                 this.importRemote();
 
-
             }
 
 
@@ -341,7 +340,9 @@ module Garage {
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                             click: () => {
-                                this.exportRemote(remoteIdToExport); // true で警告なし
+                                let face :IGFace = huisFiles.getFace(remoteIdToExport);
+
+                                this.exportRemote(remoteIdToExport, face.name,face.modules); // true で警告なし
                             }
                         }));
 

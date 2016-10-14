@@ -315,7 +315,60 @@
 					return { cancel: this._cancel };
 				}
 
-          
+                // 対象のフォルダを中身ごと削除する
+                // @param targetDirectoryPath{string} 削除するフォルダ
+                // @param callback{(err: Error)=>void} 削除後に実行するコールバック
+                public deleteDirectory(targetDirectoryPath: string, callback?: (err: Error) => void) {
+                    let emptyDirectory = path.join(GARAGE_FILES_ROOT, "empty").replace(/\\/g, "/");
+                    if (!fs.existsSync(emptyDirectory)) {// 存在しない場合フォルダを作成。
+                        fs.mkdirSync(emptyDirectory);
+                    }
+
+                    let srcRootDir = emptyDirectory;
+                    let destRootDir = targetDirectoryPath;
+
+                    this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
+                        .then((diffInfo: IDiffInfo) => {
+                            // TODO: ディスクの容量チェック
+
+                            var df = $.Deferred();
+                            // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                            var copyTargetFiles = diffInfo.diff;
+                            copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                            this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
+                                .then(() => {
+                                    df.resolve(diffInfo.dir2Extra);
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+                            return CDP.makePromise(df);
+                        }).then((removeTargetFiles: string[]) => {
+                            var df = $.Deferred();
+                            // destRootDirの余分なファイルやディレクトリを削除
+                            this._removeFiles(destRootDir, removeTargetFiles)
+                                .then(() => {
+                                    df.resolve();
+                                    fs.rmdir(emptyDirectory);
+                                    fs.rmdirSync(targetDirectoryPath);
+
+                                    if (callback) {
+                                        callback(null);
+                                    }
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+                            df.resolve();
+                            return CDP.makePromise(df);
+                        }).then(() => {
+                            callback(null);	// 成功
+                        }).fail((err) => {
+                            callback(err);
+                        });
+
+              
+                }
 
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数

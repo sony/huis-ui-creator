@@ -48,7 +48,8 @@ module Config {
             "garage.util.zipmanager": "scripts/Util/ZipManager",
             "garage.util.importmanager": "scripts/Util/ImportManager",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
-			"garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
+            "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
+            "garage.view.exportmanager": "scripts/View/ExportManager",
 
 			/* <ATELIERMARKUP type="require-module-path" /> */
 			// internal lib modules
