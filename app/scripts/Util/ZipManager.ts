@@ -40,10 +40,12 @@ module Garage {
                                 next();
                             } else {
                                 writer.close((blob) => {
-                                    let saveTask = ZipManager.saveBlobToFile(blob, dstFile);
-                                    saveTask
-                                        .done(() => { df.resolve() })
-                                        .fail((err) => { df.reject(err) });
+                                    ZipManager.saveBlobToFile(blob, dstFile)
+                                        .done(() => {
+                                            df.resolve()
+                                        }).fail((err) => {
+                                            df.reject(err)
+                                        });
                                 });
                             }
                         });
@@ -53,6 +55,7 @@ module Garage {
                 },
                     () => {
                         alert("create zip errored");
+                        df.reject();
                     });
 
                 return promise;
@@ -133,17 +136,21 @@ module Garage {
                             return;
                         }
 
-                        for (let entry of entries) {
+                        let saveTasks = new Array < JQueryPromise<void>>(entries.length);
+
+                        for (let i = 0; i < entries.length; i++) {
+                            let entry = entries[i];
+
                             entry.getData(new zip.BlobWriter(""), (blob) => {
                                 if (!entry.directory) {
-                                    let saveTask = ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename));
-                                    saveTask
-                                        .done(() => { df.resolve() })
+                                    saveTasks[i] = ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename))
                                         .fail((err) => { df.reject(err) });
-                                    
                                 }
                             });
                         }
+
+                        $.when(saveTasks)
+                            .done(() => { df.resolve(); });
                     });
                 });
 

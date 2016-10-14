@@ -27,6 +27,7 @@ module Garage {
 
             /**
              * エクスポートを実行
+             * ファイル選択およびプログレスダイアログを表示し、実際のエクスポート処理を呼び出す
              */
              exec() {
                  let options: Util.ElectronSaveFileDialogOptions = {
@@ -46,22 +47,36 @@ module Garage {
                              title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
                          });
                          dialog.show();
-
-                         this.export(dstFile).then(() => { dialog.close(); });
+                         console.time("export");
+                         this.export(dstFile).then(() => {
+                             console.timeEnd("export");
+                             dialog.close();
+                         });
                      }
                  );
              }
 
+            /**
+             * エクスポート処理
+             * @param dstFile {string} エクスポートファイルの出力先（フルパス）
+             */
              private export(dstFile: string): CDP.IPromise<void> {
                  let df = $.Deferred<void>();
                  let promise = CDP.makePromise(df);
 
                  this.outputTemporaryFolder(this.targetFaceName, this.targetModules)
                      .done(() => {
-                         this.compress(dstFile).then(() => {
-                             this.deleteTmpFolder();
-                             df.resolve();
-                         });
+                         this.compress(dstFile)
+                             .done(() => {
+                                 this.deleteTmpFolder();
+                                 df.resolve();
+                             }).fail(() => {
+                                 this.deleteTmpFolder();
+                                 df.reject();
+                             })
+                     }).fail(() => {
+                         this.deleteTmpFolder();
+                         df.reject();
                      });
 
                  return promise;
@@ -74,6 +89,7 @@ module Garage {
              */
              private outputTemporaryFolder(faceName: string, gmodules: IGModule[]): CDP.IPromise<void> {
                  let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
+                 console.log("create temporary files: " + faceName);
 
                  let df = $.Deferred<void>();
                  let promise = CDP.makePromise(df);
@@ -105,22 +121,22 @@ module Garage {
                  this.copyCache(targetRemoteIdFolderPath);
 
 
-                 //画像をコピー
-                 let syncTask = new Util.HuisDev.FileSyncTask();
                  try {
+                     //画像をコピー
+                     let syncTask = new Util.HuisDev.FileSyncTask();
                      syncTask.copyFilesSimply(src, dst, () => {
                          //現在のfaceを書き出す。
-                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile).done(() => {
-                             //成功時の処理
-                             df.resolve();
-                         }).fail(() => {
-                             //失敗時の処理
-                             df.reject();
-                         });
+                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile)
+                             .done(() => {
+                                 df.resolve();
+                             }).fail(() => {
+                                 df.reject();
+                             });
 
                      });
                  } catch (err) {
                      console.error(FUNCTION_NAME + err);
+                     df.reject();
                  }
 
                  return promise;
@@ -130,11 +146,12 @@ module Garage {
              * 圧縮対象のファイル一覧を作成
              */
              private findCompressTargetFiles(): string[] {
+                 console.log("search target for compress] " + this.filePathBeforeCompressionFile);
                  if (!fs.existsSync(this.filePathBeforeCompressionFile)) {
                      return [];
                  }
 
-                 let files: string[] = this.getFiles(this.filePathBeforeCompressionFile);
+                 let files = this.getFiles(this.filePathBeforeCompressionFile);
 
                  for (let i = 0; i < files.length; i++) {
                      files[i] = path.relative(this.filePathBeforeCompressionFile, files[i]);
@@ -168,15 +185,22 @@ module Garage {
              * @param dstFile {string} 出力ファイル名（フルパス）
              */
              private compress(dstFile: string): CDP.IPromise<void> {
+                 console.log("compress: " + dstFile);
                  let df = $.Deferred<void>();
                  let promise = CDP.makePromise(df);
 
-                 let files: string[] = this.findCompressTargetFiles();
+                 let files: string[];
+                 try {
+                     files = this.findCompressTargetFiles();
+                 } catch (e) {
+                     console.error("failed to find temporary files for compress: " + e);
+                     df.reject();
+                     return promise;
+                 }
 
-                 let compressTask = ZipManager.compress(files, this.filePathBeforeCompressionFile, dstFile);
-                 compressTask
-                     .done(df.resolve)
-                     .fail(df.reject);
+                 ZipManager.compress(files, this.filePathBeforeCompressionFile, dstFile)
+                     .done(() => { df.resolve(); })
+                     .fail(() => { df.reject(); });
 
                  return promise;
              }
@@ -186,7 +210,8 @@ module Garage {
             /*
             * エクスポートにつかう一時ファイルを削除する。
             */
-            private deleteTmpFolder() {
+             private deleteTmpFolder() {
+                 console.log("delete temporary files");
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.deleteDirectory(this.filePathBeforeCompressionFile);
