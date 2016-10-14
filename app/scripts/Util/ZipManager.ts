@@ -21,8 +21,17 @@ module Garage {
 
                     function next() {
                         let filePath = path.resolve(srcRoot, files[index]);
-                        let fileData: NodeBuffer = fs.readFileSync(filePath);
-                        let fileBlob = new Blob([fileData]);
+                        let fileData: NodeBuffer;
+                        let fileBlob: Blob;
+                        try {
+                            fileData = fs.readFileSync(filePath);
+                            fileBlob = new Blob([fileData]);
+                        } catch (e) {
+                            console.error("failed to read a file: " + filePath);
+                            console.error(e);
+                            df.reject("failed to read a file: " + filePath);
+                            return;
+                        }
 
                         writer.add(files[index], new zip.BlobReader(fileBlob), () => {
                             index++;
@@ -32,7 +41,9 @@ module Garage {
                             } else {
                                 writer.close((blob) => {
                                     let saveTask = ZipManager.saveBlobToFile(blob, dstFile);
-                                    saveTask.done(() => { df.resolve() });
+                                    saveTask
+                                        .done(() => { df.resolve() })
+                                        .fail((err) => { df.reject(err) });
                                 });
                             }
                         });
@@ -58,8 +69,15 @@ module Garage {
 
                 let dir = path.dirname(dstFile);
                 if (!fs.existsSync(dir)) {
-                    console.log("mkdirs: " + dir);
-                    fs.mkdirsSync(dir);
+                    try {
+                        console.log("mkdirs: " + dir);
+                        fs.mkdirsSync(dir);
+                    } catch (e) {
+                        console.error("failed to mkdirs: " + dir);
+                        console.error(e);
+                        df.reject("failed to mkdirs: " + dir);
+                        return promise;
+                    }
                 }
 
                 let reader = new FileReader();
@@ -70,9 +88,15 @@ module Garage {
                         buf.writeUInt8(result[i], i);
                     }
 
-                    fs.writeFileSync(dstFile, buf);
-                    console.log("create file: " + dstFile);
-                    df.resolve();
+                    try {
+                        fs.writeFileSync(dstFile, buf);
+                        console.log("create file: " + dstFile);
+                        df.resolve();
+                    } catch (e) {
+                        console.error("failed to write: " + dstFile);
+                        console.error(e);
+                        df.reject("failed to write: " + dstFile);
+                    }
                 };
                 reader.readAsArrayBuffer(blob);
 
@@ -90,16 +114,33 @@ module Garage {
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
-                let fileData: NodeBuffer = fs.readFileSync(zipFile);
-                let fileBlob = new Blob([fileData]);
+                let fileData: NodeBuffer;
+                let fileBlob: Blob;
+                try {
+                    fileData = fs.readFileSync(zipFile);
+                    fileBlob = new Blob([fileData]);
+                } catch (e) {
+                    console.error("failed to read a zip file: " + zipFile);
+                    console.error(e);
+                    df.reject("failed to read a zip file: " + zipFile);
+                    return promise;
+                }
 
                 zip.createReader(new zip.BlobReader(fileBlob), (reader) => {
                     reader.getEntries((entries) => {
+                        if (entries.length <= 0) {
+                            df.resolve();
+                            return;
+                        }
+
                         for (let entry of entries) {
                             entry.getData(new zip.BlobWriter(""), (blob) => {
                                 if (!entry.directory) {
                                     let saveTask = ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename));
-                                    saveTask.done(() => { df.resolve() });
+                                    saveTask
+                                        .done(() => { df.resolve() })
+                                        .fail((err) => { df.reject(err) });
+                                    
                                 }
                             });
                         }

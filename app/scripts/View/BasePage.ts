@@ -600,7 +600,7 @@ module Garage {
              * @param remoteId{string} エクスポートするリモコンのID
              */
             protected exportRemote(remoteId: string) {
-                let files = huisFiles.getRemoteFiles(remoteId);
+                let files = [];//huisFiles.getRemoteFiles(remoteId);
                 if (!files ||
                     files.length <= 0) {
                     // TODO
@@ -614,6 +614,9 @@ module Garage {
                 electronDialog.showSaveFileDialog(
                     options,
                     (dstFile) => {
+                        if (!dstFile) {
+                            return;
+                        }
                         this.export(files, dstFile);
                     }
                 );
@@ -622,57 +625,17 @@ module Garage {
 
             protected importRemote(callback?: Function) {
                 //TODO インポート処理
-                //リモコン数の上限になっていないか判定
-
-                let FUNCTION_NAME = TAG_BASE + "importRemote : ";
-
-                let canCreateResult = huisFiles.canCreateNewRemote();
-
-                if (canCreateResult == 0) {
-
-
-                    this.closeAllPopups();
-
-                    let importManager = new Util.ImportManager();
-
-                    //インポートするファイルをダイアログから、取得。
-                    importManager.showSelectFileDialog(
-                        () => {
-                            //TODO:コールバックを定義
-                            if (callback) {
-                                callback();
-                            }
-                        }
-                    );
-
-                    importManager.exec(callback);
-
-                } else if (canCreateResult == -1) {
-                    this.showLimitRemoteNumDialog();
-                }
-
+                this.import();
             }
 
 
-            /*
-             * リモコン数の上限に達していて、新規追加できない場合のダイアログを表示
+
+            /**
+             * エクスポート処理（仮）★★★★
+             * @param files {string[]} エクスポート対象ファイルパス（HUISファイルルートからの相対パス）
+             * @param dstFile {string} 出力ファイル（フルパス）
              */
-            protected showLimitRemoteNumDialog() {
-                let FUNCTION_NAME = TAG_BASE + "showLimitRemoteNumDialog : ";
-
-                electronDialog.showMessageBox({
-                    type: "error",
-                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
-                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                    title: PRODUCT_NAME,
-                });
-
-            }
-
-
-
-            // 仮
-            private export(files: string[], dstFile) {
+            private export(files: string[], dstFile: string) {
                 console.log("export to " + dstFile);
                 let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -680,8 +643,29 @@ module Garage {
                 });
                 dialog.show();
 
-                let exportTask = ZipManager.compress(files, huisFiles.getHuisFilesRoot(), dstFile);
+                let exportTask = ZipManager.compress(files, HUIS_FILES_ROOT, dstFile);
                 exportTask.then(() => { dialog.close() });
+            }
+
+            /**
+             * 仮
+             */
+            private import() {
+                let options: Util.ElectronOpenFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                };
+                electronDialog.showOpenFileDialog(
+                    options,
+                    (files) => {
+                        if (!files ||
+                            files.length != 1) {
+                            return;
+                        }
+
+                        let importTask = ZipManager.decompress(files[0], path.join(GARAGE_FILES_ROOT, "import"));
+                    }
+                );
             }
         }
     }
