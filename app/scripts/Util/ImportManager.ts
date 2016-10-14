@@ -32,7 +32,7 @@ module Garage {
             exec(callback?: Function) {
                 let FUNCTION_NAME = TAG + "exec : ";
 
-                //インポーt先のダイアログを表示する。
+                //インポートするリモコンファイルを選択するダイアログを表示する。
                 let options: Util.ElectronOpenFileDialogOptions = {
                     title: PRODUCT_NAME,
                     filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
