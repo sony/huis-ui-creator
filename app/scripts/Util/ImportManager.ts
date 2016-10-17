@@ -98,10 +98,12 @@ module Garage {
 
                                 }, DURATION_DIALOG_CLOSE);
 
-                            }).fail((err: Error) => {
+                            }).fail((err: Error, errMsg: string) => {
+                                let message = (errMsg && errMsg.length != 0) ? errMsg : $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR");
+
                                 //失敗時、一時ファイルを削除する。
                                 this.deleteTmpFolder();
-                                this.showErrorDialog(err, FUNCTION_NAME);
+                                this.showErrorDialog(err, message, FUNCTION_NAME);
                                 dialog.close();
                             })
 
@@ -109,6 +111,12 @@ module Garage {
                     } );
             }
 
+            /**
+             * リモコンファイルエラー時のエラーメッセージを取得
+             */
+            static createRemoteFileErrorMessage(): string {
+                return $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_FAIL") + $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IMPORT_REMOTE_FILE_ERROR");
+            }
 
             /*
             * インポートにつかう一時ファイルを削除する。
@@ -160,8 +168,8 @@ module Garage {
                         
                         if (err) {
 
-                            this.showErrorDialog(err, FUNCTION_NAME);
-                            df.fail();
+                            this.showErrorDialog(err, $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"), FUNCTION_NAME);
+                            df.reject(err, $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"));
                         } else {
                             df.resolve();
                         }
@@ -178,13 +186,13 @@ module Garage {
              * err {Error} エラー内容
              * functionName {string} エラーが発生したfunction名
              */
-            private showErrorDialog(err: Error, functionName:string) {
+            private showErrorDialog(err: Error, errMsg: string, functionName: string) {
                 
 
                 console.error(functionName + err);
                 electronDialog.showMessageBox({
                     type: "error",
-                    message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
+                    message: errMsg,
                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                     title: PRODUCT_NAME,
                 });
@@ -227,7 +235,7 @@ module Garage {
              * @return キャッシュファイルがないときnullを変えす。
              */
             private copyCache(dirPath:string, newRemoteId: string, oldRemoteId:string) {
-                let FUNCITON_NAME = TAG + "readCache : ";
+                let FUNCITON_NAME = TAG + "copyCache : ";
 
                 if (newRemoteId == null) {
                     console.warn(FUNCITON_NAME + "newRemoteId is invalid");
@@ -242,6 +250,9 @@ module Garage {
                 try {
                     //インポート対象のキャッシュファイルを読み込み先
                     let cacheReadFilePath = path.join(dirPath, oldRemoteId, oldRemoteId + "_buttondeviceinfo.cache");
+                    if (!fs.existsSync(cacheReadFilePath)) {
+                        return null;
+                    }
 
                     //コピー先のファイルパスを作成
                     let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
@@ -333,7 +344,7 @@ module Garage {
 
                 if (!convertedFace.modules) {
                     console.error("modules not found. remoteId: " + decompressRemoteId);
-                    df.reject();
+                    df.reject("modules not found. remoteId: " + decompressRemoteId, ImportManager.createRemoteFileErrorMessage());
                     return promise;
                 }
                 //module内の情報を更新
@@ -379,16 +390,17 @@ module Garage {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 try{
                     syncTask.copyFilesSimply(src, dst, () => {
-                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true).done(() => {
-                            df.resolve();
-                        }).fail(() => {
-                            df.fail();
-                        });
+                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true)
+                            .then(() => {
+                                df.resolve();
+                            }).fail((err) => {
+                                df.reject(err);
+                            });
                        
                     });
                 } catch (err) {
                     console.error(FUNCTION_NAME + err);
-                    df.fail();
+                    df.reject(err, ImportManager.createRemoteFileErrorMessage());
                 }
                 
 
