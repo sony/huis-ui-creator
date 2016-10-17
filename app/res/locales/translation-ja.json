@@ -51,7 +51,7 @@
             "STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2": " に重なり合っているボタンがあります。",
             "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1": "Bluetooth機器が",
             "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2": "つ設定されているため編集を終了できません。\nカスタムリモコンで設定可能なBluetooth機器は1つのみです。\nボタンを編集して、設定しているBluetooth機器を１つ以下にしてください。",
-            "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2_EXPORT": "つ設定されているためeエクスポートできません。\nカスタムリモコンで設定可能なBluetooth機器は1つのみです。\nボタンを編集して、設定しているBluetooth機器を１つ以下にしてください。",
+            "STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2_EXPORT": "つ設定されているためエクスポートできません。\nカスタムリモコンで設定可能なBluetooth機器は1つのみです。\nボタンを編集して、設定しているBluetooth機器を１つ以下にしてください。",
             "STR_DIALOG_MESSAGE_ALERT_DISCONNECT": "HUIS REMOTE CONTROLLERとの接続が解除されました。\nアプリを終了します。",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_1": "リモコンを作成できません。\nHUIS REMOTE CONTROLLERに登録できるリモコンは",
             "STR_DIALOG_MESSAGE_ALERT_LIMIT_2": "個までです。\n不要なリモコンを削除してください。",
@@ -150,7 +150,7 @@
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート", 
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
-        "STR_OPTION_MENU_ABOUT": " のバージョン情報"
+        "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
     },
     "tooltip": {
         "STR_TOOLTIP_PALLET_ITEMS": "ダブルクリックで追加",
