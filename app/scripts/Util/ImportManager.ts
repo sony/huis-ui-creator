@@ -468,7 +468,7 @@ module Garage {
                 }
 
                 //Bluetoothを含むとき、メッセージを追加
-                if (this.hasAirconditioner) {
+                if (this.hasBluetooth) {
                     dialogMessage += $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_IMPORT_AFTER_BT");
                 }
 
