@@ -612,7 +612,9 @@ module Garage {
 
                 //リモコン数上限チェック
                 let canCreateResult = huisFiles.canCreateNewRemote();
-                if (canCreateResult == 0) {
+                if (canCreateResult == -1) {
+                    this.showErrorDialogRemoteNumLimit()
+                } else {
 
                     //インポート処理
                     let importManager = new Util.ImportManager();
@@ -621,8 +623,7 @@ module Garage {
                             callback();
                         }
                     });
-                } else if (canCreateResult == -1) {
-                    this.showErrorDialogRemoteNumLimit()
+                    
                 }
 
             }
