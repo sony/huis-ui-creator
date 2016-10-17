@@ -893,9 +893,12 @@ module Garage {
 						this.remoteList_.push({ remote_id: remoteId });
 					}
 
-					this.updateRemoteList();
-
-					df.resolve();
+                    try {
+                        this.updateRemoteList();
+                        df.resolve();
+                    } catch (e) {
+                        df.reject();
+                    }
                 });
 
                 if (cache != null){
