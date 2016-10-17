@@ -156,7 +156,6 @@ module Garage {
                     // 「このリモコンを削除」とセパレータを削除する
                     if (remoteId == undefined) {
                         $("li#command-delete-remote").remove();
-                        $("li.menu-item-separator").remove();
                     }
 
                     huisFiles.init(HUIS_FILES_ROOT);
