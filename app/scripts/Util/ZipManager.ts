@@ -124,7 +124,7 @@ module Garage {
                 } catch (e) {
                     console.error("failed to read a zip file: " + zipFile);
                     console.error(e);
-                    df.reject("failed to read a zip file: " + zipFile);
+                    df.reject(e, ImportManager.createRemoteFileErrorMessage());
                     return promise;
                 }
 
@@ -151,7 +151,7 @@ module Garage {
                                 df.resolve();
                             }).fail((err) => {
                                 console.log("failed to decompress: " + err);
-                                df.reject();
+                                df.reject(err, ImportManager.createRemoteFileErrorMessage());
                             });
                     });
                 });

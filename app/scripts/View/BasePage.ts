@@ -608,16 +608,39 @@ module Garage {
 
 
             protected importRemote(callback?: Function) {
-                let importManager = new Util.ImportManager();
-                importManager.exec(() => {
-                    if (callback) {
-                        callback();
-                    }
-                });
+                let FUNCTION_NAME = TAG_BASE + "importRemote : ";
+
+                //リモコン数上限チェック
+                let canCreateResult = huisFiles.canCreateNewRemote();
+                if (canCreateResult == -1) {
+                    this.showErrorDialogRemoteNumLimit()
+                } else {
+
+                    //インポート処理
+                    let importManager = new Util.ImportManager();
+                    importManager.exec(() => {
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                    
+                }
 
             }
 
+            /*
+             * リモコン数が上限だというエラーダイアログを表示する。
+             */
+            protected showErrorDialogRemoteNumLimit() {
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
 
+            }
+           
 
         }
     }

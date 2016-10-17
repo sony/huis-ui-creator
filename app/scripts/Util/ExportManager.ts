@@ -282,11 +282,14 @@ module Garage {
             * @return キャッシュファイルがないときnullを変えす。
             */
             private copyCache(filePath : string) {
-                let FUNCITON_NAME = TAG + "readCache : ";
+                let FUNCITON_NAME = TAG + "copyCache : ";
 
                 try {
                     //エクスポート対象のキャッシュファイルを読み込み先
                     let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.targetRemoteId, this.targetRemoteId + "_buttondeviceinfo.cache");
+                    if (!fs.existsSync(cacheReadFilePath)) {
+                        return null;
+                    }
 
                     //コピー先に書き出す作成
                     let outputDirectoryPath: string = filePath;
