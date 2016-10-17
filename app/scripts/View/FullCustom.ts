@@ -269,6 +269,12 @@ module Garage {
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
 
+                //errorハンドリング
+                let errorOccur: boolean = this._isErrorOccurBeforeSave(true);
+                if (errorOccur) {
+                    return;
+                }
+
                 this.exportRemote(remoteId, faceName, gmodules);
             }
 
@@ -2637,7 +2643,7 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
-				$("#button-edit-done").prop("disabled", true); // 二度押し対策
+				
 
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
@@ -2645,37 +2651,15 @@ module Garage {
 				// 現在のターゲットを外す
 				this._loseTarget();
 
-				var options: Util.ElectronMessageBoxOptions = {
-				
-				};
-
-				let gmodules = this.faceRenderer_canvas_.getModules();
-				let remoteId = this.faceRenderer_canvas_.getRemoteId();
-				let faceName: string = $("#input-face-name").val();
-                if (!faceName) {
-                    let response = this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME"));
-					if (response === 0) {
-						//テキストフィールドにフォーカス
-						var $remoteName: JQuery = $("#input-face-name");
-						this.setFocusAndMoveCursorToEnd($remoteName);
-                    }
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
-					return;
-				}
-				let overlapButtonError = this._overlapButtonsExist();
-                if (overlapButtonError) {
-                    this._showSaveErrorDialog($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP") + overlapButtonError);
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
-					return;
-                }
-                // Bluetoothデバイスが複数設定されている場合はエラー
-                let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist();
-                if (multipleBluetoothDevError) {
-                    this._showSaveErrorDialog(multipleBluetoothDevError);
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                //エラーハンドリング
+                let errorOccur: boolean = this._isErrorOccurBeforeSave();
+                if (errorOccur) {
                     return;
                 }
 
+                let gmodules = this.faceRenderer_canvas_.getModules();
+                let remoteId = this.faceRenderer_canvas_.getRemoteId();
+                let faceName: string = $("#input-face-name").val();
 				huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
 					.always(() => {
 						garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
@@ -2720,6 +2704,65 @@ module Garage {
                 return result;
             }
 
+
+
+            /*
+             * エクスポート・編集終了時の警告ダイアログを表示などのエラー処理をする。
+             * @param isForExport {boolean} エクスポート時に使う場合、true, なにも入力がない場合、false
+             * @return {boolean} エラーが発生しているか否か エラーが発生している場合 true,それ以外はfalse
+             */
+            private _isErrorOccurBeforeSave(isForExport :boolean= false) :boolean{
+
+                var options: Util.ElectronMessageBoxOptions = {
+
+                };
+
+                let faceName: string = $("#input-face-name").val();
+
+                $("#button-edit-done").prop("disabled", true); // 二度押し対策
+
+
+                //名前がない場合のエラー
+                if (!faceName) {
+                    let errorMessage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME");
+                    if (isForExport) {
+                        errorMessage  = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME_EXPORT");
+                    }
+
+                    let response = this._showSaveErrorDialog(errorMessage);
+                    if (response === 0) {
+                        //テキストフィールドにフォーカス
+                        var $remoteName: JQuery = $("#input-face-name");
+                        this.setFocusAndMoveCursorToEnd($remoteName);
+                    }
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    return true;
+                }
+
+
+                //ボタン重なり時のエラー
+                let overlapButtonError = this._overlapButtonsExist();
+                if (overlapButtonError) {
+                    let errorMessage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP");
+                    if (isForExport) {
+                        errorMessage = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP_EXPORT");
+                    }
+                    this._showSaveErrorDialog(errorMessage + overlapButtonError);
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    return true;
+                }
+
+
+                // Bluetoothデバイスが複数設定されている場合はエラー
+                let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist(isForExport);
+                if (multipleBluetoothDevError) {
+                    this._showSaveErrorDialog(multipleBluetoothDevError);
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    return true;
+                }
+
+            }
+        
 
 			/**
 			 * 現在のターゲットとなるモデルに対して、データをセットする。
@@ -4214,16 +4257,21 @@ module Garage {
             /**
              * 複数のBluetoothデバイスが使用されていないかをチェックし、
              * 使用されている場合はエラー文言を、そうでない場合は空文字を返す。
-             *
+             * @param isForExport{boolean} : エクスポート時に使うダイアログの場合true
              * @return {string} エラー文言。１つ以下のBluetoothデバイスしか存在しない場合は空文字が返る。
              */ 
-            private _checkMultipleBluetoothDevicesExist(): string {
+            private _checkMultipleBluetoothDevicesExist(isForExport: boolean = false): string {
                 let bluetoothDevices: IBluetoothDevice[] = this._getBluetoothDevicesInAllButtons();
+
+                let errorMassage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
+                if (isForExport) {
+                    errorMassage = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2_EXPORT");
+                }
 
                 if (bluetoothDevices.length <= 1) {
                     return "";
                 } else {
-                    return $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
+                    return errorMassage;
                 }
             }
 
