@@ -2644,7 +2644,7 @@ module Garage {
 			 */
 			private onEditDoneButtonClicked(event: Event) {
 				
-
+                $("#button-edit-done").prop("disabled", true); // 二度押し対策
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
 
@@ -2654,6 +2654,7 @@ module Garage {
                 //エラーハンドリング
                 let errorOccur: boolean = this._isErrorOccurBeforeSave();
                 if (errorOccur) {
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                     return;
                 }
 
@@ -2719,7 +2720,7 @@ module Garage {
 
                 let faceName: string = $("#input-face-name").val();
 
-                $("#button-edit-done").prop("disabled", true); // 二度押し対策
+                
 
 
                 //名前がない場合のエラー
@@ -2735,7 +2736,6 @@ module Garage {
                         var $remoteName: JQuery = $("#input-face-name");
                         this.setFocusAndMoveCursorToEnd($remoteName);
                     }
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                     return true;
                 }
 
@@ -2748,7 +2748,6 @@ module Garage {
                         errorMessage = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP_EXPORT");
                     }
                     this._showSaveErrorDialog(errorMessage + overlapButtonError);
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                     return true;
                 }
 
@@ -2757,7 +2756,6 @@ module Garage {
                 let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist(isForExport);
                 if (multipleBluetoothDevError) {
                     this._showSaveErrorDialog(multipleBluetoothDevError);
-                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
                     return true;
                 }
 
