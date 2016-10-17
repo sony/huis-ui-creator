@@ -253,9 +253,6 @@ module Garage {
 		while (!HUIS_ROOT_PATH) {
             HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
 
-            //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-            RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
-
             if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
                 let dirs = null;
                 while (dirs == null) {
@@ -278,6 +275,10 @@ module Garage {
                     }
                 }
                 isHUISConnected = true; // HUISが接続されている
+
+                //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
+                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+
                 callback(); // 次の処理へ
 
 			} else {
