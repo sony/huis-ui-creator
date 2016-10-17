@@ -54,7 +54,6 @@ module Garage {
 
                         this.deleteTmpFolerAsync()
                             .then(() => {
-                                console.log("★３");
                                 //リモコンファイルを展開する。
                                 return ZipManager.decompress(files[0], this.filePathDecompressionFile)
 
