@@ -107,6 +107,15 @@ module Garage {
 				return true;
 			}
 
+
+            /*
+             * watingResizeImages_を初期化する。
+             */
+            initWatingResizeImages() {
+                let FUNCTION_NAME = TAGS.HuisFiles + "initWatingResizeImages : ";
+                this.watingResizeImages_ = [];
+            }
+
 			/**
 			 * 指定した remoteId とひも付けられた face を取得する。
 			 * このメソッドを呼ぶ前に、init() を呼び出す必要がある。
