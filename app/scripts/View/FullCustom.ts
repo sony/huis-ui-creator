@@ -119,7 +119,12 @@ module Garage {
 					this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
 
 					this._pageLayout();
-					this._listupFaces();
+                    this._listupFaces();
+
+                    //書き出し待ち の画像リストを初期化する。
+                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
+                    huisFiles.initWatingResizeImages();
+
 					var remoteId = this._getUrlQueryParameter("remoteId");
                     this._renderCanvas(remoteId);
 
@@ -158,7 +163,7 @@ module Garage {
                         $("li#command-delete-remote").remove();
                     }
 
-                    huisFiles.init(HUIS_FILES_ROOT);
+                   
 
 					//html上の文言をローカライズ
 					$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
