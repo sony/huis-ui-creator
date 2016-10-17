@@ -150,7 +150,7 @@
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート", 
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
-        "STR_OPTION_MENU_ABOUT": " のバージョン情報"
+        "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
     },
     "tooltip": {
         "STR_TOOLTIP_PALLET_ITEMS": "ダブルクリックで追加",
