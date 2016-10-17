@@ -34,7 +34,7 @@ module Garage {
                 this.major = major;
 
                 //minorを代入
-                if (JQUtils.isNaN(major) || minor == null) {
+                if (JQUtils.isNaN(minor) || minor == null) {
                     console.warn(FUNCTION_NAME + "minor is invalid");
                     return;
                 }

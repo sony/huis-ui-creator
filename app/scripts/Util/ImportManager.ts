@@ -376,10 +376,12 @@ module Garage {
 
                 if (face == null) {
                     console.warn(FUNCTION_NAME + "face is invalid");
+                    return;
                 }
 
                 if (category == null) {
                     console.warn(FUNCTION_NAME + "category is invalid");
+                    return;
                 }
 
                 //モジュールがひとつもないとき含んでいないとみなす。
