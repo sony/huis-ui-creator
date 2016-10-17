@@ -30,6 +30,7 @@ module Garage {
              * ファイル選択およびプログレスダイアログを表示し、実際のエクスポート処理を呼び出す
              */
              exec() {
+                 let FUNCTION_NAME = TAG + "exec : ";
                  let options: Util.ElectronSaveFileDialogOptions = {
                      title: PRODUCT_NAME,
                      filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
@@ -47,9 +48,9 @@ module Garage {
                              title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
                          });
                          dialog.show();
-                         console.time("export");
+                         //console.time("export");
                          this.export(dstFile).then(() => {
-                             console.timeEnd("export");
+                             //console.timeEnd("export");
 
                              //完了を示すダイアログにする。
                              var $dialog = $(".spinner-dialog");
@@ -63,10 +64,33 @@ module Garage {
                                  dialog.close();
 
                              }, DURATION_DIALOG_CLOSE);
+                         }).fail((err) => {
+                             // 失敗
+                             this.showErrorDialog(err, FUNCTION_NAME);
+                             dialog.close();
                          });
                      }
                  );
              }
+
+             /**
+              * 失敗時のダイアログを表示する。
+              * err {Error} エラー内容
+              * functionName {string} エラーが発生したfunction名
+              */
+             private showErrorDialog(err: Error, functionName: string) {
+
+                 console.error(functionName + err);
+                 electronDialog.showMessageBox({
+                     type: "error",
+                     message: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL"),
+                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                     title: PRODUCT_NAME,
+                 });
+
+             }
+
+
 
             /**
              * エクスポート処理
@@ -129,19 +153,20 @@ module Garage {
                      fs.mkdirSync(dst);
                  }
 
-                 //キャッシュファイルをコピー
-                 this.copyCache(targetRemoteIdFolderPath);
-
-
                  try {
+                     //キャッシュファイルをコピー
+                     this.copyCache(targetRemoteIdFolderPath);
+
                      //画像をコピー
                      let syncTask = new Util.HuisDev.FileSyncTask();
                      syncTask.copyFilesSimply(src, dst, () => {
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile)
                              .done(() => {
+                                 console.log("succeeded to updateFace: " + this.targetRemoteId + ", " + faceName);
                                  df.resolve();
                              }).fail(() => {
+                                 console.log("failed to updateFace: " + this.targetRemoteId + ", " + faceName);
                                  df.reject();
                              });
 

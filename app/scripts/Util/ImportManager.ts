@@ -53,7 +53,8 @@ module Garage {
 
                        
                         //リモコンファイルを展開する。
-                        ZipManager.decompress(files[0], this.filePathDecompressionFile).done(() => {
+                        ZipManager.decompress(files[0], this.filePathDecompressionFile)
+                            .then(() => {
                             
                             
 
@@ -304,6 +305,11 @@ module Garage {
                 //face名を変更
                 convertedFace.remoteId = newRemoteId;
 
+                if (!convertedFace.modules) {
+                    console.error("modules not found. remoteId: " + decompressRemoteId);
+                    df.reject();
+                    return promise;
+                }
                 //module内の情報を更新
                 for (let i = 0; i < convertedFace.modules.length; i++) {
 

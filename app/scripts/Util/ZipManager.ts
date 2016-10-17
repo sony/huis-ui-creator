@@ -85,18 +85,18 @@ module Garage {
 
                 let reader = new FileReader();
                 reader.onload = function () {
-                    let result = new Uint8Array(reader.result);
-                    let buf = new Buffer(result.length);
-                    for (let i = 0; i < result.length; i++) {
-                        buf.writeUInt8(result[i], i);
-                    }
-
                     try {
+                        let result = new Uint8Array(reader.result);
+                        let buf = new Buffer(result.length);
+                        for (let i = 0; i < result.length; i++) {
+                            buf.writeUInt8(result[i], i);
+                        }
+
                         fs.writeFileSync(dstFile, buf);
                         console.log("create file: " + dstFile);
                         df.resolve();
                     } catch (e) {
-                        console.error("failed to write: " + dstFile);
+                        console.error("failed to create file: " + dstFile);
                         df.reject();
                     }
                 };
@@ -135,6 +135,7 @@ module Garage {
                             df.resolve();
                             return;
                         }
+                        console.log("find files: " + entries.length);
 
                         let saveTasks = new Array <JQueryPromise<void>>(entries.length);
 
@@ -145,11 +146,11 @@ module Garage {
                         }
 
                         $.when.apply($, saveTasks)
-                            .done(() => {
+                            .then(() => {
                                 console.log("finish decompress");
                                 df.resolve();
-                            }).fail(() => {
-                                console.log("failed to decompress");
+                            }).fail((err) => {
+                                console.log("failed to decompress: " + err);
                                 df.reject();
                             });
                     });
@@ -168,18 +169,21 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 if (entry.directory) {
-                    console.log("skop decompress: " + entry.filename);
+                    console.log("skip decompress: " + entry.filename);
+                    let df = $.Deferred<void>();
+                    let promise = CDP.makePromise(df);
+
                     df.resolve();
                     return promise;
                 }
 
                 entry.getData(new zip.BlobWriter(""), (blob) => {
-
                     ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename))
                         .done(() => {
                             console.log("succeeded to decompress: " + entry.filename);
                             df.resolve();
                         }).fail(() => {
+                            console.error("failed to decompress: " + entry.filename);
                             df.reject();
                         });
                 });

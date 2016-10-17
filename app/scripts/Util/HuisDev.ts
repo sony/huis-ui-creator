@@ -160,7 +160,9 @@
 				getRelPathesAsync(dir1).then((pathes) => {
 					dir1Files = pathes;
 					return getRelPathesAsync(dir2);
-				}).then((pathes) => {
+                }, () => {
+                    df.reject();
+                }).then((pathes) => {
 					dir2Files = pathes;
 
 					let dir1ExtraFiles = [];  // dir1にだけ存在するファイル群
@@ -542,7 +544,9 @@
 						setTimeout(() => {
 							diffAsync(dir1, dir2).then((diffInfo) => {
 								df.resolve(diffInfo);
-							});
+                            }, () => {
+                                df.reject();
+                            });
 						});
 					} catch (err) {
 						df.reject(err);
