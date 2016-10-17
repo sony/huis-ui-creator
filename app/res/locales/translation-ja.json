@@ -71,6 +71,8 @@
             "STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING": "インポート中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_IMPORT_DONE": "インポートしました。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER": "インポートされたリモコンのボタンは、エクスポートされた際の機器が登録されています。\n実際にお使いになる前に、ボタンの信号設定を変更してください。",
+            "STR_GARAGE_DIALOG_MESSAGE_IMPORT_FAIL": "インポートに失敗しました。",
+            "STR_GARAGE_DIALOG_MESSAGE_IMPORT_REMOTE_FILE_ERROR": "\nリモコンファイルが壊れている可能性があります。\nファイルを確認して、もう一度お試しください。",
             "STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING": "エクスポート中です。",
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE": "エクスポートしました。",
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL": "エクスポートに失敗しました。",
