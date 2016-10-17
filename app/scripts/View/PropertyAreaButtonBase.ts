@@ -939,6 +939,26 @@ module Garage {
                 return null;
             }
 
+
+            /*
+            * ボタンに、入力したデバイスタイプの信号がはいっているかチェックする。
+            */
+            protected isIncludeSpecificDeviceType(button : Model.ButtonItem, category : string): boolean {
+                for (let state of button.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (!action.deviceInfo || !action.deviceInfo.code_db || !action.deviceInfo.code_db.device_type) continue;
+
+                        if (action.deviceInfo.code_db.device_type == category) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
         }
 	}
 }

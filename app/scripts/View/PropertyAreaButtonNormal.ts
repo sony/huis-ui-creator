@@ -257,14 +257,19 @@ module Garage {
             renderViewState(stateId : number): JQuery {
                 let FUNCTION_NAME = TAG + "renderViewState";
 
-                this.updateAssiendInputActionsFromModel(stateId);
-
                 if (stateId == null) {
                     console.warn(FUNCTION_NAME + "stateId is null");
                     return;
                 }
 
-                return this.renderSignals(stateId);
+
+                if (this.isIncludeSpecificDeviceType(this.model, DEVICE_TYPE_AC)) {
+                    //エアコンの場合、プルダウンを描画しない
+                    return this.$el;
+                } else {
+                    this.updateAssiendInputActionsFromModel(stateId);
+                    return this.renderSignals(stateId);
+                }
                 
             }
 
