@@ -37,7 +37,7 @@ module Garage {
 			private remoteList_: IRemoteId[];
 			private remoteInfos_: IRemoteInfo[];
 			private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
-			private watingResizeImages_: IWaitingRisizeImage[];
+			private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
 
 			constructor() {
 				if (!fs) {
@@ -62,6 +62,7 @@ module Garage {
 			init(huisFilesRoot: string): boolean {
 				this.remoteList_ = [];
 				this.remoteInfos_ = [];
+                this.watingResizeImages_ = [];
 
 				huisFilesRoot = path.resolve(huisFilesRoot);
 				if (!fs.existsSync(huisFilesRoot)) {
