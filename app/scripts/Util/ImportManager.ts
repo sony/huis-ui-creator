@@ -201,7 +201,7 @@ module Garage {
              * @return キャッシュファイルがないときnullを変えす。
              */
             private copyCache(dirPath:string, newRemoteId: string, oldRemoteId:string) {
-                let FUNCITON_NAME = TAG + "readCache : ";
+                let FUNCITON_NAME = TAG + "copyCache : ";
 
                 if (newRemoteId == null) {
                     console.warn(FUNCITON_NAME + "newRemoteId is invalid");
@@ -216,6 +216,9 @@ module Garage {
                 try {
                     //インポート対象のキャッシュファイルを読み込み先
                     let cacheReadFilePath = path.join(dirPath, oldRemoteId, oldRemoteId + "_buttondeviceinfo.cache");
+                    if (!fs.existsSync(cacheReadFilePath)) {
+                        return null;
+                    }
 
                     //コピー先のファイルパスを作成
                     let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
