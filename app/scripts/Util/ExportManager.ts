@@ -100,16 +100,14 @@ module Garage {
                  let df = $.Deferred<void>();
                  let promise = CDP.makePromise(df);
 
-                 this.outputTemporaryFolder(this.targetFaceName, this.targetModules)
-                     .done(() => {
-                         this.compress(dstFile)
-                             .done(() => {
-                                 this.deleteTmpFolder();
-                                 df.resolve();
-                             }).fail(() => {
-                                 this.deleteTmpFolder();
-                                 df.reject();
-                             })
+                 this.deleteTmpFolerAsync()
+                     .then(() => {
+                         return this.outputTemporaryFolder(this.targetFaceName, this.targetModules);
+                     }).then(() => {
+                         return this.compress(dstFile);
+                     }).then(() => {
+                         this.deleteTmpFolder();
+                         df.resolve();
                      }).fail(() => {
                          this.deleteTmpFolder();
                          df.reject();
@@ -252,7 +250,31 @@ module Garage {
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.deleteDirectory(this.filePathBeforeCompressionFile);
-            }
+             }
+
+
+            /**
+             * エクスポートに使う一時ファイルを非同期に削除する。
+             */
+             private deleteTmpFolerAsync(): CDP.IPromise<void> {
+                 let df = $.Deferred<void>();
+                 let promise = CDP.makePromise(df);
+
+                 let syncTask = new Util.HuisDev.FileSyncTask();
+                 if (fs.existsSync(this.filePathBeforeCompressionFile)) {
+                     syncTask.deleteDirectory(this.filePathBeforeCompressionFile, (err) => {
+                         if (err) {
+                             df.reject();
+                         } else {
+                             df.resolve();
+                         }
+                     });
+                 } else {
+                     df.resolve();
+                 }
+
+                 return promise;
+             }
 
             /*
             * エクスポート対象のキャッシュを一時フォルダにコピーする。

@@ -44,29 +44,31 @@ module Garage {
                             files.length != 1) {
                             return;
                         }
-                        
+
                         let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                             src: CDP.Framework.toUrl("/templates/dialogs.html"),
                             title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_IMPORTING")
                         });
                         dialog.show();
 
-                       
-                        //リモコンファイルを展開する。
-                        ZipManager.decompress(files[0], this.filePathDecompressionFile)
+
+                        this.deleteTmpFolerAsync()
                             .then(() => {
+                                //リモコンファイルを展開する。
+                                return ZipManager.decompress(files[0], this.filePathDecompressionFile)
 
-
-
+                            }).then(() => {
                                 //展開されたフォルダのファイルパス
                                 let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");;
 
                                 //展開されたリモコンのremoteIdを取得
                                 let decompressedRemoteId = this.getDecompressedRemoteId(dirPath);
                                 return this.convertByNewRemoteIdInfo(dirPath, decompressedRemoteId);
+
                             }).then(() => {
                                 //HUISと同期
                                 return this.syncToHuis();
+
                             }).then(() => {
 
                                 // 同期が完了したら、コールバックを呼び出し終了
@@ -95,6 +97,7 @@ module Garage {
 
 
                                 }, DURATION_DIALOG_CLOSE);
+
                             }).fail((err: Error, errMsg: string) => {
                                 let message = (errMsg && errMsg.length != 0) ? errMsg : $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR");
 
@@ -102,9 +105,9 @@ module Garage {
                                 this.deleteTmpFolder();
                                 this.showErrorDialog(err, message, FUNCTION_NAME);
                                 dialog.close();
-                            });
-                           
-                        
+                            })
+
+
                     } );
             }
 
@@ -116,7 +119,7 @@ module Garage {
             }
 
             /*
-            * エクスポートにつかう一時ファイルを削除する。
+            * インポートにつかう一時ファイルを削除する。
             */
             deleteTmpFolder() {
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
@@ -125,6 +128,29 @@ module Garage {
                     syncTask.deleteDirectory(this.filePathDecompressionFile);
 
                 }
+            }
+
+            /**
+             * インポートに使う一時ファイルを非同期に削除する。
+             */
+            private deleteTmpFolerAsync(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                if (fs.existsSync(this.filePathDecompressionFile)) {
+                    syncTask.deleteDirectory(this.filePathDecompressionFile, (err) => {
+                        if (err) {
+                            df.reject();
+                        } else {
+                            df.resolve();
+                        }
+                    });
+                } else {
+                    df.resolve();
+                }
+
+                return promise;
             }
 
 
@@ -160,13 +186,12 @@ module Garage {
              * err {Error} エラー内容
              * functionName {string} エラーが発生したfunction名
              */
-            private showErrorDialog(err: Error, errMsg: string, functionName:string) {
+            private showErrorDialog(err: Error, errMsg: string, functionName: string) {
                 
 
                 console.error(functionName + err);
                 electronDialog.showMessageBox({
                     type: "error",
-                    //message: $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"),
                     message: errMsg,
                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                     title: PRODUCT_NAME,
