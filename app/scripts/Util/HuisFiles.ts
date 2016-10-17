@@ -62,6 +62,7 @@ module Garage {
 			init(huisFilesRoot: string): boolean {
 				this.remoteList_ = [];
 				this.remoteInfos_ = [];
+                this.watingResizeImages_ = [];
 
 				huisFilesRoot = path.resolve(huisFilesRoot);
 				if (!fs.existsSync(huisFilesRoot)) {
@@ -1861,6 +1862,7 @@ module Garage {
 
 			/**
 			 * リサイズ待機リストの画像をリサイズする。
+             * @param remoteId? {string} 対象のremoteIdが入力されている場合,remoteIdが一致するパスの画像のみ書き出す。
 			 */
 			private _resizeImages(): IPromise<void> {
 				let df = $.Deferred<void>();
