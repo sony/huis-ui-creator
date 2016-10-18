@@ -3073,13 +3073,13 @@ module Garage {
 										props["resolved-path"] = "null";
 										if (image != null) {
                                             if (image[0] != null) {
-                                                //表示用なので、CSS
+                                                //resizeResolvedOriginalPathCSS,resolved-patCSSをいれるとupdateButtonOnCanvasでさらに変換されてしまう。
                                                 //originalPathを優先。ない場合は、resolved-pathを仕様。
-                                                let resizeOriginal = image[0].resizeResolvedOriginalPathCSS;
+                                                let resizeOriginal = image[0].resizeResolvedOriginalPath;
                                                 if (resizeOriginal != null) {
                                                     props["resizeResolvedOriginalPath"] = resizeOriginal;
                                                 } else {
-                                                    let resolvedPath = image[0].resolvedPathCSS;
+                                                    let resolvedPath = image[0].resolvedPath;
                                                     if (resolvedPath != null) {
                                                         props["resolved-path"] = resolvedPath;
                                                     }
