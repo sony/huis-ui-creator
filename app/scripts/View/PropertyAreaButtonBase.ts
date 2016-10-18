@@ -197,6 +197,22 @@ module Garage {
                         remoteId = huisFiles.getRemoteIdByCode(code);
                     }
 
+                    //codeで検索でわからないばあい、functionCodeHashで取得
+                    if (remoteId == null &&
+                        action.deviceInfo &&
+                        action.deviceInfo.functionCodeHash != null) {
+                        let functionCodeHash = action.deviceInfo.functionCodeHash;
+                        let checkCode: string = null;
+
+                        //functionCodeHashのうち、適当なcodeで検索
+                        for (let key in functionCodeHash) {
+                            checkCode = functionCodeHash[key];
+                            break;
+                        }
+                        remoteId = huisFiles.getRemoteIdByCode(checkCode);
+                    }
+                   
+
                     // codeで見つからない場合、code_dbで検索
                     if (remoteId == null &&
                         action.deviceInfo &&
