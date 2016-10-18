@@ -263,8 +263,18 @@ module Garage {
                 }
 
 
-                if (this.isIncludeSpecificDeviceType(this.model, DEVICE_TYPE_AC)) {
+                if (this.isIncludeSpecificDeviceType(this.model, DEVICE_TYPE_AC) ||
+                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_UP_VALUE) ||
+                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
+                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_LEFT_VALUE) ||
+                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_DOWN_VALUE)
+                ) {
+                    //スワイプ系のアクションを含むモジュールの場合、プルダウンを描画しない。
                     //エアコンの場合、プルダウンを描画しない
+
+                    //＋ボタンも表示しない
+                    this.$el.find(".add-btn-container").remove();
+
                     return this.$el;
                 } else {
                     this.updateAssiendInputActionsFromModel(stateId);
