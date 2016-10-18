@@ -3525,7 +3525,7 @@ module Garage {
 								break;
 
 							case "resized":
-								if (value) {
+								if (value && targetState.image) {
 									solveImage(targetState);
 									targetState.image[0].resized = true;
 								}
