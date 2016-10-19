@@ -37,11 +37,13 @@ module Garage {
                  };
                  electronDialog.showSaveFileDialog(
                      options,
-                     (dstFile) => {
-                         if (!dstFile ||
-                             dstFile.length == 0) {
+                     (file) => {
+                         if (!file ||
+                             file.length == 0) {
                              return;
                          }
+
+                         let dstFile = this.fixExportFileExtension(file);
 
                          let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                              src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -90,7 +92,23 @@ module Garage {
 
              }
 
+            /**
+             * エクスポートファイル名の拡張子がHUISリモコンファイルのものでない場合、
+             * HUISリモコンファイルの拡張子を付与したファイル名を返す。
+             * 元から正しい拡張子の場合はそのまま返す。
+             * @param fileName {string} エクスポートファイル名
+             * @return HUISリモコンファイルの拡張子付きファイル名
+             */
+             private fixExportFileExtension(filePath: string): string {
+                 let fileName = path.basename(filePath);
 
+                 if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length + 1 &&
+                     fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length) {
+                     return filePath;
+                 }
+
+                 return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE;
+             }
 
             /**
              * エクスポート処理
