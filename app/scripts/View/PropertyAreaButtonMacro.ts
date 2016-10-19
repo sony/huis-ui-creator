@@ -114,6 +114,9 @@ module Garage {
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+
+                        $nextAboveSignalContainer.i18n();
+                        $nextAboveSignalContainer.find('.custom-select').trigger('create');
                     }
 
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
@@ -172,10 +175,12 @@ module Garage {
                         
                         this.renderIntervalOf(0);
                         this.setIntervalPullDownOf(0, 0);
-
                         this.removeIntervalPullDown(targetOrder);
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
+
+                        $thisOrderSignalContainer.i18n();
+                        $thisOrderSignalContainer.find('.custom-select').trigger('create');
                     }
 
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
