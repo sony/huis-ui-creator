@@ -1368,7 +1368,7 @@ module Garage {
 			 */
 			private _resizeItem(position: IPosition, update?: boolean) {
 
-
+                this.$currentTarget_.removeClass("moving-item");
 				var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
