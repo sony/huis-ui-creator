@@ -27,10 +27,10 @@
         "url": "http://huis.jp/",
         "update": {
             "rc": {
-                "url": "http://huis.jp/support/update/?prd=rmt-controller"
+                "url": "http://huis.jp/support/update/"
             },
             "app": { 
-                "url": "http://huis.jp/support/update/?prd=ui-creator"
+                "url": "http://huis.jp/support/update/"
             }
         }
     },"dialog": {
