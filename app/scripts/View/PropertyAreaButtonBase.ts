@@ -963,8 +963,25 @@ module Garage {
 
             /*
             * ボタンに、入力したデバイスタイプの信号がはいっているかチェックする。
+            * @param button{Model.ButtonItem} 判定対象のボタン
+            * @param category{string} 特定したいデバイスタイプ
+            * @return {boolean} ボタンの信号に入力したデバイスタイプがひとつでもある場合 true, ひとつもない場合false, エラーが発生した場合undefined
             */
-            protected isIncludeSpecificDeviceType(button : Model.ButtonItem, category : string): boolean {
+            protected isIncludeSpecificDeviceType(button: Model.ButtonItem, category: string): boolean {
+                let FUNCTION_NAME = TAG + "isIncludeSpecificDeviceType : ";
+
+                if (!this.isValidValue(button)) {
+                    console.warn(FUNCTION_NAME + "button is invalid");
+                    return;
+                }
+
+                if (!this.isValidValue(category)) {
+                    console.warn(FUNCTION_NAME + "category is invalid");
+                    return;
+                }
+
+
+
                 for (let state of button.state) {
                     if (!state.action) continue;
 
@@ -979,6 +996,46 @@ module Garage {
 
                 return false;
             }
+
+
+
+            /*
+          * ボタンのactionに、特定のアクションが含まれるか判定する
+          * @param inputButton{Model.ButtonItem} 判定対象のボタン
+          * @param actiionType{string} buttonに含まれているか確かめたいアクションタイプ
+          * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+          */
+            protected isIncludeSpecificActionType(button: Model.ButtonItem, actionType
+                : string): boolean {
+                let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
+
+                if (!this.isValidValue(button)) {
+                    console.warn(FUNCTION_NAME + "button is invalid");
+                    return;
+                }
+
+                if (!this.isValidValue(actionType)) {
+                    console.warn(FUNCTION_NAME + "actionType is invalid");
+                    return;
+                }
+
+                for (let state of button.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (!action.input) continue;
+
+                        if (action.input == actionType) {
+                            return true;
+                        }
+                    }
+                }
+
+
+                return false;
+
+            }
+
 
         }
 	}

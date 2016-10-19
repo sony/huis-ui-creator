@@ -112,6 +112,11 @@ module Garage {
         ACTION_INPUT_FLICK_RIGHT_VALUE = "flick_right";
         ACTION_INPUT_FLICK_LEFT_VALUE = "flick_left";
         ACTION_INPUT_FLICK_DOWN_VALUE = "flick_down";
+        ACTION_INPUT_SWIPE_UP_VALUE = "swipe_up";
+        ACTION_INPUT_SWIPE_RIGHT_VALUE = "swipe_right";
+        ACTION_INPUT_SWIPE_LEFT_VALUE = "swipe_left";
+        ACTION_INPUT_SWIPE_DOWN_VALUE = "swipe_down";
+
         ACTION_INPUTS = [];
         ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value : ACTION_INPUT_TAP_VALUE});
         ACTION_INPUTS.push({ key: ACTION_INPUT_LONG_PRESS_KEY, value: ACTION_INPUT_LONG_PRESS_VALUE });
