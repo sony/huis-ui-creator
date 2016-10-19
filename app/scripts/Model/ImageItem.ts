@@ -63,21 +63,7 @@ module Garage {
 					// path が指定されていない場合は、resolvedPath も指定しない
 					this.resolvedPath = "";
 
-				} else if (this.remoteId_ === "common") {
-					//this.resolvedPath = path.resolve(path.join("app/res/faces/common/images", val)).replace(/\\/g, "/");
-					// common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る
-					console.log(CDP.Framework.toUrl("/res/faces/common/images/" + val));
-					//let resolvedPath = (CDP.Framework.toUrl("/res/faces/common/images/" + val)).replace(/\\/g, "/");
-					// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-					// パスデリミタが\なら/に変換する
-					let resolvedPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
-
-					//if (resolvedPath.indexOf("file:///") === 0) {
-					//	resolvedPath = resolvedPath.split("file:///")[1];
-					//}
-					this.resolvedPath = resolvedPath;
-
-				} else if (this.resolvedPathDirectory_) {
+                } else if (this.resolvedPathDirectory_) {
 					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
 				}
 			}

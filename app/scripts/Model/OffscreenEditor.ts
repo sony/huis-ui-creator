@@ -111,13 +111,19 @@ module Garage {
 
 							// imageType と指定したパスの拡張子が合わない場合は補正する。
 							dstPath = OffscreenEditor.getEditResultPath(dstPath, params.imageType);
-							encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
-							fs.outputFileSync(dstPath, buffer);
-							console.log(TAG + "after editImage dst: " + dstPath);
-							df.resolve({
-								dataUrl: imageDataUrl,
-								path: dstPath
-							});
+                            encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
+
+                            try {
+                                fs.outputFileSync(dstPath, buffer);
+                                console.log(TAG + "after editImage dst: " + dstPath);
+                                df.resolve({
+                                    dataUrl: imageDataUrl,
+                                    path: dstPath
+                                });
+                            } catch (e) {
+                                console.error(e);
+                                df.reject(e);
+                            }
 
 						} else { // 編集した画像の dataUrl を返す
 							df.resolve(imageDataUrl);
