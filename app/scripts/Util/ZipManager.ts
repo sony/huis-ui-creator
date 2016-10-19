@@ -137,7 +137,7 @@ module Garage {
                         }
                         console.log("find files: " + entries.length);
 
-                        let saveTasks = new Array <JQueryPromise<void>>(entries.length);
+                        let saveTasks = new Array<JQueryPromise<void>>(entries.length);
 
                         for (let i = 0; i < entries.length; i++) {
                             let entry = entries[i];
@@ -154,6 +154,11 @@ module Garage {
                                 df.reject(err, ImportManager.createRemoteFileErrorMessage());
                             });
                     });
+
+                }, (error) => {
+                    // hsrcファイル読み込み失敗
+                    console.error("failed to read the hsrc file" + error);
+                    df.reject(error, ImportManager.createRemoteFileErrorMessage());
                 });
 
                 return promise;
