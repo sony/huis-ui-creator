@@ -311,6 +311,8 @@ module Garage {
 
                     this.updateModel();
                     this.controlPlusButtonEnable();
+                    $signalContainer.i18n();
+                    $signalContainer.find('.custom-select').trigger('create');
 
                     //削除とソートボタンをちら見する。
                     this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
@@ -600,9 +602,17 @@ module Garage {
                     }
                 }
                 
-                this.renderSpecialElementDependingSignalNum();
+               
 
                 this.controlPlusButtonEnable();
+
+                //一度、ここで、jQueryMoblieのレイアウトをあてる。
+                $signalContainer.i18n();
+                $signalContainer.find('.custom-select').trigger('create');
+
+                //レイアウト崩れ防止のため、trigger('create')の後に呼ぶ 
+                this.renderSpecialElementDependingSignalNum();
+
             }
 
 
@@ -755,9 +765,7 @@ module Garage {
                 let functionName = this.getFunctionNameFromAction(action);
                 this.renderFunctionsOf(order, this.defaultState.id, functionName);
 
-                //言語対応
-                $signalContainer.i18n();
-                $signalContainer.trigger('create');
+              
             }
 
 
@@ -842,9 +850,6 @@ module Garage {
                     inputInterval = 0;
                 }
                 this.setIntervalPullDownOf(order, inputInterval);
-
-                $targetSignalContainer.i18n();
-                $targetSignalContainer.trigger('create');
             }
 
 

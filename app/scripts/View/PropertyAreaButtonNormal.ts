@@ -172,9 +172,11 @@ module Garage {
                         }
                     }
 
-                    $('.custom-select').trigger('create');
+                  
                     this.updateModel(this.DEFAULT_STATE_ID);
                     this.controlPlusButtonEnable();
+                    this.$el.i18n();
+                    $('.custom-select').trigger('create');
 
                     //削除をちら見する。
                     this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
@@ -525,9 +527,15 @@ module Garage {
                     this.renderFunctionsOf(i, stateId, functionName);
                 }
 
-                this.renderSomeElementIfOneSignalOnlyExist();
+                
                 this.controlPlusButtonEnable();
 
+                
+
+                this.$el.i18n();
+                this.$el.find('.custom-select').trigger('create');
+
+                //レイアウト崩れ防止のため、trigger('create');の後に呼ぶ。
                 this.renderSpecialElementDependingSignalNum();
 
                 return this.$el;
