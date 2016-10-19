@@ -251,7 +251,9 @@ body {
                 font-family:$FONT_FAMILY_PULL_DOWM_MENU;
                 font-size:$FONT_SIZE_PULL_DOWM_MENU;
                 span{
-                    
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
                     text-align:left;
                 }
                
