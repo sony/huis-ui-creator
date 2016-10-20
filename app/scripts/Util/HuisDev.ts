@@ -375,7 +375,7 @@
                                 .fail((err) => {
                                     df.reject(err);
                                 });
-                            df.resolve();
+
                             return CDP.makePromise(df);
                         }).then(() => {
                             if (callback) {
