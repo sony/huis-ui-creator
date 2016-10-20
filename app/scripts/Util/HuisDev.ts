@@ -163,35 +163,35 @@
 
 				let dir1Files: string[], dir2Files: string[];
 
-				getRelPathesAsync(dir1).then((pathes) => {
-					dir1Files = pathes;
-					return getRelPathesAsync(dir2);
+                getRelPathesAsync(dir1).then((pathes) => {
+                    dir1Files = pathes;
+                    return getRelPathesAsync(dir2);
                 }, () => {
                     df.reject();
                 }).then((pathes) => {
-					dir2Files = pathes;
+                    dir2Files = pathes;
 
-					let dir1ExtraFiles = [];  // dir1にだけ存在するファイル群
-					let dir2ExtraFiles = [];  // dir2にだけ存在するファイル群
-					let diffFiles = [];	 //	名称は同じだが異なるファイル群
-					let temp = [];
+                    let dir1ExtraFiles = [];  // dir1にだけ存在するファイル群
+                    let dir2ExtraFiles = [];  // dir2にだけ存在するファイル群
+                    let diffFiles = [];	 //	名称は同じだが異なるファイル群
+                    let temp = [];
 
-					// dir1にのみ含まれているファイルを算出
+                    // dir1にのみ含まれているファイルを算出
                     for (let i = 0, l = dir1Files.length; i < l; i++) {
                         if ($.inArray(dir1Files[i], dir2Files) === -1) {
-							dir1ExtraFiles.push(dir1Files[i]);
-						} else {
-							temp.push(dir1Files[i]);
-						}
-					}
-					// dir2にのみ含まれているファイルを算出
-					for (let i = 0, l = dir2Files.length; i < l; i++) {
+                            dir1ExtraFiles.push(dir1Files[i]);
+                        } else {
+                            temp.push(dir1Files[i]);
+                        }
+                    }
+                    // dir2にのみ含まれているファイルを算出
+                    for (let i = 0, l = dir2Files.length; i < l; i++) {
                         if ($.inArray(dir2Files[i], dir1Files) === -1) {
-							dir2ExtraFiles.push(dir2Files[i]);
-						}
-					}
+                            dir2ExtraFiles.push(dir2Files[i]);
+                        }
+                    }
 
-					// 名称は同じだが異なるファイル群を算出
+                    // 名称は同じだが異なるファイル群を算出
                     for (let i = 0, l = temp.length; i < l; i++) {
                         try {
                             var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
@@ -200,27 +200,29 @@
                             console.error(FUNCTION_NAME + err);
                             df.reject();
                         }
-						
-						if (!dir1Stat && !dir2Stat) {
-							continue; // TODO エラー処理が必要
-						}
-						// ファイル更新日時が±10秒までは同じファイルとして扱う
-						// 以下の点に注意
-						// 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
-						// 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
-						if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10*1000 ) ||
-							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
-							continue;
-						}
-						diffFiles.push(temp[i]);
-					}
-					let diffInfo: IDiffInfo = {
-						diff: diffFiles,
-						dir1Extra: dir1ExtraFiles,
-						dir2Extra: dir2ExtraFiles
-					};
-					df.resolve(diffInfo);
-				});
+
+                        if (!dir1Stat && !dir2Stat) {
+                            continue; // TODO エラー処理が必要
+                        }
+                        // ファイル更新日時が±10秒までは同じファイルとして扱う
+                        // 以下の点に注意
+                        // 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
+                        // 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
+                        if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10 * 1000) ||
+                            (dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
+                            continue;
+                        }
+                        diffFiles.push(temp[i]);
+                    }
+                    let diffInfo: IDiffInfo = {
+                        diff: diffFiles,
+                        dir1Extra: dir1ExtraFiles,
+                        dir2Extra: dir2ExtraFiles
+                    };
+                    df.resolve(diffInfo);
+                }, () => {
+                    df.reject();
+                });
 
 				return promise;
 			}
@@ -517,12 +519,12 @@
                                 if (fs.existsSync(filePath)) {
 									let fileStat = fs.lstatSync(filePath);
 									if (fileStat) {
-										if (fileStat.isDirectory()) {
+                                        if (fileStat.isDirectory()) {
+                                            console.log("rmdirSync: " + file);
 											fs.rmdirSync(filePath);
-											console.log("rmdirSync: " + file);
                                         } else {
+                                            console.log("unlinkSync: " + file);
 											fs.unlinkSync(filePath);
-											console.log("unlinkSync: " + file);
 										}
 									} else {
 										console.warn("fileStat is null: " + filePath);
