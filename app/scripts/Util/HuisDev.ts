@@ -106,7 +106,9 @@
 				return promise;
 			}
 
-			function diff(dir1: string, dir2: string): IDiffInfo {
+            function diff(dir1: string, dir2: string): IDiffInfo {
+                let FUNCTION_NAME = TAG + "diff : ";
+
 				var dir1Files, dir2Files;
 				try {
 					dir1Files = getRelPathes(dir1);	 //	相対パス
@@ -132,9 +134,11 @@
 						}
 					}
 					// 名称は同じだが異なるファイル群を算出
-					for (var i = 0; i < temp.length; i++) {
-						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
-						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                    for (var i = 0; i < temp.length; i++) {
+
+                        var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
+                        var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                      
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
@@ -145,12 +149,14 @@
 						diffFiles.push(temp[i]);
 					}
 					return { diff: diffFiles, dir1Extra: dir1ExtraFiles, dir2Extra: dir2ExtraFiles };
-				} catch (err) {
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
 					throw err;
 				}
 			}
 
             function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+                let FUNCTION_NAME = TAG + "diffAsync : ";
 
 				let df = $.Deferred<IDiffInfo>();
 				let promise = CDP.makePromise(df);
@@ -186,9 +192,15 @@
 					}
 
 					// 名称は同じだが異なるファイル群を算出
-					for (let i = 0, l = temp.length; i < l; i++) {
-						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
-						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                    for (let i = 0, l = temp.length; i < l; i++) {
+                        try {
+                            var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
+                            var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                        } catch (err) {
+                            console.error(FUNCTION_NAME + err);
+                            df.reject();
+                        }
+						
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
