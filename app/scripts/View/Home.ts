@@ -157,6 +157,7 @@ module Garage {
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
+                    this._disableIntroduction();//念のため、introductionを非表示にする。
                     var $faceList = $("#face-list")
                     $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
@@ -192,6 +193,15 @@ module Garage {
                 $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
                 $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
                 $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
+            }
+
+            /*
+             * 導入画面を非表示にする。
+             */
+            private _disableIntroduction() {
+                var $indtroductionHome = $("#home-introductions");
+                $indtroductionHome.css("visibility", "hidden");
+
             }
 
 
