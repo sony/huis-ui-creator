@@ -141,7 +141,7 @@
                             var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
                         } catch (err) {
                             console.error(FUNCTION_NAME + err);
-                            continue;
+                            throw err;
                         }
 						
 						if (!dir1Stat && !dir2Stat) {
@@ -202,7 +202,7 @@
                             var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
                         } catch (err) {
                             console.error(FUNCTION_NAME + err);
-                            continue;
+                            df.reject();
                         }
 						
 						if (!dir1Stat && !dir2Stat) {
