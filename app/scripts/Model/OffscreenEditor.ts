@@ -73,10 +73,18 @@ module Garage {
 			public static editImage(imageSrc: string, params: IImageEditParams): IPromise<string>;
 
 			// public methods:
-			public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
+            public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
+                let FUNCTION_NAME = TAG + "editImage : ";
 				var df = $.Deferred();
 				var promise = CDP.makePromise(df);
 				var encodedDstPath = null;
+
+
+                if (!fs.existsSync(imageSrc)) {
+                    console.error(FUNCTION_NAME + imageSrc + "(imageSrc) does not exist");
+                    df.reject();
+                    return promise;
+                }
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
@@ -88,6 +96,7 @@ module Garage {
 				console.log(TAG + "before editImage src: " + imageSrc);
                 let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
 
+                
 				// 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
 					.done((texture: PIXI.Texture) => {
@@ -129,7 +138,8 @@ module Garage {
 							df.resolve(imageDataUrl);
 						}
 					})
-					.fail(() => {
+                    .fail(() => {
+                        console.error(FUNCTION_NAME + "error occur in loadTexture");
 						renderer.destroy(true);
 						df.reject();
 					});
@@ -191,24 +201,30 @@ module Garage {
 			 * @param src {string} テクスチャーを取得する画像のパス
 			 * @return {IPromise<PIXI.Texture>} 読み込んだテクスチャーの promise オブジェクト
 			 */
-			public static loadTexture(src: string): IPromise<PIXI.Texture> {
+            public static loadTexture(src: string): IPromise<PIXI.Texture> {
+                let FUNCTION_NAME = TAG + "loadTexture : ";
 				let df = $.Deferred();
 				let promise = CDP.makePromise(df);
 
 				if (null == src) {
 					df.resolve(PIXI.Texture.EMPTY);
-				} else {
-					let texture = PIXI.Texture.fromImage(src);
+                } else {
+                    try {
+                        let texture = PIXI.Texture.fromImage(src);
 
-					if (texture.baseTexture && texture.baseTexture.hasLoaded) {
-						df.resolve(texture);
-					} else {
-						let onLoad = () => {
-							df.resolve(texture);
-						};
-						texture.once("update", onLoad);
-					}
-				}
+                        if (texture.baseTexture && texture.baseTexture.hasLoaded) {
+                            df.resolve(texture);
+                        } else {
+                            let onLoad = () => {
+                                df.resolve(texture);
+                            };
+                            texture.once("update", onLoad);
+                        }
+                    } catch (err) {
+                        console.error(FUNCTION_NAME + err);
+                        df.reject();
+                    }
+		        }
 
 				return promise;
 			}

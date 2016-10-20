@@ -851,7 +851,9 @@ module Garage {
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
             updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
-				let df = $.Deferred<void>();
+                let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
+
+                let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
 				var moduleCount = gmodules.length;
@@ -908,7 +910,10 @@ module Garage {
                     } catch (e) {
                         df.reject();
                     }
-                });
+                }).fail(() => {
+                    console.error(FUNCTION_NAME + "_resizeImages is fail");
+                    df.reject();
+                    });
 
                 if (cache != null){
                     cache.save(gmodules);
@@ -1875,7 +1880,9 @@ module Garage {
 			/**
 			 * リサイズ待機リストの画像をリサイズする。
 			 */
-			private _resizeImages(): IPromise<void> {
+            private _resizeImages(): IPromise<void> {
+                let FUNCTION_NAME = TAGS.HuisFiles + "_resizeImages : ";
+
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -1893,7 +1900,10 @@ module Garage {
 						}, resizeImage.dst)
 							.always(() => {
 								setTimeout(proc);
-							});
+                            }).fail(() => {
+                                console.error(FUNCTION_NAME + "editImage is fail");
+                                df.reject();
+                            });
 					}
 				};
 

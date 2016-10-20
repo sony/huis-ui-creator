@@ -2644,10 +2644,19 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
-				
+                let FUNCTION_NAME = TAG + "onEditDoneButtonClicked : ";
+
+
                 $("#button-edit-done").prop("disabled", true); // 二度押し対策
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
+
+                //doneボタンの非活性タイマー
+                let durationTimerDoneButtonEnable = 5000;
+                setTimeout(() => {
+                    //二度押し対策が裏目にならないように、ある程度 時間がたつと非活性解除
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                }, durationTimerDoneButtonEnable)
 
 				// 現在のターゲットを外す
 				this._loseTarget();
@@ -2688,7 +2697,10 @@ module Garage {
 							Framework.Router.back();
 							$("#button-edit-done").prop("disabled", false);
 					}
-				});
+                    }).fail(() => {
+                        console.error(FUNCTION_NAME + "updateFace is fail");
+                        $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    });
             }
 
             /**
