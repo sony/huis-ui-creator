@@ -432,12 +432,6 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, "none");
                     }
 
-                    //Functionの文言を和訳
-                    $remoteContainer.i18n();
-
-                    //プルダウンにJQueryMobileのスタイルをあてる
-                    $remoteContainer.trigger('create');
-
                 }
             }
 
@@ -636,12 +630,6 @@ module Garage {
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
-
-                    //Functionの文言を和訳
-                    $functionlContainer.i18n();
-
-                    //プルダウンにJQueryMobileのスタイルをあてる
-                    $functionlContainer.trigger('create');
 
                 }
             }
