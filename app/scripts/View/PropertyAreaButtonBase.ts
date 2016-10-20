@@ -185,13 +185,7 @@ module Garage {
 
                 if (action != null) {
 
-                    //bluetoothの情報で検索
-                    if (action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        return huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
-                    }
-
-                    // blueooth情報でわからない場合、codeで検索
+                    // codeで検索
                     let code = action.code;
                     if (remoteId == null && code != null) {
                         remoteId = huisFiles.getRemoteIdByCode(code);
@@ -211,27 +205,28 @@ module Garage {
                         }
                         remoteId = huisFiles.getRemoteIdByCode(checkCode);
                     }
-                   
 
-                    // codeで見つからない場合、code_dbで検索
+                    // functionCodeHashでみつからない場合、deviceinfoで検索
+                    if (remoteId == null &&
+                        action.deviceInfo) {
+                        remoteId = huisFiles.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                    }
+
+                    //deviceinfoでみつからない場合、bluetoothの情報で検索
+                    if (remoteId == null &&
+                        action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device) {
+                        return huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action
+                            .deviceInfo.remoteName);
+                    }
+
+
+                    // codebluetoothでみつからない場合、code_dbで検索
                     if (remoteId == null &&
                         action.deviceInfo &&
                         action.deviceInfo.code_db) {
                         let codeDb = action.deviceInfo.code_db;
-                        remoteId =  huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-                    }
-
-                  
-                    if (remoteId == null) {
-                        //codeでは取得できない場合、brand,
-                        let codeDb = action.code_db;
-                        if (codeDb != null) {
-                            let brand = codeDb.brand;
-                            let deviceType = codeDb.device_type;
-                            let modelNumber = codeDb.model_number
-
-                            remoteId = huisFiles.getRemoteIdByCodeDbElements(brand, deviceType, modelNumber);
-                        }
+                        remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
