@@ -96,6 +96,34 @@ module Garage {
             }
 
 
+
+
+            /*
+              * encodeUriValidInWindowsAndCSSで変換されたパスを元に戻す
+              * @param inputUrl{string} encodeUriValidInWindowsAndCSSで変換されたurl
+              * @return {string} encodeUriValidInWindowsAndCSSで変換される前のurl
+              */
+            static decodeUriValidInWindowsAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]decodeUriValidInWindowsAndCSS : inputUrl is null");
+                    return;
+                }
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("%23", "g");
+                inputUrl = inputUrl.replace(regExp1, "#");
+
+                var regExp2 = new RegExp("%27", "g");
+                inputUrl = inputUrl.replace(regExp2, "'");
+
+                let tmpUrl: string = decodeURI(inputUrl);
+
+                return tmpUrl;
+            }
+
+
+
             /*
               * CSSのURLが解釈できず、Macでは使用可能な文字を、CSSでも有効な文字に変換して返す。
               * @param url{string} cssのbackground-imageに設定する画像のurl
