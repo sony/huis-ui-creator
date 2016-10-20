@@ -1507,9 +1507,6 @@ module Garage {
 
 				if (this.currentTargetModel_.type === "button") {
 					this._resizeButtonStateItem(this.$currentTarget_, newArea);
-					this._updateCurrentModelStateData(undefined, "resized", true);
-					//let stateId = parseInt(JQUtils.data($select, "stateId"), 10);
-					//this._updateCurrentModelStateData(stateId, "resized", true);
 				}
 				if (update) {
 					let validateArea = this._validateArea(newArea);
@@ -3542,7 +3539,6 @@ module Garage {
 				});
 
 				
-
 				var memento: IMemento = {
 					target: button,
 					previousData: { "state": currentStates },
