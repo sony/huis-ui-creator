@@ -770,8 +770,10 @@ declare module Garage {
      * 設定できるアクションリスト
      */
     var ACTION_INPUTS: IStringKeyValue[];
+    var ACTION_INPUTS_MACRO: IStringKeyValue[]; //macro用
     var ACTION_INPUT_TAP_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY_SINGLE: string;
     var ACTION_INPUT_FLICK_UP_KEY: string;
     var ACTION_INPUT_FLICK_RIGHT_KEY: string;
     var ACTION_INPUT_FLICK_LEFT_KEY: string;
