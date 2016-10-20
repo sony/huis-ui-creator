@@ -253,8 +253,13 @@ module Garage {
 
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order, this.defaultState.id);
-
                 this.updateModel();
+
+                //jQueryのスタイルをあてる。
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+                $targetSignalContainer.i18n();
+                $targetSignalContainer.find('.custom-select').trigger('create');
+
 
                 //noneのoptionをもっていたとき,noneの選択肢を消すため表示を更新する。
                 if ($target.find(".default-value").length != 0) {
