@@ -136,14 +136,9 @@
 					// 名称は同じだが異なるファイル群を算出
                     for (var i = 0; i < temp.length; i++) {
 
-                        try {
-                            var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
-                            var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
-                        } catch (err) {
-                            console.error(FUNCTION_NAME + err);
-                            throw err;
-                        }
-						
+                        var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
+                        var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                      
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
@@ -154,7 +149,8 @@
 						diffFiles.push(temp[i]);
 					}
 					return { diff: diffFiles, dir1Extra: dir1ExtraFiles, dir2Extra: dir2ExtraFiles };
-				} catch (err) {
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
 					throw err;
 				}
 			}
