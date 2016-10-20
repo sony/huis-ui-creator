@@ -1368,7 +1368,7 @@ module Garage {
 			 */
 			private _resizeItem(position: IPosition, update?: boolean) {
 
-
+                this.$currentTarget_.removeClass("moving-item");
 				var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
@@ -1528,7 +1528,7 @@ module Garage {
              * return : グリッドに沿った　face-page上の座標値 : number
 			 */
             private getGridCordinate (inputCordinate :number):number{
-                return inputCordinate = Math.floor(inputCordinate / this.gridSize_) * this.gridSize_;
+                return inputCordinate = Math.round(inputCordinate / this.gridSize_) * this.gridSize_;
             }
 
 			/**
@@ -3891,12 +3891,12 @@ module Garage {
                     var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
                     var BIAS_Y = 0
 
-                    newX = Math.floor(ungriddedPosition.x / this.gridSize_) * this.gridSize_ + BIAS_X;
-                    newY = Math.floor(ungriddedPosition.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
+                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
                     
                 } else {
-                    newX = Math.floor(ungriddedPosition.x / this.gridSize_) * this.gridSize_;
-                    newY = Math.floor(ungriddedPosition.y / this.gridSize_) * this.gridSize_;
+                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_;
+                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_;
                 }
 
                 // アイテム元座標のキャンバス
