@@ -1406,7 +1406,7 @@ module Garage {
 							area: image.area,
                             path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
 						};
-
+                        
 						// リサイズ待機リストに追加
 						this.watingResizeImages_.push({
 							src: garageExtensions.resolvedOriginalPath,
@@ -1890,7 +1890,8 @@ module Garage {
 
 				let proc = () => {
 					let resizeImage: IWaitingRisizeImage;
-					if (resizeImages.length <= 0) {
+                    if (resizeImages.length <= 0) {
+                        this.watingResizeImages_ = [];
 						df.resolve();
 					} else {
 						resizeImage = resizeImages.shift();
@@ -1902,6 +1903,7 @@ module Garage {
 								setTimeout(proc);
                             }).fail(() => {
                                 console.error(FUNCTION_NAME + "editImage is fail");
+                                this.watingResizeImages_ = [];
                                 df.reject();
                             });
 					}
