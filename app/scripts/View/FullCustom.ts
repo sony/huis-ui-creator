@@ -3704,13 +3704,16 @@ module Garage {
 				let previceBagroundCSS: string = $preview.css("background-image");
 				if (previceBagroundCSS == null) {
 					return;
-				}
-				var backgroundImageCssArray = previceBagroundCSS.split("/");
+                }
+
+                let decodePath = JQUtils.decodeUriValidInWindowsAndCSS(previceBagroundCSS);
+
+                var backgroundImageCssArray = decodePath.split("/");
 				var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
                 var path = pathArray[0];
 
 				//なぜか、background-imageにfull-custom.htmlが紛れることがある。
-				if (path != "null" && path != "full-custom.html" && path != "none" && this.existsImageFile(previceBagroundCSS)) {
+                if (path != "null" && path != "full-custom.html" && path != "none" && this.existsImageFile(decodePath)) {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					this._updatePreviewInDetailArea("none", $preview);
