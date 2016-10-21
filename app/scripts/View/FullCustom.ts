@@ -1899,12 +1899,12 @@ module Garage {
                 }
                 
 
-				$tooltip.find(".remote-info").html(remoteInfo);
+				$tooltip.find(".remote-info").text(remoteInfo);
 
 				//ファンクション情報をローカライズ
 				let outputFunctionName = functions[0];
 				let $functionName:JQuery= $tooltip.find(".function-name");
-				$functionName.html(outputFunctionName);
+				$functionName.text(outputFunctionName);
 				var localizedString = null;
 				if (outputFunctionName !== "none") {
 					localizedString = $.i18n.t("button.function." + outputFunctionName);
@@ -1917,7 +1917,7 @@ module Garage {
 				if (functions.length > 1) {
 					outputString = outputString + " etc.";
 				}
-				$functionName.html(outputString);
+				$functionName.text(outputString);
 
 				//#face-pages-areaのscale率を取得
 				let buttonTransform = $("#face-pages-area").css("transform").split(",");
