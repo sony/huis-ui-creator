@@ -19,6 +19,7 @@ module Garage {
             protected templateItemDetailFile_: string;
             protected availableRemotelist: IRemoteInfo[];
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
+            protected defaultState: IGState; // Defaultのstate
 
 			/**
 			 * constructor
@@ -28,6 +29,8 @@ module Garage {
                 this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
                 this.DEFAULT_STATE_ID = 0;
+                //stateIdはデフォルト値とする。
+                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
             }
 
 
@@ -76,11 +79,26 @@ module Garage {
             *保持しているモデルを取得する
             * @return {Model.BUttonItem}
             */
-            getModel(): Model.ButtonItem {
+            public getModel(): Model.ButtonItem {
                 return this.model;
             }
 
 
+            /*
+             * このクラス内のbuttonモデルのstateを、入力されたものに更新する
+             * @param inputStates{IGState[]}
+             */
+            public setStates(inputStates: IGState[]) {
+                let FUNCTION_NAME = "setState";
+
+                if (inputStates == null){
+                    console.warn(FUNCTION_NAME + "inputStates is null");
+                    return;
+                }
+
+                this.model.state = inputStates;
+                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
+            }
 
 
             /////////////////////////////////////////////////////////////////////////////////////////
