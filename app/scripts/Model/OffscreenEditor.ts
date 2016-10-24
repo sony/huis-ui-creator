@@ -79,12 +79,21 @@ module Garage {
 				var promise = CDP.makePromise(df);
 				var encodedDstPath = null;
 
-
+                //変換するファイルが存在するか確認
                 if (!fs.existsSync(imageSrc)) {
                     console.error(FUNCTION_NAME + imageSrc + "(imageSrc) does not exist");
                     df.reject();
                     return promise;
                 }
+
+                //ファイル名があるか確認。
+                if (imageSrc == HUIS_REMOTEIMAGES_ROOT) {
+                    //imageSrcが 
+                    console.error(FUNCTION_NAME + imageSrc + "imageSrc (" + imageSrc+ ")is invalid");
+                    df.reject();
+                    return promise;
+                }
+
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
