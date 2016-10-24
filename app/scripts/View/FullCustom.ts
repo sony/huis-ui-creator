@@ -1303,7 +1303,9 @@ module Garage {
                 let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
-                if (!this._getTargetPageModule(this.mouseMoveStartPosition_)) {
+                let isFromPallet: boolean = !(this._getTargetPageModule(this.mouseMoveStartPosition_));
+
+                if (isFromPallet) {
                     // 開始位置がキャンバス外の場合＝パレットからの配置の場合
 
                     if ((newPosition.x + newArea.w <= BIAS_X_DEFAULT_GRID_LEFT || newPosition.x >= GRID_AREA_WIDTH) ||
@@ -1329,7 +1331,7 @@ module Garage {
 
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
-                    this._updateCurrentModelData("area", newArea);
+                    this._updateCurrentModelData("area", newArea, isFromPallet);
                     this._showDetailItemArea(this.currentTargetModel_);
                     return;
                 }
@@ -2780,9 +2782,10 @@ module Garage {
 			 * 
 			 * @param key {string} データのキー
 			 * @param value {any} 値
+             * @param disablePrevData {boolean} Undoとしてモデルの無効化を設定するかどうか
 			 * @return {any} 現在のターゲットとなるモデル
 			 */
-			private _updateCurrentModelData(key: string, value: any): ItemModel;
+			private _updateCurrentModelData(key: string, value: any, disablePrevData?: boolean): ItemModel;
 
 			/**
 			 * 現在のターゲットとなるモデルに対して、データをセットする。
@@ -2792,7 +2795,7 @@ module Garage {
 			 */
 			private _updateCurrentModelData(properties: any): ItemModel;
 
-			private _updateCurrentModelData(param1: any, param2?: any): ItemModel {
+			private _updateCurrentModelData(param1: any, param2?: any, param3: boolean = false): ItemModel {
 				if (!this.currentTargetModel_) {
 					console.warn(TAG + "_updateCurrentModelData() target model not found");
 					return;
@@ -2824,12 +2827,20 @@ module Garage {
 				 */
 				var previousData = {};
 				var nextData = {};
-				if (_.isString(param1)) {
-					let key = param1;
-					let value = param2;
-					previousData[key] = model[key];
-					nextData[key] = value;
-				} else if (_.isObject(param1)) {
+                if (_.isString(param1)) {
+                    let key = param1;
+                    let value = param2;
+
+                    if (param3) {
+                        // UndoでModel無効化/Redoで有効化（Palletからのドラッグ＆ドロップ追加時）
+                        previousData["enabled"] = false;
+                        nextData["enabled"] = true;
+                    }
+
+                    previousData[key] = model[key];
+                    nextData[key] = value;
+
+                } else if (_.isObject(param1)) {
 					let properties: Object = param1;
 					let keys = Object.keys(properties);
 					keys.forEach((key) => {
