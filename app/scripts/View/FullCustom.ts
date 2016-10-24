@@ -2847,11 +2847,11 @@ module Garage {
                         // UndoでModel無効化/Redoで有効化（Palletからのドラッグ＆ドロップ追加時）
                         previousData["enabled"] = false;
                         nextData["enabled"] = true;
+                    } else {
+                        previousData[key] = model[key];
                     }
 
-                    previousData[key] = model[key];
                     nextData[key] = value;
-
                 } else if (_.isObject(param1)) {
 					let properties: Object = param1;
 					let keys = Object.keys(properties);
