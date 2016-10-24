@@ -592,6 +592,8 @@ module Garage {
                     } catch (e) {
                         console.warn(e);
                     }
+                    // 有効なパスが無かった場合はnullを設定
+                    inputPath = null;
                 }
 
                 if (inputPath != null) {
