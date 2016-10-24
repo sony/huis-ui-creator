@@ -22,16 +22,13 @@ module Garage {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
-            private defaultState: IGState; // マクロボタンDefaultのstate
+           
 
 			/**
 			 * constructor
 			 */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
-
-                //stateIdはデフォルト値とする。
-                this.defaultState = this.model.state[this.model.default];
             }
 
 

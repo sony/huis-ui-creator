@@ -3550,14 +3550,27 @@ module Garage {
 					});
 				});
 
-				
 				var memento: IMemento = {
 					target: button,
 					previousData: { "state": currentStates },
 					nextData: { "state": states }
 				};
 				var mementoCommand = new MementoCommand([memento]);
-				this.commandManager_.invoke(mementoCommand);
+                this.commandManager_.invoke(mementoCommand);
+
+
+                //propertyArea用のクラス内のモデルを更新する。
+                if (states != null) {
+                    
+                    if (this.buttonProperty != null) {
+                        this.buttonProperty.setStates(states);
+                    }
+
+                    if (this.macroProperty != null) {
+                        this.macroProperty.setStates(states);
+                    }
+                }
+
 
 			}
 
