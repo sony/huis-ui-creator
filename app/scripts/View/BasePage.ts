@@ -576,14 +576,22 @@ module Garage {
 
                 let inputPath = null;
                 //有効なパスを優先順位順にサーチ
-                if (model["resizeResolvedOriginalPathCSS"]) {
-                    inputPath = model["resizeResolvedOriginalPathCSS"];
-                } else if (model["resolvedPathCSS"]) {
-                    inputPath = model["resolvedPathCSS"]
-                } else if (model["resizeResolvedOriginalPath"]) {
-                    inputPath = model["resizeResolvedOriginalPath"];
-                } else if (model["resolvedPath"]) {
-                    inputPath = model["resolvedPath"];
+                let props: string[] = [
+                    "resizeResolvedOriginalPathCSS",
+                    "resolvedPathCSS",
+                    "resizeResolvedOriginalPath",
+                    "resolvedPath"
+                ];
+                for (let i = 0; i < props.length; i++) {
+                    inputPath = model[props[i]];
+                    try {
+                        if (inputPath && fs.existsSync(inputPath) && !fs.lstatSync(inputPath).isDirectory()) {
+                            console.log("valid path: " + props[i] + " = " + inputPath);
+                            break;
+                        }
+                    } catch (e) {
+                        console.warn(e);
+                    }
                 }
 
                 if (inputPath != null) {
