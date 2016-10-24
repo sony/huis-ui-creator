@@ -86,10 +86,11 @@ module Garage {
                     return promise;
                 }
 
-                //ファイル名があるか確認。
-                if (imageSrc == HUIS_REMOTEIMAGES_ROOT) {
-                    //imageSrcが 
-                    console.error(FUNCTION_NAME + imageSrc + "imageSrc (" + imageSrc+ ")is invalid");
+                //imageSrcがディレクトリかどうか確認
+                let fileStat = fs.lstatSync(imageSrc);
+                if (fileStat != null && fileStat.isDirectory()) {
+                    //imageSrcがファイル名ではなく、ディレクトリあった場合、エラー
+                    console.error(FUNCTION_NAME + "imageSrc (" + imageSrc + ")is directory");
                     df.reject();
                     return promise;
                 }
