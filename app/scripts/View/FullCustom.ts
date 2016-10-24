@@ -1342,6 +1342,7 @@ module Garage {
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
 
+                let mementoList: IMemento[] = [];
                 var addMemento: IMemento = {
                     target: newItem,
                     previousData: {
@@ -1354,9 +1355,20 @@ module Garage {
 
                 //元キャンバスページから削除
                 let delMemento = this._deleteCurrentTargetItem(false);
+                if (isFromPallet) {
+                    // パレットからの場合は履歴に登録せずに削除
+                    let delCommand = new MementoCommand([delMemento]);
+                    let delModel = delCommand.invoke();
+                    this._updateItemElementsOnCanvas(delModel);
+                } else {
+                    // キャンバス内ページ跨ぎの場合は履歴に登録して削除
+                    mementoList.push(delMemento);
+                }
+
+                mementoList.push(addMemento);
 
                 //追加と削除を1アクションとしてRedo･Undo履歴に追加
-                var mementoCommand = new MementoCommand([delMemento, addMemento]);
+                var mementoCommand = new MementoCommand(mementoList);
                 var updatedItems = this.commandManager_.invoke(mementoCommand);
 
                 // 新しいItemの詳細エリア表示
