@@ -664,6 +664,7 @@ module Garage {
                 // 画像の path を出力先の remoteId のディレクトリーになるように指定
                 newImage.path = image.path;
                 newImage.resolvedPath = image.resolvedPath;
+                newImage.resizeOriginal = image.resizeOriginal;
 
 
                 //バージョン情報をもっている場合、引き継ぐ
