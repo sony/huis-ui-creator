@@ -79,12 +79,22 @@ module Garage {
 				var promise = CDP.makePromise(df);
 				var encodedDstPath = null;
 
-
+                //変換するファイルが存在するか確認
                 if (!fs.existsSync(imageSrc)) {
                     console.error(FUNCTION_NAME + imageSrc + "(imageSrc) does not exist");
                     df.reject();
                     return promise;
                 }
+
+                //imageSrcがディレクトリかどうか確認
+                let fileStat = fs.lstatSync(imageSrc);
+                if (fileStat != null && fileStat.isDirectory()) {
+                    //imageSrcがファイル名ではなく、ディレクトリあった場合、エラー
+                    console.error(FUNCTION_NAME + "imageSrc (" + imageSrc + ")is directory");
+                    df.reject();
+                    return promise;
+                }
+
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
