@@ -220,6 +220,11 @@ module Garage {
 					df.resolve(PIXI.Texture.EMPTY);
                 } else {
                     try {
+                        let pixiCache: PIXI.Texture = PIXI.utils.TextureCache[src];
+                        if (pixiCache) {
+                            pixiCache.destroy(true);
+                        }
+
                         let texture = PIXI.Texture.fromImage(src);
 
                         if (texture.baseTexture && texture.baseTexture.hasLoaded) {
