@@ -584,8 +584,10 @@ module Garage {
                 ];
                 for (let i = 0; i < props.length; i++) {
                     inputPath = model[props[i]];
+
+
                     try {
-                        if (inputPath && fs.existsSync(inputPath) && !fs.lstatSync(inputPath).isDirectory()) {
+                        if (inputPath != null) {
                             console.log("valid path: " + props[i] + " = " + inputPath);
                             break;
                         }
