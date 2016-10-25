@@ -440,7 +440,7 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                   if (inputRemoteId != null) {
+                    if (this.isValidValue(inputRemoteId)) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
                     }else{
