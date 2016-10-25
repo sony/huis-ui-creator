@@ -7,7 +7,8 @@ module Garage {
 
 		import Framework = CDP.Framework;
 		import Tools = CDP.Tools;
-		import UI = CDP.UI;
+        import UI = CDP.UI;
+        import Dialog = CDP.UI.Dialog;
 
 		var TAG: string = "[Garage.View.Home] ";
 
@@ -104,6 +105,23 @@ module Garage {
 				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
+
+
+
+
+
+
+                var dialog: Dialog = null;
+                var props: DialogProps = null;
+                var text: string = "お知らせの内容お知らせの内容お知らせの内容お知らせの内容お知らせの内容";
+
+                dialog = new CDP.UI.Dialog("#common-dialog-information", {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
+                    message: text,
+                    dismissible: true,
+                });
+                dialog.show();
 			}
 
             /**
