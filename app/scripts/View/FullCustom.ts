@@ -5041,14 +5041,29 @@ module Garage {
                                 codeDb.model_number != " " && codeDb.device_type != undefined) {
                                 //codeDbの情報がそろっている場合、codeDbからfunctionsを代入
                                 let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-                                deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
+
+                                let face = huisFiles.getFace(remoteId);
+                                if (face != null) {
+                                    deviceInfo.remoteName = face.name;
+                                } else {
+                                    deviceInfo.remoteName = null;
+                                }
+                                
                                 deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
 
                             } else if (codes != null) {
                                 //codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
                                 let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
                                 if (remoteId != null) {
-                                    deviceInfo.remoteName = huisFiles.getFace(remoteId).name;
+
+                                    let face = huisFiles.getFace(remoteId);
+                                    if (face != null) {
+                                        deviceInfo.remoteName = face.name;
+                                    } else {
+                                        deviceInfo.remoteName = null;
+                                    }
+
+
                                     deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
                                     deviceInfo.functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
                                 }
