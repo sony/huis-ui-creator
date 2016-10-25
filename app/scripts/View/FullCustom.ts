@@ -968,11 +968,7 @@ module Garage {
                     case "button":
                         return this.faceRenderer_canvas_.addButton(item.button, canvasModuleId, moduleOffsetY);
                     case "image":
-                        return this.faceRenderer_canvas_.addImage(item.image, canvasModuleId, moduleOffsetY, () => {
-                            // 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
-                            // このタイミングで CSS を更新
-                            this._updateItemElementOnCanvas(newModel);
-                        });
+                        return this.faceRenderer_canvas_.addImageWithoutCopy(item.image, canvasModuleId, moduleOffsetY);
                     case "label":
                         return this.faceRenderer_canvas_.addLabel(item.label, canvasModuleId, moduleOffsetY);
                     default:
