@@ -683,7 +683,7 @@ module Garage {
                 $actionContainer.append($actionDetail);
 
                 //inputActionを入力していた場合、値を表示
-                if (inputAction != null) {
+                if (this.isValidValue(inputAction)) {
                     this.setInputAction(order, stateId, inputAction);
                 } else {
                     //値が入力されていない場合、初期状態を描画
