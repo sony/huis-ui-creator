@@ -170,15 +170,21 @@ module Garage {
                  }
 
                  try {
-                     //キャッシュファイルをコピー
-                     this.copyCache(targetRemoteIdFolderPath);
-
+                     
                      //画像をコピー
                      let syncTask = new Util.HuisDev.FileSyncTask();
                      syncTask.copyFilesSimply(src, dst, () => {
+
+                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.targetRemoteId );
+                         // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+
                          //現在のfaceを書き出す。
-                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, null, true, this.filePathBeforeCompressionFile)
+                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, cache, true, this.filePathBeforeCompressionFile)
                              .done(() => {
+
+                                 //キャッシュファイルをコピー
+                                 this.copyCache(targetRemoteIdFolderPath);
+
                                  console.log("succeeded to updateFace: " + this.targetRemoteId + ", " + faceName);
                                  df.resolve();
                              }).fail(() => {
