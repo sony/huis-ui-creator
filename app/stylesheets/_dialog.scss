@@ -144,6 +144,11 @@ body {
     #information-dialog-area {
         -webkit-box-shadow: 0 0 15px #4d4d4d;
         box-shadow: 0 0 15px #4d4d4d;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: 480px;
+        width: 640px;
+        background: #ffffff;
 
         .common-dialog {
             color: $COLOR_TEXT_MAIN;
@@ -151,7 +156,7 @@ body {
             height: 480px;
             text-shadow: none;
             background: $COLOR_ABOUT_DIALOG_BACKGROUND;
-            
+
             .information-dialog {
                 padding-top: 16px;
                 padding-bottom: 24px;
@@ -171,50 +176,45 @@ body {
                 margin: 0 auto;
             }
 
-            .information-body {
-                height: 402px;
-                overflow-y: scroll;
+            .white-space-12px {
+                height: 12px;
+            }
 
-                .white-space-12px {
-                    height: 12px;
+            .information-container {
+                width: 560px;
+                height: 150px;
+                margin: 24px 40px;
+            }
+
+            .information-img {
+                width: 150px;
+                height: 150px;
+                background-color: red;
+                float: left;
+            }
+
+            .information-box {
+                width: 370px;
+                height: 150px;
+                padding-left: 40px;
+                float: left;
+
+                .information-date {
+                    font-size: $FONT_SIZE_SSS;
+                    font-family: $FONT_FAMILY_NORMAL;
+                    padding-bottom: 8px;
                 }
 
-                .information-container {
-                    width: 560px;
-                    height: 150px;
-                    margin: 24px 40px;
+                .information-text {
+                    font-size: $FONT_SIZE_S;
+                    font-family: $FONT_FAMILY_LIGHT;
                 }
+            }
 
-                .information-img {
-                    width: 150px;
-                    height: 150px;
-                    background-color: red;
-                    float: left;
-                }
-
-                .information-box {
-                    width: 370px;
-                    height: 150px;
-                    padding-left: 40px;
-                    float: left;
-
-                    .information-date {
-                        font-size: $FONT_SIZE_SSS;
-                        font-family: $FONT_FAMILY_NORMAL;
-                        padding-bottom: 8px;
-                    }
-
-                    .information-text {
-                        font-size: $FONT_SIZE_S;
-                        font-family: $FONT_FAMILY_LIGHT;
-                    }
-                }
-
-                .separator {
-                    border-top: 1px solid #cccccc;
-                    width: 576px;
-                    margin: 0 auto;
-                }
+            .separator {
+                border-top: 1px solid #cccccc;
+                width: 576px;
+                margin: 0 auto;
             }
         }
     }
