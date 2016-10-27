@@ -1,168 +1,157 @@
 ﻿@import "variables/variable";
 
-body{
+body {
+    //共通ダイアログ
+    .ui-popup-screen.in {
+        opacity: $OPACITY_DIALOG_MASK;
+    }
 
+    .ui-overlay-b {
+        background-color: $COLOR_DIALOG_MASK;
+    }
 
-//共通ダイアログ
-.ui-popup-screen.in{
-    opacity: $OPACITY_DIALOG_MASK;
-}
+    .common-dialog {
+        text-shadow: none;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        height: $SIZE_DIALOG_HEIGHT;
+        width: $SIZE_DIALOG_WIDTH;
+        color: $COLOR_DIALOG_TEXT;
+        background: $COLOR_DIALOG_BACKGROUND;
+        border-radius: 0;
+        border: none;
+        max-width: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
 
-.ui-overlay-b{
-    background-color:$COLOR_DIALOG_MASK;   
-}
+        .spinner-dialog {
+            height: $SIZE_DIALOG_HEIGHT;
+            padding: 0;
+            -webkit-box-pack: inherit;
 
-.common-dialog{
-    text-shadow: none;
+            p {
+                word-wrap: break-word;
+                font-size: $FONT_SIZE_DIALOG_TEXT;
+                font-family: $FONT_WEIGHT_DIALOG_TEXT;
+                width: $SIZE_DIALOG_TEXT_WIDTH;
+                margin-right: $SIZE_DIALOG_TEXT_MARGIN_RIGHT;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
 
-    font-family:$FONT_WEIGHT_DIALOG_TEXT;
-    height:$SIZE_DIALOG_HEIGHT;
-    width:$SIZE_DIALOG_WIDTH;
-    color:$COLOR_DIALOG_TEXT;
-    background:$COLOR_DIALOG_BACKGROUND;
-    border-radius:0;
-    border:none;
-    max-width:none;
-    box-shadow:none;
-    -webkit-box-shadow:none;
+        #common-dialog-center-spinner {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_SPINNER;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
 
-    .spinner-dialog{
-        height:$SIZE_DIALOG_HEIGHT;
-        padding:0;
-        -webkit-box-pack:inherit;
-
-        p{
-            word-wrap:break-word;
-            font-size:$FONT_SIZE_DIALOG_TEXT;
-            font-family:$FONT_WEIGHT_DIALOG_TEXT;
-            width:$SIZE_DIALOG_TEXT_WIDTH;
-            margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
-            margin-left:0px;
-            margin-top:0px;
-            margin-bottom:0px;
+        #simple-dialog-image {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_DONE_ICON;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
     }
 
-    #common-dialog-center-spinner{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_SPINNER;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
+    #about-dialog-area {
+
+        .title {
+            font-family: $FONT_FAMILY_ABOUT_TITLE;
+            font-size: $FONT_SIZE_ABOUT_TITLE;
+            text-align: center;
+        }
+
+        #about-info-box {
+            display: flex;
+            margin-top: $SIZE_ABOUT_INFO_BOX_MARING_TOP;
+            margin-bottom: $SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
+
+            #about-logo {
+                background-image: $PATH_IMG_SPLASH_HUIS_LOGO;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: $SIZE_ABOUT_LOGO_WIDTH;
+                height: $SIZE_ABOUT_LOGO_HEIGHT;
+                margin-right: $SIZE_ABOUT_LOGO_MARING_RIGHT;
+                margin-left: $SIZE_ABOUT_LOGO_MARING_LEFT;
+            }
+
+            .info-box {
+                font-size: $FONT_SIZE_ABOUT_INFO;
+
+                #about-app-name {
+                    font-size: $FONT_SIZE_ABOUT_APP_NAME;
+                    font-family: $FONT_FAMILY_ABOUT_APP_NAME;
+                    color: $COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
+                }
+            }
+        }
+
+        overflow-y: auto;
+        overflow-x: hidden;
+        text-shadow: none;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        width: $SIZE_DIALOG_WIDTH;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        text-shadow: none;
+        border-radius: 0;
+        background: $COLOR_ABOUT_DIALOG_BACKGROUND;
+        height: $SIZE_ABOUT_DIALOG_HEIGHT;
+        border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+        padding-top: $SIZE_ABOUT_DIALOG_MARGIN_TOP;
+        padding-bottom: $SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
+        padding-right: $SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
+        padding-left: $SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+
+        .common-dialog {
+            background: none;
+
+            .about-dialog {
+                color: $COLOR_ABOUT_DIALOG_TXET;
+
+                .separator {
+                    margin-top: $SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
+                    margin-bottom: $SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
+                    border-bottom: $SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
+                }
+
+                .text-area {
+                    p {
+                        line-height: $TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+                        font-size: $FONT_SIZE_ABOUT_TEXT_LISENCE;
+                        color: $COLOR_ABOUT_DIALOG_TXET;
+                    }
+                }
+            }
+        }
     }
-
-    #simple-dialog-image{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_DONE_ICON;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-
-	
-}
-
-#about-dialog-area{
-
-	.title{
-		font-family:$FONT_FAMILY_ABOUT_TITLE;
-		font-size:$FONT_SIZE_ABOUT_TITLE;
-		text-align:center;
-	}
-
-	#about-info-box{
-		display:flex;
-		margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
-		margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
-
-		#about-logo{
-			background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
-			background-position:center;
-			background-repeat: no-repeat;
-			background-size: contain;
-			width:$SIZE_ABOUT_LOGO_WIDTH;
-			height:$SIZE_ABOUT_LOGO_HEIGHT;
-			margin-right:$SIZE_ABOUT_LOGO_MARING_RIGHT;
-			margin-left:$SIZE_ABOUT_LOGO_MARING_LEFT;
-		}
-		.info-box{
-			font-size:$FONT_SIZE_ABOUT_INFO;
-
-			#about-app-name{
-				font-size:$FONT_SIZE_ABOUT_APP_NAME;
-				font-family:$FONT_FAMILY_ABOUT_APP_NAME;
-				color:$COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
-			}
-		}
-	}
-
-	
-
-	overflow-y:auto;
-	overflow-x:hidden;
-	text-shadow: none;
-	font-family:$FONT_WEIGHT_DIALOG_TEXT;
-	width:$SIZE_DIALOG_WIDTH;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	text-shadow: none;
-	border-radius:0;
-	background:$COLOR_ABOUT_DIALOG_BACKGROUND;
-	height:$SIZE_ABOUT_DIALOG_HEIGHT;
-	border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
-
-	padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
-	padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-	padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-	padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
-		
-	.common-dialog{
-		background:none;
-			
-		.about-dialog{
-			color:$COLOR_ABOUT_DIALOG_TXET;
-				
-			.separator{
-				margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
-				margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
-				border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
-			}
-
-			.text-area{
-				p{
-					line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
-					font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
-					color:$COLOR_ABOUT_DIALOG_TXET;
-				}
-			}
-		}	
-	}
-}
 
     #information-dialog-area {
-        box-shadow: none;
 
         .common-dialog {
             color: $COLOR_TEXT_MAIN;
             width: 640px;
             height: 480px;
-            box-shadow: none;
-            -webkit-box-shadow: none;
+            box-shadow: 0 0 15px #4d4d4d;
             text-shadow: none;
             background: $COLOR_ABOUT_DIALOG_BACKGROUND;
-            border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
-            overflow-y: scroll;
-
+            
             .information-dialog {
                 padding-top: 16px;
                 padding-bottom: 24px;
@@ -177,50 +166,55 @@ body{
             }
 
             .bold-separator {
-                border: 2px solid #999999;
+                border-top: 2px solid #999999;
                 width: 608px;
                 margin: 0 auto;
             }
 
-            .white-space-12px {
-                height: 12px;
-            }
+            .information-body {
+                height: 402px;
+                overflow-y: scroll;
 
-            .information-container {
-                width: 560px;
-                height: 150px;
-                margin: 24px 40px;
-            }
-
-            .information-img {
-                width: 150px;
-                height: 150px;
-                background-color: red;
-                float: left;
-            }
-
-            .information-box {
-                width: 370px;
-                height: 150px;
-                padding-left: 40px;
-                float: left;
-
-                .information-date {
-                    font-size: $FONT_SIZE_SSS;
-                    font-family: $FONT_FAMILY_NORMAL;
-                    padding-bottom: 8px;
+                .white-space-12px {
+                    height: 12px;
                 }
 
-                .information-text {
-                    font-size: $FONT_SIZE_S;
-                    font-family: $FONT_FAMILY_LIGHT;
+                .information-container {
+                    width: 560px;
+                    height: 150px;
+                    margin: 24px 40px;
                 }
-            }
 
-            .separator {
-                border: 1px solid #cccccc;
-                width: 576px;
-                margin: 0 auto;
+                .information-img {
+                    width: 150px;
+                    height: 150px;
+                    background-color: red;
+                    float: left;
+                }
+
+                .information-box {
+                    width: 370px;
+                    height: 150px;
+                    padding-left: 40px;
+                    float: left;
+
+                    .information-date {
+                        font-size: $FONT_SIZE_SSS;
+                        font-family: $FONT_FAMILY_NORMAL;
+                        padding-bottom: 8px;
+                    }
+
+                    .information-text {
+                        font-size: $FONT_SIZE_S;
+                        font-family: $FONT_FAMILY_LIGHT;
+                    }
+                }
+
+                .separator {
+                    border-top: 1px solid #cccccc;
+                    width: 576px;
+                    margin: 0 auto;
+                }
             }
         }
     }
