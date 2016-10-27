@@ -149,46 +149,79 @@ body{
 	}
 }
 
-#information-dialog-area{
-    
-	.common-dialog{
-		background:none;			
-		.information-dialog{
-			color:$COLOR_ABOUT_DIALOG_TXET;
-		}
-	}
+    #information-dialog-area {
+        box-shadow: none;
 
-	.title{
-		font-family:$FONT_FAMILY_ABOUT_TITLE;
-		font-size:$FONT_SIZE_ABOUT_TITLE;
-        padding-left:20px;
-	}
+        .common-dialog {
+            color: $COLOR_TEXT_MAIN;
+            width: 640px;
+            height: 480px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            text-shadow: none;
+            background: $COLOR_ABOUT_DIALOG_BACKGROUND;
+            border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+            overflow-y: scroll;
 
-    .separator{
-				margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
-				margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
-				border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
-	}
+            .information-dialog {
+                padding-top: 16px;
+                padding-bottom: 24px;
+            }
 
-    overflow-y:auto;
-	overflow-x:hidden;
-	text-shadow: none;
-	font-family:$FONT_WEIGHT_DIALOG_TEXT;
-	width:$SIZE_DIALOG_WIDTH;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	text-shadow: none;
-	border-radius:0;
-	background:$COLOR_ABOUT_DIALOG_BACKGROUND;
-	height:$SIZE_ABOUT_DIALOG_HEIGHT;
-	border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+            .title {
+                font-size: $FONT_SIZE_LL;
+                font-family: $FONT_FAMILY_NORMAL;
+                line-height: 1.5em;
+                margin: 0px;
+                padding-left: 24px;
+            }
 
-	padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
-	padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-	padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-	padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
-		
-}
+            .bold-separator {
+                border: 2px solid #999999;
+                width: 608px;
+                margin: 0 auto;
+            }
 
+            .white-space-12px {
+                height: 12px;
+            }
 
+            .information-container {
+                width: 560px;
+                height: 150px;
+                margin: 24px 40px;
+            }
+
+            .information-img {
+                width: 150px;
+                height: 150px;
+                background-color: red;
+                float: left;
+            }
+
+            .information-box {
+                width: 370px;
+                height: 150px;
+                padding-left: 40px;
+                float: left;
+
+                .information-date {
+                    font-size: $FONT_SIZE_SSS;
+                    font-family: $FONT_FAMILY_NORMAL;
+                    padding-bottom: 8px;
+                }
+
+                .information-text {
+                    font-size: $FONT_SIZE_S;
+                    font-family: $FONT_FAMILY_LIGHT;
+                }
+            }
+
+            .separator {
+                border: 1px solid #cccccc;
+                width: 576px;
+                margin: 0 auto;
+            }
+        }
+    }
 }
