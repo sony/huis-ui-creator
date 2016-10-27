@@ -142,12 +142,13 @@ body {
     }
 
     #information-dialog-area {
+        -webkit-box-shadow: 0 0 15px #4d4d4d;
+        box-shadow: 0 0 15px #4d4d4d;
 
         .common-dialog {
             color: $COLOR_TEXT_MAIN;
             width: 640px;
             height: 480px;
-            box-shadow: 0 0 15px #4d4d4d;
             text-shadow: none;
             background: $COLOR_ABOUT_DIALOG_BACKGROUND;
             
