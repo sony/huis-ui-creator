@@ -68,6 +68,8 @@ body {
     }
 
     #about-dialog-area {
+        -webkit-box-shadow: 0 0 15px #4d4d4d;
+        box-shadow: 0 0 15px #4d4d4d;
 
         .title {
             font-family: $FONT_FAMILY_ABOUT_TITLE;
@@ -107,9 +109,6 @@ body {
         text-shadow: none;
         font-family: $FONT_WEIGHT_DIALOG_TEXT;
         width: $SIZE_DIALOG_WIDTH;
-        box-shadow: none;
-        -webkit-box-shadow: none;
-        text-shadow: none;
         border-radius: 0;
         background: $COLOR_ABOUT_DIALOG_BACKGROUND;
         height: $SIZE_ABOUT_DIALOG_HEIGHT;
