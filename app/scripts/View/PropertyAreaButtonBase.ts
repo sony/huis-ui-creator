@@ -206,7 +206,7 @@ module Garage {
                     //bluetoothの情報で検索
                     if (action.bluetooth_data &&
                         action.bluetooth_data.bluetooth_device) {
-                        return huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
+                        remoteId = huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
                     }
 
                     // blueooth情報でわからない場合、codeで検索
