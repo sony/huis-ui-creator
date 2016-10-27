@@ -523,7 +523,7 @@ module Garage {
                     }
 
                     let actionInput: string = targetAction.input;
-                    let remoteId = this.getRemoteIdByAction(targetAction);
+                    let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
 
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);

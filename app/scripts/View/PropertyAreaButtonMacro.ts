@@ -765,7 +765,7 @@ module Garage {
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
                 
-                let remoteId: string = this.getRemoteIdByAction(action);
+                let remoteId: string = huisFiles.getRemoteIdByAction(action);
                 this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
 
                 //Functions用のプルダウンを描画できるときは描画
