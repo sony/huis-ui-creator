@@ -2678,7 +2678,7 @@ module Garage {
                     return;
                 }
 
-                let gmodules = this.faceRenderer_canvas_.getModules();
+                let gmodules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area) });
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
 				huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
@@ -4061,6 +4061,24 @@ module Garage {
 				}
             }
 
+            /**
+             * 対象エリアが完全にキャンバスの外にあるか検査する
+             * 一部でもキャンバス内に含まれる場合はfalseを返す
+             * @param area {IArea} 検査対象のエリア
+             * @return {boolean} エリアが完全にキャンバス外の場合はtrue、そうでない場合はfalse
+             */
+            private isCompletelyOutOfCanvas(area: IArea): boolean {
+                if (area.x + area.w < BIAS_X_DEFAULT_GRID_LEFT ||
+                    area.x > GRID_AREA_WIDTH + BIAS_X_DEFAULT_GRID_LEFT ||
+                    area.y + area.h < 0 ||
+                    area.y > GRID_AREA_HEIGHT) {
+
+                    return true;
+                }
+
+                return false;
+            }
+
 
 			/*
 			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
@@ -4190,8 +4208,9 @@ module Garage {
                         }
 
 
-						// 両方のボタンが enabled 状態のときのみ判定
-                        if (buttons[i].enabled && buttons[j].enabled) {
+						// 両方のボタンが enabled 状態かつキャンバス内のときのみ判定
+                        if (buttons[i].enabled && buttons[j].enabled &&
+                            !this.isCompletelyOutOfCanvas(button1Area) && !this.isCompletelyOutOfCanvas(button2Area)) {
                             // 当たり判定
                             if (this.isOverlap(button1Area, button2Area)) {
                                 //console.log("1: " + button1Area.x + "-" + (button1Area.x + button1Area.w) + ":" + button1Area.y + "-" + (button1Area.y + button1Area.h));

@@ -292,9 +292,9 @@ module Garage {
 			 * 
 			 * @return {IGModule[]} Module View がもつ module の配列
 			 */
-			getModules(): IGModule[] {
-				return this.moduleView_.getModules();
-			}
+            getModules(areaFilter?: (area) => boolean): IGModule[] {
+                return this.moduleView_.getModules(areaFilter);
+            }
 
 			/**
 			 * 指定された ID の module を取得する。
