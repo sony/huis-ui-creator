@@ -57,55 +57,8 @@ module Garage {
 				this.$facePages_ = [];
 				var modules: Model.Module[] = [];
 				for (var i = 0, l = modulesData.length; i < l; i++) {
-					let moduleData: IGModule = modulesData[i];
-					let moduleModel: Model.Module = new Model.Module();
-					moduleModel.set("area", moduleData.area);
-					moduleModel.name = moduleData.name;
-					moduleModel.remoteId = moduleData.remoteId;
-					moduleModel.pageIndex = moduleData.pageIndex;
-					moduleModel.offsetY = moduleData.offsetY;
-
-					// モジュール内に button があったら、ButtonItem View を生成
-					if (moduleData.button) {
-						moduleModel.set("button", moduleData.button);
-						this.buttonViews_.push(new ButtonItem({
-							attributes: {
-								buttons: moduleData.button,
-								materialsRootPath: this.materialsRootPath_,
-								remoteId: moduleData.remoteId
-							}
-						}));
-					} else {
-						this.buttonViews_.push(null);
-					}
-
-					// モジュール内に label があったら、LabelItem View を生成
-					if (moduleData.label) {
-						moduleModel.set("label", moduleData.label);
-						this.labelViews_.push(new LabelItem({
-							attributes: {
-								labels: moduleData.label,
-								materialsRootPath: this.materialsRootPath_
-							}
-						}));
-					} else {
-						this.labelViews_.push(null);
-					}
-
-					// モジュール内に image があったら、ImageItem View を生成
-					if (moduleData.image) {
-						moduleModel.set("image", moduleData.image);
-						this.imageViews_.push(new ImageItem({
-							attributes: {
-								images: moduleData.image,
-								materialsRootPath: this.materialsRootPath_,
-								remoteId: moduleData.remoteId
-							}
-						}));
-					} else {
-						this.imageViews_.push(null);
-					}
-
+					
+                    let moduleModel = this.getModuleModel(modulesData[i]);
 					moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
 
 					modules.push(moduleModel);
@@ -398,7 +351,7 @@ module Garage {
 			 * @param moduleId {string} [in] ボタンの追加先となる module の ID
 			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
 			 */
-			addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number): Model.ButtonItem {
+            addButton(button: Model.ButtonItem, moduleId: string, offsetY?: number, callback?: Function): Model.ButtonItem {
 				var moduleIndex = this._getModuleIndex(moduleId);
 				if (moduleIndex < 0) {
 					console.log(TAG + "module not found");
@@ -418,7 +371,7 @@ module Garage {
 					this.buttonViews_[moduleIndex] = buttonView;
 				}
 
-				var newButton = this._copyButtonItem(button, module, offsetY);
+                var newButton = this._copyButtonItem(button, module, offsetY);
 
 				// 所属する module の要素を取得し、View に set する
 				var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -453,7 +406,7 @@ module Garage {
 			/**
 			 * ButtonItem をコピーする
 			 */
-			private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
+            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
 				if (!offsetY) {
 					offsetY = 0;
 				}
@@ -484,11 +437,6 @@ module Garage {
 				    newButton.currentStateId = srcButton.currentStateId;
 				}
 
-				// button.deviceInfo のコピー
-				if (srcButton.deviceInfo) {
-					newButton.deviceInfo = $.extend(true, {}, srcButton.deviceInfo);
-				}
-
 				// button.state のコピー
 				var srcStates = srcButton.state;
 				var newStates: IGState[] = [];
@@ -499,7 +447,7 @@ module Garage {
 					};
 					newState.active = srcState.active;
 
-					if (srcState.action) {
+                    if (srcState.action) {
 						if (_.isArray(srcState.action)) {
 							newState.action = $.extend(true, [], srcState.action);
 						} else {
@@ -515,11 +463,19 @@ module Garage {
 						}
 					}
 
-					if (srcState.image) {
-						if (_.isArray(srcState.image)) {
+                    if (srcState.image) {
+                        if (_.isArray(srcState.image)) {
 							newState.image = $.extend(true, [], srcState.image);
 						} else {
 							newState.image = [$.extend(true, {}, srcState.image)];
+						}
+					}
+
+					if (srcState.label) {
+						if (_.isArray(srcState.label)) {
+							newState.label = $.extend(true, [], srcState.label);
+						} else {
+							newState.label = [$.extend(true, {}, srcState.label)];
 						}
 					}
 
@@ -652,15 +608,85 @@ module Garage {
 
 				// 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
 				if (srcImagePath && fs.existsSync(srcImagePath) && !fs.existsSync(newImage.resolvedPath)) {
-					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done(() => {
+					Model.OffscreenEditor.editImage(srcImagePath, IMAGE_EDIT_PARAMS, newImage.resolvedPath).done((result) => {
 						if (callback) {
-							callback();
+							callback(result);
 						}
 					});
 				}
 
 				return newImage;
-			}
+            }
+
+
+            /**
+			 * 画像アイテムを追加する。画像のコピーは発生しない。
+			 * 
+			 * @param image {Model.ImageItem} [in] 追加する画像アイテムの元となる model
+			 * @param moduleId {string} [in] 画像アイテムの追加先となる module の ID
+			 * @param offsetY {number} [in] module の y 座標の offset。ここでは、各ページの先頭からの offset を指す。
+			 */
+            addImageWithoutCopy(image: Model.ImageItem, moduleId: string, offsetY: number): Model.ImageItem {
+                if (!offsetY) {
+                    offsetY = 0;
+                }
+
+                var moduleIndex = this._getModuleIndex(moduleId);
+                if (moduleIndex < 0) {
+                    console.log(TAG + "module not found");
+                    return null;
+                }
+                var module = this.collection.at(moduleIndex);
+
+                var imageView = this.imageViews_[moduleIndex];
+                if (!imageView) {
+                    imageView = new ImageItem({
+                        attributes: {
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: module.remoteId
+                        }
+                    });
+                    this.imageViews_[moduleIndex] = imageView;
+                }
+
+                // 新しい model を追加する
+                var newImage = new Model.ImageItem({
+                    materialsRootPath: this.materialsRootPath_,
+                    remoteId: module.remoteId
+                });
+
+                var newArea: IArea;
+                // image が string の場合は、image をパスとして扱う
+                newArea = $.extend(true, {}, image.area);
+                newArea.y += offsetY;
+                newImage.area = newArea;
+
+                // 画像の path を出力先の remoteId のディレクトリーになるように指定
+                newImage.path = image.path;
+                newImage.resolvedPath = image.resolvedPath;
+                newImage.resizeOriginal = image.resizeOriginal;
+
+
+                //バージョン情報をもっている場合、引き継ぐ
+                if (image.version != null) {
+                    newImage.version = image.version;
+                }
+
+                //最後に書き出されるようにするため、resizedはtrueにする。
+                newImage.resized = true;
+
+                // 所属する module の要素を取得し、View に set する
+                var $module = this.$el.find("[data-cid='" + moduleId + "']");
+                imageView.setElement($module);
+                if (newImage.pageBackground) {
+                    // 背景の場合、先頭に追加する
+                    imageView.collection.add(newImage, { at: 0 });
+                } else {
+                    imageView.collection.add(newImage);
+                }
+
+                return newImage;
+            }
 
 			/**
 			 * 画像アイテムを削除する。
@@ -821,6 +847,87 @@ module Garage {
 				var gmodule: IGModule = $.extend(true, {}, moduleModel);
 				return gmodule;
 			}
+
+
+            /*
+            * IGModuleから、Model.Moduleを取得する。
+            */
+            
+            private getModuleModel(gmodule: IGModule): Model.Module {
+                let moduleData: IGModule = gmodule;
+                let moduleModel: Model.Module = new Model.Module();
+                moduleModel.set("area", moduleData.area);
+                moduleModel.name = moduleData.name;
+                moduleModel.remoteId = moduleData.remoteId;
+                moduleModel.pageIndex = moduleData.pageIndex;
+                moduleModel.offsetY = moduleData.offsetY;
+
+                // モジュール内に button があったら、ButtonItem View を生成
+                if (moduleData.button) {
+                    moduleModel.set("button", moduleData.button);
+                    this.buttonViews_.push(new ButtonItem({
+                        attributes: {
+                            buttons: moduleData.button,
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: moduleData.remoteId
+                        }
+                    }));
+                } else {
+                    this.buttonViews_.push(null);
+                }
+
+                // モジュール内に label があったら、LabelItem View を生成
+                if (moduleData.label) {
+                    moduleModel.set("label", moduleData.label);
+                    this.labelViews_.push(new LabelItem({
+                        attributes: {
+                            labels: moduleData.label,
+                            materialsRootPath: this.materialsRootPath_
+                        }
+                    }));
+                } else {
+                    this.labelViews_.push(null);
+                }
+
+                // モジュール内に image があったら、ImageItem View を生成
+                if (moduleData.image) {
+                    moduleModel.set("image", moduleData.image);
+                    this.imageViews_.push(new ImageItem({
+                        attributes: {
+                            images: moduleData.image,
+                            materialsRootPath: this.materialsRootPath_,
+                            remoteId: moduleData.remoteId
+                        }
+                    }));
+                } else {
+                    this.imageViews_.push(null);
+                }
+
+                return moduleModel;
+            }
+
+
+
+            addModuleInNewFacePages(inputModules: IGModule[]) {
+                let FUNCTION_NAME = TAG + "addModules : ";
+
+                if (inputModules == null) {
+                    console.warn(FUNCTION_NAME + "inputModules is null");
+                    return;
+                }
+                let modulesModels: Model.Module[] = [];
+
+                for (var i = 0, l = inputModules.length; i < l; i++) {
+                    //ページカウントは、すでに記述されているページに追加する
+                    let moduleModel = this.getModuleModel(inputModules[i]);
+                    moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
+                    modulesModels.push(moduleModel);
+                }
+                (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
+                
+                
+            }
+
 
 			private _getModuleIndex(id: string): number {
 				var moduleIndex = -1;

@@ -18,7 +18,8 @@ module Garage {
 	}
 
 	define("app", [
-		"hogan",
+        "hogan",
+        "zip",
 		"modernizr",
 		"cdp.nativebridge",
 		"cdp.ui.jqm",

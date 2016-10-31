@@ -80,6 +80,14 @@ module Garage {
 				this.set("version", val);
 			}
 
+			get interval(): number{
+				return this.get("interval");
+			}
+
+			set interval(val: number) {
+				this.set("interval", val);
+			}
+
             get currentStateId(): number {
 				return this.get("currentStateId");
 			}
@@ -159,40 +167,31 @@ module Garage {
 
 					this.stateCollection_.add(stateModel);
 				}
-				// ボタンの機器情報が設定していなかったら、state 内から情報を探して設定する
-				if (!this.deviceInfo) {
-					for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
-						let stateModel = this.stateCollection_.at(i);
-						if (stateModel && stateModel.action && stateModel.action.length) {
-							let action = stateModel.action[0];
-							if (action && action.code_db) {
-								let code_db = action.code_db;
-								let deviceInfo: IButtonDeviceInfo = {
-									code_db: code_db,
-									functions: []
-								};
-								this.deviceInfo = deviceInfo;
-								break;
-							}
-						}
-					}
-				}
+                // Action毎の機器情報の設定
+                for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
+                    let stateModel = this.stateCollection_.at(i);
+                    if (stateModel && stateModel.action && stateModel.action.length) {
+                        let action = stateModel.action[0];
+                        if (action && action.code_db && !action.deviceInfo) {
+                            // 機器情報が設定されていない場合はactionに設定されている情報をコピー
+                            action.deviceInfo = {
+                                id: "",
+                                code_db: action.code_db,
+                                bluetooth_data: (action.bluetooth_data) ? action.bluetooth_data : null,
+                                functions: []
+                            };
+                        }
+                    }
+                }
 				this._setStateItemsArea(this.area);
 			}
 
-			get deviceInfo(): IButtonDeviceInfo {
-				return this.get("deviceInfo");
-			}
-
-			set deviceInfo(val: IButtonDeviceInfo) {
-				this.set("deviceInfo", val);
-			}
 
 			/**
 			 * 変更可能なプロパティーの一覧
 			 */
 			get properties(): string[]{
-				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version"];
+				return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
 			}
 
 			/**

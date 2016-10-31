@@ -71,6 +71,7 @@ module Garage {
 					"mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
+                    "click #command-import-remote": "onOptionImport",
                     // ショートカットキー
                     //"keydown": "_onKeyDown",
 					// コンテキストメニュー
@@ -82,6 +83,20 @@ module Garage {
 				this._renderFaceList();
 				return this;
 			}
+
+            /*
+            * オプションの「リモコンをインポート」を押した際の処理
+            */
+            private onOptionImport(event: Event) {
+
+                this.importRemote(() => {
+                    //インポートが完了したら、再描画する。
+                    huisFiles.init(HUIS_FILES_ROOT);
+                    this._calculateFaceListWidth();
+                    this._renderFaceList();
+                });
+            }
+
 
 			/**
 			 * Home 画面の初期化
@@ -142,6 +157,7 @@ module Garage {
                 var numRemotes:number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
+                    this._disableIntroduction();//念のため、introductionを非表示にする。
                     var $faceList = $("#face-list")
                     $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
@@ -177,6 +193,15 @@ module Garage {
                 $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
                 $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
                 $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
+            }
+
+            /*
+             * 導入画面を非表示にする。
+             */
+            private _disableIntroduction() {
+                var $indtroductionHome = $("#home-introductions");
+                $indtroductionHome.css("visibility", "hidden");
+
             }
 
 
@@ -241,12 +266,7 @@ module Garage {
 						title: PRODUCT_NAME,
 					});
 				} else if (canCreateResult == -1) {
-					electronDialog.showMessageBox({
-						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
-						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-						title: PRODUCT_NAME,
-					});
+                    this.showErrorDialogRemoteNumLimit()
 				} else {
 					console.warn("no alert dialog in _onCreateNewRemote()");
 				}
@@ -304,7 +324,7 @@ module Garage {
 							});
 						} else {
 						}
-					});
+                    });
 				}
             }
 
@@ -325,6 +345,17 @@ module Garage {
 				if ($face.length) {
 					this.remoteIdToDelete = $face.data("remoteid");
                     if (this.remoteIdToDelete) {
+
+                        let remoteIdToExport = $face.data("remoteid");
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                            click: () => {
+                                let face :IGFace = huisFiles.getFace(remoteIdToExport);
+
+                                this.exportRemote(remoteIdToExport, face.name,face.modules); // true で警告なし
+                            }
+                        }));
+
 						this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
