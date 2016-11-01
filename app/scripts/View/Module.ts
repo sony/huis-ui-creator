@@ -95,29 +95,33 @@ module Garage {
 				}
 
 
-				this.collection.each((item, index) => {
-					let pageIndex: number = item.get("pageIndex");
-					let $targetFacePage = this.$facePages_[pageIndex];
-					let $moduleContainer = $(this.moduleContainerTemplate_({
-						index: index,
-						width: item.area.w,
-						height: item.area.h,
-						offsetY: item.offsetY,
-						pageIndex: item.pageIndex,
-						cid: item.cid
-					}));
+                this.collection
+                    .filter((item, index) => {
+                        return this.isValidModule(item);
+                    })
+                    .forEach((item, index) => {
+                        let pageIndex: number = item.get("pageIndex");
+                        let $targetFacePage = this.$facePages_[pageIndex];
+                        let $moduleContainer = $(this.moduleContainerTemplate_({
+                            index: index,
+                            width: item.area.w,
+                            height: item.area.h,
+                            offsetY: item.offsetY,
+                            pageIndex: item.pageIndex,
+                            cid: item.cid
+                        }));
 
-					// ラベルをレンダリング
-					this._renderLabels(item.label, index, $moduleContainer);
-					// 画像をレンダリング
-					this._renderImages(item.image, index, $moduleContainer);
-					// ボタンをレンダリング
-					this._renderButtons(item.button, index, $moduleContainer);
+                        // ラベルをレンダリング
+                        this._renderLabels(item.label, index, $moduleContainer);
+                        // 画像をレンダリング
+                        this._renderImages(item.image, index, $moduleContainer);
+                        // ボタンをレンダリング
+                        this._renderButtons(item.button, index, $moduleContainer);
 
-					// DOM に追加
-					$targetFacePage.append($moduleContainer);
-					this.$el.append($targetFacePage);
-				});
+                        // DOM に追加
+                        $targetFacePage.append($moduleContainer);
+                        this.$el.append($targetFacePage);
+                    });
 
 				//Jsonファイルが破壊されているなどの理由で、moduleがひとつもないとき
 				// facePagesだけでappendする
@@ -918,6 +922,11 @@ module Garage {
                 let modulesModels: Model.Module[] = [];
 
                 for (var i = 0, l = inputModules.length; i < l; i++) {
+                    if (!this.isValidModule(inputModules[i])) {
+                        // 無効なモジュールは表示しない
+                        continue;
+                    }
+
                     //ページカウントは、すでに記述されているページに追加する
                     let moduleModel = this.getModuleModel(inputModules[i]);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
@@ -929,7 +938,68 @@ module Garage {
             }
 
 
-			private _getModuleIndex(id: string): number {
+            /**
+             * モジュールが有効かどうか検査する
+             * @param item {IGModule} 検査対象モジュール
+             * @return {boolean} 有効なモジュールの場合はtrue、そうでない場合はfalse
+             */
+            private isValidModule(item: IGModule): boolean {
+                if (item.button) {
+                    // ボタンが有る場合はボタン全てを検査
+                    return this.isValidButtons(item.button);
+                } else {
+                    // ボタンが無い場合は有効
+                    return true;
+                }
+            }
+
+
+            /**
+             * ボタンリストが有効かどうか検査する
+             * @param buttons {IGButton[]} 検査対象ボタンリスト
+             * @return {boolean} ボタンリストが有効な場合はtrue、そうでない場合はfalse
+             */
+            private isValidButtons(buttons: IGButton[]): boolean {
+                for (let button of buttons) {
+                    if (this.isValidButton(button)) {
+                        return true;
+                    }
+                }
+
+                // 全ボタンが無効な場合は無効
+                return false;
+            }
+
+
+            /**
+             * ボタンが有効かどうか検査する
+             * @param button {IGButton} 検査対象ボタン
+             * @return {boolean} ボタンが有効な場合はtrue、そうでない場合はfalse
+             */
+            private isValidButton(button: IGButton): boolean {
+                if (!button.state) return false;
+
+                for (let state of button.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (action.code_db &&
+                            action.code_db.device_type &&
+                            action.code_db.device_type == DEVICE_TYPE_LEARNED &&
+                            !action.bluetooth_data) {
+                            // 学習リモコンの場合
+                            if (action.code == null) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+
+            private _getModuleIndex(id: string): number {
 				var moduleIndex = -1;
 				this.collection.find((module: Model.Module, index: number) => {
 					if (module.cid === id) {

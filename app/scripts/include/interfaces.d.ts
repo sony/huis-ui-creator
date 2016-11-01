@@ -705,6 +705,8 @@ declare module Garage {
 	var DEVICE_TYPE_FULL_CUSTOM: string;
     var DEVICE_TYPE_BT: string;
     var DEVICE_TYPE_SPECIAL: string;
+    /** デバイスタイプ 学習リモコン */
+    var DEVICE_TYPE_LEARNED: string;
 
 	/**
 	* DetailAreaの機能に表示されないデバイスタイプ
