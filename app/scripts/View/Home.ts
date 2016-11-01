@@ -106,42 +106,8 @@ module Garage {
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
 
-
-                
-
-                if (!fs) {
-                    fs = require("fs-extra");
-                }
-
-                function isExistFile(file) {
-                    try {
-                        fs.statSync(file);
-                        return true;
-                    } catch (err) {
-                        return false;
-                    }
-                }
-
-                if (!isExistFile('./notified_flag_file')) {
-                    fs.outputFile('./notified_flag_file', "this file is a flag", function (err) { console.log(err); });
-
-                    var dialog: Dialog = null;
-                    var props: DialogProps = null;
-                    var informationList: { date: string, text: string }[] = [];
-                    informationList.push({ date: "2016.01.01", text: "お知らせ１" });
-                    informationList.push({ date: "2016.01.02", text: "お知らせ２" });
-                    informationList.push({ date: "2016.01.03", text: "お知らせ３" });
-
-
-                    dialog = new CDP.UI.Dialog("#common-dialog-information", {
-                        src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                        title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
-                        informationList: informationList,
-                        dismissible: true,
-                    });
-                    dialog.show();
-                }
-			}
+                this._notify();
+            }
 
             /**
 			 * face リストのレンダリング
@@ -451,7 +417,49 @@ module Garage {
             //            break;
             //    }
             //}
-		}
+
+			/**
+			 * お知らせダイアログを表示する必要があるかを判定して、必要なら表示する
+			 */
+            private _notify() {
+
+                if (!fs) {
+                    fs = require("fs-extra");
+                }
+
+                function shouldNotify() {
+                    try {
+                        let preVersion = fs.readFileSync("./version.txt").toString();
+                        let lastNotifiedVersion = fs.readFileSync("./last_notified_version.txt").toString();
+                        if (preVersion === lastNotifiedVersion) return false;
+                        else return true;
+                    } catch (err) {
+                        console.log("last_notified_version.txt, version.txt が存在しません");
+                        return true;
+                    }
+                }
+
+                if (shouldNotify()) {
+                    fs.outputFile("./last_notified_version.txt", fs.readFileSync("./version.txt"), function (err) { console.log(err); });
+
+                    var dialog: Dialog = null;
+                    var props: DialogProps = null;
+                    var informationList: { date: string, text: string }[] = [];
+                    informationList.push({ date: "2016.01.01", text: "お知らせ１" });
+                    informationList.push({ date: "2016.01.02", text: "お知らせ２" });
+                    informationList.push({ date: "2016.01.03", text: "お知らせ３" });
+
+
+                    dialog = new CDP.UI.Dialog("#common-dialog-information", {
+                        src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                        title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
+                        informationList: informationList,
+                        dismissible: true,
+                    });
+                    dialog.show();
+                }
+		    }
+        }
 
 		var View = new Home();
 	}

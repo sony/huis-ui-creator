@@ -7,4 +7,4 @@ obj/
 tests/
 www/app/
 www/
-notified_flag_file
+last_notified_version.txt
