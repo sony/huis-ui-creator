@@ -3,12 +3,12 @@
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaNormal] ";
+        var TAG = "[Garage.View.PropertyAreaNormal] ";
 
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
@@ -85,9 +85,9 @@ module Garage {
             private assignedInputActions: string[];
 
          
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.assignedInputActions = [];
@@ -898,5 +898,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

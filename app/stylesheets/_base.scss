@@ -55,22 +55,22 @@ body {
         -ms-user-select: none;
             user-select: none;
  
-	.tooltip-text{
-			display: none;	
-	}
-				
-	//ラベル、ボタン、画像などのz-indexアイテム
-	.label-item{
-		z-index:3;	
-	}
+    .tooltip-text{
+            display: none;
+    }
+                
+    //ラベル、ボタン、画像などのz-indexアイテム
+    .label-item{
+        z-index:3;
+    }
 
-	.button-item{
-		z-index:2;
-	}
+    .button-item{
+        z-index:2;
+    }
 
-	.image-item{
-		z-index:1;
-	}
+    .image-item{
+        z-index:1;
+    }
 
 
     //スクロールバー
@@ -120,41 +120,41 @@ body {
         background-clip: padding-box;
 
         &:horizontal{
-			border-right:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-			border-left:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-right:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-left:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
             border-bottom : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_TOP solid $COLOR_SCROLL_BAR_THUMB_PADDING;
             border-top : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_BOTTOM solid $COLOR_SCROLL_BAR_THUMB_PADDING;
         }
 
         &:vertical{
-			//スケールが1/2なので２倍に
+            //スケールが1/2なので２倍に
             border-left : $SIZE_SCROLL_BAR_BORDER_VERTICAL_LEFT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
-			border-right : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
-			border-bottom : $SIZE_SCROLL_BAR_BORDER_VERTICAL_BOTTOM *2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-right : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
+            border-bottom : $SIZE_SCROLL_BAR_BORDER_VERTICAL_BOTTOM *2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
             border-top : $SIZE_SCROLL_BAR_BORDER_VERTICAL_TOP*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
 
         }
     }
 
 
-	.ui-loader{
-			position:absolute;
-			text-align:center;
-			font-size:$FONT_SIZE_TOAST;
-			font-family : $FONT_FAMILY_TOAST;
-			padding-left:$SIZE_TOAST_PADDING_LEFT;
-			padding-right:$SIZE_TOAST_PADDING_RIGHT;
-			height:$SIZE_TOAST_HEIGHT;
-			line-height:$SIZE_TOAST_HEIGHT;
-			border-radius:0;
-			box-shadow:none;
-			text-shadow:none;
-			color:$COLOR_TOAST_TEXT;
-			background-color:$COLOR_TOAST_BACKGROUND;
-	}
+    .ui-loader{
+            position:absolute;
+            text-align:center;
+            font-size:$FONT_SIZE_TOAST;
+            font-family : $FONT_FAMILY_TOAST;
+            padding-left:$SIZE_TOAST_PADDING_LEFT;
+            padding-right:$SIZE_TOAST_PADDING_RIGHT;
+            height:$SIZE_TOAST_HEIGHT;
+            line-height:$SIZE_TOAST_HEIGHT;
+            border-radius:0;
+            box-shadow:none;
+            text-shadow:none;
+            color:$COLOR_TOAST_TEXT;
+            background-color:$COLOR_TOAST_BACKGROUND;
+    }
 
     .ui-page-theme-b{
-	
+    
 
         //共通の吹き出し
         #popup-arrow{
@@ -165,7 +165,7 @@ body {
             width:$SIZE_POPUP_ARROW_WIDTH;
             height:$SIZE_POPUP_ARROW_HEIGHT;
             margin-top:$SIZE_POPUP_ARROW_MINUS_MARGIN;
-			margin-bottom:$SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
+            margin-bottom:$SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
         }
 
         //共通のテキストボタン
@@ -228,7 +228,7 @@ body {
                     padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
                     font-size:$FONT_SIZE_TITLE;
                     font-family:$FONT_FAMILY_TITLE;
-					font-weight:initial;
+                    font-weight:initial;
                 }
             }
 
@@ -333,13 +333,13 @@ body {
                             padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
                             &:hover, &:active{
                                 background-color:$COLOR_PULL_DOWN_BACKGROUND_HOVER;
-								color : $COLOR_PULL_DOWN_TEXT_HOVER;
+                                color : $COLOR_PULL_DOWN_TEXT_HOVER;
                             }
 
                         }
 
                         .ui-btn-active{
-							color : $COLOR_PULL_DOWN_TEXT_SELECTED;
+                            color : $COLOR_PULL_DOWN_TEXT_SELECTED;
                         }
                     }
                 }
@@ -400,16 +400,16 @@ body {
                         padding-right:$SIZE_OPTIOM_MENU_POPUP_ITEM_PADDING_RIGHT;
                         height:$SIZE_OPTION_MENU_POPUP_ITEM_HEIGHT;
                         display: flex;
-	                    align-items: center;
+                        align-items: center;
 
                         &:hover{
                             background-color:$COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
-							color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+                            color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
                         }
 
                         &:active{
                             background-color:$COLOR_LIGHT_GREEN;
-							color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+                            color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
                         }
 
                         &:disabled{
@@ -417,7 +417,7 @@ body {
                         }
                     }
 
-					   
+                       
                      #command-delete-remote{
                              color:$COLOR_OPTIOM_MENU_POPUP_ITEM_DELETE_TEXT;
  
@@ -427,10 +427,10 @@ body {
  
                          }
  
-					.menu-item-separator{
-						border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid  $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
-						margin: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM 0;
-					}  
+                    .menu-item-separator{
+                        border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid  $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
+                        margin: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM 0;
+                    }  
 
                 }
             }
@@ -467,25 +467,25 @@ body {
                 border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
             }            
 
-		}
+        }
 
-		input[type="text"].text-field-type2{
-			background-color:$COLOR_FORM_BACKGROUND_TYPE2;
-			border-top:none;
-			border-left:none;
-			border-right:none;
-			text-align:center;
-			border-color:$COLOR_FORM_BORDER_NORMAL_TYPE2;
-			border-width:$SIZE_FORM_BORDER_THICKNESS;
+        input[type="text"].text-field-type2{
+            background-color:$COLOR_FORM_BACKGROUND_TYPE2;
+            border-top:none;
+            border-left:none;
+            border-right:none;
+            text-align:center;
+            border-color:$COLOR_FORM_BORDER_NORMAL_TYPE2;
+            border-width:$SIZE_FORM_BORDER_THICKNESS;
 
-			&:hover{
+            &:hover{
                  border-color : $COLOR_FORM_BORDER_HOVER_TYPE2;
             }
 
-			&:focus{
+            &:focus{
                 border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
             }       
-		}
+        }
 
         section {
             &.normal-screen {
