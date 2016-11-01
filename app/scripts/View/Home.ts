@@ -107,21 +107,36 @@ module Garage {
                 this.contextMenu_ = new Menu();
 
 
+                
 
+                if (!fs) {
+                    fs = require("fs-extra");
+                }
 
+                function isExistFile(file) {
+                    try {
+                        fs.statSync(file);
+                        return true;
+                    } catch (err) {
+                        return false;
+                    }
+                }
 
+                if (!isExistFile('./notified_flag_file')) {
+                    fs.outputFile('./notified_flag_file', "this file is a flag", function (err) { console.log(err); });
 
-                var dialog: Dialog = null;
-                var props: DialogProps = null;
-                var text: string = "お知らせの内容お知らせの内容お知らせの内容お知らせの内容お知らせの内容";
+                    var dialog: Dialog = null;
+                    var props: DialogProps = null;
+                    var text: string = "お知らせの内容お知らせの内容お知らせの内容お知らせの内容お知らせの内容";
 
-                dialog = new CDP.UI.Dialog("#common-dialog-information", {
-                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                    title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
-                    message: text,
-                    dismissible: true,
-                });
-                dialog.show();
+                    dialog = new CDP.UI.Dialog("#common-dialog-information", {
+                        src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                        title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
+                        message: text,
+                        dismissible: true,
+                    });
+                    dialog.show();
+                }
 			}
 
             /**
