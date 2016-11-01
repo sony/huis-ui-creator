@@ -803,7 +803,7 @@ module Garage {
 			/**
 			 * Module View がもつすべての module を取得する。
 			 *
-             * @param areaFilter {Function} 
+             * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
 			 * @return {IGModule[]} Module View がもつ module の配列
 			 */
             getModules(areaFilter?: (area) => boolean): IGModule[] {

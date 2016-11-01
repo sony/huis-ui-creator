@@ -289,7 +289,8 @@ module Garage {
 
 			/**
 			 * Module View がもつすべての module を取得する。
-			 * 
+             * 
+			 * @param areaFilter module の area によるフィルタ
 			 * @return {IGModule[]} Module View がもつ module の配列
 			 */
             getModules(areaFilter?: (area) => boolean): IGModule[] {

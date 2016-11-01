@@ -2678,7 +2678,7 @@ module Garage {
                     return;
                 }
 
-                let gmodules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area) });
+                let gmodules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
 				huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
