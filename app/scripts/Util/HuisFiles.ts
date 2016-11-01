@@ -236,6 +236,79 @@ module Garage {
 				}
 			}
 
+
+            /**
+             * IActionオブジェクトからremoteIdを取得する
+             * @param action {IAction}
+             * @return {string} remoteId
+             */
+            getRemoteIdByAction(action: IAction): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+                let remoteId: string = undefined;
+
+                if (action != null) {
+
+                    // codeで検索
+                    let code = action.code;
+                    if (remoteId == null && code != null) {
+                        remoteId = this.getRemoteIdByCode(code);
+                    }
+
+                    //codeで検索でわからないばあい、functionCodeHashで取得
+                    if (remoteId == null &&
+                        action.deviceInfo &&
+                        action.deviceInfo.functionCodeHash != null) {
+                        let functionCodeHash = action.deviceInfo.functionCodeHash;
+                        let checkCode: string = null;
+
+                        //functionCodeHashのうち、適当なcodeで検索
+                        for (let key in functionCodeHash) {
+                            checkCode = functionCodeHash[key];
+                            break;
+                        }
+                        remoteId = this.getRemoteIdByCode(checkCode);
+                    }
+
+                    // functionCodeHashでみつからない場合、deviceinfoで検索
+                    if (remoteId == null &&
+                        action.deviceInfo) {
+                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                    }
+
+                    //deviceinfoでみつからない場合、bluetoothの情報で検索
+                    if (remoteId == null &&
+                        action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device &&
+                        action.deviceInfo &&
+                        action.deviceInfo.remoteName != null) {
+                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                    }
+
+
+                    // codebluetoothでみつからない場合、code_dbで検索
+                    if (remoteId == null &&
+                        action.deviceInfo &&
+                        action.deviceInfo.code_db) {
+                        let codeDb = action.deviceInfo.code_db;
+                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                    }
+
+                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
+                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
+                        remoteId = action.deviceInfo.id;
+                    }
+
+                }
+
+                return remoteId;
+
+            }
+
+
 			/*
 			* 同一のコードを持つremoteがあった場合そのremoteIdをする
 			* @param code{string} 学習して登録した際の button/state/action/code
@@ -1014,7 +1087,8 @@ module Garage {
                     df.reject();
                     });
 
-                if (cache != null){
+                if (cache != null) {
+                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules);
                     cache.save(gmodules);
                 }
                 
