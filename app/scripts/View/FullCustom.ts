@@ -1700,10 +1700,8 @@ module Garage {
 			 * キャンバス内のスクロールイベントのハンドリング
 			 */
 			private onCanvasPageScrolled(event: Event) {
-				console.log("canvas scrolled");
 				var $target: JQuery = $(event.currentTarget);
 				var scrollTop: number = $target.scrollTop();
-				console.log("scrollTop: " + scrollTop);
 
 				var $children = $target.children();
 
@@ -1727,10 +1725,8 @@ module Garage {
 			 * パレット内のスクロールイベントのハンドリング
 			 */
             private onPalletPageScrolled(event: Event) {
-                console.log("onPalletPageScrolled:pallet scrolled");
                 var $target: JQuery = $(event.currentTarget);
                 var scrollTop: number = $target.scrollTop();
-                console.log("onPalletPageScrolled:scrollTop: " + scrollTop);
                 this.displayGradationInPalletArea(scrollTop, $target);
 
                 var $children = $target.children();
