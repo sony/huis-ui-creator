@@ -3759,7 +3759,7 @@ module Garage {
              * @return ファイルが存在する場合はtrue、そうでない場合（対象がフォルダだった場合を含む）はfalse
              */
             private existsImageFile(backgroundImage: string): boolean {
-                let imageFullPath = backgroundImage.match(/[^url\("file:\/\/\/].+[^"?\)]/);
+                let imageFullPath = backgroundImage.match(/[^url\("file:\/\/\/][^\?"\)]*/);
                 try {
                     if (imageFullPath &&
                         imageFullPath[0] &&
