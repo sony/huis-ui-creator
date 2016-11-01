@@ -527,7 +527,8 @@ module Garage {
                 }
 
                 //mac対策のため、シングルクォーテーションで囲む
-                $target.css("background-image", "url('" + imageUrl + "')");
+                //ブラウザキャッシュ対策のため、現在時刻をクエリに設定
+                $target.css("background-image", "url('" + imageUrl + "?" + (new Date()).getTime() + "')");
 
             }
 

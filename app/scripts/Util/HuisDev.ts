@@ -391,7 +391,9 @@
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数
 				// TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
-				private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
+                private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
+                    let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
+
 					this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
 					.then((diffInfo: IDiffInfo)	=> {
 						// TODO: ディスクの容量チェック
@@ -412,16 +414,15 @@
 						var	df = $.Deferred();
 						// destRootDirの余分なファイルやディレクトリを削除
 						this._removeFiles(destRootDir, removeTargetFiles)
-							.then(() => {
+                            .done(() => {
+                                callback(null);	// 成功
 								df.resolve();
 							})
-							.fail((err) => {
+                            .fail((err) => {
 								df.reject(err);
 							});
 							df.resolve();
 						return CDP.makePromise(df);
-					}).then(() => {
-							callback(null);	// 成功
 					}).fail((err) => {
 						callback(err);
 					});
@@ -468,7 +469,8 @@
 
 
 				private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
-					let df = $.Deferred<Error>();
+                    let FUNCITON_NAME = TAG + "_copyFiles : ";
+                    let df = $.Deferred<Error>();
 					let promise = CDP.makePromise(df);
 
 					let files = targetFiles.slice();
@@ -486,6 +488,7 @@
                                     // ボタンデバイス情報のキャッシュファイルは本体に送らない
                                     filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }
+                                console.log(FUNCITON_NAME + "copy file (" + file + ")");
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {

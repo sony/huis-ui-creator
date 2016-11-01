@@ -252,19 +252,13 @@ module Garage {
 
                 if (action != null) {
 
-                    //bluetoothの情報で検索
-                    if (action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
-                    }
-
-                    // blueooth情報でわからない場合、codeで検索
+                    // codeで検索
                     let code = action.code;
                     if (remoteId == null && code != null) {
                         remoteId = this.getRemoteIdByCode(code);
                     }
 
-                    //codeで検索でわからない場合、functionCodeHashで取得
+                    //codeで検索でわからないばあい、functionCodeHashで取得
                     if (remoteId == null &&
                         action.deviceInfo &&
                         action.deviceInfo.functionCodeHash != null) {
@@ -279,26 +273,28 @@ module Garage {
                         remoteId = this.getRemoteIdByCode(checkCode);
                     }
 
+                    // functionCodeHashでみつからない場合、deviceinfoで検索
+                    if (remoteId == null &&
+                        action.deviceInfo) {
+                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                    }
 
-                    // codeで見つからない場合、code_dbで検索
+                    //deviceinfoでみつからない場合、bluetoothの情報で検索
+                    if (remoteId == null &&
+                        action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device &&
+                        action.deviceInfo &&
+                        action.deviceInfo.remoteName != null) {
+                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                    }
+
+
+                    // codebluetoothでみつからない場合、code_dbで検索
                     if (remoteId == null &&
                         action.deviceInfo &&
                         action.deviceInfo.code_db) {
                         let codeDb = action.deviceInfo.code_db;
                         remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-                    }
-
-
-                    if (remoteId == null) {
-                        //codeでは取得できない場合、brand,
-                        let codeDb = action.code_db;
-                        if (codeDb != null) {
-                            let brand = codeDb.brand;
-                            let deviceType = codeDb.device_type;
-                            let modelNumber = codeDb.model_number
-
-                            remoteId = this.getRemoteIdByCodeDbElements(brand, deviceType, modelNumber);
-                        }
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
@@ -311,6 +307,7 @@ module Garage {
                 return remoteId;
 
             }
+
 
 			/*
 			* 同一のコードを持つremoteがあった場合そのremoteIdをする
@@ -376,21 +373,120 @@ module Garage {
 				return null;
             }
 
+
+            /*
+            * deviceInfoの情報から、remoteIdを特定して取得する
+            * @param inputDeviceInfo{IButtonDecviceInfo}
+            * @return {string} remoteId 見つからない場合、nullを返す。
+            */
+            getRemoteIdByButtonDeviceInfo(inputDeviceInfo: IButtonDeviceInfo): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByButtonDeviceInfo : ";
+
+                if (inputDeviceInfo == null) {
+                    console.warn(FUNCTION_NAME + "inputDeviceInfo is null");
+                    return null;
+                    
+                }
+
+                // remtoeNameを取得
+                if (inputDeviceInfo.remoteName == null) {
+                    console.warn(FUNCTION_NAME + "inputDeviceInfo.remoteName is null");
+                    return null;
+                }
+                let remoteName = inputDeviceInfo.remoteName;
+
+
+
+                //bluetooth_dataがある場合
+                if (inputDeviceInfo.bluetooth_data != null && 
+                    inputDeviceInfo.bluetooth_data.bluetooth_device != null) {
+                    return this.getRemoteIdByBluetoothDevice(inputDeviceInfo.bluetooth_data.bluetooth_device, remoteName);
+                }
+
+
+                if (inputDeviceInfo.code_db == null) {
+                    console.warn(FUNCTION_NAME + "inputDeviceInfo.code_db is null");
+                    return;
+                }
+                let codeDb = inputDeviceInfo.code_db;
+
+                //brandを取得
+                if (codeDb.brand == null) {
+                    console.warn(FUNCTION_NAME + "codeDb.brand is null");
+                    return;
+                }
+                let brand = codeDb.brand;
+
+                //deviceTypeを取得
+                if (codeDb.device_type == null) {
+                    console.warn(FUNCTION_NAME + "codeDb.device_type is null");
+                    return;
+                }
+                let deviceType = codeDb.device_type;
+
+                //codesetを取得
+                if (codeDb.db_codeset == null) {
+                    console.warn(FUNCTION_NAME + "codeDb.db_codeset is null");
+                    return;
+                }
+                let codeset = codeDb.db_codeset;
+
+                //model_numberを取得
+                if (codeDb.model_number == null) {
+                    console.warn(FUNCTION_NAME + "codeDb.model_number is null");
+                    return;
+                }
+                let modelNumber = codeDb.model_number;
+                
+                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
+                    let targetRemoteId = this.remoteInfos_[i].remoteId;
+                    let targetRemoteName = this.remoteInfos_[i].face.name;
+                    let codeDb = this.getMasterCodeDb(targetRemoteId);
+                    if (codeDb) {
+                        if (codeDb.brand === brand &&
+                            codeDb.device_type === deviceType &&
+                            (!modelNumber || codeDb.model_number === modelNumber) &&
+                            remoteName == targetRemoteName) {
+                            return targetRemoteId;
+                        }
+                    }
+                }
+            }
+
+
+
+            
+
+
             /**
              * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
              * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+             * @param remoteName{string} リモコン名
              * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
              */
-            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice): string {
+            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice, remoteName : string): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
 
-                for (let i = 0, l = this.remoteList_.length; i < l; i++) {
-                    let remoteId = this.remoteList_[i].remote_id;
-                    let bluetoothData = this.getMasterBluetoothData(remoteId);
+                if (bluetoothDevice == null) {
+                    console.warn(FUNCTION_NAME + "bluetoothDevice is null");
+                    return null;
+                }
+
+                if (remoteName == null) {
+                    console.warn(FUNCTION_NAME + "remoteName is null");
+                    return null;
+                }
+
+                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
+                    let targetRemoteId = this.remoteInfos_[i].remoteId;
+                    let targetRemoteName = this.remoteInfos_[i].face.name;
+                    let bluetoothData = this.getMasterBluetoothData(targetRemoteId);
                     if (bluetoothData &&
                         bluetoothData.bluetooth_device &&
-                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address) {
-                        return remoteId;
+                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address &&
+                        remoteName == targetRemoteName
+                        ) {
+                        return targetRemoteId;
                     }
                 }
 
