@@ -118,30 +118,16 @@
                     <div class="bold-separator"></div>
                     <div class="information-body">
                         <div class="white-space-12px"></div>
+                        {{#informationList}}
                         <div class="information-container">
                             <div class="information-img"></div>
                             <div class="information-box">
-                                <div class="information-date">2016.01.01</div>
-                                <div class="information-text">操作方法がドラッグ・アンド・ドロップに変わりました。</div>
+                                <div class="information-date">{{date}}</div>
+                                <div class="information-text">{{text}}</div>
                             </div>
                         </div>
                         <div class="separator"></div>
-                        <div class="information-container">
-                            <div class="information-img"></div>
-                            <div class="information-box">
-                                <div class="information-date">2016.01.01</div>
-                                <div class="information-text">操作方法がドラッグ・アンド・ドロップに変わりました。</div>
-                            </div>
-                        </div>
-                        <div class="separator"></div>
-                        <div class="information-container">
-                            <div class="information-img"></div>
-                            <div class="information-box">
-                                <div class="information-date">2016.01.01</div>
-                                <div class="information-text">操作方法がドラッグ・アンド・ドロップに変わりました。</div>
-                            </div>
-                        </div>
-                        <div class="separator"></div>
+                        {{/informationList}}
                     </div>
                 </div>
             </section>

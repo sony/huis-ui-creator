@@ -127,12 +127,16 @@ module Garage {
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
-                    var text: string = "お知らせの内容お知らせの内容お知らせの内容お知らせの内容お知らせの内容";
+                    var informationList: { date: string, text: string }[] = [];
+                    informationList.push({ date: "2016.01.01", text: "お知らせ１" });
+                    informationList.push({ date: "2016.01.02", text: "お知らせ２" });
+                    informationList.push({ date: "2016.01.03", text: "お知らせ３" });
+
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {
                         src: CDP.Framework.toUrl("/templates/dialogs.html"),
                         title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
-                        message: text,
+                        informationList: informationList,
                         dismissible: true,
                     });
                     dialog.show();
