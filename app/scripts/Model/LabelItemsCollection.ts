@@ -2,12 +2,12 @@
 /// <reference path="LabelItem.ts" />
 
 module Garage {
-	export module Model {
-		var TAG = "[Garage.Model.LabelItemsCollection] ";
+    export module Model {
+        var TAG = "[Garage.Model.LabelItemsCollection] ";
 
-		export class LabelItemsCollection extends Backbone.Collection<LabelItem> {
+        export class LabelItemsCollection extends Backbone.Collection<LabelItem> {
 
-			// Backbone.Collection に対象の Model の型を与える
+            // Backbone.Collection に対象の Model の型を与える
             model = LabelItem;
 
             //! constructor
@@ -19,6 +19,6 @@ module Garage {
             private onDestroy(item: LabelItem) {
                 console.log(TAG + "onDestroy()");
             }
-		}
-	}
+        }
+    }
 }
