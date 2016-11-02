@@ -95,33 +95,29 @@ module Garage {
                 }
 
 
-                this.collection
-                    .filter((item, index) => {
-                        return this.isValidModule(item);
-                    })
-                    .forEach((item, index) => {
-                        let pageIndex: number = item.get("pageIndex");
-                        let $targetFacePage = this.$facePages_[pageIndex];
-                        let $moduleContainer = $(this.moduleContainerTemplate_({
-                            index: index,
-                            width: item.area.w,
-                            height: item.area.h,
-                            offsetY: item.offsetY,
-                            pageIndex: item.pageIndex,
-                            cid: item.cid
-                        }));
+                this.collection.each((item, index) => {
+                    let pageIndex: number = item.get("pageIndex");
+                    let $targetFacePage = this.$facePages_[pageIndex];
+                    let $moduleContainer = $(this.moduleContainerTemplate_({
+                        index: index,
+                        width: item.area.w,
+                        height: item.area.h,
+                        offsetY: item.offsetY,
+                        pageIndex: item.pageIndex,
+                        cid: item.cid
+                    }));
 
-                        // ラベルをレンダリング
-                        this._renderLabels(item.label, index, $moduleContainer);
-                        // 画像をレンダリング
-                        this._renderImages(item.image, index, $moduleContainer);
-                        // ボタンをレンダリング
-                        this._renderButtons(item.button, index, $moduleContainer);
+                    // ラベルをレンダリング
+                    this._renderLabels(item.label, index, $moduleContainer);
+                    // 画像をレンダリング
+                    this._renderImages(item.image, index, $moduleContainer);
+                    // ボタンをレンダリング
+                    this._renderButtons(item.button, index, $moduleContainer);
 
-                        // DOM に追加
-                        $targetFacePage.append($moduleContainer);
-                        this.$el.append($targetFacePage);
-                    });
+                    // DOM に追加
+                    $targetFacePage.append($moduleContainer);
+                    this.$el.append($targetFacePage);
+                });
 
                 //Jsonファイルが破壊されているなどの理由で、moduleがひとつもないとき
                 // facePagesだけでappendする
@@ -129,7 +125,7 @@ module Garage {
                     let $targetFacePage = this.$facePages_[0];
                     this.$el.append($targetFacePage);
                 }
-                
+
 
                 return this;
             }
