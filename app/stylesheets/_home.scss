@@ -2,15 +2,15 @@
 
 #page-home {
     text-shadow: none;
-	overflow-y:hidden;
-	background-color: $COLOR_HOME_BACKGROUND;
+    overflow-y:hidden;
+    background-color: $COLOR_HOME_BACKGROUND;
     //リモコン数が0個の時の画面
     #home-introductions{
         position:absolute;
         visibility:hidden;
         width:100%;
-		overflow-x:auto;
-		overflow-y:hidden;
+        overflow-x:auto;
+        overflow-y:hidden;
 
         #home-introduction-vector{
             position:absolute;
@@ -38,7 +38,7 @@
                 font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
                 font-family:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
                 line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
-				margin:0;
+                margin:0;
 
                 .accent{
                     color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
@@ -78,10 +78,10 @@
                 background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
             }
 
-			.tooltip-text{
-				margin-right:20px;
-				bottom:$SIZE_PLUS_TN_TOOLTIP_MAGIN_BOTTOM;
-			}
+            .tooltip-text{
+                margin-right:20px;
+                bottom:$SIZE_PLUS_TN_TOOLTIP_MAGIN_BOTTOM;
+            }
         }
 
         #sync-pc-to-huis{
@@ -154,7 +154,7 @@
                 #face-pages-area {
                     width:inherit;
                     font-family: $FONT_FAMILY_NORMAL;
-					overflow-y : hidden;
+                    overflow-y : hidden;
                 }
 
                 .face-page{

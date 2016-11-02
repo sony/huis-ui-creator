@@ -1,7 +1,7 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
-	export module Util {
+    export module Util {
         let TAG = "[ImportManager]";
         import IPromise = CDP.IPromise;
 
@@ -631,6 +631,6 @@ module Garage {
 
             }
 
-		}
-	}
+        }
+    }
 } 

@@ -3,12 +3,12 @@
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
+        var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
 
         //プルダウンに入力できる情報
         interface ISignalInputs {
@@ -24,9 +24,9 @@ module Garage {
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
            
 
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
             }
@@ -1213,5 +1213,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

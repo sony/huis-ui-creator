@@ -3,12 +3,12 @@
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaButtonBase] ";
+        var TAG = "[Garage.View.PropertyAreaButtonBase] ";
 
        
         export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
@@ -21,9 +21,9 @@ module Garage {
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
             protected defaultState: IGState; // Defaultのstate
 
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
@@ -969,5 +969,5 @@ module Garage {
 
 
         }
-	}
+    }
 }
