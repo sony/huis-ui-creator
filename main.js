@@ -17,12 +17,12 @@ var {app, BrowserWindow, crashReporter} = require('electron');
 var mainWindow = null;
 
 var shouldQuit = app.makeSingleInstance(function(argv, workingDirectory) {
-	if(mainWindow.isMinimized()) mainWindow.restore();
-	mainWindow.focus();
+    if(mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
 });
 
 if (shouldQuit) {
-	app.quit();
+    app.quit();
 }
 
 // すべてのウィンドウが閉じられたら終了
@@ -36,16 +36,16 @@ app.on('window-all-closed', function() {
 
 // Electron の初期化が終わってブラウザウィンドウを作る準備ができたら呼ばれる
 app.on('ready', function() {
-	// ブラウザウィンドウを作る
+    // ブラウザウィンドウを作る
 
-	mainWindow = new BrowserWindow({
-	    width: 1280,
-	    height: 768,
-		//minWidth :  1280,
-		//minHeight :768,
-		icon:  __dirname + '/app/huis-favicon.png',
-		title: 'HUIS UI CREATOR'
-	});
+    mainWindow = new BrowserWindow({
+        width: 1280,
+        height: 768,
+        //minWidth :  1280,
+        //minHeight :768,
+        icon:  __dirname + '/app/huis-favicon.png',
+        title: 'HUIS UI CREATOR'
+    });
 
   // アプリの index.html をロードする
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');
@@ -53,7 +53,7 @@ app.on('ready', function() {
   // garage.exe と同じディレクトリーに "debug" があれば devtools を開く
   var fs = require("fs");
   if (fs.existsSync("debug")) {
-  	mainWindow.openDevTools();
+      mainWindow.openDevTools();
   }
 
   // ウィンドウが閉じられたら実行
