@@ -216,6 +216,7 @@ module Garage {
                     'change #input-face-name ': "onRemoteNameTextFieldChanged",
                     "change #face-item-detail select": "onItemPropertySelectChanged",
                     "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
+                    "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
 
                     "click #refer-image": "onReferImageClicked",
                     "click .refer-state-image": "onReferImageClicked",
@@ -2271,6 +2272,14 @@ module Garage {
 
                 $selectMenu.popup(options);
             
+            }
+
+            /**
+             * 詳細編集エリアの select メニュー上で mousedown されたときに呼び出される。
+             * @param event {Event} mousedownイベント
+             */
+            private onSelectMenuMouseDown(event: Event) {
+                event.preventDefault();
             }
 
             /**
