@@ -452,7 +452,7 @@ module Garage {
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {
                         src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                        title: "お知らせ",// [TODO]titleの外部化 $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
+                        title: $.i18n.t("information.STR_INFORMATION_TITLE"),
                         informationList: informationList,
                         dismissible: true,
                     });
