@@ -125,7 +125,7 @@ module Garage {
                     let $targetFacePage = this.$facePages_[0];
                     this.$el.append($targetFacePage);
                 }
-                
+
 
                 return this;
             }
@@ -918,6 +918,11 @@ module Garage {
                 let modulesModels: Model.Module[] = [];
 
                 for (var i = 0, l = inputModules.length; i < l; i++) {
+                    if (!this.isValidModule(inputModules[i])) {
+                        // 無効なモジュールは表示しない
+                        continue;
+                    }
+
                     //ページカウントは、すでに記述されているページに追加する
                     let moduleModel = this.getModuleModel(inputModules[i]);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
@@ -926,6 +931,67 @@ module Garage {
                 (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
                 
                 
+            }
+
+
+            /**
+             * モジュールが有効かどうか検査する
+             * @param item {IGModule} 検査対象モジュール
+             * @return {boolean} 有効なモジュールの場合はtrue、そうでない場合はfalse
+             */
+            private isValidModule(item: IGModule): boolean {
+                if (item.button) {
+                    // ボタンが有る場合はボタン全てを検査
+                    return this.isValidButtons(item.button);
+                } else {
+                    // ボタンが無い場合は有効
+                    return true;
+                }
+            }
+
+
+            /**
+             * ボタンリストが有効かどうか検査する
+             * @param buttons {IGButton[]} 検査対象ボタンリスト
+             * @return {boolean} ボタンリストが有効な場合はtrue、そうでない場合はfalse
+             */
+            private isValidButtons(buttons: IGButton[]): boolean {
+                for (let button of buttons) {
+                    if (this.isValidButton(button)) {
+                        return true;
+                    }
+                }
+
+                // 全ボタンが無効な場合は無効
+                return false;
+            }
+
+
+            /**
+             * ボタンが有効かどうか検査する
+             * @param button {IGButton} 検査対象ボタン
+             * @return {boolean} ボタンが有効な場合はtrue、そうでない場合はfalse
+             */
+            private isValidButton(button: IGButton): boolean {
+                if (!button.state) return false;
+
+                for (let state of button.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (action.code_db &&
+                            action.code_db.device_type &&
+                            action.code_db.device_type == DEVICE_TYPE_LEARNED &&
+                            !action.bluetooth_data) {
+                            // 学習リモコンの場合
+                            if (action.code == null) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
             }
 
 
