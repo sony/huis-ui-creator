@@ -444,10 +444,15 @@ module Garage {
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
+                    var parsedJSON = $.parseJSON(fs.readFileSync("./app/res/notes/informations.json", "utf-8").toString());
                     var informationList: { id: number, date: string, imagePath: string, text: string }[] = [];
-                    informationList.push({ id: 1, date: "2016.01.01", imagePath: "../res/notes/images/img1.png", text: "お知らせ１" });
-                    informationList.push({ id: 2, date: "2016.01.01", imagePath: "../res/notes/images/img2.png", text: "お知らせ２" });
-                    informationList.push({ id: 3, date: "2016.01.01", imagePath: "/", text: "お知らせ３" });
+                    Object.keys(parsedJSON["informations"]).forEach(function (key) {
+                        informationList.push({ id:        parsedJSON["informations"][key]["id"],
+                                               date:      parsedJSON["informations"][key]["date"],
+                                               imagePath: parsedJSON["informations"][key]["imagePath"],
+                                               text:      parsedJSON["informations"][key]["text"]
+                        });
+                    });
 
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {
