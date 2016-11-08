@@ -444,10 +444,10 @@ module Garage {
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
-                    var informationList: { date: string, text: string }[] = [];
-                    informationList.push({ date: "2016.01.01", text: "お知らせ１" });
-                    informationList.push({ date: "2016.01.02", text: "お知らせ２" });
-                    informationList.push({ date: "2016.01.03", text: "お知らせ３" });
+                    var informationList: { id: number, date: string, imagePath: string, text: string }[] = [];
+                    informationList.push({ id: 1, date: "2016.01.01", imagePath: "../res/notes/images/img1.png", text: "お知らせ１" });
+                    informationList.push({ id: 2, date: "2016.01.01", imagePath: "../res/notes/images/img2.png", text: "お知らせ２" });
+                    informationList.push({ id: 3, date: "2016.01.01", imagePath: "/", text: "お知らせ３" });
 
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {
