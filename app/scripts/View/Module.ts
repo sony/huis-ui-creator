@@ -767,6 +767,7 @@ module Garage {
 
                 //バージョン情報がある場合、コピーする
                 if (label.version) {
+
                     newLabel.version = label.version;
                 }
 
@@ -802,10 +803,13 @@ module Garage {
 
             /**
              * Module View がもつすべての module を取得する。
-             * 
+             *
+             * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(): IGModule[] {
+            getModules(areaFilter?: (area) => boolean): IGModule[] {
+                let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
+
                 var modules: IGModule[] = $.extend(true, [], this.collection.models);
                 modules.forEach((module: IGModule, index: number) => {
                     let buttonView = this.buttonViews_[index],
@@ -813,13 +817,19 @@ module Garage {
                         labelView = this.labelViews_[index];
 
                     if (buttonView) {
-                        module.button = buttonView.getButtons();
+                        module.button = buttonView.getButtons().filter((button) => {
+                            return isValidArea(button.area);
+                        });
                     }
                     if (imageView) {
-                        module.image = imageView.getImages();
+                        module.image = imageView.getImages().filter((image) => {
+                            return isValidArea(image.area);
+                        });
                     }
                     if (labelView) {
-                        module.label = labelView.getLabels();
+                        module.label = labelView.getLabels().filter((label) => {
+                            return isValidArea(label.area);
+                        });
                     }
                 });
 
@@ -847,6 +857,7 @@ module Garage {
                 var gmodule: IGModule = $.extend(true, {}, moduleModel);
                 return gmodule;
             }
+
 
 
             /*

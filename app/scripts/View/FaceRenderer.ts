@@ -290,10 +290,11 @@ module Garage {
             /**
              * Module View がもつすべての module を取得する。
              * 
+             * @param areaFilter module の area によるフィルタ
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(): IGModule[] {
-                return this.moduleView_.getModules();
+            getModules(areaFilter?: (area) => boolean): IGModule[] {
+                return this.moduleView_.getModules(areaFilter);
             }
 
             /**
@@ -342,6 +343,7 @@ module Garage {
             private _renderAsPlain() {
                 var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
                 var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
+
                 this.$facePlane_ = $(template());
 
                 this.moduleView_ = new Module({
