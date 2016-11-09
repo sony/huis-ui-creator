@@ -3742,41 +3742,20 @@ module Garage {
                     return;
                 }
 
-                let decodePath = JQUtils.decodeUriValidInWindowsAndCSS(previceBagroundCSS);
+                let decodePath = JQUtils.extractBackgroundImagePathFromCss(previceBagroundCSS);
 
                 var backgroundImageCssArray = decodePath.split("/");
                 var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
                 var path = pathArray[0];
 
                 //なぜか、background-imageにfull-custom.htmlが紛れることがある。
-                if (path != "null" && path != "full-custom.html" && path != "none" && this.existsImageFile(decodePath)) {
+                if (path != "null" && path != "full-custom.html" && path != "none" && miscUtil.existsFile(decodePath)) {
                     $textFieldInPreview.css("visibility", "hidden");
                 } else {//画像が存在しないとき、テキストEdit機能を表示する。
                     this._updatePreviewInDetailArea("none", $preview);
                     $textFieldInPreview.css("visibility", "visible");
                     
                 }
-            }
-
-            /**
-             * background-imageスタイルシートに記述されたパスにファイルが存在するか検査する
-             * @param backgroundImage {string} background-image に設定されている値
-             * @return ファイルが存在する場合はtrue、そうでない場合（対象がフォルダだった場合を含む）はfalse
-             */
-            private existsImageFile(backgroundImage: string): boolean {
-                let imageFullPath = backgroundImage.match(/[^url\("file:\/\/\/][^\?"\)]*/);
-                try {
-                    if (imageFullPath &&
-                        imageFullPath[0] &&
-                        fs.existsSync(imageFullPath[0]) &&
-                        !fs.lstatSync(imageFullPath[0]).isDirectory()) {
-                        return true;
-                    }
-                } catch (e) {
-                    console.warn("can not access to the image file: " + backgroundImage + "\n" + e);
-                }
-
-                return false;
             }
 
             /**
