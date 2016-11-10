@@ -3,18 +3,27 @@ var {app, BrowserWindow, crashReporter} = require('electron');
 // ネイティブのブラウザウィンドウを作るためのモジュール           
 // 及びクラッシュレポーターをrequireする
 
-// クラッシュレポートを送るための設定
-crashReporter.start({
-    productName: 'YourName',
-    companyName: 'YourCompany',
-    submitURL: 'https://your-domain.com/url-to-submit',
-    autoSubmit: true
-});
+// クラッシュレポートを送るための設定 // 受け取り先がないのでコメントアウトしておく
+//crashReporter.start({
+//    productName: 'HUIS UI CREATOR',
+//    companyName: 'Sony Corporation',
+//    submitURL: 'https://your-domain.com/url-to-submit',
+//    autoSubmit: false
+//});
 
 
 // ウィンドウオブジェクトをグローバル宣言する
 // JavaScript のオブジェクトが GC されたときにウィンドウが閉じてしまうため
 var mainWindow = null;
+
+var shouldQuit = app.makeSingleInstance(function(argv, workingDirectory) {
+	if(mainWindow.isMinimized()) mainWindow.restore();
+	mainWindow.focus();
+});
+
+if (shouldQuit) {
+	app.quit();
+}
 
 // すべてのウィンドウが閉じられたら終了
 app.on('window-all-closed', function() {
@@ -27,8 +36,16 @@ app.on('window-all-closed', function() {
 
 // Electron の初期化が終わってブラウザウィンドウを作る準備ができたら呼ばれる
 app.on('ready', function() {
-  // ブラウザウィンドウを作る
-  mainWindow = new BrowserWindow({width: 1280, height: 800});
+	// ブラウザウィンドウを作る
+
+	mainWindow = new BrowserWindow({
+	    width: 1280,
+	    height: 768,
+		//minWidth :  1280,
+		//minHeight :768,
+		icon:  __dirname + '/app/huis-favicon.png',
+		title: 'HUIS UI CREATOR'
+	});
 
   // アプリの index.html をロードする
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');

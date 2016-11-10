@@ -5,6 +5,7 @@
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
+/// <reference path="../Util/MiscUtil.ts" />
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
@@ -173,9 +174,11 @@ interface IState {
  * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
  */
 interface IGButton {
+	version?: string;
 	area: IArea;
 	default?: number;
 	state: IGState[];
+	name?: string;
 	/**
 	 * 現在の state.id
 	 */
@@ -204,6 +207,10 @@ interface IButton {
 	 * 状態
 	 */
     state: IState[];
+	/**
+	 * ボタンの名前
+	 */
+	name?: string;
 }
 
 /**
@@ -213,6 +220,15 @@ interface IButton {
 interface IButtonDeviceInfo {
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
+}
+
+/**
+ * @interface IStringStringHash
+ * @brief keyもValueもStringのハッシュ
+ */
+interface IStringStringHash {
+	[key: string]: string;
 }
 
 /**
@@ -220,11 +236,13 @@ interface IButtonDeviceInfo {
  * @brief ILabel に対して Garage で使用する情報を付加したもの
  */
 interface IGLabel {
+	version?: string;
 	area?: IArea;
     text: string;
     color?: number;
     font?: string;
     size?: number;
+    font_weight?: FontWeight;//normal | bold
 	/**
 	 * 親要素の area に対してのこのアイテムの area の比率
 	 */
@@ -261,7 +279,12 @@ interface ILabel {
 	 * テキストのフォントサイズ
 	 */
     size?: number;
+    /**
+	 * テキストの太さ
+	 */
+    font_weight?: FontWeight;
 }
+
 
 /**
  * @interface IGGarageImageExtensions
@@ -293,6 +316,7 @@ interface IGarageImageExtensions {
  * @brief IImage に Garage で使用する情報を付加したもの
  */
 interface IGImage {
+	version?: string;
 	area?: IArea;
     path: string;
 	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
@@ -325,6 +349,7 @@ interface IGOutput {
  * @brief IModule に対して Garage で使用する情報を付加したもの
  */
 interface IGModule {
+	version?: string;
 	area: IArea;
 	button?: IGButton[];
 	label?: IGLabel[];
@@ -341,6 +366,7 @@ interface IGModule {
  */
 interface IModule {
     area: IArea;
+	version?: string;
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];
@@ -441,6 +467,10 @@ interface DialogProps {
 //}
 
 declare module Garage {
+	/*
+	* HUIS UI CREATOR のバージョン
+	*/
+	var APP_VERSION:string;
 	/**
 	 * Util.ElectronDialog のインスタンス
 	 */
@@ -453,6 +483,71 @@ declare module Garage {
 	 * Util.GarageFiles のインスタンス
 	 */
 	var garageFiles: Util.GarageFiles;
+
+	/**
+	 * face のページの横サイズ
+	 */
+	var HUIS_FACE_PAGE_WIDTH: number;
+	/**
+	 * face のページの縦サイズ
+	 */
+	var HUIS_FACE_PAGE_HEIGHT: number;
+	/**
+	 * HUIS が扱える face の最大数
+	 */
+	var MAX_HUIS_FILES: number;
+	/**
+	 * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
+	 */
+	var GARAGE_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルの置き場所: (GARAGE_FILES_ROOT/HuisFiles)
+	 */
+	var HUIS_FILES_ROOT: string;
+	/**
+	 * ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
+	 */
+	var HUIS_REMOTEIMAGES_ROOT: string;
+	/**
+	 * HUIS の VID
+	 */
+	var HUIS_VID: number;
+	/**
+	 * HUIS の PID
+	 */
+	var HUIS_PID: number;
+	/**
+	 * HUIS のデバイスのルートパス
+	 */
+    var HUIS_ROOT_PATH: string;
+    /**
+	 * PC から HUIS への同期時のダイアログのパラメーター完了時のダイアログつき
+	 */
+    var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE: DialogProps;
+    /**
+     * 新規リモコンが追加されたときのダイアログパラメーター
+    */
+    var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
+    /**
+     * リモコンを削除した際のダイアログパラメーター
+    */
+    var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
+	/**
+	 * HUIS から PC への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps;
+	/**
+	 * PC から HUIS への同期時のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps;
+	/**
+	 * HUIS と PC の差分チェック中のダイアログのパラメーター
+	 */
+	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+	/**
+	 * Util.MiscUtilのインスタンス
+	 */
+	var miscUtil: Util.MiscUtil;
 
 	/**
 	 * face のページの横サイズ
@@ -534,6 +629,81 @@ declare module Garage {
      * Debug Modeかどうかのフラグ
      */
     var DEBUG_MODE: Boolean;
+	/**
+	 * HUISが接続されているかどうかのフラグ
+	 */
+    var isHUISConnected: Boolean;
+	/**
+	 * アプリの名称
+	 */
+	var PRODUCT_NAME: string;
+
+	/*
+	* EDITの詳細編集エリア プレビューの高さの最小
+	*/
+	var MIN_HEIGHT_PREVIEW: number;
+	/**
+	* Garageで表示するテキストの表示上の減衰率
+	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
+	* RATIO_TEXT_SIZE_HUIS_GARAGE = HUISで表示するのと同じにみえる text_size / 実際のtext size(ex 23px / 30px
+	*/
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
+	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
+
+	/**
+	* HUISで利用されているデバイスタイプ
+	*/
+	var DEVICE_TYPE_TV: string; 
+	var DEVICE_TYPE_AC: string;
+	var DEVICE_TYPE_LIGHT: string;
+	var DEVICE_TYPE_AUDIO: string;
+	var DEVICE_TYPE_PLAYER: string;
+	var DEVICE_TYPE_RECORDER: string;
+	var DEVICE_TYPE_PROJECTOR: string;
+	var DEVICE_TYPE_STB: string;
+	var DEVICE_TYPE_FAN: string;
+	var DEVICE_TYPE_AIR_CLEANER: string;
+	var DEVICE_TYPE_CUSOM: string;
+	var DEVICE_TYPE_FULL_CUSTOM: string;
+	var DEVICE_TYPE_BT: string;
+
+	/**
+	* PalletAreaで表示されないデバイスタイプ
+	*/
+	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+
+	/*
+	* CanvasAreaのグリッドサイズ
+	*/
+	var GRID_AREA_WIDTH: number;
+	var GRID_AREA_HEIGHT: number;
+	var BIAS_X_DEFAULT_GRID_LEFT :number  //デフォルトグリッドの際は左にあるマージン
+    var BIAS_X_DEFAULT_GRID_RIGHT :number;//デフォルトグリッドの際は左にあるマージン	
+    var DEFAULT_GRID: number; //デフォルトのグリッドサイズ
+
+	/*
+	* Windowの最小幅・高さ
+	*/
+	var WINDOW_MIN_WIDTH: number;
+	var WINDOW_MIN_HEIGHT: number;
+	/*
+	* リモコンの背景の大きさ
+	*/
+	var REMOTE_BACKGROUND_WIDTH: number;
+	var REMOTE_BACKGROUND_HEIGHT: number;
+	/*
+	* 設定できる画像の容量の最大値[byte]
+	*/
+	var MAX_IMAGE_FILESIZE: number;
+	/*
+	* EDIT画面で、マウスを動かせる範囲。
+	* Windowの端から何ピクセルか
+	*/
+	var MARGIN_MOUSEMOVALBE_TOP: number;
+	var MARGIN_MOUSEMOVABLE_LEFT: number;
+	var MARGIN_MOUSEMOVABLE_RIGHT: number;
+	var MARGIN_MOUSEMOVALBE_BOTTOM: number;
+	
 
 }
 

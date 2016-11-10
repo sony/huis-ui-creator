@@ -138,6 +138,7 @@
     <Content Include="app\res\images\btn_done_hover.png" />
     <Content Include="app\res\images\btn_done_normal.png" />
     <Content Include="app\res\images\btn_done_pressed.png" />
+    <Content Include="app\res\images\btn_image_label.png" />
     <Content Include="app\res\images\btn_new_hover.png" />
     <Content Include="app\res\images\btn_new_normal.png" />
     <Content Include="app\res\images\btn_new_pressed.png" />
@@ -147,9 +148,21 @@
     <Content Include="app\res\images\btn_sync_hover.png" />
     <Content Include="app\res\images\btn_sync_normal.png" />
     <Content Include="app\res\images\btn_sync_pressed.png" />
+    <Content Include="app\res\images\button_delete_image_hover.png" />
+    <Content Include="app\res\images\button_delete_image_normal.png" />
+    <Content Include="app\res\images\button_delete_image_pressed.png" />
+    <Content Include="app\res\images\button_edit_button_hover.png" />
+    <Content Include="app\res\images\button_edit_button_normal.png" />
+    <Content Include="app\res\images\button_edit_button_pressed.png" />
+    <Content Include="app\res\images\button_edit_image_hover.png" />
+    <Content Include="app\res\images\button_edit_image_normal.png" />
+    <Content Include="app\res\images\button_edit_image_pressed.png" />
+    <Content Include="app\res\images\button_edit_text_hover.png" />
+    <Content Include="app\res\images\button_edit_text_normal.png" />
+    <Content Include="app\res\images\button_edit_text_pressed.png" />
     <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
-    <Content Include="app\res\images\icon_guide_arrow.png" />
+    <Content Include="app\res\images\icon_guide_arrow_gray.png" />
     <Content Include="app\res\images\icon_sync.gif" />
     <Content Include="app\res\images\icon_sync_green.gif" />
     <Content Include="app\res\images\icon_sync_green.png" />
@@ -189,8 +202,6 @@
     <Content Include="app\stylesheets\_home.scss" />
     <Content Include="app\templates\full-custom.html" />
     <Content Include="app\stylesheets\_full-custom.scss" />
-    <Content Include="app\templates\face-render-experiment.html" />
-    <Content Include="app\stylesheets\_face-render-experiment.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\templates\splash.html" />
@@ -273,6 +284,8 @@
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
+    <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
     <Content Include="app\scripts\View\Home.js">
@@ -287,13 +300,6 @@
     </Content>
     <Content Include="app\scripts\View\FullCustom.js.map">
       <DependentUpon>FullCustom.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="app\scripts\View\FaceRenderExperiment.ts" />
-    <Content Include="app\scripts\View\FaceRenderExperiment.js">
-      <DependentUpon>FaceRenderExperiment.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\FaceRenderExperiment.js.map">
-      <DependentUpon>FaceRenderExperiment.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonItem.ts" />
     <Content Include="app\scripts\Model\ButtonItem.js">

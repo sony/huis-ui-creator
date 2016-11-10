@@ -32,11 +32,58 @@ module Garage {
         Menu = require("electron").remote.Menu;
         MenuItem = require("electron").remote.MenuItem;
 
+		//このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
+		
+		APP_VERSION = "";
+		try{
+			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
+		} catch (err) {
+			console.error(err);
+		}
+
+		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.663;
+		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.7;
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
 		HUIS_VID = 0x054C;
 		HUIS_PID = 0x0B94;
+
+		// 製品名の設定
+		PRODUCT_NAME = "HUIS UI CREATOR";
+
+		// デバイスタイプ
+		DEVICE_TYPE_TV = "TV";
+		DEVICE_TYPE_AC = "Air conditioner";
+		DEVICE_TYPE_LIGHT = "Light";
+		DEVICE_TYPE_AUDIO = "Audio";
+		DEVICE_TYPE_PLAYER = "Player";
+		DEVICE_TYPE_RECORDER = "Recorder";
+		DEVICE_TYPE_PROJECTOR = "Projector";
+		DEVICE_TYPE_STB = "Set top box";
+		DEVICE_TYPE_FAN = "Fan";
+		DEVICE_TYPE_AIR_CLEANER = "Air cleaner";
+		DEVICE_TYPE_CUSOM = "Custom";
+		DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
+		DEVICE_TYPE_BT = "Bluetooth";
+
+		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
+
+
+		GRID_AREA_WIDTH = 464;
+		GRID_AREA_HEIGHT = 812;
+		BIAS_X_DEFAULT_GRID_LEFT = 8;
+		BIAS_X_DEFAULT_GRID_RIGHT = 8;
+		DEFAULT_GRID = 29;
+
+		WINDOW_MIN_WIDTH = 768;
+		WINDOW_MIN_HEIGHT = 1280;
+
+		MARGIN_MOUSEMOVALBE_TOP = 100;
+		MARGIN_MOUSEMOVABLE_LEFT = 200;
+		MARGIN_MOUSEMOVABLE_RIGHT = 200;
+		MARGIN_MOUSEMOVALBE_BOTTOM = 80;
+
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
 		// HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
@@ -46,14 +93,20 @@ module Garage {
 		}
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
 		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
+		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
+
+		REMOTE_BACKGROUND_WIDTH = 540;
+		REMOTE_BACKGROUND_HEIGHT = 870;
 
 		// ページの背景の起点座標とサイズ
 		HUIS_PAGE_BACKGROUND_AREA = {
 			x: -30,
 			y: -24,
-			w: 540,
-			h: 870
+			w: REMOTE_BACKGROUND_WIDTH,
+			h: REMOTE_BACKGROUND_HEIGHT
 		};
+
+		MAX_IMAGE_FILESIZE = 5000000;
 
 		// 画像追加時の画像編集パラメーター
 		IMAGE_EDIT_PARAMS = {
@@ -74,90 +127,71 @@ module Garage {
 			imageType: "image/png"
         };
 
+        HELP_SITE_URL = "http://huis.jp/extended-feature.html";
 
-        //完了時のダイアログのアイコンのパス
-        var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
+        //if (fs.existsSync("debug")) {
+        //    DEBUG_MODE = true;
+        //    console.warn("DEBUG_MODE enabled");
+        //} else {
+        //    DEBUG_MODE = false;
+        //}
 
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
-        DIALOG_PROPS_CREATE_NEW_REMOTE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: "リモコン登録が完了しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
-        DIALOG_PROPS_DELTE_REMOTE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: "リモコンとの同期が完了しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-        // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言月(文言は仮のもの)
-        DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE = {
-            id: "#common-dialog-spinner",
-            options: {
-                title: "同期中です。",
-                anotherOption: {
-                    title: " HUISとの同期を完了しました。",
-                    src: PATH_IMG_DIALOG_DONE_ICON,
-                }
-            }
-        }
-
-		// 同期 (HUIS -> PC) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC = {
-			id: "#common-dialog-spinner",
-			options: {
-				title: "HUIS のファイルと PC のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。",
+        fs.stat("debug", (err: Error, stats) => {
+			if (err) {
+				DEBUG_MODE = false;
+			} else {
+				console.log(err);
+				console.warn("DEBUG_MODE enabled");
+				DEBUG_MODE = true;
 			}
-		};
-
-		// 同期 (PC -> HUIS) ダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS = {
-			id: "#common-dialog-spinner",
-			options: {
-				"message": "PC のファイルと HUIS のファイルを同期中です。\nHUIS と PC との接続を解除しないでください。"
-			}
-		};
-
-		// PC と HUIS とのファイル差分チェックダイアログのパラメーター (文言は仮のもの)
-		DIALOG_PROPS_CHECK_DIFF = {
-			id: "#common-dialog-spinner",
-			options: {
-                "title": "PC のファイルと HUIS のファイルの差分を確認中です。\nHUIS と PC との接続を解除しないでください。"
-			}
-        };
-
-        HELP_SITE_URL = "http://huis.jp/extended-feature.html"; //　仮
-
-        if (fs.existsSync("debug")) {
-            DEBUG_MODE = true;
-            console.warn("DEBUG_MODE enabled");
-        } else {
-            DEBUG_MODE = false;
-        }
+		});
 
 		callback();
 	};
 
 	var loadUtils = (callback: Function): void => {
 		// Util のロードと初期化
-		requirejs(["garage.model.offscreeneditor", "garage.util.huisfiles", "garage.util.electrondialog", "garage.util.huisdev", "garage.util.garagefiles", "garage.util.jqutils"], () => {
-			electronDialog = new Util.ElectronDialog();
-			huisFiles = new Util.HuisFiles();
-			garageFiles = new Util.GarageFiles();
-			callback();
-		});
+		requirejs(["pixi",
+			"garage.model.offscreeneditor",
+			"garage.util.huisfiles",
+			"garage.util.electrondialog",
+			"garage.util.huisdev",
+			"garage.util.miscutil",
+			"garage.util.garagefiles",
+			"garage.util.jqutils"],
+			() => {
+				try {
+					electronDialog = new Util.ElectronDialog();
+					huisFiles = new Util.HuisFiles();
+					garageFiles = new Util.GarageFiles();
+					miscUtil = new Util.MiscUtil();
+				} catch (e) {
+					console.error("init.ts loadUtils failed. " + e);
+				}
+				callback();
+			},
+			(err: RequireError) => {
+				console.error("init.ts loadUtils failed. " + err);
+				//load trouble, retry
+				requirejs(err.requireModules,
+					() => {
+						try {
+							electronDialog = new Util.ElectronDialog();
+							huisFiles = new Util.HuisFiles();
+							garageFiles = new Util.GarageFiles();
+							miscUtil = new Util.MiscUtil();
+						} catch (e) {
+							console.error("init.ts loadUtils failed. " + e);
+						}
+						callback();
+					},
+					(err: RequireError) => {
+						console.error("retry failed..." + err);
+					}
+
+				); 
+			}
+		);
 	};
 
 	// 起動時のチェック
@@ -174,10 +208,11 @@ module Garage {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
-                                type: "info",
-                                message: "HUIS の画面の「パソコンと接続」をクリックしてください。\n"
-                                + "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-                                buttons: ["ok", "cancel"]
+                                type: "error",
+                                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
+                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+								title: PRODUCT_NAME,
+								cancelId:0,
                             });
 
                         if (response !== 0) {
@@ -185,18 +220,18 @@ module Garage {
                         }
                     }
                 }
-
+                isHUISConnected = true; // HUISが接続されている
                 callback(); // 次の処理へ
 
 			} else {
 				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
 				let response = electronDialog.showMessageBox(
 					{
-						type: "info",
-						message: "HUIS が PC に接続されていません。\n"
-						+ "HUIS を PC と接続し「パソコンと接続」をクリックし [OK] ボタンを押してください。\n"
-						+ "[キャンセル] ボタンを押すとアプリケーションは終了します。",
-						buttons: ["ok", "cancel"]
+						type: "error",
+						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+						title: PRODUCT_NAME,
+						cancelId:0,
                     });
 
 				if (response !== 0) {
@@ -204,36 +239,6 @@ module Garage {
 				}
 			}
 		}
-	};
-
-	// HUIS -> PC の同期を行う
-    // Splash.tsに移動したのでいらない
-	//var syncWithHUIS = (callback?: Function) => ...
-
-	// HUIS -> PC の同期処理
-	var doSync = (callback?: Function) => {
-		let syncTask = new Util.HuisDev.FileSyncTask();
-		// 同期処理の開始
-		let syncProgress = syncTask.exec(HUIS_ROOT_PATH, HUIS_FILES_ROOT, false, null, (err) => {
-			if (err) {
-				// エラーダイアログの表示
-				// [TODO] エラー内容に応じて表示を変更するべき
-				// [TODO] 文言は仮のもの
-				electronDialog.showMessageBox({
-					type: "error",
-					message: "HUIS との同期に失敗しました"
-				});
-
-				app.exit(0);
-			} else {
-				// 同期後に改めて、HUIS ファイルの parse を行う
-				huisFiles.init(HUIS_FILES_ROOT);
-				console.log("Complete!!!");
-				if (callback) {
-					callback();
-				}
-			}
-		});
 	};
 
 	setup(() => {

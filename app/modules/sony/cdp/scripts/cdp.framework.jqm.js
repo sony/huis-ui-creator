@@ -196,8 +196,7 @@ var CDP;
          */
         function toUrl(path) {
             if (null != path[0] && "/" === path[0]) {
-                var root = location.href.split(CDP.webRoot)[0] + CDP.webRoot;
-                return root + path;
+            	return CDP.webRoot + path.slice(1);
             }
             else {
                 return $.mobile.path.makeUrlAbsolute(path, getCurrentDocumentUrl());
