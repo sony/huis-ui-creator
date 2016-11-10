@@ -216,6 +216,12 @@ body {
                 width: 576px;
                 margin: 0 auto;
             }
+
+            .information-body{
+                div.separator:last-child{
+                    border: none;
+                }
+            }
         }
     }
 }
