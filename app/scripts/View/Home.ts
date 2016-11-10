@@ -444,15 +444,25 @@ module Garage {
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
-                    var parsedJSON = $.parseJSON(fs.readFileSync("./app/res/notes/informations.json", "utf-8").toString());
-                    var informationList: { id: number, date: string, imagePath: string, text: string }[] = [];
-                    Object.keys(parsedJSON["informations"]).forEach(function (key) {
-                        informationList.push({ id:        parsedJSON["informations"][key]["id"],
-                                               date:      parsedJSON["informations"][key]["date"],
-                                               imagePath: parsedJSON["informations"][key]["imagePath"],
-                                               text:      parsedJSON["informations"][key]["text"]
+                    var informationList: { dirName: string, date: string, imagePath: string, text: string }[] = [];
+                    var pathToNotes = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
+                    var dirs = fs.readdirSync(pathToNotes);
+                    dirs.reverse();
+
+                    /**
+                     * お知らせを追加する場合は/app/res/notes/のディレクトリにフォルダを追加し、
+                     * 追加したディレクトリ内に date.txt, image.png, note.txt の３つのファイルを追加してください。
+                     * テキストファイルはutf-8で保存してください。shift-JISだと文字化けします。
+                     */
+                    dirs.forEach(function (dirName) {
+                        informationList.push({
+                            dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
+                            date: fs.readFileSync(pathToNotes + dirName + "/date.txt", "utf8"),
+                            imagePath:           (pathToNotes + dirName + "/image.png"),
+                            text: fs.readFileSync(pathToNotes + dirName + "/note.txt", "utf8")
                         });
                     });
+
 
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {

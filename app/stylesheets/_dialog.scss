@@ -176,7 +176,7 @@ body {
                 margin: 0 auto;
             }
 
-            .white-space-12px {
+            .white-space {
                 height: 12px;
             }
 
@@ -188,7 +188,7 @@ body {
 
             .information-img {
                 width: 150px;
-                height: 150px;
+                height: auto;
                 float: left;
             }
 
@@ -207,6 +207,7 @@ body {
                 .information-text {
                     font-size: $FONT_SIZE_S;
                     font-family: $FONT_FAMILY_LIGHT;
+                    white-space: pre-wrap;
                 }
             }
 
