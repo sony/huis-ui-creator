@@ -110,6 +110,25 @@ module Garage {
                 return (MiscUtil.ERROR_TYPE_NOERROR);
             }
 
+
+            /**
+             * 指定されたパスにファイルが存在するか検査する
+             * @param path {string} 検査対象のファイルパス
+             * @return ファイルが存在する場合はtrue、そうでない場合（対象がフォルダだった場合を含む）はfalse
+             */
+            existsFile(path: string): boolean {
+                try {
+                    if (path &&
+                        fs.existsSync(path) &&
+                        !fs.lstatSync(path).isDirectory()) {
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn("can not access to the image file: " + path + "\n" + e);
+                }
+
+                return false;
+            }
         }
     }
 }

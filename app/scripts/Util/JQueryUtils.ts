@@ -122,6 +122,26 @@ module Garage {
                 return tmpUrl;
             }
 
+            /**
+             * css の backgrond-image に設定されたURLからパスを取得する。
+             * css としてエンコードされていた文字列はデコードされた状態で返す。
+             * @param backgroundImageCss {string} background-image の設定値
+             * @return パス
+             */
+            static extractBackgroundImagePathFromCss(backgroundImageCss: string): string {
+                if (!backgroundImageCss) {
+                    return "";
+                }
+
+                let cssPath = JQueryUtils.decodeUriValidInWindowsAndCSS(backgroundImageCss);
+
+                let path = cssPath.match(/[^url\("file:\/\/\/][^\?"\)]*/);
+                if (path && path[0]) {
+                    return path[0];
+                } else {
+                    return "";
+                }
+            }
 
 
             /*
