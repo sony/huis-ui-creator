@@ -331,6 +331,7 @@
       <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonBase.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonJump.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonMacro.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonNormal.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />

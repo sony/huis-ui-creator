@@ -87,6 +87,10 @@ interface IAction {
      */
     bluetooth_data?: IBluetoothData;
     /**
+     * 任意リモコンページへの遷移機能情報
+     */
+    jump?: IJump;
+    /**
      * ボタンがひも付けられている機器の情報
      */
     deviceInfo?: IButtonDeviceInfo;
@@ -161,6 +165,20 @@ interface IBluetoothDevice {
      * Bluetoothデバイスの名前
      */
     bluetooth_device_name: string;
+}
+
+/**
+ * @interface IJump
+ */
+interface IJump {
+    /**
+     * 遷移先リモコンのremote_id
+     */
+    remote_id: string;
+    /**
+     * 遷移先のシーンNo.
+     */
+    scene_no: number;
 }
 
 /**
@@ -771,6 +789,7 @@ declare module Garage {
      */
     var ACTION_INPUTS: IStringKeyValue[];
     var ACTION_INPUTS_MACRO: IStringKeyValue[]; //macro用
+    var ACTION_INPUTS_JUMP: IStringKeyValue[]; //jump用
     var ACTION_INPUT_TAP_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY_SINGLE: string;

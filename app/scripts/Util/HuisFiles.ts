@@ -1444,6 +1444,9 @@ module Garage {
                         if (!_.isUndefined(action.bluetooth_data)) {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
+                        if (!_.isUndefined(action.jump)) {
+                            normalizedAction.jump = action.jump;
+                        }
                     } else {
                         normalizedAction.code_db = {
                             function: "none",
