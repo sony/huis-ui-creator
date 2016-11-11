@@ -233,6 +233,7 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
+            "garage.util.selectremotepagedialog",
             "garage.util.huisdev",
             "garage.util.miscutil",
             "garage.util.garagefiles",

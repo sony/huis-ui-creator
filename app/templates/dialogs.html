@@ -107,4 +107,23 @@
         </div>
     </script>
 
+    <!-- select remote page dialog -->
+    <script type="text/template" id="common-dialog-remotelist">
+        <div id="remotelist-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <section class="common-dialog">
+                <div class="remotelist-dialog">
+                    <header class="{{_header}}">
+                        <h3 class="title">{{title}}</h3>
+                    </header>
+                    <div id="remotelist-container">
+                    </div>
+                    <div class="separator"></div>
+                    <div class="submit-area">
+                        <input id="remotelist-button-ok" type="button" value="{{#anotherOption}}{{label_ok}}{{/anotherOption}}" />
+                        <input id="remotelist-button-cancel" type="button" value="{{#anotherOption}}{{label_cancel}}{{/anotherOption}}" />
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
 </article>
