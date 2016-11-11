@@ -74,9 +74,27 @@ module Garage {
 
 			// public methods:
 			public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
+                let FUNCTION_NAME = TAG + "editImage : ";
 				var df = $.Deferred();
 				var promise = CDP.makePromise(df);
 				var encodedDstPath = null;
+
+                //変換するファイルが存在するか確認
+                if (!fs.existsSync(imageSrc)) {
+                    console.error(FUNCTION_NAME + imageSrc + "(imageSrc) does not exist");
+                    df.reject();
+                    return promise;
+                }
+
+                //imageSrcがディレクトリかどうか確認
+                let fileStat = fs.lstatSync(imageSrc);
+                if (fileStat != null && fileStat.isDirectory()) {
+                    //imageSrcがファイル名ではなく、ディレクトリあった場合、エラー
+                    console.error(FUNCTION_NAME + "imageSrc (" + imageSrc + ")is directory");
+                    df.reject();
+                    return promise;
+                }
+
 
 				var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
 				if (params.resize) {
@@ -86,9 +104,11 @@ module Garage {
 				}
 
 				console.log(TAG + "before editImage src: " + imageSrc);
+                let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
 
+                
 				// 画像のロード
-				OffscreenEditor.loadTexture(imageSrc)
+                OffscreenEditor.loadTexture(loadPath)
 					.done((texture: PIXI.Texture) => {
 						let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
 
@@ -96,27 +116,40 @@ module Garage {
 
 						// 出力先のパスが指定されている場合は、ファイル出力を行う
 						if (dstPath) {
-							if (dstPath.indexOf(' ') !== -1) {
-								dstPath = OffscreenEditor.getEncodedPath(dstPath);
-							}
+
+
+                            let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
+                            //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
+                            //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
+                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
+                                dstPath = this.getEncodedPath(dstPath);
+                            }
+
 							// Buffer オブジェクトを使用して、base64 デコーディング
 							let buffer = new Buffer(imageDataUrl.split("base64,")[1], "base64");
 
 							// imageType と指定したパスの拡張子が合わない場合は補正する。
 							dstPath = OffscreenEditor.getEditResultPath(dstPath, params.imageType);
-							encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
+                            encodedDstPath = OffscreenEditor.getEncodedPath(dstPath);
+
+                            try {
 							fs.outputFileSync(dstPath, buffer);
 							console.log(TAG + "after editImage dst: " + dstPath);
 							df.resolve({
 								dataUrl: imageDataUrl,
 								path: dstPath
 							});
+                            } catch (e) {
+                                console.error(e);
+                                df.reject(e);
+                            }
 
 						} else { // 編集した画像の dataUrl を返す
 							df.resolve(imageDataUrl);
 						}
 					})
 					.fail(() => {
+                        console.error(FUNCTION_NAME + "error occur in loadTexture");
 						renderer.destroy(true);
 						df.reject();
 					});
@@ -179,12 +212,14 @@ module Garage {
 			 * @return {IPromise<PIXI.Texture>} 読み込んだテクスチャーの promise オブジェクト
 			 */
 			public static loadTexture(src: string): IPromise<PIXI.Texture> {
+                let FUNCTION_NAME = TAG + "loadTexture : ";
 				let df = $.Deferred();
 				let promise = CDP.makePromise(df);
 
 				if (null == src) {
 					df.resolve(PIXI.Texture.EMPTY);
 				} else {
+                    try {
 					let texture = PIXI.Texture.fromImage(src);
 
 					if (texture.baseTexture && texture.baseTexture.hasLoaded) {
@@ -195,7 +230,11 @@ module Garage {
 						};
 						texture.once("update", onLoad);
 					}
+                    } catch (err) {
+                        console.error(FUNCTION_NAME + err);
+                        df.reject();
 				}
+		        }
 
 				return promise;
 			}

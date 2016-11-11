@@ -6,7 +6,8 @@ module Garage {
 			all?: boolean; //! true を指定した場合、すべての要素の deta 属性に値を入れる。それ以外の場合は、先頭の要素の data 属性に値を入れる。
 		}
 
-		export class JQueryUtils {
+        export class JQueryUtils {
+            static TAG = "JQueryUtils";
 
 			/**
 			 * jQuery オブジェクトで選択された DOM の data 属性を取得する。
@@ -44,7 +45,148 @@ module Garage {
 				} else {
 					return $elem.get(0).dataset[key];
 				}
-			}
+            }
+
+
+            static enccodeUriValidInCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]enccodeUriValidInCSS : inputUrl is null");
+                    return;
+                }
+
+                return this.encodeUriValidInWindowsAndCSS(inputUrl);
+                /*
+                //ダミーの変数、マック対応時に動的に入手
+                let isWindows = true;
+                let isMac = false;
+
+                if (isWindows) {
+                    return this.encodeUriValidInWindowsAndCSS(inputUrl);
+                }
+                
+                else if (isMac) {
+                    return this.encodeUriValidInMacAndCSS(inputUrl);
+                }
+                */
+
+            }
+
+            /*
+              * CSSのURLが解釈できず、Windowsでは使用可能な文字を、CSSでも有効な文字に変換して返す。
+              * @param url{string} cssのbackground-imageに設定する画像のurl
+              * @return {string} CSSでも解釈可能なURL
+              */
+            static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
+                    return;
+                }
+
+                let tmpUrl: string = encodeURI(inputUrl);
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("\\#", "g");
+                tmpUrl = tmpUrl.replace(regExp1, "%23");
+
+                var regExp2 = new RegExp("\\'", "g");
+                tmpUrl = tmpUrl.replace(regExp2, "%27");
+                return tmpUrl;
+            }
+
+
+
+
+            /*
+              * encodeUriValidInWindowsAndCSSで変換されたパスを元に戻す
+              * @param inputUrl{string} encodeUriValidInWindowsAndCSSで変換されたurl
+              * @return {string} encodeUriValidInWindowsAndCSSで変換される前のurl
+              */
+            static decodeUriValidInWindowsAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]decodeUriValidInWindowsAndCSS : inputUrl is null");
+                    return;
+                }
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("%23", "g");
+                inputUrl = inputUrl.replace(regExp1, "#");
+
+                var regExp2 = new RegExp("%27", "g");
+                inputUrl = inputUrl.replace(regExp2, "'");
+
+                let tmpUrl: string = decodeURI(inputUrl);
+
+                return tmpUrl;
+            }
+
+
+
+            /*
+              * CSSのURLが解釈できず、Macでは使用可能な文字を、CSSでも有効な文字に変換して返す。
+              * @param url{string} cssのbackground-imageに設定する画像のurl
+              * @return {string} CSSでも解釈可能なURL
+              */
+            static encodeUriValidInMacAndCSS(inputUrl: string): string {
+
+                if (inputUrl == null) {
+                    console.warn("[JQueryUtils]encodeUriValidInMacAndCSS : inputUrl is null");
+                    return;
+                }
+
+                let tmpUrl: string = encodeURI(inputUrl);
+
+                //encodeURIで未サポートの#と'を変換する。
+                var regExp1 = new RegExp("\\#", "g");
+                tmpUrl = tmpUrl.replace(regExp1, "%23");
+
+                var regExp2 = new RegExp("\\'", "g");
+                tmpUrl = tmpUrl.replace(regExp2, "%27");
+                return tmpUrl;
+            }
+
+            /*
+			* テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+            static getOffsetTextButtonSize(textsize: number): number {
+                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextSize :";
+
+                if (textsize == null) {
+                    console.error(FUNCTION_NAME + "textsize is null");
+                    return 0;
+                }
+
+                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC);
+            }
+
+			/*
+			* テキストラベルの表示を、HUISで表示されたときと合わせるための補正値
+			* @param textsize{number} 表示するテキストサイズ
+			* @return Garage上で表示する補正後のテキストサイズ
+			*/
+            static getOffsetTextLabelSize(textsize: number): number {
+                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextLabelSize :";
+
+                if (textsize == null) {
+                    console.error(FUNCTION_NAME + "textsize is null");
+                    return 0;
+                }
+
+                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
+            }
+
+
+            //NaNか判定 Number.isNaNが使えないので代用
+            static isNaN(v): boolean {
+                return v !== v;
+            }
+
+
+
 		}
 	}
 } 

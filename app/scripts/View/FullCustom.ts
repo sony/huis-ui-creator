@@ -59,9 +59,10 @@ module Garage {
 			private faceListContainerWidth_: number;
 
 			private commandManager_: CommandManager;
-			private $currentTarget_: JQuery;
+            private $currentTarget_: JQuery;
+            private $currentTargetDummy_: JQuery;
 			private currentTargetModel_: TargetModel;
-			private currentTargetPageIndex_: number;
+            private currentTargetPageIndex_: number;
 			private currentTargetButtonStates_: IStateDetail[];
 			private currentTargetButtonStatesUpdated_: boolean;
 			private selectedResizer_: string;
@@ -70,11 +71,21 @@ module Garage {
 			private mouseMoveStartTargetArea_: IArea;
 			private mouseMoving_: boolean;
 			private gridSize_: number;
+            private minItemSize_: number;
             private isTextBoxFocused: Boolean;
 
             private bindedLayoutPage = null;
+            //マクロのプロパティView用
+            private macroProperty: PropertyAreaButtonMacro;
+            //通常ボタンのプロパティView用
+            private buttonProperty: PropertyAreaButtonNormal;
 
-            
+            private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
+
+            private palletItemMouseDownCount: number = 0;
+            private clickedPalletItem: JQuery;
+            private palletItemDoubleClickResetTimer;
+
 			/**
 			 * construnctor
 			 */
@@ -93,23 +104,34 @@ module Garage {
 				this.faceListTotalWidth_ = 0;
 				this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
-				
+                this.minItemSize_ = DEFAULT_GRID;
 			}
 
 			onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
 				requirejs(["garage.view.fullcustomcommand"], () => {
 
 					super.onPageShow(event, data);
-
+                    this.macroProperty = null;
+                    this.buttonProperty = null;
 					this.newRemote_ = false;
 
 					this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
 					this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
 
 					this._pageLayout();
-					this._listupFaces();
+                    this._listupFaces();
+
+                    //書き出し待ち の画像リストを初期化する。
+                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
+                    huisFiles.initWatingResizeImages();
+
 					var remoteId = this._getUrlQueryParameter("remoteId");
-					this._renderCanvas(remoteId);
+                    this._renderCanvas(remoteId);
+
+                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
+                    var gmodules = this.faceRenderer_canvas_.getModules();
+                    // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+                    this.buttonDeviceInfoCache.load(gmodules);
 
 					this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -139,8 +161,9 @@ module Garage {
                     // 「このリモコンを削除」とセパレータを削除する
                     if (remoteId == undefined) {
                         $("li#command-delete-remote").remove();
-                        $("li.menu-item-separator").remove();
                     }
+
+                   
 
 					//html上の文言をローカライズ
 					$("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
@@ -166,9 +189,10 @@ module Garage {
                 var ret: any = {};
                 ret = super.events();
 
-				return $.extend(ret,{
+                return $.extend(ret, {
 					// パレット内のアイテムのダブルクリック
-					"dblclick #face-pallet .item": "onPalletItemDblClick",
+                    //"dblclick #face-pallet .item": "onPalletItemDblClick",
+                    "mousedown #face-pallet .item": "onPalletItemMouseDown",
 
 					// 画面内のマウスイベント
 					"mousedown #main": "onMainMouseDown",
@@ -222,9 +246,12 @@ module Garage {
 					"contextmenu": "onContextMenu",
 
                     // プルダウンメニューのリスト
+                    "click #command-export-remote": "_onCommandExportRemote",
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
+                    
+
 
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin input[type='text']": "_onTextBoxFocusIn",
@@ -236,6 +263,24 @@ module Garage {
 				// Please add your code
 				return this;
 			}
+
+            /*
+             * オプションメニューの「リモコンをエクスポート」を押したさいの処理
+
+             */
+            private _onCommandExportRemote(event: Event) {
+                let gmodules = this.faceRenderer_canvas_.getModules();
+                let remoteId = this.faceRenderer_canvas_.getRemoteId();
+                let faceName: string = $("#input-face-name").val();
+
+                //errorハンドリング
+                let errorOccur: boolean = this._isErrorOccurBeforeSave(true);
+                if (errorOccur) {
+                    return;
+                }
+
+                this.exportRemote(remoteId, faceName, gmodules);
+            }
 
 
 			/*
@@ -401,7 +446,7 @@ module Garage {
 			private _listupFaces() {
 				// fullcustom と "Air conditioner" を除いた face 一覧を取得する
 				// "Air conditioner" のボタンの形式が Garage では扱えないもののため 
-				var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: ["fullcustom", "custom", "special", "Bluetooth", "Air conditioner"] });
+                var faces = huisFiles.getFilteredFacesByCategories({ unmatchingCategories: Garage.NON_SUPPORT_FACE_CATEGORY });
 				// faces データから face 一覧を作成し、face list に追加する
 				var faceItemTemplate = Tools.Template.getJST("#template-face-item", this.templateFullCustomFile_);
 				$("#face-item-list").append($(faceItemTemplate({ faces: faces })));
@@ -614,7 +659,24 @@ module Garage {
 						materialsRootPath: HUIS_FILES_DIRECTORY
 					}
 				});
-				this.faceRenderer_pallet_.render();
+                this.faceRenderer_pallet_.render();
+
+                //マスターフェースを表示する。Commonの場合は、無視
+                let isMasterFace: boolean = true;
+                let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
+                if (masterFace != null && remoteId != "common") {
+
+                    //マスターフェースとの境界線にセパレーターを描画
+                    let templateFile = CDP.Framework.toUrl("/templates/face-items.html");
+                    let template: Tools.JST = Tools.Template.getJST("#template-separator-face-and-master", templateFile);
+                    let $separator = $(template());
+                    $facePallet.find("#face-pages-area").append($separator);
+
+                    this.faceRenderer_pallet_.addFace(masterFace);
+
+                    //テキストをローカライズ
+                    $facePallet.i18n();
+                }
 
 				//それぞれのボタンにtitleを追加
 				this.addTitleToEachItemInPallet();
@@ -667,201 +729,439 @@ module Garage {
 				return undefined;
 			}
 
-
 			/**
 			 * パレット内のアイテムをダブルクリック
 			 */
-			private onPalletItemDblClick(event: Event) {
-				var $target = $(event.currentTarget);
-				var $parent = $target.parent();
-				var targetModel = this._getItemModel($target, "pallet");
-				if (!targetModel) {
-					return;
-				}
+            private onPalletItemDblClick() {
+                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem);
 
-				// 現在ターゲットとなっているページを追加先とする
-				var moduleId_canvas: string = this._getCanvasPageModuleId();
-				var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10); //$parent.data("module-offset-y");
+                if (!newItem) {
+                    console.error("failed to add new PalletItem");
+                    return;
+                }
+                // model 状態を有効にする
+                var memento: IMemento = {
+                    target: newItem,
+                    previousData: {
+                        enabled: false
+                    },
+                    nextData: {
+                        enabled: true
+                    }
+                };
+                var mementoCommand = new MementoCommand([memento]);
+                let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
-				var model: ItemModel;
+                this._updateItemElementsOnCanvas(updatedItem);
+			}
 
-				switch (targetModel.type) {
-					case "button":
-						if (targetModel.button) {
-							// ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
-							let remoteId = this.faceRenderer_pallet_.getRemoteId();
-							let functions = huisFiles.getMasterFunctions(remoteId);
-							let codeDb = huisFiles.getMasterCodeDb(remoteId);
-							let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+            /**
+             * パレット内のアイテム上でマウス押下
+             * 対象アイテムをCanvasに追加しドラッグ状態にする
+             */
+            private onPalletItemMouseDown(event: Event) {
+                this.countPalletItemClick(event);
 
-							let deviceInfo: IButtonDeviceInfo = {
-								functions: functions,
-								code_db: codeDb
-							};
+                this.selectedResizer_ = null;
 
-							if (functionCodeHash != null) {
-								deviceInfo = {
-									functions: functions,
-									code_db: codeDb,
-									functionCodeHash: functionCodeHash,
-								};
-							}
+                // 直前に選択されていたボタンの状態更新があれば行う
+                this._updateCurrentModelButtonStatesData();
 
-							targetModel.button.deviceInfo = deviceInfo;
-							model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-						}
+                // 現在のターゲットを外す
+                this._loseTarget();
+
+                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), true);
+                if (!newItem) {
+                    console.error("Failed to add the pallet item to the canvas.");
+                    return;
+                }
+                this._updateItemElementOnCanvas(newItem);
+                
+                var mousePosition: IPosition = {
+                    x: event.pageX,
+                    y: event.pageY
+                };
+                let target = this._getTarget(mousePosition);
+                if (target) {
+                    this.setDragTarget(target, false);
+                    this.startDraggingCanvasItem(mousePosition, true);
+                    // onMainMouseDown呼び出しの防止
+                    event.stopPropagation();
+                } else {
+                    console.log("target not found. mousePosition: " + mousePosition.x + ", " + mousePosition.y);
+                }
+            }
+
+            /**
+             * パレットアイテムのクリック数を計測する。
+             * @param event {Event} パレットアイテムのイベントオブジェクト
+             */
+            private countPalletItemClick(event: Event) {
+                if (event.type === "mousedown") {
+                    let currentTarget: JQuery = $(event.currentTarget);
+                    if (!this.clickedPalletItem ||                                                              // クリック対象未設定 または
+                        JQUtils.data(this.clickedPalletItem, "cid") !== JQUtils.data(currentTarget, "cid")) {   // 直前のクリックと対象が異なる場合
+                        // ダブルクリック判定を初期化して開始
+                        this.startPalletItemClickCount(currentTarget);
+                    }
+
+                    this.palletItemMouseDownCount++;
+                }
+            }
+
+            /**
+             * イベントがダブルクリックかどうか検査する。
+             * @param event {Event} イベントオブジェクト
+             * @return ダブルクリックの場合はtrue、そうでない場合はfalse
+             */
+            private isDoubleClick(event: Event): boolean {
+                if (event.type === "mouseup") {
+                    if (this.palletItemMouseDownCount >= 2) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+
+            /**
+             * パレットアイテムのダブルクリック検知用クリック数カウンタを初期化し、カウントを開始する。
+             * @param target {JQuery} パレットアイテムのJQueryオブジェクト
+             */
+            private startPalletItemClickCount(target: JQuery) {
+                this.clearPalletItemClickCount(this);
+                this.clickedPalletItem = target;
+                this.palletItemDoubleClickResetTimer = setTimeout(this.clearPalletItemClickCount, DOUBLE_CLICK_TIME_MS, this);
+            }
+
+            /**
+             * パレットアイテムのダブルクリック検知関連変数を初期状態にする。
+             * @param fullCustom {FullCustom} FullCustomオブジェクト
+             */
+            private clearPalletItemClickCount(fullCustom: FullCustom) {
+                // setTimeout から呼ばれた場合スコープが異なるため this は使用しない
+
+                if (fullCustom.palletItemDoubleClickResetTimer) {
+                    clearInterval(fullCustom.palletItemDoubleClickResetTimer);
+                    fullCustom.palletItemDoubleClickResetTimer = null;
+                }
+                fullCustom.palletItemMouseDownCount = 0;
+                fullCustom.clickedPalletItem = null;
+            }
+
+            /**
+             * 対象キャンバスから指定位置までの相対座標を取得。
+             * 起点とするキャンバスIDを指定しなかった場合は現在のページを使用する。
+             * @param position 画面上の座標
+             * @param moduleId 起点にするキャンバスの module ID。未指定の場合は現在のページのキャンバスを使用する。
+             */
+            private getPointFromCanvas(position: IPosition, moduleId?: string): IPosition {
+                let selector = "#face-canvas .module-container[data-cid=" + ((moduleId) ? moduleId : this._getCanvasPageModuleId()) + "]";
+                let targetCanvasModule = $(selector);
+
+                return {
+                    x: (position.x - targetCanvasModule.parent().offset().left) * 2,
+                    y: (position.y - targetCanvasModule.parent().offset().top) * 2
+                };
+            }
+
+            /**
+             * Pallet上のItemをCanvasに追加
+             * 
+             * @param event {Event}
+             * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
+             * @return 追加したItemModel
+             */
+            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): ItemModel {
+                var $target = target;
+                var $parent = $target.parent();
+                var targetModel = this._getItemModel($target, "pallet");
+                if (!targetModel) {
+                    return;
+                }
+
+                // 現在ターゲットとなっているページを追加先とする
+                var moduleId_canvas: string = this._getCanvasPageModuleId();
+                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
+
+                // イベント発生位置にアイテム座標を補正
+                if (setOnEventPosition) {
+                    // モデルのクローンを生成してから位置を設定
+                    targetModel = this._cloneTargetModel(targetModel);
+                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
+                    this._setTargetModelArea(targetModel, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                }
+
+                var model: ItemModel;
+                switch (targetModel.type) {
+                    case "button":
+                        if (targetModel.button) {
+                            console.log("button model: " + targetModel.button.area.x + "-" + targetModel.button.area.y);
+                            // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                            let functions = huisFiles.getMasterFunctions(remoteId);
+                            let codeDb = huisFiles.getMasterCodeDb(remoteId);
+                            let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                            let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
+                            let remoteName = huisFiles.getFace(remoteId).name;
+
+                            let deviceInfo: IButtonDeviceInfo = {
+                                id: "",
+                                functions: functions,
+                                remoteName: remoteName,
+                                code_db: codeDb
+                            };
+                            if (bluetoothData != null) {
+                                deviceInfo.bluetooth_data = bluetoothData;
+                            }
+                            if (functionCodeHash != null) {
+                                deviceInfo.functionCodeHash = functionCodeHash;
+                            }
+
+                            // 機器情報を全てのactionにセット
+                            for (let state of targetModel.button.state) {
+                                if (!state.action) continue;
+
+                                for (let action of state.action) {
+                                    action.deviceInfo = deviceInfo;
+                                }
+                            }
+                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
+                        }
 						break;
+
 
 					case "image":
-						if (targetModel.image) {
-							model = this.faceRenderer_canvas_.addImage(targetModel.image, moduleId_canvas, moduleOffsetY_pallet, () => {
-								// 画像変換・コピーが完了してからでないと background-image に画像が貼れないため、
-								// このタイミングで CSS を更新
-								this._updateItemElementOnCanvas(model);
-							});
-						}
+                        if (targetModel.image) {
+                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
+
+                            model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
+
+                        }
 						break;
 
-					case "label":
-						if (targetModel.label) {
-							model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
-						}
-						break;
+                 
 
-					default:
-				}
+                    case "label":
+                        if (targetModel.label) {
+                            model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
+                        }
+                        break;
 
-				if (!model) {
-					return;
-				}
+                    default:
+                }
+                
+                return model;
+            }
 
-				// model 状態を有効にする
-				var memento: IMemento = {
-					target: model,
-					previousData: {
-						enabled: false
-					},
-					nextData: {
-						enabled: true
-					}
-				};
-				var mementoCommand = new MementoCommand(memento);
-				this.commandManager_.invoke(mementoCommand);
-
-				this._updateItemElementOnCanvas(model);
-			}
+            /**
+             * アイテムをキャンバスに追加
+             *
+             * @param item {TargetModel} 追加するアイテムのモデル
+             * @param canvasModuleId {string} 追加するキャンバスの moduleID
+             * @param moduleOffsetY {number} module の y 座標の offset
+             */
+            private setNewItemOnCanvas(item: TargetModel, canvasModuleId: string, moduleOffsetY: number): ItemModel {
+                let newModel: ItemModel;
+                switch (item.type) {
+                    case "button":
+                        return this.faceRenderer_canvas_.addButton(item.button, canvasModuleId, moduleOffsetY);
+                    case "image":
+                        return this.faceRenderer_canvas_.addImageWithoutCopy(item.image, canvasModuleId, moduleOffsetY);
+                    case "label":
+                        return this.faceRenderer_canvas_.addLabel(item.label, canvasModuleId, moduleOffsetY);
+                    default:
+                        console.error("setItemOnCanvas: invalid ItemModel.type " + item.type);
+                        return;
+                }
+            }
 
 			/**
 			 * フルカスタム編集画面での mousedown イベントのハンドリング
 			 */
-			private onMainMouseDown(event: Event) {
-				if (event.type !== "mousedown") {
-					console.error(TAG + "onMainMouseDown() Invalid event type: " + event.type);
-					return;
-				}
+            private onMainMouseDown(event: Event) {
+                if (event.type !== "mousedown") {
+                    console.error(TAG + "onMainMouseDown() Invalid event type: " + event.type);
+                    return;
+                }
 
-				this.selectedResizer_ = null;
+                this.selectedResizer_ = null;
 
-				var mousePosition: IPosition = {
-					x: event.pageX,
-					y: event.pageY
-				};
+                var mousePosition: IPosition = {
+                    x: event.pageX,
+                    y: event.pageY
+                };
 
-				// 直前に選択していたものと同一のアイテムを選択しているかチェック
-				var remainsTarget = this._remainsTarget(mousePosition);
-				// 選択しているリサイザーをチェック
-				var selectedResizer = this._checkResizerSelected(mousePosition);
-				// 詳細編集エリア上を選択しているかをチェック
-				var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
+                // 直前に選択していたものと同一のアイテムを選択しているかチェック
+                var remainsTarget = this._remainsTarget(mousePosition);
+                // 選択しているリサイザーをチェック
+                var selectedResizer = this._checkResizerSelected(mousePosition);
+                // 詳細編集エリア上を選択しているかをチェック
+                var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
 
-				// マウスポインター位置が、選択中のターゲット上は、
-				// ターゲットを外す
-				if (!remainsTarget && !selectedResizer && !overDetailArea) {
-					// 直前に選択されていたボタンの状態更新があれば行う
-					this._updateCurrentModelButtonStatesData();
+                // マウスポインター位置が、選択中のターゲット上は、
+                // ターゲットを外す
+                if (!remainsTarget && !selectedResizer && !overDetailArea) {
+                    // 直前に選択されていたボタンの状態更新があれば行う
+                    this._updateCurrentModelButtonStatesData();
 
-					// 現在のターゲットを外す
-					this._loseTarget();
+                    // 現在のターゲットを外す
+                    this._loseTarget();
 
-					//CanvasのFacePagesArea上でない場合は反応しない
-					if (this.isOnCanvasFacePagesArea(mousePosition)) {
-					// マウスポインター位置にアイテムがあれば取得する
-						let $target = this._getTarget(mousePosition);
-						if ($target) {
+                    //CanvasのFacePagesArea上でない場合は反応しない
+                    if (this.isOnCanvasFacePagesArea(mousePosition)) {
+                        // マウスポインター位置にアイテムがあれば取得する
+                        let $target = this._getTarget(mousePosition);
+                        if ($target) {
+                            this.setDragTarget($target);
+                        } else {
+                            // マウスポインター位置にアイテムが存在しない場合で、
+                            // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
+                            let $page = this._getTargetPageModule(mousePosition);
+                            if ($page) {
+                                // ページ背景の model の作成、もしくは既存のものを取得する
+                                let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
+                                this.currentTargetModel_ = {
+                                    type: "image",
+                                    image: backgroundImageModel
+                                };
+                                $("#face-item-detail-area").addClass("active");
+                                // ページの背景の detail エリアを作成する
+                                this._showDetailItemAreaOfPage($page);
+                            }
+                        }
 
-							$target.focus();
-							console.log("target " + JQUtils.data($target, "cid")); //$target.data("cid"));
-							this.$currentTarget_ = $target;
-							// target に紐付くモデルを取得
-							this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+                    }
+                }
+                if (remainsTarget) {
+                    // 選択中のアイテムがボタンの場合、状態の更新を行う
+                    this._updateCurrentModelButtonStatesData();
+                }
+                if (selectedResizer) {
+                    this.selectedResizer_ = selectedResizer;
+                    console.log(this.selectedResizer_);
+                }
 
-							// 選択状態にする
-							this.$currentTarget_.addClass("selected");
+                this.startDraggingCanvasItem(mousePosition);
+            }
 
-							//ツールチップを非表示にする。
-							this.disableButtonInfoTooltip();
+            /**
+             * Canvas上のドラッグ対象を設定
+             *
+             * @param target {JQuery} ドラッグ対象
+             * @param showDetailItemArea {boolean} 詳細編集エリアを表示するかどうか
+             */
+            private setDragTarget(target: JQuery, showDetailItemArea: boolean = true) {
+                target.focus();
+                console.log("target " + JQUtils.data(target, "cid")); //$target.data("cid"));
+                this.$currentTarget_ = target;
+                
+                // target に紐付くモデルを取得
+                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
 
-							// リサイザーを追加
-							this._setResizer(this.$currentTarget_);
+                // 選択状態にする
+                this.$currentTarget_.addClass("selected");
 
-							// 詳細編集エリアを表示
-							$("#face-item-detail-area").addClass("active");
-							this._showDetailItemArea(this.currentTargetModel_);
-						
+                //ツールチップを非表示にする。
+                this.disableButtonInfoTooltip();
 
-						} else {
-							// マウスポインター位置にアイテムが存在しない場合で、
-							// canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
-							let $page = this._getTargetPageModule(mousePosition);
-							if ($page) {
-								// ページ背景の model の作成、もしくは既存のものを取得する
-								let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
-								this.currentTargetModel_ = {
-									type: "image",
-									image: backgroundImageModel
-								};
-								$("#face-item-detail-area").addClass("active");
-								// ページの背景の detail エリアを作成する
-								this._showDetailItemAreaOfPage($page);
-							}
-						}
+                // リサイザーを追加
+                this._setResizer(this.$currentTarget_);
 
-					}
-				}
-				if (remainsTarget) {
-					// 選択中のアイテムがボタンの場合、状態の更新を行う
-					this._updateCurrentModelButtonStatesData();
-				}
-				if (selectedResizer) {
-					this.selectedResizer_ = selectedResizer;
-					console.log(this.selectedResizer_);
-				}
-				if (this.$currentTarget_ && this.isOnCanvasFacePagesArea(mousePosition)) {
-					this.mouseMoveStartPosition_ = mousePosition;
-					this.mouseMoveStartTargetPosition_ = {
-						x: parseInt(this.$currentTarget_.css("left"), 10),
-						y: parseInt(this.$currentTarget_.css("top"), 10)
-					};
-					this.mouseMoveStartTargetArea_ = {
-						x: parseInt(this.$currentTarget_.css("left"), 10),
-						y: parseInt(this.$currentTarget_.css("top"), 10),
-						w: parseInt(this.$currentTarget_.css("width"), 10),
-						h: parseInt(this.$currentTarget_.css("height"), 10)
-					};
-					// 詳細編集エリア上の場合は、mousemove 状態にしない
-					if (!overDetailArea) {
-						this.mouseMoving_ = true;
-						event.preventDefault();
+                if (showDetailItemArea) {
+                    // 詳細編集エリアを表示
+                    $("#face-item-detail-area").addClass("active");
+                    this._showDetailItemArea(this.currentTargetModel_);
+                }
+            }
 
-						//preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
+            /**
+             * 対象アイテムのドラッグ中表示用ダミーを生成
+             */
+            private setCurrentTargetDummy() {
+                if (!this.$currentTarget_ ||
+                    this.$currentTargetDummy_) {
+                    return;
+                }
+
+                let dummyArea = $('#face-dummy-area');
+                let dummy = this.createDragItemDummy(this.$currentTarget_, dummyArea);
+                dummyArea.append(dummy);
+
+                this.$currentTargetDummy_ = dummy;
+            }
+
+            /**
+             * ドラッグ対象アイテムのCanvas外表示用ダミーを生成
+             * @param target ドラッグ対象アイテム
+             * @param dummyArea ダミー表示エリア
+             */
+            private createDragItemDummy(target: JQuery, dummyArea: JQuery): JQuery {
+                let dummy: JQuery = target.clone();
+
+                dummy
+                    .attr('id', 'canvas-item-dummy')
+                    .css({
+                        'left': (target.offset().left - dummyArea.offset().left) * 2 + 'px',
+                        'top' : (target.offset().top  - dummyArea.offset().top ) * 2 + 'px',
+                        'border': target.css('border'),
+                    });
+
+                this._setResizer(dummy);
+
+                return dummy;
+            }
+
+            /**
+             * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
+             *
+             * @param mousePosition {IPosition} マウス座標
+             * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
+             */
+            private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
+                if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
+
+                    // ドラッグ開始位置の保存
+                    this.mouseMoveStartPosition_ = mousePosition;
+                    this.mouseMoveStartTargetPosition_ = {
+                        x: parseInt(this.$currentTarget_.css("left"), 10),
+                        y: parseInt(this.$currentTarget_.css("top"), 10)
+                    };
+                    this.mouseMoveStartTargetArea_ = {
+                        x: parseInt(this.$currentTarget_.css("left"), 10),
+                        y: parseInt(this.$currentTarget_.css("top"), 10),
+                        w: parseInt(this.$currentTarget_.css("width"), 10),
+                        h: parseInt(this.$currentTarget_.css("height"), 10)
+                    };
+
+                    if (!this.selectedResizer_) {
+                        // サイズ変更でなければダミーを表示
+                        this.setCurrentTargetDummy();
+                    }
+
+                    if (!this._checkDetailItemAreaPosition(mousePosition)) {
+                        this.mouseMoving_ = true;
+                        if (this.$currentTargetDummy_) {
+                            this.$currentTargetDummy_.addClass("moving-item");
+                        }
+                        this.$currentTarget_.addClass("moving-item");
+                        event.preventDefault();
+
+                        //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
 						//そのため、preventDefault直後にフォーカスを設定しなおす。
-						this.$el.focus();
-					}
-				}
-			}
+                        this.$el.focus();
+                        if (this.macroProperty != null){
+                            //フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
+                            this.macroProperty.focusFirstPulldown();
+                        }
+                    }
+                }
+            }
 
 			/*
 			* 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
+            *
 			* @param mousePosition : IPosition マウスポインター
 			* @return result : boolean  CanvasAreaのFacePagesAreaの上の場合true, 違う場合false
 			*/
@@ -916,48 +1216,59 @@ module Garage {
 				}
 
 				// リサイザーが選択されている場合は、アイテムのリサイズを行う
-				if (this.selectedResizer_) {
-					this._resizeItem({ x: event.pageX, y: event.pageY }, false);
-				} else {
+                if (this.selectedResizer_) {
+                    this._resizeItem({ x: event.pageX, y: event.pageY }, false);
+                } else {
+                    var newPosition = this._getGriddedPosition({x: event.pageX, y: event.pageY});
 
-					var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
-					var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
+                    this.$currentTarget_.css({
+                        "left": newPosition.x + "px",
+                        "top": newPosition.y + "px"
+                    });
 
-                    var newX;
-                    var newY;
+                    //currentTargetの重なり判定
+                    this.changeColorOverlapedButtonsWithCurrentTargetButton();
 
-                    //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                    if (this.gridSize_ === DEFAULT_GRID) {
-                        var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
-                        var BIAS_Y = 0
-
-                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
-                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
-
-                    } else {
-                        newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-                        newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
-
-                    }
-
-					this.$currentTarget_.css({
-						"left": newX + "px",
-						"top": newY + "px"
-					});
+                    this.moveCurrentTargetDummy();
 				}
 			}
+
+			
+
+            private moveCurrentTargetDummy() {
+                if (!this.$currentTargetDummy_) return;
+
+                let faceEditArea = $('#face-dummy-area');
+                let dummyPosition: IPosition = {
+                    x: (this.$currentTarget_.offset().left - faceEditArea.offset().left) * 2,
+                    y: (this.$currentTarget_.offset().top - faceEditArea.offset().top) * 2
+                };
+
+                this.$currentTargetDummy_.css({
+                    "left": dummyPosition.x + 'px',
+                    "top": dummyPosition.y + 'px',
+                    "border-color": this.$currentTarget_.css("border-color")
+                });
+            }
+
+
 
 			/**
 			 * フルカスタム編集画面での mouseup イベントのハンドリング
 			 */
-			private onMainMouseUp(event: Event) {
+            private onMainMouseUp(event: Event) {
+                if (this.$currentTargetDummy_) {
+                    this.$currentTargetDummy_.remove();
+                    this.$currentTargetDummy_ = null;
+                }
+
 				if (event.type !== "mouseup") {
 					console.error(TAG + "onMainMouseUp() Invalid event type: " + event.type);
 					return;
 				}
 				if (!this.$currentTarget_ || !this.mouseMoving_) {
 					return;
-				}
+                }
 
 				var position = { x: event.pageX, y: event.pageY };
 
@@ -966,95 +1277,183 @@ module Garage {
 					this._resizeItem(position, true);
 				} else { // それ以外の場合は、アイテムの移動
 					this._moveItem(position);
-				}
-				this.mouseMoving_ = false;
+                }
+
+                this.$currentTarget_.removeClass("moving-item");
+                this.mouseMoving_ = false;
+                if (this.isDoubleClick(event)) {
+                    this.onPalletItemDblClick();
+                    this.clearPalletItemClickCount(this);
+                }
+
 			}
 
 			/**
-			 * アイテムの移動を行う
+			 * アイテムの移動を行い、位置を確定する
 			 */
-            private _moveItem(position: IPosition, update?: boolean) {
+            private _moveItem(position: IPosition) {
+                let fromPageModuleId: string = JQUtils.data(this.$currentTarget_.parent(), "cid");
+                let toPageModuleId  : string = JQUtils.data(this._getCanvasPageByDraggingPosition(position.y), "cid");
+                let isCrossPageMoving: boolean = (fromPageModuleId != toPageModuleId);
 
-				var deltaX = event.pageX - this.mouseMoveStartPosition_.x;
-				var deltaY = event.pageY - this.mouseMoveStartPosition_.y;
-				if (deltaX === 0 && deltaY === 0) {
-					return;
-				}
-                var newX;
-                var newY;
+                let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
+                let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
-                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
-                if (this.gridSize_ === DEFAULT_GRID) {
-                    var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
-                    var BIAS_Y = 0
-                    var MAX_X = $(".face-page").width() - BIAS_X_DEFAULT_GRID_LEFT;
+                let isFromPallet: boolean = !(this._getTargetPageModule(this.mouseMoveStartPosition_));
 
-                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_ + BIAS_X;
-                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_ + BIAS_Y;
+                if (isFromPallet) {
+                    // 開始位置がキャンバス外の場合＝パレットからの配置の場合
 
-                    if (newX < BIAS_X) {
-                        newX = BIAS_X;
-                    } else if (newX + this.$currentTarget_.width() > MAX_X) {
-                        newX = MAX_X - this.$currentTarget_.width();
+                    if ((newPosition.x + newArea.w <= BIAS_X_DEFAULT_GRID_LEFT || newPosition.x >= GRID_AREA_WIDTH) ||
+                        (newPosition.y + newArea.h <= 0 || newPosition.y >= GRID_AREA_HEIGHT)) {
+                        // 現在位置がキャンバス外の場合はアイテム破棄
+
+                        let delMemento = this._deleteCurrentTargetItem(false);
+                        let delCommand = new MementoCommand([delMemento]);
+                        // 履歴に登録せずに実行
+                        let delModel = delCommand.invoke();
+                        this._updateItemElementsOnCanvas(delModel);
+
+                        return;
                     }
-
-                } else {
-                    newX = Math.floor((this.mouseMoveStartTargetPosition_.x + deltaX * 2) / this.gridSize_) * this.gridSize_;
-                    newY = Math.floor((this.mouseMoveStartTargetPosition_.y + deltaY * 2) / this.gridSize_) * this.gridSize_;
                 }
 
-				this.$currentTarget_.css({
-					"left": newX + "px",
-					"top": newY + "px"
-				});
-                
-				// 新しい area の妥当性を検証し、調整済みの area を取得する
-				var newArea = this._validateArea({
-					x: newX,
-					y: newY
-				});
-				this._updateCurrentModelData("area", newArea);
-				this._showDetailItemArea(this.currentTargetModel_);
-            }
+                if (this.mouseMoveStartTargetPosition_.x == newPosition.x &&
+                    this.mouseMoveStartTargetPosition_.y == newPosition.y) {
+                    // 位置に変更がない（アイテム選択のみ）の場合は何もしない
+                    // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
+                    return;
+                }
 
+                if (!isCrossPageMoving) {
+                    // ページを跨がない場合は位置を更新して完了
+                    this._updateCurrentModelData("area", newArea, isFromPallet);
+                    this._showDetailItemArea(this.currentTargetModel_);
+                    return;
+                }
+
+                // 元ページのモデルをコピーし移動先ページに追加
+                let newModel = this._cloneTargetModel(this.currentTargetModel_);
+                this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
+                //移動先キャンバスページに追加
+                let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
+
+                let mementoList: IMemento[] = [];
+                var addMemento: IMemento = {
+                    target: newItem,
+                    previousData: {
+                        enabled: false
+                    },
+                    nextData: {
+                        enabled: true
+                    }
+                };
+
+                //元キャンバスページから削除
+                let delMemento = this._deleteCurrentTargetItem(false);
+                if (isFromPallet) {
+                    // パレットからの場合は履歴に登録せずに削除
+                    let delCommand = new MementoCommand([delMemento]);
+                    let delModel = delCommand.invoke();
+                    this._updateItemElementsOnCanvas(delModel);
+                } else {
+                    // キャンバス内ページ跨ぎの場合は履歴に登録して削除
+                    mementoList.push(delMemento);
+                }
+
+                mementoList.push(addMemento);
+
+                //追加と削除を1アクションとしてRedo･Undo履歴に追加
+                var mementoCommand = new MementoCommand(mementoList);
+                var updatedItems = this.commandManager_.invoke(mementoCommand);
+
+                // 新しいItemの詳細エリア表示
+                this._setTarget(newItem);
+                this._updateItemElementsOnCanvas(updatedItems);
+                this._showDetailItemArea(this.currentTargetModel_);
+            }
 
 			/**
 			 * アイテムのリサイズを行う
 			 */
 			private _resizeItem(position: IPosition, update?: boolean) {
 
-
+                this.$currentTarget_.removeClass("moving-item");
 				var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
 					var newArea: IArea = $.extend(true, {}, baseArea);
 
 					switch (this.selectedResizer_) {
-						case "left-top":
-							newArea.x += deltaX;
-							newArea.y += deltaY;
-							newArea.w -= deltaX;
-							newArea.h -= deltaY;
-							break;
+                        case "left-top":
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
 
-						case "right-top":
-							newArea.y += deltaY;
-							newArea.w += deltaX;
-							newArea.h -= deltaY;
-							break;
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
 
-						case "right-bottom":
-							newArea.w += deltaX;
-							newArea.h += deltaY;
-							break;
+                            break;
 
-						case "left-bottom":
-							newArea.x += deltaX;
-							newArea.w -= deltaX;
-							newArea.h += deltaY;
-							break;
+                        case "right-top":
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
 
-						default:
-							;
-					}
+                            if (deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                                newArea.y += (baseArea.h > this.minItemSize_) ? baseArea.h - this.minItemSize_ : 0;
+                            } else {
+                                newArea.y += deltaY;
+                                newArea.h -= deltaY;
+                            }
+
+                            break;
+
+                        case "right-bottom":
+                            if (-deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                            } else {
+                                newArea.w += deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        case "left-bottom":
+                            if (deltaX >= baseArea.w - this.minItemSize_) {
+                                newArea.w = this.minItemSize_;
+                                newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
+                            } else {
+                                newArea.x += deltaX;
+                                newArea.w -= deltaX;
+                            }
+
+                            if (-deltaY >= baseArea.h - this.minItemSize_) {
+                                newArea.h = this.minItemSize_;
+                            } else {
+                                newArea.h += deltaY;
+                            }
+                            break;
+
+                        default:
+                            ;
+                    }
+
+
 
 					//グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
@@ -1112,11 +1511,12 @@ module Garage {
 					height: newArea.h + "px",
 					lineHeight: newArea.h + "px"
 				});
+
+                //currentTargetの重なり判定
+                this.changeColorOverlapedButtonsWithCurrentTargetButton();
+
 				if (this.currentTargetModel_.type === "button") {
 					this._resizeButtonStateItem(this.$currentTarget_, newArea);
-					this._updateCurrentModelStateData(undefined, "resized", true);
-					//let stateId = parseInt(JQUtils.data($select, "stateId"), 10);
-					//this._updateCurrentModelStateData(stateId, "resized", true);
 				}
 				if (update) {
 					let validateArea = this._validateArea(newArea);
@@ -1135,7 +1535,7 @@ module Garage {
              * return : グリッドに沿った　face-page上の座標値 : number
 			 */
             private getGridCordinate (inputCordinate :number):number{
-                return inputCordinate = Math.floor(inputCordinate / this.gridSize_) * this.gridSize_;
+                return inputCordinate = Math.round(inputCordinate / this.gridSize_) * this.gridSize_;
             }
 
 			/**
@@ -1263,8 +1663,8 @@ module Garage {
 					accelerator: "CmdOrCtrl+Z",
 					enabled: this.commandManager_.canUndo() ? true : false,
 					click: () => {
-						var targetModel = this.commandManager_.undo();
-						this._updateItemElementOnCanvas(targetModel);
+                        var targetModels = this.commandManager_.undo();
+                        this._updateItemElementsOnCanvas(targetModels);
 						// 現在のターゲットを外す
 						this._loseTarget();
 					}
@@ -1275,8 +1675,8 @@ module Garage {
 					accelerator: "CmdOrCtrl+Y",
 					enabled: this.commandManager_.canRedo() ? true : false,
 					click: () => {
-						var targetModel = this.commandManager_.redo();
-						this._updateItemElementOnCanvas(targetModel);
+                        var targetModels = this.commandManager_.redo();
+                        this._updateItemElementsOnCanvas(targetModels);
 						// 現在のターゲットを外す
 						this._loseTarget();
 					}
@@ -1492,13 +1892,29 @@ module Garage {
 				$tooltip.removeClass("disable");
 
 				//ツールチップ内の文言を代入
-				let deviceType: string = this.getButtonDeviceType($button);
-				$tooltip.find(".device-type").html(deviceType);
+
+				let deviceInfo: IButtonDeviceInfo = this.getButtonDeviceInfo($button);
+
+				// リモコン名を取得できない場合、デバイスタイプを表示する。(ver1.3対策)
+				let remoteInfo: string = this.getButtonDeviceType($button);
+				if (deviceInfo) {
+					if (deviceInfo.remoteName) {
+						remoteInfo = deviceInfo.remoteName;
+					}
+                }
+
+                //マクロボタンの場合、リモコン名を特殊表記
+                if (this.isMacroButton(buttonModel.button)) {
+                    remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
+                }
+                
+
+				$tooltip.find(".remote-info").text(remoteInfo);
 
 				//ファンクション情報をローカライズ
 				let outputFunctionName = functions[0];
 				let $functionName:JQuery= $tooltip.find(".function-name");
-				$functionName.html(outputFunctionName);
+				$functionName.text(outputFunctionName);
 				var localizedString = null;
 				if (outputFunctionName !== "none") {
 					localizedString = $.i18n.t("button.function." + outputFunctionName);
@@ -1511,7 +1927,7 @@ module Garage {
 				if (functions.length > 1) {
 					outputString = outputString + " etc.";
 				}
-				$functionName.html(outputString);
+				$functionName.text(outputString);
 
 				//#face-pages-areaのscale率を取得
 				let buttonTransform = $("#face-pages-area").css("transform").split(",");
@@ -1557,13 +1973,19 @@ module Garage {
 					return;	
 				}
 
+                //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
 				var stateNum = buttonModel.button.state.length;
 				var fucntions: string[] = [];
-				for (var i = 0; i < buttonModel.button.state.length; i++){
-					if (buttonModel.button.state[i].action[0]){
-						fucntions.push(buttonModel.button.state[i].action[0].code_db.function.toString());
+                for (var i = 0; i < buttonModel.button.state.length; i++){
+                    for (let j = 0; j < buttonModel.button.state[i].action.length;j++){
+                        if (buttonModel.button.state[i].action[j] &&
+                            buttonModel.button.state[i].action[j].code_db &&
+                            buttonModel.button.state[i].action[j].code_db.function) {
+                            fucntions.push(buttonModel.button.state[i].action[j].code_db.function.toString());
 
-					}
+                        }
+
+                    }
 				}
 
 				return fucntions;
@@ -1571,7 +1993,8 @@ module Garage {
 			}
 
 			/*
-			* ボタンのデバイスタイプを取得
+			* ボタンの先頭に設定されている操作のデバイスタイプを取得
+            * 操作が一つも設定されていない場合は空文字を返す
 			* @ $button : JQuery デバイスタイプを取得したいボタンのJquery要素
 			* @ return : string  デバイスタイプ
 			*/
@@ -1593,12 +2016,60 @@ module Garage {
 				if (buttonModel.type !== "button") {
 					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
 					return;
+                }
+
+                if (buttonModel.button &&
+                    buttonModel.button.state &&
+                    buttonModel.button.state[0] &&
+                    buttonModel.button.state[0].action &&
+                    buttonModel.button.state[0].action[0] &&
+                    buttonModel.button.state[0].action[0].code_db &&
+                    buttonModel.button.state[0].action[0].code_db.device_type) {
+                    return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+                } else {
+                    return "";
+                }
+			}
+
+
+			/**
+			* ボタンの機器情報を取得。
+            * ボタンに複数の機器情報が設定されていても、state、actionの最初に設定されているdeviceInfoを返す。
+			* @ $button : JQuery ボタンのJquery要素
+			* @ return : string  リモコン名
+			*/
+			private getButtonDeviceInfo($button: JQuery): IButtonDeviceInfo {
+				var FUNCTION_NAME = this.FILE_NAME + " getButtonRemoteName :";
+
+				if (_.isUndefined($button)) {
+					console.warn(FUNCTION_NAME + "$button is Undefined");
+					return;
 				}
 
+				var buttonModel: TargetModel = this._getItemModel($button, "canvas");
 
-				return	buttonModel.button.state[0].action[0].code_db.device_type.toString();
-				
+				if (_.isUndefined(buttonModel)) {
+					console.warn(FUNCTION_NAME + "buttonModel is Undefined");
+					return;
+				}
+
+				if (buttonModel.type !== "button") {
+					console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+					return;
+				}
+
+                if (buttonModel.button &&
+                    buttonModel.button.state &&
+                    buttonModel.button.state[0] &&
+                    buttonModel.button.state[0].action &&
+                    buttonModel.button.state[0].action[0] &&
+                    buttonModel.button.state[0].action[0].deviceInfo) {
+                    return buttonModel.button.state[0].action[0].deviceInfo;
+                } else {
+                    return;
+                }
 			}
+
 
 			/*
 			* リモコン名のテキストフィールドの値が変わったときに呼び出される
@@ -1636,8 +2107,9 @@ module Garage {
 				}
 
 				if (key.indexOf("state-") === 0) {
-					let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-					this._updateCurrentModelStateData(stateId, key.slice("state-".length), value);
+					//let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
+					//このバージョンでは、すべての画像を変更する。
+					this._updateCurrentModelStateData(TARGET_ALL_STATE, key.slice("state-".length), value);
 				} else {
 					this._updateCurrentModelData(key, value);
 				}
@@ -1648,9 +2120,7 @@ module Garage {
 			 */
 			private onItemPropertySelectChanged(event: Event) {
 				var $target = $(event.currentTarget);
-                if ($target.hasClass("state-action-input") || $target.hasClass("state-action-function")) {
-                    this._setButtonStateActionsBySelect($target);
-                } else if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
+                if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
                     this._setImageResizeModeBySelect($target);
                 } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
                     this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
@@ -1699,7 +2169,7 @@ module Garage {
 			/**
 			 * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
-			private onEditImageBackgroundClicked(event: Event) {
+            private onEditImageBackgroundClicked(event: Event) {
 				var $target = $(event.currentTarget);
 				var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
 				this.startEditButtonImage($target, imageType);
@@ -1751,13 +2221,17 @@ module Garage {
 				let $textField: JQuery = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
 
 				let textInTextFiled: string = $textField.val();
+                
+                if (textInTextFiled == null || textInTextFiled == "") {
+                    textInTextFiled = $.i18n.t("button.text_button.STR_REMOTE_BTN_TEXT_BTN_DEFAULT");
+                    $textField.val(textInTextFiled);
+                }
 
-				this._updateCurrentModelStateData(stateId,
+				this._updateCurrentModelStateData(TARGET_ALL_STATE,
 					{
 						"text": textInTextFiled,
 						"path": null,
 						"resolved-path": null
-
 					});
 				this.setFocusAndMoveCursorToEnd($textField);
 			}
@@ -1974,12 +2448,8 @@ module Garage {
 				// 画像は remoteimages/[remoteId]/ 以下に配置される。
 				// image.path には remoteimages 起点の画像パスを指定する。
 				var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-				let model = <Model.ImageItem>this._updateCurrentModelData({
-					"path": imagePath,
-					"resizeOriginal": imagePath
-				});
 				// face ディレクトリ内に配置されるべき画像のパスを取得
-				let resolvedPath = model.resolvedPath;
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, imagePath)).replace(/\\/g, "/");
 				// 画像を face ディレクトリ内にコピー
 				// 画像のリサイズとグレースケール化
 				Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
@@ -2033,7 +2503,7 @@ module Garage {
 				var image = targetState.image[0];
 				image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
 				// resolvedPath ( [HUIS_FILES_ROOT]/[remoteId]/imageName)
-				let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages", image.path)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, image.path)).replace(/\\/g, "/");
 				image.resolvedPath = resolvedPath;
 				// 画像のリサイズとグレースケール化
 				Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
@@ -2041,17 +2511,27 @@ module Garage {
 						// 画像編集後に出力パスが変わる場合があるので、再度 model 更新
 						let editedImageName = path.basename(editedImage.path);
 						let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-						this._updateCurrentModelStateData(stateId, {
+
+                        let resolvedPath = editedImage.path.replace(/\\/g, "/");
+
+						//このバージョンでは、すべてのステートの画像を変更する。
+						this._updateCurrentModelStateData(TARGET_ALL_STATE, {
 							"path": editedImagePath,
-							"resolved-path": editedImage.path.replace(/\\/g, "/"),
+                            "resolved-path": resolvedPath,
 							"resizeOriginal": editedImagePath,
 							"text":""
 						});
 
-						
-
 						// テキストエリアの文字表示をアップデート
 						$(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
+
+
+                        //previewを更新する
+                        let inputURL = JQUtils.enccodeUriValidInCSS(resolvedPath);
+                        let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
+                        this._updatePreviewInDetailArea(inputURL, $preview);
+                        
+                        
 
 						//this._updateCurrentModelStateData(stateId, "path", editedImagePath);
 						//this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
@@ -2150,13 +2630,15 @@ module Garage {
 					});
 
 				if (response === 0) {// positiveなボタンの場合,Saveと同じ処理
+					$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
 					this.onEditDoneButtonClicked(event);
 				} else if (response === 1) {
+					$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
 					Framework.Router.back();//negative なボタンの場合、homeに戻る
 				} else {//キャンセル処理の場合、なにもしない。
 				}
 
-				$("#button-edit-back").prop("disabled", false);
+				$("#button-edit-back").prop("disabled", false); // 二度押し対策の解除
            }
 
 			/*
@@ -2172,47 +2654,34 @@ module Garage {
 			 * 編集完了ボタンを押したときに呼び出される
 			 */
 			private onEditDoneButtonClicked(event: Event) {
-				$("#button-edit-done").prop("disabled", true); // 二度押し対策
+                let FUNCTION_NAME = TAG + "onEditDoneButtonClicked : ";
 
+
+                $("#button-edit-done").prop("disabled", true); // 二度押し対策
 				// 直前に選択されていたボタンの状態更新があれば行う
 				this._updateCurrentModelButtonStatesData();
+
+                //doneボタンの非活性タイマー
+                let durationTimerDoneButtonEnable = 5000;
+                setTimeout(() => {
+                    //二度押し対策が裏目にならないように、ある程度 時間がたつと非活性解除
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                }, durationTimerDoneButtonEnable)
 
 				// 現在のターゲットを外す
 				this._loseTarget();
 
-				var options: Util.ElectronMessageBoxOptions = {
-				
-				};
+                //エラーハンドリング
+                let errorOccur: boolean = this._isErrorOccurBeforeSave();
+                if (errorOccur) {
+                    $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    return;
+                }
 
-				let gmodules = this.faceRenderer_canvas_.getModules();
-				let remoteId = this.faceRenderer_canvas_.getRemoteId();
-				let faceName: string = $("#input-face-name").val();
-				if (!faceName) {
-					let response = electronDialog.showMessageBox({
-						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME"),
-						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-						title: PRODUCT_NAME,
-					});
-					if (response === 0) {
-						//テキストフィールドにフォーカス
-						var $remoteName: JQuery = $("#input-face-name");
-						this.setFocusAndMoveCursorToEnd($remoteName);
-					}
-					return;
-				}
-				let overlapButtonError = this._overlapButtonsExist();
-				if (overlapButtonError) {
-					electronDialog.showMessageBox({
-						type: "error",
-						message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP")
-						+ overlapButtonError,
-						buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-						title: PRODUCT_NAME,
-					});
-					return;
-				}
-				huisFiles.updateFace(remoteId, faceName, gmodules)
+                let gmodules = this.faceRenderer_canvas_.getModules();
+                let remoteId = this.faceRenderer_canvas_.getRemoteId();
+                let faceName: string = $("#input-face-name").val();
+				huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
 					.always(() => {
 						garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
 						if (HUIS_ROOT_PATH) {
@@ -2230,26 +2699,101 @@ module Garage {
 									//CDP.this.showGarageToast"HUIS との同期が完了しました。"); 使われてない？
 									Framework.Router.back();
 								}
-								$("#button-edit-done").prop("disabled", false);
+								$("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 
-							});
+                            });
 						} else {
 							//this.showGarageToast("リモコンを保存しました。");　使われてない
 							Framework.Router.back();
 							$("#button-edit-done").prop("disabled", false);
 					}
-				});
-			}
+                    }).fail(() => {
+                        console.error(FUNCTION_NAME + "updateFace is fail");
+                        $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
+                    });
+            }
 
+            /**
+             * 保存前のバリデーションエラーダイアログを表示
+             * @param errorMessage ダイアログに表示する文言
+             * @return {number} ダイアログでクリックされたボタンのインデックス
+             */
+            private _showSaveErrorDialog(errorMessage: string): number {
+                let result = electronDialog.showMessageBox({
+                    type: "error",
+                    message: errorMessage,
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+                return result;
+            }
+
+
+
+            /*
+             * エクスポート・編集終了時の警告ダイアログを表示などのエラー処理をする。
+             * @param isForExport {boolean} エクスポート時に使う場合、true, なにも入力がない場合、false
+             * @return {boolean} エラーが発生しているか否か エラーが発生している場合 true,それ以外はfalse
+             */
+            private _isErrorOccurBeforeSave(isForExport :boolean= false) :boolean{
+
+                var options: Util.ElectronMessageBoxOptions = {
+
+                };
+
+                let faceName: string = $("#input-face-name").val();
+
+                
+
+
+                //名前がない場合のエラー
+                if (!faceName) {
+                    let errorMessage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME");
+                    if (isForExport) {
+                        errorMessage  = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_NO_REMOTE_NAME_EXPORT");
+                    }
+
+                    let response = this._showSaveErrorDialog(errorMessage);
+                    if (response === 0) {
+                        //テキストフィールドにフォーカス
+                        var $remoteName: JQuery = $("#input-face-name");
+                        this.setFocusAndMoveCursorToEnd($remoteName);
+                    }
+                    return true;
+                }
+
+
+                //ボタン重なり時のエラー
+                let overlapButtonError = this._overlapButtonsExist();
+                if (overlapButtonError) {
+                    let errorMessage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP");
+                    if (isForExport) {
+                        errorMessage = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_OVERLAP_EXPORT");
+                    }
+                    this._showSaveErrorDialog(errorMessage + overlapButtonError);
+                    return true;
+                }
+
+
+                // Bluetoothデバイスが複数設定されている場合はエラー
+                let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist(isForExport);
+                if (multipleBluetoothDevError) {
+                    this._showSaveErrorDialog(multipleBluetoothDevError);
+                    return true;
+                }
+
+            }
+        
 
 			/**
 			 * 現在のターゲットとなるモデルに対して、データをセットする。
 			 * 
 			 * @param key {string} データのキー
 			 * @param value {any} 値
+             * @param disablePrevData {boolean} Undoとしてモデルの無効化を設定するかどうか
 			 * @return {any} 現在のターゲットとなるモデル
 			 */
-			private _updateCurrentModelData(key: string, value: any): ItemModel;
+			private _updateCurrentModelData(key: string, value: any, disablePrevData?: boolean): ItemModel;
 
 			/**
 			 * 現在のターゲットとなるモデルに対して、データをセットする。
@@ -2259,7 +2803,7 @@ module Garage {
 			 */
 			private _updateCurrentModelData(properties: any): ItemModel;
 
-			private _updateCurrentModelData(param1: any, param2?: any): ItemModel {
+			private _updateCurrentModelData(param1: any, param2?: any, param3: boolean = false): ItemModel {
 				if (!this.currentTargetModel_) {
 					console.warn(TAG + "_updateCurrentModelData() target model not found");
 					return;
@@ -2291,12 +2835,20 @@ module Garage {
 				 */
 				var previousData = {};
 				var nextData = {};
-				if (_.isString(param1)) {
-					let key = param1;
-					let value = param2;
-					previousData[key] = model[key];
-					nextData[key] = value;
-				} else if (_.isObject(param1)) {
+                if (_.isString(param1)) {
+                    let key = param1;
+                    let value = param2;
+
+                    if (param3) {
+                        // UndoでModel無効化/Redoで有効化（Palletからのドラッグ＆ドロップ追加時）
+                        previousData["enabled"] = false;
+                        nextData["enabled"] = true;
+                    } else {
+                        previousData[key] = model[key];
+                    }
+
+                    nextData[key] = value;
+                } else if (_.isObject(param1)) {
 					let properties: Object = param1;
 					let keys = Object.keys(properties);
 					keys.forEach((key) => {
@@ -2311,7 +2863,7 @@ module Garage {
 					nextData: nextData
 				};
 
-				var mementoCommand = new MementoCommand(memento);
+				var mementoCommand = new MementoCommand([memento]);
 				this.commandManager_.invoke(mementoCommand);
 
 				// 更新内容を DOM に反映
@@ -2358,9 +2910,9 @@ module Garage {
 						case "size":
 							//HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
 							if (itemType == "button") {
-								value = (value * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+								value = JQUtils.getOffsetTextButtonSize(value);
 							} else if (itemType == "label") {
-								value = (value * RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL);
+                                value = JQUtils.getOffsetTextLabelSize(value);
 							}
 							
 							$target.css("font-size", value + "pt");
@@ -2381,26 +2933,24 @@ module Garage {
 
 								// image.garageExtension.original のパスを優先的に使う。
 								// 存在しない場合は、image.path を使う。
-								let resolvedPath = targetModel["resizeResolvedOriginalPath"];
+                                let resolvedPath = this.getValidPathOfImageItemForCSS(targetModel);
 
-								if (!resolvedPath || resolvedPath == HUIS_REMOTEIMAGES_ROOT) {
-									resolvedPath = targetModel["resolvedPath"];
-								}
-
+                                
 								// 画像のロードが完了してから表示を更新する
-								let img = new Image();
-								img.onload = () => {
-									$target.css("background-image", "url(" + resolvedPath + ")");
-									// 詳細編集エリアの画像ファイルパス名を更新
-									let path = targetModel["resizeOriginal"];
-									if (!path) {
-										path = targetModel["path"];
-									}
-									$("#refer-image").val(path);
+                                let img = new Image();
+                                img.src = resolvedPath;
+                                img.onload = () => {
+                                    this.setBackgroundImageUrlInCSS($target, resolvedPath);
 									// 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
+
+                                    try {
+                                        this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
+                                    } catch (e) {
+                                        // ロード中にダミーが消される可能性を考慮
+                                    }
 								};
-								img.src = resolvedPath;
+								
 
 							}
 							break;
@@ -2453,20 +3003,27 @@ module Garage {
 
 						case "resizeOriginal":
 							{
-								let resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
+                                let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
+
+                                //CSS対応のresizeResolvedOriginalPathCSSがない場合
+                                if (resolvedOriginalPath == null) {
+                                    resolvedOriginalPath = targetModel["resizeResolvedOriginalPath"];
+                                }
+
 								if (resolvedOriginalPath) {
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
-									img.onload = () => {
-										$target.css("background-image", "url(" + resolvedOriginalPath + ")");
+                                    let img = new Image();
+                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
 
 										// プレビュー部分の更新
                                         this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
                                     };
-                                    if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
-                                        img.src = resolvedOriginalPath;
-                                    }
+                                    
 								}
 							}
 							break;
@@ -2543,16 +3100,27 @@ module Garage {
 										let image = targetState.image;
 										props["resolved-path"] = "null";
 										if (image != null) {
-											if (image[0] != null) {
-												let resolvedPath = image[0].resolvedPath;
-												if (resolvedPath != null) {
-													props["resolved-path"] = resolvedPath;
-												}
+                                            if (image[0] != null) {
+                                                //resizeResolvedOriginalPathCSS,resolved-patCSSをいれるとupdateButtonOnCanvasでさらに変換されてしまう。
+                                                //originalPathを優先。ない場合は、resolved-pathを仕様。
+                                                let resizeOriginal = image[0].resizeResolvedOriginalPath;
+                                                if (resizeOriginal != null) {
+                                                    props["resizeResolvedOriginalPath"] = resizeOriginal;
+                                                } else {
+                                                    let resolvedPath = image[0].resolvedPath;
+                                                    if (resolvedPath != null) {
+                                                        props["resolved-path"] = resolvedPath;
+                                                    }
+                                                }
+
+												
 
 												let resizeMode = image[0].resizeMode;
 												if (resizeMode != null) {
 													props["resizeMode"] = resizeMode;
-												}
+                                                }
+
+                                                
 											}
 											
 										}
@@ -2560,7 +3128,7 @@ module Garage {
 										let keys = Object.keys(props);
 										keys.forEach((key) => {
 											let value = props[key];
-											this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, buttonW, buttonH);
+                                            this.updateButtonOnCanvas(stateId, key, value, targetState, $targetStateElem, buttonW, buttonH);
 										});
 									});
 								}
@@ -2569,15 +3137,32 @@ module Garage {
 					}
 
 					
-				});
-			}
+                });
+
+                this._overlapButtonsExist();
+            }
+
+            /**
+             * canvas 上にあるアイテムの要素に対して、表示の更新を行う
+             * @param targetModel {ItemModel[]} アイテム要素の表示更新の対象となる model の配列
+             */
+            private _updateItemElementsOnCanvas(targetModels: ItemModel[]) {
+                if (!targetModels) {
+                    return;
+                }
+
+                for (let targetModel of targetModels) {
+                    this._updateItemElementOnCanvas(targetModel);
+                }
+            }
 
 
             /**
             * 詳細設定エリアのプレビューの画像を更新する
+            * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
             */
-            private _updatePreviewInDetailArea(imagePath : string, $preview, isBackground? : boolean) {
-                if (imagePath == undefined) {
+            private _updatePreviewInDetailArea(resolvedImagePathForCSS : string, $preview, isBackground? : boolean) {
+                if (resolvedImagePathForCSS == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
 					return;
                 }
@@ -2591,13 +3176,15 @@ module Garage {
 					isBackground = false;
 				}
 
+            
+
 				let previewHeight: number = MIN_HEIGHT_PREVIEW;
-				if (imagePath != HUIS_REMOTEIMAGES_ROOT
-					&& imagePath != "") {
-					$preview.css("background-image", "url(" + imagePath + ")");
+                if (resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
+                    && resolvedImagePathForCSS != "") {
+                    this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
 					let previewWidth = $preview.width();
 					let img = new Image();
-					img.src = imagePath;
+                    img.src = resolvedImagePathForCSS;
 					let imgWidth = img.width;
 					let imgHeight = img.height;
 					previewHeight = imgHeight * (previewWidth / imgWidth);
@@ -2613,7 +3200,7 @@ module Garage {
 				}
 
                 $preview.height(previewHeight);
-           }
+            }
             
 
 			/**
@@ -2626,26 +3213,41 @@ module Garage {
 				// 更新がない場合は何もしない
 				if (!this.currentTargetButtonStatesUpdated_) {
 					return;
-				}
+                }
+                // this.currentTargetButtonStatesUpdated_ を true にするルートが現状存在しないため
+                // 以下のコードが実行されることはないはず
 
+                console.error("unexpected path to _updateCurrentModelButtonStateData()");
+
+                /*
 				var button = this.currentTargetModel_.button;
 
 				// ボタンにひも付けられている機器の情報を取得
-				var deviceInfo = button.deviceInfo;
+                var deviceInfo = button.deviceInfo;
 				var brand: string,
 					device_type: string,
 					db_codeset: string,
 					model_number: string,
-					functions: string[],
-					functionCodeHash: IStringStringHash;
+                    functions: string[],
+                    bluetooth_data: IBluetoothData,
+					functionCodeHash: IStringStringHash,
+					remoteName:string;
 				if (deviceInfo && deviceInfo.code_db) {
 					brand = deviceInfo.code_db.brand;
 					device_type = deviceInfo.code_db.device_type;
 					db_codeset = deviceInfo.code_db.db_codeset;
-					model_number = deviceInfo.code_db.model_number;
+                    model_number = deviceInfo.code_db.model_number;
+                    if (deviceInfo.bluetooth_data) {
+                        bluetooth_data = deviceInfo.bluetooth_data;
+                    }
 					if (deviceInfo.functionCodeHash){
 						functionCodeHash = deviceInfo.functionCodeHash;
 					}
+
+					if (deviceInfo.remoteName) {
+						remoteName = deviceInfo.remoteName;
+					}
+					
 				}
 
 				
@@ -2661,7 +3263,7 @@ module Garage {
 					if (targetState.length < 1) {
 						targetState = null;
 					}
-					var actionList = stateDetail.actionList;
+                    var actionList = stateDetail.actionList;
 					
 
 					if (actionList) {
@@ -2669,12 +3271,11 @@ module Garage {
 						for (let key in actionList) {
 							if (!key) {
 								continue;
-							}
+                            }
 							let value: string = actionList[key];
 							if (_.isUndefined(value) || value === "none") {
 								continue;
 							}
-							
 							let codeDb: ICodeDB = {
 								function: value,
 								brand: brand,
@@ -2686,31 +3287,27 @@ module Garage {
 
 							let action: IAction = {
 								input: key,
-								code_db: codeDb
+                                code_db: codeDb,
+                                bluetooth_data: bluetooth_data,
 							};
-
+                            
 							
 							//このFunctionに登録されているaction/code を取得する。
 							if (functionCodeHash != undefined) {
 								let code: string = functionCodeHash[value];
 								//codeがある場合は actionに登録する。
 								if (code != null) {
-									action = {
-										input: key,
-										code_db: codeDb,
-										code: code,
-									};
+                                    action.code = code;
 								}
 							}
 						
 
 							actions.push(action);
-							
 						}
 
 						//アクションが一つもない場合、actionが空のボタンにする。
 						if (actions != undefined && actions.length == 0) {
-							let codeDb: ICodeDB = {
+                            let codeDb: ICodeDB = {
 								function: "none",
 								brand: brand,
 								device_type: device_type,
@@ -2719,7 +3316,8 @@ module Garage {
 							};
 							let action: IAction = {
 								input: "none",
-								code_db: codeDb
+                                code_db: codeDb,
+                                bluetooth_data: bluetooth_data,
 							};
 							actions.push(action);
 						}
@@ -2765,9 +3363,10 @@ module Garage {
 					previousData: { "state": currentStates },
 					nextData: { "state": newStates }
 				};
-				var mementoCommand = new MementoCommand(memento);
+				var mementoCommand = new MementoCommand([memento]);
 				this.commandManager_.invoke(mementoCommand);
 
+                */
 				this.currentTargetButtonStatesUpdated_ = false;
 			}
 
@@ -2799,14 +3398,18 @@ module Garage {
 					return;
 				}
 
-              
-
 				/**
 				 * state 内に label が存在しない場合に、補完する
 				 */
 				var solveLabel = function (state: IGState) {
 					var defaltTextSize = 30;
-					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + stateId + "\"]");
+					let localStateId = state.id;
+
+					var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
+
+					if ($targetTextSizePullDown.length == 0) {//DOMが存在しないとき(長さが0のとき)stateId=0の際のDOMを読み込み
+						$targetTextSizePullDown = $(".property-state-text-size[data-state-id=\"0\"]");
+					}
 
 					if ($targetTextSizePullDown) {
 						defaltTextSize = +($targetTextSizePullDown.val());
@@ -2858,8 +3461,11 @@ module Garage {
 				var currentStates: IGState[] = $.extend(true, [], states);
 
 				let targetStates: IGState[];
-				if (_.isUndefined(stateId)) {
+				if (_.isUndefined(stateId) ) {
 					// stateId が指定されていない場合は、全 state を更新
+					targetStates = states;
+				} else if (stateId === TARGET_ALL_STATE) {
+					// stateIdがTARGET_ALL_STATEの場合、全stateを更新
 					targetStates = states;
 				} else {
 					targetStates = states.filter((state) => {
@@ -2875,15 +3481,20 @@ module Garage {
 				// state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
 				var targetState = targetStates[0];
 				var $targetStateElem = this.$currentTarget_.find(".button-state").filter((index: number, elem: Element) => {
-					return parseInt(JQUtils.data($(elem), "stateId"), 10) === stateId;
+					let tmpStateId = stateId;
+					if (_.isUndefined(stateId)) {
+						// stateId が指定されていない場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
+					} else if (stateId === TARGET_ALL_STATE) {
+						// stateId がTARGET_ALL_STATEの場合は、state:0のDOMを利用する。
+						tmpStateId = 0;
+					}
+					return parseInt(JQUtils.data($(elem), "stateId"), 10) === tmpStateId;
 				});
 				if (!$targetStateElem || $targetStateElem.length < 1) {
 					console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
 					return;
 				}
-
-
-                
 
 				targetStates.forEach((targetState: IGState) => {
 
@@ -2951,22 +3562,34 @@ module Garage {
 							default:
 
 						}
-
-						this.updateButtonOnCustom(stateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
+						let currentStateId = targetState.id;
+                        this.updateButtonOnCanvas(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
 					
 					});
 				});
-
-				
 
 				var memento: IMemento = {
 					target: button,
 					previousData: { "state": currentStates },
 					nextData: { "state": states }
 				};
-				var mementoCommand = new MementoCommand(memento);
-				this.commandManager_.invoke(mementoCommand);
+				var mementoCommand = new MementoCommand([memento]);
+                this.commandManager_.invoke(mementoCommand);
+
+
+                //propertyArea用のクラス内のモデルを更新する。
+                if (states != null) {
+                    
+                    if (this.buttonProperty != null) {
+                        this.buttonProperty.setStates(states);
+                    }
+
+                    if (this.macroProperty != null) {
+                        this.macroProperty.setStates(states);
+                    }
+                }
+
 
 			}
 
@@ -2979,19 +3602,18 @@ module Garage {
 			*  @buttonAreaW{number} 変更対象のボタンのW
 			*  @buttonAreaH{number} 変更対象のボタンのH
 			*/
-			private updateButtonOnCustom(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
+			private updateButtonOnCanvas(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
 					// canvas 上のスタイルと詳細エリアの更新
 						switch (key) {
 							case "text":
 							case "size":
 								{
 								
-									let $labelElement = $targetStateElem.find(".state-label");
-									let label = targetState.label[0];
-									if (label == null) {
-										break;
-									}
-									$labelElement.text(label.text);
+                                    let $labelElement = $targetStateElem.find(".state-label");
+                                    let label = targetState.label[0];
+                                    let text = (label && label.text) ? label.text : "";
+                                    let size = (label && label.size) ? label.size : 0;
+									$labelElement.text(text);
 									$labelElement.css({
 										left: "0",
 										top: "0",
@@ -2999,7 +3621,7 @@ module Garage {
 										height: buttonAreaH + "px",
 										lineHeight: buttonAreaH + "px",
 										color: "rgb(0,0,0)",
-										fontSize: (label.size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON) + "pt"
+                                        fontSize: JQUtils.getOffsetTextButtonSize(size) + "pt"
 									});
 
 									//画像が存在するとき、テキストEdit機能を非表示にする
@@ -3022,7 +3644,9 @@ module Garage {
 									let $input = $(".refer-state-image[data-state-id=\"" + stateId + "\"]");
 									$input.val(value);
 								}
-								break;
+                                break;
+
+                            case "resizeResolvedOriginalPath":
 							case "resolved-path":
 								{
 									//let image = targetState.image[0];
@@ -3032,24 +3656,35 @@ module Garage {
 										top: "0",
 										width: buttonAreaW + "px",
 										height: buttonAreaH + "px",
-										backgroundImage: value ? "url(" + value + ")" : "none"
-									});
+                                    });
+
+                                    let inputUrl: string = null;
+                                   
+                                    inputUrl = JQUtils.enccodeUriValidInCSS(value);
+                                    
+
+
+                                    if (inputUrl == null) {
+                                        inputUrl = "none";
+                                    }    
+
+                                    this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
+
+
 									// 画像のロードが完了してから表示を更新する
-									let img = new Image();
-									img.onload = () => {
+                                    let img = new Image();
+                                    img.src = inputUrl;
+                                    img.onload = () => {
+                                        this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
 										// 詳細エリアのプレビュー更新
 										let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-										this._updatePreviewInDetailArea(value, $preview);
-
 
 										//画像が存在するとき、テキストEdit機能を非表示にする
 										this.toggleImagePreview(stateId);
 
 									};
-									img.src = value;
 									
-                                    //$preview.css("background-image", value ? "url('" + value + "')": "none");
-
+									
 								}
 								break;
 							case "resizeMode":
@@ -3100,20 +3735,44 @@ module Garage {
 				let previceBagroundCSS: string = $preview.css("background-image");
 				if (previceBagroundCSS == null) {
 					return;
-				}
-				var backgroundImageCssArray = previceBagroundCSS.split("/");
+                }
+
+                let decodePath = JQUtils.decodeUriValidInWindowsAndCSS(previceBagroundCSS);
+
+                var backgroundImageCssArray = decodePath.split("/");
 				var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
-				var path = pathArray[0];
+                var path = pathArray[0];
 
 				//なぜか、background-imageにfull-custom.htmlが紛れることがある。
-				if (path != "null" && path != "full-custom.html" && path != "none") {
+                if (path != "null" && path != "full-custom.html" && path != "none" && this.existsImageFile(decodePath)) {
 					$textFieldInPreview.css("visibility", "hidden");
 				} else {//画像が存在しないとき、テキストEdit機能を表示する。
 					this._updatePreviewInDetailArea("none", $preview);
 					$textFieldInPreview.css("visibility", "visible");
 					
 				}
-			}
+            }
+
+            /**
+             * background-imageスタイルシートに記述されたパスにファイルが存在するか検査する
+             * @param backgroundImage {string} background-image に設定されている値
+             * @return ファイルが存在する場合はtrue、そうでない場合（対象がフォルダだった場合を含む）はfalse
+             */
+            private existsImageFile(backgroundImage: string): boolean {
+                let imageFullPath = backgroundImage.match(/[^url\("file:\/\/\/].+[^"?\)]/);
+                try {
+                    if (imageFullPath &&
+                        imageFullPath[0] &&
+                        fs.existsSync(imageFullPath[0]) &&
+                        !fs.lstatSync(imageFullPath[0]).isDirectory()) {
+                        return true;
+                    }
+                } catch (e) {
+                    console.warn("can not access to the image file: " + backgroundImage + "\n" + e);
+                }
+
+                return false;
+            }
 
 			/**
 			 * 現在ターゲットとなっているボタンの state を取得する
@@ -3137,8 +3796,9 @@ module Garage {
 
 			/**
 			 * 現在ターゲットとなっているアイテムを削除する
+             * @param doInvoke 削除処理を実行するかどうか。falseの場合は削除処理は行わず、そのコマンドのみを返す
 			 */
-			private _deleteCurrentTargetItem() {
+            private _deleteCurrentTargetItem(doInvoke: boolean = true): IMemento {
 				if (!this.$currentTarget_) {
 					console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] target item is not found.");
 					return;
@@ -3172,22 +3832,30 @@ module Garage {
 					return;
 				}
 
-				// model 状態を無効にする
-				var memento: IMemento = {
-					target: model,
-					previousData: {
-						enabled: true
-					},
-					nextData: {
-						enabled: false
-					}
-				};
-				var mementoCommand = new MementoCommand(memento);
-				this.commandManager_.invoke(mementoCommand);
+                // model 状態を無効にする
+                var memento: IMemento = {
+                    target: model,
+                    previousData: {
+                        enabled: true
+                    },
+                    nextData: {
+                        enabled: false
+                    }
+                };
+
+                if (doInvoke) {
+                    var mementoCommand = new MementoCommand([memento]);
+                    this.commandManager_.invoke(mementoCommand);
+
+                    this._updateItemElementOnCanvas(model);
+                }
+
+                var $detail = $("#face-item-detail");
+                $detail.children().remove();
 
 				this._updateItemElementOnCanvas(model);
-				var $detail = $("#face-item-detail");
-				$detail.children().remove();
+                return memento;
+
 				// DOM の削除
 				//this.$currentTarget_.remove();
 
@@ -3208,58 +3876,7 @@ module Garage {
 				//}
 			}
 
-			/**
-			 * 選択中のボタンのアクション設定を行う。
-			 * onItemPropertySelectChanged() から呼び出されることが前提。
-			 * 
-			 * @param $select {JQuery} onItemPropertySelectChanged の発火元となった select 要素の jQuery オブジェクト
-			 */
-			private _setButtonStateActionsBySelect($select: JQuery) {
-				if (!this.currentTargetButtonStates_) {
-					return;
-				}
-
-				let stateId = parseInt(JQUtils.data($select, "stateId"), 10); //$target.data("state-id");
-				if (_.isUndefined(stateId)) {
-					return;
-				}
-				let type: string = JQUtils.data($select, "type"); //$target.data("type");
-				if (_.isUndefined(type)) {
-					return;
-				}
-				let value: string = $select.val();
-
-				let stateDetail: IStateDetail = this.currentTargetButtonStates_[stateId];
-				if (_.isUndefined(stateDetail)) {
-					return;
-				}
-				let actionList = stateDetail.actionList;
-				if (_.isUndefined(actionList)) {
-					return;
-				}
-
-				switch (type) {
-					case "state-input":
-						{
-							let actionName = actionList[value];
-							if (!_.isUndefined(actionName)) {
-								$("#select-state-action-function-" + stateId).val(actionName).selectmenu('refresh');
-							}
-						}
-						break;
-
-					case "state-action":
-						{
-							let inputName = $("#select-state-action-input-" + stateId).val();
-							if (!_.isUndefined(inputName)) {
-								actionList[inputName] = value;
-								this.currentTargetButtonStatesUpdated_ = true;
-								this._updateCurrentModelButtonStatesData();
-							}
-						}
-						break;
-				}
-			}
+			
 
 			/**
 			 * 画像の resizeMode を設定する。
@@ -3297,6 +3914,18 @@ module Garage {
 					this.faceRenderer_canvas_.deletePage(pageIndex);
 					let $pageContainer = $pageModule.parent();
 					$pageContainer.remove();
+
+					// 現在のターゲットを外す
+                    this._loseTarget();
+
+                    
+                    // CommandManager の初期化
+                    if (this.commandManager_) {
+                        this.commandManager_.reset();
+                    } else {
+                        this.commandManager_ = new CommandManager();
+                    }
+
 					return;
 				} else {
 					return;
@@ -3304,6 +3933,52 @@ module Garage {
 
 				
 			}
+
+            /**
+             * 元のアイテム座標からグリッド位置に合わせて補正されたアイテム座標を返す
+             * @param mousePosition
+             * @param baseNewCanvas アイテムがページを跨いで移動する際に移動後のキャンバスページを基準にするかどうか。falseの場合はドラッグ開始時のキャンバスを基準にした座標を返す。
+             */
+            private _getGriddedPosition(mousePosition: IPosition, baseNewCanvas: boolean = false): IPosition {
+                // グリッドに合わせる前のアイテム座標
+                var ungriddedPosition = {
+                    x: this.mouseMoveStartTargetPosition_.x + (mousePosition.x - this.mouseMoveStartPosition_.x) * 2,
+                    y: this.mouseMoveStartTargetPosition_.y + (mousePosition.y - this.mouseMoveStartPosition_.y) * 2
+                };
+
+                var newX;
+                var newY;
+
+                //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
+                if (this.gridSize_ === DEFAULT_GRID) {
+                    var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
+                    var BIAS_Y = 0
+
+                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
+                    
+                } else {
+                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_;
+                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_;
+                }
+
+                // アイテム元座標のキャンバス
+                var fromCanvas = this.$currentTarget_.parent();
+                // グリッド位置補正前の対象アイテムが乗っているキャンバス
+                var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
+                var fromCid = JQUtils.data(fromCanvas, "cid");
+                var pointedCid = JQUtils.data(pointedCanvas, "cid");
+                if (fromCid && pointedCid && fromCid != pointedCid) {
+                    // ページを跨ぐ場合グリッドのずれを補正
+                    newY += ((pointedCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
+
+                    if (baseNewCanvas) {
+                        newY -= (pointedCanvas.offset().top - fromCanvas.offset().top) * 2;
+                    }
+                }
+
+                return { x: newX, y: newY };
+            }
 
 			/**
 			 * 指定した area を検証し、妥当な area の値を返す。
@@ -3344,13 +4019,6 @@ module Garage {
 
 				this._normalizeArea(complementedArea);
 
-				if (this.currentTargetModel_.type === "button") {
-					if (this._checkOverlapButton(complementedArea, model.cid)) {
-						// 重なり合わせられた場合は、最初の area に戻す
-						complementedArea = $.extend(true, {}, model.area);
-					}
-				}
-
 				return complementedArea;
 			}
 
@@ -3387,52 +4055,238 @@ module Garage {
 					if (GRID_AREA_HEIGHT < area.h) {
 						area.h = GRID_AREA_HEIGHT;
 						area.y = 0;
-					} else {
+                    } else {
 						area.y = GRID_AREA_HEIGHT - area.h;
 					}
 				}
+            }
+
+
+			/*
+			 * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
+			 */
+            private changeColorOverlapedButtonsWithCurrentTargetButton() {
+
+                let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
+
+				//currentTargetがボタンでなかった場合、無視する
+				if (this.currentTargetModel_.type != "button") {
+					return;
+				}
+				if (!this.currentTargetModel_.button) {
+					return;
+                }
+
+                //currentTargetのエリアを取得
+				if (this.$currentTarget_ == undefined) {
+					console.warn(FUNCTION_NAME + "$currentTarget_ is undefined");
+					return;
+				}
+				let currentTargetArea: IArea = {
+					x: parseInt(this.$currentTarget_.css("left"), 10),
+					y: parseInt(this.$currentTarget_.css("top"), 10),
+					w: parseInt(this.$currentTarget_.css("width"), 10),
+					h: parseInt(this.$currentTarget_.css("height"), 10)
+				}
+
+                // 検査したボタン
+                let buttons: Model.ButtonItem[] = [];
+                // 重なっていたボタン
+                let overlapButtons: Model.ButtonItem[] = [];
+
+                let currentCanvas = this.$currentTarget_.parent();
+                let currentCanvasId = JQUtils.data(currentCanvas, "cid");
+                let hoverCanvas = this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, currentTargetArea.y, currentTargetArea.h);
+                let hoverCanvasId = JQUtils.data(hoverCanvas, "cid");
+                if (currentCanvasId != hoverCanvasId) {
+                    // 移動中のボタンは移動前にいたキャンバス上の座標なので
+                    // 現在位置のキャンバス上の座標を設定するために高さを調整
+                    currentTargetArea.y = currentTargetArea.y - (hoverCanvas.offset().top - currentCanvas.offset().top) * 2;
+                }
+
+                $('#face-canvas .module-container').each((index, elm) => {
+                    let canvasModuleId = JQUtils.data($(elm), "cid");
+                    if (!canvasModuleId) {
+                        return true; // JQuery.each()でのcontinue
+                    }
+
+                    let tmpButtons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(canvasModuleId);
+                    if (!tmpButtons) {
+                        return true;
+                    }
+
+                    if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
+                        // 移動中のボタンの元ページと現在位置のページが異なる場合、現在ページにモデルを仮追加する
+                        tmpButtons.push(this.currentTargetModel_.button);
+                    }
+
+                    // 移動中のボタンの元ページと現在位置のページが異なる場合、元ページのモデルを無視する
+                    let ignoreCurrentModel = (currentCanvasId != hoverCanvasId && canvasModuleId == currentCanvasId);
+
+                    let tmpOverlapButtons: Model.ButtonItem[] = this.getOverlapButtonItems(tmpButtons, currentTargetArea, ignoreCurrentModel);
+
+                    if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
+                        // 仮追加していたモデルを削除
+                        tmpButtons.pop();
+                    }
+
+                    $.merge(buttons, tmpButtons);
+                    $.merge(overlapButtons, tmpOverlapButtons);
+                });
+
+                //overlapButtonsがundefinedのとき、重なっているボタン数が0のとき、currentTargetModelを通常色に
+                if (overlapButtons == null || overlapButtons.length === 0) {
+					this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
+                }
+
+                this.changeOverlapButtonsFrame(overlapButtons, buttons);
 			}
 
 			/**
-			 * 指定した area がいずかの button と衝突するかをチェックする。
-			 * 
-			 * @param area {IArea} チェックする area
-			 * @param targetId {string} target となるボタンの cid。重なり判定時にボタン一覧から target となるボタンを除外するために使用する。
-			 * @return {boolean} いずれかの button と衝突する場合はtrue。衝突しない場合は false
-			 */
-			private _checkOverlapButton(area: IArea, targetId?: string): boolean {
-				if (!area) {
-					console.error(TAG + "_checkOverlapButton()  area is undefined.");
-					return false;
-				}
-				var moduleId = this._getCanvasPageModuleId();
-				var buttons: Model.ButtonItem[] = this.faceRenderer_canvas_.getButtons(moduleId);
+			* 重なっているボタン配列をかえす。
+			* @param buttons {Model.ButtonItem} 対象となるボタンたち
+			* @param currentTargetArea? {IArea} currentTargetは特殊なボタンとして扱う。
+            * @param ignoreCurrentTarget {boolean} currentTargetを検査対象外とするかどうか
+			* @return {Model.ButtonItem}
+			*/
+			private getOverlapButtonItems(buttons:Model.ButtonItem[], currentTargetArea? :IArea, ignoreCurrentTarget: boolean = false) {
+				let FUNCTION_NAME = TAG + "getOverlapButtonItems";
+                let overlapButtons: Model.ButtonItem[] = []; 
+				
 				if (!buttons) {
-					return false;
+                    return overlapButtons;
 				}
 
-				for (let i = 0, l = buttons.length; i < l; i++) {
-					let button = buttons[i];
-					if (!button || !button.area) {
-						continue;
-					}
-					if (button.cid === targetId) {
-						continue;
-					}
-					if (!button.enabled) {
-						continue;
-					}
-					let buttonArea = button.area;
-					// 当たり判定
-					if (area.x < buttonArea.x + buttonArea.w && buttonArea.x < area.x + area.w) {
-						if (area.y < buttonArea.y + buttonArea.h && buttonArea.y < area.y + area.h) {
-							return true;
-						}
-					}
-				}
+				let buttonCount = buttons.length;
+				if (buttonCount < 2) {
+                    return overlapButtons;
+                }
 
-				return false;
+
+				// 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
+				
+                for (let i = 0; i < buttonCount - 1; i++) {
+                    if (ignoreCurrentTarget && buttons[i].cid == this.currentTargetModel_.button.cid) {
+                        continue;
+                    }
+
+                    for (let j = i + 1; j < buttonCount; j++) {
+                        if (ignoreCurrentTarget && buttons[j].cid == this.currentTargetModel_.button.cid) {
+                            continue;
+                        }
+
+						let button1Area = buttons[i].area,
+                            button2Area = buttons[j].area;
+
+						//もし、currentTargetのbuttonの場合、areaはcurrentTargetAreaをつかう。
+						if (currentTargetArea) {
+                            if (buttons[i].cid == this.currentTargetModel_.button.cid) {
+								button1Area = currentTargetArea;
+							}
+
+                            if (buttons[j].cid == this.currentTargetModel_.button.cid) {
+								button2Area = currentTargetArea;
+							}
+                        }
+
+
+						// 両方のボタンが enabled 状態のときのみ判定
+                        if (buttons[i].enabled && buttons[j].enabled) {
+                            // 当たり判定
+                            if (this.isOverlap(button1Area, button2Area)) {
+                                //console.log("1: " + button1Area.x + "-" + (button1Area.x + button1Area.w) + ":" + button1Area.y + "-" + (button1Area.y + button1Area.h));
+                                //console.log("2: " + button2Area.x + "-" + (button2Area.x + button2Area.w) + ":" + button2Area.y + "-" + (button2Area.y + button2Area.h));
+                                //例外対象でなかったら配列に追加
+                                overlapButtons.push(buttons[i]);
+                                overlapButtons.push(buttons[j]);
+                            }
+                        }
+					}
+                }
+
+				return overlapButtons;
+
 			}
+
+			/*
+			* 重なっているボタンを警告色に変える。
+			* @param overlapedButtons :{Model.ButtonItem[]} 重なっているボタンの配列
+			* @param buttons:{Model.ButtonItem[]} 対象となるボタン配列
+			*/
+			private changeOverlapButtonsFrame(overlapButtons:Model.ButtonItem[], buttons:Model.ButtonItem[]) {
+				let FUNCTION_NAME = TAG + "changeNotOverlapButtonFrame";
+
+				if (overlapButtons == null) {
+					console.warn(FUNCTION_NAME + "overlapButtons is null");
+					return;
+				}
+
+				if (buttons == null) {
+					console.warn(FUNCTION_NAME + "buttons is null");
+					return;
+				}
+
+                //すべてのボタンの色を通常にもどす。
+				if (buttons.length === 0) {
+					return;
+				}
+                for (let i = 0; i < buttons.length; i++) {
+                    this.changeButtonFrameColorNormal(buttons[i]);
+                }
+
+                //重なっているボタンを警告色にする
+                if (overlapButtons.length === 0) {
+                    return;
+                }               
+                for (let j = 0; j < overlapButtons.length; j++){
+                    this.changeButtonFrameColorWarn(overlapButtons[j]);
+                }
+					
+			}
+
+
+	
+		
+			/*
+			* 重なりあったボタンの枠線を警告色に変える
+			* @param overlayedButton{ Model.buttonItem } 枠の色を変える対象のbutton model
+			* @param isCurrentTarget{boolean} 対象がcurrentTargetだった場合true
+			*/
+			private changeButtonFrameColorWarn(overlayedButton: Model.ButtonItem,isCurrentTarget? : boolean) {
+				let FUNCTION_NAME = TAG + " : changeButtonFrameColorWarn : ";
+				if (overlayedButton == null) {
+					console.warn(FUNCTION_NAME + "overlayedButton is null");
+				}
+				let $button: JQuery = this._getItemElementByModel(overlayedButton);
+
+				if (isCurrentTarget) {
+					this.$currentTarget_.addClass("overlayed");
+				}else if ($button) {
+					$button.addClass("overlayed");
+				}
+				
+			}
+
+			/*
+			 * ボタンの枠線をもとに戻す
+			 * @param overlayedButton{ Model.buttonItem } 枠の色を変える対象のbutton model
+			 * @param isCurrentTarget{boolean} 対象がcurrentTargetだった場合true
+			 */
+			private changeButtonFrameColorNormal(normalButton: Model.ButtonItem, isCurrentTarget ? : boolean) {
+				let FUNCTION_NAME = TAG + " : changeButtonFrameColorNormal : ";
+				if (normalButton == null) {
+					console.warn(FUNCTION_NAME + "normalButton is null");
+				}
+				let $button: JQuery = this._getItemElementByModel(normalButton);
+
+				if (isCurrentTarget) {
+					this.$currentTarget_.removeClass("overlayed");
+				}else if ($button) {
+					$button.removeClass("overlayed");
+				}
+			}
+
+
 
 			/**
 			 * キャンバス内に重なり合っているボタンがないかをチェックする。
@@ -3444,46 +4298,120 @@ module Garage {
 				let pageCount = this.faceRenderer_canvas_.getPageCount();
 				for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
 					// ページにある button を取得
-					let pageModuleId = this._getCanvasPageModuleId(pageIndex);
+					let	pageModuleId = this._getCanvasPageModuleId(pageIndex);
+
 					if (!pageModuleId) {
 						continue;
 					}
 					let buttons = this.faceRenderer_canvas_.getButtons(pageModuleId);
-					if (!buttons) {
-						continue;
-					}
-					let buttonCount = buttons.length;
-					if (buttonCount < 2) {
-						continue;
-					}
 
-					// ページ内のボタンが重なり合わないかをチェック
-					let overlapButtonCount = 0;
-					for (let i = 0; i < buttonCount - 1; i++) {
-						for (let j = i + 1; j < buttonCount; j++) {
-							let button1Area = buttons[i].area,
-								button2Area = buttons[j].area;
-							// 両方のボタンが enabled 状態のときのみ判定
-							if (buttons[i].enabled && buttons[j].enabled) {
-								// 当たり判定
-								if (button1Area.x < button2Area.x + button2Area.w && button2Area.x < button1Area.x + button1Area.w) {
-									if (button1Area.y < button2Area.y + button2Area.h && button2Area.y < button1Area.y + button1Area.h) {
-										console.warn(TAG + "_overlapButtonsExist()");
-										console.warn("pageIndex: " + pageIndex + ", i: " + i + ", j: " + j);
-										console.warn(button1Area);
-										console.warn(button2Area);
-										overlapButtonCount++;
-									}
-								}
-							}
-						}
-					}
-					if (0 < overlapButtonCount) {
-						result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2") + overlapButtonCount + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_3");
-					}
+					let overlapButtons: Model.ButtonItem[] = this.getOverlapButtonItems(buttons);
+
+                    if (0 < overlapButtons.length) {
+                        result += $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_1") + (pageIndex + 1) + $.i18n.t("dialog.message.STR_DIALOG_WARN_OVERLAP_MESSAGE_DETAIL_INFO_2");
+                    }
+
+                    this.changeOverlapButtonsFrame(overlapButtons, buttons);
+
+
 				}
+
 				return result;
-			}
+            }
+
+            /**
+             * 複数のBluetoothデバイスが使用されていないかをチェックし、
+             * 使用されている場合はエラー文言を、そうでない場合は空文字を返す。
+             * @param isForExport{boolean} : エクスポート時に使うダイアログの場合true
+             * @return {string} エラー文言。１つ以下のBluetoothデバイスしか存在しない場合は空文字が返る。
+             */ 
+            private _checkMultipleBluetoothDevicesExist(isForExport: boolean = false): string {
+                let bluetoothDevices: IBluetoothDevice[] = this._getBluetoothDevicesInAllButtons();
+
+                let errorMassage: string = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2");
+                if (isForExport) {
+                    errorMassage = $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_1") + bluetoothDevices.length + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_WARN_MULTIPLE_BLUETOOTH_DEVICES_2_EXPORT");
+                }
+
+                if (bluetoothDevices.length <= 1) {
+                    return "";
+                } else {
+                    return errorMassage;
+                }
+            }
+
+            /**
+             * 全ボタンに対して登録されているBluetoothデバイスのリストを返す
+             */
+            private _getBluetoothDevicesInAllButtons(): IBluetoothDevice[] {
+                // bluetooth_deviceを含むボタンのリスト
+                // 現在は使われていないが、後に該当するボタンの色変更などが必要になった場合に備えて残す
+                let bluetoothButtons: Model.ButtonItem[] = [];
+                // 含まれている bluetooth_device のリスト
+                let bluetoothDevices: IBluetoothDevice[] = [];
+
+                let pageCount = this.faceRenderer_canvas_.getPageCount();
+                // 全ページの全ボタンを走査
+                for (let pageIndex = 0; pageIndex < pageCount; pageIndex++) {
+                    let pageModuleId = this._getCanvasPageModuleId(pageIndex);
+
+                    if (!pageModuleId) {
+                        continue;
+                    }
+                    let buttons = this.faceRenderer_canvas_.getButtons(pageModuleId);
+                    if (!buttons) {
+                        continue;
+                    }
+
+                    for (let button of buttons) {
+                        if (!button.state ||
+                            !button.enabled) {
+                            continue;
+                        }
+
+                        for (let state of button.state) {
+                            if (!state.action) {
+                                continue;
+                            }
+
+                            for (let action of state.action) {
+                                if (action.deviceInfo &&
+                                    action.deviceInfo.bluetooth_data &&
+                                    action.deviceInfo.bluetooth_data.bluetooth_device) {
+                                    // bluetoothを含む場合とりあえず登録
+                                    bluetoothButtons.push(button);
+
+                                    let target: IBluetoothDevice = action.deviceInfo.bluetooth_data.bluetooth_device;
+                                    if (!this._containsBluetoothDevice(bluetoothDevices, target)) {
+                                        bluetoothDevices.push(target);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return bluetoothDevices;
+            }
+
+            /**
+             * Bluetoothデバイスのリストに対象Bluetoothデバイスが含まれているか検査する
+             *
+             * @param devices Bluetoothデバイスのリスト
+             * @param target 検査対象のBluetoothデバイス
+             * @return {boolean} devices内にtargetと同一のBluetoothデバイスが含まれている場合はtrue、そうでない場合はfalse
+             */
+            private _containsBluetoothDevice(devices: IBluetoothDevice[], targetDevice: IBluetoothDevice): boolean {
+                for (let device of devices) {
+                    // bluetooth_addressが同じならば同一デバイスと見なす
+                    if (device.bluetooth_address == targetDevice.bluetooth_address) {
+                        return true;
+                    }
+                }
+
+                console.log("New BluetoothDevice. address: " + targetDevice.bluetooth_address);
+                return false;
+            }
 
 			/**
 			 * 画面上の位置にあるアイテムを取得する。
@@ -3718,6 +4646,27 @@ module Garage {
 				});
 			}
 
+            /**
+             * 現在の操作対象アイテムを設定
+             */
+            private _setTarget(target: ItemModel) {
+                this.$currentTarget_ = this._getItemElementByModel(target);
+                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+
+                // 選択状態にする
+                this.$currentTarget_.addClass("selected");
+
+                //ツールチップを非表示にする。
+                this.disableButtonInfoTooltip();
+
+                // リサイザーを追加
+                this._setResizer(this.$currentTarget_);
+
+                // 詳細編集エリアを表示
+                $("#face-item-detail-area").addClass("active");
+                this._showDetailItemArea(this.currentTargetModel_);
+            }
+
 			/**
 			 * ターゲットを外す
 			 */
@@ -3737,7 +4686,22 @@ module Garage {
 				this.$currentTarget_ = null;
 				this.currentTargetModel_ = null;
 				this.currentTargetButtonStates_ = null;
-				this.currentTargetButtonStatesUpdated_ = false;
+                this.currentTargetButtonStatesUpdated_ = false;
+
+
+                //ボタン用のプロパティのインスタンスを削除
+                if (this.buttonProperty != null) {
+                    this.buttonProperty.unbind("updateModel", this.updateNormalButtonItemModel, this);
+                    this.buttonProperty.remove();
+                    this.buttonProperty = null
+                }
+
+                //マクロ用のプロパティのインスタンスを削除
+                if (this.macroProperty != null) {
+                    this.macroProperty.unbind("updateModel", this.updateMacroButtonItemModel, this);
+                    this.macroProperty.remove();
+                    this.macroProperty = null
+                }
 			}
 
 			/**
@@ -3777,6 +4741,25 @@ module Garage {
 				}
 			}
 
+			/*
+			* マクロボタンか否か判定する。
+			* @param buttonModel{Model.ButtonItem} :判定対象のモデル
+			*/
+			private isMacroButton(button: Model.ButtonItem): boolean{
+				let FUNCTION_NAME = TAG + "isMacroButton : ";
+
+				if (button == null) {
+					console.warn(FUNCTION_NAME + "button is null");
+					return false;
+				}
+			
+				if (button.state[0].action[0].interval !== undefined) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
 			/**
 			 * 詳細編集エリアを表示する。
 			 * 
@@ -3794,12 +4777,14 @@ module Garage {
 
 				switch (targetModel.type) {
 					case "button":
-						// ボタンアイテムの詳細エリアを表示
-						this._renderButtonItemDetailArea(targetModel.button, $detail);
-						//テキストをローカライズ
-						$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
-						$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
-						$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+						if (this.isMacroButton(targetModel.button)) {
+							// マクロボタンアイテムの詳細エリアを表示
+							this._renderMacroButtonItemDetailArea(targetModel.button, $detail);
+						} else {
+							// ボタンアイテムの詳細エリアを表示
+							this._renderButtonItemDetailArea(targetModel.button, $detail);
+						}
+						
 						break;
 					case "image":
 						// 画像アイテムの詳細エリアを表示
@@ -3814,8 +4799,14 @@ module Garage {
 							let resizeMode = targetModel.image.resizeMode;
 							if (resizeMode) {
 								$(".image-resize-mode").val(resizeMode);
-							}
-							this._updatePreviewInDetailArea(targetModel.image.resolvedPath, $("#property-image-preview"));
+                            }
+
+
+                            //オリジナルのパスがある場合は、そちらを表示。
+                            //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
+                            let inputURL = this.getValidPathOfImageItemForCSS(targetModel.image);
+                            this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
+							
 							//テキストをローカライズ
 							$("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 						}
@@ -3878,8 +4869,9 @@ module Garage {
 					let resizeMode = backgroundModel.resizeMode;
 					if (resizeMode) {
 						$(".image-resize-mode").val(resizeMode);
-					}
-					this._updatePreviewInDetailArea(backgroundModel.resolvedPath, $("#property-image-preview"), true);
+                    }
+                    let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"), true);
 				} else {
 					let $pageBackgroundDetail = $(templatePageBackground({}));
 					$detail.append($pageBackgroundDetail);
@@ -3918,6 +4910,111 @@ module Garage {
 
 			}
 
+
+			/*
+			* マクロボタンアイテムの詳細情報エリアのレンダリング
+			* 
+			*/
+			private _renderMacroButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
+				let FUNCTION_NAME = TAG + "_renderMacroButtonItemDetailArea: ";
+
+				if (!button) {
+					console.warn(FUNCTION_NAME + "button is null");
+					return;
+				}
+
+				if (!$detail) {
+					console.warn(FUNCTION_NAME + "$detail is null");
+					return;
+				}
+
+                var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
+                //var $buttonDetail = $(templateButton(this._macroButtonModel));
+                var $buttonDetail = $(templateButton(button));
+                $detail.append($buttonDetail);
+
+
+                if (this.macroProperty == null) {
+                    this.macroProperty = new PropertyAreaButtonMacro({
+                        el: $buttonDetail,
+                        model: button,
+                    });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel,this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.macroProperty.undelegateEvents();
+                    this.macroProperty.$el = $buttonDetail;
+                    this.macroProperty.delegateEvents();
+                }
+
+                $detail.append(this.macroProperty.renderView())
+
+                //previewの情報を別途更新。
+                let $preview = this.$el.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                //テキストボタン、あるいは画像のどちらかを表示する。
+                this.toggleImagePreview(button.default);
+
+                //ボタンステートを入力
+                this.currentTargetButtonStates_ = button.state;
+
+
+                //初期状態の場合、最初のプルダウンをフォーカス。
+                this.macroProperty.focusFirstPulldown();
+
+                $detail.i18n();
+			}
+
+            //マクロボタンのモデルが変更された際に呼び出される
+            private updateMacroButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.macroProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+
+            //通常のボタンのモデルが変更された際に呼び出される
+            private updateNormalButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.buttonProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+           /*
+            * propertyエリアの情報が更新された際、ボタンのモデルを更新する
+            * @param button {Model.ButtonItem}
+            */
+            private updateButtonItemModel(button: Model.ButtonItem) {
+                let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
+
+                if (button == null) {
+                    console.warn(FUNCTION_NAME + "button is null");
+                    return;
+                }
+
+                let currentButtonState = this.currentTargetButtonStates_;
+                let newButtonState = button.state;
+
+                // 状態を更新する
+                var memento: IMemento = {
+                    target: button,
+                    previousData: { "state": currentButtonState },
+                    nextData: { "state": newButtonState }
+                };
+                var mementoCommand = new MementoCommand([memento]);
+                this.commandManager_.invoke(mementoCommand);
+
+                //this.currentTargetButtonStates_を更新する。 commandManagerの状態と一致するようにする。
+                this.currentTargetButtonStates_ = newButtonState;
+
+                this.$el.focus();
+            }
+
+
 			/**
 			 * ボタンアイテムの詳細情報エリアのレンダリング
 			 */
@@ -3927,56 +5024,112 @@ module Garage {
 				}
 
 				// masterFunctions が未取得の場合は取得する
-				let deviceInfo = button.deviceInfo;
-				if (deviceInfo) {
-					if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
-						let codeDb = deviceInfo.code_db;
-						let codes: string[] = this.getCodesFrom(button);
+                for (let state of button.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (!action.deviceInfo) continue;
+
+                        let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
+
+                        if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
+                            let codeDb = deviceInfo.code_db;
+                            let codes: string[] = this.getCodesFrom(button);
+
+                            if (codeDb.brand != " " && codeDb.brand != undefined &&
+                                codeDb.device_type != " " && codeDb.device_type != undefined &&
+                                codeDb.model_number != " " && codeDb.device_type != undefined) {
+                                //codeDbの情報がそろっている場合、codeDbからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+
+                                let face = huisFiles.getFace(remoteId);
+                                if (face != null) {
+                                    deviceInfo.remoteName = face.name;
+                                } else {
+                                    deviceInfo.remoteName = null;
+                                }
+                                
+                                deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+
+                            } else if (codes != null) {
+                                //codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
+                                if (remoteId != null) {
+
+                                    let face = huisFiles.getFace(remoteId);
+                                    if (face != null) {
+                                        deviceInfo.remoteName = face.name;
+                                    } else {
+                                        deviceInfo.remoteName = null;
+                                    }
 
 
-						if (codeDb.brand != " " && codeDb.brand != undefined && 
-							codeDb.device_type != " " && codeDb.device_type != undefined &&
-							codeDb.model_number != " " && codeDb.device_type != undefined) {
-							//codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-							deviceInfo.functions = huisFiles.getMasterFunctions(codeDb.brand, codeDb.device_type, codeDb.model_number);
-						} else if(codes != null){
-							//codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
-							let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
-							if (remoteId != null) {
-								deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-								deviceInfo.functionCodeHash= huisFiles.getMasterFunctionCodeMap(remoteId);
-							}
-						}
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                                }
+                            } else if (deviceInfo.bluetooth_data != null) {
+                                //Bluetooth情報しかない場合
+                                let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                                if (remoteId != null) {
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
+                                }
+                            }
 
+                            action.deviceInfo = deviceInfo;
 
-						button.deviceInfo = deviceInfo;
-						
-					}
-				}
-
-				
+                        }
+                    }
+                }
 
 				// ボタン情報の外枠部分をレンダリング
 				var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-				var $buttonDetail = $(templateButton(button));
 
-				// ボタンのエリア情報を付加
-				var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
-				var $areaContainer = $buttonDetail.nextAll("#area-container");
-				$areaContainer.append($(templateArea(button)));
+                var $buttonDetail = $(templateButton(button));
 
+                //信号用のViewの初期化・更新
+                if (this.buttonProperty == null) {
+                    this.buttonProperty = new PropertyAreaButtonNormal({
+                        el: $buttonDetail,
+                        model: button,
+                    });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.buttonProperty.undelegateEvents();
+                    this.buttonProperty.$el = $buttonDetail;
+                    this.buttonProperty.delegateEvents();
+                }
 
 				// ボタンの state 情報を付加
 				var $statesContainer = $buttonDetail.nextAll("#states-container");
 				this.currentTargetButtonStates_ = button.state;
                 if (this.currentTargetButtonStates_) {
                     let templateState: Tools.JST = null;
+
+                    // エアコンの有無を検査
+                    let containsAircon: boolean = false;
+                    for (let state of button.state) {
+                        if (!state.action) continue;
+
+                        for (let action of state.action) {
+                            if (!action.deviceInfo || !action.deviceInfo.code_db || !action.deviceInfo.code_db.device_type) continue;
+
+                            if (action.deviceInfo.code_db.device_type == "Air conditioner") {
+                                containsAircon = true;
+                            }
+                        }
+                    }
+
+                    if (containsAircon) {
                     // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
-                    if (button.deviceInfo && button.deviceInfo.code_db.device_type == "Air conditioner") { // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
+                        // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
                     } else {
                         templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
                     }
+
 
                     // HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
                     // もしレンジ外を指している場合はレンジ内の最初に見つかった要素をdefaultとして一時的に設定し直す
@@ -3984,22 +5137,23 @@ module Garage {
 
                     var checkedArray: IStateDetail[] = [];
 
-                    if (button.deviceInfo) {
-                        checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
-                            return (
-                                (button.default == state.id) &&
-                                (((state.image != null) && (state.image[0] != null)) ||
-                                 ((state.label != null) && (state.label[0] != null)) )
-                                   );
-                        });
+                    checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
+                        return (
+                            (button.default == state.id) &&
+                            (((state.image != null) && (state.image[0] != null)) ||
+                                ((state.label != null) && (state.label[0] != null)))
+                        );
+                    });
                    
-                        if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                            button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
-                        }
+                    if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
+                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
                     }
+
+
 
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
+
                         stateData.id = state.id;
                         let resizeMode: string;
                         if (state.image) {
@@ -4012,74 +5166,56 @@ module Garage {
                         if (state.label) {
                             stateData.label = state.label[0];
                         }
-                        if (button.deviceInfo && button.deviceInfo.functions) {
-                            stateData.functions = button.deviceInfo.functions;
+
+                        if (state.action &&
+                            state.action[0] &&
+                            state.action[0].deviceInfo &&
+                            state.action[0].deviceInfo.functions) {
+                            stateData.functions = state.action[0].deviceInfo.functions;
                         }
 
                         this._setActionListToState(state);
 
-						if (button.deviceInfo && this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
+                        if (this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
                             if (state.id != button.default) return;
                         }
 
                         let $stateDetail = $(templateState(stateData));
                         $statesContainer.append($stateDetail);
+
+
+                        //テキストラベルの大きさの設定値を反映する。
+                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                        if (!_.isUndefined(stateData.label)) {
+                            var textSizeString: string = stateData.label.size;
+                            $textSize.val(textSizeString);
+                        }
+
+                        //信号コンテナを描画
+                        $statesContainer.append(this.buttonProperty.renderViewState(state.id));
+
                         // 文言あて・ローカライズ
-                        $stateDetail.i18n();
+                        $statesContainer.i18n();
 
-                        if (resizeMode) {
-                            $stateDetail.find(".state-image-resize-mode[data-state-id=\"" + stateData.id + "\"]").val(resizeMode);
-                        }
 
-                        let actionList = state.actionList;
-                        let alreadyMenuSet = false;
-                        if (actionList) {
-                            // 「機能」が割り当てられている「入力」をメニューに表示されるようにする
-                            for (let input in actionList) {
-                                if (!alreadyMenuSet && actionList.hasOwnProperty(input) && actionList[input]) {
-                                    var action = actionList[input];
-                                    $stateDetail.find("#select-state-action-input-" + state.id).val(input);
-                                    $stateDetail.find("#select-state-action-function-" + state.id).val(action);
-                                    alreadyMenuSet = true;
-                                }
-                            }
-                        }
-
-						//テキストラベルの大きさの設定値を反映する。
-						var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
-						if (!_.isUndefined(stateData.label)) {
-							var textSizeString: string = stateData.label.size;
-							$textSize.val(textSizeString);
-						}
 
                     });
                     
 				}
-
 				
                 $detail.append($buttonDetail);
-
-				let $makerName = $(".button-info-brand-and-type").find(".brand_name");
-
-				//ブランド名が空の場合,メーカー名情報がない旨に変換
-				if ($makerName.text() == " ") {
-					if (button.state[0].action[0].code != null) {
-						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LEARNED"));
-					} else {
-						$makerName.text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_NON_MAKER"));
-					}
-				}
-
-
-                //x,y情報を別途　記入
-                this.updateAreaInState(button.area.x, button.area.y, button.area.w, button.area.h);
+               
                 //previewの情報を別途更新。
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
-                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
-                this._updatePreviewInDetailArea(resolvedPath, $preview);
+                var inputURL = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(inputURL, $preview);
                 //テキストボタン、あるいは画像のどちらかを表示する。
 				this.toggleImagePreview(button.default);
 
+				//テキストをローカライズ
+				$("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
+				$("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
+				$("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
                 //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
     
 
@@ -4158,47 +5294,6 @@ module Garage {
 				state.actionListTranslate = actionListTranslate;
 			}
 
-            /**
-            * 詳細編集エリアのステートのエリア情報をアップデート
-            * @param inputX: numer　X座標
-            * @param inputY: numer　Y座標
-            * @param inputW: numer　W座標
-            * @param inputH: numer　H座標
-            **/
-            private updateAreaInState(inputX: number, inputY: number, inputW: number, inputH: number) {
-
-                if (inputX === undefined) {
-                    console.log("updateAreaInState : inputX is undefined");
-                    return;
-                }
-
-                if (inputY === undefined) {
-                    console.log("updateAreaInState : inputY is undefined");
-                    return;
-                }
-
-                if (inputW === undefined) {
-                    console.log("updateAreaInState : inputW is undefined");
-                    return;
-                }
-
-                if (inputH === undefined) {
-                    console.log("updateAreaInState : inputH is undefined");
-                    return;
-                }
-
-                let $paramXY = $("#state-button-x-y");
-                var xStr: string = "X:";
-                var yStr: string = "   Y:";
-                var paramXYStr: string = xStr + inputX + yStr + inputY;
-                $paramXY.html(paramXYStr);
-
-                let $paramWH = $("#state-button-w-h");
-                var wStr: string = "W:";
-                var hStr: string = "   H:";
-                var paramWHStr: string = wStr + inputW + hStr + inputH;
-                $paramWH.html(paramWHStr);
-            }
 
 			/**
 			 * 指定した要素にひも付けられている model を取得
@@ -4241,7 +5336,67 @@ module Garage {
 				} else {
 					return null;
 				}
-			}
+            }
+
+            /**
+             * TargetModelのクローンを生成
+             * typeが不正だった場合はnullを返す
+             *
+             * @param model {TargetModel} 基にするTargetModel
+             * @return 生成したTargetModel
+             */
+            private _cloneTargetModel(model: TargetModel): TargetModel {
+                let clone: TargetModel = { type: model.type };
+
+                switch (clone.type) {
+                    case "button":
+                        clone.button = $.extend(true, {}, model.button);
+                        break;
+                    case "image":
+                        clone.image = $.extend(true, {}, model.image);
+                        break;
+                    case "label":
+                        clone.label = $.extend(true, {}, model.label);
+                        break;
+                    default:
+                        return null;
+                }
+
+                return clone;
+            }
+
+            /**
+             * 対象モデルのAreaをtypeによらず変更する
+             * 有効でない値(undefinedなど)が設定されたパラメータは無視され、更新されない
+             *
+             * @param model {TargetModel}
+             * @param x {number} x座標
+             * @param y {number} y座標
+             * @param w {number} width
+             * @param h {number} height
+             */
+            private _setTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
+                let target: IArea;
+                switch (model.type) {
+                    case "button":
+                        target = model.button.area;
+                        break;
+                    case "image":
+                        target = model.image.area;
+                        break;
+                    case "label":
+                        target = model.label.area;
+                        break;
+                    default:
+                        console.error("Invalid model type: " + model.type);
+                        return;
+                }
+
+                if (_.isNumber(x)) target.x = x;
+                if (_.isNumber(y)) target.y = y;
+                if (_.isNumber(w)) target.w = w;
+                if (_.isNumber(h)) target.h = h;
+            }
 
 			/**
 			 * 指定した model にひも付けられた canvas 上の要素を返す。
@@ -4278,6 +5433,54 @@ module Garage {
 				}
 				return moduleId;
 
+            }
+
+            /**
+             * ドラッグ中のマウス座標から対応するキャンバスのJQueryオブジェクトを返す
+             * @param positionY マウスのY座標
+             * @return キャンバスのJQueryオブジェクト
+             */
+            private _getCanvasPageByDraggingPosition(positionY: number): JQuery {
+                // 移動後のアイテム座標（元キャンバスページ基準）
+                let itemPositionY = this.mouseMoveStartTargetPosition_.y + (positionY - this.mouseMoveStartPosition_.y) * 2;
+                return this._getCanvasPageByItemArea(this.$currentTarget_.parent().offset().top, itemPositionY, this.$currentTarget_.height());
+            }
+
+            /**
+             * アイテムの情報から該当するキャンバスのJQueryオブジェクトを返す
+             *
+             * @param baseCanvasPositionY アイテムの置かれているキャンバスのY座標
+             * @param itemRelPositionY アイテムの置かれているキャンバス上での相対Y座標
+             * @param itemHeight アイテムの縦幅
+             * @return キャンバスのJQueryオブジェクト
+             */
+            private _getCanvasPageByItemArea(baseCanvasPositionY: number, itemRelPositionY: number, itemHeight: number): JQuery {
+                let itemCenterY = baseCanvasPositionY + (itemRelPositionY + (itemHeight / 2)) / 2;
+
+                return this._getCanvasPageByPointY(itemCenterY);
+            }
+
+            /**
+             * 指定のY座標がどのキャンバスページに該当する検査し、該当するキャンバスのJQueryオブジェクトを返す
+             * @param pointY {number} Y座標
+             * @return キャンバスのJQueryオブジェクト
+             */
+            private _getCanvasPageByPointY(pointY: number): JQuery {
+                let canvas;
+                $('#face-canvas .face-page').each(function (index) {
+                    if (pointY >= $(this).offset().top &&
+                        pointY <= $(this).offset().top + $(this).height()) {
+                        canvas = $(this);
+                        return;
+                    }
+                });
+
+                if (canvas) {
+                    return canvas.find(".module-container");
+                } else {
+                    // 該当なしの場合は現在のキャンバスを返す
+                    return this.$currentTarget_.parent();
+                }
             }
 
             private _syncPcToHuisAndBack(noWarn?: Boolean) {
@@ -4349,16 +5552,21 @@ module Garage {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
 
+				if (event.keyCode == 9) {//tabの場合は無視
+					event.preventDefault();
+					return;
+				}
+
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
-                        case 8: // BS
+                        case 8: // BackSpace
                         case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
                         case 90: // z Undo
                             if (event.ctrlKey) {
-                                var targetModel = this.commandManager_.undo();
-                                this._updateItemElementOnCanvas(targetModel);
+                                var targetModels = this.commandManager_.undo();
+                                this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
 								event.preventDefault();
@@ -4366,8 +5574,8 @@ module Garage {
                             break;
                         case 89: // y Redo
                             if (event.ctrlKey) {
-                                var targetModel = this.commandManager_.redo();
-                                this._updateItemElementOnCanvas(targetModel);
+                                var targetModels = this.commandManager_.redo();
+                                this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
                                 this._loseTarget();
 								event.preventDefault();
@@ -4378,7 +5586,12 @@ module Garage {
                 }
             }
 
-		}
+         
+
+        }
+
+        
+
 
 		var View = new FullCustom();
 

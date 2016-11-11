@@ -9,6 +9,8 @@ module Garage {
         import UI = CDP.UI;
 		import Dialog = CDP.UI.Dialog;
 		import DialogOptions = CDP.UI.DialogOptions;
+        import JQUtils = Util.JQueryUtils;
+        import ZipManager = Util.ZipManager;
 
 		let TAG_BASE: string = "[Garage.View.BasePage] ";
 
@@ -264,10 +266,8 @@ module Garage {
                     $overflow.popup("close");
                 });
 
-				//オプションのテキストのローカライズ
-				$("#command-delete-remote").html($.i18n.t("option_menu.STR_OPTION_MENU_DELTE_REMOTE"));
-				$("#command-visit-help").html($.i18n.t("option_menu.STR_OPTION_MENU_HELP"));
-				$("#command-about-this").html($.i18n.t("app.name") + $.i18n.t("option_menu.STR_OPTION_MENU_ABOUT"));
+                $overflow.i18n();
+
 
                 return;
             }
@@ -478,7 +478,181 @@ module Garage {
 				return false;
 
 			}
-		
+
+			/*
+			* ふたつのエリアが重なっているか判定する
+			* @param area1{IArea}
+			* @param area2{IArea}
+			* @return boolean
+			*/
+			protected isOverlap(area1: IArea, area2: IArea): boolean {
+				let FUNCTION_NAME = TAG_BASE + "isOverlap: ";
+
+				if (area1 == null) {
+					console.warn(FUNCTION_NAME + "area1 is null");
+					return false;
+				}
+
+				if (area2 == null) {
+					console.warn(FUNCTION_NAME + "area2 is null");
+					return false;
+				}
+
+				if (area1.x < area2.x + area2.w && area2.x < area1.x + area1.w) {
+					if (area1.y < area2.y + area2.h && area2.y < area1.y + area1.h) {
+						return true;
+					}
+				}
+
+				return false;
+            }
+
+
+            /*
+             * ターゲットのCSSの背景にURLを設定する。
+             * @param $target{JQuery} 背景を設定する対象の JQuery
+             * @param url{String} backgroundに設定する画像のurl
+             */
+            protected setBackgroundImageUrlInCSS($target: JQuery, imageUrl: string) {
+                let FUNCTION_NAME = TAG_BASE + "setBackgroundImageUrlInCSS : ";
+
+                if ($target == null) {
+                    console.warn(FUNCTION_NAME + "$target is null");
+                    return;
+                }
+
+                if (imageUrl == null) {
+                    console.warn(FUNCTION_NAME + "imageUrl is null");
+                    return;
+                }
+
+                //mac対策のため、シングルクォーテーションで囲む
+                $target.css("background-image", "url('" + imageUrl + "')");
+
+            }
+
+
+            /*
+             * ImageItemから、CSSを描画に必要なパスを取得する。
+             * @param model{Model.ImageItem} CSSに表示したい画像モデル
+             */
+            protected getValidPathOfImageItemForCSS(model:ItemModel) :string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfImageItemForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+                return this.getValidPathForCSS(model);
+            }
+
+
+            /*
+             * ImageItemから、CSSを描画に必要なパスを取得する。
+             * @param model{Model.ImageItem} CSSに表示したい画像モデル
+             */
+            protected getValidPathOfIGImageForCSS(model: IGImage): string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfIGImageForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+                return this.getValidPathForCSS(model);
+            }
+
+
+
+            private getValidPathForCSS(model) {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathForCSS : ";
+
+                if (model == null) {
+                    console.warn(FUNCTION_NAME + "model is null");
+                    return;
+                }
+
+
+                let inputPath = null;
+                //有効なパスを優先順位順にサーチ
+                let props: string[] = [
+                    "resizeResolvedOriginalPathCSS",
+                    "resolvedPathCSS",
+                    "resizeResolvedOriginalPath",
+                    "resolvedPath"
+                ];
+                for (let i = 0; i < props.length; i++) {
+                    inputPath = model[props[i]];
+
+
+                    try {
+                        if (inputPath != null) {
+                            console.log("valid path: " + props[i] + " = " + inputPath);
+                            break;
+                        }
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                    // 有効なパスが無かった場合はnullを設定
+                    inputPath = null;
+                }
+
+                if (inputPath != null) {
+                    return inputPath;
+                } else {
+                    console.error(FUNCTION_NAME + "model " + model.cid + "not have valid path");
+                    return;
+                }
+
+            }
+
+            /*
+             * リモコンをエクスポートする
+             * @param remoteId{string} エクスポートするリモコンのID
+             * @param faceName{string}:リモコン名
+             * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
+             */
+            protected exportRemote(remoteId: string, faceName: string, gmodules: IGModule[]) {
+                let exportManager: Util.ExportManager = new Util.ExportManager(remoteId, faceName, gmodules);
+                exportManager.exec();
+            }
+
+
+            protected importRemote(callback?: Function) {
+                let FUNCTION_NAME = TAG_BASE + "importRemote : ";
+
+                //リモコン数上限チェック
+                let canCreateResult = huisFiles.canCreateNewRemote();
+                if (canCreateResult == -1) {
+                    this.showErrorDialogRemoteNumLimit()
+                } else {
+
+                    //インポート処理
+                    let importManager = new Util.ImportManager();
+                    importManager.exec(() => {
+                        if (callback) {
+                            callback();
+                        }
+                    });
+                    
+                }
+
+            }
+
+            /*
+             * リモコン数が上限だというエラーダイアログを表示する。
+             */
+            protected showErrorDialogRemoteNumLimit() {
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_1") + MAX_HUIS_FILES + $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_LIMIT_2"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+
+            }
+           
 
         }
     }
