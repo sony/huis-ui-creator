@@ -147,6 +147,17 @@ module Garage {
                 return null;
             }
 
+            createTmpFace(remoteId: string, faceName: string, gmodules: IGModule[]): IGFace {
+                let tmpFace: IGFace = {
+                    remoteId: remoteId,
+                    name: faceName,
+                    category: DEVICE_TYPE_FULL_CUSTOM,
+                    modules: gmodules
+                };
+
+                return tmpFace;
+            }
+
             /**
              * 指定した category と「一致する」または「一致しない」face 群を取得する。
              * このメソッドを呼ぶ前に、init() を呼び出す必要がある。

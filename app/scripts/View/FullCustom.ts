@@ -4707,6 +4707,7 @@ module Garage {
                     this.macroProperty = null
                 }
 
+                //ページジャンプ用のプロパティのインスタンスを削除
                 if (this.jumpProperty != null) {
                     this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
                     this.jumpProperty.remove();
@@ -5274,10 +5275,14 @@ module Garage {
 
                 //信号用のViewの初期化・更新
                 if (this.jumpProperty == null) {
-                    this.jumpProperty = new PropertyAreaButtonJump({
-                        el: $buttonDetail,
-                        model: button,
-                    });
+                    this.jumpProperty = new PropertyAreaButtonJump(
+                        this.faceRenderer_canvas_.getRemoteId(),
+                        $("#input-face-name").val(),
+                        this.faceRenderer_canvas_.getModules(),
+                        {
+                            el: $buttonDetail,
+                            model: button,
+                        });
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
                 } else {
