@@ -114,6 +114,7 @@ module Garage {
                     super.onPageShow(event, data);
                     this.macroProperty = null;
                     this.buttonProperty = null;
+                    this.jumpProperty = null;
                     this.newRemote_ = false;
 
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -3587,6 +3588,10 @@ module Garage {
                     if (this.macroProperty != null) {
                         this.macroProperty.setStates(states);
                     }
+
+                    if (this.jumpProperty != null) {
+                        this.jumpProperty.setStates(states);
+                    }
                 }
 
 
@@ -4700,6 +4705,12 @@ module Garage {
                     this.macroProperty.unbind("updateModel", this.updateMacroButtonItemModel, this);
                     this.macroProperty.remove();
                     this.macroProperty = null
+                }
+
+                if (this.jumpProperty != null) {
+                    this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
+                    this.jumpProperty.remove();
+                    this.jumpProperty = null;
                 }
             }
 
