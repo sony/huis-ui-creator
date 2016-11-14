@@ -2220,6 +2220,32 @@ module Garage {
                     }
                 });
             }
+
+            isValidJumpSettings(jump: IJump): boolean {
+                if (jump == null) {
+                    return false;
+                }
+
+                let face: IFace;
+
+                // remote_id の検査
+                if (jump.remote_id != null) {
+                    face = this.getFace(jump.remote_id);
+
+                    if (face == null) {
+                        return false;
+                    }
+                }
+
+                // scene_no の検査
+                if (jump.scene_no != null &&
+                    jump.scene_no >= 0 &&
+                    jump.scene_no < face.modules.length) {
+                    return true;
+                }
+
+                return false;
+            }
         }
     }
 }

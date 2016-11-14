@@ -68,7 +68,6 @@ body{
         background-size: contain;
     }
 
-    
 }
 
 #about-dialog-area{
@@ -147,6 +146,104 @@ body{
         }    
     }
     
+}
+
+#remotelist-dialog-area{
+
+    .remotelist-dialog{
+        background-color: $COLOR_COMMON_BACKGROUND; //★★★★
+
+        #face-list-container {
+            overflow-x: overlay;
+            overflow-y: hidden;
+            height: 500px;
+            width: 1000px;
+            box-sizing: border-box;
+
+            #face-list {
+                position:relative;
+                //height: 400px; // tentative
+                overflow-y: hidden;
+           
+                //box-shadow: 0 0 20px #222;
+                z-index: 1;
+                padding: 0;
+                margin: 0;
+
+                #face-list-footer {
+                    position: absolute;
+                    bottom: 0;
+                    width:100%;
+                    height:$SIZE_HOME_FOOTOR_HEIGHT;
+                    background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                    z-index: 1;
+                }    
+
+                .face {
+                    list-style-type: none;
+                    float: left;
+                    margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                    margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                    overflow: hidden;
+                    width: $SIZE_HOME_REMOTE_WIDTH;
+
+                    .title {
+                        margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                        margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                        text-align: center;
+                        color: $COLOR_TEXT_MAIN;
+                        font-size:$FONT_HOME_REMOTE_TITLE;
+                        font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                        line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                    }
+
+                    .face-container{
+                        height: 872px; //★★
+                        
+                        overflow-x: hidden;
+                        overflow-y: overlay;
+                    }
+
+                    #face-pages-area {
+                        width:inherit;
+                        font-family: $FONT_FAMILY_NORMAL;
+                        overflow-y : hidden;
+                        
+                    }
+
+                    .face-page{
+                        margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                        margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                        margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                        padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                        .button-item{
+                            border:none;
+                        }
+
+                        &.selected{
+                            border-style: solid;
+                            border-color: #00C588; //★★★★
+                        }
+                    }
+
+                    .module-container {
+                        overflow: visible;
+                    }
+                }
+        }
+
+            .face-container {
+                width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+                transform : scale(0.5);
+                transform-origin : left top;
+                box-sizing: border-box;
+                background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+                border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+                cursor: pointer;
+            }
+        }
+    }
 }
 
 }

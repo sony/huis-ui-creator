@@ -80,7 +80,7 @@
                 "db_device_id": "none"
               },
               "jump": {
-                "remote_id": "0000",
+                "remote_id": "",
                 "scene_no": 0
               }
             }
