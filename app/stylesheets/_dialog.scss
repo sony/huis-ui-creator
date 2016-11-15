@@ -68,8 +68,8 @@ body {
     }
 
     #about-dialog-area {
-        -webkit-box-shadow: 0 0 15px #4d4d4d;
-        box-shadow: 0 0 15px #4d4d4d;
+        -webkit-box-shadow: 0 0 $SIZE_ABOUT_BOX_SHADOW_BLUR $COLOR_ABOUT_BOX_SHADOW;
+        box-shadow: 0 0 $SIZE_ABOUT_BOX_SHADOW_BLUR $COLOR_ABOUT_BOX_SHADOW;
 
         .title {
             font-family: $FONT_FAMILY_ABOUT_TITLE;
@@ -142,78 +142,78 @@ body {
     }
 
     #information-dialog-area {
-        -webkit-box-shadow: 0 0 15px #4d4d4d;
-        box-shadow: 0 0 15px #4d4d4d;
+        -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+        box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
         overflow-y: scroll;
         overflow-x: hidden;
-        height: 480px;
-        width: 640px;
-        background: #ffffff;
+        width: $SIZE_INFORMATION_DIALOG_WIDTH;
+        height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+        background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
 
         .common-dialog {
-            color: $COLOR_TEXT_MAIN;
-            width: 640px;
-            height: 480px;
+            color: $COLOR_INFORMATION_DIALOG_TEXT;
+            width: $SIZE_INFORMATION_DIALOG_WIDTH;
+            height: $SIZE_INFORMATION_DIALOG_HEIGHT;
             text-shadow: none;
-            background: $COLOR_ABOUT_DIALOG_BACKGROUND;
+            background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
 
             .information-dialog {
-                padding-top: 16px;
-                padding-bottom: 24px;
+                padding-top: $SIZE_INFORMATION_DIALOG_PADDING_TOP;
+                padding-bottom: $SIZE_INFORMATION_DIALOG_PADDING_BOTTOM;
             }
 
             .title {
-                font-size: $FONT_SIZE_LL;
-                font-family: $FONT_FAMILY_NORMAL;
+                font-size: $FONT_SIZE_INFORMATION_TITLE;
+                font-family: $FONT_FAMILY_INFORMATION_TITLE;
                 line-height: 1.5em;
-                margin: 0px;
-                padding-left: 24px;
+                margin: 0;
+                padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
             }
 
             .bold-separator {
-                border-top: 2px solid #999999;
-                width: 608px;
+                border-top: $SIZE_INFORMATION_BOLD_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                width: $SIZE_INFORMATION_BOLD_SEPARATOR_WIDTH;
                 margin: 0 auto;
             }
 
             .white-space {
-                height: 12px;
+                height: $SIZE_INFORMATION_WHITE_SPACE_TOP;
             }
 
             .information-container {
-                width: 560px;
-                height: 150px;
-                margin: 24px 40px;
+                width: $SIZE_INFORMATION_CONTAINER_WIDTH;
+                height: $SIZE_INFORMATION_CONTAINER_HEIGHT;
+                margin: $SIZE_INFORMATION_CONTAINER_MARGIN_TOP_BOTTOM $SIZE_INFORMATION_CONTAINER_MARGIN_LEFT_RIGHT;
             }
 
             .information-img {
-                width: 150px;
+                width: $SIZE_INFORMATION_IMG_WIDTH;
                 height: auto;
                 float: left;
             }
 
             .information-box {
-                width: 370px;
-                height: 150px;
-                padding-left: 40px;
+                width: $SIZE_INFORMATION_BOX_WIDTH;
+                height: $SIZE_INFORMATION_BOX_HEIGHT;
+                padding-left: $SIZE_INFORMATION_BOX_PADDING_LEFT;
                 float: left;
 
                 .information-date {
-                    font-size: $FONT_SIZE_SSS;
-                    font-family: $FONT_FAMILY_NORMAL;
-                    padding-bottom: 8px;
+                    font-size: $FONT_SIZE_INFORMATION_DATE;
+                    font-family: $FONT_FAMILY_INFORMATION_DATE;
+                    padding-bottom: $SIZE_INFORMATION_DATE_PADDING_BOTTOM;
                 }
 
                 .information-text {
-                    font-size: $FONT_SIZE_S;
-                    font-family: $FONT_FAMILY_LIGHT;
+                    font-size: $FONT_SIZE_INFORMATION_TEXT;
+                    font-family: $FONT_FAMILY_INFORMATION_TEXT;
                     white-space: pre-wrap;
                 }
             }
 
             .separator {
-                border-top: 1px solid #cccccc;
-                width: 576px;
+                border-top: $SIZE_INFORMATION_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_SEPARATOR;
+                width: $SIZE_INFORMATION_SEPARATOR_WIDTH;
                 margin: 0 auto;
             }
 
