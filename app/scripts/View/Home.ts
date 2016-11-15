@@ -7,9 +7,9 @@ module Garage {
 
 		import Framework = CDP.Framework;
 		import Tools = CDP.Tools;
-		import UI = CDP.UI;
+        import UI = CDP.UI;
 
-		var TAG: string = "[Garage.View.Home] ";
+		var TAG: string = "[Garage.View.Home]";
 
 		/**
 		 * @class Home
@@ -104,7 +104,12 @@ module Garage {
 				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
 				// コンテキストメニュー
                 this.contextMenu_ = new Menu();
-			}
+
+                var informationDialog = new Util.InformationDialog();
+                if (informationDialog.shouldNotify()) {
+                    informationDialog.notify();
+                }
+            }
 
             /**
 			 * face リストのレンダリング
@@ -414,7 +419,8 @@ module Garage {
             //            break;
             //    }
             //}
-		}
+
+        }
 
 		var View = new Home();
 	}

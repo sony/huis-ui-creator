@@ -42,7 +42,8 @@ module Config {
 			"garage.util.huisdev": "scripts/Util/HuisDev",
 			"garage.util.miscutil": "scripts/Util/MiscUtil",
 			"garage.util.garagefiles": "scripts/Util/GarageFiles",
-			"garage.util.jqutils": "scripts/Util/JQueryUtils",
+            "garage.util.jqutils": "scripts/Util/JQueryUtils",
+            "garage.util.informationdialog": "scripts/Util/InformationDialog",
 			"garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
 			"garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
 

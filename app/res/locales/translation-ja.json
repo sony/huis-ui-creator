@@ -94,6 +94,9 @@
         "STR_ABOUT_TEXT_COPYRIGHT": "Copyright 2016 Sony Corporation",
         "STR_ABOUT_TEXT_VERSION": "Version "
     },
+    "information": {
+        "STR_INFORMATION_TITLE":  "お知らせ"
+    },
     "context_menu": {
         "STR_CONTEXT_VALIDATE_ELEMENTS": "要素を検証",
         "STR_CONTEXT_GRID_SIZE": "グリッドサイズ",

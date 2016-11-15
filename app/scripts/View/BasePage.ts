@@ -190,7 +190,7 @@ module Garage {
 				$("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
 				$("#about-version-number").text(APP_VERSION);
                 return;
-}
+            }
 
             private _onCommandVisitHelp() {
                 var shell = require('electron').shell;

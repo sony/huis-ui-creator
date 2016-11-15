@@ -1,153 +1,227 @@
 ﻿@import "variables/variable";
 
-body{
+body {
+    //共通ダイアログ
+    .ui-popup-screen.in {
+        opacity: $OPACITY_DIALOG_MASK;
+    }
 
+    .ui-overlay-b {
+        background-color: $COLOR_DIALOG_MASK;
+    }
 
-//共通ダイアログ
-.ui-popup-screen.in{
-    opacity: $OPACITY_DIALOG_MASK;
-}
+    .common-dialog {
+        text-shadow: none;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        height: $SIZE_DIALOG_HEIGHT;
+        width: $SIZE_DIALOG_WIDTH;
+        color: $COLOR_DIALOG_TEXT;
+        background: $COLOR_DIALOG_BACKGROUND;
+        border-radius: 0;
+        border: none;
+        max-width: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
 
-.ui-overlay-b{
-    background-color:$COLOR_DIALOG_MASK;   
-}
+        .spinner-dialog {
+            height: $SIZE_DIALOG_HEIGHT;
+            padding: 0;
+            -webkit-box-pack: inherit;
 
-.common-dialog{
-    text-shadow: none;
+            p {
+                word-wrap: break-word;
+                font-size: $FONT_SIZE_DIALOG_TEXT;
+                font-family: $FONT_WEIGHT_DIALOG_TEXT;
+                width: $SIZE_DIALOG_TEXT_WIDTH;
+                margin-right: $SIZE_DIALOG_TEXT_MARGIN_RIGHT;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
 
-    font-family:$FONT_WEIGHT_DIALOG_TEXT;
-    height:$SIZE_DIALOG_HEIGHT;
-    width:$SIZE_DIALOG_WIDTH;
-    color:$COLOR_DIALOG_TEXT;
-    background:$COLOR_DIALOG_BACKGROUND;
-    border-radius:0;
-    border:none;
-    max-width:none;
-    box-shadow:none;
-    -webkit-box-shadow:none;
+        #common-dialog-center-spinner {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_SPINNER;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
 
-    .spinner-dialog{
-        height:$SIZE_DIALOG_HEIGHT;
-        padding:0;
-        -webkit-box-pack:inherit;
-
-        p{
-            word-wrap:break-word;
-            font-size:$FONT_SIZE_DIALOG_TEXT;
-            font-family:$FONT_WEIGHT_DIALOG_TEXT;
-            width:$SIZE_DIALOG_TEXT_WIDTH;
-            margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
-            margin-left:0px;
-            margin-top:0px;
-            margin-bottom:0px;
+        #simple-dialog-image {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_DONE_ICON;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
     }
 
-    #common-dialog-center-spinner{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_SPINNER;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
+    #about-dialog-area {
+        -webkit-box-shadow: 0 0 $SIZE_ABOUT_BOX_SHADOW_BLUR $COLOR_ABOUT_BOX_SHADOW;
+        box-shadow: 0 0 $SIZE_ABOUT_BOX_SHADOW_BLUR $COLOR_ABOUT_BOX_SHADOW;
+
+        .title {
+            font-family: $FONT_FAMILY_ABOUT_TITLE;
+            font-size: $FONT_SIZE_ABOUT_TITLE;
+            text-align: center;
+        }
+
+        #about-info-box {
+            display: flex;
+            margin-top: $SIZE_ABOUT_INFO_BOX_MARING_TOP;
+            margin-bottom: $SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
+
+            #about-logo {
+                background-image: $PATH_IMG_SPLASH_HUIS_LOGO;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: $SIZE_ABOUT_LOGO_WIDTH;
+                height: $SIZE_ABOUT_LOGO_HEIGHT;
+                margin-right: $SIZE_ABOUT_LOGO_MARING_RIGHT;
+                margin-left: $SIZE_ABOUT_LOGO_MARING_LEFT;
+            }
+
+            .info-box {
+                font-size: $FONT_SIZE_ABOUT_INFO;
+
+                #about-app-name {
+                    font-size: $FONT_SIZE_ABOUT_APP_NAME;
+                    font-family: $FONT_FAMILY_ABOUT_APP_NAME;
+                    color: $COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
+                }
+            }
+        }
+
+        overflow-y: auto;
+        overflow-x: hidden;
+        text-shadow: none;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        width: $SIZE_DIALOG_WIDTH;
+        border-radius: 0;
+        background: $COLOR_ABOUT_DIALOG_BACKGROUND;
+        height: $SIZE_ABOUT_DIALOG_HEIGHT;
+        border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+        padding-top: $SIZE_ABOUT_DIALOG_MARGIN_TOP;
+        padding-bottom: $SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
+        padding-right: $SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
+        padding-left: $SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+
+        .common-dialog {
+            background: none;
+
+            .about-dialog {
+                color: $COLOR_ABOUT_DIALOG_TXET;
+
+                .separator {
+                    margin-top: $SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
+                    margin-bottom: $SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
+                    border-bottom: $SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
+                }
+
+                .text-area {
+                    p {
+                        line-height: $TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+                        font-size: $FONT_SIZE_ABOUT_TEXT_LISENCE;
+                        color: $COLOR_ABOUT_DIALOG_TXET;
+                    }
+                }
+            }
+        }
     }
 
-    #simple-dialog-image{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_DONE_ICON;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
+    #information-dialog-area {
+        -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+        box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        width: $SIZE_INFORMATION_DIALOG_WIDTH;
+        height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+        background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+
+        .common-dialog {
+            color: $COLOR_INFORMATION_DIALOG_TEXT;
+            width: $SIZE_INFORMATION_DIALOG_WIDTH;
+            height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+            text-shadow: none;
+            background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+
+            .information-dialog {
+                padding-top: $SIZE_INFORMATION_DIALOG_PADDING_TOP;
+                padding-bottom: $SIZE_INFORMATION_DIALOG_PADDING_BOTTOM;
+            }
+
+            .title {
+                font-size: $FONT_SIZE_INFORMATION_TITLE;
+                font-family: $FONT_FAMILY_INFORMATION_TITLE;
+                line-height: $TEXT_HEIGHT_INFORMATION_TEXT_TITLE;
+                margin: 0;
+                padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
+            }
+
+            .bold-separator {
+                border-top: $SIZE_INFORMATION_BOLD_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                width: $SIZE_INFORMATION_BOLD_SEPARATOR_WIDTH;
+                margin: 0 auto;
+            }
+
+            .white-space {
+                height: $SIZE_INFORMATION_WHITE_SPACE_TOP;
+            }
+
+            .information-container {
+                width: $SIZE_INFORMATION_CONTAINER_WIDTH;
+                height: $SIZE_INFORMATION_CONTAINER_HEIGHT;
+                margin: $SIZE_INFORMATION_CONTAINER_MARGIN_TOP_BOTTOM $SIZE_INFORMATION_CONTAINER_MARGIN_LEFT_RIGHT;
+            }
+
+            .information-img {
+                width: $SIZE_INFORMATION_IMG_WIDTH;
+                height: auto;
+                float: left;
+            }
+
+            .information-box {
+                width: $SIZE_INFORMATION_BOX_WIDTH;
+                height: $SIZE_INFORMATION_BOX_HEIGHT;
+                padding-left: $SIZE_INFORMATION_BOX_PADDING_LEFT;
+                float: left;
+
+                .information-date {
+                    font-size: $FONT_SIZE_INFORMATION_DATE;
+                    font-family: $FONT_FAMILY_INFORMATION_DATE;
+                    padding-bottom: $SIZE_INFORMATION_DATE_PADDING_BOTTOM;
+                }
+
+                .information-text {
+                    font-size: $FONT_SIZE_INFORMATION_TEXT;
+                    font-family: $FONT_FAMILY_INFORMATION_TEXT;
+                    white-space: pre-wrap;
+                }
+            }
+
+            .separator {
+                border-top: $SIZE_INFORMATION_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_SEPARATOR;
+                width: $SIZE_INFORMATION_SEPARATOR_WIDTH;
+                margin: 0 auto;
+            }
+
+            .information-body{
+                div.separator:last-child{
+                    border: none;
+                }
+            }
+        }
     }
-
-	
-}
-
-#about-dialog-area{
-
-	.title{
-		font-family:$FONT_FAMILY_ABOUT_TITLE;
-		font-size:$FONT_SIZE_ABOUT_TITLE;
-		text-align:center;
-	}
-
-	#about-info-box{
-		display:flex;
-		margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
-		margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
-
-		#about-logo{
-			background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
-			background-position:center;
-			background-repeat: no-repeat;
-			background-size: contain;
-			width:$SIZE_ABOUT_LOGO_WIDTH;
-			height:$SIZE_ABOUT_LOGO_HEIGHT;
-			margin-right:$SIZE_ABOUT_LOGO_MARING_RIGHT;
-			margin-left:$SIZE_ABOUT_LOGO_MARING_LEFT;
-		}
-		.info-box{
-			font-size:$FONT_SIZE_ABOUT_INFO;
-
-			#about-app-name{
-				font-size:$FONT_SIZE_ABOUT_APP_NAME;
-				font-family:$FONT_FAMILY_ABOUT_APP_NAME;
-				color:$COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
-			}
-		}
-	}
-
-	
-
-	overflow-y:auto;
-	overflow-x:hidden;
-	text-shadow: none;
-	font-family:$FONT_WEIGHT_DIALOG_TEXT;
-	width:$SIZE_DIALOG_WIDTH;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	text-shadow: none;
-	border-radius:0;
-	background:$COLOR_ABOUT_DIALOG_BACKGROUND;
-	height:$SIZE_ABOUT_DIALOG_HEIGHT;
-	border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
-
-	padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
-	padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-	padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-	padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
-		
-	.common-dialog{
-		background:none;
-			
-		.about-dialog{
-			color:$COLOR_ABOUT_DIALOG_TXET;
-				
-			.separator{
-				margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
-				margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
-				border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
-			}
-
-			.text-area{
-				p{
-					line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
-					font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
-					color:$COLOR_ABOUT_DIALOG_TXET;
-				}
-			}
-		}	
-	}
-	
-}
-
 }

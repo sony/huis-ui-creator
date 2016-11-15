@@ -82,29 +82,55 @@
         </section>
     </script>
 
-	<!-- about dialog -->
-	<script type="text/template" id="common-dialog-about">
-		<div id="about-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
-			<section class="common-dialog">
-				<div class="about-dialog">
-					<header class="{{_header}}">
-						<h3 class="title">{{title}}</h3>
-					</header>
-					<div id="about-info-box">
-						<div id="about-logo"></div>
-						<div class="info-box">
-							<div id="about-app-name">★HUIS UI CREATOR</div>
-							<div id="about-version-info"><span class="label">★version </span><span id="about-version-number">★0.0.0_XXXX</span></div>
-							<div id="about-copyright">★Copyright 2016 Sony Corporation</div>
-						</div>
-					</div>
-					<div class="separator"></div>
-					<div class="text-area">
-						<p class="message">{{message}}</p>
-					</div>
-				</div>
-			</section>
-		</div>
-	</script>
+    <!-- about dialog -->
+    <script type="text/template" id="common-dialog-about">
+        <div id="about-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <section class="common-dialog">
+                <div class="about-dialog">
+                    <header class="{{_header}}">
+                        <h3 class="title">{{title}}</h3>
+                    </header>
+                    <div id="about-info-box">
+                        <div id="about-logo"></div>
+                        <div class="info-box">
+                            <div id="about-app-name">★HUIS UI CREATOR</div>
+                            <div id="about-version-info"><span class="label">★version </span><span id="about-version-number">★0.0.0_XXXX</span></div>
+                            <div id="about-copyright">★Copyright 2016 Sony Corporation</div>
+                        </div>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="text-area">
+                        <p class="message">{{message}}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
 
+    <!-- information dialog -->
+    <script type="text/template" id="common-dialog-information">
+        <div id="information-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <section class="common-dialog">
+                <div class="information-dialog">
+                    <header class="{{_header}}">
+                        <h3 class="title">{{title}}</h3>
+                    </header>
+                    <div class="bold-separator"></div>
+                    <div class="information-body">
+                        <div class="white-space"></div>
+                        {{#informationList}}
+                        <div class="information-container">
+                            <img class="information-img" src="{{imagePath}}">
+                            <div class="information-box">
+                                <div class="information-date">{{date}}</div>
+                                <div class="information-text">{{text}}</div>
+                            </div>
+                        </div>
+                        <div class="separator"></div>
+                        {{/informationList}}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
 </article>
