@@ -5,6 +5,12 @@
 
         var TAG: string = "[Garage.Util.InformationDialog]";
 
+        var VERSION_TEXT_PATH: string = "./version.txt";
+        var LAST_NOTIFIED_VERSION_TEXT_PATH: string = "./last_notified_version.txt";
+        var FILE_NAME_DATE  = "date.txt";
+        var FILE_NAME_IMAGE = "image.png";
+        var FILE_NAME_NOTE  = "note.txt";
+
         /**
          * @class Notifier
 		 * @brief ui-creatorアップデート後の初回起動時かどうかの判定を行い、お知らせダイアログを表示するクラス
@@ -18,18 +24,11 @@
                 let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
 
                 try {
-                    var preVersion: string = fs.readFileSync("./version.txt").toString();
-                } catch (err) {
-                    console.error(FUNCTION_NAME + "version.txt が存在しません" + err);
-                }
-
-                try {
-                    var lastNotifiedVersion: string = fs.readFileSync("./last_notified_version.txt").toString();
-                } catch (err) {
-                    console.log("last_notified_version.txt が存在しません");
-                }
-
-                try {
+                    let preVersion: string = fs.readFileSync(VERSION_TEXT_PATH).toString();
+                    let lastNotifiedVersion: string;
+                    if (fs.existsSync(LAST_NOTIFIED_VERSION_TEXT_PATH)){
+                        lastNotifiedVersion = fs.readFileSync(LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
+                    }
                     if (preVersion === lastNotifiedVersion) return false;
                     else return true;
                 } catch (err) {
@@ -48,7 +47,7 @@
                 let FUNCTION_NAME: string = TAG + " : Notify : ";
 
                 try {
-                    fs.outputFile("./last_notified_version.txt", fs.readFileSync("./version.txt"), function (err) { console.log(err); });
+                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, fs.readFileSync(VERSION_TEXT_PATH), function (err) { console.log(err); });
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
@@ -59,11 +58,12 @@
 
                     // ダイアログにnoteを追加させていく
                     notePaths.forEach(function (dirName) {
+                        let path = pathToNotes + dirName + "/";
                         informationList.push({
-                            dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
-                            date: fs.readFileSync(pathToNotes + dirName + "/date.txt", "utf8"),
-                            imagePath: (pathToNotes + dirName + "/image.png"),
-                            text: fs.readFileSync(pathToNotes + dirName + "/note.txt", "utf8")
+                            dirName   : dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
+                            imagePath : (path + FILE_NAME_IMAGE),
+                            date      : fs.readFileSync(path + FILE_NAME_DATE, "utf8"),
+                            text      : fs.readFileSync(path + FILE_NAME_NOTE, "utf8")
                         });
                     });
 
