@@ -9,6 +9,7 @@
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
+/// <reference path="../Util/InformationDialog.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 
 /**
