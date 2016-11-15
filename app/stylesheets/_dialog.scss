@@ -165,7 +165,7 @@ body {
             .title {
                 font-size: $FONT_SIZE_INFORMATION_TITLE;
                 font-family: $FONT_FAMILY_INFORMATION_TITLE;
-                line-height: 1.5em;
+                line-height: $TEXT_HEIGHT_INFORMATION_TEXT_TITLE;
                 margin: 0;
                 padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
             }
