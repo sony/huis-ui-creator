@@ -484,9 +484,13 @@
                 </select>
             </div>
 
+            <div class="button-jump-action-container-element">
+                <h4 id="button-state-label-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_DEST">★移動先</h4>
+            </div>
             <div class="property-state-action-jump">
-                <div id="property-jump-remoteid">remote_id: {{#jump}}{{remote_id}}{{/jump}}</div>
-                <div id="property-jump-sceneno">scene_no : {{#jump}}{{scene_no}}{{/jump}}</div>
+                <div id="property-jump-remote-name" data-remote-id="{{#jump}}{{remote_id}}{{/jump}}"></div>
+                <div id="property-jump-scene-no" data-scene-no="{{#jump}}{{scene_no}}{{/jump}}"></div>
+                <button id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">★変更する</button>
             </div>
 
         </div>

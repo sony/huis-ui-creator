@@ -163,6 +163,29 @@ body{
             line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
         }
 
+        #spinner-dialog-spinner-gif{
+            width:$SIZE_SPLASH_SPINNER_WIDHT;
+            height:$SIZE_SPLASH_SPINNER_HEIHGT;
+            margin:0 auto;
+            margin-top:$SIZE_SPLASH_SPINNER_MARGIN_TOP;
+            background-image: $PATH_IMG_SPLASH_SPINNER;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        
+        #remotelist-load-message {
+            text-shadow:none;
+            font-size:$FONT_SIZE_SPLASH_MESSAGE;
+            font-family:$FONT_FAMILY_SPLASH_MESSAGE;
+            line-height:$TEXT_HEIGHT_DEFAULT;
+            color:$COLOR_SPLASH_TEXT;
+            text-align:center;
+            margin:0 auto;
+            margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
+        }
+
+
         #face-list-container {
             overflow-x: overlay;
             overflow-y: hidden;

@@ -35,6 +35,9 @@
         }
     },
     "dialog": {
+        "title": { 
+            "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択"
+        },
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
@@ -98,7 +101,9 @@
             "STR_EDIT_PROPERTY_TITLE_IMAGE": "Image",
             "STR_EDIT_PROPERTY_TITLE_LABEL": "Label",
             "STR_EDIT_PROPERTY_TITLE_BUTTON": "Button",
+            "STR_EDIT_PROPERTY_TITLE_JUMP": "Page Jump Button",
             "STR_EDIT_PROPERTY_LABEL_ACTION": "操作",
+            "STR_EDIT_PROPERTY_LABEL_DEST": "移動先",
             "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
             "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
             "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
@@ -108,7 +113,8 @@
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE": "マクロとは？",
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT": "連続して複数種類の信号を発信できる機能です。",
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
-            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加"
+            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
+            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST":  "変更する"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"

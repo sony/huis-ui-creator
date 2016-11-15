@@ -117,7 +117,19 @@
                     </header>
                     <div class="separator"></div>
                     <div id="face-list-container">
-                        {{!リモコン数が0の場合}}
+
+                        <!--
+                        <div id="spinner-container">
+                            <div class="spinner large show" id="spinner-dialog-spinner-gif">&nbsp;</div>
+
+                            <div id="remotelist-load-message">
+                                <p>
+                                    ★HUIS REMOTE CONTROLLERと同期中です。<br>
+                                    USBケーブルをぬかないでください。
+                                </p>
+                            </div>
+                        </div>
+                        -->
                         
                         {{!リモコンリスト}}
                         <ul id="face-list">
@@ -128,10 +140,6 @@
                     <div class="submit-area">
                         <button id="remotelist-button-ok" disabled>{{#anotherOption}}{{label_ok}}{{/anotherOption}}</button>
                         <button id="remotelist-button-cancel">{{#anotherOption}}{{label_cancel}}{{/anotherOption}}</button>
-                        <!--
-                        <input id="remotelist-button-ok" type="button" value="{{#anotherOption}}{{label_ok}}{{/anotherOption}}" disabled/>
-                        <input id="remotelist-button-cancel" type="button" value="{{#anotherOption}}{{label_cancel}}{{/anotherOption}}" />
-                        -->
                     </div>
                 </div>
             </section>

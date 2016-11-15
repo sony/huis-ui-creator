@@ -5271,6 +5271,7 @@ module Garage {
                 // ボタン情報の外枠部分をレンダリング
                 var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
                 var $buttonDetail = $(templateButton(button));
+                $buttonDetail.find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_JUMP"));
                 $detail.append($buttonDetail);
 
                 //信号用のViewの初期化・更新
