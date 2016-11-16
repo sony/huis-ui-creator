@@ -5,6 +5,7 @@ module Garage {
 
         import Dialog = CDP.UI.Dialog;
 
+
         export class SelectRemotePageDialog {
 
             /** 表示するダイアログ */
@@ -26,6 +27,13 @@ module Garage {
             private tmpFace: IGFace;
 
 
+            /**
+             * コンストラクタ
+             *
+             * @param title {string} ダイアログに表示するタイトル
+             * @param defaultJumpSettings {IJump} 初期選択状態にするリモコンページ設定
+             * @param tmpFace {IGFace} 編集中のリモコン設定（編集中のリモコンも一覧表示する場合に使用）
+             */
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: IGFace) {
                 this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
@@ -49,7 +57,9 @@ module Garage {
                 this.dialog = new Dialog("#common-dialog-remotelist", options);
             }
 
+
             /**
+             * ダイアログを表示する
              *
              * @param onSubmit {(result: IJump)=>void} OK押下時のcallback
              */
@@ -61,7 +71,7 @@ module Garage {
                 $dialog.trigger('create');
 
                 // Face の遅延ロード
-                this.startRenderingFaceList(this);
+                this.startRenderingFaceList();
 
                 $dialog.on({
                     "click": SelectRemotePageDialog.onClick
@@ -72,15 +82,24 @@ module Garage {
             }
 
 
-            private startRenderingFaceList(dialog: SelectRemotePageDialog) {
+            /**
+             * リモコン一覧の読み込み～描画を開始する
+             */
+            private startRenderingFaceList() {
+                let self = this;
                 setTimeout(() => {
-                    SelectRemotePageDialog.renderFaceList(dialog);
-                    dialog.selectDefaultFacePage(dialog);
+                    SelectRemotePageDialog.renderFaceList(self);
+                    self.selectDefaultFacePage(self);
                     SelectRemotePageDialog.removeSpinner();
-                }, 0);
+                }, 100);
             }
 
 
+            /**
+             * リモコン一覧を描画
+             *
+             * @param dialog {SelectRemotePageDialog}
+             */
             private static renderFaceList(dialog: SelectRemotePageDialog) {
                 var templateFile = CDP.Framework.toUrl("/templates/home.html");
                 var faceItemTemplate = CDP.Tools.Template.getJST("#face-list-template", templateFile);
@@ -151,6 +170,12 @@ module Garage {
             }
 
 
+            /**
+             * リモコンを描画
+             *
+             * @param dialog {SelectRemotePageDialog}
+             * @param $face {JQuery}
+             */
             private renderFace(dialog: SelectRemotePageDialog, $face: JQuery): void {
                 var remoteId = $face.attr("data-remoteId");
                 if (!remoteId) {
@@ -181,6 +206,9 @@ module Garage {
             }
 
 
+            /**
+             * リモコン一覧の幅を算出しDOMに設定する
+             */
             private static calculateFaceListWidth() {
                 let $faceList = $("#face-list");
                 let $items = $faceList.find(".face");
@@ -188,15 +216,23 @@ module Garage {
                 $items.each((index, item) => {
                     listWidth += $(item).outerWidth(true);
                 });
-                $faceList.width(listWidth);
+                $faceList.width(listWidth * 0.8);
             }
 
 
+            /**
+             * リモコン一覧読み込み中のスピナー表示を削除
+             */
             private static removeSpinner() {
                 $('#spinner-container').remove();
             }
 
 
+            /**
+             * 初期選択対象のリモコンページを選択状態にする
+             *
+             * @param dialog {SelectRemotePageDialog}
+             */
             private selectDefaultFacePage(dialog: SelectRemotePageDialog) {
                 if (!dialog.defaultJumpSettings) {
                     return;
@@ -208,6 +244,12 @@ module Garage {
             }
 
 
+            /**
+             * クリックされたリモコンページを選択状態にする
+             *
+             * @param dialog {SelectRemotePageDialog}
+             * @param event {Event} クリックイベント
+             */
             private selectClickedFacePage(dialog: SelectRemotePageDialog, event: Event) {
                 let $selectedPage = $(event.currentTarget);
 
@@ -247,15 +289,23 @@ module Garage {
             }
 
 
+            /**
+             * OKボタンを有効化する
+             */
             private static enableSubmitButton() {
                 let $button = $('#remotelist-button-ok');
                 if ($button.prop('disabled')) {
-                    //$button.button('enable');
                     $button.prop('disabled', false);
                 }
             }
 
 
+            /**
+             * リモコンページのJQueryオブジェクトからIJump設定を取得する
+             *
+             * @param $page {JQuery} リモコンページのDOMから生成されたJQueryオブジェクト
+             * @return {IJump}
+             */
             private static getRemotePageByFacePageJQuery($page: JQuery): IJump {
                 let page = $page.data("page-index");
 
@@ -270,18 +320,33 @@ module Garage {
 
 
 
+            /**
+             * ダイアログ全体のクリックイベント
+             *
+             * @param event {Event}
+             */
             private static onClick(event: Event) {
                 // ダイアログ内をクリックするだけで閉じてしまうのを防止
                 event.stopPropagation();
             }
 
 
+            /**
+             * OKボタンのクリックイベント
+             *
+             * @param event {Event}
+             */
             private onOKClicked(event: Event) {
                 this.dialog.close();
                 this.onSubmit(this.selectedSettings);
             }
 
 
+            /**
+             * Cancelボタンのクリックイベント
+             *
+             * @param event {Event}
+             */
             private onCancelClicked(event: Event) {
                 this.dialog.close();
             }

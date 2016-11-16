@@ -151,12 +151,12 @@ body{
 #remotelist-dialog-area{
 
     .remotelist-dialog{
-        background-color: $COLOR_COMMON_BACKGROUND; //★★★★
+        background-color: $COLOR_COMMON_BACKGROUND;
 
-        .title{ //★★★★
-            margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
-            margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
-            //text-align: center;
+        h3.title{
+            padding-top:$SIZE_DIALOG_TITLE_PADDING_TOP;
+            margin-bottom:$SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+            margin-left:$SIZE_DIALOG_TITLE_MARGIN_LEFT;
             color: $COLOR_TEXT_MAIN;
             font-size:$FONT_HOME_REMOTE_TITLE;
             font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
@@ -164,16 +164,17 @@ body{
         }
 
         #spinner-dialog-spinner-gif{
-            width:$SIZE_SPLASH_SPINNER_WIDHT;
-            height:$SIZE_SPLASH_SPINNER_HEIHGT;
+            width: $SIZE_DIALOG_SPINNER_WIDTH;
+            height: $SIZE_DIALOG_SPINNER_HEIGHT;
             margin:0 auto;
-            margin-top:$SIZE_SPLASH_SPINNER_MARGIN_TOP;
+            margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
             background-image: $PATH_IMG_SPLASH_SPINNER;
             background-position:center;
             background-repeat: no-repeat;
             background-size: contain;
         }
         
+        /*
         #remotelist-load-message {
             text-shadow:none;
             font-size:$FONT_SIZE_SPLASH_MESSAGE;
@@ -184,6 +185,7 @@ body{
             margin:0 auto;
             margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
         }
+        */
 
 
         #face-list-container {
@@ -191,12 +193,17 @@ body{
             overflow-y: hidden;
             height: 500px;
             width: 1000px;
+            border-top: 1px solid $COLOR_DIALOG_FACE_LIST_BORDER_TOP;
+            margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
             box-sizing: border-box;
 
             #face-list {
                 position:relative;
                 //height: 400px; // tentative
                 overflow-y: hidden;
+                transform: scale(0.8);
+                transform-origin : left top;
            
                 //box-shadow: 0 0 20px #222;
                 z-index: 1;
@@ -231,7 +238,7 @@ body{
                     }
 
                     .face-container{
-                        height: 872px; //★★
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
                         
                         overflow-x: hidden;
                         overflow-y: overlay;
@@ -254,18 +261,18 @@ body{
                             border:none;
                         }
                         
-                        &.selected{//★★★★
+                        &.selected{
                             border-style: solid;
-                            border-width: 4px;
+                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
                             border-color: #00C588; 
                             margin-top: 0px;
                             //margin-right: 0px;
                             margin-left: 0px;
                             //margin-bottom: 1px;
-                            padding-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP - 4;
-                            padding-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT - (4 * 2);
-                            padding-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT - 4;
-                            padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM - 4;
+                            padding-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            padding-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT - ($SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2);
+                            padding-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
                         }
                         
 
