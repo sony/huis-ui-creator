@@ -114,6 +114,7 @@
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT": "連続して複数種類の信号を発信できる機能です。",
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
             "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
+            "STR_EDIT_PROPERTY_JUMP_NO_DEST": "設定なし",
             "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST":  "変更する"
         },
         "canvas": {
