@@ -119,6 +119,12 @@ module Garage {
                 this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
                 // コンテキストメニュー
                 this.contextMenu_ = new Menu();
+
+                //お知らせダイアログを表示
+                //var informationDialog = new Util.InformationDialog();
+                //if (informationDialog.shouldNotify()) {
+                //    informationDialog.notify();
+                //}
                 
             }
 
