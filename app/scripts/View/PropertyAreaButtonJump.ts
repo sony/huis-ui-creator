@@ -238,7 +238,16 @@ module Garage {
                 } else {
                     let face = huisFiles.getFace(jump.remote_id);
                     if (face) {
-                        total = face.modules.length;
+                        // 総ページ数を取得するためにViewを生成
+                        let modulesView = new Module({
+                            el: $(''),
+                            attributes: {
+                                remoteId: face.remoteId,
+                                modules: face.modules,
+                                materialsRootPath: HUIS_FILES_ROOT
+                            }
+                        });
+                        total = modulesView.getPageCount();
                     } else {
                         // 存在しないリモコン
                         total = -1;//★★TODO
