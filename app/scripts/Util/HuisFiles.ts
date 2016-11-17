@@ -17,11 +17,6 @@ module Garage {
 			modules: any[];
 		}
 
-		interface IRemoteInfo {
-			remoteId: string;
-			face: IGFace;
-			mastarFace?: IGFace;
-		}
 
 		interface IWaitingRisizeImage {
 			src: string; //! リサイズの original のパス。(PC 上のフルパス)
@@ -29,97 +24,7 @@ module Garage {
 			params: Model.IImageResizeParams;
 		}
 
-		class ModuleVersion {
-			private CLASS_NAME = TAGS.HuisFiles + " : ModuleVersion : "; 
-			private majorVersion: number;
-			private minorVersion: number;
-
-
-			constructor(stringVersion: string) {
-				let FUNCTION_NAME = this.CLASS_NAME + ": constructor : ";
-			
-				if (!stringVersion) {
-					console.warn(FUNCTION_NAME + "stringVersion is undefined");
-					return;
-				}
-
-				let separateString: string[] = stringVersion.split(".");
-				let majorVersionInput: number = parseInt(separateString[0]);
-				let minorVersionInput: number = parseInt(separateString[1]);
-				let otherInfo: number = parseInt(separateString[2]);
-
-				if (otherInfo) {
-					console.warn(FUNCTION_NAME + "there is otherInfo");
-				}
-
-				this.majorVersion = majorVersionInput;
-				this.minorVersion = minorVersionInput;
-			}
-
-			/*
-			* 入力の ModelVersionより古いバージョンのとき、trueを返す。
-			* @param counterPart : ModuleVersion 　比較対象のModelVersion
-			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse
-			*/
-			public isOlderThan(counterPart: ModuleVersion) {
-
-				let FUNCTION_NAME = this.CLASS_NAME + ": isOlderThan() : ";
-
-				if(!counterPart) {
-					console.warn(FUNCTION_NAME + "counterPart is undefined");
-					return;
-				}
-
-				//majorバージョンが同じとき、minorバージョンで比べる。
-				if (this.majorVersion === counterPart.getMajorVersion()) {
-
-					//minorバージョンで比べる。
-					if (this.minorVersion < counterPart.getMinorVersion()) {//minorVersion値が少ない　＝＝　古い
-						return true;
-					} else {
-						return false;
-					}
-
-				} else {
-
-					//majorバージョンで比べる。
-					if (this.majorVersion < counterPart.getMajorVersion()) {//majorVersion値が少ない　＝＝　古い
-						return true;
-					} else {
-						return false;
-					}
-
-				}
-			}
-
-			/*
-			* X.Yの形で、ModuleVersionの値を返す　ex) 1.2
-			*/
-			public getVersionString(): string {
-				let FUNCTION_NAME = this.CLASS_NAME + ": getVersionString : ";
-
-				if (this.majorVersion == null) {
-					console.warn(FUNCTION_NAME + "majorVersion is null ");
-					return null;
-				}
-
-				if (this.minorVersion == null) {
-					console.log(FUNCTION_NAME + "minorVersion is null");
-					return null;
-				}
-
-				return this.majorVersion + "." + this.minorVersion;
-			}
-
-			public getMajorVersion(): number {
-				return this.majorVersion;
-			}
-
-			public getMinorVersion(): number {
-				return this.minorVersion;
-			}
-
-		}
+		
 
 
 		/**
@@ -132,7 +37,7 @@ module Garage {
 			private remoteList_: IRemoteId[];
 			private remoteInfos_: IRemoteInfo[];
 			private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
-			private watingResizeImages_: IWaitingRisizeImage[];
+			private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
 
 			constructor() {
 				if (!fs) {
@@ -157,6 +62,7 @@ module Garage {
 			init(huisFilesRoot: string): boolean {
 				this.remoteList_ = [];
 				this.remoteInfos_ = [];
+                this.watingResizeImages_ = [];
 
 				huisFilesRoot = path.resolve(huisFilesRoot);
 				if (!fs.existsSync(huisFilesRoot)) {
@@ -201,6 +107,15 @@ module Garage {
 				return true;
 			}
 
+
+            /*
+             * watingResizeImages_を初期化する。
+             */
+            initWatingResizeImages() {
+                let FUNCTION_NAME = TAGS.HuisFiles + "initWatingResizeImages : ";
+                this.watingResizeImages_ = [];
+            }
+
 			/**
 			 * 指定した remoteId とひも付けられた face を取得する。
 			 * このメソッドを呼ぶ前に、init() を呼び出す必要がある。
@@ -214,6 +129,12 @@ module Garage {
 				if (!remoteInfos || !_.isArray(remoteInfos)) {
 					return null;
 				}
+
+                // Commonの場合はMasterFaceがないので、faceを返す。
+                if (remoteId == "common") {
+                    return this.commonRemoteInfo_.face;
+                }
+
 				for (let i = 0, l = remoteInfos.length; i < l; i++) {
 					if (remoteInfos[i].remoteId === remoteId) {
 						if (master) {
@@ -306,17 +227,9 @@ module Garage {
 					let brand = param1,
 						deviceType = param2,
 						modelNumber = param3;
-					for (let i = 0, l = this.remoteList_.length; i < l; i++) {
-						let remoteId = this.remoteList_[i].remote_id;
-						let codeDb = this.getMasterCodeDb(remoteId);
-						if (codeDb) {
-							if (codeDb.brand === brand &&
-								codeDb.device_type === deviceType &&
-								(!modelNumber || codeDb.model_number === modelNumber)) {
-								return this._getMasterFunctions(remoteId);
-							}
-						}
-					}
+
+					return this._getMasterFunctions(this.getRemoteIdByCodeDbElements(brand,deviceType, modelNumber));
+
 				} else { // param2 が指定されていない場合は、param1: remoteId
 					let remoteId = param1;
 					return this._getMasterFunctions(remoteId);
@@ -334,9 +247,12 @@ module Garage {
 					console.warn(FUNCTION_NAME + "code is undefined");
 				}
 
-				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
-					let remoteId = this.remoteList_[i].remote_id;
-					let face = this.getFace(remoteId);
+					for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+						let remoteId = this.remoteList_[i].remote_id;
+                    let face = this.getFace(remoteId);
+                    if (!face) {
+                        continue;
+                    }
 					let codesMaster: string[] = this.getMasterCodes(remoteId);
 					let deviceType = face.category;
 
@@ -357,8 +273,53 @@ module Garage {
 				}
 
 				return null;
-
 			}
+
+			/**
+			* 同じbrand, deviceType, modelNumberをもつリモコンのremoteIdを取得する。
+			* @param brand{string} 機器のブランド
+			* @param deviceType{string} 機器のタイプ
+			* @param modelNumber{string} 機器のモデルナンバー
+			* @return remoteId{string}リモコンのID
+			*/
+			getRemoteIdByCodeDbElements(brand, deviceType, modelNumber):string {
+				let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
+	
+				for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+					let remoteId = this.remoteList_[i].remote_id;
+						let codeDb = this.getMasterCodeDb(remoteId);
+						if (codeDb) {
+							if (codeDb.brand === brand &&
+								codeDb.device_type === deviceType &&
+								(!modelNumber || codeDb.model_number === modelNumber)) {
+							return remoteId;
+							}
+						}
+					}
+
+				return null;
+				}
+
+            /**
+             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
+             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
+             */
+            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
+
+                for (let i = 0, l = this.remoteList_.length; i < l; i++) {
+                    let remoteId = this.remoteList_[i].remote_id;
+                    let bluetoothData = this.getMasterBluetoothData(remoteId);
+                    if (bluetoothData &&
+                        bluetoothData.bluetooth_device &&
+                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address) {
+                        return remoteId;
+			}
+                }
+
+                return null;
+            }
 
 			/**
 			 * 機器の master face に記述されている最初の code を取得する。
@@ -475,7 +436,7 @@ module Garage {
 							if (code != null && code != undefined && code != " ") {
 								//学習によって登録された用 codeがある場合
 								functions.push(code_db.function);
-							}else if (code_db.db_codeset != " " || code_db.brand != " ") {
+							} else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
 								//プリセット用 db_codeset と brand が空白文字で。
 								functions.push(code_db.function);
 							} else {
@@ -600,7 +561,52 @@ module Garage {
 
 				return result;
 
-			}
+            }
+
+			/**
+             * 機器の master face に記述されている最初の bluetooth_data を取得する。
+             *
+             * @param remoteId {string} リモコンの remoteId
+             * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
+             */
+            getMasterBluetoothData(remoteId: string): IBluetoothData {
+                let masterFace: IGFace = this._getMasterFace(remoteId);
+                if (!masterFace) {
+                    console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
+                    return null;
+                }
+
+                let result: IStringStringHash = {};
+
+                var modules = masterFace.modules;
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                var bluetoothData = actions[l].bluetooth_data;
+                                if (bluetoothData) {
+                                    return $.extend(true, {}, bluetoothData);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
 
 			/**
 			 * Common の face を取得する。
@@ -627,6 +633,92 @@ module Garage {
 				return 0;
 				
 			}
+
+
+            /**
+            * 利用できるリモコンのリストを返す
+            * @return {IRemoteInfo[]}
+            */
+            getSupportedRemoteInfo(): IRemoteInfo[]{
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteNameList :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result :IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++){
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
+
+            /*
+             * マクロで利用できるリモコンのリストを返す。
+             * @return {IRemoteInfo[]}
+             */
+            getSupportedRemoteInfoInMacro(): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_MACRO.indexOf(this.remoteInfos_[i].face.category) == -1) {
+                        result.push(this.remoteInfos_[i]);
+                    }
+                }
+
+                return result;
+            }
+
+            /*
+            * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
+            */
+            getDeviceInfo(remoteId): IButtonDeviceInfo {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getDevieInfo:";
+
+                if (remoteId == null) {
+                    console.warn(FUNCTION_NAME + "remoteId is null");
+                    return;
+                }
+
+                let functions = this.getMasterFunctions(remoteId);
+                let codeDb = this.getMasterCodeDb(remoteId);
+                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let bluetoothData = this.getMasterBluetoothData(remoteId);
+
+                let face = huisFiles.getFace(remoteId);
+                if (face == null) {
+                    console.warn(FUNCTION_NAME + "face not found. remoteID: " + remoteId);
+                    return;
+                }
+
+                let deviceInfo: IButtonDeviceInfo = {
+                    id: "",
+                    functions: functions,
+                    remoteName: face.name,
+                    code_db: codeDb
+                };
+                if (bluetoothData) {
+                    deviceInfo.bluetooth_data = bluetoothData;
+                }
+
+                if (functionCodeHash != null) {
+                    deviceInfo.functionCodeHash = functionCodeHash;
+                }
+
+                return deviceInfo;
+            }
 
 
 			/**
@@ -755,8 +847,12 @@ module Garage {
 			 * @param remoteId {string} 更新または新規作成する face の remote ID
 			 * @param faceName {string} 更新または新規作成する face の名前 
 			 * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param isToImportExport {bollean} importExport用に使われる場合true
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			updateFace(remoteId: string, faceName: string, gmodules: IGModule[]): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+                let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
+
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -765,7 +861,7 @@ module Garage {
 				var moduleNames: string[] = [];
 				// module ファイルの更新
 				for (let i = 0; i < moduleCount; i++) {
-					let moduleInfo = this._updateModule(remoteId, gmodules[i]);
+                    let moduleInfo = this._updateModule(remoteId, gmodules[i], outputDirPath);
 					modules.push(moduleInfo.module);
 					moduleNames.push(moduleInfo.name);
 				}
@@ -777,14 +873,23 @@ module Garage {
 					modules: moduleNames
 				};
 
+
 				var faceFilePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
+
+                //ファイルパスの指定がある場合、書き出し先を変更する。
+                if (outputDirPath != null) {
+                    faceFilePath = path.join(outputDirPath, remoteId, remoteId + ".face");
+                }
+
 				fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
 				// サイズ変更を行った画像を一括でリサイズする
 				this._resizeImages().always(() => {
 					// 不要な画像を削除
+                    if (!isToImportExport) {
 					this._removeUnnecessaryImages(remoteId, modules);
-
+                    }
+	
 					/* remotelist.ini ファイルを更新 */
 
 					// remoteList 内に、remoteId が含まれているかをチェック。
@@ -799,10 +904,21 @@ module Garage {
 						this.remoteList_.push({ remote_id: remoteId });
 					}
 
+                    try {
 					this.updateRemoteList();
-
 					df.resolve();
+                    } catch (e) {
+                        df.reject();
+                    }
+                }).fail(() => {
+                    console.error(FUNCTION_NAME + "_resizeImages is fail");
+                    df.reject();
 				});
+
+                if (cache != null){
+                    cache.save(gmodules);
+                }
+                
 
 				return promise;
 
@@ -842,7 +958,7 @@ module Garage {
 
 					// 以下のディレクトリーは削除対象外
 					switch (file) {
-						case "remoteimages":
+                        case REMOTE_IMAGES_DIRRECOTORY_NAME:
 						case "lost+found":
 						case "9999": // "9999" (special face) の扱いをどうするか要検討
 							return false;
@@ -901,8 +1017,9 @@ module Garage {
 			 * module ファイルを更新する。
 			 * 指定された module が存在しない場合は、新規作成する。
 			 * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _updateModule(remoteId: string, gmodule: IGModule): {module: IModule, name: string} {
+			private _updateModule(remoteId: string, gmodule: IGModule, outputDirPath ? :string): {module: IModule, name: string} {
 				// IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
 
 				
@@ -919,16 +1036,23 @@ module Garage {
 				}
 
 				if (gmodule.button) {
-					module.button = this._normalizeButtons(gmodule.button, remoteId);
+                    module.button = this._normalizeButtons(gmodule.button, remoteId, outputDirPath);
 				}
 				if (gmodule.image) {
-					module.image = this._normalizeImages(gmodule.image, remoteId);
+                    module.image = this._normalizeImages(gmodule.image, remoteId, outputDirPath);
 				}
 				if (gmodule.label) {
 					module.label = this._normalizeLabels(gmodule.label);
 				}
 
 				var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", gmodule.name + ".module");
+
+                //ファイルパスの指定がある場合、書き出し先を変更する。
+                if (outputDirPath != null) {
+                    moduleFilePath = path.join(outputDirPath, remoteId, "modules", gmodule.name + ".module");
+                }
+
+
 				fs.outputJSONSync(moduleFilePath, module, { spaces: 2 });
 
 				return {
@@ -950,8 +1074,8 @@ module Garage {
 					return null;
 				}
 
-				let versions: ModuleVersion[] = this.getVersions(gModule.button, gModule.image, gModule.label);
-				let oldestVersion :ModuleVersion= this.getOldestVersionOf(versions);
+                let versions: Model.VersionString[] = this.getVersions(gModule.button, gModule.image, gModule.label);
+                let oldestVersion: Model.VersionString= this.getOldestVersionOf(versions);
 
 				if (oldestVersion != null) {
 					let oldestVersionString: string = oldestVersion.getVersionString();
@@ -967,7 +1091,7 @@ module Garage {
 			* @param versions : string[]
 			* return :string 最古のボタンバージョン
 			*/
-			private getOldestVersionOf(versions: ModuleVersion[]):ModuleVersion {
+            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOldestVersionOfGButton : ";
 
 				if (versions == undefined) {
@@ -975,7 +1099,7 @@ module Garage {
 					return;
 				}
 
-				let oldestVersion :ModuleVersion= null;
+                let oldestVersion: Model.VersionString= null;
 
 				for (let i = 0; i < versions.length; i++){
 					oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
@@ -991,18 +1115,18 @@ module Garage {
 			* @param labels ? : IGLabels
 			* return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
 			*/
-			private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): ModuleVersion[] {
+            private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): Model.VersionString[] {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getVersions : ";
 				if (!buttons && !images && !labels) {
 					console.warn(FUNCTION_NAME + "no inputs");
 					return;
 				}
-				let result: ModuleVersion[] = [];
+                let result: Model.VersionString[] = [];
 
 				if (buttons) {
 					for (let i = 0; i < buttons.length; i++){
 						if (buttons[i].version) {
-							result.push(new ModuleVersion(buttons[i].version));
+							result.push(new Model.VersionString(buttons[i].version));
 						}
 					}
 				}
@@ -1010,7 +1134,7 @@ module Garage {
 				if (images) {
 					for (let i = 0; i < images.length; i++) {
 						if (images[i].version) {
-							result.push(new ModuleVersion(images[i].version));
+                            result.push(new Model.VersionString(images[i].version));
 						}
 					}
 				}
@@ -1018,7 +1142,7 @@ module Garage {
 				if (labels) {
 					for (let i = 0; i < labels.length; i++) {
 						if (labels[i].version) {
-							result.push(new ModuleVersion(labels[i].version));
+                            result.push(new Model.VersionString(labels[i].version));
 						}
 					}
 				}
@@ -1033,7 +1157,7 @@ module Garage {
 			* @param version2 :string 比較対象のバージョン情報２
 			* return より番号が若い方のバージョン情報 : string
 			*/
-			private getOlderVersionOf(version1: ModuleVersion, version2: ModuleVersion): ModuleVersion {
+            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
 				let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOlderVersion : ";
 
 				if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
@@ -1064,15 +1188,16 @@ module Garage {
 
 			/**
 			 * Button データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _normalizeButtons(buttons: IGButton[], remoteId: string): IButton[] {
+            private _normalizeButtons(buttons: IGButton[], remoteId: string, outputDirPath?:string): IButton[] {
 				var normalizedButtons: IButton[] = [];
 
 				for (let i = 0, l = buttons.length; i < l; i++) {
 					let button: IGButton = buttons[i];
 					let normalizedButton: IButton = {
 						area: button.area,
-						state: this._normalizeButtonStates(button.state, remoteId)
+                        state: this._normalizeButtonStates(button.state, remoteId, outputDirPath)
 					};
 					if (button.default != null) {
 						normalizedButton.default = button.default;
@@ -1088,8 +1213,9 @@ module Garage {
 
 			/**
 			 * button.state データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
 			 */
-			private _normalizeButtonStates(states: IGState[], remoteId: string): IState[] {
+            private _normalizeButtonStates(states: IGState[], remoteId: string, outputDirPath? :string): IState[] {
 				var normalizedStates: IState[] = [];
 
 				states.forEach((state: IGState) => {
@@ -1098,7 +1224,7 @@ module Garage {
 					};
 
 					if (state.image) {
-						normalizedState.image = this._normalizeImages(state.image, remoteId);
+                        normalizedState.image = this._normalizeImages(state.image, remoteId, outputDirPath);
 					}
 					if (state.label) {
 						normalizedState.label = this._normalizeLabels(state.label);
@@ -1124,14 +1250,14 @@ module Garage {
 
 				actions.forEach((action: IAction) => {
 					let normalizedAction: IAction = {
-						input: action.input
+                        input: (action.input) ? action.input : "none"
 					};
 					if (action.code) {
 						normalizedAction.code = action.code;
 					}
 					if (action.code_db) {
 						normalizedAction.code_db = {
-							function: action.code_db.function,
+                            function: (action.code_db.function) ? action.code_db.function : "none",
 							brand: action.code_db.brand,
 							device_type: action.code_db.device_type,
 							db_codeset: action.code_db.db_codeset
@@ -1142,7 +1268,21 @@ module Garage {
 						if (!_.isUndefined(action.code_db.model_number)) {
 							normalizedAction.code_db.model_number = action.code_db.model_number;
 						}
+                        if (!_.isUndefined(action.bluetooth_data)) {
+                            normalizedAction.bluetooth_data = action.bluetooth_data;
 					}
+                    } else {
+                        normalizedAction.code_db = {
+                            function: "none",
+                            brand: " ",
+                            device_type: " ",
+                            db_codeset: " "
+                        }
+                    }
+                    if (!_.isUndefined(action.interval)) {
+                        normalizedAction.interval = action.interval;
+                    }
+
 					normalizedActions.push(normalizedAction);
 				});
 
@@ -1202,8 +1342,9 @@ module Garage {
 			 * また、リモコン編集時に画像のリサイズが発生している場合は、
 			 * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
 			 * リサイズ処理自体はここでは行わない。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
 			 */
-			private _normalizeImages(images: IGImage[], remoteId: string): IImage[] {
+			private _normalizeImages(images: IGImage[], remoteId: string, outputDirPath? :string ): IImage[] {
 				var normalizedImages: IImage[] = [];
 
 				images.forEach((image) => {
@@ -1225,7 +1366,9 @@ module Garage {
 
 					// 編集画面でサイズ変更が行われていたら、リサイズ用に path を変更しておく。
 					// リサイズ処理はここでは行わない。
-					if (image.resized) {
+                    // outputDirPathがある場合は必ずする。
+                    if (image.resized || outputDirPath != null) {
+
 						// リサイズ後のファイル名を作る。
 						// "image.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
 						// 例) "image_w200_h150_stretch.png"
@@ -1233,27 +1376,37 @@ module Garage {
 						let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
 						if (!resolvedOriginalPath) {
 							resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                            garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
 						}
 						let parsedPath = path.parse(resolvedOriginalPath);
-						let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+                        let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
 						// ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
 
 						let newFileFullPath: string;
+
+                        let newDirPath = parsedPath.dir;
+                        if (outputDirPath != null) {
+                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");;
+                        }
+
 						// original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
-						if (originalPath.indexOf("/") === -1) {
-							newFileFullPath = path.join(parsedPath.dir, remoteId, newFileName).replace(/\\/g, "/");
+                        // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
+                        if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
+                            newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
 						} else {
-							newFileFullPath = path.join(parsedPath.dir, newFileName).replace(/\\/g, "/");
+                            newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
 						}
 						// editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
 						// 補正は拡張子の付け替え。
 						newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
 
+                        
+
 						normalizedImage = {
 							area: image.area,
 							path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
 						};
-
+                        
 						// リサイズ待機リストに追加
 						this.watingResizeImages_.push({
 							src: garageExtensions.resolvedOriginalPath,
@@ -1287,6 +1440,12 @@ module Garage {
 				if (!_.isArray(this.remoteInfos_)) {
 					return null;
 				}
+
+				// Commonの場合はMasterFaceがないので、faceを返す。
+				if (remoteId == "common") {
+					return this.commonRemoteInfo_.face;
+				}
+
 
 				// 指定した remoteId の情報を取得する
 				var targetRemoteInfos = this.remoteInfos_.filter((remoteInfo) => {
@@ -1423,7 +1582,7 @@ module Garage {
 			/**
 			 * 指定したパスの face を parse する
 			 */
-			private _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+			_parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
 				// face ファイルを読み込む
 				if (!fs.existsSync(facePath)) {
 					//console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
@@ -1722,6 +1881,8 @@ module Garage {
 			 * リサイズ待機リストの画像をリサイズする。
 			 */
 			private _resizeImages(): IPromise<void> {
+                let FUNCTION_NAME = TAGS.HuisFiles + "_resizeImages : ";
+
 				let df = $.Deferred<void>();
 				let promise = CDP.makePromise(df);
 
@@ -1730,6 +1891,7 @@ module Garage {
 				let proc = () => {
 					let resizeImage: IWaitingRisizeImage;
 					if (resizeImages.length <= 0) {
+                        this.watingResizeImages_ = [];
 						df.resolve();
 					} else {
 						resizeImage = resizeImages.shift();
@@ -1739,6 +1901,10 @@ module Garage {
 						}, resizeImage.dst)
 							.always(() => {
 								setTimeout(proc);
+                            }).fail(() => {
+                                console.error(FUNCTION_NAME + "editImage is fail");
+                                this.watingResizeImages_ = [];
+                                df.reject();
 							});
 					}
 				};

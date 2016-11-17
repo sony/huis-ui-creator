@@ -52,6 +52,16 @@
 				}
 			}
 
+            function getRegExpResolved(inputString: string): string {
+                inputString = inputString.replace(/\$/g, '\\$');
+                inputString = inputString.replace(/\./g, '\\.');
+                inputString = inputString.replace(/\(/g, '\\(');
+                inputString = inputString.replace(/\)/g, '\\)');
+                inputString = inputString.replace(/\^/g, '\\^');
+
+                return inputString;
+            }
+
 			function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
 				let df = $.Deferred<string[]>();
 				let promise = CDP.makePromise(df);
@@ -64,7 +74,10 @@
 				let proc = () => {
 					if (dirs.length <= 0) {
 						// 相対パス化
-						let re = new RegExp(dirPath + "/*");
+                        // 正規表現の特殊文字をエスケープ
+                        let dirPathForRegExp = getRegExpResolved(dirPath);
+
+                        let re = new RegExp(dirPathForRegExp + "/*");
 						pathes.forEach((p: string, i: number, pathes: string[]) => {
 							pathes[i] = p.replace(re, "");
 						});
@@ -94,6 +107,8 @@
 			}
 
 			function diff(dir1: string, dir2: string): IDiffInfo {
+                let FUNCTION_NAME = TAG + "diff : ";
+
 				var dir1Files, dir2Files;
 				try {
 					dir1Files = getRelPathes(dir1);	 //	相対パス
@@ -120,8 +135,10 @@
 					}
 					// 名称は同じだが異なるファイル群を算出
 					for (var i = 0; i < temp.length; i++) {
+
 						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
 						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                      
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
@@ -133,11 +150,14 @@
 					}
 					return { diff: diffFiles, dir1Extra: dir1ExtraFiles, dir2Extra: dir2ExtraFiles };
 				} catch (err) {
+                    console.error(FUNCTION_NAME + err);
 					throw err;
 				}
 			}
 
 			function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+                let FUNCTION_NAME = TAG + "diffAsync : ";
+
 				let df = $.Deferred<IDiffInfo>();
 				let promise = CDP.makePromise(df);
 
@@ -146,6 +166,8 @@
 				getRelPathesAsync(dir1).then((pathes) => {
 					dir1Files = pathes;
 					return getRelPathesAsync(dir2);
+                }, () => {
+                    df.reject();
 				}).then((pathes) => {
 					dir2Files = pathes;
 
@@ -171,16 +193,22 @@
 
 					// 名称は同じだが異なるファイル群を算出
 					for (let i = 0, l = temp.length; i < l; i++) {
+                        try {
 						var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
 						var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
+                        } catch (err) {
+                            console.error(FUNCTION_NAME + err);
+                            df.reject();
+                        }
+
 						if (!dir1Stat && !dir2Stat) {
 							continue; // TODO エラー処理が必要
 						}
-						// ファイル更新日時が±10秒までは同じファイルとして扱う
-						// 以下の点に注意
-						// 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
-						// 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
-						if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10*1000 ) ||
+                        // ファイル更新日時が±10秒までは同じファイルとして扱う
+                        // 以下の点に注意
+                        // 1. 10秒という値は例えば書き込むべきファイル数が膨大だった場合にも有効か
+                        // 2. mtime.getTime()の値はWindowsの場合エポック日時からのミリ秒だが他のOSの場合も同じとは限らない
+                        if ((dir1Stat.size === dir2Stat.size && Math.abs(dir1Stat.mtime.getTime() - dir2Stat.mtime.getTime()) < 10 * 1000) ||
 							(dir1Stat.isDirectory() && dir2Stat.isDirectory())) {
 							continue;
 						}
@@ -192,6 +220,8 @@
 						dir2Extra: dir2ExtraFiles
 					};
 					df.resolve(diffInfo);
+                }, () => {
+                    df.reject();
 				});
 
 				return promise;
@@ -252,6 +282,7 @@
                         }
                     }
 
+
 					setTimeout(() => {
 						this._syncHuisFiles(srcRootDir, destRootDir, (err) => {
 							if (err) {
@@ -300,7 +331,62 @@
 					return { cancel: this._cancel };
 				}
 
-          
+                // 対象のフォルダを中身ごと削除する
+                // @param targetDirectoryPath{string} 削除するフォルダ
+                // @param callback{(err: Error)=>void} 削除後に実行するコールバック
+                public deleteDirectory(targetDirectoryPath: string, callback?: (err: Error) => void) {
+                    let emptyDirectory = path.join(GARAGE_FILES_ROOT, "empty").replace(/\\/g, "/");
+                    if (!fs.existsSync(emptyDirectory)) {// 存在しない場合フォルダを作成。
+                        fs.mkdirSync(emptyDirectory);
+                    }
+
+                    let srcRootDir = emptyDirectory;
+                    let destRootDir = targetDirectoryPath;
+
+                    this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
+                        .then((diffInfo: IDiffInfo) => {
+                            // TODO: ディスクの容量チェック
+
+                            var df = $.Deferred();
+                            // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                            var copyTargetFiles = diffInfo.diff;
+                            copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                            this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
+                                .then(() => {
+                                    df.resolve(diffInfo.dir2Extra);
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+                            return CDP.makePromise(df);
+                        }).then((removeTargetFiles: string[]) => {
+                            var df = $.Deferred();
+                            // destRootDirの余分なファイルやディレクトリを削除
+                            this._removeFiles(destRootDir, removeTargetFiles)
+                                .then(() => {
+                                    df.resolve();
+                                    fs.rmdir(emptyDirectory);
+                                    fs.rmdirSync(targetDirectoryPath);
+
+                                    if (callback) {
+                                        callback(null);
+                                    }
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+
+                            return CDP.makePromise(df);
+                        }).then(() => {
+                            if (callback) {
+                                callback(null);	// 成功
+                            }
+                        }).fail((err) => {
+                            callback(err);
+                        });
+
+              
+                }
 
 
 				// destRootDirの中身を、srcRootDirの中身と同期させる関数
@@ -341,6 +427,46 @@
 					});
 				}
 
+                /*
+                * srcRootDirのファイルを dstRootDirにコピーする。
+                * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
+                */
+                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                    this._isCanceled = false;
+                    var errorValue: Error = null; 
+
+                    setTimeout(() => {
+                        this._compDirs(srcRootDir, dstRootDir)  // Directory間の差分を取得
+                            .then((diffInfo: IDiffInfo) => {
+                                // TODO: ディスクの容量チェック
+
+                                var df = $.Deferred();
+                                // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                                var copyTargetFiles = diffInfo.diff;
+                                copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                                this._copyFiles(srcRootDir, dstRootDir, copyTargetFiles)
+                                    .then(() => {
+                                        df.resolve(diffInfo.dir2Extra);
+                                    })
+                                    .fail((err) => {
+                                        df.reject(err);
+                                    });
+                                return CDP.makePromise(df);
+                            }).then(() => {
+                                if (callback) {
+                                    callback(null);	// 成功
+                                }
+                            }).fail((err) => {
+                                if (callback) {
+                                    callback(err);	// 成功
+                                }
+                            });
+                    }, 100);
+
+                    return { cancel: this._cancel };
+                }
+
+
 				private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
 					let df = $.Deferred<Error>();
 					let promise = CDP.makePromise(df);
@@ -355,9 +481,11 @@
 							file = files.shift();
 							try {
 								this._checkCancel();
-								let option: CopyOptions = {
-									preserveTimestamps: true
-								}
+                                let option: CopyOptions = {
+                                    preserveTimestamps: true,
+                                    // ボタンデバイス情報のキャッシュファイルは本体に送らない
+                                    filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
+                                }
 								fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
 								setTimeout(proc);
 							} catch (err) {
@@ -377,7 +505,7 @@
 					let df = $.Deferred<Error>();
 					let promise = CDP.makePromise(df);
 
-					let files = targetFiles.slice();
+					let files = this._filterDeviceInfoCache(dstRootDir, targetFiles.slice());
 
 					let proc = () => {
 						let file: string;
@@ -392,11 +520,11 @@
 									let fileStat = fs.lstatSync(filePath);
 									if (fileStat) {
 										if (fileStat.isDirectory()) {
+                                            console.log("rmdirSync: " + file);
 											fs.rmdirSync(filePath);
-											console.log("rmdirSync: " + file);
 										} else {
+                                            console.log("unlinkSync: " + file);
 											fs.unlinkSync(filePath);
-											console.log("unlinkSync: " + file);
 										}
 									} else {
 										console.warn("fileStat is null: " + filePath);
@@ -430,6 +558,8 @@
 						setTimeout(() => {
 							diffAsync(dir1, dir2).then((diffInfo) => {
 								df.resolve(diffInfo);
+                            }, () => {
+                                df.reject();
 							});
 						});
 					} catch (err) {
@@ -438,6 +568,64 @@
 					return CDP.makePromise(df);
 				}
 
+                /**
+                 * 削除対象のファイルリストから残すべきキャッシュファイルのパスを除外したリストを返す
+                 * @param dstRootDir {string} 
+                 * @param files {string[]} 削除対象ファイルリスト
+                 * @return 
+                 */
+                private _filterDeviceInfoCache(dstRootDir: string, files: string[]): string[] {
+                    // キャッシュファイルのリスト
+                    let cacheList = files.filter((file) => {
+                        return (file.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) != -1)
+                    });
+
+                    if (cacheList.length <= 0) {
+                        console.log("cache file not found");
+                        return files;
+			}
+                    console.log("↓↓↓↓ cache list ↓↓↓↓");
+                    cacheList.forEach((val) => { console.log(val); });
+                    console.log("↑↑↑↑ cache list ↑↑↑↑");
+
+                    // 削除対象外とするキャッシュのリスト
+                    let cacheListToBeLeft = cacheList.filter((cache) => {
+                        let cachePath = getAbsPath(dstRootDir, cache);
+
+                        // キャッシュの上位フォルダが存在する場合は削除対象
+                        return !files.some((file) => {
+                            let path = getAbsPath(dstRootDir, file);
+                            if (fs.existsSync(path)) {
+                                let fileStat = fs.lstatSync(path);
+                                if (fileStat &&
+                                    fileStat.isDirectory() &&
+                                    cachePath.indexOf(path) != -1) {
+                                    // キャッシュの上位フォルダの場合はtrue
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        });
+                    });
+
+                    if (cacheListToBeLeft.length <= 0) {
+                        console.log("↓↓↓↓ left cache not found ↓↓↓↓");
+                        files.forEach((val) => { console.log(val); });
+                        console.log("↑↑↑↑ left cache not found ↑↑↑↑");
+                        return files;
+                    }
+                    console.log("↓↓↓↓ cache to be left list ↓↓↓↓");
+                    cacheListToBeLeft.forEach((val) => { console.log(val); });
+                    console.log("↑↑↑↑ cache to be left list ↑↑↑↑");
+
+                    // 削除対象リストから削除対象外キャッシュを除外
+                    return files.filter((file) => {
+                        return !cacheListToBeLeft.some((leftCache) => {
+                            return (leftCache == file);
+                        });
+                    });
+                }
 			}
 
 			/**

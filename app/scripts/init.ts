@@ -39,10 +39,16 @@ module Garage {
 			APP_VERSION = fs.readFileSync('version.txt', 'utf8');
 		} catch (err) {
 			console.error(err);
-		}
+        }
 
-		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.663;
-		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.7;
+        DURATION_DIALOG_CLOSE = 3000;
+
+		RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.758;
+		RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.758;
+		MIN_TEXT_SIZE = 12;
+		GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC = 0.001;
+		GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC = 0.001;
+
 		HUIS_FACE_PAGE_WIDTH = 480;
 		HUIS_FACE_PAGE_HEIGHT = 812;
 		MAX_HUIS_FILES = 30;
@@ -65,10 +71,12 @@ module Garage {
 		DEVICE_TYPE_AIR_CLEANER = "Air cleaner";
 		DEVICE_TYPE_CUSOM = "Custom";
 		DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
-		DEVICE_TYPE_BT = "Bluetooth";
+        DEVICE_TYPE_BT = "Bluetooth";
+        DEVICE_TYPE_SPECIAL = "special";
 
-		NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_BT];
-
+        NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM];
+        NON_SUPPORT_FACE_CATEGORY = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL, DEVICE_TYPE_BT, DEVICE_TYPE_AC];
+        NON_SUPPORT_DEVICE_TYPE_IN_MACRO = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL,DEVICE_TYPE_AC]
 
 		GRID_AREA_WIDTH = 464;
 		GRID_AREA_HEIGHT = 812;
@@ -80,9 +88,68 @@ module Garage {
 		WINDOW_MIN_HEIGHT = 1280;
 
 		MARGIN_MOUSEMOVALBE_TOP = 100;
-		MARGIN_MOUSEMOVABLE_LEFT = 200;
-		MARGIN_MOUSEMOVABLE_RIGHT = 200;
-		MARGIN_MOUSEMOVALBE_BOTTOM = 80;
+		MARGIN_MOUSEMOVABLE_LEFT = 50;
+		MARGIN_MOUSEMOVABLE_RIGHT = 50;
+		MARGIN_MOUSEMOVALBE_BOTTOM = 50;
+
+        TARGET_ALL_STATE = 999;
+
+        DOUBLE_CLICK_TIME_MS = 500;
+
+        MAX_NUM_MACRO_SIGNAL = 63;
+        DEFAULT_INTERVAL_MACRO = 400;
+
+        ACTION_INPUT_TAP_KEY = "STR_ACTION_INPUT_TAP";
+        ACTION_INPUT_LONG_PRESS_KEY = "STR_ACTION_INPUT_LONG_PRESS";
+        ACTION_INPUT_LONG_PRESS_KEY_SINGLE = "STR_ACTION_INPUT_LONG_PRESS_SINGLE";
+        ACTION_INPUT_FLICK_UP_KEY = "STR_ACTION_INPUT_FLICK_UP";
+        ACTION_INPUT_FLICK_RIGHT_KEY = "STR_ACTION_INPUT_FLICK_RIGHT";
+        ACTION_INPUT_FLICK_LEFT_KEY = "STR_ACTION_INPUT_FLICK_LEFT";
+        ACTION_INPUT_FLICK_DOWN_KEY = "STR_ACTION_INPUT_FLICK_DOWN";
+
+
+        ACTION_INPUT_TAP_VALUE = "touch";
+        ACTION_INPUT_LONG_PRESS_VALUE = "long_press";
+        ACTION_INPUT_FLICK_UP_VALUE =  "flick_up";
+        ACTION_INPUT_FLICK_RIGHT_VALUE = "flick_right";
+        ACTION_INPUT_FLICK_LEFT_VALUE = "flick_left";
+        ACTION_INPUT_FLICK_DOWN_VALUE = "flick_down";
+        ACTION_INPUT_SWIPE_UP_VALUE = "swipe_up";
+        ACTION_INPUT_SWIPE_RIGHT_VALUE = "swipe_right";
+        ACTION_INPUT_SWIPE_LEFT_VALUE = "swipe_left";
+        ACTION_INPUT_SWIPE_DOWN_VALUE = "swipe_down";
+
+        ACTION_INPUTS = [];
+        ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value : ACTION_INPUT_TAP_VALUE});
+        ACTION_INPUTS.push({ key: ACTION_INPUT_LONG_PRESS_KEY, value: ACTION_INPUT_LONG_PRESS_VALUE });
+        ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
+        ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
+        ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
+        ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
+
+        //マクロのときに選べるアクション
+        ACTION_INPUTS_MACRO = [];
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_LONG_PRESS_KEY_SINGLE, value: ACTION_INPUT_LONG_PRESS_VALUE });
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
+        ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
+
+        DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
+        DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER = 500;
+        DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
+        DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
+
+        //接続しているHUISリモコンのバージョンを取得
+        //初期値。splashスクリーンで値をいれる。
+        RC_VERSION = null;
+
+        HUIS_RC_VERSION_REQUIRED = "3.1.2";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.0.0";//sqa用に実際にチェックする値とは別に値を用意。
+        //インポート・エクスポート用の拡張子
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
 		// Garage のファイルのルートパス設定 (%APPDATA%\Garage)
 		GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -91,8 +158,10 @@ module Garage {
 		if (!fs.existsSync(HUIS_FILES_ROOT)) {
 			fs.mkdirSync(HUIS_FILES_ROOT);
 		}
+        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
 		// HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-		HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, "remoteimages").replace(/\\/g, "/");
+        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 		MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 
 		REMOTE_BACKGROUND_WIDTH = 540;
@@ -127,7 +196,7 @@ module Garage {
 			imageType: "image/png"
         };
 
-        HELP_SITE_URL = "http://huis.jp/extended-feature.html";
+        HELP_SITE_URL = "http://huis.jp/remote-controller/ui-creator/";
 
         //if (fs.existsSync("debug")) {
         //    DEBUG_MODE = true;
@@ -158,7 +227,8 @@ module Garage {
 			"garage.util.huisdev",
 			"garage.util.miscutil",
 			"garage.util.garagefiles",
-			"garage.util.jqutils"],
+            "garage.util.jqutils",
+            "garage.util.zipmanager"],
 			() => {
 				try {
 					electronDialog = new Util.ElectronDialog();
@@ -199,6 +269,7 @@ module Garage {
 		HUIS_ROOT_PATH = null;
 		while (!HUIS_ROOT_PATH) {
 			HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+
             if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
                 let dirs = null;
                 while (dirs == null) {
@@ -221,10 +292,14 @@ module Garage {
                     }
                 }
                 isHUISConnected = true; // HUISが接続されている
+
+                //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
+                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+
                 callback(); // 次の処理へ
 
 			} else {
-				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す               
+				// HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
 				let response = electronDialog.showMessageBox(
 					{
 						type: "error",

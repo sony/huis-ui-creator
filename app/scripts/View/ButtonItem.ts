@@ -4,7 +4,8 @@
 
 module Garage {
 	export module View {
-		import Tools = CDP.Tools;
+        import Tools = CDP.Tools;
+        import JQUtils = Util.JQueryUtils;
 		var TAG = "[Garage.View.ButtonItem] ";
 
 		export class ButtonItem extends Backbone.View<Model.ButtonItem> {
@@ -89,23 +90,29 @@ module Garage {
                     let filtered_state = null;
                     let filtered_action = null;
                     if (_.isArray(model.state)) {
-
-						filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
-							filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
-                                return (a.code == null && a.code_db.brand === " " && a.code_db.db_codeset === " " && a.code_db.function !== "none");
-							});
-							return (filtered_action.length > 0);
+                        // 全actionが無効なstate
+                        filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+                            // 無効なaction
+                            filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
+                                //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
+                                return (a.code == null &&
+                                    (a.code_db == null || a.code_db.brand === " " && a.code_db.db_codeset === " " && a.code_db.function !== "none") &&
+                                    a.bluetooth_data == null);
+                            });
+							return (filtered_action.length >= s.action.length);
                         });
-                        if (filtered_state.length > 0) {
+
+                        //filterされた数と、総数が一致 : 有効なstateが一つもない場合 このボタンは無効とする。
+                        if (model.state.length == filtered_state.length) {
                             return this;
                         }
                     }
 
-					//表示用のmodelはラベルの大きさを実際より小さくする。減衰率はRATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON
+					//表示用のmodelはラベルの大きさを実際より小さくする。
 					let modelForDisplay: Model.ButtonItem= jQuery.extend(true, {}, model);
 					for (let i = 0; i < modelForDisplay.state.length; i++){
 						for (let j = 0; j < modelForDisplay.state[i].label.length; j++){
-							modelForDisplay.state[i].label[j].size = Math.round(modelForDisplay.state[i].label[j].size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+                            modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size);
 						}
 					}
 					this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
@@ -133,11 +140,11 @@ module Garage {
 			 */
 			private _renderNewModel(model: Model.ButtonItem) {
 				this._modifyModel(model);
-				//表示用のmodelはラベルの大きさを実際より小さくする。減衰率はRATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON
+				//表示用のmodelはラベルの大きさを実際より小さくする。
 				let modelForDisplay: Model.ButtonItem = jQuery.extend(true, {}, model);
 				for (let i = 0; i < modelForDisplay.state.length; i++) {
 					for (let j = 0; j < modelForDisplay.state[i].label.length; j++) {
-						modelForDisplay.state[i].label[j].size = Math.round(modelForDisplay.state[i].label[j].size * RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON);
+                        modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size); 
 					}
 				}
 				this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));

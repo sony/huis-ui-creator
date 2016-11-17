@@ -2,6 +2,7 @@
 /// <reference path="../../modules/include/node.d.ts" />
 /// <reference path="../../modules/include/fs-extra.d.ts" />
 /// <reference path="../../modules/include/pixi.d.ts" />
+/// <reference path="../../modules/include/zip.js.d.ts" />
 
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
@@ -9,7 +10,12 @@
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
+/// <reference path="../Util/ButtonDeviceInfoCache.ts" />
+/// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
+/// <reference path="../Model/VersionString.ts" />
+/// <reference path="../Util/ExportManager.ts" />
+/// <reference path="../Util/ImportManager.ts" />
 
 /**
  * @interface IArea
@@ -74,7 +80,16 @@ interface IAction {
 	 * データベースから引くためのIR信号
 	 */
     code_db?: ICodeDB;
+	interval?: number; // マクロ時の送信間隔。
 	[x: string]: any;
+    /**
+     * Bluetooth通信用の情報
+     */
+    bluetooth_data?: IBluetoothData;
+    /**
+	 * ボタンがひも付けられている機器の情報
+	 */
+    deviceInfo?: IButtonDeviceInfo;
 }
 
 /**
@@ -109,6 +124,46 @@ interface ICodeDB {
 }
 
 /**
+ * @interface IBluetoothData
+ */
+interface IBluetoothData {
+    /**
+     * 通信相手のBluetooth機器の情報
+     */
+    bluetooth_device: IBluetoothDevice;
+    /**
+     * 通信するデータの内容（生データではなくfunction）
+     */
+    bluetooth_data_content: string;
+}
+
+/**
+ * @interface IBluetoothDevice
+ */
+interface IBluetoothDevice {
+    /**
+     * 管理されているBluetoothペアリング機器リストのID
+     */
+    bluetooth_device_id: number;
+    /**
+     * Bluetoothデバイスのアドレス
+     */
+    bluetooth_address: string;
+    /**
+     * Bluetoothプロトコルの種類
+     */
+    bluetooth_device_type: string;
+    /**
+     * Bluetoothの機器の種類
+     */
+    bluetooth_device_product_type: string;
+    /**
+     * Bluetoothデバイスの名前
+     */
+    bluetooth_device_name: string;
+}
+
+/**
  * @interface IStateTranslate
  * @brief HUIS の module ファイルにおける button.state.translate にあたる
  */
@@ -122,6 +177,7 @@ interface IStateTranslate {
 	 */
     next: number;
 }
+
 
 /**
  * @interface IGState
@@ -183,10 +239,6 @@ interface IGButton {
 	 * 現在の state.id
 	 */
 	currentStateId: number;
-	/**
-	 * ボタンがひも付けられている機器の情報
-	 */
-	deviceInfo?: IButtonDeviceInfo;
 	[x: string]: any;
 }
 
@@ -218,8 +270,11 @@ interface IButton {
  * @brief ボタンがひも付けられている機器の情報と使用できる機能
  */
 interface IButtonDeviceInfo {
+    id: string; // ボタン識別子
+	remoteName?: string;  // もともとのボタンのリモコン名
 	functions: string[]; // ボタンがひも付けられている機器で使用できる機能
 	code_db: ICodeDB; // ボタンがひも付けられている機器の情報
+    bluetooth_data?: IBluetoothData; // Bluetooth通信用の情報
 	functionCodeHash?: IStringStringHash; //ファンクション名とコードとの対応表
 }
 
@@ -229,6 +284,15 @@ interface IButtonDeviceInfo {
  */
 interface IStringStringHash {
 	[key: string]: string;
+}
+
+/**
+* @interface
+* @brief ハッシュを疑似的に実現する
+*/
+interface IStringKeyValue {
+    key: string;
+    value: string;
 }
 
 /**
@@ -320,6 +384,7 @@ interface IGImage {
 	area?: IArea;
     path: string;
 	resolvedPath?: string; //<!image.path を絶対パスに変換したもの
+    resolvedPathCSS?: string;//CSSで表示できる状態のパス
 	garageExtensions?: IGGarageImageExtensions;
 	areaRatio?: IGAreaRatio;
 	pageBackground?: boolean;
@@ -327,6 +392,7 @@ interface IGImage {
 	resizeMode?: string;
 	resizeOriginal?: string;
 	resizeResolvedOriginalPath?: string;
+    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
 	[x: string]: any;
 }
 
@@ -449,6 +515,15 @@ interface DialogProps {
 	id: string; //<! 表示するダイアログ DOM の id
 	options: CDP.UI.DialogOptions;
 }
+/*
+* @inteface IRemoteInfo
+* brief HuisFilesでおもに利用するリモコンの基礎情報
+*/
+interface IRemoteInfo {
+    remoteId: string;
+    face: IGFace;
+    mastarFace?: IGFace;
+}
 
 //declare const enum EFaceCategory {
 //	TV,
@@ -470,7 +545,15 @@ declare module Garage {
 	/*
 	* HUIS UI CREATOR のバージョン
 	*/
-	var APP_VERSION:string;
+    var APP_VERSION: string;
+   /*
+	* 接続しているHUIS REMOTE CONTROLLER のバージョン
+	*/
+    var RC_VERSION: string;
+    /*
+     * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
+     */
+    var RC_VERSION_FILE_NAME: string;
 	/**
 	 * Util.ElectronDialog のインスタンス
 	 */
@@ -484,66 +567,6 @@ declare module Garage {
 	 */
 	var garageFiles: Util.GarageFiles;
 
-	/**
-	 * face のページの横サイズ
-	 */
-	var HUIS_FACE_PAGE_WIDTH: number;
-	/**
-	 * face のページの縦サイズ
-	 */
-	var HUIS_FACE_PAGE_HEIGHT: number;
-	/**
-	 * HUIS が扱える face の最大数
-	 */
-	var MAX_HUIS_FILES: number;
-	/**
-	 * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
-	 */
-	var GARAGE_FILES_ROOT: string;
-	/**
-	 * ローカル上の HUIS ファイルの置き場所: (GARAGE_FILES_ROOT/HuisFiles)
-	 */
-	var HUIS_FILES_ROOT: string;
-	/**
-	 * ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
-	 */
-	var HUIS_REMOTEIMAGES_ROOT: string;
-	/**
-	 * HUIS の VID
-	 */
-	var HUIS_VID: number;
-	/**
-	 * HUIS の PID
-	 */
-	var HUIS_PID: number;
-	/**
-	 * HUIS のデバイスのルートパス
-	 */
-    var HUIS_ROOT_PATH: string;
-    /**
-	 * PC から HUIS への同期時のダイアログのパラメーター完了時のダイアログつき
-	 */
-    var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS_WITH_DONE: DialogProps;
-    /**
-     * 新規リモコンが追加されたときのダイアログパラメーター
-    */
-    var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
-    /**
-     * リモコンを削除した際のダイアログパラメーター
-    */
-    var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
-	/**
-	 * HUIS から PC への同期時のダイアログのパラメーター
-	 */
-	var DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC: DialogProps;
-	/**
-	 * PC から HUIS への同期時のダイアログのパラメーター
-	 */
-	var DIALOG_PROPS_SYNC_FROM_PC_TO_HUIS: DialogProps;
-	/**
-	 * HUIS と PC の差分チェック中のダイアログのパラメーター
-	 */
-	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
 	/**
 	 * Util.MiscUtilのインスタンス
 	 */
@@ -572,7 +595,11 @@ declare module Garage {
 	/**
 	 * ローカル上の HUIS ファイルディレクトリー内にある remoteimages のパス
 	 */
-	var HUIS_REMOTEIMAGES_ROOT: string;
+    var HUIS_REMOTEIMAGES_ROOT: string;
+    /**
+	 * ローカル上の HUIS ファイルディレクトリー内にある画像用ディレクトリ名
+	 */
+    var REMOTE_IMAGES_DIRRECOTORY_NAME: string;
 	/**
 	 * HUIS の VID
 	 */
@@ -608,7 +635,11 @@ declare module Garage {
 	/**
 	 * HUIS と PC の差分チェック中のダイアログのパラメーター
 	 */
-	var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    var DIALOG_PROPS_CHECK_DIFF: DialogProps;
+    /**
+     * 処理が完了してから、ダイアログが消えるまでの時間
+     */
+    var DURATION_DIALOG_CLOSE : number;
 	/**
 	 * ページの背景の領域
 	 */
@@ -646,9 +677,17 @@ declare module Garage {
 	* Garageで表示するテキストの表示上の減衰率
 	* Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
 	* RATIO_TEXT_SIZE_HUIS_GARAGE = HUISで表示するのと同じにみえる text_size / 実際のtext size(ex 23px / 30px
+	*
+	* 一定の値では、HUISと同じ見え方にはならないので、関数で、補正する。
+	* そのための定数として、ここに定義する。
+	*  MIN_TEXT_SIZE:テキストの最小サイズ
+	*  GAIN_TEXT_SIZE_OFFSET_FUNC :関数の減少ゲイン
 	*/
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON: number;
 	var RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL: number;
+	var MIN_TEXT_SIZE: number;
+	var GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC: number;
+	var GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC: number;
 
 	/**
 	* HUISで利用されているデバイスタイプ
@@ -665,13 +704,22 @@ declare module Garage {
 	var DEVICE_TYPE_AIR_CLEANER: string;
 	var DEVICE_TYPE_CUSOM: string;
 	var DEVICE_TYPE_FULL_CUSTOM: string;
-	var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_BT: string;
+    var DEVICE_TYPE_SPECIAL: string;
 
 	/**
-	* PalletAreaで表示されないデバイスタイプ
+	* DetailAreaの機能に表示されないデバイスタイプ
 	*/
-	var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
+    var NON_SUPPORT_DEVICE_TYPE_IN_EDIT: string[];
 
+    /**
+     * PalletAreaで表示されないデバイスタイプ
+     */
+    var NON_SUPPORT_FACE_CATEGORY: string[];
+    /*
+    * Macroで利用できあいデバイスタイプ
+    */
+    var NON_SUPPORT_DEVICE_TYPE_IN_MACRO: string[];
 	/*
 	* CanvasAreaのグリッドサイズ
 	*/
@@ -703,8 +751,77 @@ declare module Garage {
 	var MARGIN_MOUSEMOVABLE_LEFT: number;
 	var MARGIN_MOUSEMOVABLE_RIGHT: number;
 	var MARGIN_MOUSEMOVALBE_BOTTOM: number;
-	
+	/*
+	 * ステートの内容を変更する際の特殊 ID
+	 */
+    var TARGET_ALL_STATE: number;
+    /*
+     * ダブルクリックの待ち受け時間
+     */
+    var DOUBLE_CLICK_TIME_MS: number;
+    /*
+     * マクロに登録できる信号の最大数
+     */
+    var MAX_NUM_MACRO_SIGNAL : number;
+    /*
+     * マクロを設定する際のデフォルトInverval秒数[ms]
+     */
+    var DEFAULT_INTERVAL_MACRO: number;
+    /*
+     * 設定できるアクションリスト
+     */
+    var ACTION_INPUTS: IStringKeyValue[];
+    var ACTION_INPUTS_MACRO: IStringKeyValue[]; //macro用
+    var ACTION_INPUT_TAP_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY: string;
+    var ACTION_INPUT_LONG_PRESS_KEY_SINGLE: string;
+    var ACTION_INPUT_FLICK_UP_KEY: string;
+    var ACTION_INPUT_FLICK_RIGHT_KEY: string;
+    var ACTION_INPUT_FLICK_LEFT_KEY: string;
+    var ACTION_INPUT_FLICK_DOWN_KEY: string;
+    var ACTION_INPUT_TAP_VALUE: string;
+    var ACTION_INPUT_LONG_PRESS_VALUE: string;
+    var ACTION_INPUT_FLICK_UP_VALUE: string;
+    var ACTION_INPUT_FLICK_RIGHT_VALUE: string;
+    var ACTION_INPUT_FLICK_LEFT_VALUE: string;
+    var ACTION_INPUT_FLICK_DOWN_VALUE: string;
+    var ACTION_INPUT_SWIPE_UP_VALUE: string;
+    var ACTION_INPUT_SWIPE_RIGHT_VALUE: string;
+    var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
+    var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
 
+    /*
+    * マクロボタンの順番交換アニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
+    /*
+    * 信号を削除する際のアニメの長さ[ms]
+    */
+    var DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER: number;
+    /*
+     * 信号を追加する際のアニメの長さ[ms]
+     */
+    var DURATION_ANIMATION_ADD_SIGNAL_CONTAINER: number;
+    /*
+    * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
+    */
+    var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
+    /*
+    * インポートエクスポートがつかえるようになるHUIS本体のバージョン
+    */
+    var HUIS_RC_VERSION_REQUIRED: string;
+    /*
+   * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
+   */
+    var HUIS_RC_VERSION_REQUIRED_FOR_DIALOG: string;
+    /*
+     * インポート・エクスポート する際に仕様する拡張子
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE : string;
+    /*
+     * インポート・エクスポート用拡張子の日本語の説明
+     */
+    var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
 }
 
 
