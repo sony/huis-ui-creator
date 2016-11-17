@@ -89,8 +89,10 @@ module Garage {
                 let self = this;
                 setTimeout(() => {
                     SelectRemotePageDialog.renderFaceList(self);
-                    self.selectDefaultFacePage(self);
                     SelectRemotePageDialog.removeSpinner();
+                    SelectRemotePageDialog.addMultiPagedFaceClass();
+                    self.selectDefaultFacePage(self);
+                    $('.face-container').scroll(SelectRemotePageDialog.onScrollFaceContainer);
                 }, 100);
             }
 
@@ -216,7 +218,7 @@ module Garage {
                 $items.each((index, item) => {
                     listWidth += $(item).outerWidth(true);
                 });
-                $faceList.width(listWidth * 0.8);
+                $faceList.width(listWidth);
             }
 
 
@@ -226,6 +228,37 @@ module Garage {
             private static removeSpinner() {
                 $('#spinner-container').remove();
             }
+
+
+            /**
+             * 複数ページを持つリモコンのDOMにクラスを設定し、グラデーション表示用DOMを追加する
+             */
+            private static addMultiPagedFaceClass() {
+                let $faces = $('.face-container');
+                $faces.each((index, elem) => {
+                    let pages = $(elem).find('.face-page').length;
+                    if (pages > 1) {
+                        $(elem).addClass('multi-page');
+                        SelectRemotePageDialog.addGradationArea($(elem));
+                    }
+                });
+            }
+
+
+            /**
+             * グラデーション表示用DOMを追加する
+             *
+             * @param $faceContainer {JQuery} 追加対象のface-container
+             */
+            private static addGradationArea($faceContainer: JQuery) {
+                let $top = $('<div>').addClass('gradation-area').addClass('gradation-top');
+                let $bottom = $('<div>').addClass('gradation-area').addClass('gradation-bottom');
+
+                $faceContainer.after($bottom).after($top);
+
+                SelectRemotePageDialog.controlGradationAreaDisplay($faceContainer);
+            }
+
 
 
             /**
@@ -318,6 +351,31 @@ module Garage {
                 };
             }
 
+
+            /**
+             * face-containerスクロールイベント
+             *
+             * @param event {Event}
+             */
+            private static onScrollFaceContainer(event: Event) {
+                SelectRemotePageDialog.controlGradationAreaDisplay($(event.currentTarget));
+            }
+
+
+            /**
+             * 対象のスクロール位置を検査しグラデーションの表示/非表示を切り替える
+             *
+             * @param $faceContainer {JQuery} 検査対象のface-container
+             */
+            private static controlGradationAreaDisplay($faceContainer: JQuery) {
+                let scrollTop = $faceContainer.scrollTop();
+                let topArea = $faceContainer.siblings('.gradation-top');
+                let btmArea = $faceContainer.siblings('.gradation-bottom');
+
+                topArea.css('visibility', (scrollTop === 0) ? 'hidden' : 'visible');
+                btmArea.css('visibility', (scrollTop >= ($faceContainer[0].scrollHeight - $faceContainer[0].clientHeight)) ? 'hidden' : 'visible');
+
+            }
 
 
             /**

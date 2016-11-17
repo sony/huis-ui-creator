@@ -244,6 +244,33 @@ body{
                         overflow-y: overlay;
                     }
 
+                    .face-container.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
+
+                        
+                    }
+                    
+                    .gradation-area{
+                        position:absolute;
+                        //z-index:1;
+                            
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+                    }
+
+                    .gradation-top{
+                        visibility:hidden;
+                        top: $SIZE_DIALOG_GRADATION_TOP_TOP;
+                        background:$COLOR_PALLET_GRADATION_TOP;
+                    }
+
+                    .gradation-bottom{
+                        visibility:visible;
+                        top: $SIZE_DIALOG_GRADATION_BOTTOM_TOP;
+                        background:$COLOR_PALLET_GRADATION_BOTTOM;
+                    }
+
+
                     #face-pages-area {
                         width:inherit;
                         font-family: $FONT_FAMILY_NORMAL;
