@@ -168,7 +168,7 @@ body{
             height: $SIZE_DIALOG_SPINNER_HEIGHT;
             margin:0 auto;
             margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
-            background-image: $PATH_IMG_SPLASH_SPINNER;
+            background-image: $PATH_IMG_DIALOG_SPINNER;
             background-position:center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -200,7 +200,6 @@ body{
 
             #face-list {
                 position:relative;
-                //height: 400px; // tentative
                 overflow-y: hidden;
                 transform: scale(0.8);
                 transform-origin : left top;

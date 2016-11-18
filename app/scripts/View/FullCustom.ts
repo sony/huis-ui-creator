@@ -5302,6 +5302,10 @@ module Garage {
                 //テキストボタン、あるいは画像のどちらかを表示する。
                 this.toggleImagePreview(button.default);
 
+                //ボタンステートを入力
+                this.currentTargetButtonStates_ = button.state;
+
+                $detail.i18n();
             }
 
 

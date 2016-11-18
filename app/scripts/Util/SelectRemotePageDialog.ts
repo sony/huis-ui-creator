@@ -91,7 +91,7 @@ module Garage {
                     SelectRemotePageDialog.renderFaceList(self);
                     SelectRemotePageDialog.removeSpinner();
                     SelectRemotePageDialog.addMultiPagedFaceClass();
-                    self.selectDefaultFacePage(self);
+                    self.selectDefaultFacePage();
                     $('.face-container').scroll(SelectRemotePageDialog.onScrollFaceContainer);
                 }, 100);
             }
@@ -266,14 +266,87 @@ module Garage {
              *
              * @param dialog {SelectRemotePageDialog}
              */
-            private selectDefaultFacePage(dialog: SelectRemotePageDialog) {
-                if (!dialog.defaultJumpSettings) {
+            private selectDefaultFacePage() {
+                if (!this.defaultJumpSettings) {
                     return;
                 }
 
-                let $faceContainer = $('.face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
-                let $facePage = $faceContainer.find('.face-page[data-page-index="' + this.defaultJumpSettings.scene_no + '"]');
-                $facePage.addClass("selected");
+                let $face = $('.face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
+                let $page = $face.find('.face-page[data-page-index="' + this.defaultJumpSettings.scene_no + '"]');
+
+                if ($page.length != 1) {
+                    return;
+                }
+
+
+                $page.addClass("selected");
+
+                let $list = $('#face-list-container');
+                this.setScrollPosition($list, $face);
+            }
+
+
+
+            /**
+             * スクロール位置を選択されたリモコンページに合わせる
+             *
+             * @param $faceListContainer {JQuery} face-list-container
+             * @param $faceContainer {JQuery} 選択されたリモコンのface-container
+             */
+            private setScrollPosition($faceListContainer: JQuery, $faceContainer: JQuery) {
+                this.setVerticalScrollPosition($faceListContainer);
+                this.setHorizontalScrollPosition($faceContainer);
+            }
+
+
+            /**
+             * 横スクロール位置を選択されたリモコンページに合わせる
+             *
+             * @param $faceListContainer {JQuery} face-list-container
+             */
+            private setVerticalScrollPosition($faceListContainer: JQuery) {
+                if ($faceListContainer[0] == null ||
+                    $faceListContainer[0].scrollWidth <= $faceListContainer[0].clientWidth) {
+                    // スクロール不能
+                    return;
+                }
+
+                let $faces = $faceListContainer.find('.face');
+                let faceWidth = $faceListContainer[0].scrollWidth / $faces.length;
+
+                let faceIndex: number = 0;
+                $faces.each((index, elem) => {
+                    if (this.defaultJumpSettings.remote_id === $(elem).data('remoteid')) {
+                        faceIndex = index;
+                    }
+                });
+
+                let scrollLeft = faceWidth * faceIndex - $faceListContainer.innerWidth() / 2 + faceWidth / 2;
+                if (scrollLeft > 0) {
+                    $faceListContainer.scrollLeft(scrollLeft);
+                }
+            }
+
+
+            /**
+             * 縦スクロール位置を選択されたリモコンページに合わせる
+             *
+             * @param $faceContainer {JQuery} 選択されたリモコンのface-container
+             */
+            private setHorizontalScrollPosition($faceContainer: JQuery) {
+                if ($faceContainer[0] == null ||
+                    $faceContainer[0].scrollHeight <= $faceContainer[0].clientHeight) {
+                    // スクロール不能
+                    return;
+                }
+
+                let $pages = $faceContainer.find('.face-page');
+                let pageHeight = $faceContainer[0].scrollHeight / $pages.length;
+
+                let scrollTop = pageHeight * this.defaultJumpSettings.scene_no;
+                if (scrollTop > 0) {
+                    $faceContainer.scrollTop(scrollTop);
+                }
             }
 
 
@@ -302,6 +375,7 @@ module Garage {
                 $(event.currentTarget).addClass("selected");
                 SelectRemotePageDialog.enableSubmitButton();
             }
+
 
             /////////////////////
             private static insertCursorDomAtSelectedFacePage($facePage: JQuery) {
