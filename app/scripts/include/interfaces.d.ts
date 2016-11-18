@@ -16,6 +16,7 @@
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
+/// <reference path="../Util/InformationDialog.ts" />
 
 /**
  * @interface IArea

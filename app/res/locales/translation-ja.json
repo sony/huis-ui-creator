@@ -33,6 +33,8 @@
                 "url": "http://huis.jp/support/update/"
             }
         }
+    },"information": {
+        "STR_INFORMATION_TITLE":  "お知らせ"
     },"dialog": {
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
