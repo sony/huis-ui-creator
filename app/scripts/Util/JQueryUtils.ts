@@ -186,6 +186,47 @@ module Garage {
             }
 
 
+            /**
+             * margin-topのpx値をnumberとして取得
+             * px以外の単位には未対応
+             *
+             * @param $elem {JQuery} 検査対象エレメント
+             * @return {number} margin-topの値
+             */
+            static getMarginTopPx($elem: JQuery): number {
+                let marginTop = $elem.css('margin-top');
+                let pxIndex = marginTop.indexOf('px');
+
+                return (pxIndex < 0) ? Number(marginTop) : Number(marginTop.substring(0, pxIndex));
+
+            }
+
+
+            /**
+             * transform の scale値をnumberとして取得
+             * x-scaleのみを取得し、y-scaleとの検証は行わない
+             *
+             * @param $elem {JQuery} 検査対象エレメント
+             * @return {number} transform の scale値
+             */
+            static getScale($elem: JQuery): number {
+                let scaleText = $elem.css('transform');
+                let matrix = scaleText.match(/[^matrix\(].+[^\)]/);
+
+                if (matrix.length < 0) {
+                    return 1;
+                } else {
+                    let values = matrix[0].split(',');
+
+                    if (values.length < 6) {
+                        return 1;
+                    } else {
+                        return Number(values[0]);
+                    }
+                }
+
+            }
+
 
         }
     }

@@ -168,7 +168,7 @@ body{
             height: $SIZE_DIALOG_SPINNER_HEIGHT;
             margin:0 auto;
             margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
-            background-image: $PATH_IMG_DIALOG_SPINNER;
+            background-image: $PATH_IMG_DIALOG_SPINNER_LOAD;
             background-position:center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -191,8 +191,8 @@ body{
         #face-list-container {
             overflow-x: overlay;
             overflow-y: hidden;
-            height: 500px;
-            width: 1000px;
+            height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
+            width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
             border-top: 1px solid $COLOR_DIALOG_FACE_LIST_BORDER_TOP;
             margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
             margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
@@ -245,13 +245,46 @@ body{
 
                     .face-container.multi-page{
                         height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
+                    }
 
+                    .face-selector{
+                        pointer-events: none;
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                        position: absolute;
+                        z-index: 1;
                         
+                        overflow-x: hidden;
+                        overflow-y: scroll;
+
+                        &::-webkit-scrollbar{
+                            display: none;
+                        }
+
+                        .face-page-selector{
+                            width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT / 2 - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            position: relative;
+                            
+                        }
+
+                        .face-page-selector.selected{
+                            z-index: 1;
+                            border-style: solid;
+                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            border-color: #00C588; 
+                            margin: 0px;
+
+                        }
+                    }
+
+                    .face-selector.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT / 2;
                     }
                     
                     .gradation-area{
+                        pointer-events: none;
                         position:absolute;
-                        //z-index:1;
                             
                         width: $SIZE_HOME_REMOTE_WIDTH;
                         height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
@@ -287,6 +320,7 @@ body{
                             border:none;
                         }
                         
+                        /*
                         &.selected{
                             border-style: solid;
                             border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
@@ -300,17 +334,8 @@ body{
                             padding-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
                             padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
                         }
-                        
-
-                        /*
-                        #face-page-selector{
-                            position: absolute;
-                            border-style: solid;
-                            border-width: 4px;
-                            border-color: #00C588; //★★★★
-                            
-                        }
                         */
+
                     }
 
                     .module-container {
@@ -331,9 +356,8 @@ body{
         }
 
         .submit-area{
-            height: 60px;//★★★
+            height: $SIZE_DIALOG_SUBMIT_AREA_HEIGHT;
 
-            //共通のテキストボタン
             .ui-btn{
                 position: absolute;
                 font-family:$FONT_FAMILY_TEXT_BUTTON;

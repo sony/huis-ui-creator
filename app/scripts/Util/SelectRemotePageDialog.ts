@@ -26,6 +26,12 @@ module Garage {
             /** 編集中の Face 情報 */
             private tmpFace: IGFace;
 
+            /** face-container の scale */
+            private faceContainerScale: number = 0.5;
+
+            /** face-list の scale */
+            private faceListScale: number = 0.8;
+
 
             /**
              * コンストラクタ
@@ -77,6 +83,7 @@ module Garage {
                     "click": SelectRemotePageDialog.onClick
                 });
 
+                $dialog.find(".face-container").scroll();
                 $dialog.find("#remotelist-button-ok").click(this.onOKClicked.bind(this));
                 $dialog.find("#remotelist-button-cancel").click(this.onCancelClicked.bind(this));
             }
@@ -86,14 +93,21 @@ module Garage {
              * リモコン一覧の読み込み～描画を開始する
              */
             private startRenderingFaceList() {
-                let self = this;
                 setTimeout(() => {
-                    SelectRemotePageDialog.renderFaceList(self);
-                    SelectRemotePageDialog.removeSpinner();
-                    SelectRemotePageDialog.addMultiPagedFaceClass();
-                    self.selectDefaultFacePage();
-                    $('.face-container').scroll(SelectRemotePageDialog.onScrollFaceContainer);
+                    this.renderFaceList();
+                    this.removeSpinner();
+                    this.addMultiPagedFaceClass();
+                    this.loadDomProperties();
+                    $('.face-container').scroll((event) => {
+                        this.onScrollFaceContainer(event);
+                    });
+                    this.selectDefaultFacePage();
                 }, 100);
+            }
+
+            private loadDomProperties() {
+                this.faceContainerScale = JQueryUtils.getScale($('.face-container'));
+                this.faceListScale = JQueryUtils.getScale($('#face-list'));
             }
 
 
@@ -102,32 +116,32 @@ module Garage {
              *
              * @param dialog {SelectRemotePageDialog}
              */
-            private static renderFaceList(dialog: SelectRemotePageDialog) {
+            private renderFaceList() {
                 var templateFile = CDP.Framework.toUrl("/templates/home.html");
-                var faceItemTemplate = CDP.Tools.Template.getJST("#face-list-template", templateFile);
+                var faceItemTemplate = CDP.Tools.Template.getJST("#face-list-selector-template", templateFile);
 
                 var faces = huisFiles.getFilteredFacesByCategories({});
                 var faceList: { remoteId: string, name: string }[] = [];
 
-                if (dialog.tmpFace) {
+                if (this.tmpFace) {
                     // HuisFiles に編集中の face があるか検査
                     let tmpFace = faces.filter((value: { remoteId: string; name: string; }) => {
-                        return (dialog.tmpFace.remoteId == value.remoteId);
+                        return (this.tmpFace.remoteId == value.remoteId);
                     });
                     if (tmpFace.length < 1) {
                         // 編集中の face が HuisFiles に無い場合（新規の場合）はリストに追加
                         faceList.push({
-                            remoteId: dialog.tmpFace.remoteId,
-                            name: dialog.tmpFace.name
+                            remoteId: this.tmpFace.remoteId,
+                            name: this.tmpFace.name
                         });
                     }
                 }
 
                 faces.forEach((face: IGFace) => {
                     let tmpFaceName: string;
-                    if (dialog.tmpFace &&
-                        dialog.tmpFace.remoteId == face.remoteId) {
-                        tmpFaceName = dialog.tmpFace.name;
+                    if (this.tmpFace &&
+                        this.tmpFace.remoteId == face.remoteId) {
+                        tmpFaceName = this.tmpFace.name;
                     } else {
                         tmpFaceName = face.name;
                     }
@@ -157,17 +171,13 @@ module Garage {
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
                     for (let i = 0, l = elems.length; i < l; i++) {
-                        dialog.renderFace(dialog, $(elems[i]));
+                        this.renderFace(this, $(elems[i]));
                     }
                     SelectRemotePageDialog.calculateFaceListWidth();
                 } else {
                     // リモコン数０
                     // ★★★★TODO
                 }
-
-                //テキストのローカライズ
-                //$("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
-                //$("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
 
             }
 
@@ -225,7 +235,7 @@ module Garage {
             /**
              * リモコン一覧読み込み中のスピナー表示を削除
              */
-            private static removeSpinner() {
+            private removeSpinner() {
                 $('#spinner-container').remove();
             }
 
@@ -233,13 +243,15 @@ module Garage {
             /**
              * 複数ページを持つリモコンのDOMにクラスを設定し、グラデーション表示用DOMを追加する
              */
-            private static addMultiPagedFaceClass() {
+            private addMultiPagedFaceClass() {
                 let $faces = $('.face-container');
                 $faces.each((index, elem) => {
                     let pages = $(elem).find('.face-page').length;
                     if (pages > 1) {
                         $(elem).addClass('multi-page');
                         SelectRemotePageDialog.addGradationArea($(elem));
+
+                        $(elem).siblings('.face-selector').addClass('multi-page');
                     }
                 });
             }
@@ -280,9 +292,15 @@ module Garage {
 
 
                 $page.addClass("selected");
+                $face.siblings('.face-selector').children('.face-page-selector').addClass('selected');
 
                 let $list = $('#face-list-container');
                 this.setScrollPosition($list, $face);
+
+                // 選択中リモコンページ枠の位置を補正するためにスクロールイベントを呼ぶ
+                setTimeout(() => {
+                    $face.scroll();
+                });
             }
 
 
@@ -367,33 +385,31 @@ module Garage {
 
                //SelectRemotePageDialog.insertCursorDomAtSelectedFacePage($selectedPage);
 
-                let $facePages = $(".face-page");
+                // selected クラスを削除
+                let $facePages = $('.face-page');
                 $facePages.each((index, elem) => {
-                    $(elem).removeClass("selected");
+                    $(elem).removeClass('selected');
+                });
+                let $selectors = $('.face-page-selector');
+                $selectors.each((index, elem) => {
+                    $(elem).removeClass('selected');
                 });
 
-                $(event.currentTarget).addClass("selected");
+
+                // selected クラスを付与
+                let $targetPage = $(event.currentTarget);
+                $targetPage.addClass('selected');
+
+                let $faceContainer = $targetPage.parents('.face-container');
+
+                let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
+                $selector
+                    .addClass('selected')
+                    .css('top', dialog.getFacePageTop($faceContainer, $targetPage));
+
                 SelectRemotePageDialog.enableSubmitButton();
             }
 
-
-            /////////////////////
-            private static insertCursorDomAtSelectedFacePage($facePage: JQuery) {
-                let $cursor = $('#face-page-selector');
-                if ($cursor.length > 0) {
-                    $cursor.remove();
-                }
-
-                let $newCursor = $('<div>');
-                $newCursor
-                    .attr("id", "face-page-selector")
-                    .css({
-                        "width": $facePage.width(),
-                        "height": $facePage.height()
-                    });
-
-                $facePage.before($newCursor);
-            }
 
 
             /**
@@ -431,8 +447,10 @@ module Garage {
              *
              * @param event {Event}
              */
-            private static onScrollFaceContainer(event: Event) {
-                SelectRemotePageDialog.controlGradationAreaDisplay($(event.currentTarget));
+            private onScrollFaceContainer(event: Event) {
+                let $faceContainer = $(event.currentTarget);
+                SelectRemotePageDialog.controlGradationAreaDisplay($faceContainer);
+                this.scrollSelectorArea($faceContainer);
             }
 
 
@@ -449,6 +467,33 @@ module Garage {
                 topArea.css('visibility', (scrollTop === 0) ? 'hidden' : 'visible');
                 btmArea.css('visibility', (scrollTop >= ($faceContainer[0].scrollHeight - $faceContainer[0].clientHeight)) ? 'hidden' : 'visible');
 
+            }
+
+
+            /**
+             * 選択中リモコンページ枠表示エリアをスクロールに合わせて移動させる
+             *
+             * @param $faceContainer {JQuery} スクロールされた face-container
+             */
+            private scrollSelectorArea($faceContainer: JQuery) {
+                let $selectedPage = $faceContainer.find('.selected');
+                if ($selectedPage.length != 1) {
+                    return;
+                }
+
+                let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
+                $selector.css('top', this.getFacePageTop($faceContainer, $selectedPage));
+            }
+
+
+            /**
+             *
+             *
+             *
+             *
+             */
+            private getFacePageTop($faceContainer: JQuery, $facePage: JQuery): number {
+                return ($facePage.position().top + JQueryUtils.getMarginTopPx($facePage) * (1 - this.faceContainerScale * this.faceListScale)) / this.faceListScale - $faceContainer.scrollTop() * this.faceContainerScale;
             }
 
 
