@@ -107,4 +107,42 @@
         </div>
     </script>
 
+    <!-- select remote page dialog -->
+    <script type="text/template" id="common-dialog-remotelist">
+        <div id="remotelist-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+            <section class="select-remote-dialog">
+                <div class="remotelist-dialog">
+                    <header class="{{_header}}">
+                        <h3 class="title">{{title}}</h3>
+                    </header>
+                    <div class="separator"></div>
+                    <div id="face-list-container">
+
+                        {{!読み込み中のスピナー表示}}
+                        <article id="spinner-container">
+                            <div class="spinner large show" id="spinner-dialog-spinner-gif">&nbsp;</div>
+
+                            <div id="remotelist-load-message">
+                                <p>
+                                    <!--  -->
+                                </p>
+                            </div>
+                        </article>
+                        
+                        {{!リモコンリスト}}
+                        <ul id="face-list">
+                            <ui id="face-list-footer"></ui>
+                        </ul>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="submit-area">
+                        <button id="remotelist-button-ok" disabled>{{#anotherOption}}{{label_ok}}{{/anotherOption}}</button>
+                        <button id="remotelist-button-cancel">{{#anotherOption}}{{label_cancel}}{{/anotherOption}}</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </script>
+
+
 </article>

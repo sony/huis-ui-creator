@@ -36,6 +36,20 @@
                 </li>
                 {{/faceList}}
         </script>
+
+        {{!選択ダイアログ用}}
+        <script type="text/template" id="face-list-selector-template">
+            {{#faceList}}
+            <li class="face" data-remoteid="{{remoteId}}">
+                <p class="title">{{name}}</p>
+                <section class="face-selector" data-remoteid="{{remoteId}}">
+                    <div class="face-page-selector"></div>
+                </section>
+                <section class="face-container" data-remoteid="{{remoteId}}"></section>
+            </li>
+            {{/faceList}}
+        </script>
+
         <section id="option-pulldown-menu-popup" data-role="popup" >
             <ul id="option-pulldown-menu-list">
                 <li id="command-import-remote" class="menu-item-text"

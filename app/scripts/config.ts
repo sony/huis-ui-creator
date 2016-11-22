@@ -40,6 +40,7 @@ module Config {
             // garage scripts
             "garage.util.huisfiles": "scripts/Util/HuisFiles",
             "garage.util.electrondialog": "scripts/Util/ElectronDialog",
+            "garage.util.selectremotepagedialog": "scripts/Util/SelectRemotePageDialog",
             "garage.util.huisdev": "scripts/Util/HuisDev",
             "garage.util.miscutil": "scripts/Util/MiscUtil",
             "garage.util.garagefiles": "scripts/Util/GarageFiles",

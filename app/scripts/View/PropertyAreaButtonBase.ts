@@ -137,6 +137,34 @@ module Garage {
                 }
             }
 
+
+            /**
+             * state情報からテンプレート生成に必要なstateDataを生成する
+             * @param state {IGState}
+             */
+            protected createStateData(state: IGState): any {
+                let stateData: any = {};
+
+                stateData.id = state.id;
+
+                if (state.image) {
+                    stateData.image = state.image[0];
+                }
+
+                if (state.label) {
+                    stateData.label = state.label[0];
+                }
+
+                if (state.action &&
+                    state.action[0] &&
+                    state.action[0].deviceInfo &&
+                    state.action[0].deviceInfo.functions) {
+                    stateData.functions = state.action[0].deviceInfo.functions;
+                }
+
+                return stateData;
+            }
+
           
             /*
            * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。

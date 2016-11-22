@@ -79,6 +79,7 @@ module Garage {
             private macroProperty: PropertyAreaButtonMacro;
             //通常ボタンのプロパティView用
             private buttonProperty: PropertyAreaButtonNormal;
+            private jumpProperty: PropertyAreaButtonJump;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
 
@@ -113,6 +114,7 @@ module Garage {
                     super.onPageShow(event, data);
                     this.macroProperty = null;
                     this.buttonProperty = null;
+                    this.jumpProperty = null;
                     this.newRemote_ = false;
 
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -1903,6 +1905,8 @@ module Garage {
                 //マクロボタンの場合、リモコン名を特殊表記
                 if (this.isMacroButton(buttonModel.button)) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
+                } else if (this.isJumpButton(buttonModel.button)) {
+                    remoteInfo = $.i18n.t("button.jump.STR_REMOTE_BTN_JUMP");
                 }
                 
 
@@ -3593,6 +3597,10 @@ module Garage {
                     if (this.macroProperty != null) {
                         this.macroProperty.setStates(states);
                     }
+
+                    if (this.jumpProperty != null) {
+                        this.jumpProperty.setStates(states);
+                    }
                 }
 
 
@@ -4705,6 +4713,13 @@ module Garage {
                     this.macroProperty.remove();
                     this.macroProperty = null
                 }
+
+                //ページジャンプ用のプロパティのインスタンスを削除
+                if (this.jumpProperty != null) {
+                    this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
+                    this.jumpProperty.remove();
+                    this.jumpProperty = null;
+                }
             }
 
             /**
@@ -4764,6 +4779,27 @@ module Garage {
             }
 
             /**
+             * ジャンプボタンか否か判定する。
+             * @param button {Model.ButtonItem} 判定対象のモデル
+             */
+            private isJumpButton(button: Model.ButtonItem): boolean {
+                let FUNCTION_NAME = TAG + "isJumpButton : ";
+
+                if (button == null) {
+                    console.warn(FUNCTION_NAME + "button is null");
+                    return false;
+                }
+
+                try {
+                    if (button.state[0].action[0].jump !== undefined) {
+                        return true;
+                    }
+                } catch (e) { }
+
+                return false;
+            }
+
+            /**
              * 詳細編集エリアを表示する。
              * 
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
@@ -4783,6 +4819,9 @@ module Garage {
                         if (this.isMacroButton(targetModel.button)) {
                             // マクロボタンアイテムの詳細エリアを表示
                             this._renderMacroButtonItemDetailArea(targetModel.button, $detail);
+                        } else if (this.isJumpButton(targetModel.button)) {
+                            // ジャンプボタンアイテムの詳細エリアを表示
+                            this._renderJumpButtonItemDetailArea(targetModel.button, $detail);
                         } else {
                             // ボタンアイテムの詳細エリアを表示
                             this._renderButtonItemDetailArea(targetModel.button, $detail);
@@ -4982,6 +5021,13 @@ module Garage {
             //通常のボタンのモデルが変更された際に呼び出される
             private updateNormalButtonItemModel(event: JQueryEventObject) {
                 let button: Model.ButtonItem = this.buttonProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+            private updateJumpButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.jumpProperty.getModel();
                 if (button != null) {
                     this.updateButtonItemModel(button);
                 }
@@ -5223,6 +5269,54 @@ module Garage {
     
 
             }
+
+            private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
+                if (!button || !$detail) {
+                    return;
+                }
+
+                // ボタン情報の外枠部分をレンダリング
+                var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
+                var $buttonDetail = $(templateButton(button));
+                $buttonDetail.find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_JUMP"));
+                $detail.append($buttonDetail);
+
+                //信号用のViewの初期化・更新
+                if (this.jumpProperty == null) {
+                    this.jumpProperty = new PropertyAreaButtonJump(
+                        this.faceRenderer_canvas_.getRemoteId(),
+                        $("#input-face-name").val(),
+                        this.faceRenderer_canvas_.getModules(),
+                        {
+                            el: $buttonDetail,
+                            model: button,
+                        });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.jumpProperty.undelegateEvents();
+                    this.jumpProperty.$el = $buttonDetail;
+                    this.jumpProperty.delegateEvents();
+                }
+
+                $detail.append(this.jumpProperty.renderView());
+
+                //previewの情報を別途更新。
+                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var inputURL = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(inputURL, $preview);
+                //テキストボタン、あるいは画像のどちらかを表示する。
+                this.toggleImagePreview(button.default);
+
+                //ボタンステートを入力
+                this.currentTargetButtonStates_ = button.state;
+
+                $detail.i18n();
+            }
+
+
+            
 
 
             /*

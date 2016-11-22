@@ -137,6 +137,16 @@ module Garage {
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
 
+        //ジャンプのときに選べるアクション
+        ACTION_INPUTS_JUMP = [];
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_LONG_PRESS_KEY_SINGLE, value: ACTION_INPUT_LONG_PRESS_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
+
+
         DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
         DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
@@ -224,6 +234,7 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
+            "garage.util.selectremotepagedialog",
             "garage.util.huisdev",
             "garage.util.miscutil",
             "garage.util.garagefiles",

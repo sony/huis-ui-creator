@@ -68,7 +68,6 @@ body{
         background-size: contain;
     }
 
-    
 }
 
 #about-dialog-area{
@@ -147,6 +146,273 @@ body{
         }    
     }
     
+}
+
+#remotelist-dialog-area{
+
+    .remotelist-dialog{
+        background-color: $COLOR_COMMON_BACKGROUND;
+
+        h3.title{
+            padding-top:$SIZE_DIALOG_TITLE_PADDING_TOP;
+            margin-bottom:$SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+            margin-left:$SIZE_DIALOG_TITLE_MARGIN_LEFT;
+            color: $COLOR_TEXT_MAIN;
+            font-size:$FONT_HOME_REMOTE_TITLE;
+            font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+            line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+        }
+
+        #spinner-dialog-spinner-gif{
+            width: $SIZE_DIALOG_SPINNER_WIDTH;
+            height: $SIZE_DIALOG_SPINNER_HEIGHT;
+            margin:0 auto;
+            margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
+            background-image: $PATH_IMG_DIALOG_SPINNER_LOAD;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        
+        /*
+        #remotelist-load-message {
+            text-shadow:none;
+            font-size:$FONT_SIZE_SPLASH_MESSAGE;
+            font-family:$FONT_FAMILY_SPLASH_MESSAGE;
+            line-height:$TEXT_HEIGHT_DEFAULT;
+            color:$COLOR_SPLASH_TEXT;
+            text-align:center;
+            margin:0 auto;
+            margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
+        }
+        */
+
+
+        #face-list-container {
+            overflow-x: overlay;
+            overflow-y: hidden;
+            height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
+            width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
+            border-top: 1px solid $COLOR_DIALOG_FACE_LIST_BORDER_TOP;
+            margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
+            box-sizing: border-box;
+
+            #face-list {
+                position:relative;
+                overflow-y: hidden;
+                transform: scale(0.8);
+                transform-origin : left top;
+           
+                //box-shadow: 0 0 20px #222;
+                z-index: 1;
+                padding: 0;
+                margin: 0;
+
+                #face-list-footer {
+                    position: absolute;
+                    bottom: 0;
+                    width:100%;
+                    height:$SIZE_HOME_FOOTOR_HEIGHT;
+                    background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                    z-index: 1;
+                }    
+
+                .face {
+                    list-style-type: none;
+                    float: left;
+                    margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
+                    margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                    overflow: hidden;
+                    width: $SIZE_HOME_REMOTE_WIDTH;
+
+                    .title {
+                        margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
+                        margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                        text-align: center;
+                        color: $COLOR_TEXT_MAIN;
+                        font-size:$FONT_HOME_REMOTE_TITLE;
+                        font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                        line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                    }
+
+                    .face-container{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                        
+                        overflow-x: hidden;
+                        overflow-y: overlay;
+                    }
+
+                    .face-container.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
+                    }
+
+                    .face-selector{
+                        pointer-events: none;
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                        position: absolute;
+                        z-index: 1;
+                        
+                        overflow-x: hidden;
+                        overflow-y: scroll;
+
+                        &::-webkit-scrollbar{
+                            display: none;
+                        }
+
+                        .face-page-selector{
+                            width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT / 2 - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            position: relative;
+                            
+                        }
+
+                        .face-page-selector.selected{
+                            z-index: 1;
+                            border-style: solid;
+                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            border-color: #00C588; 
+                            margin: 0px;
+
+                        }
+                    }
+
+                    .face-selector.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT / 2;
+                    }
+                    
+                    .gradation-area{
+                        pointer-events: none;
+                        position:absolute;
+                            
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+                    }
+
+                    .gradation-top{
+                        visibility:hidden;
+                        top: $SIZE_DIALOG_GRADATION_TOP_TOP;
+                        background:$COLOR_PALLET_GRADATION_TOP;
+                    }
+
+                    .gradation-bottom{
+                        visibility:visible;
+                        top: $SIZE_DIALOG_GRADATION_BOTTOM_TOP;
+                        background:$COLOR_PALLET_GRADATION_BOTTOM;
+                    }
+
+
+                    #face-pages-area {
+                        width:inherit;
+                        font-family: $FONT_FAMILY_NORMAL;
+                        overflow-y : hidden;
+                        
+                    }
+
+                    .face-page{
+                        margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                        margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                        margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                        padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                        .button-item{
+                            border:none;
+                        }
+                        
+                        /*
+                        &.selected{
+                            border-style: solid;
+                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            border-color: #00C588; 
+                            margin-top: 0px;
+                            //margin-right: 0px;
+                            margin-left: 0px;
+                            //margin-bottom: 1px;
+                            padding-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            padding-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT - ($SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2);
+                            padding-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                        }
+                        */
+
+                    }
+
+                    .module-container {
+                        overflow: visible;
+                    }
+                }
+            }
+
+            .face-container {
+                width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+                transform : scale(0.5);
+                transform-origin : left top;
+                box-sizing: border-box;
+                background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+                border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+                cursor: pointer;
+            }
+        }
+
+        .submit-area{
+            height: $SIZE_DIALOG_SUBMIT_AREA_HEIGHT;
+
+            .ui-btn{
+                position: absolute;
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                text-shadow:none;
+                margin:0;
+                padding:0;
+                border:none;
+                height:$SIZE_BUTTON_HEIGHT;   
+                font-size:$FONT_SIZE_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                background-color:$COLOR_BUTTON_NORMAL;
+                box-shadow:none;   
+                border-radius:0;
+
+                &:hover{
+                    text-shadow:none;
+                    background-color:$COLOR_BUTTON_HOVER;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    border:none;
+                }
+
+                &:active{
+                    text-shadow:none;
+                    background-color:$COLOR_BUTTON_PRESED;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    box-shadow:none;
+                    border:none;
+                }
+
+                &:focus{
+                    text-shadow:none;
+                    box-shadow:none;
+                    border:none;
+                }
+            }
+          
+            #remotelist-button-ok{
+                width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
+                height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
+                right: 150px;
+                bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
+                font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
+            }
+          
+            #remotelist-button-cancel{
+                width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
+                height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
+                right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
+                bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
+                font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
+            }
+        }
+    }
 }
 
 }

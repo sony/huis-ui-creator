@@ -393,6 +393,12 @@
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
         }
 
+        //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
+        .button-jump-action-container-element{
+            margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+        }
+
+
         //マクロの信号セット用プルダウンセット
         #macro-container{
             .signal-container-element{
