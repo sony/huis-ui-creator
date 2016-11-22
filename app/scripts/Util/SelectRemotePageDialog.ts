@@ -405,7 +405,7 @@ module Garage {
                 let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
                 $selector
                     .addClass('selected')
-                    .css('top', dialog.getFacePageTop($faceContainer, $targetPage));
+                    .css('top', dialog.calcSelectorTop($faceContainer, $targetPage));
 
                 SelectRemotePageDialog.enableSubmitButton();
             }
@@ -482,17 +482,18 @@ module Garage {
                 }
 
                 let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
-                $selector.css('top', this.getFacePageTop($faceContainer, $selectedPage));
+                $selector.css('top', this.calcSelectorTop($faceContainer, $selectedPage));
             }
 
 
             /**
+             * 選択中リモコンページ枠を表示するべき高さを算出する
              *
-             *
-             *
-             *
+             * @param $faceContainer {JQuery} 選択中のページを含むface-container
+             * @param $facePage {JQuery} 選択中のページ
+             * @return {number}
              */
-            private getFacePageTop($faceContainer: JQuery, $facePage: JQuery): number {
+            private calcSelectorTop($faceContainer: JQuery, $facePage: JQuery): number {
                 return ($facePage.position().top + JQueryUtils.getMarginTopPx($facePage) * (1 - this.faceContainerScale * this.faceListScale)) / this.faceListScale - $faceContainer.scrollTop() * this.faceContainerScale;
             }
 
