@@ -147,6 +147,17 @@ module Garage {
                 return null;
             }
 
+            createTmpFace(remoteId: string, faceName: string, gmodules: IGModule[]): IGFace {
+                let tmpFace: IGFace = {
+                    remoteId: remoteId,
+                    name: faceName,
+                    category: DEVICE_TYPE_FULL_CUSTOM,
+                    modules: gmodules
+                };
+
+                return tmpFace;
+            }
+
             /**
              * 指定した category と「一致する」または「一致しない」face 群を取得する。
              * このメソッドを呼ぶ前に、init() を呼び出す必要がある。
@@ -1444,6 +1455,9 @@ module Garage {
                         if (!_.isUndefined(action.bluetooth_data)) {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
+                        if (!_.isUndefined(action.jump)) {
+                            normalizedAction.jump = action.jump;
+                        }
                     } else {
                         normalizedAction.code_db = {
                             function: "none",
@@ -2216,6 +2230,32 @@ module Garage {
                         fs.removeSync(file);
                     }
                 });
+            }
+
+            isValidJumpSettings(jump: IJump): boolean {
+                if (jump == null) {
+                    return false;
+                }
+
+                let face: IFace;
+
+                // remote_id の検査
+                if (jump.remote_id != null) {
+                    face = this.getFace(jump.remote_id);
+
+                    if (face == null) {
+                        return false;
+                    }
+                }
+
+                // scene_no の検査
+                if (jump.scene_no != null &&
+                    jump.scene_no >= 0 &&
+                    jump.scene_no < face.modules.length) {
+                    return true;
+                }
+
+                return false;
             }
         }
     }
