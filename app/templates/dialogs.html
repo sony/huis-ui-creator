@@ -145,4 +145,59 @@
     </script>
 
 
+    <!-- HUIS config dialog -->
+    <script type="text/template" id="dialog-config">
+        <section id="dialog-config-screen">
+            <div id="dialog-config-area" class="ui-overlay-shadow">
+                <div id="dialog-config-header">
+                    <h3 class="title">★詳細設定</h3>
+                </div>
+                <div class="separator"></div>
+                <div id="dialog-config-details">
+                    <div id="dialog-config-details-home-dest" class="category">
+                        <h4 class="category-title">★ホームボタンの移動先</h4>
+                        <fieldset data-role="controlgroup">
+                            <input type="radio" name="radio-home-dest" id="dialog-config-radio-home-as-home" value="home" {{#checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
+                            <label for="dialog-config-radio-home-as-home">★ホーム画面</label>
+
+                            <input type="radio" name="radio-home-dest" id="dialog-config-radio-jump-as-home" value="jump" {{^checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
+                            <label for="dialog-config-radio-jump-as-home">★カスタム： <span id="dialog-config-label-jump-dest">{{^checkHomeAsHomeRadio}}{{destLabel}}{{/checkHomeAsHomeRadio}}</span></label>
+                            <button id="dialog-config-button-change-home-dest" {{#checkHomeAsHomeRadio}} disabled {{/checkHomeAsHomeRadio}}>★変更する</button>
+                        </fieldset>
+                    </div>
+                    <div id="dialog-config-details-home-settings" class="category">
+                        <h4 class="category-title">★ホーム画面</h4>
+                        <label>
+                            <input type="checkbox" id="dialog-config-checkbox-show-button-setting" {{^display_setting_button}} checked="checked" {{/display_setting_button}} />★設定ボタンを非表示
+                        </label>
+                        <label>
+                            <input type="checkbox" id="dialog-config-checkbox-show-button-add" {{^display_add_button}} checked="checked" {{/display_add_button}} />★追加ボタンを非表示
+                        </label>
+                    </div>
+                    <div id="dialog-config-details-remocon-settings" class="category">
+                        <h4 class="category-title">★リモコン画面の移動</h4>
+                        <label>
+                            <input type="checkbox" id="dialog-config-checkbox-show-button-move" {{^display_remote_arrow}} checked="checked" {{/display_remote_arrow}} />★ヘッダーの左右移動ボタンを非表示
+                        </label>
+                        <label>
+                            <input type="checkbox" id="dialog-config-checkbox-disable-swipe" {{^enable_vertical_remote_page_swipe}} checked="checked" {{/enable_vertical_remote_page_swipe}} />★スワイプによる移動を無効化
+                        </label>
+                    </div>
+                    <div id="dialog-config-details-storage-access" class="category">
+                        <h4 class="category-title">★ストレージアクセス</h4>
+                        <label>
+                            <input type="checkbox" id="dialog-config-checkbox-block-storage-access" />★HUIS-100RC のストレージへのアクセスをブロック
+                        </label>
+                    </div>
+                </div>
+                <div class="separator"></div>
+                <div id="dialog-config-submit-area">
+                    <button id="dialog-config-button-default">★デフォルトに戻す</button>
+                    <button id="dialog-config-button-submit" disabled>★OK</button>
+                    <button id="dialog-config-button-cancel">★キャンセル</button>
+                </div>
+            </div>
+        </section>
+    </script>
+
 </article>

@@ -34,10 +34,15 @@ module Garage {
         export class HuisFiles {
 
             private huisFilesRoot_: string;
+            private phnConfig_: IPhnConfig;
             private remoteList_: IRemoteId[];
             private remoteInfos_: IRemoteInfo[];
             private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
             private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
+
+            get phnConfig(): IPhnConfig {
+                return this.phnConfig_;
+            }
 
             constructor() {
                 if (!fs) {
@@ -47,6 +52,7 @@ module Garage {
                     path = require("path");
                 }
                 this.huisFilesRoot_ = undefined;
+                this.phnConfig_ = undefined;
                 this.remoteList_ = [];
                 this.remoteInfos_ = [];
                 this.commonRemoteInfo_ = null;
@@ -103,6 +109,8 @@ module Garage {
                         face: commonFace,
                     };
                 }
+
+                this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
 
                 return true;
             }
@@ -1195,6 +1203,42 @@ module Garage {
                 removingRemoteimagesDirectories.forEach((directory) => {
                     fs.removeSync(path.join(HUIS_REMOTEIMAGES_ROOT, directory));
                 });
+            }
+
+            updatePhnConfigFile(settings: IPhnConfig): IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                PhnConfigFile.saveToFile(this.huisFilesRoot_, settings)
+                    .then(() => {
+                        let df = $.Deferred<void>();
+                        let promise = CDP.makePromise(df);
+
+                        let syncTask = new Util.HuisDev.FileSyncTask();
+
+                        syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, false, null,
+                            () => {
+                            },
+                            (err) => {
+                                if (!err) {
+                                    console.log('★１');
+                                    df.resolve();
+                                } else {
+                                    console.log('★２');
+                                    df.reject();
+                                }
+                            });
+
+                        return promise;
+                    })
+                    .then(() => {
+                        console.log('★３');
+                        this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
+                        console.log('★４');
+                        df.resolve();
+                    });
+
+                return promise;
             }
 
             /**

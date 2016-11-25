@@ -415,4 +415,38 @@ body{
     }
 }
 
+
+// 詳細設定ダイアログ
+#dialog-config-screen{
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
+    position: absolute;
+
+
+    #dialog-config-area{
+        height: 650px;
+        width: 700px;
+        background-color: $COLOR_COMMON_BACKGROUND;
+        color: black;
+        margin: auto;
+        z-index: 4;
+
+       // transform: scale(1);
+        animation-name: popin;
+        animation-duration: 350ms;
+
+        #dialog-config-details{
+            height: 450px;
+            width: 680px;
+            margin: auto;
+            overflow-y: scroll;
+
+        }
+    }
+}
+
+
+
 }

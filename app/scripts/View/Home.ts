@@ -1,6 +1,7 @@
 ﻿/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
+/// <reference path="PhnConfig.ts" />
 
 module Garage {
     export module View {
@@ -71,6 +72,7 @@ module Garage {
                     "mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
+                    "click #command-set-properties": "onOptionSetPropertiesClick",
                     "click #command-import-remote": "onOptionImport",
                     // ショートカットキー
                     //"keydown": "_onKeyDown",
@@ -81,7 +83,19 @@ module Garage {
 
             render(): Home {
                 this._renderFaceList();
+                $('body').trigger('create');
                 return this;
+            }
+
+
+            /**
+             * オプションの「詳細設定」を押した際の処理
+             *
+             * @param event {Event} クリックイベント
+             */
+            private onOptionSetPropertiesClick(event: Event) {
+                let conf = new PhnConfig({el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig)});
+                return;
             }
 
             /*

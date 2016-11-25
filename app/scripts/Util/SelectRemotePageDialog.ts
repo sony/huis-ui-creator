@@ -20,6 +20,9 @@ module Garage {
             /** OK押下時のcallback */
             private onSubmit: (result: IJump) => void;
 
+            /** Cancel押下時のcallback */
+            private onCancel: () => void;
+
             /** 選択されているリモコンページ */
             private selectedSettings: IJump;
 
@@ -69,8 +72,9 @@ module Garage {
              *
              * @param onSubmit {(result: IJump)=>void} OK押下時のcallback
              */
-            show(onSubmit: (result: IJump) => void) {
+            show(onSubmit: (result: IJump) => void, onCancel?: () => void) {
                 this.onSubmit = onSubmit;
+                this.onCancel = onCancel;
                 let $dialog = this.dialog.show();
 
                 // jQuery mobile 適用
@@ -83,7 +87,7 @@ module Garage {
                     "click": SelectRemotePageDialog.onClick
                 });
 
-                $dialog.find(".face-container").scroll();
+                $dialog.find("#remotelist-dialog-area .face-container").scroll();
                 $dialog.find("#remotelist-button-ok").click(this.onOKClicked.bind(this));
                 $dialog.find("#remotelist-button-cancel").click(this.onCancelClicked.bind(this));
             }
@@ -98,7 +102,7 @@ module Garage {
                     this.removeSpinner();
                     this.addMultiPagedFaceClass();
                     this.loadDomProperties();
-                    $('.face-container').scroll((event) => {
+                    $('#remotelist-dialog-area .face-container').scroll((event) => {
                         this.onScrollFaceContainer(event);
                     });
                     this.selectDefaultFacePage();
@@ -106,8 +110,8 @@ module Garage {
             }
 
             private loadDomProperties() {
-                this.faceContainerScale = JQueryUtils.getScale($('.face-container'));
-                this.faceListScale = JQueryUtils.getScale($('#face-list'));
+                this.faceContainerScale = JQueryUtils.getScale($('#remotelist-dialog-area .face-container'));
+                this.faceListScale = JQueryUtils.getScale($('#remotelist-dialog-area #face-list'));
             }
 
 
@@ -166,7 +170,7 @@ module Garage {
                 var numRemotes: number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
-                    var $faceList = $("#face-list")
+                    var $faceList = $("#remotelist-dialog-area #face-list")
                     $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
@@ -222,7 +226,7 @@ module Garage {
              * リモコン一覧の幅を算出しDOMに設定する
              */
             private static calculateFaceListWidth() {
-                let $faceList = $("#face-list");
+                let $faceList = $("#remotelist-dialog-area #face-list");
                 let $items = $faceList.find(".face");
                 let listWidth = 0;
                 $items.each((index, item) => {
@@ -516,7 +520,12 @@ module Garage {
              */
             private onOKClicked(event: Event) {
                 this.dialog.close();
-                this.onSubmit(this.selectedSettings);
+
+                if (this.onSubmit != null) {
+                    this.onSubmit(this.selectedSettings);
+                }
+
+                this.dialog.$el.remove();
             }
 
 
@@ -527,6 +536,12 @@ module Garage {
              */
             private onCancelClicked(event: Event) {
                 this.dialog.close();
+
+                if (this.onCancel != null) {
+                    this.onCancel();
+                }
+
+                this.dialog.$el.remove();
             }
         }
     }
