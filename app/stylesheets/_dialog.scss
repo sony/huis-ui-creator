@@ -319,22 +319,6 @@ body{
                         .button-item{
                             border:none;
                         }
-                        
-                        /*
-                        &.selected{
-                            border-style: solid;
-                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
-                            border-color: #00C588; 
-                            margin-top: 0px;
-                            //margin-right: 0px;
-                            margin-left: 0px;
-                            //margin-bottom: 1px;
-                            padding-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
-                            padding-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT - ($SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2);
-                            padding-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
-                            padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
-                        }
-                        */
 
                     }
 
@@ -433,7 +417,6 @@ body{
         margin: auto;
         z-index: 4;
 
-       // transform: scale(1);
         animation-name: popin;
         animation-duration: 350ms;
 
