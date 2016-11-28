@@ -116,7 +116,10 @@ module Garage {
              * 跳び先選択ダイアログを表示
              */
             private showSelectDestDialog() {
-                let dialog = new Util.SelectRemotePageDialog("", { remote_id: this.model.homeId, scene_no: this.model.sceneNo });
+                let dialog = new Util.SelectRemotePageDialog(
+                    $.i18n.t("dialog.title.STR_DIALOG_TITLE_SELECT_JUMP"),
+                    { remote_id: this.model.homeId, scene_no: this.model.sceneNo });
+
                 dialog.show(
                     (result) => {
                         // OK押下時
@@ -316,6 +319,16 @@ module Garage {
 
 
             /**
+             *「ストレージへのアクセスをブロック」チェックボックスをモデル状態に合わせて更新
+             */
+            private updateBlockStorageAccessCheckbox() {
+                $('#dialog-config-checkbox-block-storage-access')
+                    .prop('checked', !this.model.allowAccessToStorage)
+                    .checkboxradio('refresh');
+            }
+
+
+            /**
              * 「デフォルトに戻す」ボタン押下時処理
              *
              * event {Event} clickイベント
@@ -329,6 +342,7 @@ module Garage {
                 this.updateShowAddButtonCheckbox();
                 this.updateShowMoveButtonCheckbox();
                 this.updateDisableSwipeCheckbox();
+                this.updateBlockStorageAccessCheckbox();
 
                 this.enableSubmitButton();
             }
@@ -374,6 +388,7 @@ module Garage {
              * 詳細設定ダイアログのDomを削除
              */
             private removeConfigDialog() {
+                this.undelegateEvents();
                 this.$el.children('#dialog-config-screen').remove();
             }
 

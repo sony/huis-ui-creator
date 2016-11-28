@@ -54,6 +54,12 @@ module Garage {
             set displayAddButton(val: boolean) {
                 this.set('display_add_button', val);
             }
+            get allowAccessToStorage(): boolean {
+                return this.get('allow_access_to_storage');
+            }
+            set allowAccessToStorage(val: boolean) {
+                this.set('allow_access_to_storage', val);
+            }
 
             constructor(data?: IPhnConfig) {
                 super();
@@ -79,7 +85,8 @@ module Garage {
                     enable_horizontal_remote_page_swipe: true,
                     display_remote_arrow: true,
                     display_setting_button: true,
-                    display_add_button: true
+                    display_add_button: true,
+                    allow_access_to_storage: true
                 };
             }
 

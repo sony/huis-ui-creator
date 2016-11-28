@@ -58,8 +58,8 @@ module Garage {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
                     title: title,
                     anotherOption: {
-                        label_ok: "OK",                 // ★★★★仮
-                        label_cancel: "キャンセル"       // ★★★★仮
+                        label_ok: $.i18n.t('dialog.button.STR_DIALOG_BUTTON_OK'),
+                        label_cancel: $.i18n.t('dialog.button.STR_DIALOG_BUTTON_CANCEL')
                     }
                 };
 
@@ -248,7 +248,7 @@ module Garage {
              * 複数ページを持つリモコンのDOMにクラスを設定し、グラデーション表示用DOMを追加する
              */
             private addMultiPagedFaceClass() {
-                let $faces = $('.face-container');
+                let $faces = $('#remotelist-dialog-area .face-container');
                 $faces.each((index, elem) => {
                     let pages = $(elem).find('.face-page').length;
                     if (pages > 1) {
@@ -287,7 +287,7 @@ module Garage {
                     return;
                 }
 
-                let $face = $('.face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
+                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
                 let $page = $face.find('.face-page[data-page-index="' + this.defaultJumpSettings.scene_no + '"]');
 
                 if ($page.length != 1) {
@@ -298,7 +298,7 @@ module Garage {
                 $page.addClass("selected");
                 $face.siblings('.face-selector').children('.face-page-selector').addClass('selected');
 
-                let $list = $('#face-list-container');
+                let $list = $('#remotelist-dialog-area #face-list-container');
                 this.setScrollPosition($list, $face);
 
                 // 選択中リモコンページ枠の位置を補正するためにスクロールイベントを呼ぶ
@@ -386,8 +386,6 @@ module Garage {
                 }
 
                 dialog.selectedSettings = SelectRemotePageDialog.getRemotePageByFacePageJQuery($selectedPage);
-
-               //SelectRemotePageDialog.insertCursorDomAtSelectedFacePage($selectedPage);
 
                 // selected クラスを削除
                 let $facePages = $('.face-page');
@@ -524,8 +522,6 @@ module Garage {
                 if (this.onSubmit != null) {
                     this.onSubmit(this.selectedSettings);
                 }
-
-                this.dialog.$el.remove();
             }
 
 
@@ -540,8 +536,6 @@ module Garage {
                 if (this.onCancel != null) {
                     this.onCancel();
                 }
-
-                this.dialog.$el.remove();
             }
         }
     }
