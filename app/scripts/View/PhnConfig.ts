@@ -393,7 +393,7 @@ module Garage {
                     .then(() => {
                         return this.stopSpinnerOnSuccess($dialog);
                     })
-                    .then(() => {
+                    .always(() => {
                         dialog.close();
                     });
             }

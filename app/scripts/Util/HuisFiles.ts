@@ -1205,6 +1205,13 @@ module Garage {
                 });
             }
 
+
+            /**
+             * phnconfig.iniファイルを更新
+             *
+             * @param settings {IPhnConfig} 保存するphnconfigデータ
+             * @return {CDP.IPromise<void>}
+             */
             updatePhnConfigFile(settings: IPhnConfig): IPromise<void> {
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
@@ -1221,10 +1228,10 @@ module Garage {
                             },
                             (err) => {
                                 if (!err) {
-                                    console.log('★１');
+                                    console.log('succeeded to sync after saving phnconfig.ini');
                                     df.resolve();
                                 } else {
-                                    console.log('★２');
+                                    console.error('failed to sync after saving phnconfig.ini: ' + err);
                                     df.reject();
                                 }
                             });
@@ -1232,10 +1239,13 @@ module Garage {
                         return promise;
                     })
                     .then(() => {
-                        console.log('★３');
+                        console.log('reload phnconfig.ini');
                         this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
-                        console.log('★４');
                         df.resolve();
+                    },
+                    () => {
+                        console.log('no reloading phnconfig.ini');
+                        df.reject();
                     });
 
                 return promise;
