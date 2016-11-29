@@ -178,6 +178,9 @@ module Garage {
                         this.renderFace(this, $(elems[i]));
                     }
                     SelectRemotePageDialog.calculateFaceListWidth();
+                    $faceList.find('#face-pages-area').click((event) => {
+                        this.selectClickedFacePage(this, event);
+                    });
                 } else {
                     // リモコン数０
                     // ★★★★TODO
@@ -215,10 +218,6 @@ module Garage {
                     }
                 });
                 faceRenderer.render();
-
-                $face.find(".face-page").on("click", (event) => {
-                    dialog.selectClickedFacePage(dialog, event);
-                });
             }
 
 
@@ -379,7 +378,8 @@ module Garage {
              * @param event {Event} クリックイベント
              */
             private selectClickedFacePage(dialog: SelectRemotePageDialog, event: Event) {
-                let $selectedPage = $(event.currentTarget);
+                let $facePagesArea = $(event.currentTarget);
+                let $selectedPage = this.getClickedPageFromFacePagesArea($facePagesArea, event);
 
                 if ($selectedPage.hasClass("selected")) {
                     return;
@@ -397,19 +397,46 @@ module Garage {
                     $(elem).removeClass('selected');
                 });
 
-
                 // selected クラスを付与
-                let $targetPage = $(event.currentTarget);
-                $targetPage.addClass('selected');
+                $selectedPage.addClass('selected');
 
-                let $faceContainer = $targetPage.parents('.face-container');
-
+                let $faceContainer = $selectedPage.parents('.face-container');
                 let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
                 $selector
                     .addClass('selected')
-                    .css('top', dialog.calcSelectorTop($faceContainer, $targetPage));
+                    .css('top', dialog.calcSelectorTop($faceContainer, $selectedPage));
 
                 SelectRemotePageDialog.enableSubmitButton();
+            }
+
+
+            /**
+             *
+             *
+             * @param $facePagesArea {JQuery}
+             * @param event {Event}
+             */
+            private getClickedPageFromFacePagesArea($facePagesArea: JQuery, event: Event): JQuery {
+                let origin = $(event.target);
+                if (origin.is('#face-pages-area')) {
+                    // face-pages-areaがクリックされた場合：クリック座標からページを算出
+                    let $pages = $facePagesArea.find('.face-page');
+                    let pageHeight = $facePagesArea.outerHeight() / $pages.length;
+                    let pageNum = Math.floor(event['offsetY'] / pageHeight);
+                    if (pageNum >= $pages.length) {
+                        console.error('clicked face page not found');
+                        return $pages.eq(0);
+                    } else {
+                        console.log('#face-pages-area clicked: ' + pageNum + '(' + event['offsetY'] + ' / ' + pageHeight + ')');
+                        return $pages.eq(pageNum);
+                    }
+                } else if (origin.is('.face-page')) {
+                    // face-pageがクリックされた場合
+                    return origin;
+                } else {
+                    // face-pageの子孫がクリックされた場合
+                    return $(event.target).parents('.face-page');
+                }
             }
 
 
