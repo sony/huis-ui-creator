@@ -393,9 +393,21 @@
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
         }
 
-        //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
         .button-jump-action-container-element{
+            //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+
+            #button-state-label-dest{
+                display: inline;
+            }
+
+            #button-change-jump-dest{
+                display: inline;
+                margin-left: 65px;
+                cursor: pointer;
+                color: #00c588;
+                text-decoration: underline;
+            }
         }
 
 
@@ -439,6 +451,14 @@
                     margin-left : $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
                     margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
                     width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
+                }
+                #signal-remote-container .custom-select{
+                    margin: 0;
+                    width: 100%;
+                }
+                #signal-page-container .custom-select{
+                    margin: 0;
+                    width: 100%;
                 }
 
                 .order-indicator-container{
@@ -1216,4 +1236,9 @@
             }
         }
 
+        ul[id*="select-signal-page-input-"]{
+            li.ui-state-disabled{
+                display: none;
+            }
+        }
 }

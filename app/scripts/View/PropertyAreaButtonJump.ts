@@ -13,7 +13,7 @@ module Garage {
              * 編集中リモコンの remote_id
              * Jump機能の跳び先ではないことに注意。
              */
-            private remoteId: string;
+            //private remoteId: string;
 
             /**
              * 編集中リモコン名
@@ -24,7 +24,7 @@ module Garage {
             /**
              * 編集中リモコンのモジュール
              */
-            private gmodules: IGModule[];
+            //private gmodules: IGModule[];
 
             /**
              * constructor
@@ -39,12 +39,15 @@ module Garage {
                 this.faceName = faceName;
                 this.gmodules = gmodules;
 
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, gmodules);
             }
 
 
             events() {
                 return {
                     "change .action-input": "onActionPullDownListChanged",
+                    "change .remote-input": "onRemotePullDownListChanged",
+                    "change .page-input": "onPagePullDownListChanged",
                     "click #button-change-jump-dest": "onChangeJumpDestButtonClicked"
                 };
             }
@@ -53,6 +56,41 @@ module Garage {
             //Actionを変更させたときに呼ばれる
             private onActionPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
+                this.updateModel();
+            }
+
+            /**
+             * リモコン選択用のプルダウンが変更されたときに呼ばれる
+             */
+            private onRemotePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onRemotePullDownListChanged";
+                let $target = $(event.currentTarget);
+                let remoteId = $target.val();
+
+                //remoteIdがない場合、処理を終了する。
+                if (remoteId == "none" || remoteId == null) {
+                    return;
+                }
+
+                // プルダウンに設定されている順番を取得
+                let order = this.getOrderFrom($target);
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                this.renderPagesOf(order, undefined);
+
+                this.updateModel();
+
+                //jQueryのスタイルをあてる。
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+                $targetSignalContainer.i18n();
+                this.refreshPageSelect($targetSignalContainer);
+            }
+
+            private onPagePullDownListChanged(event: Event) {
                 this.updateModel();
             }
 
@@ -91,15 +129,10 @@ module Garage {
                 $jumpContainer.append($stateDetail);
 
                 this.setActionPullDown(this.defaultState);
-                this.updateJumpSettings();
+                this.renderRemoteIdOf(0, undefined, this.defaultState.action[0].jump.remote_id);
+                this.renderPagesOf(0, undefined, this.defaultState.action[0].jump.scene_no); 
 
-                //一度、ここで、jQueryMoblieのレイアウトをあてる。
                 $jumpContainer.i18n();
-                $jumpContainer.find('.custom-select').trigger('create');
-                $('.property-state-action-jump').trigger('create');
-
-
-                //this.renderSignalContainers();
 
                 return $jumpContainer;
             }
@@ -174,26 +207,25 @@ module Garage {
              *
              * @param newSettings {IJump} ページジャンプ設定
              */
-            private updateJumpSettings(newSettings?: IJump) {
-                let $remoteName = this.$el.find("#property-jump-remote-name");
-                let $sceneNo = this.$el.find("#property-jump-scene-no");
+            private updateJumpSettings(newSettings: IJump) {
+                this.setRemoteIdPullDownOf(0, newSettings.remote_id);
+                
+                this.renderPagesOf(0, undefined, newSettings.scene_no);
 
-                let jump: IJump;
-                if (newSettings) {
-                    $remoteName.data("remote-id", newSettings.remote_id);
-                    $sceneNo.data("scene-no", newSettings.scene_no);
+                let $targetSignalContainer = this.getSignalContainerElementOf(0);
+                $targetSignalContainer.i18n();
+                this.refreshRemoteSelect($targetSignalContainer);
+                this.refreshPageSelect($targetSignalContainer);
 
-                    jump = newSettings;
-                } else {
-                    jump = this.getJumpSettings();
-                }
+                this.updateModel();
+            }
 
-                $remoteName.text(this.getFaceNameForDisplay(jump.remote_id));
-                $sceneNo.text(this.createPageNumberText(jump));
+            private refreshRemoteSelect($signalContainer: JQuery) {
+                $signalContainer.find('#signal-remote-container .custom-select select').selectmenu('refresh');
+            }
 
-                if (newSettings) {
-                    this.updateModel();
-                }
+            private refreshPageSelect($signalContainer: JQuery) {
+                $signalContainer.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
             }
 
             /**
@@ -264,8 +296,8 @@ module Garage {
              * @return {IJump} 現在のページジャンプ設定
              */
             private getJumpSettings(): IJump {
-                let remoteId = this.$el.find("#property-jump-remote-name").data("remote-id");
-                let sceneNoText = this.$el.find("#property-jump-scene-no").data("scene-no");
+                let remoteId = this.getRemoteIdFromPullDownOf(0); //this.$el.find("#property-jump-remote-name").data("remote-id");
+                let sceneNoText = this.getPageFromPullDownOf(0); //this.$el.find("#property-jump-scene-no").data("scene-no");
                 let sceneNo: number = sceneNoText ? Number(sceneNoText) : 0;
 
                 return {

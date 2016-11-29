@@ -21,6 +21,12 @@ module Garage {
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
             protected defaultState: IGState; // Defaultのstate
 
+            /** 現在編集中のremote_id */
+            protected remoteId: string;
+
+            /** 現在編集中のgmodules */
+            protected gmodules: IGModule[];
+
             /**
              * constructor
              */
@@ -660,6 +666,183 @@ module Garage {
                         return;
                     }
                 }
+            }
+
+
+            protected renderPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID, page: number = -1) {
+                let FUNCTION_NAME = TAG + "renderPagesOf : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $pulldown = this.appendPagesPullDown(order, stateId);
+
+                let maxPage = this.getPagesOf(order, stateId);
+                if (page >= maxPage) {
+                    page = 0;
+                }
+
+                this.controlHiddennessOfPagesPullDown($pulldown, maxPage, page);
+
+                this.setPagePullDownOf(order, page);
+
+            }
+
+
+            /**
+             * ページ選択用プルダウンのDOMを追加し、そのJQueryオブジェクトを返す。
+             * 既に存在する場合は追加せずに対象のJQueryオブジェクトを返す。
+             *
+             * @param order {number}
+             * @param stateId {number}
+             */
+            private appendPagesPullDown(order: number, stateId: number = this.DEFAULT_STATE_ID): JQuery {
+                //targetとなるJQueryを取得
+                let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                if ($target == null || $target.length == 0) {
+                    console.warn("$target is undefined");
+                    return null;
+                }
+
+                let $pages: JQuery = $target.find('.signal-page-container-element');
+                if ($pages.length > 0) {
+                    return $pages.eq(0);
+                }
+
+
+                let $container = $target.find("#signal-page-container");
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.templateItemDetailFile_);
+
+                let inputData = {
+                    order: order,
+                    id: stateId
+                }
+                let $pulldown = $(template(inputData));
+                $container.append($pulldown);
+
+                let $appendedElement = $container.children('.signal-page-container-element');
+                if ($appendedElement.length > 0) {
+                    return $appendedElement.eq(0);
+                } else {
+                    return null;
+                }
+            }
+
+            private getPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID): number {
+                let FUNCTION_NAME = TAG + "getPagesOf : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return 0;
+                }
+
+
+                let remoteId: string = this.getRemoteIdFromPullDownOf(order);
+                if (remoteId == null) {
+                    return 0;
+                }
+
+                let total: number;
+                if (remoteId == this.remoteId) {
+                    // 編集中ページを跳び先としている場合
+                    total = this.gmodules.length;
+
+                } else {
+                    let face = huisFiles.getFace(remoteId);
+                    if (face) {
+                        // 総ページ数を取得するためにViewを生成
+                        let modulesView = new Module({
+                            el: $(''),
+                            attributes: {
+                                remoteId: face.remoteId,
+                                modules: face.modules,
+                                materialsRootPath: HUIS_FILES_ROOT
+                            }
+                        });
+                        total = modulesView.getPageCount();
+                    } else {
+                        // 存在しないリモコン
+                        total = 0;
+                    }
+                }
+                return total;
+            }
+
+            private controlHiddennessOfPagesPullDown($pulldown: JQuery, maxPage: number, defaultPageValue: number) {
+                let $pageOption = $pulldown.find('option');
+
+                $pageOption.each((index, elem) => {
+                    let self = $(elem);
+
+                    let val = Number(self.val());
+                    if (val < maxPage &&
+                        !(val < 0 && defaultPageValue >= 0)) {  //「ページを選択」は初期ページ設定がある場合には表示しない
+                        self.prop('disabled', false)
+                    } else {
+                        self.prop('disabled', true);
+                    }
+
+                });
+            }
+
+            protected setPagePullDownOf(order: number, page: number) {
+                let FUNCTION_NAME = TAG + "setPagePullDownOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $pagePullDown = $signalContainerElement.find(".page-input[data-signal-order=\"" + order + "\"]");
+                if ($pagePullDown == null || $pagePullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$pagePullDown is invalid");
+                    return;
+                }
+
+                let remoteVal = this.getRemoteIdFromPullDownOf(order);
+                if (remoteVal == null) {
+                    // リモコンが存在しない場合は強制的に「ページを選択」
+                    $pagePullDown.val('-1');
+                } else {
+                    $pagePullDown.val('' + page);
+                }
+            }
+
+            /**
+             * 入力したorderの信号に登録されているpageをpulldownから取得する。
+             * 見つからなかった場合、undefinedを返す。
+             * @order{number} : remoeIdを取得したい信号の順番
+             * @{string} remoteId
+             */
+            protected getPageFromPullDownOf(order: number): number {
+                let FUNCTION_NAME = TAG + "getPageFromPullDownOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $pagePullDown = $signalContainerElement.find(".page-input[data-signal-order=\"" + order + "\"]");
+                if ($pagePullDown == null || $pagePullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$pagePullDown is invalid");
+                    return;
+                }
+                return $pagePullDown.val();
+
             }
           
           /*

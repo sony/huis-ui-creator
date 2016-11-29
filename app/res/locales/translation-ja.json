@@ -35,7 +35,7 @@
         }
     },
     "dialog": {
-        "title": { 
+        "title": {
             "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択"
         },
         "message": {
@@ -115,7 +115,7 @@
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
             "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
             "STR_EDIT_PROPERTY_JUMP_NO_DEST": "設定なし",
-            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST":  "変更する"
+            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST": "リモコンをみて選択"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
@@ -210,8 +210,10 @@
         "macro": {
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
-        "jump": { 
-            "STR_REMOTE_BTN_JUMP":  "★ジャンプボタン"
+        "jump": {
+            "STR_REMOTE_BTN_JUMP": "★ジャンプボタン",
+            "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
+            "STR_PLEASE_INPUT_PAGE": "ページを選択"
         },
         "input": {
             "STR_PLEASE_INPUT_ACTION": "操作を選択",
@@ -222,6 +224,13 @@
             "STR_ACTION_INPUT_FLICK_RIGHT": "右フリック",
             "STR_ACTION_INPUT_FLICK_LEFT": "左フリック",
             "STR_ACTION_INPUT_FLICK_DOWN": "下フリック"
+        },
+        "page": { 
+            "STR_PAGE_0": "ページ１",
+            "STR_PAGE_1": "ページ２",
+            "STR_PAGE_2": "ページ３",
+            "STR_PAGE_3": "ページ４",
+            "STR_PAGE_4": "ページ５"
         },
         "function": {
             "STR_PLEASE_INPUT_REMOTE": "信号を選択",

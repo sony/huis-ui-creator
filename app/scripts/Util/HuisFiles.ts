@@ -864,6 +864,39 @@ module Garage {
                 return result;
             }
 
+            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: IGModule[]): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    let target = this.remoteInfos_[i];
+
+                    if (target.face.remoteId == tmpRemoteId) {
+                        // 編集中のリモコン
+                        result.push({
+                            remoteId: tmpRemoteId,
+                            mastarFace: target.mastarFace,
+                            face: {
+                                name: faceName,
+                                remoteId: tmpRemoteId,
+                                category: target.face.category,
+                                modules: gmodules
+                            }
+                        });
+                    } else {
+                        result.push(target);
+                    }
+                }
+
+                return result;
+            }
+
             /*
             * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
             */

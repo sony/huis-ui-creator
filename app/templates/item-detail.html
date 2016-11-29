@@ -400,6 +400,22 @@
             <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
         </script>
 
+        <!--ページ選択用プルダウンのテンプレート-->
+        <script type="text/template" id="template-property-button-signal-pages">
+            <div class="signal-page-container-element">
+                <div class="custom-select">
+                    <select class="page-input" id="select-signal-page-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                        <option value="-1" class="default-value" data-i18n="button.jump.STR_PLEASE_INPUT_PAGE">★ページを選択</option>
+                        <option value="0" data-i18n="button.page.STR_PAGE_0">★ページ１</option>
+                        <option value="1" data-i18n="button.page.STR_PAGE_1">★ページ２</option>
+                        <option value="2" data-i18n="button.page.STR_PAGE_2">★ページ３</option>
+                        <option value="3" data-i18n="button.page.STR_PAGE_3">★ページ４</option>
+                        <option value="4" data-i18n="button.page.STR_PAGE_4">★ページ５</option>
+                    </select>
+                </div>
+            </div>
+        </script>
+
 
 
 
@@ -486,11 +502,14 @@
 
             <div class="button-jump-action-container-element">
                 <h4 id="button-state-label-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_DEST">★移動先</h4>
+                <div id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">★リモコンをみて選択</div>
             </div>
-            <div class="property-state-action-jump">
-                <div id="property-jump-remote-name" data-remote-id="{{#jump}}{{remote_id}}{{/jump}}"></div>
-                <div id="property-jump-scene-no" data-scene-no="{{#jump}}{{scene_no}}{{/jump}}"></div>
-                <button id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">★変更する</button>
+            <div class="signal-container-element property-state-action-jump" data-signal-order="0">
+                <div id="signal-remote-container">
+                    {{! リモコンプルダウン }}
+                </div>
+                <div id="signal-page-container">
+                </div>
             </div>
 
         </div>
