@@ -21,10 +21,19 @@ module Garage {
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
             protected defaultState: IGState; // Defaultのstate
 
-            /** 現在編集中のremote_id */
+            /**
+             * 編集中リモコンのremote_id
+             */
             protected remoteId: string;
 
-            /** 現在編集中のgmodules */
+            /**
+             * 編集中リモコン名
+             */
+            protected faceName: string;
+
+            /**
+             * 編集中リモコンのgmodules
+             */
             protected gmodules: IGModule[];
 
             /**
@@ -669,6 +678,13 @@ module Garage {
             }
 
 
+            /**
+             * ページプルダウンをレンダリング
+             *
+             * @param order {number}
+             * @param stateId {number}
+             * @param page {number}
+             */
             protected renderPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID, page: number = -1) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
@@ -730,6 +746,9 @@ module Garage {
                 }
             }
 
+            /**
+             * orderに設定されているリモコンのページ数を取得
+             */
             private getPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID): number {
                 let FUNCTION_NAME = TAG + "getPagesOf : ";
 
@@ -770,6 +789,14 @@ module Garage {
                 return total;
             }
 
+
+            /**
+             * ページプルダウン各項目の表示/非表示を切り替える
+             *
+             * @param $pulldown {JQuery}
+             * @param maxPage {number} 対象リモコンのページ数
+             * @param defaultPageValue {number} 初期選択状態にするページのvalue（ページ番号ではない）
+             */
             private controlHiddennessOfPagesPullDown($pulldown: JQuery, maxPage: number, defaultPageValue: number) {
                 let $pageOption = $pulldown.find('option');
 
@@ -787,6 +814,13 @@ module Garage {
                 });
             }
 
+
+            /**
+             * ページプルダウンの選択項目を設定
+             *
+             * @param order {number}
+             * @param page {number} 設定する項目の値（ページ番号ではない）
+             */
             protected setPagePullDownOf(order: number, page: number) {
                 let FUNCTION_NAME = TAG + "setPagePullDownOf";
 
@@ -844,6 +878,39 @@ module Garage {
                 return $pagePullDown.val();
 
             }
+
+
+            /**
+             * 新規作成されたリモコン選択プルダウンにスタイルを適用する
+             *
+             * @param order {number}
+             */
+            protected triggerCreateRemoteSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-remote-container .custom-select').trigger('create');
+            }
+
+
+            /**
+             * リモコン選択プルダウンの変更を表示に反映する
+             *
+             * @param order {number}
+             */
+            protected refreshRemoteSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-remote-container .custom-select select').selectmenu('refresh');
+            }
+
+            /**
+             * ページ選択プルダウンの変更を表示に反映する
+             *
+             * @param order {number}
+             */
+            protected refreshPageSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
+            }
+
           
           /*
            * ＋ボタンを押下する際のアニメーション. 

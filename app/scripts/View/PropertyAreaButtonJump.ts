@@ -9,22 +9,11 @@ module Garage {
         var TAG = "[Garage.View.PropertyAreaButtonJump] ";
 
         export class PropertyAreaButtonJump extends PropertyAreaButtonBase {
-            /**
-             * 編集中リモコンの remote_id
-             * Jump機能の跳び先ではないことに注意。
-             */
-            //private remoteId: string;
 
-            /**
-             * 編集中リモコン名
-             * Jump機能の跳び先ではないことに注意。
+            /** 
+             * ページジャンプ設定として使用する信号番号
              */
-            private faceName: string;
-
-            /**
-             * 編集中リモコンのモジュール
-             */
-            //private gmodules: IGModule[];
+            static DEFAULT_SIGNAL_ORDER: number = 0;
 
             /**
              * constructor
@@ -72,25 +61,37 @@ module Garage {
                     return;
                 }
 
-                // プルダウンに設定されている順番を取得
                 let order = this.getOrderFrom($target);
-
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
 
-                this.renderPagesOf(order, undefined);
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, this.getRemoteIdFromPullDownOf(order));
+                this.renderPagesOf(order, this.DEFAULT_STATE_ID);
 
                 this.updateModel();
 
-                //jQueryのスタイルをあてる。
-                let $targetSignalContainer = this.getSignalContainerElementOf(order);
-                $targetSignalContainer.i18n();
-                this.refreshPageSelect($targetSignalContainer);
+                this.triggerCreateRemoteSelect(order);
+                this.refreshPageSelect(order);
             }
 
+
+            /**
+             * ページプルダウン変更時処理
+             *
+             * event {Event} changeイベント
+             */
             private onPagePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onPagePullDownListChanged";
+                let order = this.getOrderFrom($(event.currentTarget));
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                this.renderPagesOf(order, this.DEFAULT_STATE_ID, this.getPageFromPullDownOf(order));
+                this.refreshPageSelect(order);
                 this.updateModel();
             }
 
@@ -151,8 +152,11 @@ module Garage {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
-                this.defaultState.action[0].input = tmpInput;
-                this.defaultState.action[0].jump = this.getJumpSettings();
+                let newAction = $.extend(true, {}, this.defaultState.action[0]);
+                newAction.input = tmpInput;
+                newAction.jump = this.getJumpSettings();
+                let newActions: IAction[] = [ newAction ];
+                this.defaultState.action = newActions;
 
                 let states: IGState[] = [];
                 states.push(this.defaultState);
@@ -212,21 +216,14 @@ module Garage {
                 
                 this.renderPagesOf(0, undefined, newSettings.scene_no);
 
-                let $targetSignalContainer = this.getSignalContainerElementOf(0);
+                let $targetSignalContainer = this.getSignalContainerElementOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
                 $targetSignalContainer.i18n();
-                this.refreshRemoteSelect($targetSignalContainer);
-                this.refreshPageSelect($targetSignalContainer);
+                this.refreshRemoteSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                this.refreshPageSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
 
                 this.updateModel();
             }
 
-            private refreshRemoteSelect($signalContainer: JQuery) {
-                $signalContainer.find('#signal-remote-container .custom-select select').selectmenu('refresh');
-            }
-
-            private refreshPageSelect($signalContainer: JQuery) {
-                $signalContainer.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
-            }
 
             /**
              * 詳細エリア表示用のface名を取得する
@@ -296,8 +293,8 @@ module Garage {
              * @return {IJump} 現在のページジャンプ設定
              */
             private getJumpSettings(): IJump {
-                let remoteId = this.getRemoteIdFromPullDownOf(0); //this.$el.find("#property-jump-remote-name").data("remote-id");
-                let sceneNoText = this.getPageFromPullDownOf(0); //this.$el.find("#property-jump-scene-no").data("scene-no");
+                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                let sceneNoText = this.getPageFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
                 let sceneNo: number = sceneNoText ? Number(sceneNoText) : 0;
 
                 return {
