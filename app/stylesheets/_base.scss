@@ -153,8 +153,86 @@ body {
             background-color:$COLOR_TOAST_BACKGROUND;
     }
 
+    
+
     .ui-page-theme-b{
     
+        //共通のラジオボタン
+        .ui-radio{
+            margin:0;
+            height:32px;
+
+            display: flex;
+            align-items: center;
+
+            .ui-btn{
+                background:none;
+                font-weight:normal;
+                height:32px;
+                line-height:32px;
+                border:none;
+                padding-top:0;
+                padding-bottom:0;
+                padding-left:$SIZE_RADIO_TEXT_PADDING_LEFT;
+                font-size: $FONT_SIZE_RADIO_BOX;
+                font-family:$FONT_FAMILY_RADIO_BOX;
+
+                &:hover{
+                    background:none;
+                }
+
+                &:active{
+                    background:none;
+                }
+
+                &:focus{
+                    background:none;
+                }
+
+                
+                input[type="radio"]{
+                    left:0;
+                    width:20px;
+                    height:20px;
+                }
+
+            }
+        }
+
+        //共通のチェックボックス
+        .ui-checkbox{
+            margin:0;
+            display: flex;
+            align-items: center;
+
+            height:32px;
+
+            .ui-btn{
+                background:none;
+                font-weight:normal;
+                height:32px;
+                line-height:32px;
+                padding-left:$SIZE_CHECK_BOX_TEXT_MARGIN_PADDING;
+                padding-top : 0;
+                padding-bottom:0;
+                border:none;
+                font-size: $FONT_SIZE_CHECK_BOX;
+                font-family:$FONT_FAMILY_CHECK_BOX;
+
+                &:hover{
+                    background:none;
+                }
+
+                &:active{
+                    background:none;
+                }
+
+                &:focus{
+                    background:none;
+                }
+
+            }
+        }
 
         //共通の吹き出し
         #popup-arrow{
@@ -167,6 +245,8 @@ body {
             margin-top:$SIZE_POPUP_ARROW_MINUS_MARGIN;
             margin-bottom:$SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
         }
+
+        
 
         //共通のテキストボタン
           .ui-btn{
