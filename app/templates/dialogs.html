@@ -148,53 +148,75 @@
     <!-- HUIS config dialog -->
     <script type="text/template" id="dialog-config">
         <section id="dialog-config-screen">
-            <div id="dialog-config-area" class="ui-overlay-shadow">
+            <div id="dialog-config-area" class="ui-overlay-shadow ui-page-theme-b">
                 <div id="dialog-config-header">
-                    <h3 class="title" data-i18n="dialog.title.STR_DIALOG_TITLE_SET_PROPERTIES">★詳細設定</h3>
+                    <span class="title" data-i18n="dialog.title.STR_DIALOG_TITLE_SET_PROPERTIES">★詳細設定</span>
                 </div>
                 <div class="separator"></div>
                 <div id="dialog-config-details">
                     <div id="dialog-config-details-home-dest" class="category">
-                        <h4 class="category-title" data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON">★ホームボタンの移動先</h4>
-                        <fieldset data-role="controlgroup">
-                            <input type="radio" name="radio-home-dest" id="dialog-config-radio-home-as-home" value="home" {{#checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
-                            <label for="dialog-config-radio-home-as-home" data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_HOME">★ホーム画面</label>
-
-                            <input type="radio" name="radio-home-dest" id="dialog-config-radio-jump-as-home" value="jump" {{^checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
-                            <label for="dialog-config-radio-jump-as-home" data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM">★カスタム： <span id="dialog-config-label-jump-dest">{{^checkHomeAsHomeRadio}}{{destLabel}}{{/checkHomeAsHomeRadio}}</span></label>
-                            <button id="dialog-config-button-change-home-dest" {{#checkHomeAsHomeRadio}} disabled {{/checkHomeAsHomeRadio}} data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE_HOME_DEST">★変更する</button>
+                        <div class="category-title">
+                            <span data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON">★ホームボタンの移動先</span>
+                            <div class="category-divider"></div>
+                        </div>
+                        <fieldset data-role="controlgroup" data-mini="true">
+                            <div class="inputs-container">
+                                <input type="radio" name="radio-home-dest" id="dialog-config-radio-home-as-home" value="home" {{#checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
+                                <label for="dialog-config-radio-home-as-home" data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_HOME">★ホーム画面</label>
+                                <div class="one-line input-element">
+                                    <input type="radio" name="radio-home-dest" id="dialog-config-radio-jump-as-home" value="jump" {{^checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
+                                    <label for="dialog-config-radio-jump-as-home" data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM">★カスタム： <span id="dialog-config-label-jump-dest">{{^checkHomeAsHomeRadio}}{{destLabel}}{{/checkHomeAsHomeRadio}}</span></label>
+                                    <button id="dialog-config-button-change-home-dest" {{#checkHomeAsHomeRadio}} disabled {{/checkHomeAsHomeRadio}} data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE_HOME_DEST">★変更する</button>
+                                </div>
+                            </div>
                         </fieldset>
                     </div>
                     <div id="dialog-config-details-home-settings" class="category">
-                        <h4 class="category-title" data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_HOME">★ホーム画面</h4>
-                        <label>
-                            <input type="checkbox" id="dialog-config-checkbox-show-button-setting" {{^display_setting_button}} checked="checked" {{/display_setting_button}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SETTING">★設定ボタンを非表示</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="dialog-config-checkbox-show-button-add" {{^display_add_button}} checked="checked" {{/display_add_button}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_ADD">★追加ボタンを非表示</span>
-                        </label>
+                        <div class="category-title">
+                            <span data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_HOME">★ホーム画面</span>
+                            <div class="category-divider"></div>
+                        </div>
+                        <div class="inputs-container">
+                            <label>
+                                <input class="input-element" type="checkbox" id="dialog-config-checkbox-show-button-setting" {{^display_setting_button}} checked="checked" {{/display_setting_button}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SETTING">★設定ボタンを非表示</span>
+                            </label>
+                            <label>
+                                <input class="input-element" type="checkbox" id="dialog-config-checkbox-show-button-add" {{^display_add_button}} checked="checked" {{/display_add_button}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_ADD">★追加ボタンを非表示</span>
+                            </label>
+                        </div>
                     </div>
                     <div id="dialog-config-details-remocon-settings" class="category">
-                        <h4 class="category-title" data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE">★リモコン画面の移動</h4>
-                        <label>
-                            <input type="checkbox" id="dialog-config-checkbox-show-button-move" {{^display_remote_arrow}} checked="checked" {{/display_remote_arrow}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON">★ヘッダーの左右移動ボタンを非表示</span>
-                        </label>
-                        <label>
-                            <input type="checkbox" id="dialog-config-checkbox-disable-swipe" {{^enable_vertical_remote_page_swipe}} checked="checked" {{/enable_vertical_remote_page_swipe}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SWIPE">★スワイプによる移動を無効化</span>
-                        </label>
+                        <div class="category-title">
+                            <span data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE">★リモコン画面の移動</span>
+                            <div class="category-divider"></div>
+                        </div>
+                        <div class="inputs-container">
+                            <label>
+                                <input class="input-element"  type="checkbox" id="dialog-config-checkbox-show-button-move" {{^display_remote_arrow}} checked="checked" {{/display_remote_arrow}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON">★ヘッダーの左右移動ボタンを非表示</span>
+                            </label>
+                            <label>
+                                <input class="input-element" type="checkbox" id="dialog-config-checkbox-disable-swipe" {{^enable_vertical_remote_page_swipe}} checked="checked" {{/enable_vertical_remote_page_swipe}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SWIPE">★スワイプによる移動を無効化</span>
+                            </label>
+                        </div>
                     </div>
                     <div id="dialog-config-details-storage-access" class="category">
-                        <h4 class="category-title" data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_STORAGE_ACCESS">★ストレージアクセス</h4>
-                        <label>
-                            <input type="checkbox" id="dialog-config-checkbox-block-storage-access" /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_STORAGE_ACCESS">★HUIS-100RC のストレージへのアクセスをブロック</span>
-                        </label>
+                        <div class="category-title">
+                            <span data-i18n="dialog.label.STR_DIALOG_PROPERTY_LABEL_STORAGE_ACCESS">★ストレージアクセス</span>
+                            <div class="category-divider"></div>
+                        </div>
+                        <div class="inputs-container">
+                            <label>
+                                <input class="input-element" type="checkbox" id="dialog-config-checkbox-block-storage-access" /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_STORAGE_ACCESS">★HUIS-100RC のストレージへのアクセスをブロック</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="separator"></div>
                 <div id="dialog-config-submit-area">
                     <button id="dialog-config-button-default" data-i18n="dialog.button.STR_DIALOG_BUTTON_SET_DEFAULT">★デフォルトに戻す</button>
-                    <button id="dialog-config-button-submit" disabled data-i18n="dialog.button.STR_DIALOG_BUTTON_OK">★OK</button>
-                    <button id="dialog-config-button-cancel" data-i18n="dialog.button.STR_DIALOG_BUTTON_CANCEL">★キャンセル</button>
+                    <div class="one-line ok-cancel-btns">
+                        <button id="dialog-config-button-submit" disabled data-i18n="dialog.button.STR_DIALOG_BUTTON_OK">★OK</button>
+                        <button id="dialog-config-button-cancel" data-i18n="dialog.button.STR_DIALOG_BUTTON_CANCEL">★キャンセル</button>
+                    </div>
                 </div>
             </div>
         </section>
