@@ -1489,7 +1489,7 @@ module Garage {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
                         if (!_.isUndefined(action.jump)) {
-                            normalizedAction.jump = action.jump;
+                            normalizedAction.jump = this._normalizeJump(action.jump);
                         }
                     } else {
                         normalizedAction.code_db = {
@@ -1654,6 +1654,22 @@ module Garage {
                 });
 
                 return normalizedImages;
+            }
+
+            /**
+             * ページジャンプ設定の不正なデータを修正する
+             *
+             * @param jump {IJump} ページジャンプ設定
+             * @return {IJump}
+             */
+            private _normalizeJump(jump: IJump): IJump {
+                let remoteId: string = (jump.remote_id != null) ? jump.remote_id : "";
+                let sceneNo: number = (jump.scene_no != null && jump.scene_no >= 0 && jump.scene_no <= 4) ? jump.scene_no : 0;
+
+                return {
+                    remote_id: remoteId,
+                    scene_no: sceneNo
+                }
             }
 
             private _getMasterFace(remoteId: string): IGFace {

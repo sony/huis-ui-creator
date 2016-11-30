@@ -81,7 +81,7 @@
               },
               "jump": {
                 "remote_id": "",
-                "scene_no": -1
+                "scene_no": 0
               }
             }
           ]
