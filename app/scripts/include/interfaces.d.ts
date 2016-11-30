@@ -17,6 +17,21 @@
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
+/// <reference path="../Util/PhnConfigFile.ts" />
+
+/**
+ * @interface IPhnConfig
+ * @brief 
+ */
+interface IPhnConfig {
+    home_id: string;
+    scene_no: number;
+    enable_vertical_remote_page_swipe: boolean;
+    enable_horizontal_remote_page_swipe: boolean;
+    display_remote_arrow: boolean;
+    display_setting_button: boolean;
+    display_add_button: boolean;
+}
 
 /**
  * @interface IArea

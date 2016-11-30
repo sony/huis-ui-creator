@@ -35,8 +35,9 @@
         }
     },
     "dialog": {
-        "title": { 
-            "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択"
+        "title": {
+            "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択",
+            "STR_DIALOG_TITLE_SET_PROPERTIES": "詳細設定"
         },
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
@@ -91,7 +92,8 @@
             "STR_DIALOG_BUTTON_CLOSE_APP": "アプリを終了",
             "STR_DIALOG_BUTTON_SAVE": "保存",
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
-            "STR_DIALOG_BUTTON_DELETE": "削除"
+            "STR_DIALOG_BUTTON_DELETE": "削除",
+            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST":  "変更する"
         }
     },
     "edit": {
@@ -156,6 +158,7 @@
         "STR_CONTEXT_REDO": "やり直し"
     },
     "option_menu": {
+        "STR_OPTION_MENU_SET_PROPERTIES": "詳細設定",
         "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート",
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",

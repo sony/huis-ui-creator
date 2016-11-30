@@ -48,6 +48,7 @@ module Config {
             "garage.util.buttondeviceinfocache": "scripts/Util/ButtonDeviceInfoCache",
             "garage.util.zipmanager": "scripts/Util/ZipManager",
             "garage.util.importmanager": "scripts/Util/ImportManager",
+            "garage.util.phnconfigfile": "scripts/Util/PhnConfigFile",
             "garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
             "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
             "garage.view.exportmanager": "scripts/View/ExportManager",
