@@ -152,22 +152,40 @@ module Garage {
                 let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
 
                 //このバージョンのGarageに必要になるHUISのバージョン
-                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
+                let rcVersionAvailableThisGarage = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
 
                 //HUIS RCとバージョン不一致の判定
                 if (RC_VERSION != null) {
                     console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
 
                     //HUIS RCはimportを使えないバージョンのときダイアログを出す。
-                    if (rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
-                        this.showHuisRcVersionIsOldDialog();
+                    if (!rcVersion.isSameMajorVersion(rcVersionAvailableThisGarage)) {
+                        this.showHuisRcVersonIsNotBtoB();
                     }
+
+
                 } else {//RC_VERSIONがない場合もダイアログを表示。
-                    this.showHuisRcVersionIsOldDialog();
+                    this.showHuisRcVersonIsNotBtoB();
                 }
 
             }
 
+
+            /*
+            * HUISがBtoB向けのバージョンではない場合のダイアログを表示
+            */
+            private showHuisRcVersonIsNotBtoB() {
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
 
             /*
             * HUIS本体のバージョンが古い場合のダイアログを表示

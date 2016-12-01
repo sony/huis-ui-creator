@@ -57,6 +57,24 @@ module Garage {
 
             }
 
+            /*
+            * 入植したVersionStringと同じMajorバージョンのときtrueを返す。違う場合はfalseを返す。
+            */
+            public isSameMajorVersion(counterPart: VersionString) {
+
+                let FUNCTION_NAME = TAG + ": isSameMajorVersion() ";
+
+                if (!counterPart) {
+                    console.warn(FUNCTION_NAME + "counterPart is undefined");
+                    return false;;
+                }
+
+                if (this.major === counterPart.getMajor()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
 
             /*
             * 入力の ModelVersionより古いバージョンのとき、trueを返す。同じ場合はfalse
