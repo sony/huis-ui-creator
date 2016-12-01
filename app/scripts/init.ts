@@ -306,7 +306,7 @@ module Garage {
                 isHUISConnected = true; // HUISが接続されている
 
                 //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
 
                 callback(); // 次の処理へ
 
