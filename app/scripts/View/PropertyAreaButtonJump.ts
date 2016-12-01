@@ -130,8 +130,10 @@ module Garage {
                 $jumpContainer.append($stateDetail);
 
                 this.setActionPullDown(this.defaultState);
-                this.renderRemoteIdOf(0, undefined, this.defaultState.action[0].jump.remote_id);
-                this.renderPagesOf(0, undefined, this.defaultState.action[0].jump.scene_no); 
+                this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.remote_id);
+                this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.scene_no);
+
+                this.focusFirstPulldown();
 
                 $jumpContainer.i18n();
 
@@ -226,68 +228,6 @@ module Garage {
 
 
             /**
-             * 詳細エリア表示用のface名を取得する
-             *
-             * @param remoteId {string} 検索する remote_id
-             * @return {string} 表示用のface名
-             */
-            private getFaceNameForDisplay(remoteId: string): string {
-                if (remoteId == null ||
-                    remoteId.length <= 0) {
-                    return $.i18n.t("edit.property.STR_EDIT_PROPERTY_JUMP_NO_DEST");
-                }
-
-                if (remoteId == this.remoteId) {
-                    // 編集中リモコン
-                    return this.faceName;
-                }
-
-                let face = huisFiles.getFace(remoteId);
-                if (face) {
-                    // HuisFiles内のリモコン
-                    return face.name;
-                }
-
-                return remoteId;
-            }
-
-
-            /**
-             * ページジャンプ跳び先ページ番号の詳細エリア表示用テキストを取得する
-             *
-             * @param jump {IJump} ページジャンプ設定
-             * @return {string} 表示用ページ番号
-             */
-            private createPageNumberText(jump: IJump): string {
-                let total: number;
-                if (jump.remote_id == this.remoteId) {
-                    // 編集中ページを跳び先としている場合
-                    total = this.gmodules.length;
-
-                } else {
-                    let face = huisFiles.getFace(jump.remote_id);
-                    if (face) {
-                        // 総ページ数を取得するためにViewを生成
-                        let modulesView = new Module({
-                            el: $(''),
-                            attributes: {
-                                remoteId: face.remoteId,
-                                modules: face.modules,
-                                materialsRootPath: HUIS_FILES_ROOT
-                            }
-                        });
-                        total = modulesView.getPageCount();
-                    } else {
-                        // 存在しないリモコン
-                        total = -1;//★★TODO
-                    }
-                }
-
-                return (jump.scene_no + 1) + " / " + total;
-            }
-
-
-            /**
              * 現在のページジャンプ設定を取得する
              *
              * @return {IJump} 現在のページジャンプ設定
@@ -303,6 +243,24 @@ module Garage {
                 };
             }
 
+
+            /*
+            * 何も設定されていない場合、プルダウンをアクセント表示
+            */
+            focusFirstPulldown() {
+                let FUNCTION_NAME = TAG + "focusFirstPulldown";
+
+                //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
+                //remoteId設定用プルダウンをフォーカスする。
+                let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+
+                if (!this.isValidValue(remoteId)) {
+                    let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                    input.focus();
+                }
+            }
 
         }
     }

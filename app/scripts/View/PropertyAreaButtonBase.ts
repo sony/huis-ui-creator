@@ -422,6 +422,20 @@ module Garage {
             }
 
             /*
+            protected setCurrentRemoteNameInPullDown(order: number, remoteId: string, remoteName: string) {
+                let FUNCTION_NAME = TAG + "changeCurrentRemoteNameInPullDown : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $option: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"] #signal-remote-container option[value=" + remoteId + "]");
+                $option.text(remoteName);
+            }
+            */
+
+            /*
              * アクションに設定されているFunctionNameを取得する
              * @param action{IAction} : functionNameを抽出するAction
              * @return {string} : functionName, 見つからない場合、 nullを返す。
@@ -696,14 +710,20 @@ module Garage {
                 let $pulldown = this.appendPagesPullDown(order, stateId);
 
                 let maxPage = this.getPagesOf(order, stateId);
-                if (page >= maxPage) {
-                    page = 0;
+                if (maxPage <= 0) {
+                    // リモコン未選択時/リモコンが存在しないはプルダウン自体を非表示
+                    $pulldown.hide();
+                } else {
+                    $pulldown.show();
+                    if (page >= maxPage) {
+                        // リモコンはあるがページが無い場合: 1ページ目を表示
+                        page = 0;
+                    }
+
+                    this.controlHiddennessOfPagesPullDown($pulldown, maxPage, page);
+
+                    this.setPagePullDownOf(order, page);
                 }
-
-                this.controlHiddennessOfPagesPullDown($pulldown, maxPage, page);
-
-                this.setPagePullDownOf(order, page);
-
             }
 
 
@@ -760,6 +780,7 @@ module Garage {
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
+                    // 未選択 or 存在しないリモコン
                     return 0;
                 }
 
@@ -782,7 +803,6 @@ module Garage {
                         });
                         total = modulesView.getPageCount();
                     } else {
-                        // 存在しないリモコン
                         total = 0;
                     }
                 }

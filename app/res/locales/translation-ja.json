@@ -115,7 +115,8 @@
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
             "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
             "STR_EDIT_PROPERTY_JUMP_NO_DEST": "設定なし",
-            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST": "リモコンをみて選択"
+            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST": "リモコンをみて選択",
+            "STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE": "このリモコン"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
@@ -211,7 +212,7 @@
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
         "jump": {
-            "STR_REMOTE_BTN_JUMP": "★ジャンプボタン",
+            "STR_REMOTE_BTN_JUMP": "ジャンプボタン",
             "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
             "STR_PLEASE_INPUT_PAGE": "ページを選択"
         },

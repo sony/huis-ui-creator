@@ -864,6 +864,14 @@ module Garage {
                 return result;
             }
 
+            /**
+             * ページジャンプボタンで使用可能なリモコン情報を取得
+             *
+             * @param tmpRemoteId {string} 編集中リモコンのremote_id
+             * @param faceName {string} 編集中リモコンの名称
+             * @param gmodules {IGModule[]} 編集中リモコンのモジュール
+             * @return {IRemoteInfo[]}
+             */
             getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: IGModule[]): IRemoteInfo[] {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
 
@@ -873,28 +881,55 @@ module Garage {
                 }
 
                 let result: IRemoteInfo[] = [];
-
+                let containsTmpRemote = false;
                 for (let i = 0; i < this.remoteInfos_.length; i++) {
                     let target = this.remoteInfos_[i];
 
                     if (target.face.remoteId == tmpRemoteId) {
                         // 編集中のリモコン
-                        result.push({
-                            remoteId: tmpRemoteId,
-                            mastarFace: target.mastarFace,
-                            face: {
-                                name: faceName,
-                                remoteId: tmpRemoteId,
-                                category: target.face.category,
-                                modules: gmodules
-                            }
-                        });
+                        containsTmpRemote = true;
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules, target.face.category, target.mastarFace));
+
                     } else {
                         result.push(target);
+
                     }
                 }
 
+                // 新規作成中の場合はリストの先頭に追加
+                if (!containsTmpRemote) {
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules));
+                }
+
                 return result;
+            }
+
+            /**
+             * 一時的なのリモコン情報を生成
+             *
+             * @param remoteId {string}
+             * @param faceName {string}
+             * @param modules {IGModule[]}
+             * @param catgory {string}
+             * @param masterFace {IGFace}
+             * @return {IRemoteInfo}
+             */
+            private createTmpRemoteInfo(remoteId: string, faceName: string, modules: IGModule[], category: string = "", masterFace?: IGFace): IRemoteInfo {
+                let tmpInfo:IRemoteInfo = {
+                    remoteId: remoteId,
+                    face: {
+                        name: $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE'),//faceNameを使用せず固定
+                        remoteId: remoteId,
+                        category: category,
+                        modules: modules
+                    }
+                };
+
+                if (masterFace != null) {
+                    tmpInfo.mastarFace = masterFace;
+                }
+
+                return tmpInfo;
             }
 
             /*
