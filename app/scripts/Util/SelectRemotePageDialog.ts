@@ -8,6 +8,8 @@ module Garage {
 
         export class SelectRemotePageDialog {
 
+            private static TAG = "[Garage.Util.SelectRemotePageDialog] ";
+
             /** 表示するダイアログ */
             private dialog: Dialog;
 
@@ -76,7 +78,9 @@ module Garage {
                 this.onSubmit = onSubmit;
                 this.onCancel = onCancel;
                 let $dialog = this.dialog.show();
+                this.updateSelectedFacePageLabel();
 
+                $dialog.i18n();
                 // jQuery mobile 適用
                 $dialog.trigger('create');
 
@@ -406,12 +410,14 @@ module Garage {
                     .addClass('selected')
                     .css('top', dialog.calcSelectorTop($faceContainer, $selectedPage));
 
+                dialog.updateSelectedFacePageLabel();
+
                 SelectRemotePageDialog.enableSubmitButton();
             }
 
 
             /**
-             *
+             * クリックされたリモコンページのJQueryオブジェクトを取得
              *
              * @param $facePagesArea {JQuery}
              * @param event {Event}
@@ -439,6 +445,27 @@ module Garage {
                 }
             }
 
+
+            /**
+             * 選択中のリモコン情報表示を現在の状態に合わせて更新
+             */
+            private updateSelectedFacePageLabel() {
+                let FUNCTION_NAME = SelectRemotePageDialog.TAG + "updateSelectedFacePageLabel ";
+                if (this.selectedSettings == null) {
+                    return;
+                }
+
+                let face = huisFiles.getFace(this.selectedSettings.remote_id);
+                if (face == null) {
+                    console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
+                    return;
+                }
+
+                let labelArea = $('#remotelist-label-selected');
+                labelArea.text(
+                    $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_REMOTE') + face.name + " " +
+                    $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + (this.selectedSettings.scene_no + 1));
+            }
 
 
             /**

@@ -184,18 +184,16 @@ body{
             background-size: contain;
         }
         
-        /*
         #remotelist-load-message {
             text-shadow:none;
             font-size:$FONT_SIZE_SPLASH_MESSAGE;
             font-family:$FONT_FAMILY_SPLASH_MESSAGE;
             line-height:$TEXT_HEIGHT_DEFAULT;
-            color:$COLOR_SPLASH_TEXT;
+            color:$COLOR_DIALOG_LOADING_TEXT;
             text-align:center;
             margin:0 auto;
             margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
         }
-        */
 
 
         #face-list-container {
@@ -359,6 +357,14 @@ body{
             height: $SIZE_BUTTON_HEIGHT;
             padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
             padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+
+            #remotelist-label-selected-conainer{
+                color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
+                font-size: $FONT_SIZE_DIALOG_SELECTED;
+                text-align: right;
+                right: $SIZE_DIALOG_OK_BUTTON_RIGHT + $SIZE_DIALOG_BUTTON_WIDTH + 4;
+                width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH - ($SIZE_DIALOG_OK_BUTTON_RIGHT + $SIZE_DIALOG_BUTTON_WIDTH + 4);
+            }
 
             .ui-btn{
                 position: absolute;

@@ -82,8 +82,8 @@
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE": "エクスポートしました。",
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL": "エクスポートに失敗しました。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER_AC": "\nエアコンのボタンはそのままでは利用できません。ボタンを一度削除して、登録済みのエアコンのボタンを配置してください。",
-            "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。"
-
+            "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。",
+            "STR_DIALOG_MESSAGE_LOADING_REMOTE_LIST": "しばらくお待ちください。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
@@ -93,7 +93,11 @@
             "STR_DIALOG_BUTTON_SAVE": "保存",
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
             "STR_DIALOG_BUTTON_DELETE": "削除",
-            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST":  "変更する"
+            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST": "変更する"
+        },
+        "label": {
+            "STR_DIALOG_LABEL_SELECTED_REMOTE": "選択中のリモコン：",
+            "STR_DIALOG_LABEL_SELECTED_PAGE": "ページ"
         }
     },
     "edit": {
