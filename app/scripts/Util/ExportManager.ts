@@ -33,7 +33,7 @@ module Garage {
                  let FUNCTION_NAME = TAG + "exec : ";
                  let options: Util.ElectronSaveFileDialogOptions = {
                      title: PRODUCT_NAME,
-                     filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                     filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
                  };
                  electronDialog.showSaveFileDialog(
                      options,
@@ -43,7 +43,7 @@ module Garage {
                              return;
                          }
 
-                         let dstFile = this.fixExportFileExtension(file);
+                         let dstFile = this.fixExportFileExtensionB2B(file);
 
                          let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                              src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -109,6 +109,26 @@ module Garage {
 
                  return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE;
              }
+
+
+            /**
+             * エクスポートファイル名の拡張子がHUISリモコンファイルのものでない場合、
+             * HUISリモコンファイルの拡張子を付与したファイル名を返す。（BtoB版）
+             * 元から正しい拡張子の場合はそのまま返す。
+             * @param fileName {string} エクスポートファイル名
+             * @return HUISリモコンファイルの拡張子付きファイル名
+             */
+             private fixExportFileExtensionB2B(filePath: string): string {
+                 let fileName = path.basename(filePath);
+
+                 if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length + 1 &&
+                     fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length) {
+                     return filePath;
+                 }
+
+                 return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B;
+             }
+
 
             /**
              * エクスポート処理

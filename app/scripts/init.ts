@@ -156,10 +156,12 @@ module Garage {
         //初期値。splashスクリーンで値をいれる。
         RC_VERSION = null;
 
-        HUIS_RC_VERSION_REQUIRED = "3.1.2";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.0.0";//sqa用に実際にチェックする値とは別に値を用意。
+        HUIS_RC_VERSION_REQUIRED = "8.0.0";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";//sqa用に実際にチェックする値とは別に値を用意。
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
+
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
@@ -306,7 +308,7 @@ module Garage {
                 isHUISConnected = true; // HUISが接続されている
 
                 //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
 
                 callback(); // 次の処理へ
 
