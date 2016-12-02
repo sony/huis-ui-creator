@@ -167,7 +167,6 @@ body {
 
             .ui-btn{
                 background:none;
-                background-color: $COLOR_COMMON_BACKGROUND;
                 font-weight:normal;
                 height:32px;
                 line-height:32px;
@@ -178,19 +177,20 @@ body {
                 font-size: $FONT_SIZE_RADIO_BOX;
                 font-family:$FONT_FAMILY_RADIO_BOX;
 
+                & + input[type=radio]{
+                    display: none;
+                }
+
                 &:hover{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
                 &:active{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
                 &:focus{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
                 
@@ -213,7 +213,6 @@ body {
 
             .ui-btn{
                 background:none;
-                background-color: $COLOR_COMMON_BACKGROUND;
                 font-weight:normal;
                 height:32px;
                 line-height:32px;
@@ -224,19 +223,20 @@ body {
                 font-size: $FONT_SIZE_CHECK_BOX;
                 font-family:$FONT_FAMILY_CHECK_BOX;
 
+                & + input[type=checkbox]{
+                    display: none;
+                }
+
                 &:hover{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
                 &:active{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
                 &:focus{
                     background:none;
-                    background-color: $COLOR_COMMON_BACKGROUND;
                 }
 
             }
