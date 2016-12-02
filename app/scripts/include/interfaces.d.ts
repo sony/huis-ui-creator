@@ -855,6 +855,10 @@ declare module Garage {
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
     /*
+     * インポート・エクスポート する際に仕様する拡張子（BtoB版）
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B
+    /*
      * インポート・エクスポート用拡張子の日本語の説明
      */
     var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
