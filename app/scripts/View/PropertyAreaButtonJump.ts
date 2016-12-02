@@ -133,8 +133,6 @@ module Garage {
                 this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.remote_id);
                 this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.scene_no);
 
-                this.focusFirstPulldown();
-
                 $jumpContainer.i18n();
 
                 return $jumpContainer;
