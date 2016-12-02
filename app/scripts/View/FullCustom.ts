@@ -5270,6 +5270,12 @@ module Garage {
 
             }
 
+            /**
+             * ページジャンプボタンの詳細エリアをレンダリング
+             *
+             * @param button {Model.ButtonItem} ページジャンプボタンのモデル
+             * @param $detail {JQuery} 
+             */
             private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
                 if (!button || !$detail) {
                     return;

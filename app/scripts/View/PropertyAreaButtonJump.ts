@@ -9,22 +9,11 @@ module Garage {
         var TAG = "[Garage.View.PropertyAreaButtonJump] ";
 
         export class PropertyAreaButtonJump extends PropertyAreaButtonBase {
-            /**
-             * 編集中リモコンの remote_id
-             * Jump機能の跳び先ではないことに注意。
-             */
-            private remoteId: string;
 
-            /**
-             * 編集中リモコン名
-             * Jump機能の跳び先ではないことに注意。
+            /** 
+             * ページジャンプ設定として使用する信号番号
              */
-            private faceName: string;
-
-            /**
-             * 編集中リモコンのモジュール
-             */
-            private gmodules: IGModule[];
+            static DEFAULT_SIGNAL_ORDER: number = 0;
 
             /**
              * constructor
@@ -39,12 +28,15 @@ module Garage {
                 this.faceName = faceName;
                 this.gmodules = gmodules;
 
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, gmodules);
             }
 
 
             events() {
                 return {
                     "change .action-input": "onActionPullDownListChanged",
+                    "change .remote-input": "onRemotePullDownListChanged",
+                    "change .page-input": "onPagePullDownListChanged",
                     "click #button-change-jump-dest": "onChangeJumpDestButtonClicked"
                 };
             }
@@ -53,6 +45,53 @@ module Garage {
             //Actionを変更させたときに呼ばれる
             private onActionPullDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onActionPullDownListChanged";
+                this.updateModel();
+            }
+
+            /**
+             * リモコン選択用のプルダウンが変更されたときに呼ばれる
+             */
+            private onRemotePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onRemotePullDownListChanged";
+                let $target = $(event.currentTarget);
+                let remoteId = $target.val();
+
+                //remoteIdがない場合、処理を終了する。
+                if (remoteId == "none" || remoteId == null) {
+                    return;
+                }
+
+                let order = this.getOrderFrom($target);
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, this.getRemoteIdFromPullDownOf(order));
+                this.renderPagesOf(order, this.DEFAULT_STATE_ID);
+
+                this.updateModel();
+
+                this.triggerCreateRemoteSelect(order);
+                this.refreshPageSelect(order);
+            }
+
+
+            /**
+             * ページプルダウン変更時処理
+             *
+             * event {Event} changeイベント
+             */
+            private onPagePullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onPagePullDownListChanged";
+                let order = this.getOrderFrom($(event.currentTarget));
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                this.renderPagesOf(order, this.DEFAULT_STATE_ID, this.getPageFromPullDownOf(order));
+                this.refreshPageSelect(order);
                 this.updateModel();
             }
 
@@ -91,15 +130,12 @@ module Garage {
                 $jumpContainer.append($stateDetail);
 
                 this.setActionPullDown(this.defaultState);
-                this.updateJumpSettings();
+                this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.remote_id);
+                this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.scene_no);
 
-                //一度、ここで、jQueryMoblieのレイアウトをあてる。
+                this.focusFirstPulldown();
+
                 $jumpContainer.i18n();
-                $jumpContainer.find('.custom-select').trigger('create');
-                $('.property-state-action-jump').trigger('create');
-
-
-                //this.renderSignalContainers();
 
                 return $jumpContainer;
             }
@@ -118,8 +154,11 @@ module Garage {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
-                this.defaultState.action[0].input = tmpInput;
-                this.defaultState.action[0].jump = this.getJumpSettings();
+                let newAction = $.extend(true, {}, this.defaultState.action[0]);
+                newAction.input = tmpInput;
+                newAction.jump = this.getJumpSettings();
+                let newActions: IAction[] = [ newAction ];
+                this.defaultState.action = newActions;
 
                 let states: IGState[] = [];
                 states.push(this.defaultState);
@@ -174,87 +213,17 @@ module Garage {
              *
              * @param newSettings {IJump} ページジャンプ設定
              */
-            private updateJumpSettings(newSettings?: IJump) {
-                let $remoteName = this.$el.find("#property-jump-remote-name");
-                let $sceneNo = this.$el.find("#property-jump-scene-no");
+            private updateJumpSettings(newSettings: IJump) {
+                this.setRemoteIdPullDownOf(0, newSettings.remote_id);
+                
+                this.renderPagesOf(0, undefined, newSettings.scene_no);
 
-                let jump: IJump;
-                if (newSettings) {
-                    $remoteName.data("remote-id", newSettings.remote_id);
-                    $sceneNo.data("scene-no", newSettings.scene_no);
+                let $targetSignalContainer = this.getSignalContainerElementOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                $targetSignalContainer.i18n();
+                this.refreshRemoteSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                this.refreshPageSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
 
-                    jump = newSettings;
-                } else {
-                    jump = this.getJumpSettings();
-                }
-
-                $remoteName.text(this.getFaceNameForDisplay(jump.remote_id));
-                $sceneNo.text(this.createPageNumberText(jump));
-
-                if (newSettings) {
-                    this.updateModel();
-                }
-            }
-
-            /**
-             * 詳細エリア表示用のface名を取得する
-             *
-             * @param remoteId {string} 検索する remote_id
-             * @return {string} 表示用のface名
-             */
-            private getFaceNameForDisplay(remoteId: string): string {
-                if (remoteId == null ||
-                    remoteId.length <= 0) {
-                    return $.i18n.t("edit.property.STR_EDIT_PROPERTY_JUMP_NO_DEST");
-                }
-
-                if (remoteId == this.remoteId) {
-                    // 編集中リモコン
-                    return this.faceName;
-                }
-
-                let face = huisFiles.getFace(remoteId);
-                if (face) {
-                    // HuisFiles内のリモコン
-                    return face.name;
-                }
-
-                return remoteId;
-            }
-
-
-            /**
-             * ページジャンプ跳び先ページ番号の詳細エリア表示用テキストを取得する
-             *
-             * @param jump {IJump} ページジャンプ設定
-             * @return {string} 表示用ページ番号
-             */
-            private createPageNumberText(jump: IJump): string {
-                let total: number;
-                if (jump.remote_id == this.remoteId) {
-                    // 編集中ページを跳び先としている場合
-                    total = this.gmodules.length;
-
-                } else {
-                    let face = huisFiles.getFace(jump.remote_id);
-                    if (face) {
-                        // 総ページ数を取得するためにViewを生成
-                        let modulesView = new Module({
-                            el: $(''),
-                            attributes: {
-                                remoteId: face.remoteId,
-                                modules: face.modules,
-                                materialsRootPath: HUIS_FILES_ROOT
-                            }
-                        });
-                        total = modulesView.getPageCount();
-                    } else {
-                        // 存在しないリモコン
-                        total = -1;//★★TODO
-                    }
-                }
-
-                return (jump.scene_no + 1) + " / " + total;
+                this.updateModel();
             }
 
 
@@ -264,8 +233,8 @@ module Garage {
              * @return {IJump} 現在のページジャンプ設定
              */
             private getJumpSettings(): IJump {
-                let remoteId = this.$el.find("#property-jump-remote-name").data("remote-id");
-                let sceneNoText = this.$el.find("#property-jump-scene-no").data("scene-no");
+                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                let sceneNoText = this.getPageFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
                 let sceneNo: number = sceneNoText ? Number(sceneNoText) : 0;
 
                 return {
@@ -274,6 +243,24 @@ module Garage {
                 };
             }
 
+
+            /*
+            * 何も設定されていない場合、プルダウンをアクセント表示
+            */
+            focusFirstPulldown() {
+                let FUNCTION_NAME = TAG + "focusFirstPulldown";
+
+                //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
+                //remoteId設定用プルダウンをフォーカスする。
+                let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
+
+                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+
+                if (!this.isValidValue(remoteId)) {
+                    let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                    input.focus();
+                }
+            }
 
         }
     }

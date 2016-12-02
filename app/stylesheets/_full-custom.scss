@@ -393,9 +393,36 @@
             margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
         }
 
-        //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
         .button-jump-action-container-element{
-            margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+            //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
+            margin-top:$SIZE_PROPERTY_AREA_JUMP_ACTION_CONTAINER_MARGIN_TOP;
+
+            &.button-jump-label-dest-container{
+                height: $SIZE_PROPERTY_AREA_JUMP_DEST_CONTAINER_HEIGHT;
+            }
+
+            #button-state-label-dest{
+                display: inline;
+                vertical-align: middle;
+            }
+
+            #button-change-jump-dest{
+                display: inline;
+                vertical-align: middle;
+                margin-left: $SIZE_PROPERTY_AREA_JUMP_CHANGE_DEST_BUTTON_MARGIN_LEFT;
+                cursor: pointer;
+                color: $COLOR_PROPERTY_AREA_JUMP_CHANGE_DEST_BUTTON_COLOR;
+                text-decoration: underline;
+                font-size: $FONT_SIZE_PROPERTY_BUTTON_CHANGE_JUMP_DEST;
+            }
+        }
+
+        .property-state-action-jump{
+            &>div:first-child{
+                .ui-select{
+                    margin-top: $SIZE_PROPERTY_AREA_JUMP_FIRST_SELECT_MARGIN_TOP;
+                }
+            }
         }
 
 
@@ -410,6 +437,17 @@
                     margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
                     width:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
                 }
+            }
+        }
+        
+        .jump-container{
+             #signal-remote-container .custom-select{
+                margin: 0;
+                width: 100%;
+            }
+            #signal-page-container .custom-select{
+                margin: 0;
+                width: 100%;
             }
         }
 
@@ -1216,4 +1254,9 @@
             }
         }
 
+        ul[id*="select-signal-page-input-"]{
+            li.ui-state-disabled{
+                display: none;
+            }
+        }
 }
