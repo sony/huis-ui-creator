@@ -148,6 +148,7 @@ body{
     
 }
 
+
 #remotelist-dialog-area{
 
     .remotelist-dialog{
@@ -155,12 +156,21 @@ body{
 
         h3.title{
             padding-top:$SIZE_DIALOG_TITLE_PADDING_TOP;
-            margin-bottom:$SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+            margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
+            margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
             margin-left:$SIZE_DIALOG_TITLE_MARGIN_LEFT;
             color: $COLOR_TEXT_MAIN;
-            font-size:$FONT_HOME_REMOTE_TITLE;
+            font-size:$SIZE_DIALOG_TITLE_FONT;
             font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
-            line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+            line-height: $TEXT_HEIGHT_DEFAULT;
+        }
+
+        header+.separator{
+            border-top-style: solid;
+            border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
+            border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
+            margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
         }
 
         #spinner-dialog-spinner-gif{
@@ -193,7 +203,6 @@ body{
             overflow-y: hidden;
             height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
             width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
-            border-top: 1px solid $COLOR_DIALOG_FACE_LIST_BORDER_TOP;
             margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
             margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
             box-sizing: border-box;
@@ -201,7 +210,7 @@ body{
             #face-list {
                 position:relative;
                 overflow-y: hidden;
-                transform: scale(0.8);
+                transform: scale(0.668);
                 transform-origin : left top;
            
                 //box-shadow: 0 0 20px #222;
@@ -216,22 +225,29 @@ body{
                     height:$SIZE_HOME_FOOTOR_HEIGHT;
                     background: $COLOR_HOME_FOOTOR_BACKGROUND;
                     z-index: 1;
-                }    
+                }
+
+                .face:nth-child(2){
+                    margin-left: $SIZE_DIALOG_REMOTE_FIRST_MARGIN_LEFT;
+                }
+                .face:last-child{
+                    margin-right: $SIZE_DIALOG_REMOTE_LAST_MARGIN_RIGHT
+                }
 
                 .face {
                     list-style-type: none;
                     float: left;
-                    margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
-                    margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                    margin-left: $SIZE_DIALOG_REMOTE_MARGIN_LEFT;
+                    margin-right: $SIZE_DIALOG_REMOTE_MARGIN_RIGHT;
                     overflow: hidden;
                     width: $SIZE_HOME_REMOTE_WIDTH;
 
                     .title {
-                        margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
-                        margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                        margin-top:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_TOP;
+                        margin-bottom:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_BOTTOM;
                         text-align: center;
                         color: $COLOR_TEXT_MAIN;
-                        font-size:$FONT_HOME_REMOTE_TITLE;
+                        font-size:$FONT_DIALOG_REMOTE_TITLE;
                         font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
                         line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
                     }
@@ -340,7 +356,9 @@ body{
         }
 
         .submit-area{
-            height: $SIZE_DIALOG_SUBMIT_AREA_HEIGHT;
+            height: $SIZE_BUTTON_HEIGHT;
+            padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
+            padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
 
             .ui-btn{
                 position: absolute;
@@ -381,17 +399,17 @@ body{
             }
           
             #remotelist-button-ok{
-                width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
+                width: $SIZE_DIALOG_BUTTON_WIDTH;
                 height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
-                right: 150px;
+                right: $SIZE_DIALOG_OK_BUTTON_RIGHT;
                 bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
                 font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
             }
           
             #remotelist-button-cancel{
-                width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
+                width: $SIZE_DIALOG_BUTTON_WIDTH;
                 height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
-                right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
+                right:$SIZE_DIALOG_CANCEL_BUTTON_RIGHT;
                 bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
                 font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
             }
