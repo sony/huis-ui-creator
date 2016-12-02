@@ -239,7 +239,8 @@ module Garage {
             "garage.util.miscutil",
             "garage.util.garagefiles",
             "garage.util.jqutils",
-            "garage.util.zipmanager"],
+            "garage.util.zipmanager",
+            "garage.util.phnconfigfile"],
             () => {
                 try {
                     electronDialog = new Util.ElectronDialog();

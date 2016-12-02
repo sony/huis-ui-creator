@@ -20,6 +20,9 @@ module Garage {
             /** OK押下時のcallback */
             private onSubmit: (result: IJump) => void;
 
+            /** Cancel押下時のcallback */
+            private onCancel: () => void;
+
             /** 選択されているリモコンページ */
             private selectedSettings: IJump;
 
@@ -55,8 +58,8 @@ module Garage {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
                     title: title,
                     anotherOption: {
-                        label_ok: "OK",                 // ★★★★仮
-                        label_cancel: "キャンセル"       // ★★★★仮
+                        label_ok: $.i18n.t('dialog.button.STR_DIALOG_BUTTON_OK'),
+                        label_cancel: $.i18n.t('dialog.button.STR_DIALOG_BUTTON_CANCEL')
                     }
                 };
 
@@ -69,8 +72,9 @@ module Garage {
              *
              * @param onSubmit {(result: IJump)=>void} OK押下時のcallback
              */
-            show(onSubmit: (result: IJump) => void) {
+            show(onSubmit: (result: IJump) => void, onCancel?: () => void) {
                 this.onSubmit = onSubmit;
+                this.onCancel = onCancel;
                 let $dialog = this.dialog.show();
 
                 // jQuery mobile 適用
@@ -83,7 +87,7 @@ module Garage {
                     "click": SelectRemotePageDialog.onClick
                 });
 
-                $dialog.find(".face-container").scroll();
+                $dialog.find("#remotelist-dialog-area .face-container").scroll();
                 $dialog.find("#remotelist-button-ok").click(this.onOKClicked.bind(this));
                 $dialog.find("#remotelist-button-cancel").click(this.onCancelClicked.bind(this));
             }
@@ -98,7 +102,7 @@ module Garage {
                     this.removeSpinner();
                     this.addMultiPagedFaceClass();
                     this.loadDomProperties();
-                    $('.face-container').scroll((event) => {
+                    $('#remotelist-dialog-area .face-container').scroll((event) => {
                         this.onScrollFaceContainer(event);
                     });
                     this.selectDefaultFacePage();
@@ -106,8 +110,8 @@ module Garage {
             }
 
             private loadDomProperties() {
-                this.faceContainerScale = JQueryUtils.getScale($('.face-container'));
-                this.faceListScale = JQueryUtils.getScale($('#face-list'));
+                this.faceContainerScale = JQueryUtils.getScale($('#remotelist-dialog-area .face-container'));
+                this.faceListScale = JQueryUtils.getScale($('#remotelist-dialog-area #face-list'));
             }
 
 
@@ -166,7 +170,7 @@ module Garage {
                 var numRemotes: number = faces.length;//ホームに出現するリモコン数
 
                 if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
-                    var $faceList = $("#face-list")
+                    var $faceList = $("#remotelist-dialog-area #face-list")
                     $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
                     $faceList.append($(faceItemTemplate({ faceList: faceList })));
                     var elems: any = $faceList.children();
@@ -174,6 +178,9 @@ module Garage {
                         this.renderFace(this, $(elems[i]));
                     }
                     SelectRemotePageDialog.calculateFaceListWidth();
+                    $faceList.find('#face-pages-area').click((event) => {
+                        this.selectClickedFacePage(this, event);
+                    });
                 } else {
                     // リモコン数０
                     // ★★★★TODO
@@ -211,10 +218,6 @@ module Garage {
                     }
                 });
                 faceRenderer.render();
-
-                $face.find(".face-page").on("click", (event) => {
-                    dialog.selectClickedFacePage(dialog, event);
-                });
             }
 
 
@@ -222,7 +225,7 @@ module Garage {
              * リモコン一覧の幅を算出しDOMに設定する
              */
             private static calculateFaceListWidth() {
-                let $faceList = $("#face-list");
+                let $faceList = $("#remotelist-dialog-area #face-list");
                 let $items = $faceList.find(".face");
                 let listWidth = 0;
                 $items.each((index, item) => {
@@ -244,7 +247,7 @@ module Garage {
              * 複数ページを持つリモコンのDOMにクラスを設定し、グラデーション表示用DOMを追加する
              */
             private addMultiPagedFaceClass() {
-                let $faces = $('.face-container');
+                let $faces = $('#remotelist-dialog-area .face-container');
                 $faces.each((index, elem) => {
                     let pages = $(elem).find('.face-page').length;
                     if (pages > 1) {
@@ -283,7 +286,7 @@ module Garage {
                     return;
                 }
 
-                let $face = $('.face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
+                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
                 let $page = $face.find('.face-page[data-page-index="' + this.defaultJumpSettings.scene_no + '"]');
 
                 if ($page.length != 1) {
@@ -294,7 +297,7 @@ module Garage {
                 $page.addClass("selected");
                 $face.siblings('.face-selector').children('.face-page-selector').addClass('selected');
 
-                let $list = $('#face-list-container');
+                let $list = $('#remotelist-dialog-area #face-list-container');
                 this.setScrollPosition($list, $face);
 
                 // 選択中リモコンページ枠の位置を補正するためにスクロールイベントを呼ぶ
@@ -375,15 +378,14 @@ module Garage {
              * @param event {Event} クリックイベント
              */
             private selectClickedFacePage(dialog: SelectRemotePageDialog, event: Event) {
-                let $selectedPage = $(event.currentTarget);
+                let $facePagesArea = $(event.currentTarget);
+                let $selectedPage = this.getClickedPageFromFacePagesArea($facePagesArea, event);
 
                 if ($selectedPage.hasClass("selected")) {
                     return;
                 }
 
                 dialog.selectedSettings = SelectRemotePageDialog.getRemotePageByFacePageJQuery($selectedPage);
-
-               //SelectRemotePageDialog.insertCursorDomAtSelectedFacePage($selectedPage);
 
                 // selected クラスを削除
                 let $facePages = $('.face-page');
@@ -395,19 +397,46 @@ module Garage {
                     $(elem).removeClass('selected');
                 });
 
-
                 // selected クラスを付与
-                let $targetPage = $(event.currentTarget);
-                $targetPage.addClass('selected');
+                $selectedPage.addClass('selected');
 
-                let $faceContainer = $targetPage.parents('.face-container');
-
+                let $faceContainer = $selectedPage.parents('.face-container');
                 let $selector = $faceContainer.siblings('.face-selector').children('.face-page-selector');
                 $selector
                     .addClass('selected')
-                    .css('top', dialog.calcSelectorTop($faceContainer, $targetPage));
+                    .css('top', dialog.calcSelectorTop($faceContainer, $selectedPage));
 
                 SelectRemotePageDialog.enableSubmitButton();
+            }
+
+
+            /**
+             *
+             *
+             * @param $facePagesArea {JQuery}
+             * @param event {Event}
+             */
+            private getClickedPageFromFacePagesArea($facePagesArea: JQuery, event: Event): JQuery {
+                let origin = $(event.target);
+                if (origin.is('#face-pages-area')) {
+                    // face-pages-areaがクリックされた場合：クリック座標からページを算出
+                    let $pages = $facePagesArea.find('.face-page');
+                    let pageHeight = $facePagesArea.outerHeight() / $pages.length;
+                    let pageNum = Math.floor(event['offsetY'] / pageHeight);
+                    if (pageNum >= $pages.length) {
+                        console.error('clicked face page not found');
+                        return $pages.eq(0);
+                    } else {
+                        console.log('#face-pages-area clicked: ' + pageNum + '(' + event['offsetY'] + ' / ' + pageHeight + ')');
+                        return $pages.eq(pageNum);
+                    }
+                } else if (origin.is('.face-page')) {
+                    // face-pageがクリックされた場合
+                    return origin;
+                } else {
+                    // face-pageの子孫がクリックされた場合
+                    return $(event.target).parents('.face-page');
+                }
             }
 
 
@@ -516,7 +545,10 @@ module Garage {
              */
             private onOKClicked(event: Event) {
                 this.dialog.close();
-                this.onSubmit(this.selectedSettings);
+
+                if (this.onSubmit != null) {
+                    this.onSubmit(this.selectedSettings);
+                }
             }
 
 
@@ -527,6 +559,10 @@ module Garage {
              */
             private onCancelClicked(event: Event) {
                 this.dialog.close();
+
+                if (this.onCancel != null) {
+                    this.onCancel();
+                }
             }
         }
     }
