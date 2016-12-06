@@ -50,6 +50,9 @@ module Garage {
                     data['destLabel'] = this.createDestLabel();
                 }
 
+                data['allowAccessToStorage'] = this.model.allowAccessToStorage;
+                
+
                 let $dialog = $(jst(data));
 
                 this.$el.append($dialog);
@@ -313,6 +316,9 @@ module Garage {
              * @param event {Event}
              */
             private onChangeBlockStorageAccessCheckbox(event: Event) {
+                let val: boolean = $(event.currentTarget).prop('checked');
+                this.model.allowAccessToStorage = !val;
+
                 this.enableSubmitButton();
 
             }
@@ -358,6 +364,9 @@ module Garage {
                 // ホームボタンの跳び先設定のみOK押下時にモデルに反映
                 this.updateHomeDest();
 
+                // ストレージロック設定の反映
+                this.updateStorageLockFile();
+
                 // 設定保存
                 this.updatePhnConfigFile();
 
@@ -390,6 +399,18 @@ module Garage {
             private removeConfigDialog() {
                 this.undelegateEvents();
                 this.$el.children('#dialog-config-screen').remove();
+            }
+
+
+            /**
+             * ストレージロックファイルをモデルに合わせて更新
+             */
+            private updateStorageLockFile() {
+                if (this.model.allowAccessToStorage) {
+                    storageLock.cancelToLock();
+                } else {
+                    storageLock.readyToLock();
+                }
             }
 
 

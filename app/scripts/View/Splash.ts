@@ -49,11 +49,15 @@ module Garage {
                     }
                 })();
 
-                this.checkRcVersionFromDevice();
+                this.checkStorageLock().then(() => {
 
-                this.syncWithHUIS(() => {
-                    Framework.Router.navigate("#home");
-                }); // 同期が完了したらHomeに遷移する
+                    this.checkRcVersionFromDevice();
+
+                    this.syncWithHUIS(() => {
+                        Framework.Router.navigate("#home");
+                    }); // 同期が完了したらHomeに遷移する
+
+                });
             }
             
             //! page before hide event
@@ -135,6 +139,89 @@ module Garage {
                         callback();
                     }
                 });
+            }
+
+
+            /**
+             * ストレージロックのチェック
+             */
+            private checkStorageLock(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                storageLock = new Util.StorageLock();
+
+                setTimeout(() => {
+                    if (storageLock.isLocked()) {
+                        // ブロックされていますメッセージダイアログ
+                        let res = this.showStorageUnlockDialog();
+                        if (res === 0) {
+                            // 「解除」選択時
+                            let result = storageLock.unlock();
+                            if (result) {
+                                // 解除しました再起動してくださいダイアログ
+                                this.showPleaseRestartDialog();
+
+                            } else {
+                                // 解除失敗ダイアログ
+                                this.showFailedToUnlockDialog();
+
+                            }
+                        }
+                        app.exit(0);
+
+                    } else {
+                        df.resolve();
+                    }
+                }, 100);
+
+                return promise;
+            }
+
+            /**
+             * ストレージロックを解除するかどうかのダイアログを表示
+             *
+             * @return {number} ダイアログの入力
+             */
+            private showStorageUnlockDialog(): number {
+                return electronDialog.showMessageBox(
+                    {
+                        //type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_STORAGE_LOCKED"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_STORAGE_UNLOCK"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
+            /**
+             * ロック解除後の再起動を促すダイアログを表示
+             */
+            private showPleaseRestartDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        //type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
+            /**
+             * ロック解除失敗のダイアログを表示
+             */
+            private showFailedToUnlockDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
             }
 
 
