@@ -66,8 +66,8 @@ module Garage {
             private currentTargetButtonStates_: IStateDetail[];
             private currentTargetButtonStatesUpdated_: boolean;
             private selectedResizer_: string;
-            private mouseMoveStartTargetPosition_: IPosition;
-            private mouseMoveStartPosition_: IPosition;
+            private mouseMoveStartTargetPosition_: Model.Position;
+            private mouseMoveStartPosition_: Model.Position;
             private mouseMoveStartTargetArea_: IArea;
             private mouseMoving_: boolean;
             private gridSize_: number;
@@ -1124,11 +1124,12 @@ module Garage {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
 
                     // ドラッグ開始位置の保存
-                    this.mouseMoveStartPosition_ = mousePosition;
-                    this.mouseMoveStartTargetPosition_ = {
-                        x: parseInt(this.$currentTarget_.css("left"), 10),
-                        y: parseInt(this.$currentTarget_.css("top"), 10)
-                    };
+                    this.mouseMoveStartPosition_.setPosition(mousePosition);
+                    this.mouseMoveStartTargetPosition_.setCoord(
+                        parseInt(this.$currentTarget_.css("left"), 10),
+                        parseInt(this.$currentTarget_.css("top"), 10)
+                    );
+
                     this.mouseMoveStartTargetArea_ = {
                         x: parseInt(this.$currentTarget_.css("left"), 10),
                         y: parseInt(this.$currentTarget_.css("top"), 10),
@@ -1319,8 +1320,7 @@ module Garage {
                     }
                 }
 
-                if (this.mouseMoveStartTargetPosition_.x == newPosition.x &&
-                    this.mouseMoveStartTargetPosition_.y == newPosition.y) {
+                if (this.mouseMoveStartPosition_.isSame(newPosition)) {
                     // 位置に変更がない（アイテム選択のみ）の場合は何もしない
                     // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
                     return;
