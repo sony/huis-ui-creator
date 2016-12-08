@@ -151,9 +151,10 @@ module Garage {
 
                 storageLock = new Util.StorageLock();
 
+                // ダイアログ表示中もスピナーを回転させるための setTimeout
                 setTimeout(() => {
                     if (storageLock.isLocked()) {
-                        // ブロックされていますメッセージダイアログ
+                        // ロックされていますメッセージダイアログ
                         let res = this.showStorageUnlockDialog();
                         if (res === 0) {
                             // 「解除」選択時
@@ -171,6 +172,7 @@ module Garage {
                         app.exit(0);
 
                     } else {
+                        // ロックされていない場合はすぐ返す
                         df.resolve();
                     }
                 }, 100);
@@ -186,9 +188,11 @@ module Garage {
             private showStorageUnlockDialog(): number {
                 return electronDialog.showMessageBox(
                     {
-                        //type: "error",
                         message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_STORAGE_LOCKED"),
-                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_STORAGE_UNLOCK"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        buttons: [
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_STORAGE_UNLOCK"),
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")
+                        ],
                         title: PRODUCT_NAME,
                         cancelId: 0,
                     });
@@ -201,7 +205,6 @@ module Garage {
             private showPleaseRestartDialog() {
                 electronDialog.showMessageBox(
                     {
-                        //type: "error",
                         message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
