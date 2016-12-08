@@ -151,6 +151,9 @@ module Garage {
                         this.commandManager_ = new CommandManager();
                     }
 
+                    this.mouseMoveStartPosition_ = new Model.Position(0, 0);
+                    this.mouseMoveStartTargetPosition_ = new Model.Position(0, 0);
+
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
                     this.setFocusAndMoveCursorToEnd($remoteName);
@@ -778,10 +781,7 @@ module Garage {
                 }
                 this._updateItemElementOnCanvas(newItem);
                 
-                var mousePosition: IPosition = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                var mousePosition: Model.Position = new Model.Position(event.pageX, event.pageY);
                 let target = this._getTarget(mousePosition);
                 if (target) {
                     this.setDragTarget(target, false);
@@ -989,10 +989,7 @@ module Garage {
 
                 this.selectedResizer_ = null;
 
-                var mousePosition: IPosition = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                var mousePosition = new Model.Position(event.pageX, event.pageY);
 
                 // 直前に選択していたものと同一のアイテムを選択しているかチェック
                 var remainsTarget = this._remainsTarget(mousePosition);
@@ -1117,10 +1114,10 @@ module Garage {
             /**
              * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
              *
-             * @param mousePosition {IPosition} マウス座標
+             * @param mousePosition {Model.Position} マウス座標
              * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
              */
-            private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
+            private startDraggingCanvasItem(mousePosition: Model.Position, forceStart: boolean = false) {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
 
                     // ドラッグ開始位置の保存
