@@ -4416,7 +4416,7 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
              */
-            private _getTarget(position: IPosition): JQuery {                
+            private _getTarget(position: Model.Position): JQuery {
 
                 //label >> button >> images の優先順位
                 //この順番は、_base.cssで定義されている z-indexの高い順  
@@ -4448,7 +4448,7 @@ module Garage {
             * @param position {IPosition} 位置
             * @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
             */
-            private _getTargetIn(position: IPosition, $items: JQuery): JQuery {
+            private _getTargetIn(position: Model.Position, $items: JQuery): JQuery {
                 let FUNCTION_NAME: string = TAG + " : _getTargetIn : ";
                 if (position == undefined) {
                     console.warn(FUNCTION_NAME + "position is undefined");
@@ -4467,14 +4467,16 @@ module Garage {
                     if ($item.hasClass("background")) {
                         continue;
                     }
-                    let itemX = $item.offset().left;
-                    let itemY = $item.offset().top;
-                    let itemW = $item.width() / 2;
-                    let itemH = $item.height() / 2;
-                    if (itemX <= position.x && position.x <= itemX + itemW) {
-                        if (itemY <= position.y && position.y <= itemY + itemH) {
-                            return $item;
-                        }
+
+                    let item_area = {
+                        x: $item.offset().left,
+                        y: $item.offset().top,
+                        w: $item.width() / 2,
+                        h: $item.height() / 2,
+                    };
+
+                    if (position.isInArea(item_area)) {
+                        return $item;
                     }
                 }
 
