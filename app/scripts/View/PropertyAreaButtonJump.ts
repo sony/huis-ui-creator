@@ -139,8 +139,6 @@ module Garage {
 
                 this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.scene_no);
 
-                this.focusFirstPulldown();
-
                 $jumpContainer.i18n();
 
                 return $jumpContainer;
@@ -264,7 +262,9 @@ module Garage {
 
                 if (!this.isValidValue(remoteId)) {
                     let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
-                    input.focus();
+                    setTimeout(() => {
+                        input.focus();
+                    });
                 }
             }
 
