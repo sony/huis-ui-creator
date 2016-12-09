@@ -85,8 +85,8 @@
             "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。",
             "STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB": "接続されているHUIS REMOTE CONTROLLERでは、本アプリを利用できません。\n本アプリに対応したファームウェアにアップデートしてください。",
             "STR_DIALOG_MESSAGE_STORAGE_LOCKED": "HUIS-100RCへのストレージアクセスはブロックされています。解除しますか？",
-            "STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロックを解除しました。\n一度アプリを終了後、再起動しなおしてください。",
-            "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "★★HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。○○してください。"
+            "STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロックを解除します。\nUSBケーブルを一度抜いたあと、再度接続してください。\nその後アプリを再度起動してください。\n再起動後にも同様のメッセージが表示された場合、このバージョンのアプリでは解除できない可能性があります。",
+            "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。もう一度お試しください。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
