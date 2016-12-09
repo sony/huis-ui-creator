@@ -368,68 +368,26 @@ body{
             height: $SIZE_BUTTON_HEIGHT;
             padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
             padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+            padding-right:$SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
+            display : flex;
+            justify-content:flex-end;
 
             #remotelist-label-selected-conainer{
                 color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
                 font-size: $FONT_SIZE_DIALOG_SELECTED;
+                line-height:$SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
                 text-align: right;
-                right: $SIZE_DIALOG_OK_BUTTON_RIGHT + $SIZE_DIALOG_BUTTON_WIDTH + 4;
-                width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH - ($SIZE_DIALOG_OK_BUTTON_RIGHT + $SIZE_DIALOG_BUTTON_WIDTH + 4);
+                margin-right:$SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
             }
 
-            .ui-btn{
-                position: absolute;
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
-                text-shadow:none;
-                margin:0;
-                padding:0;
-                border:none;
-                height:$SIZE_BUTTON_HEIGHT;   
-                font-size:$FONT_SIZE_TEXT_BUTTON;
-                color:$COLOR_BUTTON_TEXT;
-                background-color:$COLOR_BUTTON_NORMAL;
-                box-shadow:none;   
-                border-radius:0;
-
-                &:hover{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_HOVER;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    border:none;
-                }
-
-                &:active{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_PRESED;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    box-shadow:none;
-                    border:none;
-                }
-
-                &:focus{
-                    text-shadow:none;
-                    box-shadow:none;
-                    border:none;
-                }
-            }
+           .ui-btn{
+               width: $SIZE_DIALOG_BUTTON_WIDTH;
+           }
           
             #remotelist-button-ok{
-                width: $SIZE_DIALOG_BUTTON_WIDTH;
-                height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
-                right: $SIZE_DIALOG_OK_BUTTON_RIGHT;
-                bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
-                font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
+                margin-right:$SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
             }
           
-            #remotelist-button-cancel{
-                width: $SIZE_DIALOG_BUTTON_WIDTH;
-                height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
-                right:$SIZE_DIALOG_CANCEL_BUTTON_RIGHT;
-                bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
-                font-size: $FONT_SIZE_ADD_PAGE_BUTTON; 
-            }
         }
     }
 }
