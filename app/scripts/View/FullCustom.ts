@@ -1573,10 +1573,7 @@ module Garage {
              */
             private onContextMenu(event: Event) {
                 event.preventDefault();
-                this.rightClickPosition_ = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                this.rightClickPosition_.setCoord(event.pageX, event.pageY);
 
                 // コンテキストメニューを作成する
                 this.contextMenu_.clear();
@@ -4486,19 +4483,21 @@ module Garage {
             /**
              * 画面上の指定した位置にあるページを取得する。
              */
-            private _getTargetPageModule(position: IPosition): JQuery {
+            private _getTargetPageModule(position: Model.Position): JQuery {
                 var $modules = $("#face-canvas .module-container");
 
                 for (let i = 0, l = $modules.length; i < l; i++) {
                     let $module = $modules.eq(i);
-                    let moduleX = $module.offset().left;
-                    let moduleY = $module.offset().top;
-                    let moduleW = $module.width() / 2;
-                    let moduleH = $module.height() / 2;
-                    if (moduleX <= position.x && position.x <= moduleX + moduleW) {
-                        if (moduleY <= position.y && position.y <= moduleY + moduleH) {
-                            return $module;
-                        }
+
+                    let moduleArea = {
+                        x: $module.offset().left,
+                        y: $module.offset().top,
+                        w: $module.width() / 2,
+                        h: $module.height() / 2,
+                    }
+
+                    if (position.isInArea(moduleArea)) {
+                        return $module;
                     }
                 }
 

@@ -337,10 +337,7 @@ module Garage {
 
             private _onContextMenu() {
                 event.preventDefault();
-                this.rightClickPosition_ = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                this.rightClickPosition_.setCoord(event.pageX, event.pageY);
 
                 // コンテキストメニューを作成する
                 this.contextMenu_.clear();

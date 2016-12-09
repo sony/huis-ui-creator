@@ -72,7 +72,7 @@ module Garage {
 
             protected currentWindow_: any;
             protected contextMenu_: any;
-            protected rightClickPosition_: { x: number; y: number };
+            protected rightClickPosition_ = new Model.Position(0, 0);
 
             constructor(html, name, options) {
                 super(html, name, options);
