@@ -1161,10 +1161,10 @@ module Garage {
             /*
             * 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
             *
-            * @param mousePosition : IPosition マウスポインター
+            * @param mousePosition : Model.Position マウスポインター
             * @return result : boolean  CanvasAreaのFacePagesAreaの上の場合true, 違う場合false
             */
-            private isOnCanvasFacePagesArea(mousePosition: IPosition):boolean {
+            private isOnCanvasFacePagesArea(mousePosition: Model.Position):boolean {
                 let FUNCTION_NAME: string = TAG + " : isOnCanvasFacePagesArea :";
                 if (mousePosition == undefined) {
                     console.warn(FUNCTION_NAME + "mousePosition is undefined");
@@ -1178,18 +1178,15 @@ module Garage {
                     return false;
                 }
 
-                let facePagesAreaLeft:number = $facePagesAreaOnCanvas.offset().left;
-                let facePagesAreaRight:number = $facePagesAreaOnCanvas.offset().left + $facePagesAreaOnCanvas.width()/2;
-                let facePagesAreaTop :number= $facePagesAreaOnCanvas.offset().top;
-                let facePagesAreaBottom :number= $facePagesAreaOnCanvas.offset().top + $facePagesAreaOnCanvas.height()/2;
+                let canvasFacePagesArea = {
+                    x: $facePagesAreaOnCanvas.offset().left,
+                    y: $facePagesAreaOnCanvas.offset().top,
+                    w: $facePagesAreaOnCanvas.width() / 2,
+                    h: $facePagesAreaOnCanvas.height() / 2,
 
-                if (mousePosition.x > facePagesAreaLeft && mousePosition.x < facePagesAreaRight
-                    && mousePosition.y > facePagesAreaTop && mousePosition.y < facePagesAreaBottom) {
-                    return true;
-                } else {
-                    return false;
                 }
 
+                return mousePosition.isInArea(canvasFacePagesArea);
             }
 
             /**
