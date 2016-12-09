@@ -4545,22 +4545,19 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {boolean} 指定した位置に現在のターゲットとなるアイテムがあったら true を返却。それ以外は false を返却。
              */
-            private _remainsTarget(position: IPosition): boolean {
+            private _remainsTarget(position: Model.Position): boolean {
                 if (!this.$currentTarget_) {
                     return false;
                 }
 
-                var targetX = this.$currentTarget_.offset().left;
-                var targetY = this.$currentTarget_.offset().top;
-                var targetW = this.$currentTarget_.width() / 2;
-                var targetH = this.$currentTarget_.height() / 2;
-                if (targetX <= position.x && position.x <= targetX + targetW) {
-                    if (targetY <= position.y && position.y <= targetY + targetH) {
-                        return true;
-                    }
+                let targetArea = {
+                    x: this.$currentTarget_.offset().left,
+                    y: this.$currentTarget_.offset().top,
+                    w: this.$currentTarget_.width() / 2,
+                    h: this.$currentTarget_.height() / 2,
                 }
 
-                return false;
+                return position.isInArea(targetArea);
             }
 
             /**
