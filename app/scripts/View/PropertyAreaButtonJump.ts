@@ -256,7 +256,9 @@ module Garage {
 
                 if (!this.isValidValue(remoteId)) {
                     let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
-                    input.focus();
+                    setTimeout(() => {
+                        input.focus();
+                    });
                 }
             }
 
