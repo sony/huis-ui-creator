@@ -4566,19 +4566,17 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {boolean} 指定した位置に詳細編集エリアがあれば true を返却。それ以外は false を返却。
              */
-            private _checkDetailItemAreaPosition(position: IPosition): boolean {
+            private _checkDetailItemAreaPosition(position: Model.Position): boolean {
                 var $detailArea = $("#face-item-detail-area");
-                var detailX = $detailArea.offset().left;
-                var detailY = $detailArea.offset().top;
-                var detailW = $detailArea.width();
-                var detailH = $detailArea.height();
-                if (detailX <= position.x && position.x <= detailX + detailW) {
-                    if (detailY <= position.y && position.y <= detailY + detailH) {
-                        return true;
-                    }
+
+                let detailArea = {
+                    x: $detailArea.offset().left,
+                    y: $detailArea.offset().top,
+                    w: $detailArea.width(),
+                    h: $detailArea.height(),
                 }
 
-                return false;
+                return position.isInArea(detailArea);
             }
 
             /**
