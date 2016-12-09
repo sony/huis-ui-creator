@@ -216,6 +216,17 @@ body{
                 padding: 0;
                 margin: 0;
 
+                ::-webkit-scrollbar{
+                    &:vertical{
+                        width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2.5;
+                    }
+                }
+                ::-webkit-scrollbar-thumb {
+                    &:vertical{
+                        border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2.5 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
+                    }
+                }
+
                 #face-list-footer {
                     position: absolute;
                     bottom: 0;
