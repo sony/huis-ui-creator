@@ -420,7 +420,7 @@ module Garage {
             private updatePhnConfigFile() {
                 let dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                    title: "★設定を適用中です。\nUSBケーブルを抜かないでください。",
+                    title: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY"),
                 });
 
                 let $dialog = dialog.show();
@@ -448,7 +448,7 @@ module Garage {
 
                 $spinner.removeClass("spinner");//アイコンが回転しないようにする。
                 $spinner.css("background-image", 'url("../res/images/icon_done.png")');
-                $dialog.find("p").html("設定を適用しました。");
+                $dialog.find("p").html($.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE"));
 
                 setTimeout(() => {
                     df.resolve();
