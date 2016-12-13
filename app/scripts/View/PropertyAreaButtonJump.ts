@@ -130,10 +130,14 @@ module Garage {
                 $jumpContainer.append($stateDetail);
 
                 this.setActionPullDown(this.defaultState);
-                this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.remote_id);
-                this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, this.defaultState.action[0].jump.scene_no);
 
-                this.focusFirstPulldown();
+                if (huisFiles.getFace(stateData.jump.remote_id) != null) {
+                    this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.remote_id);
+                } else {
+                    this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID);
+                }
+
+                this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.scene_no);
 
                 $jumpContainer.i18n();
 
@@ -258,7 +262,9 @@ module Garage {
 
                 if (!this.isValidValue(remoteId)) {
                     let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
-                    input.focus();
+                    setTimeout(() => {
+                        input.focus();
+                    });
                 }
             }
 

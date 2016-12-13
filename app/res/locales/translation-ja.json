@@ -97,7 +97,23 @@
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
             "STR_DIALOG_BUTTON_DELETE": "削除",
             "STR_DIALOG_BUTTON_CHANGE_HOME_DEST": "変更する",
-            "STR_DIALOG_BUTTON_STORAGE_UNLOCK": "解除"
+            "STR_DIALOG_BUTTON_STORAGE_UNLOCK": "解除",
+            "STR_DIALOG_BUTTON_SET_DEFAULT": "デフォルトに戻す"
+        },
+        "label": {
+            "STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON": "ホームボタンの移動先",
+            "STR_DIALOG_PROPERTY_LABEL_HOME": "ホーム画面",
+            "STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE": "リモコン画面の移動",
+            "STR_DIALOG_PROPERTY_LABEL_STORAGE_ACCESS" : "ストレージアクセス"
+        },
+        "input": {
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_HOME": "ホーム画面",
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM": "カスタム",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SETTING": "設定ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_ADD": "追加ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON": "ヘッダーの左右移動ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SWIPE": "スワイプによる移動を無効化",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_STORAGE_ACCESS": "HUIS-100RC のストレージへのアクセスをブロック"
         }
     },
     "edit": {
