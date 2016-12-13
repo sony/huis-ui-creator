@@ -96,6 +96,7 @@ module Garage {
             private onOptionSetPropertiesClick(event: Event) {
                 let conf = new PhnConfig({el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock())});
                 conf.$el.i18n();
+                conf.updateHomeDestLabel();
                 return;
             }
 
