@@ -255,11 +255,11 @@
             "STR_ACTION_INPUT_FLICK_DOWN": "下フリック"
         },
         "page": { 
-            "STR_PAGE_0": "ページ１",
-            "STR_PAGE_1": "ページ２",
-            "STR_PAGE_2": "ページ３",
-            "STR_PAGE_3": "ページ４",
-            "STR_PAGE_4": "ページ５"
+            "STR_PAGE_0": "ページ 1",
+            "STR_PAGE_1": "ページ 2",
+            "STR_PAGE_2": "ページ 3",
+            "STR_PAGE_3": "ページ 4",
+            "STR_PAGE_4": "ページ 5"
         },
         "function": {
             "STR_PLEASE_INPUT_REMOTE": "信号を選択",
