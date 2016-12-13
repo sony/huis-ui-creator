@@ -94,7 +94,7 @@ module Garage {
              * @param event {Event} クリックイベント
              */
             private onOptionSetPropertiesClick(event: Event) {
-                let conf = new PhnConfig({ el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig) });
+                let conf = new PhnConfig({el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock())});
                 conf.$el.i18n();
                 return;
             }

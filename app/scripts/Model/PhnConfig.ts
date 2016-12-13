@@ -61,7 +61,7 @@ module Garage {
                 this.set('allow_access_to_storage', val);
             }
 
-            constructor(data?: IPhnConfig) {
+            constructor(data?: IPhnConfig, allowAccessToStorage?: boolean) {
                 super();
 
                 if (data == null) {
@@ -74,6 +74,7 @@ module Garage {
                     }
                 }
 
+                this.allowAccessToStorage = allowAccessToStorage;
             }
 
 
