@@ -87,7 +87,9 @@
             "STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB": "接続されているHUIS REMOTE CONTROLLERでは、本アプリを利用できません。\n本アプリに対応したファームウェアにアップデートしてください。",
             "STR_DIALOG_MESSAGE_STORAGE_LOCKED": "HUIS-100RCへのストレージアクセスはブロックされています。解除しますか？",
             "STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロックを解除します。\nUSBケーブルを一度抜いたあと、再度接続してください。\nその後アプリを再度起動してください。\n再起動後にも同様のメッセージが表示された場合、このバージョンのアプリでは解除できない可能性があります。",
-            "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。もう一度お試しください。"
+            "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。もう一度お試しください。",
+            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY": "設定を適用中です。\nUSBケーブルを抜かないでください。",
+            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE": "設定を適用しました。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
