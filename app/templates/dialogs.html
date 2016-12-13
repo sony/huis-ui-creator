@@ -107,9 +107,9 @@
         </div>
     </script>
 
-    <!-- select remote page dialog -->
-    <script type="text/template" id="common-dialog-remotelist">
-        <div id="remotelist-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
+    <!-- destination dialog -->
+    <script type="text/template" id="common-dialog-remotelist" >
+        <div id="remotelist-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b" class="ui-page-theme-b">
             <section class="select-remote-dialog">
                 <div class="remotelist-dialog">
                     <header class="{{_header}}">
@@ -122,10 +122,8 @@
                         <article id="spinner-container">
                             <div class="spinner large show" id="spinner-dialog-spinner-gif">&nbsp;</div>
 
-                            <div id="remotelist-load-message">
-                                <p>
-                                    <!--  -->
-                                </p>
+                            <div id="remotelist-load-message-container">
+                                <p id="remotelist-load-message" data-i18n="dialog.message.STR_DIALOG_MESSAGE_LOADING_REMOTE_LIST">★しばらくお待ちください。</p>
                             </div>
                         </article>
                         
@@ -136,6 +134,7 @@
                     </div>
                     <div class="separator"></div>
                     <div class="submit-area">
+                        <div id="remotelist-label-selected-conainer"><span id="remotelist-label-selected"></span></div>
                         <button id="remotelist-button-ok" disabled>{{#anotherOption}}{{label_ok}}{{/anotherOption}}</button>
                         <button id="remotelist-button-cancel">{{#anotherOption}}{{label_cancel}}{{/anotherOption}}</button>
                     </div>
