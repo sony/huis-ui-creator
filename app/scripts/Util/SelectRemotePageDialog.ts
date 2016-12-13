@@ -457,8 +457,12 @@ module Garage {
 
                 let face = huisFiles.getFace(this.selectedSettings.remote_id);
                 if (face == null) {
-                    console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
-                    return;
+                    if (this.selectedSettings.remote_id == this.tmpFace.remoteId) {
+                        face = this.tmpFace;
+                    } else {
+                        console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
+                        return;
+                    }
                 }
 
                 let labelArea = $('#remotelist-label-selected');
