@@ -105,7 +105,7 @@
         },
         "label": {
             "STR_DIALOG_LABEL_SELECTED_REMOTE": "選択中のリモコン：",
-            "STR_DIALOG_LABEL_SELECTED_PAGE": "ページ",
+            "STR_DIALOG_LABEL_SELECTED_PAGE": "ページ ",
             "STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON": "ホームボタンの移動先",
             "STR_DIALOG_PROPERTY_LABEL_HOME": "ホーム画面",
             "STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE": "リモコン画面の移動",
