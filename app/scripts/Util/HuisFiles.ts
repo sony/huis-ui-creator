@@ -872,6 +872,74 @@ module Garage {
                 return result;
             }
 
+            /**
+             * ページジャンプボタンで使用可能なリモコン情報を取得
+             *
+             * @param tmpRemoteId {string} 編集中リモコンのremote_id
+             * @param faceName {string} 編集中リモコンの名称
+             * @param gmodules {IGModule[]} 編集中リモコンのモジュール
+             * @return {IRemoteInfo[]}
+             */
+            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: IGModule[]): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+                let containsTmpRemote = false;
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    let target = this.remoteInfos_[i];
+
+                    if (target.face.remoteId == tmpRemoteId) {
+                        // 編集中のリモコン
+                        containsTmpRemote = true;
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules, target.face.category, target.mastarFace));
+
+                    } else {
+                        result.push(target);
+
+                    }
+                }
+
+                // 新規作成中の場合はリストの先頭に追加
+                if (!containsTmpRemote) {
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules));
+                }
+
+                return result;
+            }
+
+            /**
+             * 一時的なのリモコン情報を生成
+             *
+             * @param remoteId {string}
+             * @param faceName {string}
+             * @param modules {IGModule[]}
+             * @param catgory {string}
+             * @param masterFace {IGFace}
+             * @return {IRemoteInfo}
+             */
+            private createTmpRemoteInfo(remoteId: string, faceName: string, modules: IGModule[], category: string = "", masterFace?: IGFace): IRemoteInfo {
+                let tmpInfo:IRemoteInfo = {
+                    remoteId: remoteId,
+                    face: {
+                        name: $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE'),//faceNameを使用せず固定
+                        remoteId: remoteId,
+                        category: category,
+                        modules: modules
+                    }
+                };
+
+                if (masterFace != null) {
+                    tmpInfo.mastarFace = masterFace;
+                }
+
+                return tmpInfo;
+            }
+
             /*
             * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
             */
@@ -1510,7 +1578,7 @@ module Garage {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
                         if (!_.isUndefined(action.jump)) {
-                            normalizedAction.jump = action.jump;
+                            normalizedAction.jump = this._normalizeJump(action.jump);
                         }
                     } else {
                         normalizedAction.code_db = {
@@ -1675,6 +1743,22 @@ module Garage {
                 });
 
                 return normalizedImages;
+            }
+
+            /**
+             * ページジャンプ設定の不正なデータを修正する
+             *
+             * @param jump {IJump} ページジャンプ設定
+             * @return {IJump}
+             */
+            private _normalizeJump(jump: IJump): IJump {
+                let remoteId: string = (jump.remote_id != null) ? jump.remote_id : "";
+                let sceneNo: number = (jump.scene_no != null && jump.scene_no >= 0 && jump.scene_no <= 4) ? jump.scene_no : 0;
+
+                return {
+                    remote_id: remoteId,
+                    scene_no: sceneNo
+                }
             }
 
             private _getMasterFace(remoteId: string): IGFace {

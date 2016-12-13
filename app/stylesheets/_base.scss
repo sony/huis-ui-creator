@@ -153,8 +153,155 @@ body {
             background-color:$COLOR_TOAST_BACKGROUND;
     }
 
+    
+
     .ui-page-theme-b{
     
+        //共通のラジオボタン
+        .ui-radio{
+            margin:0;
+            height:$SIZE_RADIO_MARK_HEIGHT;
+
+            display: flex;
+            align-items: center;
+
+            .ui-btn{
+                background:none;
+                font-weight:normal;
+                height:$SIZE_RADIO_MARK_HEIGHT;
+                line-height:$SIZE_RADIO_MARK_LINE_HEIGHT;
+                border:none;
+                padding-top:0;
+                padding-bottom:0;
+                padding-left:$SIZE_RADIO_TEXT_PADDING_LEFT;
+                font-size: $FONT_SIZE_RADIO_BOX;
+                font-family:$FONT_FAMILY_RADIO_BOX;
+
+                & + input[type=radio]{
+                    display: none;
+                }
+
+                &:hover{
+                    background:none;
+                }
+
+                &:active{
+                    background:none;
+                }
+
+                &:focus{
+                    background:none;
+                }
+
+                
+                input[type="radio"]{
+                    left:0;
+                    width:20px;
+                    height:20px;
+                }
+                
+                &:after{
+                    top: 33%;
+                    left: 0;
+                    width: $SIZE_RADIO_MARK_WIDTH;
+                    height: $SIZE_RADIO_MARK_HEIGHT;
+                    border: none;
+                    background: none;
+                    background-image: $PATH_IMG_RADIO_BOX_NORMAL;
+                    opacity: 1;
+                }
+
+                &:hover:after{
+                    background-image: $PATH_IMG_RADIO_BOX_HOVER;
+                }
+
+                &:active:after{
+                    background-image: $PATH_IMG_RADIO_BOX_ACTIVE;
+                }
+
+                &.ui-radio-on:after{
+                    background-image: $PATH_IMG_RADIO_BOX_CHECKED_NORMAL;
+                }
+
+                &.ui-radio-on:hover:after{
+                    background-image: $PATH_IMG_RADIO_BOX_CHECKED_HOVER;
+                }
+
+                &.ui-radio-on:active:after{
+                    background-image: $PATH_IMG_RADIO_BOX_CHECKED_PRESSED;
+                }
+
+            }
+        }
+
+        //共通のチェックボックス
+        .ui-checkbox{
+            margin:0;
+            display: flex;
+            align-items: center;
+
+            height:$SIZE_CHECK_BOX_MARK_HEIGHT;
+
+            .ui-btn{
+                background:none;
+                font-weight:normal;
+                height:$SIZE_CHECK_BOX_MARK_HEIGHT;
+                line-height:$SIZE_CHECK_BOX_MARK_LINE_HEIGHT;
+                padding-left:$SIZE_CHECK_BOX_TEXT_MARGIN_PADDING;
+                padding-top : 0;
+                padding-bottom:0;
+                border:none;
+                font-size: $FONT_SIZE_CHECK_BOX;
+                font-family:$FONT_FAMILY_CHECK_BOX;
+
+                & + input[type=checkbox]{
+                    display: none;
+                }
+
+                &:hover{
+                    background:none;
+                }
+
+                &:active{
+                    background:none;
+                }
+
+                &:focus{
+                    background:none;
+                }
+
+                &:after{
+                    top: 33%;
+                    left: 0px;
+                    width: $SIZE_CHECK_BOX_MARK_WIDTH;
+                    height: $SIZE_CHECK_BOX_MARK_HEIGHT;
+                    background: none;
+                    background-image: $PATH_IMG_CHECK_BOX_NORMAL;
+                    opacity: 1;
+                }
+
+                &:hover:after{
+                    background-image: $PATH_IMG_CHECK_BOX_HOVER;
+                }
+
+                &:active:after{
+                    background-image: $PATH_IMG_CHECK_BOX_ACTIVE;
+                }
+
+                &.ui-checkbox-on:after{
+                    background-image: $PATH_IMG_CHECK_BOX_CHECKED_NORMAL;
+                }
+
+                &.ui-checkbox-on:hover:after{
+                    background-image: $PATH_IMG_CHECK_BOX_CHECKED_HOVER;
+                }
+
+                &.ui-checkbox-on:active:after{
+                    background-image: $PATH_IMG_CHECK_BOX_CHECKED_PRESSED;
+                }
+
+            }
+        }
 
         //共通の吹き出し
         #popup-arrow{
@@ -167,6 +314,8 @@ body {
             margin-top:$SIZE_POPUP_ARROW_MINUS_MARGIN;
             margin-bottom:$SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
         }
+
+        
 
         //共通のテキストボタン
           .ui-btn{

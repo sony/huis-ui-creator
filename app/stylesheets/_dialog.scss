@@ -400,11 +400,29 @@ body{
     z-index: 3;
     background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
     position: absolute;
-
+    display:flex;
 
     #dialog-config-area{
-        height: 650px;
-        width: 700px;
+
+        #dialog-config-header{
+            padding-top: $SIZE_DETAIL_PROPERTY_HEADER_PADDING_TOP;
+            margin-left:$SIZE_DETAIL_PROPERTY_HEADER_MARGIN_LEFT;
+            
+            .title{
+                line-height:$LINE_HEIGHT_DETAIL_PROPERTY_TITLE;
+                font-size: $FONT_SIZE_DETAIL_PROPERTY_TITLE;
+                font-family:$FONT_FAMILY_DETAIL_PROPERTY_TITLE;
+            }
+
+        }
+
+        .separator{
+            margin:0 auto; //中央揃え
+            width : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_WIDTH;
+            border-bottom : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
+        }
+
+        width: $SIZE_DETAIL_PROPERTY_WIDTH;
         background-color: $COLOR_COMMON_BACKGROUND;
         color: black;
         margin: auto;
@@ -413,13 +431,81 @@ body{
         animation-name: popin;
         animation-duration: 350ms;
 
+        .one-line{
+                display:flex;
+        }
+
+        .inputs-container{
+                margin-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_LEFT;
+                margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_RIGHT;
+        }
+      
         #dialog-config-details{
-            height: 450px;
-            width: 680px;
-            margin: auto;
+            margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_TOP;
+            padding-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_LEFT;
+            padding-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_RIGHT;
             overflow-y: scroll;
 
+            .ui-controlgroup{
+                margin:0;
+
+                .input-element{
+                    margin-top:$SIZE_DETAIL_PROPERTY_INPUT_ELEMENT_MARGIN_TOP;
+                }
+            }
+
+            .category{
+                margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_MARGIN_TOP;
+                .category-title{
+
+                    //縦中央揃え
+                    display: flex;
+                    align-items: center;
+
+                    height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_HEIGHT;
+                    line-height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_LINE_HEIGHT;
+                
+                    .category-divider{
+                        flex-grow:1;
+                        border-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_DIVIDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_CATEGORY_DIVIDER_BORDER;
+                    }
+
+                    span{
+                        margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_MARGIN_RIGHT;
+                    }
+                }
+
+                #dialog-config-button-change-home-dest{
+                    width:$SIZE_DETAIL_PROPERTY_CHANGE_BUTTON_WIDTH;
+                    margin-left:auto;        
+                }
+
+            }
+
+            #dialog-config-details-storage-access{
+                margin-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_BOTTOM;
+            }
         }
+
+        #dialog-config-submit-area{
+            margin-top:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_MARGIN_TOP;
+            margin-right:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_MARGIN_RIGHT;
+            padding-bottom:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_PADDING_BOTTOM;
+
+            .ok-cancel-btns{
+                margin-top:$SIZE_DETAIL_PROPERTY_OK_CANCEL_BUTTON_MARGIN_TOP;
+            }
+
+            .ui-btn{
+                margin-left:auto;
+                width:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_BUTTON_WIDTH;
+            }
+
+            #dialog-config-button-cancel{
+                margin-left:$SIZE_DETAIL_PROPERTY_CANCEL_BUTTON_MARGIN_LEFT;
+            }
+        }
+
     }
 }
 

@@ -13,6 +13,7 @@
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Util/ZipManager.ts" />
+/// <reference path="../Util/StorageLock.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
@@ -593,6 +594,10 @@ declare module Garage {
      */
     var electronDialog: Util.ElectronDialog;
     /**
+     * Util.StorageLock のインスタンス
+     */
+    var storageLock: Util.StorageLock;
+    /**
      * Util.HuisFiles のインスタンス
      */
     var huisFiles: Util.HuisFiles;
@@ -854,6 +859,10 @@ declare module Garage {
      * インポート・エクスポート する際に仕様する拡張子
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
+    /*
+     * インポート・エクスポート する際に仕様する拡張子（BtoB版）
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B
     /*
      * インポート・エクスポート用拡張子の日本語の説明
      */

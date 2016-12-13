@@ -1154,9 +1154,11 @@ module Garage {
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
-                        if (this.macroProperty != null){
+                        if (this.macroProperty != null) {
                             //フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
                             this.macroProperty.focusFirstPulldown();
+                        } else if (this.jumpProperty != null) {
+                            this.jumpProperty.focusFirstPulldown();
                         }
                     }
                 }
@@ -5270,6 +5272,12 @@ module Garage {
 
             }
 
+            /**
+             * ページジャンプボタンの詳細エリアをレンダリング
+             *
+             * @param button {Model.ButtonItem} ページジャンプボタンのモデル
+             * @param $detail {JQuery} 
+             */
             private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
                 if (!button || !$detail) {
                     return;
@@ -5311,6 +5319,8 @@ module Garage {
 
                 //ボタンステートを入力
                 this.currentTargetButtonStates_ = button.state;
+
+                this.jumpProperty.focusFirstPulldown();
 
                 $detail.i18n();
             }
