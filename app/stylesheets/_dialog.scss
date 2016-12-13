@@ -108,7 +108,7 @@ body{
 
     overflow-y:auto;
     overflow-x:hidden;
-    text-shadow: none;
+   
     font-family:$FONT_WEIGHT_DIALOG_TEXT;
     width:$SIZE_DIALOG_WIDTH;
     box-shadow:none;
@@ -150,6 +150,8 @@ body{
 
 
 #remotelist-dialog-area{
+    text-shadow: none;
+    font-weight:normal;
 
     .remotelist-dialog{
         background-color: $COLOR_COMMON_BACKGROUND;
@@ -163,6 +165,8 @@ body{
             font-size:$SIZE_DIALOG_TITLE_FONT;
             font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
             line-height: $TEXT_HEIGHT_DEFAULT;
+            font-weight:normal;
+            text-shadow: none;
         }
 
         header+.separator{
@@ -256,6 +260,7 @@ body{
                         margin-bottom:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_BOTTOM;
                         text-align: center;
                         color: $COLOR_TEXT_MAIN;
+                        font-weight:normal;
                         font-size:$FONT_DIALOG_REMOTE_TITLE;
                         font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
                         line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
@@ -382,6 +387,8 @@ body{
 
            .ui-btn{
                width: $SIZE_DIALOG_BUTTON_WIDTH;
+               font-weight:normal;
+               text-shadow: none;
            }
           
             #remotelist-button-ok{
@@ -395,12 +402,20 @@ body{
 
 // 詳細設定ダイアログ
 #dialog-config-screen{
+    text-shadow: none;
+    font-weight:normal;
+
     height: 100%;
     width: 100%;
     z-index: 3;
     background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
     position: absolute;
     display:flex;
+
+    .ui-btn{
+        font-weight:normal;
+        text-shadow: none;
+    }
 
     #dialog-config-area{
 
@@ -412,6 +427,8 @@ body{
                 line-height:$LINE_HEIGHT_DETAIL_PROPERTY_TITLE;
                 font-size: $FONT_SIZE_DETAIL_PROPERTY_TITLE;
                 font-family:$FONT_FAMILY_DETAIL_PROPERTY_TITLE;
+                font-weight:normal;
+                text-shadow: none;
             }
 
         }
@@ -457,6 +474,9 @@ body{
             .category{
                 margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_MARGIN_TOP;
                 .category-title{
+
+                    font-weight:normal;
+                    text-shadow: none;
 
                     //縦中央揃え
                     display: flex;
