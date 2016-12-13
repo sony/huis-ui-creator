@@ -48,7 +48,8 @@ module Garage {
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: IGFace) {
                 this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
-                if (huisFiles.isValidJumpSettings(this.defaultJumpSettings)) {
+                if (huisFiles.isValidJumpSettings(this.defaultJumpSettings) ||
+                    (tmpFace != null && this.defaultJumpSettings.remote_id == tmpFace.remoteId)) {
                     this.selectedSettings = this.defaultJumpSettings;
                 }
 
