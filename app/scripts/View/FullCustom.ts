@@ -66,8 +66,8 @@ module Garage {
             private currentTargetButtonStates_: IStateDetail[];
             private currentTargetButtonStatesUpdated_: boolean;
             private selectedResizer_: string;
-            private mouseMoveStartTargetPosition_: IPosition;
-            private mouseMoveStartPosition_: IPosition;
+            private mouseMoveStartTargetPosition_: Model.Position;
+            private mouseMoveStartPosition_: Model.Position;
             private mouseMoveStartTargetArea_: IArea;
             private mouseMoving_: boolean;
             private gridSize_: number;
@@ -150,6 +150,9 @@ module Garage {
                     } else {
                         this.commandManager_ = new CommandManager();
                     }
+
+                    this.mouseMoveStartPosition_ = new Model.Position(0, 0);
+                    this.mouseMoveStartTargetPosition_ = new Model.Position(0, 0);
 
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
@@ -778,10 +781,7 @@ module Garage {
                 }
                 this._updateItemElementOnCanvas(newItem);
                 
-                var mousePosition: IPosition = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                var mousePosition: Model.Position = new Model.Position(event.pageX, event.pageY);
                 let target = this._getTarget(mousePosition);
                 if (target) {
                     this.setDragTarget(target, false);
@@ -989,10 +989,7 @@ module Garage {
 
                 this.selectedResizer_ = null;
 
-                var mousePosition: IPosition = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                var mousePosition = new Model.Position(event.pageX, event.pageY);
 
                 // 直前に選択していたものと同一のアイテムを選択しているかチェック
                 var remainsTarget = this._remainsTarget(mousePosition);
@@ -1117,18 +1114,19 @@ module Garage {
             /**
              * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
              *
-             * @param mousePosition {IPosition} マウス座標
+             * @param mousePosition {Model.Position} マウス座標
              * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
              */
-            private startDraggingCanvasItem(mousePosition: IPosition, forceStart: boolean = false) {
+            private startDraggingCanvasItem(mousePosition: Model.Position, forceStart: boolean = false) {
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
 
                     // ドラッグ開始位置の保存
-                    this.mouseMoveStartPosition_ = mousePosition;
-                    this.mouseMoveStartTargetPosition_ = {
-                        x: parseInt(this.$currentTarget_.css("left"), 10),
-                        y: parseInt(this.$currentTarget_.css("top"), 10)
-                    };
+                    this.mouseMoveStartPosition_.setPosition(mousePosition);
+                    this.mouseMoveStartTargetPosition_.setPositionXY(
+                        parseInt(this.$currentTarget_.css("left"), 10),
+                        parseInt(this.$currentTarget_.css("top"), 10)
+                    );
+
                     this.mouseMoveStartTargetArea_ = {
                         x: parseInt(this.$currentTarget_.css("left"), 10),
                         y: parseInt(this.$currentTarget_.css("top"), 10),
@@ -1163,10 +1161,10 @@ module Garage {
             /*
             * 入力のマウスポインター位置が、CanvasエリアのFacePagesAreaの上か判定する。
             *
-            * @param mousePosition : IPosition マウスポインター
+            * @param mousePosition : Model.Position マウスポインター
             * @return result : boolean  CanvasAreaのFacePagesAreaの上の場合true, 違う場合false
             */
-            private isOnCanvasFacePagesArea(mousePosition: IPosition):boolean {
+            private isOnCanvasFacePagesArea(mousePosition: Model.Position):boolean {
                 let FUNCTION_NAME: string = TAG + " : isOnCanvasFacePagesArea :";
                 if (mousePosition == undefined) {
                     console.warn(FUNCTION_NAME + "mousePosition is undefined");
@@ -1180,18 +1178,15 @@ module Garage {
                     return false;
                 }
 
-                let facePagesAreaLeft:number = $facePagesAreaOnCanvas.offset().left;
-                let facePagesAreaRight:number = $facePagesAreaOnCanvas.offset().left + $facePagesAreaOnCanvas.width()/2;
-                let facePagesAreaTop :number= $facePagesAreaOnCanvas.offset().top;
-                let facePagesAreaBottom :number= $facePagesAreaOnCanvas.offset().top + $facePagesAreaOnCanvas.height()/2;
+                let canvasFacePagesArea = {
+                    x: $facePagesAreaOnCanvas.offset().left,
+                    y: $facePagesAreaOnCanvas.offset().top,
+                    w: $facePagesAreaOnCanvas.width() / 2,
+                    h: $facePagesAreaOnCanvas.height() / 2,
 
-                if (mousePosition.x > facePagesAreaLeft && mousePosition.x < facePagesAreaRight
-                    && mousePosition.y > facePagesAreaTop && mousePosition.y < facePagesAreaBottom) {
-                    return true;
-                } else {
-                    return false;
                 }
 
+                return mousePosition.isInArea(canvasFacePagesArea);
             }
 
             /**
@@ -1319,8 +1314,7 @@ module Garage {
                     }
                 }
 
-                if (this.mouseMoveStartTargetPosition_.x == newPosition.x &&
-                    this.mouseMoveStartTargetPosition_.y == newPosition.y) {
+                if (this.mouseMoveStartPosition_.isSame(newPosition)) {
                     // 位置に変更がない（アイテム選択のみ）の場合は何もしない
                     // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
                     return;
@@ -1579,10 +1573,7 @@ module Garage {
              */
             private onContextMenu(event: Event) {
                 event.preventDefault();
-                this.rightClickPosition_ = {
-                    x: event.pageX,
-                    y: event.pageY
-                };
+                this.rightClickPosition_.setPositionXY(event.pageX, event.pageY);
 
                 // コンテキストメニューを作成する
                 this.contextMenu_.clear();
@@ -4422,7 +4413,7 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
              */
-            private _getTarget(position: IPosition): JQuery {                
+            private _getTarget(position: Model.Position): JQuery {
 
                 //label >> button >> images の優先順位
                 //この順番は、_base.cssで定義されている z-indexの高い順  
@@ -4454,7 +4445,7 @@ module Garage {
             * @param position {IPosition} 位置
             * @return {JQuery} 指定した位置にあるアイテムを返す。見つからない場合は null を返す。
             */
-            private _getTargetIn(position: IPosition, $items: JQuery): JQuery {
+            private _getTargetIn(position: Model.Position, $items: JQuery): JQuery {
                 let FUNCTION_NAME: string = TAG + " : _getTargetIn : ";
                 if (position == undefined) {
                     console.warn(FUNCTION_NAME + "position is undefined");
@@ -4473,14 +4464,16 @@ module Garage {
                     if ($item.hasClass("background")) {
                         continue;
                     }
-                    let itemX = $item.offset().left;
-                    let itemY = $item.offset().top;
-                    let itemW = $item.width() / 2;
-                    let itemH = $item.height() / 2;
-                    if (itemX <= position.x && position.x <= itemX + itemW) {
-                        if (itemY <= position.y && position.y <= itemY + itemH) {
-                            return $item;
-                        }
+
+                    let item_area = {
+                        x: $item.offset().left,
+                        y: $item.offset().top,
+                        w: $item.width() / 2,
+                        h: $item.height() / 2,
+                    };
+
+                    if (position.isInArea(item_area)) {
+                        return $item;
                     }
                 }
 
@@ -4490,19 +4483,21 @@ module Garage {
             /**
              * 画面上の指定した位置にあるページを取得する。
              */
-            private _getTargetPageModule(position: IPosition): JQuery {
+            private _getTargetPageModule(position: Model.Position): JQuery {
                 var $modules = $("#face-canvas .module-container");
 
                 for (let i = 0, l = $modules.length; i < l; i++) {
                     let $module = $modules.eq(i);
-                    let moduleX = $module.offset().left;
-                    let moduleY = $module.offset().top;
-                    let moduleW = $module.width() / 2;
-                    let moduleH = $module.height() / 2;
-                    if (moduleX <= position.x && position.x <= moduleX + moduleW) {
-                        if (moduleY <= position.y && position.y <= moduleY + moduleH) {
-                            return $module;
-                        }
+
+                    let moduleArea = {
+                        x: $module.offset().left,
+                        y: $module.offset().top,
+                        w: $module.width() / 2,
+                        h: $module.height() / 2,
+                    }
+
+                    if (position.isInArea(moduleArea)) {
+                        return $module;
                     }
                 }
 
@@ -4550,22 +4545,19 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {boolean} 指定した位置に現在のターゲットとなるアイテムがあったら true を返却。それ以外は false を返却。
              */
-            private _remainsTarget(position: IPosition): boolean {
+            private _remainsTarget(position: Model.Position): boolean {
                 if (!this.$currentTarget_) {
                     return false;
                 }
 
-                var targetX = this.$currentTarget_.offset().left;
-                var targetY = this.$currentTarget_.offset().top;
-                var targetW = this.$currentTarget_.width() / 2;
-                var targetH = this.$currentTarget_.height() / 2;
-                if (targetX <= position.x && position.x <= targetX + targetW) {
-                    if (targetY <= position.y && position.y <= targetY + targetH) {
-                        return true;
-                    }
+                let targetArea = {
+                    x: this.$currentTarget_.offset().left,
+                    y: this.$currentTarget_.offset().top,
+                    w: this.$currentTarget_.width() / 2,
+                    h: this.$currentTarget_.height() / 2,
                 }
 
-                return false;
+                return position.isInArea(targetArea);
             }
 
             /**
@@ -4574,19 +4566,17 @@ module Garage {
              * @param position {IPosition} 位置
              * @return {boolean} 指定した位置に詳細編集エリアがあれば true を返却。それ以外は false を返却。
              */
-            private _checkDetailItemAreaPosition(position: IPosition): boolean {
+            private _checkDetailItemAreaPosition(position: Model.Position): boolean {
                 var $detailArea = $("#face-item-detail-area");
-                var detailX = $detailArea.offset().left;
-                var detailY = $detailArea.offset().top;
-                var detailW = $detailArea.width();
-                var detailH = $detailArea.height();
-                if (detailX <= position.x && position.x <= detailX + detailW) {
-                    if (detailY <= position.y && position.y <= detailY + detailH) {
-                        return true;
-                    }
+
+                let detailArea = {
+                    x: $detailArea.offset().left,
+                    y: $detailArea.offset().top,
+                    w: $detailArea.width(),
+                    h: $detailArea.height(),
                 }
 
-                return false;
+                return position.isInArea(detailArea);
             }
 
             /**
