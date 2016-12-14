@@ -2371,19 +2371,16 @@ module Garage {
             }
 
             isValidJumpSettings(jump: IJump): boolean {
-                if (jump == null) {
+                if (jump == null ||
+                    jump.remote_id == null) {
                     return false;
                 }
 
-                let face: IFace;
-
                 // remote_id の検査
-                if (jump.remote_id != null) {
-                    face = this.getFace(jump.remote_id);
-
-                    if (face == null) {
-                        return false;
-                    }
+                let face = this.getFace(jump.remote_id);
+                if (face == null ||
+                    face.modules == null) {
+                    return false;
                 }
 
                 // scene_no の検査
