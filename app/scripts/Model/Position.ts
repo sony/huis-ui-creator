@@ -2,6 +2,9 @@
 
 module Garage {
     export module Model {
+
+        const TAG: string = "[Garage.Model.Position] ";
+
         export class Position implements IPosition {
 
             public x: number;
@@ -13,6 +16,10 @@ module Garage {
             }
 
             public isSame(position: IPosition): boolean {
+                if (!position) {
+                    console.error(TAG + "argument position is null or undefined");
+                    return false;
+                }
                 return this.x == position.x && this.y == position.y;
             }
 
@@ -22,6 +29,10 @@ module Garage {
             }
 
             public setPosition(position: IPosition): void {
+                if (!position) {
+                    console.error(TAG + "argument position is null or undefined");
+                    return;
+                }
                 this.x = position.x;
                 this.y = position.y;
             }
