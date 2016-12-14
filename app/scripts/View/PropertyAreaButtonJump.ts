@@ -131,7 +131,8 @@ module Garage {
 
                 this.setActionPullDown(this.defaultState);
 
-                if (huisFiles.getFace(stateData.jump.remote_id) != null) {
+                let targetRemoteId = stateData.jump.remote_id;
+                if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
                     this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.remote_id);
                 } else {
                     this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID);
