@@ -105,7 +105,7 @@
         },
         "label": {
             "STR_DIALOG_LABEL_SELECTED_REMOTE": "選択中のリモコン：",
-            "STR_DIALOG_LABEL_SELECTED_PAGE": "ページ",
+            "STR_DIALOG_LABEL_SELECTED_PAGE": "ページ ",
             "STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON": "ホームボタンの移動先",
             "STR_DIALOG_PROPERTY_LABEL_HOME": "ホーム画面",
             "STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE": "リモコン画面の移動",
@@ -255,11 +255,11 @@
             "STR_ACTION_INPUT_FLICK_DOWN": "下フリック"
         },
         "page": { 
-            "STR_PAGE_0": "ページ１",
-            "STR_PAGE_1": "ページ２",
-            "STR_PAGE_2": "ページ３",
-            "STR_PAGE_3": "ページ４",
-            "STR_PAGE_4": "ページ５"
+            "STR_PAGE_0": "ページ 1",
+            "STR_PAGE_1": "ページ 2",
+            "STR_PAGE_2": "ページ 3",
+            "STR_PAGE_3": "ページ 4",
+            "STR_PAGE_4": "ページ 5"
         },
         "function": {
             "STR_PLEASE_INPUT_REMOTE": "信号を選択",
