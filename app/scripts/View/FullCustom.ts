@@ -1122,7 +1122,7 @@ module Garage {
 
                     // ドラッグ開始位置の保存
                     this.mouseMoveStartPosition_.setPosition(mousePosition);
-                    this.mouseMoveStartTargetPosition_.setCoord(
+                    this.mouseMoveStartTargetPosition_.setPositionXY(
                         parseInt(this.$currentTarget_.css("left"), 10),
                         parseInt(this.$currentTarget_.css("top"), 10)
                     );
@@ -1573,7 +1573,7 @@ module Garage {
              */
             private onContextMenu(event: Event) {
                 event.preventDefault();
-                this.rightClickPosition_.setCoord(event.pageX, event.pageY);
+                this.rightClickPosition_.setPositionXY(event.pageX, event.pageY);
 
                 // コンテキストメニューを作成する
                 this.contextMenu_.clear();

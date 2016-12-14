@@ -16,7 +16,7 @@ module Garage {
                 return this.x == position.x && this.y == position.y;
             }
 
-            public setCoord(x: number, y:number): void {
+            public setPositionXY(x: number, y:number): void {
                 this.x = x;
                 this.y = y;
             }
