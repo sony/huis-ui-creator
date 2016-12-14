@@ -16,7 +16,7 @@ module Garage {
             }
 
             public isSame(position: IPosition): boolean {
-                if (!position) {
+                if (position == null) {
                     console.error(TAG + "argument position is null or undefined");
                     return false;
                 }
@@ -29,7 +29,7 @@ module Garage {
             }
 
             public setPosition(position: IPosition): void {
-                if (!position) {
+                if (position == null) {
                     console.error(TAG + "argument position is null or undefined");
                     return;
                 }
