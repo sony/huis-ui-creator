@@ -48,7 +48,8 @@ module Garage {
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: IGFace) {
                 this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
-                if (huisFiles.isValidJumpSettings(this.defaultJumpSettings)) {
+                if (huisFiles.isValidJumpSettings(this.defaultJumpSettings) ||
+                    (tmpFace != null && this.defaultJumpSettings.remote_id == tmpFace.remoteId)) {
                     this.selectedSettings = this.defaultJumpSettings;
                 }
 
@@ -457,8 +458,12 @@ module Garage {
 
                 let face = huisFiles.getFace(this.selectedSettings.remote_id);
                 if (face == null) {
-                    console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
-                    return;
+                    if (this.selectedSettings.remote_id == this.tmpFace.remoteId) {
+                        face = this.tmpFace;
+                    } else {
+                        console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
+                        return;
+                    }
                 }
 
                 let labelArea = $('#remotelist-label-selected');
