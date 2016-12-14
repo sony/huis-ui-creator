@@ -287,9 +287,9 @@ module Garage {
             if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
                 let dirs = null;
                 while (dirs == null) {
-                    try {
-                        dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
-                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった
+                    if (fs.existsSync(HUIS_ROOT_PATH)) {
+                        dirs = true;
+                    } else {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
@@ -297,7 +297,7 @@ module Garage {
                                 message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
                                 buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                                 title: PRODUCT_NAME,
-                                cancelId:0,
+                                cancelId: 0,
                             });
 
                         if (response !== 0) {
