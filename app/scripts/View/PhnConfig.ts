@@ -43,12 +43,19 @@ module Garage {
                 let jst = Tools.Template.getJST("#dialog-config", templateFile);
 
                 let data = this.model.toPhnConfigData();
-                let checkHomeAsHomeRadio: boolean = (this.model.homeId === Model.PhnConfig.HOME_ID_TO_HOME);
-                data['checkHomeAsHomeRadio'] = checkHomeAsHomeRadio;
 
-                if (!checkHomeAsHomeRadio) {
-                    data['destLabel'] = this.createDestLabel();
+                let checkHomeAsHomeRadio: boolean = false;
+                if (this.model.homeId === Model.PhnConfig.HOME_ID_TO_HOME) {
+                    // 'home' の場合は「ホーム画面」設定
+                    checkHomeAsHomeRadio = true;
+                } else {
+                    let face = huisFiles.getFace(this.model.homeId);
+                    if (face == null) {
+                        // 存在しないリモコンが設定されている場合は「ホーム画面」に修正
+                        checkHomeAsHomeRadio = true;
+                    }
                 }
+                data['checkHomeAsHomeRadio'] = checkHomeAsHomeRadio;
 
                 data['allowAccessToStorage'] = this.model.allowAccessToStorage;
                 
@@ -181,20 +188,46 @@ module Garage {
                 let face = huisFiles.getFace(this.model.homeId);
                 if (face == null) {
                     console.error('face not found. remote_id: ' + this.model.homeId);
-                    remoteName = this.model.homeId;
+                    return '';
                 } else {
                     remoteName = face.name;
                 }
 
-                return remoteName + " ページ" + (this.model.sceneNo + 1);
+                // 総ページ数を取得するためにViewを生成
+                let modulesView = new Module({
+                    el: $(''),
+                    attributes: {
+                        remoteId: face.remoteId,
+                        modules: face.modules,
+                        materialsRootPath: HUIS_FILES_ROOT
+                    }
+                });
+                let total = modulesView.getPageCount();
+                let pageNum: number;
+                if (this.model.sceneNo >= 0 && this.model.sceneNo < total) {
+                    pageNum = this.model.sceneNo + 1;
+                } else {
+                    // 存在しないページの場合は 1ページ目を設定
+                    pageNum = 1;
+                    this.model.sceneNo = 0;
+                }
+
+                return remoteName +
+                    $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE') +
+                    pageNum + $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE_SEPARATOR') + total;
             }
 
 
             /**
              * ホームボタン跳び先表示ラベルの文字列を変更
              */
-            private updateHomeDestLabel() {
-                $('#dialog-config-label-jump-dest').text(this.createDestLabel());
+            updateHomeDestLabel() {
+                let dest = this.createDestLabel();
+                let text = $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM');
+                if (dest.length > 0) {
+                    text += $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_SEPARATOR') + dest;
+                }
+                $('label[for="dialog-config-radio-jump-as-home"]').text(text);
             }
 
 
