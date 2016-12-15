@@ -7,7 +7,7 @@ module Garage {
         var TAG = "[Garage.Model.ImageItem] ";
         import JQUtils = Util.JQueryUtils;
 
-        export class ImageItem extends Backbone.Model implements IGImage, ItemModel {
+        export class ImageItem extends Model.Item implements IGImage {
 
             private resolvedPathDirectory_: string;
             private remoteId_: string;
@@ -93,14 +93,6 @@ module Garage {
 
             get itemType(): string {
                 return "image";
-            }
-
-            get enabled(): boolean {
-                return this.get("enabled");
-            }
-
-            set enabled(val: boolean) {
-                this.set("enabled", val);
             }
 
             get pageBackground(): boolean {
