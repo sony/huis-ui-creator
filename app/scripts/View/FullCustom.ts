@@ -1276,13 +1276,15 @@ module Garage {
                     return;
                 }
 
-                var position = { x: event.pageX, y: event.pageY };
+                var position: Model.Position = new Model.Position(event.pageX, event.pageY);
 
-                // リサイザーが選択されている場合は、アイテムのリサイズを行う
-                if (this.selectedResizer_) {
-                    this._resizeItemWithMouse(position, true);
-                } else { // それ以外の場合は、アイテムの移動
-                    this._moveItemWithMouse(position);
+                if (!position.isSame(this.mouseMoveStartPosition_)) {
+                    // リサイザーが選択されている場合は、アイテムのリサイズを行う
+                    if (this.selectedResizer_) {
+                        this._resizeItemWithMouse(position, true);
+                    } else { // それ以外の場合は、アイテムの移動
+                        this._moveItemWithMouse(position);
+                    }
                 }
 
                 this.$currentTarget_.removeClass("moving-item");
@@ -1335,7 +1337,8 @@ module Garage {
                     }
                 }
 
-                if (this.mouseMoveStartPosition_.isSame(newPosition)) {
+                let newUngriddedPosition = this._getDraggingItemPosition(position);
+                if (this.mouseMoveStartTargetPosition_.isSame(newUngriddedPosition)) {
                     // 位置に変更がない（アイテム選択のみ）の場合は何もしない
                     // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
                     return;
