@@ -1111,6 +1111,15 @@ module Garage {
                 return dummy;
             }
 
+            private _getCurrentTargetArea(): IArea {
+                return {
+                    x: parseInt(this.$currentTarget_.css("left"), 10),
+                    y: parseInt(this.$currentTarget_.css("top"), 10),
+                    w: parseInt(this.$currentTarget_.css("width"), 10),
+                    h: parseInt(this.$currentTarget_.css("height"), 10)
+                };
+            }
+
             /**
              * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
              *
@@ -1127,12 +1136,7 @@ module Garage {
                         parseInt(this.$currentTarget_.css("top"), 10)
                     );
 
-                    this.mouseMoveStartTargetArea_ = {
-                        x: parseInt(this.$currentTarget_.css("left"), 10),
-                        y: parseInt(this.$currentTarget_.css("top"), 10),
-                        w: parseInt(this.$currentTarget_.css("width"), 10),
-                        h: parseInt(this.$currentTarget_.css("height"), 10)
-                    };
+                    this.mouseMoveStartTargetArea_ = this._getCurrentTargetArea();
 
                     if (!this.selectedResizer_) {
                         // サイズ変更でなければダミーを表示
