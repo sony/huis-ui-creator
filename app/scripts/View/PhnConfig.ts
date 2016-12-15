@@ -89,7 +89,12 @@ module Garage {
                 let val: boolean = $(event.currentTarget).prop('checked');
 
                 if (val) {
-                    this.showSelectDestDialog();
+                    this.showSelectDestDialog(() => {
+                        // ラジオボタンから起動された選択ダイアログのキャンセル時にはラジオボタンを戻す
+                        $('input[name=radio-home-dest]')
+                            .val(['home'])
+                            .checkboxradio('refresh');
+                    });
                 }
             }
 
@@ -118,7 +123,7 @@ module Garage {
             /**
              * 跳び先選択ダイアログを表示
              */
-            private showSelectDestDialog() {
+            private showSelectDestDialog(onCancel?: () => void) {
                 let dialog = new Util.SelectRemotePageDialog(
                     $.i18n.t("dialog.title.STR_DIALOG_TITLE_SELECT_JUMP"),
                     { remote_id: this.model.homeId, scene_no: this.model.sceneNo });
@@ -132,7 +137,9 @@ module Garage {
                     },
                     () => {
                         // Cancel押下時
-                        this.updateHomeDestRadio();
+                        if (onCancel != null) {
+                            onCancel();
+                        }
                     }
                 );
             }
