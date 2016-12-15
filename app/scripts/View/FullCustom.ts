@@ -1217,7 +1217,7 @@ module Garage {
 
                 // リサイザーが選択されている場合は、アイテムのリサイズを行う
                 if (this.selectedResizer_) {
-                    this._resizeItem({ x: event.pageX, y: event.pageY }, false);
+                    this._resizeItemWithMouse({ x: event.pageX, y: event.pageY }, false);
                 } else {
                     var newPosition = this._getGriddedDraggingItemPosition({ x: event.pageX, y: event.pageY });
 
@@ -1274,7 +1274,7 @@ module Garage {
 
                 // リサイザーが選択されている場合は、アイテムのリサイズを行う
                 if (this.selectedResizer_) {
-                    this._resizeItem(position, true);
+                    this._resizeItemWithMouse(position, true);
                 } else { // それ以外の場合は、アイテムの移動
                     this._moveItemWithMouse(position);
                 }
@@ -1383,10 +1383,34 @@ module Garage {
                 this._showDetailItemArea(this.currentTargetModel_);
             }
 
+            private _resizeItem(newArea: IArea, update?: boolean) {
+
+                this.$currentTarget_.css({
+                    left: newArea.x + "px",
+                    top: newArea.y + "px",
+                    width: newArea.w + "px",
+                    height: newArea.h + "px",
+                    lineHeight: newArea.h + "px"
+                });
+
+                //currentTargetの重なり判定
+                this.changeColorOverlapedButtonsWithCurrentTargetButton();
+
+                if (this.currentTargetModel_.type === "button") {
+                    this._resizeButtonStateItem(this.$currentTarget_, newArea);
+                }
+                if (update) {
+                    let validateArea = this._validateArea(newArea);
+                    this._updateCurrentModelData("area", validateArea);
+                    //this._showDetailItemArea(this.currentTargetModel_);
+                }
+                this._setResizer(this.$currentTarget_);
+            }
+
             /**
              * アイテムのリサイズを行う
              */
-            private _resizeItem(position: IPosition, update?: boolean) {
+            private _resizeItemWithMouse(position: IPosition, update?: boolean) {
 
                 this.$currentTarget_.removeClass("moving-item");
                 var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
@@ -1514,28 +1538,7 @@ module Garage {
                 //canvasAreaは実際の大きさの1/2に表示されているため、mouseの移動量は2倍にする。
                 var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX*2, deltaY*2);
 
-                this.$currentTarget_.css({
-                    left: newArea.x + "px",
-                    top: newArea.y + "px",
-                    width: newArea.w + "px",
-                    height: newArea.h + "px",
-                    lineHeight: newArea.h + "px"
-                });
-
-                //currentTargetの重なり判定
-                this.changeColorOverlapedButtonsWithCurrentTargetButton();
-
-                if (this.currentTargetModel_.type === "button") {
-                    this._resizeButtonStateItem(this.$currentTarget_, newArea);
-                }
-                if (update) {
-                    let validateArea = this._validateArea(newArea);
-                    this._updateCurrentModelData("area", validateArea);
-                    this._showDetailItemArea(this.currentTargetModel_);
-                    this._setResizer(this.$currentTarget_);
-                } else {
-                    this._setResizer(this.$currentTarget_);
-                }
+                this._resizeItem(newArea, update);
             }
 
 
@@ -5603,6 +5606,42 @@ module Garage {
                 }
             }
 
+            private _heightenCurrentItemGrid(gridNum: number) {
+                this._heightenItemGrid(gridNum);
+            }
+
+            private _heightenItemGrid(gridNum: number) {
+                this._heightenItem(gridNum * this.gridSize_);
+            }
+
+            private _heightenItem(px: number) {
+                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
+                let currentTargetArea = this._getCurrentTargetArea();
+                let newArea = {
+                    x: currentTargetArea.x,
+                    y: currentTargetArea.y - px,
+                    w: currentTargetArea.w,
+                    h: currentTargetArea.h + px*2,
+                }
+                this._resizeItem(newArea, true);
+            }
+
+            private _widenItemGrid(gridNum: number) {
+                this._widenItem(gridNum * this.gridSize_);
+            }
+
+            private _widenItem(px: number) {
+                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
+                let currentTargetArea = this._getCurrentTargetArea();
+                let newArea = {
+                    x: currentTargetArea.x - px,
+                    y: currentTargetArea.y,
+                    w: currentTargetArea.w + px * 2,
+                    h: currentTargetArea.h,
+                }
+                this._resizeItem(newArea, true);
+            }
+
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
@@ -5624,17 +5663,25 @@ module Garage {
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
                             if (event.ctrlKey) {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin - 1,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                if (event.shiftKey) {
+                                    this._widenItem(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin - 1,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItem(newPosition);
                                 }
-                                this._moveItem(newPosition);
                             } else {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin - this.gridSize_,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                if (event.shiftKey) {
+                                    this._widenItemGrid(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin - this.gridSize_,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItemGrid(newPosition);
                                 }
-                                this._moveItemGrid(newPosition);
                             }
                             break;
                         } case 38: {// UpKey
@@ -5645,17 +5692,25 @@ module Garage {
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
                             if (event.ctrlKey) {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin - 1,
+                                if (event.shiftKey) {
+                                    this._heightenItem(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin - 1,
+                                    }
+                                    this._moveItem(newPosition);
                                 }
-                                this._moveItem(newPosition);
                             } else {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin - this.gridSize_,
+                                if (event.shiftKey) {
+                                    this._heightenItemGrid(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin - this.gridSize_,
+                                    }
+                                    this._moveItemGrid(newPosition);
                                 }
-                                this._moveItemGrid(newPosition);
                             }
                             break;
                         } case 39: {// RightKey
@@ -5666,17 +5721,25 @@ module Garage {
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
                             if (event.ctrlKey) {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin + 1,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                if (event.shiftKey) {
+                                    this._widenItem(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin + 1,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItem(newPosition);
                                 }
-                                this._moveItem(newPosition);
                             } else {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin + this.gridSize_,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                if (event.shiftKey) {
+                                    this._widenItemGrid(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin + this.gridSize_,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItemGrid(newPosition);
                                 }
-                                this._moveItemGrid(newPosition);
                             }
                             break;
                         } case 40: {// DownKey
@@ -5687,17 +5750,25 @@ module Garage {
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
                             if (event.ctrlKey) {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin + 1 ,
+                                if (event.shiftKey) {
+                                    this._heightenItem(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin + 1,
+                                    }
+                                    this._moveItem(newPosition);
                                 }
-                                this._moveItem(newPosition);
                             } else {
-                                let newPosition: IPosition = {
-                                    x: currentTargetPositionInCanvas.x * 2 - css_margin,
-                                    y: currentTargetPositionInCanvas.y * 2 - css_margin + this.gridSize_,
+                                if (event.shiftKey) {
+                                    this._heightenItemGrid(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin + this.gridSize_,
+                                    }
+                                    this._moveItemGrid(newPosition);
                                 }
-                                this._moveItemGrid(newPosition);
                             }
                             break;
                         } case 46: // DEL
