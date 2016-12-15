@@ -207,12 +207,14 @@ module Garage {
                 if (this.model.sceneNo >= 0 && this.model.sceneNo < total) {
                     pageNum = this.model.sceneNo + 1;
                 } else {
-                    // 存在しないページの場合は 1ページ目扱い
+                    // 存在しないページの場合は 1ページ目を設定
                     pageNum = 1;
                     this.model.sceneNo = 0;
                 }
 
-                return remoteName + " ページ " + pageNum + "/" + total;
+                return remoteName +
+                    $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE') +
+                    pageNum + $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE_SEPARATOR') + total;
             }
 
 
@@ -223,7 +225,7 @@ module Garage {
                 let dest = this.createDestLabel();
                 let text = $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM');
                 if (dest.length > 0) {
-                    text += '：' + dest;
+                    text += $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_SEPARATOR') + dest;
                 }
                 $('label[for="dialog-config-radio-jump-as-home"]').text(text);
             }
