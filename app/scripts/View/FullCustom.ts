@@ -5626,6 +5626,10 @@ module Garage {
             private _heightenItem(px: number) {
                 let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
+                // check item doesn't become smaller than minItemSize_
+                if (currentTargetArea.h + px * 2 < this.minItemSize_) {
+                    px = (currentTargetArea.h - this.minItemSize_) / 2;
+                }
                 let newArea = {
                     x: currentTargetArea.x,
                     y: currentTargetArea.y - px,
@@ -5642,12 +5646,17 @@ module Garage {
             private _widenItem(px: number) {
                 let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
+                // check item doesn't become smaller than minItemSize_
+                if (currentTargetArea.w + px*2 < this.minItemSize_) {
+                    px = (currentTargetArea.w - this.minItemSize_) / 2;
+                }
                 let newArea = {
                     x: currentTargetArea.x - px,
                     y: currentTargetArea.y,
                     w: currentTargetArea.w + px * 2,
                     h: currentTargetArea.h,
                 }
+
                 this._resizeItem(newArea, true);
             }
 
