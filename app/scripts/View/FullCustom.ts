@@ -73,6 +73,7 @@ module Garage {
             private gridSize_: number;
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
+            private isDragging: Boolean;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -159,6 +160,7 @@ module Garage {
                     this.setFocusAndMoveCursorToEnd($remoteName);
 
                     this.isTextBoxFocused = false;
+                    this.isDragging = false;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -1127,6 +1129,7 @@ module Garage {
              * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
              */
             private startDraggingCanvasItem(mousePosition: Model.Position, forceStart: boolean = false) {
+                this.isDragging = true;
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
 
                     // ドラッグ開始位置の保存
@@ -1257,6 +1260,9 @@ module Garage {
              * フルカスタム編集画面での mouseup イベントのハンドリング
              */
             private onMainMouseUp(event: Event) {
+
+                this.isDragging = false;
+
                 if (this.$currentTargetDummy_) {
                     this.$currentTargetDummy_.remove();
                     this.$currentTargetDummy_ = null;
@@ -5645,6 +5651,11 @@ module Garage {
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
+
+                if (this.isDragging) {
+                    event.preventDefault();
+                    return;
+                }
 
                 if (event.keyCode == 9) {//tabの場合は無視
                     event.preventDefault();
