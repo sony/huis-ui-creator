@@ -3653,15 +3653,6 @@ module Garage {
 
                                     //画像が存在するとき、テキストEdit機能を非表示にする
                                     this.toggleImagePreview(stateId);
-
-                                    //テキストエリアが表示されたとき、フォーカスを移す。
-                                    var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-                                    if ($textFieldInPreview.css("visibility") === "visible") {
-                                        setTimeout(function () {
-                                            $textFieldInPreview.focus();
-                                        }, 0);
-                                    }
-
                                 }
                                 break;
 
