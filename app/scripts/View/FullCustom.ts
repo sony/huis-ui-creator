@@ -2794,7 +2794,26 @@ module Garage {
                 }
 
             }
-        
+
+            private _convertTargetToItem(target: TargetModel): ItemModel {
+                var model = null;
+                switch (target.type) {
+                    case "button":
+                        model = target.button;
+                        break;
+
+                    case "label":
+                        model = target.label;
+                        break;
+
+                    case "image":
+                        model = target.image;
+                        break;
+
+                    default:
+                }
+                return model;
+            }
 
             /**
              * 現在のターゲットとなるモデルに対して、データをセットする。
@@ -2819,22 +2838,7 @@ module Garage {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
                     return;
                 }
-                var model = null;
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        model = this.currentTargetModel_.button;
-                        break;
-
-                    case "label":
-                        model = this.currentTargetModel_.label;
-                        break;
-
-                    case "image":
-                        model = this.currentTargetModel_.image;
-                        break;
-
-                    default:
-                }
+                var model = this._convertTargetToItem(this.currentTargetModel_);
 
                 if (!model) {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
