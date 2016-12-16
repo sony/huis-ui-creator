@@ -5322,7 +5322,7 @@ module Garage {
              * 
              * @return {TargetModel} 取得した model
              */
-            private _getItemModel($item: JQuery, rendererLocation?: string): TargetModel {
+            private _getItemModel($item: JQuery, rendererLocation?: string): Model.Item {
                 // item の要素の data 属性から item の id を取得
                 var itemId = JQUtils.data($item, "cid"); //$item.data("cid");
                 // item の親要素の data 属性から item が所属する module の id を取得
@@ -5338,20 +5338,11 @@ module Garage {
 
                 // item の種類に応じた model を取得
                 if ($item.hasClass("button-item")) {
-                    return {
-                        type: "button",
-                        button: renderer.getButton(moduleId, itemId)
-                    };
+                    return renderer.getButton(moduleId, itemId);
                 } else if ($item.hasClass("label-item")) {
-                    return {
-                        type: "label",
-                        label: renderer.getLabel(moduleId, itemId)
-                    };
+                    return renderer.getLabel(moduleId, itemId);
                 } else if ($item.hasClass("image-item")) {
-                    return {
-                        type: "image",
-                        image: renderer.getImage(moduleId, itemId)
-                    };
+                    return renderer.getImage(moduleId, itemId);
                 } else {
                     return null;
                 }
