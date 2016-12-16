@@ -2009,26 +2009,27 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                } else {
+                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+                    return;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
-                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
-                    return;
-                }
-
-                if (buttonModel.button &&
-                    buttonModel.button.state &&
-                    buttonModel.button.state[0] &&
-                    buttonModel.button.state[0].action &&
-                    buttonModel.button.state[0].action[0] &&
-                    buttonModel.button.state[0].action[0].code_db &&
-                    buttonModel.button.state[0].action[0].code_db.device_type) {
-                    return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+                if (buttonModel &&
+                    buttonModel.state &&
+                    buttonModel.state[0] &&
+                    buttonModel.state[0].action &&
+                    buttonModel.state[0].action[0] &&
+                    buttonModel.state[0].action[0].code_db &&
+                    buttonModel.state[0].action[0].code_db.device_type) {
+                    return buttonModel.state[0].action[0].code_db.device_type.toString();
                 } else {
                     return "";
                 }
