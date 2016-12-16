@@ -2554,38 +2554,40 @@ module Garage {
              * ボタンアイテムの詳細編集エリア内の状態追加ボタンを押したときに呼び出される
              */
             private onAddButtonStateClicked(event: Event) {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button) {
+                if (!this.currentItem) {
                     return;
                 }
 
-                var button = this.currentTargetModel_.button;
-                var states = button.state;
-                var newStateId = 0;
-                if (states) {
-                    // 未使用の stateId を探す
-                    let sortedStates = states.sort((state1, state2) => {
-                        return state1.id - state2.id;
-                    });
-                    sortedStates.forEach((state) => {
-                        if (newStateId === state.id) {
-                            newStateId++;
-                        }
-                    });
-                }
-                var newState: IState = {
-                    id: newStateId
-                };
+                let button = this.currentItem;
+                if (button instanceof Model.ButtonItem) {
+                    var states = button.state;
+                    var newStateId = 0;
+                    if (states) {
+                        // 未使用の stateId を探す
+                        let sortedStates = states.sort((state1, state2) => {
+                            return state1.id - state2.id;
+                        });
+                        sortedStates.forEach((state) => {
+                            if (newStateId === state.id) {
+                                newStateId++;
+                            }
+                        });
+                    }
+                    var newState: IState = {
+                        id: newStateId
+                    };
 
-                if (!this.currentTargetButtonStates_) {
-                    this.currentTargetButtonStates_ = [];
-                }
-                this.currentTargetButtonStates_.push({
-                    id: newStateId
-                });
-                this.currentTargetButtonStatesUpdated_ = true;
+                    if (!this.currentTargetButtonStates_) {
+                        this.currentTargetButtonStates_ = [];
+                    }
+                    this.currentTargetButtonStates_.push({
+                        id: newStateId
+                    });
+                    this.currentTargetButtonStatesUpdated_ = true;
 
-                this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentTargetModel_);
+                    this._updateCurrentModelButtonStatesData();
+                    this._showDetailItemArea(this.currentItem);
+                }
             }
 
             /**
