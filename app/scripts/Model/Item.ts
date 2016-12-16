@@ -25,6 +25,13 @@ module Garage {
                 this.set("enabled", val);
             }
 
+            get area(): IArea {
+                return this.get("area");
+            }
+
+            set area(val: IArea) {
+                this.set("area", val);
+            }
         }
     }
 }
