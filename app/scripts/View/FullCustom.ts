@@ -4734,75 +4734,65 @@ module Garage {
              * 
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
-            private _showDetailItemArea(targetModel: TargetModel) {
+            private _showDetailItemArea(item: Model.Item) {
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
-                if (!targetModel) {
+                if (!item) {
                     return;
                 }
 
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
-                switch (targetModel.type) {
-                    case "button":
-                        if (this.isMacroButton(targetModel.button)) {
-                            // マクロボタンアイテムの詳細エリアを表示
-                            this._renderMacroButtonItemDetailArea(targetModel.button, $detail);
-                        } else {
-                            // ボタンアイテムの詳細エリアを表示
-                            this._renderButtonItemDetailArea(targetModel.button, $detail);
-                        }
-                        
-                        break;
-                    case "image":
-                        // 画像アイテムの詳細エリアを表示
-                        if (targetModel.image) {
-                            let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
-                            let $imageDetail = $(templateImage(targetModel.image));
-                            let $areaContainer = $imageDetail.nextAll("#area-container");
-                            $areaContainer.append($(templateArea(targetModel.image)));
-                            $detail.append($imageDetail);
+                if (item instanceof Model.ButtonItem) {
+                    if (this.isMacroButton(item)) {
+                        // マクロボタンアイテムの詳細エリアを表示
+                        this._renderMacroButtonItemDetailArea(item, $detail);
+                    } else {
+                        // ボタンアイテムの詳細エリアを表示
+                        this._renderButtonItemDetailArea(item, $detail);
+                    }
+                } else if (item instanceof Model.ImageItem) {
+                    // 画像アイテムの詳細エリアを表示
+                    let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
+                    let $imageDetail = $(templateImage(item));
+                    let $areaContainer = $imageDetail.nextAll("#area-container");
+                    $areaContainer.append($(templateArea(item)));
+                    $detail.append($imageDetail);
 
-                            // リサイズモードの反映
-                            let resizeMode = targetModel.image.resizeMode;
-                            if (resizeMode) {
-                                $(".image-resize-mode").val(resizeMode);
-                            }
+                    // リサイズモードの反映
+                    let resizeMode = item.resizeMode;
+                    if (resizeMode) {
+                        $(".image-resize-mode").val(resizeMode);
+                    }
 
+                    //オリジナルのパスがある場合は、そちらを表示。
+                    //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
+                    let inputURL = this.getValidPathOfImageItemForCSS(item);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
 
-                            //オリジナルのパスがある場合は、そちらを表示。
-                            //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
-                            let inputURL = this.getValidPathOfImageItemForCSS(targetModel.image);
-                            this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
-                            
-                            //テキストをローカライズ
-                            $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
-                        }
-                        break;
-                    case "label":
-                        // ラベルアイテムの詳細エリアを表示
-                        if (targetModel.label) {
-                            let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
-                            let $labelDetail = $(templateLabel(targetModel.label));
-                            let $areaContainer = $labelDetail.nextAll("#area-container");
-                            $areaContainer.append($(templateArea(targetModel.label)));
-                            $detail.append($labelDetail);
-                            var $labelTextSize = $labelDetail.find(".property-text-size");
-                            $labelTextSize.val(targetModel.label.size.toString());
+                    //テキストをローカライズ
+                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 
-                            //テキストをローカライズ
-                            $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
-                            $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
-                        }
-                        break;
-                    default:
-                        console.warn(TAG + "_showDetailItemArea() unknown type item");
+                } else if (item instanceof Model.LabelItem) {
+                    // ラベルアイテムの詳細エリアを表示
+                    let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
+                    let $labelDetail = $(templateLabel(item));
+                    let $areaContainer = $labelDetail.nextAll("#area-container");
+                    $areaContainer.append($(templateArea(item)));
+                    $detail.append($labelDetail);
+                    var $labelTextSize = $labelDetail.find(".property-text-size");
+                    $labelTextSize.val(item.size.toString());
+
+                    //テキストをローカライズ
+                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
+                    $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+                } else {
+                    console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-
                 
             }
 
