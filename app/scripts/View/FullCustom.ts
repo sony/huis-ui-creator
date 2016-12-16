@@ -1331,12 +1331,12 @@ module Garage {
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
                     this._updateCurrentModelData("area", newArea, isFromPallet);
-                    this._showDetailItemArea(this.currentTargetModel_);
+                    this._showDetailItemArea(this.currentItem);
                     return;
                 }
 
                 // 元ページのモデルをコピーし移動先ページに追加
-                let newModel = this._cloneItem(this.currentItem);
+                let newModel = this.currentItem.clone();
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
@@ -1373,7 +1373,7 @@ module Garage {
                 // 新しいItemの詳細エリア表示
                 this._setTarget(newItem);
                 this._updateItemElementsOnCanvas(updatedItems);
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem);
             }
 
             private _resizeItem(newArea: IArea, update?: boolean) {
