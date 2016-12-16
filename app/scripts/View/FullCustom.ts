@@ -2837,16 +2837,11 @@ module Garage {
             private _updateCurrentModelData(properties: any): ItemModel;
 
             private _updateCurrentModelData(param1: any, param2?: any, param3: boolean = false): ItemModel {
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem) {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
                     return;
                 }
-                var model = this._convertTargetToItem(this.currentTargetModel_);
-
-                if (!model) {
-                    console.warn(TAG + "_updateCurrentModelData() target model not found");
-                    return null;
-                }
+                var model = this.currentItem;
 
                 /**
                  * undo / redo 対応のために、CommandManager 経由で model の更新を行う
