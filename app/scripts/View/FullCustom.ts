@@ -958,18 +958,15 @@ module Garage {
              * @param canvasModuleId {string} 追加するキャンバスの moduleID
              * @param moduleOffsetY {number} module の y 座標の offset
              */
-            private setNewItemOnCanvas(item: TargetModel, canvasModuleId: string, moduleOffsetY: number): ItemModel {
-                let newModel: ItemModel;
-                switch (item.type) {
-                    case "button":
-                        return this.faceRenderer_canvas_.addButton(item.button, canvasModuleId, moduleOffsetY);
-                    case "image":
-                        return this.faceRenderer_canvas_.addImageWithoutCopy(item.image, canvasModuleId, moduleOffsetY);
-                    case "label":
-                        return this.faceRenderer_canvas_.addLabel(item.label, canvasModuleId, moduleOffsetY);
-                    default:
-                        console.error("setItemOnCanvas: invalid ItemModel.type " + item.type);
-                        return;
+            private setNewItemOnCanvas(item: Model.Item, canvasModuleId: string, moduleOffsetY: number): ItemModel {
+                if (item instanceof Model.ButtonItem) {
+                    return this.faceRenderer_canvas_.addButton(item, canvasModuleId, moduleOffsetY);
+                } else if (item instanceof Model.LabelItem) {
+                    return this.faceRenderer_canvas_.addLabel(item, canvasModuleId, moduleOffsetY);
+                } else if (item instanceof Model.ImageItem) {
+                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, canvasModuleId, moduleOffsetY);
+                } else {
+                    console.error(TAG + "[setNewItemOnCanvas] unknown item type");
                 }
             }
 
