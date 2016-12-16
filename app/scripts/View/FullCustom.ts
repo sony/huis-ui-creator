@@ -3955,34 +3955,12 @@ module Garage {
              * @return {IArea} 妥当性が確認された area 
              */
             private _validateArea(area: { x?: number, y?: number, w?: number, h?: number }): IArea {
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem) {
                     console.warn(TAG + "_validateArea() target model not found.");
                     return null;
                 }
-                var model = null;
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        model = this.currentTargetModel_.button;
-                        break;
 
-                    case "label":
-                        model = this.currentTargetModel_.label;
-                        break;
-
-                    case "image":
-                        model = this.currentTargetModel_.image;
-                        break;
-
-                    default:
-                        console.error(TAG + "_validateArea() Unknown model type");
-                }
-
-                if (!model) {
-                    console.warn(TAG + "_validateArea() target model not found");
-                    return null;
-                }
-
-                var complementedArea: IArea = $.extend(true, {}, model.area, area);
+                var complementedArea: IArea = $.extend(true, {}, this.currentItem.area, area);
 
                 this._normalizeArea(complementedArea);
 
