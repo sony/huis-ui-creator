@@ -4024,6 +4024,14 @@ module Garage {
                 return false;
             }
 
+            private castToButton(item: Model.Item) {
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                    return buttonModel;
+                } else {
+                    return null;
+                }
+            }
 
             /*
              * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
