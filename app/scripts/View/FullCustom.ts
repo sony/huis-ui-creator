@@ -54,7 +54,7 @@ module Garage {
             private commandManager_: CommandManager;
             private $currentTarget_: JQuery;
             private $currentTargetDummy_: JQuery;
-            private currentTargetModel_: TargetModel;
+            private currentItem: Model.Item;
             private currentTargetPageIndex_: number;
             private currentTargetButtonStates_: IStateDetail[];
             private currentTargetButtonStatesUpdated_: boolean;
