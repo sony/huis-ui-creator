@@ -4620,7 +4620,7 @@ module Garage {
              */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
-                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -4633,7 +4633,7 @@ module Garage {
 
                 // 詳細編集エリアを表示
                 $("#face-item-detail-area").addClass("active");
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem);
             }
 
             /**
@@ -4653,7 +4653,7 @@ module Garage {
                 $detail.children().remove();
 
                 this.$currentTarget_ = null;
-                this.currentTargetModel_ = null;
+                this.currentItem = null;
                 this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
