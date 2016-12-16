@@ -3214,13 +3214,12 @@ module Garage {
 
                 $preview.height(previewHeight);
             }
-            
 
             /**
              * データとして持っている state のリストを Button Model に更新する
              */
             private _updateCurrentModelButtonStatesData() {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button || !this.currentTargetButtonStates_) {
+                if (!this.currentItem || !(this.currentItem instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
                 // 更新がない場合は何もしない
