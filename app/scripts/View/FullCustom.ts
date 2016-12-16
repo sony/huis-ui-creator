@@ -1389,13 +1389,13 @@ module Garage {
                 //currentTargetの重なり判定
                 this.changeColorOverlapedButtonsWithCurrentTargetButton();
 
-                if (this.currentTargetModel_.type === "button") {
+                if (this.currentItem instanceof Model.ButtonItem) {
                     this._resizeButtonStateItem(this.$currentTarget_, newArea);
                 }
                 if (update) {
                     let validateArea = this._validateArea(newArea);
                     this._updateCurrentModelData("area", validateArea);
-                    //this._showDetailItemArea(this.currentTargetModel_);
+
                 }
                 this._setResizer(this.$currentTarget_);
             }
