@@ -12,13 +12,6 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
-        interface TargetModel {
-            type: string;
-            button?: Model.ButtonItem;
-            image?: Model.ImageItem;
-            label?: Model.LabelItem;
-        }
-
         interface IActionList {
             touch: string;
             touch_top: string;
