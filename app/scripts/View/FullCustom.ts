@@ -862,6 +862,47 @@ module Garage {
                 };
             }
 
+           /**
+             * PalletからCanvasにコピーするButtonItemにstate情報をセットする
+             *
+             * @param buttonItem {Model.ButtonItem} state情報をセットするターゲットとなるButtonItem
+             * @return state情報がセットされたButtonItem
+             */
+            private setButtonItemState(buttonItem: Model.ButtonItem): Model.ButtonItem {
+                console.log("button model: " + buttonItem.area.x + "-" + buttonItem.area.y);
+
+                // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
+                let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                let functions = huisFiles.getMasterFunctions(remoteId);
+                let codeDb = huisFiles.getMasterCodeDb(remoteId);
+                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
+                let remoteName = huisFiles.getFace(remoteId).name;
+
+                let deviceInfo: IButtonDeviceInfo = {
+                    id: "",
+                    functions: functions,
+                    remoteName: remoteName,
+                    code_db: codeDb
+                };
+                if (bluetoothData != null) {
+                    deviceInfo.bluetooth_data = bluetoothData;
+                }
+                if (functionCodeHash != null) {
+                    deviceInfo.functionCodeHash = functionCodeHash;
+                }
+
+                // 機器情報を全てのactionにセット
+                for (let state of buttonItem.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        action.deviceInfo = deviceInfo;
+                    }
+                }
+                return buttonItem;
+            }
+
             /**
              * Pallet上のItemをCanvasに追加
              * 
@@ -886,69 +927,25 @@ module Garage {
                     // モデルのクローンを生成してから位置を設定
                     item = this._cloneItem(item);
                     let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                    this._setTargetModelArea(targetModel, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                    this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
                 }
 
-                var model: ItemModel;
-                switch (targetModel.type) {
-                    case "button":
-                        if (targetModel.button) {
-                            console.log("button model: " + targetModel.button.area.x + "-" + targetModel.button.area.y);
-                            // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
-                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
-                            let functions = huisFiles.getMasterFunctions(remoteId);
-                            let codeDb = huisFiles.getMasterCodeDb(remoteId);
-                            let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
-                            let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
-                            let remoteName = huisFiles.getFace(remoteId).name;
+                if (item instanceof Model.ButtonItem) {
+                    let buttonItem: Model.ButtonItem = this.setButtonItemState(item);
+                    return this.faceRenderer_canvas_.addButton(buttonItem, moduleId_canvas, moduleOffsetY_pallet);
 
-                            let deviceInfo: IButtonDeviceInfo = {
-                                id: "",
-                                functions: functions,
-                                remoteName: remoteName,
-                                code_db: codeDb
-                            };
-                            if (bluetoothData != null) {
-                                deviceInfo.bluetooth_data = bluetoothData;
-                            }
-                            if (functionCodeHash != null) {
-                                deviceInfo.functionCodeHash = functionCodeHash;
-                            }
+                } else if (item instanceof Model.LabelItem) {
+                    return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
 
-                            // 機器情報を全てのactionにセット
-                            for (let state of targetModel.button.state) {
-                                if (!state.action) continue;
+                } else if (item instanceof Model.ImageItem) {
+                    let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, moduleId_canvas, moduleOffsetY_pallet);
 
-                                for (let action of state.action) {
-                                    action.deviceInfo = deviceInfo;
-                                }
-                            }
-                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                        break;
-
-
-                    case "image":
-                        if (targetModel.image) {
-                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
-
-                            model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
-
-                        }
-                        break;
-
-                 
-
-                    case "label":
-                        if (targetModel.label) {
-                            model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                        break;
-
-                    default:
+                } else {
+                    console.error(TAG + "unknown item type");
                 }
-                
-                return model;
+
+                return null;
             }
 
             /**
