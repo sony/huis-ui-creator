@@ -869,11 +869,11 @@ module Garage {
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): ItemModel {
+            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var targetModel = this._getItemModel($target, "pallet");
-                if (!targetModel) {
+                var item: Model.Item = this._getItemModel($target, "pallet");
+                if (!item) {
                     return;
                 }
 
@@ -884,7 +884,7 @@ module Garage {
                 // イベント発生位置にアイテム座標を補正
                 if (setOnEventPosition) {
                     // モデルのクローンを生成してから位置を設定
-                    targetModel = this._cloneTargetModel(targetModel);
+                    item = this._cloneItem(item);
                     let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
                     this._setTargetModelArea(targetModel, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
                 }
