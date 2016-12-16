@@ -4041,10 +4041,8 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
 
                 //currentTargetがボタンでなかった場合、無視する
-                if (this.currentTargetModel_.type != "button") {
-                    return;
-                }
-                if (!this.currentTargetModel_.button) {
+                var buttonItem = this.castToButton(this.currentItem);
+                if (buttonItem == null) {
                     return;
                 }
 
@@ -4088,7 +4086,7 @@ module Garage {
 
                     if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
                         // 移動中のボタンの元ページと現在位置のページが異なる場合、現在ページにモデルを仮追加する
-                        tmpButtons.push(this.currentTargetModel_.button);
+                        tmpButtons.push(buttonItem);
                     }
 
                     // 移動中のボタンの元ページと現在位置のページが異なる場合、元ページのモデルを無視する
@@ -4107,7 +4105,7 @@ module Garage {
 
                 //overlapButtonsがundefinedのとき、重なっているボタン数が0のとき、currentTargetModelを通常色に
                 if (overlapButtons == null || overlapButtons.length === 0) {
-                    this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
+                    this.changeButtonFrameColorNormal(buttonItem,true);
                 }
 
                 this.changeOverlapButtonsFrame(overlapButtons, buttons);
