@@ -27,6 +27,10 @@ module Garage {
             /**
              * getters and setters
              */
+            get area(): IArea {
+                return this.get("area");
+            }
+
             set area(val: IArea) {
                 if (!this.initialArea_) {
                     this.initialArea_ = $.extend(true, {}, val);

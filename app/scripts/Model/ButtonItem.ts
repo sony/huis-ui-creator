@@ -39,6 +39,10 @@ module Garage {
                 //console.log("Model.ButtonItem initialize");
             }
 
+            get area(): IArea {
+                return this.get("area");
+            }
+
             set area(val: IArea) {
                 this.set("area", val);
                 if (!this.initialArea_) {
