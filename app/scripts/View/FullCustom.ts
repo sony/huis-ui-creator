@@ -1345,7 +1345,7 @@ module Garage {
                 }
 
                 // 元ページのモデルをコピーし移動先ページに追加
-                let newModel = this._cloneTargetModel(this.currentTargetModel_);
+                let newModel = this._cloneItem(this.currentItem);
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
@@ -5364,24 +5364,8 @@ module Garage {
              * @param model {TargetModel} 基にするTargetModel
              * @return 生成したTargetModel
              */
-            private _cloneTargetModel(model: TargetModel): TargetModel {
-                let clone: TargetModel = { type: model.type };
-
-                switch (clone.type) {
-                    case "button":
-                        clone.button = $.extend(true, {}, model.button);
-                        break;
-                    case "image":
-                        clone.image = $.extend(true, {}, model.image);
-                        break;
-                    case "label":
-                        clone.label = $.extend(true, {}, model.label);
-                        break;
-                    default:
-                        return null;
-                }
-
-                return clone;
+            private _cloneItem(item: Model.Item): Model.Item {
+                return $.extend(true, {}, item);
             }
 
             /**
