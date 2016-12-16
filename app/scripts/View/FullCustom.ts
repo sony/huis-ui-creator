@@ -1008,11 +1008,8 @@ module Garage {
                             let $page = this._getTargetPageModule(mousePosition);
                             if ($page) {
                                 // ページ背景の model の作成、もしくは既存のものを取得する
-                                let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
-                                this.currentTargetModel_ = {
-                                    type: "image",
-                                    image: backgroundImageModel
-                                };
+                                let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
+                                this.currentItem = backgroundImageModel;
                                 $("#face-item-detail-area").addClass("active");
                                 // ページの背景の detail エリアを作成する
                                 this._showDetailItemAreaOfPage($page);
