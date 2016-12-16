@@ -2594,7 +2594,7 @@ module Garage {
              * ボタンアイテムの詳細編集エリア内の状態削除ボタンを押したときに呼び出される
              */
             private onRemoveButtonStateClicked(event: Event) {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button || !this.currentTargetButtonStates_) {
+                if (!this.currentItem || !(this.currentItem instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
 
@@ -2620,7 +2620,7 @@ module Garage {
                 this.currentTargetButtonStatesUpdated_ = true;
 
                 this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem);
 
             }
 
