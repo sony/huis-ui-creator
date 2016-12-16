@@ -1042,7 +1042,7 @@ module Garage {
                 this.$currentTarget_ = target;
                 
                 // target に紐付くモデルを取得
-                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -1056,7 +1056,7 @@ module Garage {
                 if (showDetailItemArea) {
                     // 詳細編集エリアを表示
                     $("#face-item-detail-area").addClass("active");
-                    this._showDetailItemArea(this.currentTargetModel_);
+                    this._showDetailItemArea(this.currentItem);
                 }
             }
 
