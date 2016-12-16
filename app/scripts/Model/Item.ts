@@ -11,7 +11,7 @@ module Garage {
             private position: Model.Position;
 
             constructor(attributes?: any, options?: any) {
-                super(attributes, null);
+                super(attributes, options);
             }
 
             /**
