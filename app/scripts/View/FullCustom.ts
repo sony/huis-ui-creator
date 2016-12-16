@@ -2050,25 +2050,25 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, "canvas"));
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
+                if (!(buttonModel instanceof Model.ButtonItem)) {
                     console.warn(FUNCTION_NAME + "$buttonModel is not button model");
                     return;
                 }
 
-                if (buttonModel.button &&
-                    buttonModel.button.state &&
-                    buttonModel.button.state[0] &&
-                    buttonModel.button.state[0].action &&
-                    buttonModel.button.state[0].action[0] &&
-                    buttonModel.button.state[0].action[0].deviceInfo) {
-                    return buttonModel.button.state[0].action[0].deviceInfo;
+                if (buttonModel &&
+                    buttonModel.state &&
+                    buttonModel.state[0] &&
+                    buttonModel.state[0].action &&
+                    buttonModel.state[0].action[0] &&
+                    buttonModel.state[0].action[0].deviceInfo) {
+                    return buttonModel.state[0].action[0].deviceInfo;
                 } else {
                     return;
                 }
