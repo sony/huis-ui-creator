@@ -48,13 +48,10 @@ module Garage {
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: IGFace) {
                 this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
-                if (huisFiles.isValidJumpSettings(this.defaultJumpSettings) ||
-                    (tmpFace != null && this.defaultJumpSettings.remote_id == tmpFace.remoteId)) {
-                    this.selectedSettings = this.defaultJumpSettings;
-                }
+                this.selectedSettings = this.correctJumpSetting(this.defaultJumpSettings);
 
                 if (tmpFace) {
-                    this.tmpFace = tmpFace;
+                    this.tmpFace = this.correctTempFace(tmpFace);
                 }
 
                 let options: CDP.UI.DialogOptions = {
@@ -67,6 +64,75 @@ module Garage {
                 };
 
                 this.dialog = new Dialog("#common-dialog-remotelist", options);
+            }
+
+            /**
+             * 跳び先設定をダイアログで使用可能な値に補正する
+             * 元の設定自体がnullの場合はnullを返す
+             *
+             * @param jump {IJump} 跳び先設定
+             * @return {IJump} 補正済み設定
+             */
+            private correctJumpSetting(jump: IJump): IJump {
+                if (jump == null ||
+                    jump.remote_id == null) {
+                    return null;
+                }
+
+                let face: IGFace = this.getFace(jump.remote_id);
+                if (face == null) {
+                    return jump;
+                }
+
+                let newJump: IJump = $.extend(true, {}, jump);
+
+                let totalPage = View.Module.countTotalPage(face);
+                if (jump.scene_no < 0 ||
+                    jump.scene_no >= totalPage) {
+                    newJump.scene_no = 0;
+                }
+
+                return newJump;
+            }
+
+            /**
+             * remote_idに該当するFace取得
+             * HuisFilesと異なり編集中のリモコンも含めた検索を行う。
+             *
+             * @param remoteId {string} キーとなるremote_id
+             * @return {IGFace} remote_idに該当するFace。存在しない場合はnullを返す。
+             */
+            private getFace(remoteId: string): IGFace {
+                if (this.tmpFace != null &&
+                    this.tmpFace.remoteId == remoteId) {
+                    return this.tmpFace;
+                } else {
+                    // 検索に引っかからずnullだった場合もそのまま返す
+                    return huisFiles.getFace(remoteId);
+                }
+            }
+
+
+            /**
+             * 編集中リモコンデータを補正する。
+             * ただし元のデータがnullだった場合はnullを返す。
+             *
+             * @param tmpFace {IGFace} 元のFace
+             * @return {IGFace} 補正済みFace
+             */
+            private correctTempFace(tmpFace: IGFace): IGFace {
+                if (tmpFace == null) {
+                    return null;
+                }
+
+                let face: IGFace = $.extend(true, {}, tmpFace);
+                if (face.name != null &&
+                    face.name.length === 0) {
+                    // 空文字だと表示が崩れるため全角スペースを設定
+                    face.name = '　';
+                }
+
+                return face;
             }
 
 
@@ -166,7 +232,7 @@ module Garage {
                     } else {
                         faceList.push({
                             remoteId: face.remoteId,
-                            name: face.name
+                            name: tmpFaceName
                         });
                     }
 
@@ -206,14 +272,7 @@ module Garage {
                     return;
                 }
 
-                let face: IGFace;
-                if (dialog.tmpFace &&
-                    dialog.tmpFace.remoteId == remoteId) {
-                    // 編集中の face
-                    face = dialog.tmpFace;
-                } else {
-                    face = huisFiles.getFace(remoteId);
-                }
+                let face: IGFace = dialog.getFace(remoteId);
 
                 var faceRenderer: View.FaceRenderer = new View.FaceRenderer({
                     el: $face.find(".face-container"),
@@ -287,12 +346,12 @@ module Garage {
              * @param dialog {SelectRemotePageDialog}
              */
             private selectDefaultFacePage() {
-                if (!this.defaultJumpSettings) {
+                if (this.selectedSettings == null) {
                     return;
                 }
 
-                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + this.defaultJumpSettings.remote_id + '"]');
-                let $page = $face.find('.face-page[data-page-index="' + this.defaultJumpSettings.scene_no + '"]');
+                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + this.selectedSettings.remote_id + '"]');
+                let $page = $face.find('.face-page[data-page-index="' + this.selectedSettings.scene_no + '"]');
 
                 if ($page.length != 1) {
                     return;
@@ -456,14 +515,10 @@ module Garage {
                     return;
                 }
 
-                let face = huisFiles.getFace(this.selectedSettings.remote_id);
+                let face: IGFace = this.getFace(this.selectedSettings.remote_id);
                 if (face == null) {
-                    if (this.selectedSettings.remote_id == this.tmpFace.remoteId) {
-                        face = this.tmpFace;
-                    } else {
-                        console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
-                        return;
-                    }
+                    console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
+                    return;
                 }
 
                 let labelArea = $('#remotelist-label-selected');
