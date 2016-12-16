@@ -10,6 +10,11 @@ module Garage {
                 super(attributes, null);
             }
 
+            public clone() {
+                let clonedItem = new Model.LabelItem();
+                return $.extend(true, clonedItem, this);
+            }
+
             /**
              * getters and setters
              */

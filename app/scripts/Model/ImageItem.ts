@@ -24,6 +24,11 @@ module Garage {
                 }
             }
 
+            public clone() {
+                let clonedItem = new Model.ImageItem();
+                return $.extend(true, clonedItem, this);
+            }
+
             /**
              * getters and setters
              */

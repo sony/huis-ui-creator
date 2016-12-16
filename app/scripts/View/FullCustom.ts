@@ -925,7 +925,7 @@ module Garage {
                 // イベント発生位置にアイテム座標を補正
                 if (setOnEventPosition) {
                     // モデルのクローンを生成してから位置を設定
-                    item = this._cloneItem(item);
+                    item = item.clone();
                     let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
                     this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
                 }
@@ -5286,17 +5286,6 @@ module Garage {
                 } else {
                     return null;
                 }
-            }
-
-            /**
-             * TargetModelのクローンを生成
-             * typeが不正だった場合はnullを返す
-             *
-             * @param model {TargetModel} 基にするTargetModel
-             * @return 生成したTargetModel
-             */
-            private _cloneItem(item: Model.Item): Model.Item {
-                return $.extend(true, {}, item);
             }
 
             /**

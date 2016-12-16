@@ -14,6 +14,8 @@ module Garage {
                 super(attributes, options);
             }
 
+            abstract clone();
+
             /**
              * アイテムが有効かどうか
              */
