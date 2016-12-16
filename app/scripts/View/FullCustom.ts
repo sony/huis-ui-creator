@@ -3786,33 +3786,7 @@ module Garage {
                     return;
                 }
 
-                var model: ItemModel = null;
-                //var moduleId = this._getCurrentCanvasPageModuleId();
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        if (this.currentTargetModel_.button) {
-                            model = this.currentTargetModel_.button;
-                        }
-                        break;
-                    case "label":
-                        if (this.currentTargetModel_.label) {
-                            model = this.currentTargetModel_.label;
-                        }
-                        break;
-                    case "image":
-                        if (this.currentTargetModel_.image) {
-                            model = this.currentTargetModel_.image;
-                        }
-                        break;
-                    default:
-                        console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
-                        return;
-                }
-
-                if (model == null) {
-                    console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] mode is null.");
-                    return;
-                }
+                var model: ItemModel = this.currentItem;
 
                 // model 状態を無効にする
                 var memento: IMemento = {
