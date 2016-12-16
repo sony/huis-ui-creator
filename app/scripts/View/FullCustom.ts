@@ -3401,11 +3401,11 @@ module Garage {
 
             private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
 
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not found");
                     return;
                 }
-                if (this.currentTargetModel_.type === "button" && !this.currentTargetModel_.button) {
+                if (!(this.currentItem instanceof Model.ButtonItem)) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not button item");
                     return;
                 }
@@ -3464,7 +3464,7 @@ module Garage {
                     return;
                 }
 
-                var button = this.currentTargetModel_.button;
+                var button = this.castToButton(this.currentItem);
                 var states = button.state;
                 if (!states) {
                     console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
