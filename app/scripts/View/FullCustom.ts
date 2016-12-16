@@ -1863,14 +1863,17 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
+                if (!(buttonModel instanceof Model.ButtonItem)) {
                     console.warn(FUNCTION_NAME + "$buttonModel is not button model");
                     return;
                 }
@@ -1903,7 +1906,7 @@ module Garage {
                 }
 
                 //マクロボタンの場合、リモコン名を特殊表記
-                if (this.isMacroButton(buttonModel.button)) {
+                if (this.isMacroButton(buttonModel)) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
                 }
                 
