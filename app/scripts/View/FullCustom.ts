@@ -4135,12 +4135,12 @@ module Garage {
                 // 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
                 
                 for (let i = 0; i < buttonCount - 1; i++) {
-                    if (ignoreCurrentTarget && buttons[i].cid == this.currentTargetModel_.button.cid) {
+                    if (ignoreCurrentTarget && buttons[i].cid == this.currentItem.cid) {
                         continue;
                     }
 
                     for (let j = i + 1; j < buttonCount; j++) {
-                        if (ignoreCurrentTarget && buttons[j].cid == this.currentTargetModel_.button.cid) {
+                        if (ignoreCurrentTarget && buttons[j].cid == this.currentItem.cid) {
                             continue;
                         }
 
@@ -4149,11 +4149,11 @@ module Garage {
 
                         //もし、currentTargetのbuttonの場合、areaはcurrentTargetAreaをつかう。
                         if (currentTargetArea) {
-                            if (buttons[i].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[i].cid == this.currentItem.cid) {
                                 button1Area = currentTargetArea;
                             }
 
-                            if (buttons[j].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[j].cid == this.currentItem.cid) {
                                 button2Area = currentTargetArea;
                             }
                         }
