@@ -5366,22 +5366,8 @@ module Garage {
              * @param w {number} width
              * @param h {number} height
              */
-            private _setTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
-                let target: IArea;
-                switch (model.type) {
-                    case "button":
-                        target = model.button.area;
-                        break;
-                    case "image":
-                        target = model.image.area;
-                        break;
-                    case "label":
-                        target = model.label.area;
-                        break;
-                    default:
-                        console.error("Invalid model type: " + model.type);
-                        return;
-                }
+            private _setTargetModelArea(item: Model.Item, x: number, y: number, w: number, h: number) {
+                let target: IArea = item.area;
 
                 if (_.isNumber(x)) target.x = x;
                 if (_.isNumber(y)) target.y = y;
