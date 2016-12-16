@@ -1961,7 +1961,13 @@ module Garage {
                     return;
                 }
 
-                var buttonModel:TargetModel = this._getItemModel($button, "canvas");
+                let item: Model.Item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                } else {
+                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+                    return;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
@@ -1970,20 +1976,15 @@ module Garage {
 
                 var functionNum = 0;
 
-                if (buttonModel.type !== "button") {
-                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
-                    return;    
-                }
-
                 //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
-                var stateNum = buttonModel.button.state.length;
+                var stateNum = buttonModel.state.length;
                 var fucntions: string[] = [];
-                for (var i = 0; i < buttonModel.button.state.length; i++){
-                    for (let j = 0; j < buttonModel.button.state[i].action.length;j++){
-                        if (buttonModel.button.state[i].action[j] &&
-                            buttonModel.button.state[i].action[j].code_db &&
-                            buttonModel.button.state[i].action[j].code_db.function) {
-                            fucntions.push(buttonModel.button.state[i].action[j].code_db.function.toString());
+                for (var i = 0; i < buttonModel.state.length; i++){
+                    for (let j = 0; j < buttonModel.state[i].action.length;j++){
+                        if (buttonModel.state[i].action[j] &&
+                            buttonModel.state[i].action[j].code_db &&
+                            buttonModel.state[i].action[j].code_db.function) {
+                            fucntions.push(buttonModel.state[i].action[j].code_db.function.toString());
 
                         }
 
