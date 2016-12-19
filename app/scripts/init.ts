@@ -167,7 +167,7 @@ module Garage {
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
         // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
             fs.mkdirSync(HUIS_FILES_ROOT);
         }
