@@ -229,8 +229,8 @@ module Garage {
                 $face.find(".face-container").on("click", (event) => {
                     let $clickedFace = $(event.currentTarget);
                     let remoteId = $clickedFace.data("remoteid");
-                     if (remoteId) {
-                        Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
+                    if (remoteId) {
+                        this._enterFullCustom(remoteId);
                     }
                 });
                 //// シングルクリックしたら「選択状態」になる
@@ -259,6 +259,19 @@ module Garage {
             //        }
             //    }
             //}
+
+           /**
+             * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
+             *
+             * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
+             */
+            private _enterFullCustom(remoteId?: string) {
+                let urlQueryParameter: string = "";
+                if (remoteId != null) {
+                    urlQueryParameter = "?remoteId=" + remoteId;
+                }
+                Framework.Router.navigate("#full-custom" + urlQueryParameter);
+            }
 
             private _onCreateNewRemote() {
                 let canCreateResult = huisFiles.canCreateNewRemote();
