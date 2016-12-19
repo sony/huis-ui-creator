@@ -243,7 +243,7 @@
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
         "jump": {
-            "STR_REMOTE_BTN_JUMP": "ジャンプボタン",
+            "STR_REMOTE_BTN_JUMP": "ページジャンプボタン",
             "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
             "STR_PLEASE_INPUT_PAGE": "ページを選択"
         },
