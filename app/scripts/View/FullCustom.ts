@@ -5619,7 +5619,7 @@ module Garage {
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.h + px * 2 < this.minItemSize_) {
-                    px = (currentTargetArea.h - this.minItemSize_) / 2;
+                    px = (this.minItemSize_ - currentTargetArea.h) / 2;
                 }
                 let newArea = {
                     x: currentTargetArea.x,
@@ -5639,7 +5639,7 @@ module Garage {
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.w + px*2 < this.minItemSize_) {
-                    px = (currentTargetArea.w - this.minItemSize_) / 2;
+                    px = (this.minItemSize_ - currentTargetArea.w) / 2;
                 }
                 let newArea = {
                     x: currentTargetArea.x - px,
