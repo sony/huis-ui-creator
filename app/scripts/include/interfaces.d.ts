@@ -621,6 +621,10 @@ declare module Garage {
     */
     var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
     /**
+     * 既存リモコンをコピーして編集を開始したときのダイアログパラメーター
+     */
+    var DIALOG_PROPS_COPY_AND_EDIT_REMOTE: DialogProps;
+    /**
      * リモコンを削除した際のダイアログパラメーター
     */
     var DIALOG_PROPS_DELTE_REMOTE: DialogProps;

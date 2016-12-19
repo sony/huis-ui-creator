@@ -93,6 +93,17 @@ module Garage {
                     }
                 }
 
+                DIALOG_PROPS_COPY_AND_EDIT_REMOTE = {
+                    id: "#common-dialog-spinner",
+                    options: {
+                        title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_IN_COPYING"),
+                        anotherOption: {
+                            title: $.i18n.t(dialogMessageStr + "STR_GARAGE_DIALOG_MESSAGE_COPY_DONE_ENTER_FULLCUSTOM"),
+                            src: PATH_IMG_DIALOG_DONE_ICON,
+                        }
+                    }
+                }
+
                 // 同期 (HUIS -> PC) ダイアログのパラメーター 完了文言
                 DIALOG_PROPS_DELTE_REMOTE = {
                     id: "#common-dialog-spinner",
