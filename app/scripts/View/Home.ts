@@ -282,10 +282,56 @@ module Garage {
                 Framework.Router.navigate("#full-custom" + urlQueryParameter);
             }
 
-            private _onCreateNewRemote() {
+           /**
+             * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
+             *
+             * @param face {IGFace} コピーを作成するリモコンのface。
+             */
+            private _copyAndEditRemote(face: IGFace) {
+
+                if (!this._checkCanCreateNewRemote()) {
+                    return;
+                }
+
+                face = this._cloneFace(face);
+                face.remoteId = huisFiles.createNewRemoteId();
+
+                huisFiles.updateFace(face.remoteId, face.name, face.modules, null)
+                    .always(() => {
+                        garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
+                        if (HUIS_ROOT_PATH) {
+                            let syncTask = new Util.HuisDev.FileSyncTask();
+                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, null, (err) => {
+                                if (err) {
+                                    // [TODO] エラー値のハンドリング
+                                    electronDialog.showMessageBox({
+                                        type: "error",
+                                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR"),
+                                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                                        title: PRODUCT_NAME,
+                                    });
+                                } else {
+                                    this._initializeHomeView();
+                                    this._enterFullCustom(face.remoteId);
+                                }
+                            });
+                        } else {
+                            console.error("HUIS_ROOT_PATH is empty");
+                        }
+                    }).fail(() => {
+                        console.error("updateFace is fail");
+                    });
+            }
+
+           /**
+             * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
+             *
+             * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
+             */
+            private _checkCanCreateNewRemote(): boolean {
                 let canCreateResult = huisFiles.canCreateNewRemote();
                 if (canCreateResult == 0) {
-                    Framework.Router.navigate("#full-custom");
+                    return true;
                 } else if (canCreateResult == -2) {
                     electronDialog.showMessageBox({
                         type: "error",
@@ -297,6 +343,13 @@ module Garage {
                     this.showErrorDialogRemoteNumLimit()
                 } else {
                     console.warn("no alert dialog in _onCreateNewRemote()");
+                }
+                return false;
+            }
+
+            private _onCreateNewRemote() {
+                if (this._checkCanCreateNewRemote()) {
+                    this._enterFullCustom();
                 }
             }
 
@@ -371,13 +424,13 @@ module Garage {
                     this.remoteIdToDelete = $face.data("remoteid");
                     if (this.remoteIdToDelete) {
 
-                        let remoteIdToExport = $face.data("remoteid");
+                        let remoteId = $face.data("remoteid");
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                             click: () => {
-                                let face :IGFace = huisFiles.getFace(remoteIdToExport);
+                                let face :IGFace = huisFiles.getFace(remoteId);
 
-                                this.exportRemote(remoteIdToExport, face.name,face.modules); // true で警告なし
+                                this.exportRemote(remoteId, face.name,face.modules); // true で警告なし
                             }
                         }));
 
@@ -398,7 +451,16 @@ module Garage {
                                }
                             }
                         }));
+
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
+                            click: () => {
+                                let face: IGFace = huisFiles.getFace(remoteId);
+                                this._copyAndEditRemote(face);
+                            }
+                        }));
                     }
+
                 }
                 
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
