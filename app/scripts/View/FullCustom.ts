@@ -5618,7 +5618,7 @@ module Garage {
                 let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
-                if (currentTargetArea.h + px * 2 < this.minItemSize_) {
+                if (currentTargetArea.h + px*2 < this.minItemSize_) {
                     px = (this.minItemSize_ - currentTargetArea.h) / 2;
                 }
                 let newArea = {
