@@ -523,7 +523,7 @@ module Garage {
 
                 let labelArea = $('#remotelist-label-selected');
                 labelArea.text(
-                    $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_REMOTE') + face.name + " " +
+                    $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_REMOTE') + face.name +
                     $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + (this.selectedSettings.scene_no + 1));
             }
 
