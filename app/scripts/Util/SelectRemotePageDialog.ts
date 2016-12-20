@@ -3,15 +3,13 @@
 module Garage {
     export module Util {
 
-        import Dialog = CDP.UI.Dialog;
-
 
         export class SelectRemotePageDialog {
 
             private static TAG = "[Garage.Util.SelectRemotePageDialog] ";
 
             /** 表示するダイアログ */
-            private dialog: Dialog;
+            private dialog: CDP.UI.Dialog;
 
             /** タイトル */
             private title: string;
@@ -63,7 +61,7 @@ module Garage {
                     }
                 };
 
-                this.dialog = new Dialog("#common-dialog-remotelist", options);
+                this.dialog = new CDP.UI.Dialog("#common-dialog-remotelist", options);
             }
 
             /**
