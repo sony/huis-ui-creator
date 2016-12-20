@@ -4,7 +4,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
-        export class ButtonItem extends Backbone.Model implements IGButton, ItemModel {
+        export class ButtonItem extends Model.Item implements IGButton {
 
             remoteId: string;
             private stateCollection_: ButtonStateCollection;
@@ -199,17 +199,6 @@ module Garage {
              */
             get itemType(): string {
                 return "button";
-            }
-
-            /**
-             * アイテムが有効かどうか
-             */
-            get enabled(): boolean {
-                return this.get("enabled");
-            }
-
-            set enabled(val: boolean) {
-                this.set("enabled", val);
             }
 
             /**

@@ -4,7 +4,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        export class LabelItem extends Backbone.Model implements IGLabel, ItemModel {
+        export class LabelItem extends Item implements IGLabel {
 
             constructor(attributes?: any) {
                 super(attributes, null);
@@ -90,18 +90,6 @@ module Garage {
             get itemType(): string {
                 return "label";
             }
-
-            /**
-             * このアイテムが有効であるかどうか
-             */
-            get enabled(): boolean {
-                return this.get("enabled");
-            }
-
-            set enabled(val: boolean) {
-                this.set("enabled", val);
-            }
-
 
             /**
              * モデルの初期値を返す。
