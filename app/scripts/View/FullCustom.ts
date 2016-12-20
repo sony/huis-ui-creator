@@ -2798,26 +2798,6 @@ module Garage {
 
             }
 
-            private _convertTargetToItem(target: TargetModel): ItemModel {
-                var model = null;
-                switch (target.type) {
-                    case "button":
-                        model = target.button;
-                        break;
-
-                    case "label":
-                        model = target.label;
-                        break;
-
-                    case "image":
-                        model = target.image;
-                        break;
-
-                    default:
-                }
-                return model;
-            }
-
             /**
              * 現在のターゲットとなるモデルに対して、データをセットする。
              * 
@@ -5498,7 +5478,6 @@ module Garage {
             }
 
             private _heightenItem(px: number) {
-                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.h + px*2 < this.minItemSize_) {
@@ -5518,7 +5497,6 @@ module Garage {
             }
 
             private _widenItem(px: number) {
-                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.w + px*2 < this.minItemSize_) {
