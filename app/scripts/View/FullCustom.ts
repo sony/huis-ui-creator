@@ -54,7 +54,7 @@ module Garage {
             private commandManager_: CommandManager;
             private $currentTarget_: JQuery;
             private $currentTargetDummy_: JQuery;
-            private currentItem: Model.Item;
+            private currentItem_: Model.Item;
             private currentTargetPageIndex_: number;
             private currentTargetButtonStates_: IStateDetail[];
             private currentTargetButtonStatesUpdated_: boolean;
@@ -1009,7 +1009,7 @@ module Garage {
                             if ($page) {
                                 // ページ背景の model の作成、もしくは既存のものを取得する
                                 let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
-                                this.currentItem = backgroundImageModel;
+                                this.currentItem_ = backgroundImageModel;
                                 $("#face-item-detail-area").addClass("active");
                                 // ページの背景の detail エリアを作成する
                                 this._showDetailItemAreaOfPage($page);
@@ -1042,7 +1042,7 @@ module Garage {
                 this.$currentTarget_ = target;
                 
                 // target に紐付くモデルを取得
-                this.currentItem = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -1056,7 +1056,7 @@ module Garage {
                 if (showDetailItemArea) {
                     // 詳細編集エリアを表示
                     $("#face-item-detail-area").addClass("active");
-                    this._showDetailItemArea(this.currentItem);
+                    this._showDetailItemArea(this.currentItem_);
                 }
             }
 
@@ -1331,12 +1331,12 @@ module Garage {
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
                     this._updateCurrentModelData("area", newArea, isFromPallet);
-                    this._showDetailItemArea(this.currentItem);
+                    this._showDetailItemArea(this.currentItem_);
                     return;
                 }
 
                 // 元ページのモデルをコピーし移動先ページに追加
-                let newModel = this.currentItem.clone();
+                let newModel = this.currentItem_.clone();
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
@@ -1373,7 +1373,7 @@ module Garage {
                 // 新しいItemの詳細エリア表示
                 this._setTarget(newItem);
                 this._updateItemElementsOnCanvas(updatedItems);
-                this._showDetailItemArea(this.currentItem);
+                this._showDetailItemArea(this.currentItem_);
             }
 
             private _resizeItem(newArea: IArea, update?: boolean) {
@@ -1389,7 +1389,7 @@ module Garage {
                 //currentTargetの重なり判定
                 this.changeColorOverlapedButtonsWithCurrentTargetButton();
 
-                if (this.currentItem instanceof Model.ButtonItem) {
+                if (this.currentItem_ instanceof Model.ButtonItem) {
                     this._resizeButtonStateItem(this.$currentTarget_, newArea);
                 }
                 if (update) {
@@ -2554,11 +2554,11 @@ module Garage {
              * ボタンアイテムの詳細編集エリア内の状態追加ボタンを押したときに呼び出される
              */
             private onAddButtonStateClicked(event: Event) {
-                if (!this.currentItem) {
+                if (!this.currentItem_) {
                     return;
                 }
 
-                let button = this.currentItem;
+                let button = this.currentItem_;
                 if (button instanceof Model.ButtonItem) {
                     var states = button.state;
                     var newStateId = 0;
@@ -2586,7 +2586,7 @@ module Garage {
                     this.currentTargetButtonStatesUpdated_ = true;
 
                     this._updateCurrentModelButtonStatesData();
-                    this._showDetailItemArea(this.currentItem);
+                    this._showDetailItemArea(this.currentItem_);
                 }
             }
 
@@ -2594,7 +2594,7 @@ module Garage {
              * ボタンアイテムの詳細編集エリア内の状態削除ボタンを押したときに呼び出される
              */
             private onRemoveButtonStateClicked(event: Event) {
-                if (!this.currentItem || !(this.currentItem instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
+                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
 
@@ -2620,7 +2620,7 @@ module Garage {
                 this.currentTargetButtonStatesUpdated_ = true;
 
                 this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentItem);
+                this._showDetailItemArea(this.currentItem_);
 
             }
 
@@ -2817,11 +2817,11 @@ module Garage {
             private _updateCurrentModelData(properties: any): ItemModel;
 
             private _updateCurrentModelData(param1: any, param2?: any, param3: boolean = false): ItemModel {
-                if (!this.currentItem) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
                     return;
                 }
-                var model = this.currentItem;
+                var model = this.currentItem_;
 
                 /**
                  * undo / redo 対応のために、CommandManager 経由で model の更新を行う
@@ -3199,7 +3199,7 @@ module Garage {
              * データとして持っている state のリストを Button Model に更新する
              */
             private _updateCurrentModelButtonStatesData() {
-                if (!this.currentItem || !(this.currentItem instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
+                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
                 // 更新がない場合は何もしない
@@ -3381,11 +3381,11 @@ module Garage {
 
             private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
 
-                if (!this.currentItem) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not found");
                     return;
                 }
-                if (!(this.currentItem instanceof Model.ButtonItem)) {
+                if (!(this.currentItem_ instanceof Model.ButtonItem)) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not button item");
                     return;
                 }
@@ -3444,7 +3444,7 @@ module Garage {
                     return;
                 }
 
-                var button = this.castToButton(this.currentItem);
+                var button = this.castToButton(this.currentItem_);
                 var states = button.state;
                 if (!states) {
                     console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
@@ -3766,7 +3766,7 @@ module Garage {
                     return;
                 }
 
-                var model: ItemModel = this.currentItem;
+                var model: ItemModel = this.currentItem_;
 
                 // model 状態を無効にする
                 var memento: IMemento = {
@@ -3935,12 +3935,12 @@ module Garage {
              * @return {IArea} 妥当性が確認された area 
              */
             private _validateArea(area: { x?: number, y?: number, w?: number, h?: number }): IArea {
-                if (!this.currentItem) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_validateArea() target model not found.");
                     return null;
                 }
 
-                var complementedArea: IArea = $.extend(true, {}, this.currentItem.area, area);
+                var complementedArea: IArea = $.extend(true, {}, this.currentItem_.area, area);
 
                 this._normalizeArea(complementedArea);
 
@@ -4021,7 +4021,7 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
 
                 //currentTargetがボタンでなかった場合、無視する
-                var buttonItem = this.castToButton(this.currentItem);
+                var buttonItem = this.castToButton(this.currentItem_);
                 if (buttonItem == null) {
                     return;
                 }
@@ -4115,12 +4115,12 @@ module Garage {
                 // 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
                 
                 for (let i = 0; i < buttonCount - 1; i++) {
-                    if (ignoreCurrentTarget && buttons[i].cid == this.currentItem.cid) {
+                    if (ignoreCurrentTarget && buttons[i].cid == this.currentItem_.cid) {
                         continue;
                     }
 
                     for (let j = i + 1; j < buttonCount; j++) {
-                        if (ignoreCurrentTarget && buttons[j].cid == this.currentItem.cid) {
+                        if (ignoreCurrentTarget && buttons[j].cid == this.currentItem_.cid) {
                             continue;
                         }
 
@@ -4129,11 +4129,11 @@ module Garage {
 
                         //もし、currentTargetのbuttonの場合、areaはcurrentTargetAreaをつかう。
                         if (currentTargetArea) {
-                            if (buttons[i].cid == this.currentItem.cid) {
+                            if (buttons[i].cid == this.currentItem_.cid) {
                                 button1Area = currentTargetArea;
                             }
 
-                            if (buttons[j].cid == this.currentItem.cid) {
+                            if (buttons[j].cid == this.currentItem_.cid) {
                                 button2Area = currentTargetArea;
                             }
                         }
@@ -4600,7 +4600,7 @@ module Garage {
              */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
-                this.currentItem = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -4613,7 +4613,7 @@ module Garage {
 
                 // 詳細編集エリアを表示
                 $("#face-item-detail-area").addClass("active");
-                this._showDetailItemArea(this.currentItem);
+                this._showDetailItemArea(this.currentItem_);
             }
 
             /**
@@ -4633,7 +4633,7 @@ module Garage {
                 $detail.children().remove();
 
                 this.$currentTarget_ = null;
-                this.currentItem = null;
+                this.currentItem_ = null;
                 this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
