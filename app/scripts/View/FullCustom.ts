@@ -73,6 +73,7 @@ module Garage {
             private gridSize_: number;
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
+            private isDragging: Boolean;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -159,6 +160,7 @@ module Garage {
                     this.setFocusAndMoveCursorToEnd($remoteName);
 
                     this.isTextBoxFocused = false;
+                    this.isDragging = false;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -1111,6 +1113,15 @@ module Garage {
                 return dummy;
             }
 
+            private _getCurrentTargetArea(): IArea {
+                return {
+                    x: parseInt(this.$currentTarget_.css("left"), 10),
+                    y: parseInt(this.$currentTarget_.css("top"), 10),
+                    w: parseInt(this.$currentTarget_.css("width"), 10),
+                    h: parseInt(this.$currentTarget_.css("height"), 10)
+                };
+            }
+
             /**
              * ドラッグドロップのドラッグ開始における初期処理を行い、ドラッグ中の状態にする
              *
@@ -1118,6 +1129,7 @@ module Garage {
              * @param forceStart {boolean} マウスがキャンバス上になくても強制的にドラッグ中にするかどうか
              */
             private startDraggingCanvasItem(mousePosition: Model.Position, forceStart: boolean = false) {
+                this.isDragging = true;
                 if (this.$currentTarget_ && (this.isOnCanvasFacePagesArea(mousePosition) || forceStart)) {
 
                     // ドラッグ開始位置の保存
@@ -1127,12 +1139,7 @@ module Garage {
                         parseInt(this.$currentTarget_.css("top"), 10)
                     );
 
-                    this.mouseMoveStartTargetArea_ = {
-                        x: parseInt(this.$currentTarget_.css("left"), 10),
-                        y: parseInt(this.$currentTarget_.css("top"), 10),
-                        w: parseInt(this.$currentTarget_.css("width"), 10),
-                        h: parseInt(this.$currentTarget_.css("height"), 10)
-                    };
+                    this.mouseMoveStartTargetArea_ = this._getCurrentTargetArea();
 
                     if (!this.selectedResizer_) {
                         // サイズ変更でなければダミーを表示
@@ -1213,9 +1220,9 @@ module Garage {
 
                 // リサイザーが選択されている場合は、アイテムのリサイズを行う
                 if (this.selectedResizer_) {
-                    this._resizeItem({ x: event.pageX, y: event.pageY }, false);
+                    this._resizeItemWithMouse({ x: event.pageX, y: event.pageY }, false);
                 } else {
-                    var newPosition = this._getGriddedPosition({x: event.pageX, y: event.pageY});
+                    var newPosition = this._getGriddedDraggingItemPosition({ x: event.pageX, y: event.pageY });
 
                     this.$currentTarget_.css({
                         "left": newPosition.x + "px",
@@ -1253,6 +1260,9 @@ module Garage {
              * フルカスタム編集画面での mouseup イベントのハンドリング
              */
             private onMainMouseUp(event: Event) {
+
+                this.isDragging = false;
+
                 if (this.$currentTargetDummy_) {
                     this.$currentTargetDummy_.remove();
                     this.$currentTargetDummy_ = null;
@@ -1266,13 +1276,15 @@ module Garage {
                     return;
                 }
 
-                var position = { x: event.pageX, y: event.pageY };
+                var position: Model.Position = new Model.Position(event.pageX, event.pageY);
 
-                // リサイザーが選択されている場合は、アイテムのリサイズを行う
-                if (this.selectedResizer_) {
-                    this._resizeItem(position, true);
-                } else { // それ以外の場合は、アイテムの移動
-                    this._moveItem(position);
+                if (!position.isSame(this.mouseMoveStartPosition_)) {
+                    // リサイザーが選択されている場合は、アイテムのリサイズを行う
+                    if (this.selectedResizer_) {
+                        this._resizeItemWithMouse(position, true);
+                    } else { // それ以外の場合は、アイテムの移動
+                        this._moveItemWithMouse(position);
+                    }
                 }
 
                 this.$currentTarget_.removeClass("moving-item");
@@ -1284,15 +1296,26 @@ module Garage {
 
             }
 
+            private _moveItemGrid(ungriddedPosition: IPosition) {
+                let canvas = this.$currentTarget_.parent();
+                let newPosition: IPosition = this._getGriddedItemPosition(ungriddedPosition, canvas, true);
+                this._moveItem(newPosition);
+            }
+
+            private _moveItem(newPosition: IPosition) {
+                let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
+                this._updateCurrentModelData("area", newArea, false);
+            }
+
             /**
              * アイテムの移動を行い、位置を確定する
              */
-            private _moveItem(position: IPosition) {
+            private _moveItemWithMouse(position: IPosition) {
                 let fromPageModuleId: string = JQUtils.data(this.$currentTarget_.parent(), "cid");
                 let toPageModuleId  : string = JQUtils.data(this._getCanvasPageByDraggingPosition(position.y), "cid");
                 let isCrossPageMoving: boolean = (fromPageModuleId != toPageModuleId);
 
-                let newPosition: IPosition = this._getGriddedPosition(position, isCrossPageMoving);
+                let newPosition: IPosition = this._getGriddedDraggingItemPosition(position, isCrossPageMoving);
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
                 let isFromPallet: boolean = !(this._getTargetPageModule(this.mouseMoveStartPosition_));
@@ -1314,7 +1337,8 @@ module Garage {
                     }
                 }
 
-                if (this.mouseMoveStartPosition_.isSame(newPosition)) {
+                let newUngriddedPosition = this._getDraggingItemPosition(position);
+                if (this.mouseMoveStartTargetPosition_.isSame(newUngriddedPosition)) {
                     // 位置に変更がない（アイテム選択のみ）の場合は何もしない
                     // この判定はパレットから配置されたアイテムかどうかの判定より後でなければならない
                     return;
@@ -1368,10 +1392,34 @@ module Garage {
                 this._showDetailItemArea(this.currentTargetModel_);
             }
 
+            private _resizeItem(newArea: IArea, update?: boolean) {
+
+                this.$currentTarget_.css({
+                    left: newArea.x + "px",
+                    top: newArea.y + "px",
+                    width: newArea.w + "px",
+                    height: newArea.h + "px",
+                    lineHeight: newArea.h + "px"
+                });
+
+                //currentTargetの重なり判定
+                this.changeColorOverlapedButtonsWithCurrentTargetButton();
+
+                if (this.currentTargetModel_.type === "button") {
+                    this._resizeButtonStateItem(this.$currentTarget_, newArea);
+                }
+                if (update) {
+                    let validateArea = this._validateArea(newArea);
+                    this._updateCurrentModelData("area", validateArea);
+                    //this._showDetailItemArea(this.currentTargetModel_);
+                }
+                this._setResizer(this.$currentTarget_);
+            }
+
             /**
              * アイテムのリサイズを行う
              */
-            private _resizeItem(position: IPosition, update?: boolean) {
+            private _resizeItemWithMouse(position: IPosition, update?: boolean) {
 
                 this.$currentTarget_.removeClass("moving-item");
                 var calculateNewArea = (baseArea: IArea, deltaX: number, deltaY: number): IArea => {
@@ -1499,28 +1547,7 @@ module Garage {
                 //canvasAreaは実際の大きさの1/2に表示されているため、mouseの移動量は2倍にする。
                 var newArea = calculateNewArea(this.mouseMoveStartTargetArea_, deltaX*2, deltaY*2);
 
-                this.$currentTarget_.css({
-                    left: newArea.x + "px",
-                    top: newArea.y + "px",
-                    width: newArea.w + "px",
-                    height: newArea.h + "px",
-                    lineHeight: newArea.h + "px"
-                });
-
-                //currentTargetの重なり判定
-                this.changeColorOverlapedButtonsWithCurrentTargetButton();
-
-                if (this.currentTargetModel_.type === "button") {
-                    this._resizeButtonStateItem(this.$currentTarget_, newArea);
-                }
-                if (update) {
-                    let validateArea = this._validateArea(newArea);
-                    this._updateCurrentModelData("area", validateArea);
-                    this._showDetailItemArea(this.currentTargetModel_);
-                    this._setResizer(this.$currentTarget_);
-                } else {
-                    this._setResizer(this.$currentTarget_);
-                }
+                this._resizeItem(newArea, update);
             }
 
 
@@ -2779,7 +2806,26 @@ module Garage {
                 }
 
             }
-        
+
+            private _convertTargetToItem(target: TargetModel): ItemModel {
+                var model = null;
+                switch (target.type) {
+                    case "button":
+                        model = target.button;
+                        break;
+
+                    case "label":
+                        model = target.label;
+                        break;
+
+                    case "image":
+                        model = target.image;
+                        break;
+
+                    default:
+                }
+                return model;
+            }
 
             /**
              * 現在のターゲットとなるモデルに対して、データをセットする。
@@ -2804,22 +2850,7 @@ module Garage {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
                     return;
                 }
-                var model = null;
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        model = this.currentTargetModel_.button;
-                        break;
-
-                    case "label":
-                        model = this.currentTargetModel_.label;
-                        break;
-
-                    case "image":
-                        model = this.currentTargetModel_.image;
-                        break;
-
-                    default:
-                }
+                var model = this._convertTargetToItem(this.currentTargetModel_);
 
                 if (!model) {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
@@ -3622,15 +3653,6 @@ module Garage {
 
                                     //画像が存在するとき、テキストEdit機能を非表示にする
                                     this.toggleImagePreview(stateId);
-
-                                    //テキストエリアが表示されたとき、フォーカスを移す。
-                                    var $textFieldInPreview = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-                                    if ($textFieldInPreview.css("visibility") === "visible") {
-                                        setTimeout(function () {
-                                            $textFieldInPreview.focus();
-                                        }, 0);
-                                    }
-
                                 }
                                 break;
 
@@ -3909,18 +3931,17 @@ module Garage {
                 
             }
 
-            /**
-             * 元のアイテム座標からグリッド位置に合わせて補正されたアイテム座標を返す
-             * @param mousePosition
-             * @param baseNewCanvas アイテムがページを跨いで移動する際に移動後のキャンバスページを基準にするかどうか。falseの場合はドラッグ開始時のキャンバスを基準にした座標を返す。
-             */
-            private _getGriddedPosition(mousePosition: IPosition, baseNewCanvas: boolean = false): IPosition {
-                // グリッドに合わせる前のアイテム座標
+            private _getDraggingItemPosition(mousePosition: IPosition) {
                 var ungriddedPosition = {
                     x: this.mouseMoveStartTargetPosition_.x + (mousePosition.x - this.mouseMoveStartPosition_.x) * 2,
                     y: this.mouseMoveStartTargetPosition_.y + (mousePosition.y - this.mouseMoveStartPosition_.y) * 2
                 };
+                return ungriddedPosition;
+            }
 
+            private _getGriddedItemPosition(position: IPosition, newCanvas: JQuery, baseNewCanvas: boolean = false) {
+
+                var pointedCid = JQUtils.data(newCanvas, "cid");
                 var newX;
                 var newY;
 
@@ -3929,30 +3950,42 @@ module Garage {
                     var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
                     var BIAS_Y = 0
 
-                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_ + BIAS_X;
-                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
-                    
+                    newX = Math.round(position.x / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.round(position.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
+
                 } else {
-                    newX = Math.round(ungriddedPosition.x / this.gridSize_) * this.gridSize_;
-                    newY = Math.round(ungriddedPosition.y / this.gridSize_) * this.gridSize_;
+                    newX = Math.round(position.x / this.gridSize_) * this.gridSize_;
+                    newY = Math.round(position.y / this.gridSize_) * this.gridSize_;
                 }
 
                 // アイテム元座標のキャンバス
                 var fromCanvas = this.$currentTarget_.parent();
-                // グリッド位置補正前の対象アイテムが乗っているキャンバス
-                var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
                 var fromCid = JQUtils.data(fromCanvas, "cid");
-                var pointedCid = JQUtils.data(pointedCanvas, "cid");
                 if (fromCid && pointedCid && fromCid != pointedCid) {
                     // ページを跨ぐ場合グリッドのずれを補正
-                    newY += ((pointedCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
+                    newY += ((newCanvas.offset().top - fromCanvas.offset().top) * 2) % this.gridSize_;
 
                     if (baseNewCanvas) {
-                        newY -= (pointedCanvas.offset().top - fromCanvas.offset().top) * 2;
+                        newY -= (newCanvas.offset().top - fromCanvas.offset().top) * 2;
                     }
                 }
 
                 return { x: newX, y: newY };
+            }
+
+            /**
+             * 元のアイテム座標からグリッド位置に合わせて補正されたアイテム座標を返す
+             * @param mousePosition
+             * @param baseNewCanvas アイテムがページを跨いで移動する際に移動後のキャンバスページを基準にするかどうか。falseの場合はドラッグ開始時のキャンバスを基準にした座標を返す。
+             */
+            private _getGriddedDraggingItemPosition(mousePosition: IPosition, baseNewCanvas: boolean = false): IPosition {
+                // グリッドに合わせる前のアイテム座標
+                var ungriddedPosition: IPosition = this._getDraggingItemPosition(mousePosition);
+
+                // グリッド位置補正前の対象アイテムが乗っているキャンバス
+                var pointedCanvas = this._getCanvasPageByDraggingPosition(mousePosition.y);
+
+                return this._getGriddedItemPosition(ungriddedPosition, pointedCanvas, baseNewCanvas);
             }
 
             /**
@@ -5541,9 +5574,91 @@ module Garage {
                 this.isTextBoxFocused = false;
             }
 
+            private _getCurrentTargetPosition(): IPosition {
+                return {
+                    x: this.$currentTarget_.offset().left,
+                    y: this.$currentTarget_.offset().top,
+                }
+            }
+
+            private _getCurrentCanvasPosition(): IPosition {
+                if (this.$currentTarget_ == null) {
+                    console.error(TAG + "currentTarget is null in _getCurrentCanvasPosition");
+                    return null;
+                }
+                return {
+                    x: this.$currentTarget_.parent().offset().left,
+                    y: this.$currentTarget_.parent().offset().top,
+                }
+            }
+
+            private _getCurrentTargetPositionInCanvas(): IPosition {
+                if (this.$currentTarget_ == null) {
+                    console.error(TAG + "currentTarget is null in _getCurrentTargetPositionInCanvas");
+                    return null;
+                }
+
+                let targetPosition: IPosition = this._getCurrentTargetPosition();
+                let canvasPosition: IPosition = this._getCurrentCanvasPosition();
+                return {
+                    x: targetPosition.x - canvasPosition.x,
+                    y: targetPosition.y - canvasPosition.y,
+                }
+            }
+
+            private _heightenCurrentItemGrid(gridNum: number) {
+                this._heightenItemGrid(gridNum);
+            }
+
+            private _heightenItemGrid(gridNum: number) {
+                this._heightenItem(gridNum * this.gridSize_);
+            }
+
+            private _heightenItem(px: number) {
+                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
+                let currentTargetArea = this._getCurrentTargetArea();
+                // check item doesn't become smaller than minItemSize_
+                if (currentTargetArea.h + px*2 < this.minItemSize_) {
+                    px = (this.minItemSize_ - currentTargetArea.h) / 2;
+                }
+                let newArea = {
+                    x: currentTargetArea.x,
+                    y: currentTargetArea.y - px,
+                    w: currentTargetArea.w,
+                    h: currentTargetArea.h + px*2,
+                }
+                this._resizeItem(newArea, true);
+            }
+
+            private _widenItemGrid(gridNum: number) {
+                this._widenItem(gridNum * this.gridSize_);
+            }
+
+            private _widenItem(px: number) {
+                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
+                let currentTargetArea = this._getCurrentTargetArea();
+                // check item doesn't become smaller than minItemSize_
+                if (currentTargetArea.w + px*2 < this.minItemSize_) {
+                    px = (this.minItemSize_ - currentTargetArea.w) / 2;
+                }
+                let newArea = {
+                    x: currentTargetArea.x - px,
+                    y: currentTargetArea.y,
+                    w: currentTargetArea.w + px * 2,
+                    h: currentTargetArea.h,
+                }
+
+                this._resizeItem(newArea, true);
+            }
+
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
+
+                if (this.isDragging) {
+                    event.preventDefault();
+                    return;
+                }
 
                 if (event.keyCode == 9) {//tabの場合は無視
                     event.preventDefault();
@@ -5553,7 +5668,124 @@ module Garage {
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
                         case 8: // BackSpace
-                        case 46: // DEL
+                            break;
+                        case 37: {// LeftKey
+                            if (this.$currentTarget_ == null) {
+                                break;
+                            }
+                            let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
+                            let moveSize: number;
+                            let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
+                            if (event.ctrlKey) {
+                                if (event.shiftKey) {
+                                    this._widenItem(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin - 1,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItem(newPosition);
+                                }
+                            } else {
+                                if (event.shiftKey) {
+                                    this._widenItemGrid(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin - this.gridSize_,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItemGrid(newPosition);
+                                }
+                            }
+                            break;
+                        } case 38: {// UpKey
+                            if (this.$currentTarget_ == null) {
+                                break;
+                            }
+                            let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
+                            let moveSize: number;
+                            let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
+                            if (event.ctrlKey) {
+                                if (event.shiftKey) {
+                                    this._heightenItem(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin - 1,
+                                    }
+                                    this._moveItem(newPosition);
+                                }
+                            } else {
+                                if (event.shiftKey) {
+                                    this._heightenItemGrid(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin - this.gridSize_,
+                                    }
+                                    this._moveItemGrid(newPosition);
+                                }
+                            }
+                            break;
+                        } case 39: {// RightKey
+                            if (this.$currentTarget_ == null) {
+                                break;
+                            }
+                            let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
+                            let moveSize: number;
+                            let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
+                            if (event.ctrlKey) {
+                                if (event.shiftKey) {
+                                    this._widenItem(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin + 1,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItem(newPosition);
+                                }
+                            } else {
+                                if (event.shiftKey) {
+                                    this._widenItemGrid(1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin + this.gridSize_,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin,
+                                    }
+                                    this._moveItemGrid(newPosition);
+                                }
+                            }
+                            break;
+                        } case 40: {// DownKey
+                            if (this.$currentTarget_ == null) {
+                                break;
+                            }
+                            let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
+                            let moveSize: number;
+                            let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
+                            if (event.ctrlKey) {
+                                if (event.shiftKey) {
+                                    this._heightenItem(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin + 1,
+                                    }
+                                    this._moveItem(newPosition);
+                                }
+                            } else {
+                                if (event.shiftKey) {
+                                    this._heightenItemGrid(-1);
+                                } else {
+                                    let newPosition: IPosition = {
+                                        x: currentTargetPositionInCanvas.x * 2 - css_margin,
+                                        y: currentTargetPositionInCanvas.y * 2 - css_margin + this.gridSize_,
+                                    }
+                                    this._moveItemGrid(newPosition);
+                                }
+                            }
+                            break;
+                        } case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
                         case 90: // z Undo
