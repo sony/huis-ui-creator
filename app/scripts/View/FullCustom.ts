@@ -1915,14 +1915,22 @@ module Garage {
                 $tooltip.find(".remote-info").text(remoteInfo);
 
                 //ファンクション情報をローカライズ
-                let outputFunctionName = functions[0];
-                let $functionName:JQuery= $tooltip.find(".function-name");
-                $functionName.text(outputFunctionName);
-                var localizedString = null;
-                if (outputFunctionName !== "none") {
-                    localizedString = $.i18n.t("button.function." + outputFunctionName);
+                let outputFunctionName: string;
+                if (!this.isJumpButton(buttonModel.button)) {
+                    outputFunctionName = functions[0];
                 } else {
+                    // ジャンプボタンは跳び先を表示
+                    outputFunctionName = this.createJumpTooltip(buttonModel.button);
+                }
+
+                var localizedString = null;
+                if (outputFunctionName === "none") {
                     localizedString = $.i18n.t("button.none.STR_REMOTE_BTN_NONE");
+                } else if (this.isJumpButton(buttonModel.button)) {
+                    // ジャンプボタンは機能ではなく跳び先が格納されるのでローカライズしない
+                    localizedString = outputFunctionName;
+                } else {
+                    localizedString = $.i18n.t("button.function." + outputFunctionName);
                 }
                 
                 
@@ -1930,6 +1938,7 @@ module Garage {
                 if (functions.length > 1) {
                     outputString = outputString + " etc.";
                 }
+                let $functionName: JQuery = $tooltip.find(".function-name");
                 $functionName.text(outputString);
 
                 //#face-pages-areaのscale率を取得
@@ -2071,6 +2080,55 @@ module Garage {
                 } else {
                     return;
                 }
+            }
+
+
+            /**
+             * ジャンプボタンのツールチップに表示する文言を生成。
+             * 無効な設定がされている場合は"none"を返す。
+             *
+             * @param jumpButton {Model.ButtonItem} 対象のジャンプボタン
+             * @return {string} ツールチップ表示文言
+             */
+            private createJumpTooltip(jumpButton: Model.ButtonItem): string {
+                var FUNCTION_NAME = this.FILE_NAME + " createDestTooltip :";
+
+                if (jumpButton == null ||
+                    jumpButton.state == null ||
+                    jumpButton.state.length <= 0 ||
+                    jumpButton.state[0].action == null ||
+                    jumpButton.state[0].action.length <= 0 ||
+                    jumpButton.state[0].action[0].jump == null) {
+                    console.warn(FUNCTION_NAME + "invalid jump button.");
+                    return "none";
+                }
+                let target = jumpButton.state[0].action[0].jump;
+
+                let faceLabel: string;
+                let total: number;
+                if (target.remote_id === this.faceRenderer_canvas_.getRemoteId()) {
+                    // 編集中ページの場合
+                    faceLabel = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');
+
+                    // ページ数は現在の状態から取得
+                    total = this.faceRenderer_canvas_.getPageCount();
+
+                } else {
+                    let face: IGFace = huisFiles.getFace(target.remote_id);
+                    if (face == null) {
+                        console.warn(FUNCTION_NAME + "face not found: " + target.remote_id);
+                        return "none";
+                    }
+                    faceLabel = face.name;
+
+                    total = Module.countTotalPage(face);
+                }
+
+                let pageLabel = (target.scene_no >= 0 && target.scene_no < total)
+                                    ? target.scene_no + 1   // ページ番号
+                                    : 1;                    // 存在しないページの場合は 1ページ目
+
+                return faceLabel + $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + pageLabel;
             }
 
 
