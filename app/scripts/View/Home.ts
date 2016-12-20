@@ -138,7 +138,7 @@ module Garage {
 
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
-                var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
+                var faces = huisFiles.getFilteredFacesByCategories({});
                 var faceList: { remoteId: string, name: string }[] = [];
                 faces.forEach((face: IGFace) => {
 
