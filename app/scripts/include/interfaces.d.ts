@@ -440,6 +440,15 @@ interface IModule {
 }
 
 /**
+ * @interface IGroup
+ * @brief HUIS の moduleのgroup情報
+ */
+interface IGroup {
+    name: string;
+    original_remote_id: number;
+}
+
+/**
  * @interface IGFace
  * @brief IFace に対して Garage で使用する情報を付加したもの
  */
