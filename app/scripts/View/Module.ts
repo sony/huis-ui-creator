@@ -162,31 +162,35 @@ module Garage {
                     return false;
                 }
 
-                // Module model の生成
-                var newPageModuleModel = new Model.Module();
-
-                newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
+                let newName = this.remoteId_ + "_page_" + pageCount;
 
                 //もし、同名のリモコンがすでにある場合
                 //モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
-                let pageIndexNo :number = pageCount;
+                let pageIndexNo: number = pageCount;
                 let tmpPageNames: string[] = [];
-                for (let i = 0; i < this.collection.length; i++){
-                    if (this.collection.models[i].name == newPageModuleModel.name) {
+                for (let i = 0; i < this.collection.length; i++) {
+                    if (this.collection.models[i].name == newName) {
                         pageIndexNo++;
-                        newPageModuleModel.name = this.remoteId_ + "_page_" + pageIndexNo;
+                        newName = this.remoteId_ + "_page_" + pageIndexNo;
                     }
                 }
-        
-                newPageModuleModel.remoteId = this.remoteId_;
+
+                // Module model の生成
+                var newPageModuleModel = new Model.Module();
+                newPageModuleModel.setInfoFromIModule(
+                    {
+                        area: {
+                            x: 0,
+                            y: 0,
+                            w: HUIS_FACE_PAGE_WIDTH,
+                            h: HUIS_FACE_PAGE_HEIGHT,
+                        },
+                    },
+                    this.remoteId_,
+                    newName
+                );
                 newPageModuleModel.offsetY = 0;
                 newPageModuleModel.pageIndex = pageCount;
-                newPageModuleModel.area = {
-                    x: 0,
-                    y: 0,
-                    w: HUIS_FACE_PAGE_WIDTH,
-                    h: HUIS_FACE_PAGE_HEIGHT
-                };
 
                 // 空の Item View を追加しておく
                 this.buttonViews_.push(null);
@@ -807,10 +811,10 @@ module Garage {
              * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(areaFilter?: (area) => boolean): IGModule[] {
+            getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
 
-                var modules: IGModule[] = $.extend(true, [], this.collection.models);
+                var modules: Model.Module[] = $.extend(true, [], this.collection.models);
                 modules.forEach((module: IGModule, index: number) => {
                     let buttonView = this.buttonViews_[index],
                         imageView = this.imageViews_[index],

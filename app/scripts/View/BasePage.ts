@@ -625,7 +625,7 @@ module Garage {
              * @param faceName{string}:リモコン名
              * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
              */
-            protected exportRemote(remoteId: string, faceName: string, gmodules: IGModule[]) {
+            protected exportRemote(remoteId: string, faceName: string, gmodules: Model.Module[]) {
                 let exportManager: Util.ExportManager = new Util.ExportManager(remoteId, faceName, gmodules);
                 exportManager.exec();
             }

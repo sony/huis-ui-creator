@@ -1022,7 +1022,7 @@ module Garage {
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
                 let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
 
                 let df = $.Deferred<void>();
@@ -1192,15 +1192,15 @@ module Garage {
              * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            private _updateModule(remoteId: string, gmodule: IGModule, outputDirPath ? :string): {module: IModule, name: string} {
+            private _updateModule(remoteId: string, gmodule: Model.Module, outputDirPath ? :string): {module: IModule, name: string} {
                 // IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
 
                 
                 var module: IModule = {
-                    area: gmodule.area
+                    area: gmodule.area,
                 };
 
-                let versionString: string = this.getModuleVersion(gmodule);
+                let versionString: string = gmodule.getModuleVersion();
                 if(versionString != null){
                     module = {
                         version: versionString,
@@ -1233,131 +1233,6 @@ module Garage {
                     module: module
                 };
             }
-
-            /*
-            * gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
-            * @param gModule : IGModule バージョン情報を内在した構成要素をもつGarageないで使われていたモジュール
-            * @return oldestVersionString : string gModule内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
-            */
-            private getModuleVersion(gModule: IGModule) :string{
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getModuleVersion : ";
-
-                if (gModule == undefined) {
-                    console.warn(FUNCTION_NAME + "gModule is undefined");
-                    return null;
-                }
-
-                let versions: Model.VersionString[] = this.getVersions(gModule.button, gModule.image, gModule.label);
-                let oldestVersion: Model.VersionString= this.getOldestVersionOf(versions);
-
-                if (oldestVersion != null) {
-                    let oldestVersionString: string = oldestVersion.getVersionString();
-                    return oldestVersionString;
-                } else {
-                    return null;
-                }
-
-            }
-
-            /*
-            * 入力された　最も古いバージョン情報値:string を返す
-            * @param versions : string[]
-            * return :string 最古のボタンバージョン
-            */
-            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOldestVersionOfGButton : ";
-
-                if (versions == undefined) {
-                    console.warn(FUNCTION_NAME + "versions is undefined");
-                    return;
-                }
-
-                let oldestVersion: Model.VersionString= null;
-
-                for (let i = 0; i < versions.length; i++){
-                    oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
-                }
-
-                return oldestVersion;
-            }
-
-            /*
-            * IGButton, IGLabel, IGImageからバージョン情報を抽出する。
-            * @param buttons ? : IGButtons
-            * @param imagess ? : IGImages
-            * @param labels ? : IGLabels
-            * return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
-            */
-            private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): Model.VersionString[] {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getVersions : ";
-                if (!buttons && !images && !labels) {
-                    console.warn(FUNCTION_NAME + "no inputs");
-                    return;
-                }
-                let result: Model.VersionString[] = [];
-
-                if (buttons) {
-                    for (let i = 0; i < buttons.length; i++){
-                        if (buttons[i].version) {
-                            result.push(new Model.VersionString(buttons[i].version));
-                        }
-                    }
-                }
-
-                if (images) {
-                    for (let i = 0; i < images.length; i++) {
-                        if (images[i].version) {
-                            result.push(new Model.VersionString(images[i].version));
-                        }
-                    }
-                }
-
-                if (labels) {
-                    for (let i = 0; i < labels.length; i++) {
-                        if (labels[i].version) {
-                            result.push(new Model.VersionString(labels[i].version));
-                        }
-                    }
-                }
-
-                
-                return result;
-            }
-
-            /*
-            * ２つのバージョン情報から、より番号が若い方を返す。
-            * @param version1 :string 比較対象のバージョン情報１ 
-            * @param version2 :string 比較対象のバージョン情報２
-            * return より番号が若い方のバージョン情報 : string
-            */
-            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOlderVersion : ";
-
-                if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
-                    return null;
-                }
-
-                if (version1 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version2) {
-                        return version2;
-                    }
-                    return null;
-                }
-
-                if (version2 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version1) {
-                        return version1;
-                    }
-                    return null;
-                }
-
-                if (version1.isOlderThan(version2)) {
-                    return version1;
-                } else {
-                    return version2;
-                }
-            }
-
 
             /**
              * Button データから module 化に不要なものを間引く
@@ -1798,27 +1673,8 @@ module Garage {
                     var module: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (module) {
                         //let gmodule: IGModule = $.extend(true, { offsetY: 0, remoteId: remoteId, name: moduleName }, module);
-                        let gmodule: IGModule = {
-                            offsetY: 0,
-                            remoteId: remoteId,
-                            name: moduleName,
-                            area: $.extend(true, {}, module.area),
-                            pageIndex: 0
-                        };
-                        if (module.button) {
-                            // [TODO] button.state.image.garage_extensions 対応
-                            //gmodule.button = $.extend(true, [], module.button);
-                            gmodule.button = this._buttons2gbuttons(module.button);
-                            this.setVersionInfoToIGButton(module, gmodule.button);
-                        }
-                        if (module.image) {
-                            gmodule.image = this._images2gimages(module.image);
-                            this.setVersionInfoToIGImage(module, gmodule.image);
-                        }
-                        if (module.label) {
-                            gmodule.label = $.extend(true, [], module.label);
-                            this.setVersionInfoToIGLabel(module, gmodule.label);
-                        }
+                        let gmodule = new Model.Module();
+                        gmodule.setInfoFromIModule(module, remoteId, moduleName);
                         face.modules.push(gmodule);
                     }
                 }
@@ -1827,191 +1683,24 @@ module Garage {
                 if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
                     face.modules.length == 0) {
 
-                    let gmodule: IGModule = {
-                        offsetY: 0,
-                        pageIndex: 0,
-                        remoteId: remoteId,
+                    let imodule: IModule = {
                         area: {
                             x: 0,
                             y: 0,
                             w: HUIS_FACE_PAGE_WIDTH,
                             h: HUIS_FACE_PAGE_HEIGHT
-                        },
-                        name: remoteId + "_page_0" // 暫定
+                        }
                     }
+
+                    let temporalName = remoteId + "_page_0";
+
+                    let gmodule = new Model.Module();
+                    gmodule.setInfoFromIModule(imodule, remoteId, temporalName);
                     face.modules.push(gmodule);
                 }
 
 
                 return face;
-            }
-
-
-            /*
-            * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
-            * @param module :IModule 参照元のモジュール
-            * @param gImages :IGImage[] 代入先のモジュール
-            */
-            private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
-
-                if (iModule == null) {
-                    console.warn(FUNCTION_NAME + "iModule is null");
-                    return;
-                }
-
-                if (gImages == null) {
-                    console.warn(FUNCTION_NAME + "gImages is null");
-                    return;
-                }
-
-                if (!iModule.version) {
-                    return;//バージョン情報が存在しない場合、なにもしない。
-                }
-            
-                for (let i = 0; i < gImages.length; i++){
-                    gImages[i].version = iModule.version;
-                }
-            }
-
-
-            /*
-            * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
-            * @param module :IModule 参照元のモジュール
-            * @param gButtons :IGButton[] 代入先のモジュール
-            */
-            private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
-
-                if (iModule == null) {
-                    console.warn(FUNCTION_NAME + "iModule is null");
-                    return;
-                }
-
-                if (gButtons == null) {
-                    console.warn(FUNCTION_NAME + "gButtons is null");
-                    return;
-                }
-
-                if (!iModule.version) {
-                    return;//バージョン情報が存在しない場合、なにもしない。
-                }
-
-                for (let i = 0; i < gButtons.length; i++) {
-                    gButtons[i].version = iModule.version;
-                }
-            }
-
-
-            /*
-            * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
-            * @param module :IModule 参照元のモジュール
-            * @param gLabel :IGLabel[] 代入先のモジュール
-            */
-            private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGLabel : ";
-
-                if (iModule == null) {
-                    console.warn(FUNCTION_NAME + "iModule is null");
-                    return;
-                }
-
-                if (gLabel == null) {
-                    console.warn(FUNCTION_NAME + "gLabel is null");
-                    return;
-                }
-
-                if (!iModule.version) {
-                    return;//バージョン情報が存在しない場合、なにもしない。
-                }
-
-                for (let i = 0; i < gLabel.length; i++) {
-                    gLabel[i].version = iModule.version;
-                }
-            }
-
-            /**
-             * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
-             * 
-             * @param images {IImage[]} [in] IGImage[] に変換する IImage[]
-             * @return {IGImage[]} 変換された IGImage[]
-             */
-            private _images2gimages(images: IImage[]): IGImage[] {
-                let gimages: IGImage[] = $.extend(true, [], images);
-                gimages.forEach((image) => {
-                    let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
-                    if (garage_extensions) {
-                        image.garageExtensions = {
-                            original: garage_extensions.original,
-                            resolvedOriginalPath: "",
-                            resizeMode: garage_extensions.resize_mode
-                        };
-                        delete image["garage_extensions"];
-                    }
-                });
-
-                return gimages;
-            }
-
-            /**
-             * IButton[] を IGButton[] に変換する。
-             * 
-             * @param buttons {IButton[]} IGButton[] に変換する IButton[]
-             * @return {IGButton[]} 変換された IGButton[]
-             */
-            private _buttons2gbuttons(buttons: IButton[]): IGButton[] {
-                let gbuttons: IGButton[] = [];
-                buttons.forEach((button) => {
-                    let gstates: IGState[] = this._states2gstates(button.state);
-                    let gbutton: IGButton = {
-                        area: $.extend(true, {}, button.area),
-                        state: gstates,
-                        currentStateId: undefined
-                    };
-                    if (button.default) {
-                        gbutton.default = button.default;
-                    }
-                    if (button.name) {
-                        gbutton.name = button.name;
-                    }
-                    gbuttons.push(gbutton);
-                });
-
-                return gbuttons;
-            }
-
-            /**
-             * IState[] を IGState[] に変換する。
-             * 
-             * @param buttons {IState[]} IGState[] に変換する IState[]
-             * @return {IGState[]} 変換された IGState[]
-             */
-            private _states2gstates(states: IState[]): IGState[] {
-                let gstates: IGState[] = [];
-                states.forEach((state) => {
-                    let gstate: IGState = {};
-                    if (!_.isUndefined(state.id)) {
-                        gstate.id = state.id;
-                    }
-                    if (state.image) {
-                        gstate.image = this._images2gimages(state.image);
-                    }
-                    if (state.label) {
-                        gstate.label = $.extend(true, [], state.label);
-                    }
-                    if (state.action) {
-                        gstate.action = $.extend(true, [], state.action);
-                    }
-                    if (state.translate) {
-                        gstate.translate = $.extend(true, [], state.translate);
-                    }
-                    if (!_.isUndefined(state.active)) {
-                        gstate.active = state.active;
-                    }
-                    gstates.push(gstate);
-                });
-
-                return gstates;
             }
 
             /**
