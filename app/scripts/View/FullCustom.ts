@@ -4702,8 +4702,9 @@ module Garage {
                 // リサイザーを削除
                 $(".item-resizer").remove();
 
-                //テキストエリアのフォーカスを外す
+                //テキストエリアのフォーカスを外しfull-customページにフォーカス
                 $("input[type='text']").blur();
+                $('article#page-full-custom').focus();
 
                 // detail エリアの削除
                 let $detail = $("#face-item-detail");
