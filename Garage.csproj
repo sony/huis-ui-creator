@@ -289,6 +289,7 @@
     <Content Include="app\scripts\init.js.map">
       <DependentUpon>init.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="app\scripts\Model\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
     <TypeScriptCompile Include="app\scripts\Model\VersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
@@ -304,6 +305,7 @@
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
+    <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
     <Content Include="app\scripts\View\Home.js">
