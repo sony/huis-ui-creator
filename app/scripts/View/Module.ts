@@ -22,13 +22,16 @@ module Garage {
 
             private $facePages_: JQuery[];
 
+            private parentFace: IGFace;
+
             private static PAGE_INDEX_CHANGED = "pageIndexChanged";
 
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.Module>) {
+            constructor(parentFace?: IGFace, options?: Backbone.ViewOptions<Model.Module>) {
                 super(options);
+                this.parentFace = parentFace;
             }
 
             events() {
