@@ -183,10 +183,11 @@ module Garage {
                 $("#about-app-name").text($.i18n.t("app.name"));
                 $("#about-version-info").find(".label").text($.i18n.t("about.STR_ABOUT_TEXT_VERSION"));
                 $("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
+                $("#dialog-about-message-container").html(text);
                 $("#about-version-number").text(APP_VERSION);
                 
                 return;
-}
+            }
 
             private _onCommandVisitHelp() {
                 var shell = require('electron').shell;
