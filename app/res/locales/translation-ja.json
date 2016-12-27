@@ -144,6 +144,8 @@
         },
         "STR_CONTEXT_DELETE_REMOTE": "リモコンを削除",
         "STR_CONTEXT_EXPORT_REMOTE": "リモコンをエクスポート",
+        "STR_CONTEXT_COPY_ITEM": "コピー",
+        "STR_CONTEXT_PASTE_ITEM": "貼り付け",
         "STR_CONTEXT_DELETE_ITEM": "削除",
         "STR_CONTEXT_DELETE_PAGE": "ページを削除",
         "STR_CONTEXT_UNDO": "元に戻す",

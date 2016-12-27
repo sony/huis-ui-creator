@@ -1648,7 +1648,29 @@ module Garage {
                 });
 
 
-                // カーソルがアイテムの上にある場合は、アイテムの削除を追加
+                // カーソルがアイテムの上にある場合
+                if (this.$currentTarget_) {
+                    let menuItem_copyItem = new MenuItem({
+                        label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
+                        accelerator: "CmdOrCtrl+C",
+                        click: () => {
+                            // コピー★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        }
+                    });
+                    this.contextMenu_.append(menuItem_copyItem);
+                }
+
+                let menuItem_pasteItem = new MenuItem({
+                    label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_PASTE_ITEM"),
+                    accelerator: "CmdOrCtrl+V",
+                    enabled: true, // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    click: () => {
+                        // ペースト★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    }
+                });
+                this.contextMenu_.append(menuItem_pasteItem);
+
+                // カーソルがアイテムの上にある場合
                 if (this.$currentTarget_) {
                     let menuItem_deleteItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_DELETE_ITEM"),
@@ -1659,8 +1681,10 @@ module Garage {
                         }
                     });
                     this.contextMenu_.append(menuItem_deleteItem);
-                    this.contextMenu_.append(new MenuItem({ type: "separator" }));
-                } else {
+                }
+                this.contextMenu_.append(new MenuItem({ type: "separator" }));
+
+                if (!this.$currentTarget_) {
                     let $targetPageModule = this._getTargetPageModule(this.rightClickPosition_);
                     if ($targetPageModule) {
                         if (1 < this.faceRenderer_canvas_.getPageCount()) {
@@ -1676,6 +1700,7 @@ module Garage {
                         }
                     }
                 }
+
 
                 var menuItem_undo = new MenuItem({
                     label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_UNDO"),
@@ -3792,6 +3817,17 @@ module Garage {
             }
 
             /**
+             * ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+             */
+            private setItemClipboad(item: ItemModel) {
+                if (this.$currentTarget_  == null) {
+                    return;
+                }
+
+
+            }
+
+            /**
              * 現在ターゲットとなっているアイテムを削除する
              * @param doInvoke 削除処理を実行するかどうか。falseの場合は削除処理は行わず、そのコマンドのみを返す
              */
@@ -5667,6 +5703,8 @@ module Garage {
 
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
+                        // ctrl＋ｃ コピー★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        // ctrl＋ｖ ペースト★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                         case 8: // BackSpace
                             break;
                         case 37: {// LeftKey
