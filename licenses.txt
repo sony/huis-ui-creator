@@ -1,3 +1,6 @@
+﻿
+<a href="../../LICENSES.chromium.html">詳しくはこちら</a>
+
 ==> WebKit_LICENSE <==
 // Copyright 2014 The Chromium Authors. All rights reserved.
 //
