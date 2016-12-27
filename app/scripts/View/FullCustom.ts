@@ -67,6 +67,7 @@ module Garage {
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
+            private itemClipboard: JQuery[];
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -99,6 +100,7 @@ module Garage {
                 this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
                 this.minItemSize_ = DEFAULT_GRID;
+                this.itemClipboard = [];
             }
 
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -910,10 +912,10 @@ module Garage {
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): Model.Item {
+            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false, origin: string = "pallet"): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var item: Model.Item = this._getItemModel($target, "pallet");
+                var item: Model.Item = this._getItemModel($target, origin);
                 if (!item) {
                     return;
                 }
@@ -1639,6 +1641,7 @@ module Garage {
                         accelerator: "CmdOrCtrl+C",
                         click: () => {
                             // コピー★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                            this.setClipboadToItem();
                         }
                     });
                     this.contextMenu_.append(menuItem_copyItem);
@@ -1650,6 +1653,7 @@ module Garage {
                     enabled: true, // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                     click: () => {
                         // ペースト★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        this.pasteItemFromClipboard();
                     }
                 });
                 this.contextMenu_.append(menuItem_pasteItem);
@@ -3782,14 +3786,50 @@ module Garage {
             }
 
             /**
-             * ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+             * 現在選択中のアイテムをアイテム用クリップボードに記憶する
              */
-            private setItemClipboad(item: ItemModel) {
-                if (this.$currentTarget_  == null) {
+            private setClipboadToItem() {
+                if (this.$currentTarget_ == null) {
                     return;
                 }
 
+                this.itemClipboard = [this.$currentTarget_];
+            }
 
+            /**
+             * アイテム用クリップボードに記憶されているアイテムを張り付ける
+             */
+            private pasteItemFromClipboard() {
+                if (this.itemClipboard == null ||
+                    this.itemClipboard.length < 1) {
+                    return;
+                }
+
+                let mementoList: IMemento[] = [];
+                for (let target of this.itemClipboard) {
+                    let newItem: ItemModel = this.setPalletItemOnCanvas(target, false, "canvas");
+
+                    if (!newItem) {
+                        console.error("failed to add new PalletItem");
+                        return;
+                    }
+
+                    // model 状態を有効にする
+                    mementoList.push({
+                        target: newItem,
+                        previousData: {
+                            enabled: false
+                        },
+                        nextData: {
+                            enabled: true
+                        }
+                    });
+                }
+
+                var mementoCommand = new MementoCommand(mementoList);
+                let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
+
+                this._updateItemElementsOnCanvas(updatedItem);
             }
 
             /**
@@ -5564,8 +5604,6 @@ module Garage {
 
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
-                        // ctrl＋ｃ コピー★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-                        // ctrl＋ｖ ペースト★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                         case 8: // BackSpace
                             break;
                         case 37: {// LeftKey
@@ -5686,6 +5724,12 @@ module Garage {
                             break;
                         } case 46: // DEL
                             this._deleteCurrentTargetItem();
+                            break;
+                        case 67: // c Copy
+                            this.setClipboadToItem();
+                            break;
+                        case 86: // v Paste
+                            this.pasteItemFromClipboard();
                             break;
                         case 90: // z Undo
                             if (event.ctrlKey) {
