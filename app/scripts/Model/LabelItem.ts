@@ -10,17 +10,14 @@ module Garage {
                 super(attributes, null);
             }
 
+            public clone() {
+                let clonedItem = new Model.LabelItem();
+                return $.extend(true, clonedItem, this);
+            }
+
             /**
              * getters and setters
              */
-            get area(): IArea {
-                return this.get("area");
-            }
-
-            set area(val: IArea) {
-                this.set("area", val);
-            }
-
             get text(): string {
                 return this.get("text");
             }
