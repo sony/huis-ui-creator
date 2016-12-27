@@ -204,6 +204,10 @@ body{
     padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
     padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
         
+    #dialog-about-button-container{
+        margin-top : $SIZE_ABOUT_BUTTON_CONTAINER_MARGIN_TOP;
+    }
+
     .common-dialog{
         background:none;
             
