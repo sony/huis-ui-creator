@@ -32,6 +32,12 @@ module Garage {
             actionListTranslate?: IActionList;
         }
 
+        /** EDIT用レンダラー */
+        enum RendererLocation {
+            Canvas = <any>"canvas",
+            Pallet = <any>"pallet"
+        };
+
 
         /**
          * @class FullCustom
@@ -80,6 +86,7 @@ module Garage {
             private palletItemMouseDownCount: number = 0;
             private clickedPalletItem: JQuery;
             private palletItemDoubleClickResetTimer;
+
 
             /**
              * construnctor
@@ -734,7 +741,7 @@ module Garage {
              * パレット内のアイテムをダブルクリック
              */
             private onPalletItemDblClick() {
-                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem, RendererLocation.Pallet);
 
                 if (!newItem) {
                     console.error("failed to add new PalletItem");
@@ -771,7 +778,7 @@ module Garage {
                 // 現在のターゲットを外す
                 this._loseTarget();
 
-                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), true);
+                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), RendererLocation.Pallet, true);
                 if (!newItem) {
                     console.error("Failed to add the pallet item to the canvas.");
                     return;
@@ -909,13 +916,14 @@ module Garage {
              * Pallet上のItemをCanvasに追加
              * 
              * @param event {Event}
+             * @param renderer {RendererLocation} 基にするアイテムがあるレンダラー
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false, origin: string = "pallet"): Model.Item {
+            private setPalletItemOnCanvas(target: JQuery, renderer: RendererLocation, setOnEventPosition: boolean = false): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var item: Model.Item = this._getItemModel($target, origin);
+                var item: Model.Item = this._getItemModel($target, renderer.toString());
                 if (!item) {
                     return;
                 }
@@ -1640,19 +1648,18 @@ module Garage {
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
                         accelerator: "CmdOrCtrl+C",
                         click: () => {
-                            // コピー★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                             this.setClipboadToItem();
                         }
                     });
                     this.contextMenu_.append(menuItem_copyItem);
                 }
 
+                // アイテム選択/未選択にかかわらず「貼り付け」は表示
                 let menuItem_pasteItem = new MenuItem({
                     label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_PASTE_ITEM"),
                     accelerator: "CmdOrCtrl+V",
-                    enabled: true, // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    enabled: this.canPaste(),
                     click: () => {
-                        // ペースト★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                         this.pasteItemFromClipboard();
                     }
                 });
@@ -3800,14 +3807,13 @@ module Garage {
              * アイテム用クリップボードに記憶されているアイテムを張り付ける
              */
             private pasteItemFromClipboard() {
-                if (this.itemClipboard == null ||
-                    this.itemClipboard.length < 1) {
+                if (!this.canPaste()) {
                     return;
                 }
 
                 let mementoList: IMemento[] = [];
                 for (let target of this.itemClipboard) {
-                    let newItem: ItemModel = this.setPalletItemOnCanvas(target, false, "canvas");
+                    let newItem: ItemModel = this.setPalletItemOnCanvas(target, RendererLocation.Canvas, false);
 
                     if (!newItem) {
                         console.error("failed to add new PalletItem");
@@ -3830,6 +3836,15 @@ module Garage {
                 let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
                 this._updateItemElementsOnCanvas(updatedItem);
+            }
+
+            /**
+             * 貼り付け機能が実行可能な状態かどうか検査する
+             *
+             * @return 貼り付け可能な場合はtrue、そうでない場合はfalse
+             */
+            private canPaste(): boolean {
+                return (this.itemClipboard != null && this.itemClipboard.length > 0);
             }
 
             /**
