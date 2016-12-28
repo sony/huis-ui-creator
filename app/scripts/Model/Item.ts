@@ -11,8 +11,10 @@ module Garage {
             private position: Model.Position;
 
             constructor(attributes?: any, options?: any) {
-                super(attributes, null);
+                super(attributes, options);
             }
+
+            abstract clone();
 
             /**
              * アイテムが有効かどうか
@@ -25,6 +27,13 @@ module Garage {
                 this.set("enabled", val);
             }
 
+            get area(): IArea {
+                return this.get("area");
+            }
+
+            set area(val: IArea) {
+                this.set("area", val);
+            }
         }
     }
 }

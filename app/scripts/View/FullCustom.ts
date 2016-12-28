@@ -12,13 +12,6 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
-        interface TargetModel {
-            type: string;
-            button?: Model.ButtonItem;
-            image?: Model.ImageItem;
-            label?: Model.LabelItem;
-        }
-
         interface IActionList {
             touch: string;
             touch_top: string;
@@ -61,7 +54,7 @@ module Garage {
             private commandManager_: CommandManager;
             private $currentTarget_: JQuery;
             private $currentTargetDummy_: JQuery;
-            private currentTargetModel_: TargetModel;
+            private currentItem_: Model.Item;
             private currentTargetPageIndex_: number;
             private currentTargetButtonStates_: IStateDetail[];
             private currentTargetButtonStatesUpdated_: boolean;
@@ -869,6 +862,47 @@ module Garage {
                 };
             }
 
+           /**
+             * PalletからCanvasにコピーするButtonItemにstate情報をセットする
+             *
+             * @param buttonItem {Model.ButtonItem} state情報をセットするターゲットとなるButtonItem
+             * @return state情報がセットされたButtonItem
+             */
+            private setButtonItemState(buttonItem: Model.ButtonItem): Model.ButtonItem {
+                console.log("button model: " + buttonItem.area.x + "-" + buttonItem.area.y);
+
+                // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
+                let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                let functions = huisFiles.getMasterFunctions(remoteId);
+                let codeDb = huisFiles.getMasterCodeDb(remoteId);
+                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
+                let remoteName = huisFiles.getFace(remoteId).name;
+
+                let deviceInfo: IButtonDeviceInfo = {
+                    id: "",
+                    functions: functions,
+                    remoteName: remoteName,
+                    code_db: codeDb
+                };
+                if (bluetoothData != null) {
+                    deviceInfo.bluetooth_data = bluetoothData;
+                }
+                if (functionCodeHash != null) {
+                    deviceInfo.functionCodeHash = functionCodeHash;
+                }
+
+                // 機器情報を全てのactionにセット
+                for (let state of buttonItem.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        action.deviceInfo = deviceInfo;
+                    }
+                }
+                return buttonItem;
+            }
+
             /**
              * Pallet上のItemをCanvasに追加
              * 
@@ -876,11 +910,11 @@ module Garage {
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): ItemModel {
+            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var targetModel = this._getItemModel($target, "pallet");
-                if (!targetModel) {
+                var item: Model.Item = this._getItemModel($target, "pallet");
+                if (!item) {
                     return;
                 }
 
@@ -891,71 +925,27 @@ module Garage {
                 // イベント発生位置にアイテム座標を補正
                 if (setOnEventPosition) {
                     // モデルのクローンを生成してから位置を設定
-                    targetModel = this._cloneTargetModel(targetModel);
+                    item = item.clone();
                     let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                    this._setTargetModelArea(targetModel, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                    this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
                 }
 
-                var model: ItemModel;
-                switch (targetModel.type) {
-                    case "button":
-                        if (targetModel.button) {
-                            console.log("button model: " + targetModel.button.area.x + "-" + targetModel.button.area.y);
-                            // ボタンの配置元のマスターリモコンから、ボタンがひも付けられている機器を設定する
-                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
-                            let functions = huisFiles.getMasterFunctions(remoteId);
-                            let codeDb = huisFiles.getMasterCodeDb(remoteId);
-                            let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
-                            let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
-                            let remoteName = huisFiles.getFace(remoteId).name;
+                if (item instanceof Model.ButtonItem) {
+                    let buttonItem: Model.ButtonItem = this.setButtonItemState(item);
+                    return this.faceRenderer_canvas_.addButton(buttonItem, moduleId_canvas, moduleOffsetY_pallet);
 
-                            let deviceInfo: IButtonDeviceInfo = {
-                                id: "",
-                                functions: functions,
-                                remoteName: remoteName,
-                                code_db: codeDb
-                            };
-                            if (bluetoothData != null) {
-                                deviceInfo.bluetooth_data = bluetoothData;
-                            }
-                            if (functionCodeHash != null) {
-                                deviceInfo.functionCodeHash = functionCodeHash;
-                            }
+                } else if (item instanceof Model.LabelItem) {
+                    return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
 
-                            // 機器情報を全てのactionにセット
-                            for (let state of targetModel.button.state) {
-                                if (!state.action) continue;
+                } else if (item instanceof Model.ImageItem) {
+                    let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, moduleId_canvas, moduleOffsetY_pallet);
 
-                                for (let action of state.action) {
-                                    action.deviceInfo = deviceInfo;
-                                }
-                            }
-                            model = this.faceRenderer_canvas_.addButton(targetModel.button, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                        break;
-
-
-                    case "image":
-                        if (targetModel.image) {
-                            let remoteId = this.faceRenderer_pallet_.getRemoteId();
-
-                            model = this.faceRenderer_canvas_.addImageWithoutCopy(targetModel.image, moduleId_canvas, moduleOffsetY_pallet);
-
-                        }
-                        break;
-
-                 
-
-                    case "label":
-                        if (targetModel.label) {
-                            model = this.faceRenderer_canvas_.addLabel(targetModel.label, moduleId_canvas, moduleOffsetY_pallet);
-                        }
-                        break;
-
-                    default:
+                } else {
+                    console.error(TAG + "unknown item type");
                 }
-                
-                return model;
+
+                return null;
             }
 
             /**
@@ -965,18 +955,15 @@ module Garage {
              * @param canvasModuleId {string} 追加するキャンバスの moduleID
              * @param moduleOffsetY {number} module の y 座標の offset
              */
-            private setNewItemOnCanvas(item: TargetModel, canvasModuleId: string, moduleOffsetY: number): ItemModel {
-                let newModel: ItemModel;
-                switch (item.type) {
-                    case "button":
-                        return this.faceRenderer_canvas_.addButton(item.button, canvasModuleId, moduleOffsetY);
-                    case "image":
-                        return this.faceRenderer_canvas_.addImageWithoutCopy(item.image, canvasModuleId, moduleOffsetY);
-                    case "label":
-                        return this.faceRenderer_canvas_.addLabel(item.label, canvasModuleId, moduleOffsetY);
-                    default:
-                        console.error("setItemOnCanvas: invalid ItemModel.type " + item.type);
-                        return;
+            private setNewItemOnCanvas(item: Model.Item, canvasModuleId: string, moduleOffsetY: number): ItemModel {
+                if (item instanceof Model.ButtonItem) {
+                    return this.faceRenderer_canvas_.addButton(item, canvasModuleId, moduleOffsetY);
+                } else if (item instanceof Model.LabelItem) {
+                    return this.faceRenderer_canvas_.addLabel(item, canvasModuleId, moduleOffsetY);
+                } else if (item instanceof Model.ImageItem) {
+                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, canvasModuleId, moduleOffsetY);
+                } else {
+                    console.error(TAG + "[setNewItemOnCanvas] unknown item type");
                 }
             }
 
@@ -1021,11 +1008,8 @@ module Garage {
                             let $page = this._getTargetPageModule(mousePosition);
                             if ($page) {
                                 // ページ背景の model の作成、もしくは既存のものを取得する
-                                let backgroundImageModel = this._resolvePageBackgroundImageItem($page);
-                                this.currentTargetModel_ = {
-                                    type: "image",
-                                    image: backgroundImageModel
-                                };
+                                let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
+                                this.currentItem_ = backgroundImageModel;
                                 $("#face-item-detail-area").addClass("active");
                                 // ページの背景の detail エリアを作成する
                                 this._showDetailItemAreaOfPage($page);
@@ -1058,7 +1042,7 @@ module Garage {
                 this.$currentTarget_ = target;
                 
                 // target に紐付くモデルを取得
-                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -1072,7 +1056,7 @@ module Garage {
                 if (showDetailItemArea) {
                     // 詳細編集エリアを表示
                     $("#face-item-detail-area").addClass("active");
-                    this._showDetailItemArea(this.currentTargetModel_);
+                    this._showDetailItemArea(this.currentItem_);
                 }
             }
 
@@ -1347,12 +1331,12 @@ module Garage {
                 if (!isCrossPageMoving) {
                     // ページを跨がない場合は位置を更新して完了
                     this._updateCurrentModelData("area", newArea, isFromPallet);
-                    this._showDetailItemArea(this.currentTargetModel_);
+                    this._showDetailItemArea(this.currentItem_);
                     return;
                 }
 
                 // 元ページのモデルをコピーし移動先ページに追加
-                let newModel = this._cloneTargetModel(this.currentTargetModel_);
+                let newModel = this.currentItem_.clone();
                 this._setTargetModelArea(newModel, newArea.x, newArea.y, null, null);
                 //移動先キャンバスページに追加
                 let newItem = this.setNewItemOnCanvas(newModel, toPageModuleId, 0);
@@ -1389,7 +1373,7 @@ module Garage {
                 // 新しいItemの詳細エリア表示
                 this._setTarget(newItem);
                 this._updateItemElementsOnCanvas(updatedItems);
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem_);
             }
 
             private _resizeItem(newArea: IArea, update?: boolean) {
@@ -1405,13 +1389,13 @@ module Garage {
                 //currentTargetの重なり判定
                 this.changeColorOverlapedButtonsWithCurrentTargetButton();
 
-                if (this.currentTargetModel_.type === "button") {
+                if (this.currentItem_ instanceof Model.ButtonItem) {
                     this._resizeButtonStateItem(this.$currentTarget_, newArea);
                 }
                 if (update) {
                     let validateArea = this._validateArea(newArea);
                     this._updateCurrentModelData("area", validateArea);
-                    //this._showDetailItemArea(this.currentTargetModel_);
+
                 }
                 this._setResizer(this.$currentTarget_);
             }
@@ -1879,14 +1863,17 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
+                if (!(buttonModel instanceof Model.ButtonItem)) {
                     console.warn(FUNCTION_NAME + "$buttonModel is not button model");
                     return;
                 }
@@ -1919,7 +1906,7 @@ module Garage {
                 }
 
                 //マクロボタンの場合、リモコン名を特殊表記
-                if (this.isMacroButton(buttonModel.button)) {
+                if (this.isMacroButton(buttonModel)) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
                 }
                 
@@ -1974,7 +1961,13 @@ module Garage {
                     return;
                 }
 
-                var buttonModel:TargetModel = this._getItemModel($button, "canvas");
+                let item: Model.Item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                } else {
+                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+                    return;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
@@ -1983,20 +1976,15 @@ module Garage {
 
                 var functionNum = 0;
 
-                if (buttonModel.type !== "button") {
-                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
-                    return;    
-                }
-
                 //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
-                var stateNum = buttonModel.button.state.length;
+                var stateNum = buttonModel.state.length;
                 var fucntions: string[] = [];
-                for (var i = 0; i < buttonModel.button.state.length; i++){
-                    for (let j = 0; j < buttonModel.button.state[i].action.length;j++){
-                        if (buttonModel.button.state[i].action[j] &&
-                            buttonModel.button.state[i].action[j].code_db &&
-                            buttonModel.button.state[i].action[j].code_db.function) {
-                            fucntions.push(buttonModel.button.state[i].action[j].code_db.function.toString());
+                for (var i = 0; i < buttonModel.state.length; i++){
+                    for (let j = 0; j < buttonModel.state[i].action.length;j++){
+                        if (buttonModel.state[i].action[j] &&
+                            buttonModel.state[i].action[j].code_db &&
+                            buttonModel.state[i].action[j].code_db.function) {
+                            fucntions.push(buttonModel.state[i].action[j].code_db.function.toString());
 
                         }
 
@@ -2021,26 +2009,27 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, "canvas");
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                } else {
+                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
+                    return;
+                }
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
-                    console.warn(FUNCTION_NAME + "$buttonModel is not button model");
-                    return;
-                }
-
-                if (buttonModel.button &&
-                    buttonModel.button.state &&
-                    buttonModel.button.state[0] &&
-                    buttonModel.button.state[0].action &&
-                    buttonModel.button.state[0].action[0] &&
-                    buttonModel.button.state[0].action[0].code_db &&
-                    buttonModel.button.state[0].action[0].code_db.device_type) {
-                    return buttonModel.button.state[0].action[0].code_db.device_type.toString();
+                if (buttonModel &&
+                    buttonModel.state &&
+                    buttonModel.state[0] &&
+                    buttonModel.state[0].action &&
+                    buttonModel.state[0].action[0] &&
+                    buttonModel.state[0].action[0].code_db &&
+                    buttonModel.state[0].action[0].code_db.device_type) {
+                    return buttonModel.state[0].action[0].code_db.device_type.toString();
                 } else {
                     return "";
                 }
@@ -2061,25 +2050,25 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: TargetModel = this._getItemModel($button, "canvas");
+                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, "canvas"));
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
                     return;
                 }
 
-                if (buttonModel.type !== "button") {
+                if (!(buttonModel instanceof Model.ButtonItem)) {
                     console.warn(FUNCTION_NAME + "$buttonModel is not button model");
                     return;
                 }
 
-                if (buttonModel.button &&
-                    buttonModel.button.state &&
-                    buttonModel.button.state[0] &&
-                    buttonModel.button.state[0].action &&
-                    buttonModel.button.state[0].action[0] &&
-                    buttonModel.button.state[0].action[0].deviceInfo) {
-                    return buttonModel.button.state[0].action[0].deviceInfo;
+                if (buttonModel &&
+                    buttonModel.state &&
+                    buttonModel.state[0] &&
+                    buttonModel.state[0].action &&
+                    buttonModel.state[0].action[0] &&
+                    buttonModel.state[0].action[0].deviceInfo) {
+                    return buttonModel.state[0].action[0].deviceInfo;
                 } else {
                     return;
                 }
@@ -2565,45 +2554,47 @@ module Garage {
              * ボタンアイテムの詳細編集エリア内の状態追加ボタンを押したときに呼び出される
              */
             private onAddButtonStateClicked(event: Event) {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button) {
+                if (!this.currentItem_) {
                     return;
                 }
 
-                var button = this.currentTargetModel_.button;
-                var states = button.state;
-                var newStateId = 0;
-                if (states) {
-                    // 未使用の stateId を探す
-                    let sortedStates = states.sort((state1, state2) => {
-                        return state1.id - state2.id;
-                    });
-                    sortedStates.forEach((state) => {
-                        if (newStateId === state.id) {
-                            newStateId++;
-                        }
-                    });
-                }
-                var newState: IState = {
-                    id: newStateId
-                };
+                let button = this.currentItem_;
+                if (button instanceof Model.ButtonItem) {
+                    var states = button.state;
+                    var newStateId = 0;
+                    if (states) {
+                        // 未使用の stateId を探す
+                        let sortedStates = states.sort((state1, state2) => {
+                            return state1.id - state2.id;
+                        });
+                        sortedStates.forEach((state) => {
+                            if (newStateId === state.id) {
+                                newStateId++;
+                            }
+                        });
+                    }
+                    var newState: IState = {
+                        id: newStateId
+                    };
 
-                if (!this.currentTargetButtonStates_) {
-                    this.currentTargetButtonStates_ = [];
-                }
-                this.currentTargetButtonStates_.push({
-                    id: newStateId
-                });
-                this.currentTargetButtonStatesUpdated_ = true;
+                    if (!this.currentTargetButtonStates_) {
+                        this.currentTargetButtonStates_ = [];
+                    }
+                    this.currentTargetButtonStates_.push({
+                        id: newStateId
+                    });
+                    this.currentTargetButtonStatesUpdated_ = true;
 
-                this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentTargetModel_);
+                    this._updateCurrentModelButtonStatesData();
+                    this._showDetailItemArea(this.currentItem_);
+                }
             }
 
             /**
              * ボタンアイテムの詳細編集エリア内の状態削除ボタンを押したときに呼び出される
              */
             private onRemoveButtonStateClicked(event: Event) {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button || !this.currentTargetButtonStates_) {
+                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
 
@@ -2629,7 +2620,7 @@ module Garage {
                 this.currentTargetButtonStatesUpdated_ = true;
 
                 this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem_);
 
             }
 
@@ -2807,26 +2798,6 @@ module Garage {
 
             }
 
-            private _convertTargetToItem(target: TargetModel): ItemModel {
-                var model = null;
-                switch (target.type) {
-                    case "button":
-                        model = target.button;
-                        break;
-
-                    case "label":
-                        model = target.label;
-                        break;
-
-                    case "image":
-                        model = target.image;
-                        break;
-
-                    default:
-                }
-                return model;
-            }
-
             /**
              * 現在のターゲットとなるモデルに対して、データをセットする。
              * 
@@ -2846,16 +2817,11 @@ module Garage {
             private _updateCurrentModelData(properties: any): ItemModel;
 
             private _updateCurrentModelData(param1: any, param2?: any, param3: boolean = false): ItemModel {
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_updateCurrentModelData() target model not found");
                     return;
                 }
-                var model = this._convertTargetToItem(this.currentTargetModel_);
-
-                if (!model) {
-                    console.warn(TAG + "_updateCurrentModelData() target model not found");
-                    return null;
-                }
+                var model = this.currentItem_;
 
                 /**
                  * undo / redo 対応のために、CommandManager 経由で model の更新を行う
@@ -3228,13 +3194,12 @@ module Garage {
 
                 $preview.height(previewHeight);
             }
-            
 
             /**
              * データとして持っている state のリストを Button Model に更新する
              */
             private _updateCurrentModelButtonStatesData() {
-                if (!this.currentTargetModel_ || !this.currentTargetModel_.button || !this.currentTargetButtonStates_) {
+                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
                     return;
                 }
                 // 更新がない場合は何もしない
@@ -3416,11 +3381,11 @@ module Garage {
 
             private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
 
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not found");
                     return;
                 }
-                if (this.currentTargetModel_.type === "button" && !this.currentTargetModel_.button) {
+                if (!(this.currentItem_ instanceof Model.ButtonItem)) {
                     console.warn(TAG + "_updateCurrentModelStateData() target model is not button item");
                     return;
                 }
@@ -3479,7 +3444,7 @@ module Garage {
                     return;
                 }
 
-                var button = this.currentTargetModel_.button;
+                var button = this.castToButton(this.currentItem_);
                 var states = button.state;
                 if (!states) {
                     console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
@@ -3801,33 +3766,7 @@ module Garage {
                     return;
                 }
 
-                var model: ItemModel = null;
-                //var moduleId = this._getCurrentCanvasPageModuleId();
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        if (this.currentTargetModel_.button) {
-                            model = this.currentTargetModel_.button;
-                        }
-                        break;
-                    case "label":
-                        if (this.currentTargetModel_.label) {
-                            model = this.currentTargetModel_.label;
-                        }
-                        break;
-                    case "image":
-                        if (this.currentTargetModel_.image) {
-                            model = this.currentTargetModel_.image;
-                        }
-                        break;
-                    default:
-                        console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
-                        return;
-                }
-
-                if (model == null) {
-                    console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] mode is null.");
-                    return;
-                }
+                var model: ItemModel = this.currentItem_;
 
                 // model 状態を無効にする
                 var memento: IMemento = {
@@ -3996,34 +3935,12 @@ module Garage {
              * @return {IArea} 妥当性が確認された area 
              */
             private _validateArea(area: { x?: number, y?: number, w?: number, h?: number }): IArea {
-                if (!this.currentTargetModel_) {
+                if (!this.currentItem_) {
                     console.warn(TAG + "_validateArea() target model not found.");
                     return null;
                 }
-                var model = null;
-                switch (this.currentTargetModel_.type) {
-                    case "button":
-                        model = this.currentTargetModel_.button;
-                        break;
 
-                    case "label":
-                        model = this.currentTargetModel_.label;
-                        break;
-
-                    case "image":
-                        model = this.currentTargetModel_.image;
-                        break;
-
-                    default:
-                        console.error(TAG + "_validateArea() Unknown model type");
-                }
-
-                if (!model) {
-                    console.warn(TAG + "_validateArea() target model not found");
-                    return null;
-                }
-
-                var complementedArea: IArea = $.extend(true, {}, model.area, area);
+                var complementedArea: IArea = $.extend(true, {}, this.currentItem_.area, area);
 
                 this._normalizeArea(complementedArea);
 
@@ -4087,6 +4004,14 @@ module Garage {
                 return false;
             }
 
+            private castToButton(item: Model.Item) {
+                if (item instanceof Model.ButtonItem) {
+                    var buttonModel: Model.ButtonItem = item;
+                    return buttonModel;
+                } else {
+                    return null;
+                }
+            }
 
             /*
              * 現在のターゲットのCSSが、ボタンと重なっていた場合、警告色に変化させる
@@ -4096,10 +4021,8 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : checkOverlayCurrentTarget : ";
 
                 //currentTargetがボタンでなかった場合、無視する
-                if (this.currentTargetModel_.type != "button") {
-                    return;
-                }
-                if (!this.currentTargetModel_.button) {
+                var buttonItem = this.castToButton(this.currentItem_);
+                if (buttonItem == null) {
                     return;
                 }
 
@@ -4143,7 +4066,7 @@ module Garage {
 
                     if (currentCanvasId != hoverCanvasId && canvasModuleId == hoverCanvasId) {
                         // 移動中のボタンの元ページと現在位置のページが異なる場合、現在ページにモデルを仮追加する
-                        tmpButtons.push(this.currentTargetModel_.button);
+                        tmpButtons.push(buttonItem);
                     }
 
                     // 移動中のボタンの元ページと現在位置のページが異なる場合、元ページのモデルを無視する
@@ -4162,7 +4085,7 @@ module Garage {
 
                 //overlapButtonsがundefinedのとき、重なっているボタン数が0のとき、currentTargetModelを通常色に
                 if (overlapButtons == null || overlapButtons.length === 0) {
-                    this.changeButtonFrameColorNormal(this.currentTargetModel_.button,true);
+                    this.changeButtonFrameColorNormal(buttonItem,true);
                 }
 
                 this.changeOverlapButtonsFrame(overlapButtons, buttons);
@@ -4192,12 +4115,12 @@ module Garage {
                 // 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
                 
                 for (let i = 0; i < buttonCount - 1; i++) {
-                    if (ignoreCurrentTarget && buttons[i].cid == this.currentTargetModel_.button.cid) {
+                    if (ignoreCurrentTarget && buttons[i].cid == this.currentItem_.cid) {
                         continue;
                     }
 
                     for (let j = i + 1; j < buttonCount; j++) {
-                        if (ignoreCurrentTarget && buttons[j].cid == this.currentTargetModel_.button.cid) {
+                        if (ignoreCurrentTarget && buttons[j].cid == this.currentItem_.cid) {
                             continue;
                         }
 
@@ -4206,11 +4129,11 @@ module Garage {
 
                         //もし、currentTargetのbuttonの場合、areaはcurrentTargetAreaをつかう。
                         if (currentTargetArea) {
-                            if (buttons[i].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[i].cid == this.currentItem_.cid) {
                                 button1Area = currentTargetArea;
                             }
 
-                            if (buttons[j].cid == this.currentTargetModel_.button.cid) {
+                            if (buttons[j].cid == this.currentItem_.cid) {
                                 button2Area = currentTargetArea;
                             }
                         }
@@ -4677,7 +4600,7 @@ module Garage {
              */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
-                this.currentTargetModel_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -4690,7 +4613,7 @@ module Garage {
 
                 // 詳細編集エリアを表示
                 $("#face-item-detail-area").addClass("active");
-                this._showDetailItemArea(this.currentTargetModel_);
+                this._showDetailItemArea(this.currentItem_);
             }
 
             /**
@@ -4711,7 +4634,7 @@ module Garage {
                 $detail.children().remove();
 
                 this.$currentTarget_ = null;
-                this.currentTargetModel_ = null;
+                this.currentItem_ = null;
                 this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
@@ -4792,75 +4715,65 @@ module Garage {
              * 
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
-            private _showDetailItemArea(targetModel: TargetModel) {
+            private _showDetailItemArea(item: Model.Item) {
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
-                if (!targetModel) {
+                if (!item) {
                     return;
                 }
 
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
-                switch (targetModel.type) {
-                    case "button":
-                        if (this.isMacroButton(targetModel.button)) {
-                            // マクロボタンアイテムの詳細エリアを表示
-                            this._renderMacroButtonItemDetailArea(targetModel.button, $detail);
-                        } else {
-                            // ボタンアイテムの詳細エリアを表示
-                            this._renderButtonItemDetailArea(targetModel.button, $detail);
-                        }
-                        
-                        break;
-                    case "image":
-                        // 画像アイテムの詳細エリアを表示
-                        if (targetModel.image) {
-                            let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
-                            let $imageDetail = $(templateImage(targetModel.image));
-                            let $areaContainer = $imageDetail.nextAll("#area-container");
-                            $areaContainer.append($(templateArea(targetModel.image)));
-                            $detail.append($imageDetail);
+                if (item instanceof Model.ButtonItem) {
+                    if (this.isMacroButton(item)) {
+                        // マクロボタンアイテムの詳細エリアを表示
+                        this._renderMacroButtonItemDetailArea(item, $detail);
+                    } else {
+                        // ボタンアイテムの詳細エリアを表示
+                        this._renderButtonItemDetailArea(item, $detail);
+                    }
+                } else if (item instanceof Model.ImageItem) {
+                    // 画像アイテムの詳細エリアを表示
+                    let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
+                    let $imageDetail = $(templateImage(item));
+                    let $areaContainer = $imageDetail.nextAll("#area-container");
+                    $areaContainer.append($(templateArea(item)));
+                    $detail.append($imageDetail);
 
-                            // リサイズモードの反映
-                            let resizeMode = targetModel.image.resizeMode;
-                            if (resizeMode) {
-                                $(".image-resize-mode").val(resizeMode);
-                            }
+                    // リサイズモードの反映
+                    let resizeMode = item.resizeMode;
+                    if (resizeMode) {
+                        $(".image-resize-mode").val(resizeMode);
+                    }
 
+                    //オリジナルのパスがある場合は、そちらを表示。
+                    //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
+                    let inputURL = this.getValidPathOfImageItemForCSS(item);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
 
-                            //オリジナルのパスがある場合は、そちらを表示。
-                            //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
-                            let inputURL = this.getValidPathOfImageItemForCSS(targetModel.image);
-                            this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
-                            
-                            //テキストをローカライズ
-                            $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
-                        }
-                        break;
-                    case "label":
-                        // ラベルアイテムの詳細エリアを表示
-                        if (targetModel.label) {
-                            let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
-                            let $labelDetail = $(templateLabel(targetModel.label));
-                            let $areaContainer = $labelDetail.nextAll("#area-container");
-                            $areaContainer.append($(templateArea(targetModel.label)));
-                            $detail.append($labelDetail);
-                            var $labelTextSize = $labelDetail.find(".property-text-size");
-                            $labelTextSize.val(targetModel.label.size.toString());
+                    //テキストをローカライズ
+                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 
-                            //テキストをローカライズ
-                            $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
-                            $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
-                        }
-                        break;
-                    default:
-                        console.warn(TAG + "_showDetailItemArea() unknown type item");
+                } else if (item instanceof Model.LabelItem) {
+                    // ラベルアイテムの詳細エリアを表示
+                    let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
+                    let $labelDetail = $(templateLabel(item));
+                    let $areaContainer = $labelDetail.nextAll("#area-container");
+                    $areaContainer.append($(templateArea(item)));
+                    $detail.append($labelDetail);
+                    var $labelTextSize = $labelDetail.find(".property-text-size");
+                    $labelTextSize.val(item.size.toString());
+
+                    //テキストをローカライズ
+                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
+                    $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+                } else {
+                    console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
 
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-
                 
             }
 
@@ -5330,7 +5243,7 @@ module Garage {
              * 
              * @return {TargetModel} 取得した model
              */
-            private _getItemModel($item: JQuery, rendererLocation?: string): TargetModel {
+            private _getItemModel($item: JQuery, rendererLocation?: string): Model.Item {
                 // item の要素の data 属性から item の id を取得
                 var itemId = JQUtils.data($item, "cid"); //$item.data("cid");
                 // item の親要素の data 属性から item が所属する module の id を取得
@@ -5346,50 +5259,14 @@ module Garage {
 
                 // item の種類に応じた model を取得
                 if ($item.hasClass("button-item")) {
-                    return {
-                        type: "button",
-                        button: renderer.getButton(moduleId, itemId)
-                    };
+                    return renderer.getButton(moduleId, itemId);
                 } else if ($item.hasClass("label-item")) {
-                    return {
-                        type: "label",
-                        label: renderer.getLabel(moduleId, itemId)
-                    };
+                    return renderer.getLabel(moduleId, itemId);
                 } else if ($item.hasClass("image-item")) {
-                    return {
-                        type: "image",
-                        image: renderer.getImage(moduleId, itemId)
-                    };
+                    return renderer.getImage(moduleId, itemId);
                 } else {
                     return null;
                 }
-            }
-
-            /**
-             * TargetModelのクローンを生成
-             * typeが不正だった場合はnullを返す
-             *
-             * @param model {TargetModel} 基にするTargetModel
-             * @return 生成したTargetModel
-             */
-            private _cloneTargetModel(model: TargetModel): TargetModel {
-                let clone: TargetModel = { type: model.type };
-
-                switch (clone.type) {
-                    case "button":
-                        clone.button = $.extend(true, {}, model.button);
-                        break;
-                    case "image":
-                        clone.image = $.extend(true, {}, model.image);
-                        break;
-                    case "label":
-                        clone.label = $.extend(true, {}, model.label);
-                        break;
-                    default:
-                        return null;
-                }
-
-                return clone;
             }
 
             /**
@@ -5402,22 +5279,8 @@ module Garage {
              * @param w {number} width
              * @param h {number} height
              */
-            private _setTargetModelArea(model: TargetModel, x: number, y: number, w: number, h: number) {
-                let target: IArea;
-                switch (model.type) {
-                    case "button":
-                        target = model.button.area;
-                        break;
-                    case "image":
-                        target = model.image.area;
-                        break;
-                    case "label":
-                        target = model.label.area;
-                        break;
-                    default:
-                        console.error("Invalid model type: " + model.type);
-                        return;
-                }
+            private _setTargetModelArea(item: Model.Item, x: number, y: number, w: number, h: number) {
+                let target: IArea = item.area;
 
                 if (_.isNumber(x)) target.x = x;
                 if (_.isNumber(y)) target.y = y;
@@ -5616,7 +5479,6 @@ module Garage {
             }
 
             private _heightenItem(px: number) {
-                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.h + px*2 < this.minItemSize_) {
@@ -5636,7 +5498,6 @@ module Garage {
             }
 
             private _widenItem(px: number) {
-                let currentItem = this._convertTargetToItem(this.currentTargetModel_);
                 let currentTargetArea = this._getCurrentTargetArea();
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.w + px*2 < this.minItemSize_) {

@@ -32,6 +32,11 @@ module Garage {
                 }
             }
 
+            public clone() {
+                let clonedItem = new Model.ButtonItem();
+                return $.extend(true, clonedItem, this);
+            }
+
             /**
              * Model の initialize
              */
