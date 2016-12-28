@@ -758,13 +758,18 @@ module Garage {
                 this._updateItemElementsOnCanvas(updatedItem);
             }
 
+            /*
+             * #face-item-detail-areaがクリックされた時のイベントハンドラ。
+             */
             private onItemDetailAreaMouseDown(event: Event) {
                 // call stopPropagation so sa not to call loseTarget in onMainMouseDown
                 event.stopPropagation();
             }
 
+            /*
+             * face-pages-area内のItem要素以外の部分がクリックされた時のイベントハンドラ。
+             */
             private onFacePagesAreaMouseDown(event: Event) {
-
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
                 // マウスポインター位置にアイテムが存在しない場合で、
                 // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
@@ -781,6 +786,9 @@ module Garage {
                 event.stopPropagation();
             }
 
+            /*
+             * Canvas内のItem要素がクリックされた時のイベントハンドラ。
+             */
             private onCanvasItemMouseDown(event: Event) {
                 this.selectedResizer_ = null;
 
