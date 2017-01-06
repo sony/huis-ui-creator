@@ -35,6 +35,23 @@ module Garage {
             public clone() {
                 let clonedItem = new Model.ButtonItem();
                 return $.extend(true, clonedItem, this);
+
+
+
+                /*
+                let clonedItem = new Model.ButtonItem();
+                //return $.extend(true, clonedItem, this);
+                let item: ButtonItem = $.extend(true, clonedItem, this);
+
+                console.log(item.state[0].label.length + ' : ' + this.state[0].label.length);   // 0 : 0
+                this.state[0].label.push({
+                    text: 'changed'
+                });
+                console.log(item.state[0].label.length + ' : ' + this.state[0].label.length);   // 1 : 1
+
+
+                return item;
+                //*/
             }
 
             /**
@@ -172,6 +189,7 @@ module Garage {
 
                     this.stateCollection_.add(stateModel);
                 }
+
                 // Action毎の機器情報の設定
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);

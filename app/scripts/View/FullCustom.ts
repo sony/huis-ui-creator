@@ -73,7 +73,8 @@ module Garage {
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
-            private itemClipboard: JQuery[];
+            private itemClipboard: ClipboardItem[];
+            private pasteDisplacement: IPosition;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -156,6 +157,8 @@ module Garage {
 
                     this.mouseMoveStartPosition_ = new Model.Position(0, 0);
                     this.mouseMoveStartTargetPosition_ = new Model.Position(0, 0);
+                    this.itemClipboard = [];
+                    this.pasteDisplacement = new Model.Position(0, 0);
 
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
@@ -778,7 +781,8 @@ module Garage {
                 // 現在のターゲットを外す
                 this._loseTarget();
 
-                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), RendererLocation.Pallet, true);
+                let item = $(event.currentTarget);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(item, RendererLocation.Pallet, this.getPointFromCanvas({ x: item.offset().left, y: item.offset().top }));
                 if (!newItem) {
                     console.error("Failed to add the pallet item to the canvas.");
                     return;
@@ -920,24 +924,58 @@ module Garage {
              * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
              * @return 追加したItemModel
              */
-            private setPalletItemOnCanvas(target: JQuery, renderer: RendererLocation, setOnEventPosition: boolean = false): Model.Item {
+            private setPalletItemOnCanvas(target: JQuery, renderer: RendererLocation, position?: IPosition): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
                 var item: Model.Item = this._getItemModel($target, renderer.toString());
                 if (!item) {
                     return;
                 }
+                item = item.clone();
 
                 // 現在ターゲットとなっているページを追加先とする
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
                 // イベント発生位置にアイテム座標を補正
+                /*
                 if (setOnEventPosition) {
                     // モデルのクローンを生成してから位置を設定
                     item = item.clone();
                     let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
                     this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                }
+                */
+                if (position != null) {
+                    this._setTargetModelArea(item, position.x, position.y - moduleOffsetY_pallet, null, null);
+                }
+
+                if (item instanceof Model.ButtonItem) {
+                    let buttonItem: Model.ButtonItem = this.setButtonItemState(item);
+                    return this.faceRenderer_canvas_.addButton(buttonItem, moduleId_canvas, moduleOffsetY_pallet);
+
+                } else if (item instanceof Model.LabelItem) {
+                    return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
+
+                } else if (item instanceof Model.ImageItem) {
+                    let remoteId = this.faceRenderer_pallet_.getRemoteId();
+                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, moduleId_canvas, moduleOffsetY_pallet);
+
+                } else {
+                    console.error(TAG + "unknown item type");
+                }
+
+                return null;
+            }
+
+            private setItemOnCanvas(item: Model.Item, moduleOffsetY_pallet, position?: IPosition): Model.Item {
+                item = item.clone();
+
+                // 現在ターゲットとなっているページを追加先とする
+                var moduleId_canvas: string = this._getCanvasPageModuleId();
+
+                if (position != null) {
+                    this._setTargetModelArea(item, position.x, position.y - moduleOffsetY_pallet, null, null);
                 }
 
                 if (item instanceof Model.ButtonItem) {
@@ -3800,11 +3838,16 @@ module Garage {
                     return;
                 }
 
-                this.itemClipboard = [this.$currentTarget_];
+                let newItem: ClipboardItem = new ClipboardItem(
+                    this._getItemModel(this.$currentTarget_, RendererLocation.Canvas.toString()).clone(),
+                    parseInt(JQUtils.data(this.$currentTarget_.parent(), 'moduleOffsetY'), 10)
+                );
+                this.itemClipboard = [newItem];
+                this.pasteDisplacement = new Model.Position(0, 0);
             }
 
             /**
-             * アイテム用クリップボードに記憶されているアイテムを張り付ける
+             * アイテム用クリップボードに記憶されているアイテムを Canvas に張り付ける
              */
             private pasteItemFromClipboard() {
                 if (!this.canPaste()) {
@@ -3813,7 +3856,8 @@ module Garage {
 
                 let mementoList: IMemento[] = [];
                 for (let target of this.itemClipboard) {
-                    let newItem: ItemModel = this.setPalletItemOnCanvas(target, RendererLocation.Canvas, false);
+                    let newPos: IPosition = this.getPastePosition(target.item.area);
+                    let newItem: ItemModel = this.setItemOnCanvas(target.item, target.moduleOffsetY, newPos);
 
                     if (!newItem) {
                         console.error("failed to add new PalletItem");
@@ -3836,6 +3880,9 @@ module Garage {
                 let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
                 this._updateItemElementsOnCanvas(updatedItem);
+
+                this._loseTarget();
+
             }
 
             /**
@@ -3845,6 +3892,18 @@ module Garage {
              */
             private canPaste(): boolean {
                 return (this.itemClipboard != null && this.itemClipboard.length > 0);
+            }
+
+            private getPastePosition(originalArea: IArea): IPosition {
+                this.pasteDisplacement.x += this.gridSize_;
+                this.pasteDisplacement.y += this.gridSize_;
+
+                return this.validateItemArea({
+                    x: originalArea.x + this.pasteDisplacement.x,
+                    y: originalArea.y + this.pasteDisplacement.y,
+                    w: originalArea.w,
+                    h: originalArea.h
+                });
             }
 
             /**
@@ -4031,7 +4090,12 @@ module Garage {
                     return null;
                 }
 
-                var complementedArea: IArea = $.extend(true, {}, this.currentItem_.area, area);
+                let copiedArea = $.extend(true, {}, this.currentItem_.area, area)
+                return this.validateItemArea(copiedArea);
+            }
+
+            private validateItemArea(area: IArea): IArea {
+                var complementedArea: IArea = $.extend(true, {}, area);
 
                 this._normalizeArea(complementedArea);
 
@@ -5778,5 +5842,16 @@ module Garage {
 
         var View = new FullCustom();
 
+
+        class ClipboardItem {
+
+            public item: Model.Item;
+            public moduleOffsetY: number;
+
+            constructor(item: Model.Item, moduleOffsetY: number) {
+                this.item = item;
+                this.moduleOffsetY = moduleOffsetY;
+            }
+        }
     }
 }
