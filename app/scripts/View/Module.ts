@@ -371,7 +371,7 @@ module Garage {
                     this.buttonViews_[moduleIndex] = buttonView;
                 }
 
-                var newButton = this._copyButtonItem(button, module, offsetY);
+                var newButton = button.clone(module.remoteId, offsetY);
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -401,90 +401,6 @@ module Garage {
                 }
                 // buttonView が持っている collection から buttonItem を削除する
                 buttonView.collection.remove(button);
-            }
-
-            /**
-             * ButtonItem をコピーする
-             */
-            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
-                if (!offsetY) {
-                    offsetY = 0;
-                }
-
-                // 新しい ButtonItem の model を作成
-                var newButton = new Model.ButtonItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId,
-                    srcRemoteId: srcButton.remoteId
-                });
-                // button.area のコピー
-                var newArea: IArea = $.extend(true, {}, srcButton.area);
-                newArea.y += offsetY;
-                newButton.area = newArea;
-                if (srcButton.default) {
-                    newButton.default = srcButton.default;
-                }
-
-                if (srcButton.name) {
-                    newButton.name = srcButton.name;
-                }
-
-                if (srcButton.version) {
-                    newButton.version = srcButton.version;
-                }
-
-                if (srcButton.currentStateId) {
-                    newButton.currentStateId = srcButton.currentStateId;
-                }
-
-                // button.state のコピー
-                var srcStates = srcButton.state;
-                var newStates: IGState[] = [];
-
-                srcStates.forEach((srcState) => {
-                    let newState: IGState = {
-                        id: srcState.id
-                    };
-                    newState.active = srcState.active;
-
-                    if (srcState.action) {
-                        if (_.isArray(srcState.action)) {
-                            newState.action = $.extend(true, [], srcState.action);
-                        } else {
-                            newState.action = [$.extend(true, {}, srcState.action)];
-                        }
-                    }
-
-                    if (srcState.translate) {
-                        if (_.isArray(srcState.translate)) {
-                            newState.translate = $.extend(true, [], srcState.translate);
-                        } else {
-                            newState.translate = [$.extend(true, {}, srcState.translate)];
-                        }
-                    }
-
-                    if (srcState.image) {
-                        if (_.isArray(srcState.image)) {
-                            newState.image = $.extend(true, [], srcState.image);
-                        } else {
-                            newState.image = [$.extend(true, {}, srcState.image)];
-                        }
-                    }
-
-                    if (srcState.label) {
-                        if (_.isArray(srcState.label)) {
-                            newState.label = $.extend(true, [], srcState.label);
-                        } else {
-                            newState.label = [$.extend(true, {}, srcState.label)];
-                        }
-                    }
-
-                    newStates.push(newState);
-                });
-
-                newButton.state = newStates;
-
-                return newButton;
             }
 
             /**

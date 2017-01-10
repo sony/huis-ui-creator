@@ -32,26 +32,89 @@ module Garage {
                 }
             }
 
-            public clone() {
-                let clonedItem = new Model.ButtonItem();
-                return $.extend(true, clonedItem, this);
-
-
-
-                /*
-                let clonedItem = new Model.ButtonItem();
-                //return $.extend(true, clonedItem, this);
-                let item: ButtonItem = $.extend(true, clonedItem, this);
-
-                console.log(item.state[0].label.length + ' : ' + this.state[0].label.length);   // 0 : 0
-                this.state[0].label.push({
-                    text: 'changed'
+            /**
+             *
+             *
+             * @param dstRemoteId {string}
+             * @param offsetY {number}
+             * @return {ButtonItem}
+             */
+            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): ButtonItem {
+                var newButton = new Model.ButtonItem({
+                    materialsRootPath: this.materialsRootPath_,
+                    remoteId: dstRemoteId,
+                    srcRemoteId: this.remoteId
                 });
-                console.log(item.state[0].label.length + ' : ' + this.state[0].label.length);   // 1 : 1
 
+                // button.area のコピー
+                var newArea: IArea = $.extend(true, {}, this.area);
+                newArea.y += offsetY;
+                newButton.area = newArea;
 
-                return item;
-                //*/
+                if (this.default) {
+                    newButton.default = this.default;
+                }
+
+                if (this.name) {
+                    newButton.name = this.name;
+                }
+
+                if (this.version) {
+                    newButton.version = this.version;
+                }
+
+                if (this.currentStateId) {
+                    newButton.currentStateId = this.currentStateId;
+                }
+
+                // button.state のコピー
+                var srcStates = this.state;
+                var newStates: IGState[] = [];
+
+                srcStates.forEach((srcState) => {
+                    let newState: IGState = {
+                        id: srcState.id
+                    };
+                    newState.active = srcState.active;
+
+                    if (srcState.action) {
+                        if (_.isArray(srcState.action)) {
+                            newState.action = $.extend(true, [], srcState.action);
+                        } else {
+                            newState.action = [$.extend(true, {}, srcState.action)];
+                        }
+                    }
+
+                    if (srcState.translate) {
+                        if (_.isArray(srcState.translate)) {
+                            newState.translate = $.extend(true, [], srcState.translate);
+                        } else {
+                            newState.translate = [$.extend(true, {}, srcState.translate)];
+                        }
+                    }
+
+                    if (srcState.image) {
+                        if (_.isArray(srcState.image)) {
+                            newState.image = $.extend(true, [], srcState.image);
+                        } else {
+                            newState.image = [$.extend(true, {}, srcState.image)];
+                        }
+                    }
+
+                    if (srcState.label) {
+                        if (_.isArray(srcState.label)) {
+                            newState.label = $.extend(true, [], srcState.label);
+                        } else {
+                            newState.label = [$.extend(true, {}, srcState.label)];
+                        }
+                    }
+
+                    newStates.push(newState);
+                });
+
+                newButton.state = newStates;
+
+                return newButton;
             }
 
             /**
