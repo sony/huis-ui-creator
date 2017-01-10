@@ -33,22 +33,22 @@ module Garage {
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
                     let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
+                    let temporalName = remoteId + "_page_0";
+                    let iModule = {
+                        area: {
+                            x: 0,
+                            y: 0,
+                            w: HUIS_FACE_PAGE_WIDTH,
+                            h: HUIS_FACE_PAGE_HEIGHT
+                        },
+                    }
+                    let gmodule = new Model.Module();
+                    gmodule.setInfoFromIModule(iModule, remoteId, temporalName);
                     this.face_ = {
                         name: "New Remote",
                         remoteId: remoteId,
                         category: "fullcustom",
-                        modules: [{
-                            offsetY: 0,
-                            pageIndex: 0,
-                            remoteId: remoteId,
-                            area: {
-                                x: 0,
-                                y: 0,
-                                w: HUIS_FACE_PAGE_WIDTH,
-                                h: HUIS_FACE_PAGE_HEIGHT
-                            },
-                            name: remoteId + "_page_0" // 暫定
-                        }]
+                        modules: [gmodule],
                     };
                 }
                 this.$facePlane_ = null;
@@ -293,7 +293,7 @@ module Garage {
              * @param areaFilter module の area によるフィルタ
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(areaFilter?: (area) => boolean): IGModule[] {
+            getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 return this.moduleView_.getModules(areaFilter);
             }
 
