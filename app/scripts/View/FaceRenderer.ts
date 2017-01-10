@@ -319,7 +319,8 @@ module Garage {
                 }));
                 var $facePagesArea = $faceCanvas.find("#face-pages-area");
 
-                this.moduleView_ = new Module({
+                this.moduleView_ = new Module(
+                    this.face_, {
                     el: $facePagesArea,
                     attributes: {
                         remoteId: this.face_.remoteId,
@@ -346,7 +347,8 @@ module Garage {
 
                 this.$facePlane_ = $(template());
 
-                this.moduleView_ = new Module({
+                this.moduleView_ = new Module(
+                    this.face_, {
                     el: this.$facePlane_,
                     attributes: {
                         remoteId: this.face_.remoteId,

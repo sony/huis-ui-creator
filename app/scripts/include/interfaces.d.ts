@@ -425,6 +425,7 @@ interface IGModule {
     pageIndex: number; //!< ページ番号 (最初のページが 0
     remoteId: string; //!< モジュールが属する face の ID
     name: string; //!< モジュールの名前
+    group?: IGroup;
 }
 
 /**
@@ -437,6 +438,16 @@ interface IModule {
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];
+    group?: IGroup;
+}
+
+/**
+ * @interface IGroup
+ * @brief HUIS の moduleのgroup情報
+ */
+interface IGroup {
+    name: string;
+    original_remote_id: number;
 }
 
 /**

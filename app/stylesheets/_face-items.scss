@@ -97,6 +97,19 @@
     font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
 }
 
+.module-separator{
+    margin: 0 auto;
+    text-align: center;
+    font-size: $SIZE_MODULE_SEPARATOR_FONT_SIZE;
+    left:0px;
+    top:0px;
+    width: $SIZE_MODULE_SEPARATOR_WIDTH;
+    height: auto;
+    padding-top: $SIZE_MODULE_SEPARATOR_PADDING_TOP;
+    color: $COLOR_BLACK;
+    border-top: solid $SIZE_MODULE_SEPARATOR_BORDER_WIDTH;
+}
+
 .button-item {
     position: absolute;
     border: 2px solid #bbb;

@@ -26,6 +26,7 @@ module Garage {
                     name: moduleName,
                     area: imodule.area,
                     pageIndex: 0,
+                    group: imodule.group,
                 }
 
                 if (imodule.button) {
@@ -59,6 +60,7 @@ module Garage {
                 this.offsetY = gmodule.offsetY;
                 this.pageIndex = gmodule.pageIndex;
                 this.version = gmodule.version;
+                this.group = gmodule.group;
             }
 
             /*
@@ -369,6 +371,8 @@ module Garage {
             set name(val: string) { this.set("name", val); }
             get version(): string { return this.get("version"); }
             set version(val: string) { this.set("version", val); }
+            get group(): IGroup { return this.get("group"); }
+            set group(val: IGroup) { this.set("group", val); }
 
             defaults() {
                 var module: IModule = {
