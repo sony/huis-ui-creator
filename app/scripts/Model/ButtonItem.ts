@@ -33,7 +33,7 @@ module Garage {
             }
 
             /**
-             *
+             * ButtonItemの複製を生成
              *
              * @param dstRemoteId {string}
              * @param offsetY {number}

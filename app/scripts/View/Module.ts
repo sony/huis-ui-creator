@@ -475,15 +475,16 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId
-                });
-
+                let newImage: Model.ImageItem;
                 var newArea: IArea;
                 var srcImagePath: string;
-                // image が string の場合は、image をパスとして扱う
+                // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
+                    newImage = new Model.ImageItem({
+                        materialsRootPath: this.materialsRootPath_,
+                        remoteId: module.remoteId
+                    });
+
                     // area はページ背景のものを使用する
                     newArea = {
                         x: HUIS_PAGE_BACKGROUND_AREA.x,
@@ -498,19 +499,10 @@ module Garage {
                     }
                     newImage.pageBackground = true;
                 } else { // image が文字列でない場合は、model として情報をコピーする
-                    newArea = $.extend(true, {}, image.area);
-                    newArea.y += offsetY;
-                    newImage.area = newArea;
-                    // 画像の path を出力先の remoteId のディレクトリーになるように指定
-                    newImage.path = module.remoteId + "/" + path.basename(image.path);
+                    newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
+
                     srcImagePath = image.resolvedPath;
                 }
-
-                //バージョン情報をもっている場合、引き継ぐ
-                if (image.version != null) {
-                    newImage.version = image.version;
-                }
-
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -671,21 +663,7 @@ module Garage {
                 }
 
                 // model をコピーして追加する
-                var newLabel = new Model.LabelItem();
-                var newArea: IArea = $.extend(true, {}, label.area);
-                newArea.y += offsetY;
-                newLabel.area = newArea;
-                newLabel.text = label.text;
-                newLabel.color = label.color;
-                newLabel.font = label.font;
-                newLabel.size = label.size;
-                newLabel.font_weight = label.font_weight;
-
-                //バージョン情報がある場合、コピーする
-                if (label.version) {
-
-                    newLabel.version = label.version;
-                }
+                let newLabel = label.clone(offsetY);
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
