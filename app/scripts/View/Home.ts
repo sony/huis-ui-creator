@@ -139,24 +139,22 @@ module Garage {
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
                 var faces = huisFiles.getFilteredFacesByCategories({});
-                var faceList: { remoteId: string, name: string }[] = [];
+                var faceList: { remoteId: string, name: string, category: string }[] = [];
                 faces.forEach((face: IGFace) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
                     let tmpFaceName: string =face.name;
                     var regExp = new RegExp(" ", "g");
                     tmpFaceName = tmpFaceName.replace(regExp, "");
-                    if (tmpFaceName == "") {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: "　"
-                        });
-                    } else {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: face.name
-                        });
-                    }
+
+                    let faceName = (tmpFaceName == "") ? "　" : face.name;
+                    let faceCategory = (face.category == DEVICE_TYPE_FULL_CUSTOM) ? FACE_TYPE_FULL_CUSTOM : FACE_TYPE_NOT_FULL_CUSTOM;
+
+                    faceList.push({
+                        remoteId: face.remoteId,
+                        name: faceName,
+                        category: faceCategory
+                    });
 
                 });
 

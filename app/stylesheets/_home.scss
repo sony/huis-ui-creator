@@ -133,6 +133,14 @@
                 z-index: 1;
             }    
 
+            .face.#{$FACE_TYPE_FULL_CUSTOM} {
+                //TODO: additional style
+            }
+
+            .face.#{$FACE_TYPE_NOT_FULL_CUSTOM} {
+                //TODO: additional style
+            }
+
             .face {
                 list-style-type: none;
                 float: left;

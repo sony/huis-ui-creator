@@ -192,6 +192,7 @@
     <Content Include="app\stylesheets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <None Include="app\stylesheets\variables\_classname.scss" />
     <None Include="app\stylesheets\variables\_image-path.scss" />
     <Content Include="app\stylesheets\_base.scss" />
     <Content Include="app\stylesheets\_splash.scss" />
