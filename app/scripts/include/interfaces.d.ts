@@ -14,6 +14,7 @@
 /// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
+/// <reference path="../Model/Module.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
