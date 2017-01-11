@@ -12,6 +12,23 @@ module Garage {
                 super(attributes, null);
             }
 
+            public setInfo(remoteId: string, pageIndex: number, area?: IArea) {
+                this.remoteId = remoteId;
+                this.name = remoteId + "_page_" + pageIndex;
+                this.offsetY = 0;
+                this.button = this.image = this.label = [];
+                if (area == null) {
+                    this.area = {
+                        x: 0,
+                        y: 0,
+                        w: HUIS_FACE_PAGE_WIDTH,
+                        h: HUIS_FACE_PAGE_HEIGHT
+                    }
+                } else {
+                    this.area = area;
+                }
+            }
+
             /*
              * 各メンバ変数を設定する。offsetYとpageIndexは0で初期化される。
              * @param gmodule ? : IModule リモコンファイルから読み出して得られた情報をまとめたオブジェクト
@@ -21,7 +38,7 @@ module Garage {
             public setInfoFromIModule(imodule: IModule, remoteId: string, moduleName: string) {
 
                 let gmodule: IGModule = {
-                    offsetY: 0,
+                    offsetY: this.offsetY,
                     remoteId: remoteId,
                     name: moduleName,
                     area: imodule.area,

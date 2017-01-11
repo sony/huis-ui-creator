@@ -1683,19 +1683,8 @@ module Garage {
                 if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
                     face.modules.length == 0) {
 
-                    let imodule: IModule = {
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT
-                        }
-                    }
-
-                    let temporalName = remoteId + "_page_0";
-
                     let gmodule = new Model.Module();
-                    gmodule.setInfoFromIModule(imodule, remoteId, temporalName);
+                    gmodule.setInfo(remoteId, 0);
                     face.modules.push(gmodule);
                 }
 

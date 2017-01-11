@@ -33,17 +33,9 @@ module Garage {
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
                     let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
-                    let temporalName = remoteId + "_page_0";
-                    let iModule = {
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT
-                        },
-                    }
                     let gmodule = new Model.Module();
-                    gmodule.setInfoFromIModule(iModule, remoteId, temporalName);
+                    gmodule.setInfo(remoteId, 0);
+
                     this.face_ = {
                         name: "New Remote",
                         remoteId: remoteId,

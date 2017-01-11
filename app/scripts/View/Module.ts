@@ -173,34 +173,9 @@ module Garage {
                     return false;
                 }
 
-                let newName = this.remoteId_ + "_page_" + pageCount;
-
-                //もし、同名のリモコンがすでにある場合
-                //モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
-                let pageIndexNo: number = pageCount;
-                let tmpPageNames: string[] = [];
-                for (let i = 0; i < this.collection.length; i++) {
-                    if (this.collection.models[i].name == newName) {
-                        pageIndexNo++;
-                        newName = this.remoteId_ + "_page_" + pageIndexNo;
-                    }
-                }
-
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
-                newPageModuleModel.setInfoFromIModule(
-                    {
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT,
-                        },
-                    },
-                    this.remoteId_,
-                    newName
-                );
-                newPageModuleModel.offsetY = 0;
+                newPageModuleModel.setInfo(this.remoteId_, pageCount);
                 newPageModuleModel.pageIndex = pageCount;
 
                 // 空の Item View を追加しておく
