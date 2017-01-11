@@ -938,14 +938,6 @@ module Garage {
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
                 // イベント発生位置にアイテム座標を補正
-                /*
-                if (setOnEventPosition) {
-                    // モデルのクローンを生成してから位置を設定
-                    item = item.clone();
-                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                    this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
-                }
-                */
                 if (position != null) {
                     this._setTargetModelArea(item, position.x, position.y - moduleOffsetY_pallet, null, null);
                 }
