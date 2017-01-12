@@ -208,6 +208,11 @@ body{
         margin-top : $SIZE_ABOUT_BUTTON_CONTAINER_MARGIN_TOP;
     }
 
+    //ライセンス表記を実際に表示するエリア
+    #dialog-about-message-container{
+        white-space: pre-wrap;
+    }
+
     .common-dialog{
         background:none;
             
