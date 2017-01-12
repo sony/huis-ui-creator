@@ -185,7 +185,14 @@ module Garage {
                 $("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
                 $("#dialog-about-message-container").html(text);
                 $("#about-version-number").text(APP_VERSION);
-                
+
+
+                //エレクトロンのラインセンス情報を記載したファイルパス
+                let pathElectronLicensesFile = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
+                //licenses.txt上の リンクを有効なパスに更新する。
+                $("#link-electron-licenses-file").attr("href", pathElectronLicensesFile);
+
+
                 return;
             }
 
