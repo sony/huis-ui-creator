@@ -535,8 +535,8 @@ interface DialogProps {
 */
 interface IRemoteInfo {
     remoteId: string;
-    face: IGFace;
-    mastarFace?: IGFace;
+    face: Garage.Model.Face;
+    mastarFace?: Garage.Model.Face;
 }
 
 //declare const enum EFaceCategory {

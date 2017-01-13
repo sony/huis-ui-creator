@@ -287,7 +287,7 @@ module Garage {
              *
              * @param face {IGFace} コピーを作成するリモコンのface。
              */
-            private _copyAndEditRemote(face: IGFace) {
+            private _copyAndEditRemote(face: Model.Face) {
 
                 if (!this._checkCanCreateNewRemote()) {
                     return;
@@ -488,7 +488,7 @@ module Garage {
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
                             click: () => {
-                                let face: IGFace = huisFiles.getFace(remoteId);
+                                let face: Model.Face = huisFiles.getFace(remoteId);
                                 this._copyAndEditRemote(face);
                             }
                         }));

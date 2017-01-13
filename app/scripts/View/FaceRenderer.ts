@@ -9,7 +9,7 @@ module Garage {
         export class FaceRenderer extends Backbone.View<any> {
 
 
-            private face_: IGFace;
+            private face_: Model.Face;
             private moduleView_: Module;
             private type_: string;
             private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
@@ -36,12 +36,7 @@ module Garage {
                     let gmodule = new Model.Module();
                     gmodule.setInfo(remoteId, 0);
 
-                    this.face_ = {
-                        name: "New Remote",
-                        remoteId: remoteId,
-                        category: "fullcustom",
-                        modules: [gmodule],
-                    };
+                    this.face_ = new Model.Face(remoteId, name, "fullcustom", [gmodule]);
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
