@@ -63,20 +63,33 @@ module Garage {
 
             //! events binding
             events(): any {
-                var ret:any = {};
-                ret = super.events();
-                return $.extend(ret,{
-                    //"dblclick header .ui-title": "_onHeaderDblClick",
-                    "click #create-new-remote": "_onCreateNewRemote",
-                    "mouseover #create-new-remote": "_onCreateNewRemoteHover",
-                    "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
-                    "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
-                    "click #command-import-remote": "onOptionImport",
-                    // ショートカットキー
-                    //"keydown": "_onKeyDown",
-                    // コンテキストメニュー
-                    "contextmenu": "_onContextMenu",
-                });
+                var events:any = {};
+                events = super.events();
+                events["click #create-new-remote"] = "_onCreateNewRemote";
+                events["mouseover #create-new-remote"] = "_onCreateNewRemoteHover";
+                events["click #sync-pc-to-huis"] = "_onSyncPcToHuisClick";
+                events["click #option-pulldown-menu"] = "_onOptionPullDownMenuClick";
+                events["click #command-import-remote"] = "onOptionImport";
+                events["contextmenu"] = "_onContextMenu";
+                events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
+                events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
+                return events;
+            }
+
+            private onClickFullCustomFace(event: Event) {
+                console.log("onClickFullCustomFace");
+                let $clickedFace = $(event.currentTarget);
+                let remoteId = $clickedFace.data("remoteid");
+                if (remoteId) {
+                    this._enterFullCustom(remoteId);
+                }
+            }
+
+            private onClickNotFullCustomFace(event: Event) {
+                console.log("onClickNotFullCustomFace");
+                let $clickedFace = $(event.currentTarget);
+                let remoteId = $clickedFace.data("remoteid");
+                this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
             }
 
             render(): Home {
@@ -224,13 +237,6 @@ module Garage {
                 });
                 faceRenderer.render();
 
-                $face.find(".face-container").on("click", (event) => {
-                    let $clickedFace = $(event.currentTarget);
-                    let remoteId = $clickedFace.data("remoteid");
-                    if (remoteId) {
-                        this._enterFullCustom(remoteId);
-                    }
-                });
                 //// シングルクリックしたら「選択状態」になる
                 //$face.find(".face-container").on("click", (event) => {
                 //    let $clickedFace = $(event.currentTarget);
