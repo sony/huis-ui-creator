@@ -1,4 +1,6 @@
-﻿Copyright (c) 2013-2016 GitHub Inc.
+﻿==> electron <==
+
+Copyright (c) 2013-2016 GitHub Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -20,6 +22,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 <a id="link-electron-licenses-file" href="LICENSES.chromium.html">詳しくはこちら</a>
+
 
 ==> abbrev <==
 
