@@ -73,8 +73,7 @@ module Garage {
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
-            private itemClipboard: ClipboardItem[];
-            private pasteDisplacement: IPosition;
+            private clipboard: Util.ItemClipboard;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -108,7 +107,7 @@ module Garage {
                 this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
                 this.minItemSize_ = DEFAULT_GRID;
-                this.itemClipboard = [];
+                this.clipboard = new Util.ItemClipboard(this.gridSize_);
             }
 
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -157,8 +156,7 @@ module Garage {
 
                     this.mouseMoveStartPosition_ = new Model.Position(0, 0);
                     this.mouseMoveStartTargetPosition_ = new Model.Position(0, 0);
-                    this.itemClipboard = [];
-                    this.pasteDisplacement = new Model.Position(0, 0);
+                    this.clipboard.clear();
 
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
@@ -1688,7 +1686,7 @@ module Garage {
                 let menuItem_pasteItem = new MenuItem({
                     label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_PASTE_ITEM"),
                     accelerator: "CmdOrCtrl+V",
-                    enabled: this.canPaste(),
+                    enabled: this.clipboard.hasItem(),
                     click: () => {
                         this.pasteItemFromClipboard();
                     }
@@ -3830,25 +3828,36 @@ module Garage {
                     return;
                 }
 
-                let newItem: ClipboardItem = new ClipboardItem(
+                this.clipboard.clear();
+                this.clipboard.setItem(
+                    this._getCanvasPageModuleId(),
                     this._getItemModel(this.$currentTarget_, RendererLocation.Canvas.toString()).clone(),
                     parseInt(JQUtils.data(this.$currentTarget_.parent(), 'moduleOffsetY'), 10)
                 );
-                this.itemClipboard = [newItem];
-                this.pasteDisplacement = new Model.Position(0, 0);
             }
 
             /**
              * アイテム用クリップボードに記憶されているアイテムを Canvas に張り付ける
              */
             private pasteItemFromClipboard() {
-                if (!this.canPaste()) {
+                if (!this.clipboard.hasItem()) {
                     return;
                 }
 
                 let mementoList: IMemento[] = [];
-                for (let target of this.itemClipboard) {
-                    let newPos: IPosition = this.getPastePosition(target.item.area);
+                for (let target of this.clipboard.getItems(this._getCanvasPageModuleId())) {
+                    if (target.item == null ||
+                        target.item.area == null ||
+                        target.position == null) {
+                        continue;
+                    }
+
+                    let newPos: IPosition = this.validateItemArea({
+                        x: target.position.x,
+                        y: target.position.y,
+                        w: target.item.area.w,
+                        h: target.item.area.h
+                    });
                     let newItem: ItemModel = this.setItemOnCanvas(target.item, target.moduleOffsetY, newPos);
 
                     if (!newItem) {
@@ -3875,27 +3884,6 @@ module Garage {
 
                 this._loseTarget();
 
-            }
-
-            /**
-             * 貼り付け機能が実行可能な状態かどうか検査する
-             *
-             * @return 貼り付け可能な場合はtrue、そうでない場合はfalse
-             */
-            private canPaste(): boolean {
-                return (this.itemClipboard != null && this.itemClipboard.length > 0);
-            }
-
-            private getPastePosition(originalArea: IArea): IPosition {
-                this.pasteDisplacement.x += this.gridSize_;
-                this.pasteDisplacement.y += this.gridSize_;
-
-                return this.validateItemArea({
-                    x: originalArea.x + this.pasteDisplacement.x,
-                    y: originalArea.y + this.pasteDisplacement.y,
-                    w: originalArea.w,
-                    h: originalArea.h
-                });
             }
 
             /**
@@ -5835,15 +5823,5 @@ module Garage {
         var View = new FullCustom();
 
 
-        class ClipboardItem {
-
-            public item: Model.Item;
-            public moduleOffsetY: number;
-
-            constructor(item: Model.Item, moduleOffsetY: number) {
-                this.item = item;
-                this.moduleOffsetY = moduleOffsetY;
-            }
-        }
     }
 }

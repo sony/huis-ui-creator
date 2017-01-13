@@ -48,6 +48,7 @@ module Config {
             "garage.util.zipmanager": "scripts/Util/ZipManager",
             "garage.util.importmanager": "scripts/Util/ImportManager",
             "garage.util.informationdialog": "scripts/Util/InformationDialog",
+            "garage.util.itemclipboard": "scripts/Util/ItemClipboard",
             "garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
             "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
             "garage.view.exportmanager": "scripts/View/ExportManager",

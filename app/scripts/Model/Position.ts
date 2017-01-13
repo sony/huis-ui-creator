@@ -42,6 +42,9 @@ module Garage {
                     && this.y >= area.y && this.y <= area.y + area.h;
             }
 
+            public clone(): Position {
+                return new Position(this.x, this.y);
+            }
 
         }
     }

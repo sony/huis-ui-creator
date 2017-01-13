@@ -299,6 +299,7 @@
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ImportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\InformationDialog.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\ItemClipboard.ts" />
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ExportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
