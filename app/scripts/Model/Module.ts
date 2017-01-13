@@ -29,6 +29,29 @@ module Garage {
                 }
             }
 
+            public merge(module: Model.Module) {
+
+                if (module.button != null) {
+                    for (let elem of module.button) {
+                        elem.area.y += this.area.h;
+                    }
+                    this.button = this.button.concat(module.button);
+                }
+                if (module.image != null) {
+                    for (let elem of module.image) {
+                        elem.area.y += this.area.h;
+                    }
+                    this.image = this.image.concat(module.image);
+                }
+                if (module.label != null) {
+                    for (let elem of module.label) {
+                        elem.area.y += this.area.h;
+                    }
+                    this.label = this.label.concat(module.label);
+                }
+                this.area.h += module.area.h;
+            }
+
             /*
              * 各メンバ変数を設定する。offsetYとpageIndexは0で初期化される。
              * @param gmodule ? : IModule リモコンファイルから読み出して得られた情報をまとめたオブジェクト
