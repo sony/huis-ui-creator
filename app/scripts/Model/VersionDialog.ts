@@ -3,7 +3,7 @@
 
 module Garage {
     export module Model {
-        var TAG = "[Garage.Model.PhnConfig] ";
+        var TAG = "[Garage.Model.VersionDialog] ";
 
         export class VersionDialog extends Backbone.Model {
 
