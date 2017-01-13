@@ -434,7 +434,6 @@ module Garage {
                         pageIndex++;
                         module = new Model.Module();
                         module.setInfo(face.remoteId, pageIndex, emptyModuleArea);
-                        module.area.h = 0;
                     }
                     module.merge(elem);
                 }
