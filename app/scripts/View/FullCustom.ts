@@ -32,12 +32,6 @@ module Garage {
             actionListTranslate?: IActionList;
         }
 
-        /** EDIT用レンダラー */
-        enum RendererLocation {
-            Canvas = <any>"canvas",
-            Pallet = <any>"pallet"
-        };
-
 
         /**
          * @class FullCustom
@@ -742,7 +736,7 @@ module Garage {
              * パレット内のアイテムをダブルクリック
              */
             private onPalletItemDblClick() {
-                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem, RendererLocation.Pallet);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem, this.faceRenderer_pallet_);
 
                 if (!newItem) {
                     console.error("failed to add new PalletItem");
@@ -780,7 +774,7 @@ module Garage {
                 this._loseTarget();
 
                 let item = $(event.currentTarget);
-                let newItem: ItemModel = this.setPalletItemOnCanvas(item, RendererLocation.Pallet, this.getPointFromCanvas({ x: item.offset().left, y: item.offset().top }));
+                let newItem: ItemModel = this.setPalletItemOnCanvas(item, this.faceRenderer_pallet_, this.getPointFromCanvas({ x: item.offset().left, y: item.offset().top }));
                 if (!newItem) {
                     console.error("Failed to add the pallet item to the canvas.");
                     return;
@@ -917,45 +911,21 @@ module Garage {
             /**
              * Pallet上のItemをCanvasに追加
              * 
-             * @param event {Event}
-             * @param renderer {RendererLocation} 基にするアイテムがあるレンダラー
-             * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
-             * @return 追加したItemModel
+             * @param target {JQuery} 追加するアイテム
+             * @param renderer {FaceRenderer} 基にするアイテムがあるレンダラー
+             * @param position {IPosition} 追加位置
+             * @return 追加したItemのモデル
              */
-            private setPalletItemOnCanvas(target: JQuery, renderer: RendererLocation, position?: IPosition): Model.Item {
+            private setPalletItemOnCanvas(target: JQuery, renderer: FaceRenderer, position?: IPosition): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var item: Model.Item = this._getItemModel($target, renderer.toString());
+                var item: Model.Item = this._getItemModel($target, renderer);
                 if (!item) {
                     return;
                 }
-                item = item.clone();
-
-                // 現在ターゲットとなっているページを追加先とする
-                var moduleId_canvas: string = this._getCanvasPageModuleId();
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
-                // イベント発生位置にアイテム座標を補正
-                if (position != null) {
-                    this._setTargetModelArea(item, position.x, position.y - moduleOffsetY_pallet, null, null);
-                }
-
-                if (item instanceof Model.ButtonItem) {
-                    let buttonItem: Model.ButtonItem = this.setButtonItemState(item);
-                    return this.faceRenderer_canvas_.addButton(buttonItem, moduleId_canvas, moduleOffsetY_pallet);
-
-                } else if (item instanceof Model.LabelItem) {
-                    return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
-
-                } else if (item instanceof Model.ImageItem) {
-                    let remoteId = this.faceRenderer_pallet_.getRemoteId();
-                    return this.faceRenderer_canvas_.addImageWithoutCopy(item, moduleId_canvas, moduleOffsetY_pallet);
-
-                } else {
-                    console.error(TAG + "unknown item type");
-                }
-
-                return null;
+                return this.setItemOnCanvas(item, moduleOffsetY_pallet, position);
             }
 
             private setItemOnCanvas(item: Model.Item, moduleOffsetY_pallet, position?: IPosition): Model.Item {
@@ -1080,7 +1050,7 @@ module Garage {
                 this.$currentTarget_ = target;
                 
                 // target に紐付くモデルを取得
-                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_);
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -1927,7 +1897,7 @@ module Garage {
                     return;
                 }
 
-                let item = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 }
@@ -2025,7 +1995,7 @@ module Garage {
                     return;
                 }
 
-                let item: Model.Item = this._getItemModel($button, "canvas");
+                let item: Model.Item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 } else {
@@ -2073,7 +2043,7 @@ module Garage {
                     return;
                 }
 
-                let item = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 } else {
@@ -2114,7 +2084,7 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, "canvas"));
+                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, this.faceRenderer_canvas_));
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
@@ -3831,7 +3801,7 @@ module Garage {
                 this.clipboard.clear();
                 this.clipboard.setItem(
                     this._getCanvasPageModuleId(),
-                    this._getItemModel(this.$currentTarget_, RendererLocation.Canvas.toString()).clone(),
+                    this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_).clone(),
                     parseInt(JQUtils.data(this.$currentTarget_.parent(), 'moduleOffsetY'), 10)
                 );
             }
@@ -4735,7 +4705,7 @@ module Garage {
              */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
-                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_);
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -5373,23 +5343,15 @@ module Garage {
              * 指定した要素にひも付けられている model を取得
              * 
              * @param $item {JQuery} 取得する model の要素
-             * @param $renderLocation {string} $item が canvas と pallet のどちらに存在するか
+             * @param render {FaceRenderer} $item が存在するレンダラー
              * 
-             * @return {TargetModel} 取得した model
+             * @return {Model.Item} 取得した model
              */
-            private _getItemModel($item: JQuery, rendererLocation?: string): Model.Item {
+            private _getItemModel($item: JQuery, renderer: FaceRenderer): Model.Item {
                 // item の要素の data 属性から item の id を取得
                 var itemId = JQUtils.data($item, "cid"); //$item.data("cid");
                 // item の親要素の data 属性から item が所属する module の id を取得
                 var moduleId = JQUtils.data($item.parent(), "cid"); // $item.parent().data("cid");
-
-                // キャンバス用の face renderer かパレット用の face renderer か
-                var renderer: FaceRenderer;
-                if (rendererLocation === "pallet") {
-                    renderer = this.faceRenderer_pallet_;
-                } else {
-                    renderer = this.faceRenderer_canvas_;
-                }
 
                 // item の種類に応じた model を取得
                 if ($item.hasClass("button-item")) {
