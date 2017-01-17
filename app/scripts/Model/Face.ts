@@ -20,6 +20,64 @@ module Garage {
                 this.category = category;
             }
 
+            public convertToFullCustomFace() {
+
+                let convertedModules: Model.Module[] = [];
+                let pageIndex = 0;
+
+                let emptyModuleArea = {
+                    x: 0,
+                    y: 0,
+                    w: HUIS_FACE_PAGE_WIDTH,
+                    h: 0,
+                }
+
+                let module = new Model.Module();
+                module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
+
+                for (let elem of this.modules) {
+                    if (module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT) {
+                        convertedModules.push(module);
+                        pageIndex++;
+                        module = new Model.Module();
+                        module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
+                    }
+                    module.merge(elem);
+                }
+                convertedModules.push(module);
+
+                this.modules = convertedModules;
+                return this;
+            }
+
+            public isSeparatorNeeded(prevItem: Model.Module, currentItem: Model.Module): boolean {
+                if (currentItem == null) {
+                    console.warn(TAG + "currentItem is null, skip moduleSeparator");
+                    return false;
+                }
+
+                if (this.category !== "Custom") {
+                    return false;
+                }
+
+                if (prevItem == null) {
+                    // First module of "custom" face
+                    return true;
+                } else {
+                    if (prevItem.group == null) {
+                        // Just null check
+                        return false;
+                    }
+                    if (prevItem.group.name !== currentItem.group.name
+                        || prevItem.group.original_remote_id !== currentItem.group.original_remote_id) {
+                        // currentItem is different from prevItem
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             get remoteId() {
                 return this.get("remoteId");
             }

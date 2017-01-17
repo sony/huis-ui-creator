@@ -113,7 +113,7 @@ module Garage {
                         cid: item.cid
                     }));
 
-                    if (this._isSeparatorNeeded(prevItem, item)) {
+                    if (this.parentFace.isSeparatorNeeded(prevItem, item)) {
                         this._renderSeparator(item.group.name, $moduleContainer);
                     }
 
@@ -884,34 +884,6 @@ module Garage {
                 });
 
                 return moduleIndex;
-            }
-
-            private _isSeparatorNeeded(prevItem: Model.Module, currentItem: Model.Module): boolean {
-                if (currentItem == null) {
-                    console.warn(TAG + "currentItem is null, skip moduleSeparator");
-                    return false;
-                }
-
-                if (this.parentFace == null || this.parentFace.category !== "Custom") {
-                    return false;
-                }
-
-                if (prevItem == null) {
-                    // First module of "custom" face
-                    return true;
-                } else {
-                    if (prevItem.group == null) {
-                        // Just null check
-                        return false;
-                    }
-                    if (prevItem.group.name !== currentItem.group.name
-                        || prevItem.group.original_remote_id !== currentItem.group.original_remote_id) {
-                        // currentItem is different from prevItem
-                        return true;
-                    }
-                }
-
-                return false;
             }
 
             private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {

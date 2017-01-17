@@ -27,9 +27,7 @@ module Garage {
 
             render(): ModuleSeparator {
 
-                let moduleSeparatorModel = new Model.ModuleSeparator({
-                    text: this.moduleName_,
-                });
+                let moduleSeparatorModel = new Model.ModuleSeparator(this.moduleName_);
                 let $moduleSeparator = $(this.template_(moduleSeparatorModel));
                 this.$el.append($moduleSeparator);
                 return this;

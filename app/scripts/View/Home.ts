@@ -297,7 +297,7 @@ module Garage {
                 face.remoteId = huisFiles.createNewRemoteId();
 
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
-                    face = this._convertToFullCustomFace(face);
+                    face.convertToFullCustomFace();
                 }
 
                 huisFiles.updateFace(face.remoteId, face.name, face.modules, null)
@@ -411,36 +411,6 @@ module Garage {
                         }
                     });
                 }
-            }
-
-            private _convertToFullCustomFace(face: IGFace) {
-
-                let convertedModules: Model.Module[] = [];
-                let pageIndex = 0;
-
-                let emptyModuleArea = {
-                    x: 0,
-                    y: 0,
-                    w: HUIS_FACE_PAGE_WIDTH,
-                    h: 0,
-                }
-
-                let module = new Model.Module();
-                module.setInfo(face.remoteId, pageIndex, emptyModuleArea);
-
-                for (let elem of face.modules) {
-                    if (module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT) {
-                        convertedModules.push(module);
-                        pageIndex++;
-                        module = new Model.Module();
-                        module.setInfo(face.remoteId, pageIndex, emptyModuleArea);
-                    }
-                    module.merge(elem);
-                }
-                convertedModules.push(module);
-
-                face.modules = convertedModules;
-                return face;
             }
 
             private _onContextMenu() {
