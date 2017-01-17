@@ -10,9 +10,29 @@ module Garage {
                 super(attributes, null);
             }
 
-            public clone() {
-                let clonedItem = new Model.LabelItem();
-                return $.extend(true, clonedItem, this);
+            /**
+             * LabelItemの複製を生成
+             *
+             * @param offsetY {number} 
+             * @return {LabelItem}
+             */
+            public clone(offsetY: number = 0): LabelItem {
+                let newLabel = new Model.LabelItem();
+                let newArea: IArea = $.extend(true, {}, this.area);
+                newArea.y += offsetY;
+                newLabel.area = newArea;
+                newLabel.text = this.text;
+                newLabel.color = this.color;
+                newLabel.font = this.font;
+                newLabel.size = this.size;
+                newLabel.font_weight = this.font_weight;
+
+                //バージョン情報がある場合、コピーする
+                if (this.version) {
+                    newLabel.version = this.version;
+                }
+
+                return newLabel;
             }
 
             /**

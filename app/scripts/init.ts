@@ -77,7 +77,7 @@ module Garage {
 
         NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM];
         NON_SUPPORT_FACE_CATEGORY = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL];
-        NON_SUPPORT_DEVICE_TYPE_IN_MACRO = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL,DEVICE_TYPE_AC]
+        NON_SUPPORT_DEVICE_TYPE_IN_MACRO = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL];
 
         GRID_AREA_WIDTH = 464;
         GRID_AREA_HEIGHT = 812;
@@ -229,7 +229,8 @@ module Garage {
             "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
-            "garage.util.informationdialog"],
+            "garage.util.informationdialog",
+            "garage.util.itemclipboard"],
             () => {
                 try {
                     electronDialog = new Util.ElectronDialog();
@@ -280,7 +281,7 @@ module Garage {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
-                                type: "error",
+                                type: "info",
                                 message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
                                 buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                                 title: PRODUCT_NAME,
@@ -303,7 +304,7 @@ module Garage {
                 // HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
                 let response = electronDialog.showMessageBox(
                     {
-                        type: "error",
+                        type: "info",
                         message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,

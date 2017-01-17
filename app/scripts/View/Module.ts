@@ -386,7 +386,7 @@ module Garage {
                     this.buttonViews_[moduleIndex] = buttonView;
                 }
 
-                var newButton = this._copyButtonItem(button, module, offsetY);
+                var newButton = button.clone(module.remoteId, offsetY);
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -416,90 +416,6 @@ module Garage {
                 }
                 // buttonView が持っている collection から buttonItem を削除する
                 buttonView.collection.remove(button);
-            }
-
-            /**
-             * ButtonItem をコピーする
-             */
-            private _copyButtonItem(srcButton: Model.ButtonItem, module: Model.Module, offsetY?: number): Model.ButtonItem {
-                if (!offsetY) {
-                    offsetY = 0;
-                }
-
-                // 新しい ButtonItem の model を作成
-                var newButton = new Model.ButtonItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId,
-                    srcRemoteId: srcButton.remoteId
-                });
-                // button.area のコピー
-                var newArea: IArea = $.extend(true, {}, srcButton.area);
-                newArea.y += offsetY;
-                newButton.area = newArea;
-                if (srcButton.default) {
-                    newButton.default = srcButton.default;
-                }
-
-                if (srcButton.name) {
-                    newButton.name = srcButton.name;
-                }
-
-                if (srcButton.version) {
-                    newButton.version = srcButton.version;
-                }
-
-                if (srcButton.currentStateId) {
-                    newButton.currentStateId = srcButton.currentStateId;
-                }
-
-                // button.state のコピー
-                var srcStates = srcButton.state;
-                var newStates: IGState[] = [];
-
-                srcStates.forEach((srcState) => {
-                    let newState: IGState = {
-                        id: srcState.id
-                    };
-                    newState.active = srcState.active;
-
-                    if (srcState.action) {
-                        if (_.isArray(srcState.action)) {
-                            newState.action = $.extend(true, [], srcState.action);
-                        } else {
-                            newState.action = [$.extend(true, {}, srcState.action)];
-                        }
-                    }
-
-                    if (srcState.translate) {
-                        if (_.isArray(srcState.translate)) {
-                            newState.translate = $.extend(true, [], srcState.translate);
-                        } else {
-                            newState.translate = [$.extend(true, {}, srcState.translate)];
-                        }
-                    }
-
-                    if (srcState.image) {
-                        if (_.isArray(srcState.image)) {
-                            newState.image = $.extend(true, [], srcState.image);
-                        } else {
-                            newState.image = [$.extend(true, {}, srcState.image)];
-                        }
-                    }
-
-                    if (srcState.label) {
-                        if (_.isArray(srcState.label)) {
-                            newState.label = $.extend(true, [], srcState.label);
-                        } else {
-                            newState.label = [$.extend(true, {}, srcState.label)];
-                        }
-                    }
-
-                    newStates.push(newState);
-                });
-
-                newButton.state = newStates;
-
-                return newButton;
             }
 
             /**
@@ -574,15 +490,16 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId
-                });
-
+                let newImage: Model.ImageItem;
                 var newArea: IArea;
                 var srcImagePath: string;
-                // image が string の場合は、image をパスとして扱う
+                // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
+                    newImage = new Model.ImageItem({
+                        materialsRootPath: this.materialsRootPath_,
+                        remoteId: module.remoteId
+                    });
+
                     // area はページ背景のものを使用する
                     newArea = {
                         x: HUIS_PAGE_BACKGROUND_AREA.x,
@@ -597,19 +514,10 @@ module Garage {
                     }
                     newImage.pageBackground = true;
                 } else { // image が文字列でない場合は、model として情報をコピーする
-                    newArea = $.extend(true, {}, image.area);
-                    newArea.y += offsetY;
-                    newImage.area = newArea;
-                    // 画像の path を出力先の remoteId のディレクトリーになるように指定
-                    newImage.path = module.remoteId + "/" + path.basename(image.path);
+                    newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
+
                     srcImagePath = image.resolvedPath;
                 }
-
-                //バージョン情報をもっている場合、引き継ぐ
-                if (image.version != null) {
-                    newImage.version = image.version;
-                }
-
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
@@ -770,21 +678,7 @@ module Garage {
                 }
 
                 // model をコピーして追加する
-                var newLabel = new Model.LabelItem();
-                var newArea: IArea = $.extend(true, {}, label.area);
-                newArea.y += offsetY;
-                newLabel.area = newArea;
-                newLabel.text = label.text;
-                newLabel.color = label.color;
-                newLabel.font = label.font;
-                newLabel.size = label.size;
-                newLabel.font_weight = label.font_weight;
-
-                //バージョン情報がある場合、コピーする
-                if (label.version) {
-
-                    newLabel.version = label.version;
-                }
+                let newLabel = label.clone(offsetY);
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");

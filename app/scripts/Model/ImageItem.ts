@@ -24,9 +24,37 @@ module Garage {
                 }
             }
 
-            public clone() {
-                let clonedItem = new Model.ImageItem();
-                return $.extend(true, clonedItem, this);
+            /**
+             * ImageItemの複製を生成
+             *
+             * @param materialsRootPath {string}
+             * @param dstRemoteId {string}
+             * @param offsetY {number}
+             * @return {ImageItem}
+             */
+            public clone(materialsRootPath: string = null, dstRemoteId: string = this.remoteId_, offsetY: number = 0): ImageItem {
+                var newImage = new Model.ImageItem({
+                    materialsRootPath: materialsRootPath,
+                    remoteId: dstRemoteId
+                });
+
+                if (materialsRootPath == null) {
+                    newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
+                }
+
+                var newArea: IArea = $.extend(true, {}, this.area);
+                newArea.y += offsetY;
+                newImage.area = newArea;
+                // 画像の path を出力先の remoteId のディレクトリーになるように指定
+                newImage.path = dstRemoteId + "/" + path.basename(this.path);
+                newImage.resizeOriginal = this.resizeOriginal;
+
+                //バージョン情報をもっている場合、引き継ぐ
+                if (this.version != null) {
+                    newImage.version = this.version;
+                }
+
+                return newImage;
             }
 
             /**
