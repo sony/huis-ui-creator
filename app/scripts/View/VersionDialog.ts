@@ -54,10 +54,6 @@ module Garage {
                 dom.remove();
             }
 
-            stopEvent(event: Event) {
-                event.stopPropagation();
-            }
-
             openLink(event: Event) {
                 let anchor = $(event.currentTarget);
                 let href = miscUtil.getAppropriatePath(anchor.prop('href'));
