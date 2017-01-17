@@ -42,7 +42,7 @@ module Garage {
 
                 this.$el.append($dialog);
 
-                this.$el.trigger('create');
+                this.$el.children('#about-dialog-back').trigger('create');
 
                 return this;
             }
