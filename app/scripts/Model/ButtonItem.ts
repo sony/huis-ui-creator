@@ -32,9 +32,89 @@ module Garage {
                 }
             }
 
-            public clone() {
-                let clonedItem = new Model.ButtonItem();
-                return $.extend(true, clonedItem, this);
+            /**
+             * ButtonItemの複製を生成
+             *
+             * @param dstRemoteId {string}
+             * @param offsetY {number}
+             * @return {ButtonItem}
+             */
+            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): ButtonItem {
+                var newButton = new Model.ButtonItem({
+                    materialsRootPath: this.materialsRootPath_,
+                    remoteId: dstRemoteId,
+                    srcRemoteId: this.remoteId
+                });
+
+                // button.area のコピー
+                var newArea: IArea = $.extend(true, {}, this.area);
+                newArea.y += offsetY;
+                newButton.area = newArea;
+
+                if (this.default) {
+                    newButton.default = this.default;
+                }
+
+                if (this.name) {
+                    newButton.name = this.name;
+                }
+
+                if (this.version) {
+                    newButton.version = this.version;
+                }
+
+                if (this.currentStateId) {
+                    newButton.currentStateId = this.currentStateId;
+                }
+
+                // button.state のコピー
+                var srcStates = this.state;
+                var newStates: IGState[] = [];
+
+                srcStates.forEach((srcState) => {
+                    let newState: IGState = {
+                        id: srcState.id
+                    };
+                    newState.active = srcState.active;
+
+                    if (srcState.action) {
+                        if (_.isArray(srcState.action)) {
+                            newState.action = $.extend(true, [], srcState.action);
+                        } else {
+                            newState.action = [$.extend(true, {}, srcState.action)];
+                        }
+                    }
+
+                    if (srcState.translate) {
+                        if (_.isArray(srcState.translate)) {
+                            newState.translate = $.extend(true, [], srcState.translate);
+                        } else {
+                            newState.translate = [$.extend(true, {}, srcState.translate)];
+                        }
+                    }
+
+                    if (srcState.image) {
+                        if (_.isArray(srcState.image)) {
+                            newState.image = $.extend(true, [], srcState.image);
+                        } else {
+                            newState.image = [$.extend(true, {}, srcState.image)];
+                        }
+                    }
+
+                    if (srcState.label) {
+                        if (_.isArray(srcState.label)) {
+                            newState.label = $.extend(true, [], srcState.label);
+                        } else {
+                            newState.label = [$.extend(true, {}, srcState.label)];
+                        }
+                    }
+
+                    newStates.push(newState);
+                });
+
+                newButton.state = newStates;
+
+                return newButton;
             }
 
             /**
@@ -172,6 +252,7 @@ module Garage {
 
                     this.stateCollection_.add(stateModel);
                 }
+
                 // Action毎の機器情報の設定
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);

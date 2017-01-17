@@ -17,6 +17,7 @@
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
+/// <reference path="../Util/ItemClipboard.ts" />
 
 /**
  * @interface IArea

@@ -67,6 +67,7 @@ module Garage {
             private minItemSize_: number;
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
+            private clipboard: Util.ItemClipboard;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -79,6 +80,7 @@ module Garage {
             private palletItemMouseDownCount: number = 0;
             private clickedPalletItem: JQuery;
             private palletItemDoubleClickResetTimer;
+
 
             /**
              * construnctor
@@ -99,6 +101,7 @@ module Garage {
                 this.faceListContainerWidth_ = 0;
                 this.gridSize_ = DEFAULT_GRID;
                 this.minItemSize_ = DEFAULT_GRID;
+                this.clipboard = new Util.ItemClipboard(this.gridSize_);
             }
 
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData) {
@@ -147,6 +150,7 @@ module Garage {
 
                     this.mouseMoveStartPosition_ = new Model.Position(0, 0);
                     this.mouseMoveStartTargetPosition_ = new Model.Position(0, 0);
+                    this.clipboard.clear();
 
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
@@ -732,7 +736,7 @@ module Garage {
              * パレット内のアイテムをダブルクリック
              */
             private onPalletItemDblClick() {
-                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(this.clickedPalletItem, this.faceRenderer_pallet_);
 
                 if (!newItem) {
                     console.error("failed to add new PalletItem");
@@ -769,7 +773,8 @@ module Garage {
                 // 現在のターゲットを外す
                 this._loseTarget();
 
-                let newItem: ItemModel = this.setPalletItemOnCanvas($(event.currentTarget), true);
+                let item = $(event.currentTarget);
+                let newItem: ItemModel = this.setPalletItemOnCanvas(item, this.faceRenderer_pallet_, this.getPointFromCanvas({ x: item.offset().left, y: item.offset().top }));
                 if (!newItem) {
                     console.error("Failed to add the pallet item to the canvas.");
                     return;
@@ -906,28 +911,31 @@ module Garage {
             /**
              * Pallet上のItemをCanvasに追加
              * 
-             * @param event {Event}
-             * @param setOnEventPosition {boolean} イベントの発生した座標にアイテムを追加するかどうか
-             * @return 追加したItemModel
+             * @param target {JQuery} 追加するアイテム
+             * @param renderer {FaceRenderer} 基にするアイテムがあるレンダラー
+             * @param position {IPosition} 追加位置
+             * @return 追加したItemのモデル
              */
-            private setPalletItemOnCanvas(target: JQuery, setOnEventPosition: boolean = false): Model.Item {
+            private setPalletItemOnCanvas(target: JQuery, renderer: FaceRenderer, position?: IPosition): Model.Item {
                 var $target = target;
                 var $parent = $target.parent();
-                var item: Model.Item = this._getItemModel($target, "pallet");
+                var item: Model.Item = this._getItemModel($target, renderer);
                 if (!item) {
                     return;
                 }
+                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
+
+                return this.setItemOnCanvas(item, moduleOffsetY_pallet, position);
+            }
+
+            private setItemOnCanvas(item: Model.Item, moduleOffsetY_pallet, position?: IPosition): Model.Item {
+                item = item.clone();
 
                 // 現在ターゲットとなっているページを追加先とする
                 var moduleId_canvas: string = this._getCanvasPageModuleId();
-                var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
-                // イベント発生位置にアイテム座標を補正
-                if (setOnEventPosition) {
-                    // モデルのクローンを生成してから位置を設定
-                    item = item.clone();
-                    let itemPosition = this.getPointFromCanvas({ x: $target.offset().left, y: $target.offset().top });
-                    this._setTargetModelArea(item, itemPosition.x, itemPosition.y - moduleOffsetY_pallet, null, null);
+                if (position != null) {
+                    this._setTargetModelArea(item, position.x, position.y - moduleOffsetY_pallet, null, null);
                 }
 
                 if (item instanceof Model.ButtonItem) {
@@ -1042,7 +1050,7 @@ module Garage {
                 this.$currentTarget_ = target;
                 
                 // target に紐付くモデルを取得
-                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_);
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -1632,7 +1640,30 @@ module Garage {
                 });
 
 
-                // カーソルがアイテムの上にある場合は、アイテムの削除を追加
+                // カーソルがアイテムの上にある場合
+                if (this.$currentTarget_) {
+                    let menuItem_copyItem = new MenuItem({
+                        label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
+                        accelerator: "CmdOrCtrl+C",
+                        click: () => {
+                            this.setClipboadToItem();
+                        }
+                    });
+                    this.contextMenu_.append(menuItem_copyItem);
+                }
+
+                // アイテム選択/未選択にかかわらず「貼り付け」は表示
+                let menuItem_pasteItem = new MenuItem({
+                    label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_PASTE_ITEM"),
+                    accelerator: "CmdOrCtrl+V",
+                    enabled: this.clipboard.hasItem(),
+                    click: () => {
+                        this.pasteItemFromClipboard();
+                    }
+                });
+                this.contextMenu_.append(menuItem_pasteItem);
+
+                // カーソルがアイテムの上にある場合
                 if (this.$currentTarget_) {
                     let menuItem_deleteItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_DELETE_ITEM"),
@@ -1643,8 +1674,10 @@ module Garage {
                         }
                     });
                     this.contextMenu_.append(menuItem_deleteItem);
-                    this.contextMenu_.append(new MenuItem({ type: "separator" }));
-                } else {
+                }
+                this.contextMenu_.append(new MenuItem({ type: "separator" }));
+
+                if (!this.$currentTarget_) {
                     let $targetPageModule = this._getTargetPageModule(this.rightClickPosition_);
                     if ($targetPageModule) {
                         if (1 < this.faceRenderer_canvas_.getPageCount()) {
@@ -1660,6 +1693,7 @@ module Garage {
                         }
                     }
                 }
+
 
                 var menuItem_undo = new MenuItem({
                     label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_UNDO"),
@@ -1863,7 +1897,7 @@ module Garage {
                     return;
                 }
 
-                let item = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 }
@@ -1961,7 +1995,7 @@ module Garage {
                     return;
                 }
 
-                let item: Model.Item = this._getItemModel($button, "canvas");
+                let item: Model.Item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 } else {
@@ -2009,7 +2043,7 @@ module Garage {
                     return;
                 }
 
-                let item = this._getItemModel($button, "canvas");
+                let item = this._getItemModel($button, this.faceRenderer_canvas_);
                 if (item instanceof Model.ButtonItem) {
                     var buttonModel: Model.ButtonItem = item;
                 } else {
@@ -2050,7 +2084,7 @@ module Garage {
                     return;
                 }
 
-                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, "canvas"));
+                var buttonModel: Model.ButtonItem = this.castToButton(this._getItemModel($button, this.faceRenderer_canvas_));
 
                 if (_.isUndefined(buttonModel)) {
                     console.warn(FUNCTION_NAME + "buttonModel is Undefined");
@@ -3757,6 +3791,72 @@ module Garage {
             }
 
             /**
+             * 現在選択中のアイテムをアイテム用クリップボードに記憶する
+             */
+            private setClipboadToItem() {
+                if (this.$currentTarget_ == null) {
+                    return;
+                }
+
+                this.clipboard.clear();
+                this.clipboard.setItem(
+                    this._getCanvasPageModuleId(),
+                    this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_).clone(),
+                    parseInt(JQUtils.data(this.$currentTarget_.parent(), 'moduleOffsetY'), 10)
+                );
+            }
+
+            /**
+             * アイテム用クリップボードに記憶されているアイテムを Canvas に張り付ける
+             */
+            private pasteItemFromClipboard() {
+                if (!this.clipboard.hasItem()) {
+                    return;
+                }
+
+                let mementoList: IMemento[] = [];
+                for (let target of this.clipboard.getItems(this._getCanvasPageModuleId())) {
+                    if (target.item == null ||
+                        target.item.area == null ||
+                        target.position == null) {
+                        continue;
+                    }
+
+                    let newPos: IPosition = this.validateItemArea({
+                        x: target.position.x,
+                        y: target.position.y,
+                        w: target.item.area.w,
+                        h: target.item.area.h
+                    });
+                    let newItem: ItemModel = this.setItemOnCanvas(target.item, target.moduleOffsetY, newPos);
+
+                    if (!newItem) {
+                        console.error("failed to add new PalletItem");
+                        return;
+                    }
+
+                    // model 状態を有効にする
+                    mementoList.push({
+                        target: newItem,
+                        previousData: {
+                            enabled: false
+                        },
+                        nextData: {
+                            enabled: true
+                        }
+                    });
+                }
+
+                var mementoCommand = new MementoCommand(mementoList);
+                let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
+
+                this._updateItemElementsOnCanvas(updatedItem);
+
+                this._loseTarget();
+
+            }
+
+            /**
              * 現在ターゲットとなっているアイテムを削除する
              * @param doInvoke 削除処理を実行するかどうか。falseの場合は削除処理は行わず、そのコマンドのみを返す
              */
@@ -3940,7 +4040,12 @@ module Garage {
                     return null;
                 }
 
-                var complementedArea: IArea = $.extend(true, {}, this.currentItem_.area, area);
+                let copiedArea = $.extend(true, {}, this.currentItem_.area, area)
+                return this.validateItemArea(copiedArea);
+            }
+
+            private validateItemArea(area: IArea): IArea {
+                var complementedArea: IArea = $.extend(true, {}, area);
 
                 this._normalizeArea(complementedArea);
 
@@ -4600,7 +4705,7 @@ module Garage {
              */
             private _setTarget(target: ItemModel) {
                 this.$currentTarget_ = this._getItemElementByModel(target);
-                this.currentItem_ = this._getItemModel(this.$currentTarget_, "canvas");
+                this.currentItem_ = this._getItemModel(this.$currentTarget_, this.faceRenderer_canvas_);
 
                 // 選択状態にする
                 this.$currentTarget_.addClass("selected");
@@ -5239,23 +5344,15 @@ module Garage {
              * 指定した要素にひも付けられている model を取得
              * 
              * @param $item {JQuery} 取得する model の要素
-             * @param $renderLocation {string} $item が canvas と pallet のどちらに存在するか
+             * @param render {FaceRenderer} $item が存在するレンダラー
              * 
-             * @return {TargetModel} 取得した model
+             * @return {Model.Item} 取得した model
              */
-            private _getItemModel($item: JQuery, rendererLocation?: string): Model.Item {
+            private _getItemModel($item: JQuery, renderer: FaceRenderer): Model.Item {
                 // item の要素の data 属性から item の id を取得
                 var itemId = JQUtils.data($item, "cid"); //$item.data("cid");
                 // item の親要素の data 属性から item が所属する module の id を取得
                 var moduleId = JQUtils.data($item.parent(), "cid"); // $item.parent().data("cid");
-
-                // キャンバス用の face renderer かパレット用の face renderer か
-                var renderer: FaceRenderer;
-                if (rendererLocation === "pallet") {
-                    renderer = this.faceRenderer_pallet_;
-                } else {
-                    renderer = this.faceRenderer_canvas_;
-                }
 
                 // item の種類に応じた model を取得
                 if ($item.hasClass("button-item")) {
@@ -5650,6 +5747,12 @@ module Garage {
                         } case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
+                        case 67: // c Copy
+                            this.setClipboadToItem();
+                            break;
+                        case 86: // v Paste
+                            this.pasteItemFromClipboard();
+                            break;
                         case 90: // z Undo
                             if (event.ctrlKey) {
                                 var targetModels = this.commandManager_.undo();
@@ -5681,6 +5784,7 @@ module Garage {
 
 
         var View = new FullCustom();
+
 
     }
 }
