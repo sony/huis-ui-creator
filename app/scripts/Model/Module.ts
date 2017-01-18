@@ -16,7 +16,9 @@ module Garage {
                 this.remoteId = remoteId;
                 this.name = remoteId + "_page_" + pageIndex;
                 this.offsetY = 0;
-                this.button = this.image = this.label = [];
+                this.button = [];
+                this.image = [];
+                this.label = [];
                 if (area == null) {
                     this.area = {
                         x: 0,
