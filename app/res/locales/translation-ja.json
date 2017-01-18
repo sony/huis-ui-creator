@@ -168,7 +168,8 @@
     "toast": {
         "STR_TOAST_UNDO": "元に戻す",
         "STR_TOAST_REDO": "やり直し",
-        "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
+        "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません",
+        "STR_TOAST_CANT_EDIT": "★右クリックでオプションメニューが表示されます。"
     },
     "remote": {
         "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
