@@ -58,32 +58,6 @@
     }
 
     .ui-header{
-        #create-new-remote{
-            background-image:$PATH_IMG_CREATE_NEW_REMOTE_NORMAL;
-            margin-top:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_TOP;
-            margin-left:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_MARGIN_LEFT;
-            height:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_HEIGHT;
-            width:$SIZE_HOME_HEADER_CREATE_REMOTE_BTN_WIDTH;
-            top:0;
-            padding:0;
-            box-shadow:none;
-            border:none;
-            background-color:transparent;
-
-            &:hover{
-                background-image:$PATH_IMG_CREATE_NEW_REMOTE_HOVER;
-            }
-
-            &:active{
-                background-image:$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE;
-            }
-
-            .tooltip-text{
-                margin-right:20px;
-                bottom:$SIZE_PLUS_TN_TOOLTIP_MAGIN_BOTTOM;
-            }
-        }
-
         #sync-pc-to-huis{
             background-image:$PATH_IMG_SYNC_BTN_NORMAL;
             margin-top:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP;
@@ -183,6 +157,13 @@
             border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
             cursor: pointer;
         }
+
+        .face-container#create-new-remote {
+            height: $SIZE_FACE_PAGE_HEIGHT+$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP+$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+            background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_BIG;
+            background-size: cover;
+        }
+
     }
 
     #face-history {
