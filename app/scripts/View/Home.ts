@@ -292,9 +292,8 @@ module Garage {
                 if (!this._checkCanCreateNewRemote()) {
                     return;
                 }
-
                 face = this._cloneFace(face);
-                face.remoteId = huisFiles.createNewRemoteId();
+                face.setWholeRemoteId(huisFiles.createNewRemoteId());
 
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();

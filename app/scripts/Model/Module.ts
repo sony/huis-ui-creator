@@ -27,7 +27,7 @@ module Garage {
                         h: HUIS_FACE_PAGE_HEIGHT
                     }
                 } else {
-                    this.area = area;
+                    this.area = $.extend(true, {}, area);
                 }
             }
 

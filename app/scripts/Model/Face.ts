@@ -35,14 +35,21 @@ module Garage {
                 let module = new Model.Module();
                 module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
 
+                let prevElem;
                 for (let elem of this.modules) {
-                    if (module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT) {
+                    let isCrossPage = module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT;
+                    if (isCrossPage) {
                         convertedModules.push(module);
                         pageIndex++;
                         module = new Model.Module();
                         module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
                     }
+                    if (isCrossPage || this.isSeparatorNeeded(prevElem, elem)) {
+                        let moduleSeparator = new Model.ModuleSeparator(elem.group.name);
+                        moduleSeparator.insertTo(elem);
+                    }
                     module.merge(elem);
+                    prevElem = elem;
                 }
                 convertedModules.push(module);
 
@@ -73,9 +80,20 @@ module Garage {
                         // currentItem is different from prevItem
                         return true;
                     }
+                    if (prevItem.get("pageIndex") !== currentItem.get("pageIndex")) {
+                        // cross page border
+                        return true;
+                    }
                 }
 
                 return false;
+            }
+
+            setWholeRemoteId(val: string) {
+                this.remoteId = val;
+                for (let elem of this.modules) {
+                    elem.remoteId = val;
+                }
             }
 
             get remoteId() {
@@ -102,7 +120,7 @@ module Garage {
                 this.set("category", val);
             }
 
-            get modules() {
+            get modules(): Model.Module[] {
                 return this.get("modules");
             }
 
