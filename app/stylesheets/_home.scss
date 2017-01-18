@@ -161,7 +161,9 @@
         .face-container#create-new-remote {
             height: $SIZE_FACE_PAGE_HEIGHT+$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP+$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
             background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_BIG;
-            background-size: cover;
+            background-size: $SIZE_HOME_CREATE_REMOTE_BTN_SCALED;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
     }
