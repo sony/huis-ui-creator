@@ -11,8 +11,8 @@ module Garage {
                 super(attributes, options);
 
                 this.modules = [];
-                if (modules == null) {
-                    this.modules == modules;
+                if (modules != null) {
+                    this.modules = modules;
                 }
 
                 this.remoteId = remoteId;
