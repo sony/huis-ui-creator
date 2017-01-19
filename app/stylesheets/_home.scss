@@ -134,11 +134,22 @@
             }    
 
             .face.#{$FACE_TYPE_FULL_CUSTOM} {
-                //TODO: additional style
+                p {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                    height: 30px;
+                }
+                p.title:before {
+                    content: $PATH_IMG_FACE_ITEM_LIST_EDITABLE_ICON;
+                    margin-left: -8px;
+                    margin-right: 16px;
+                    vertical-align: -6px;
+                }
             }
 
             .face.#{$FACE_TYPE_NOT_FULL_CUSTOM} {
-                //TODO: additional style
             }
 
             .face {
