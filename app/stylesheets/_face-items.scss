@@ -107,7 +107,7 @@
     height: auto;
     padding-top: $SIZE_MODULE_SEPARATOR_PADDING_TOP;
     color: $COLOR_BLACK;
-    border-top: solid $SIZE_MODULE_SEPARATOR_BORDER_WIDTH;
+    border-top: solid $SIZE_MODULE_SEPARATOR_BORDER_WIDTH $COLOR_GRAY_2;
 }
 
 .button-item {
