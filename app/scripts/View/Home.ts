@@ -66,7 +66,6 @@ module Garage {
                 var events:any = {};
                 events = super.events();
                 events["click #create-new-remote"] = "_onCreateNewRemote";
-                events["mouseover #create-new-remote"] = "_onCreateNewRemoteHover";
                 events["click #sync-pc-to-huis"] = "_onSyncPcToHuisClick";
                 events["click #option-pulldown-menu"] = "_onOptionPullDownMenuClick";
                 events["click #command-import-remote"] = "onOptionImport";
@@ -190,9 +189,7 @@ module Garage {
                 }
 
                 //テキストのローカライズ
-                $("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
-                $("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
-                
+                $("#page-home").i18n();
             }
 
 

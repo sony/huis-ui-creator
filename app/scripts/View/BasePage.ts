@@ -178,7 +178,7 @@ module Garage {
 
             // ドロップダウンメニューから起動される共通の関数
             private _onCommandAboutThis() {
-                var dialog: Dialog = null;
+                var dialog: View.VersionDialog = null;
                 var props: DialogProps = null;
                 var text: string = "";
 
@@ -187,23 +187,25 @@ module Garage {
                 } catch (err) {
                     console.error(err);
                 }
-                
-                dialog = new CDP.UI.Dialog("#common-dialog-about", {
-                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                    title: $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
-                    message: text,
-                    dismissible: true,
-                });
-                //dialog.show().css('overflow-y', 'scroll').css('word-wrap', 'brake-word').css('color', 'red');
-                dialog.show();
+
+                dialog = new VersionDialog({ el: $('body') });
 
                 //ダイアログの中身のテキストをローカライズ
                 $("#about-app-name").text($.i18n.t("app.name"));
                 $("#about-version-info").find(".label").text($.i18n.t("about.STR_ABOUT_TEXT_VERSION"));
                 $("#about-copyright").text($.i18n.t("about.STR_ABOUT_TEXT_COPYRIGHT"));
+                $("#dialog-about-message-container").html(text);
                 $("#about-version-number").text(APP_VERSION);
+
+
+                //エレクトロンのラインセンス情報を記載したファイルパス
+                let pathElectronLicensesFile = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
+                //licenses.txt上の リンクを有効なパスに更新する。
+                $("#link-electron-licenses-file").attr("href", pathElectronLicensesFile);
+
+
                 return;
-}
+            }
 
             private _onCommandVisitHelp() {
                 var shell = require('electron').shell;

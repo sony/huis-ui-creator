@@ -124,7 +124,8 @@
         "STR_HOME_TITLE": "HOME",
         "STR_HOME_INTRODUCTION_1": "HUIS REMOTE CONTROLLERを<br>",
         "STR_HOME_INTRODUCTION_2": "あなた好み",
-        "STR_HOME_INTRODUCTION_3": "のデザインに。"
+        "STR_HOME_INTRODUCTION_3": "のデザインに。",
+        "STR_HOME_CREATE_NEW_REMOTE":  "新規作成"
     },
     "splash": {
         "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
