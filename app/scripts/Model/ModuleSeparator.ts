@@ -13,6 +13,12 @@ module Garage {
                 this.text = text;
             }
 
+            /*
+             * このModuleSeparatorを引数で渡されたModuleに追加する。
+             * ModuleSeparatorを追加する際は、名前を表すTextItemと
+             * 区切り線を示す点線のImageItemの二つを新規に作成して、それを追加する。
+             * @param module: Model.Module 挿入する対象となるModule
+             */
             public insertTo(module: Model.Module) {
                 let label = this.itemizeLabel();
                 if (module.label == null) {
@@ -31,11 +37,14 @@ module Garage {
                 module.image.push(image);
             }
 
+            /*
+             * srcPathからdstPathに画像ファイルをコピーする。
+             * コピーされた画像ファイル名はhash化されたものとなり、
+             * コピー後、imageItemにコピー先のpathを設定する。
+             */
             private _copyImageFile(imageItem: Model.ImageItem, srcPath: string, dstPath: string) {
-                // 有効な画像パスが指定されており、出力先のパスに画像が存在しない場合、グレースケール化してコピーする
                 if(path && fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
                     Model.OffscreenEditor.editImage(srcPath, IMAGE_EDIT_PARAMS, dstPath).done((editedImage) => {
-                        console.log(editedImage.path);
                         imageItem.path = editedImage.path;
                     });
                 }

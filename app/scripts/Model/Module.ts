@@ -12,6 +12,12 @@ module Garage {
                 super(attributes, null);
             }
 
+            /*
+             * このオブジェクトに対して各パラメータをセットする。
+             * @param remoteId: string このModuleの所属するremoteId
+             * @param pageIndex: number このModuleのpage番号
+             * @param area: IArea このModuleの占める領域
+             */
             public setInfo(remoteId: string, pageIndex: number, area?: IArea) {
                 this.remoteId = remoteId;
                 this.name = remoteId + "_page_" + pageIndex;
@@ -31,6 +37,12 @@ module Garage {
                 }
             }
 
+            /*
+             * 引数で与えられたModuleをこのオブジェクトにmergeする。
+             * 基本的には、moduleに含まれるItemを全て追加して、高さを足す。
+             * Itemのcloneは作成されないので、注意。
+             * @param module: Model.module このオブジェクトにmergeする対象のmodule
+             */
             public merge(module: Model.Module) {
 
                 if (module.button != null) {

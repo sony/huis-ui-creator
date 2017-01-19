@@ -20,6 +20,9 @@ module Garage {
                 this.category = category;
             }
 
+            /*
+             * このFaceをfullcustomで生成されるModuleと同様のフォーマットのFaceに変換する。
+             */
             public convertToFullCustomFace() {
 
                 let convertedModules: Model.Module[] = [];
@@ -57,6 +60,11 @@ module Garage {
                 return this;
             }
 
+            /*
+             * 引数で与えられた二つの引数の間にSeparatorが必要か否かを判定する。
+             * @param prevItem: Model.Module
+             * @param currentItem: Model.Module
+             */
             public isSeparatorNeeded(prevItem: Model.Module, currentItem: Model.Module): boolean {
                 if (currentItem == null) {
                     console.warn(TAG + "currentItem is null, skip moduleSeparator");
@@ -89,7 +97,11 @@ module Garage {
                 return false;
             }
 
-            setWholeRemoteId(val: string) {
+            /*
+             * このFace、及び含まれるModuleにremoteIdをセットする。
+             * @param val: string 設定するremoteId
+             */
+            public setWholeRemoteId(val: string) {
                 this.remoteId = val;
                 for (let elem of this.modules) {
                     elem.remoteId = val;
