@@ -14,6 +14,7 @@
 /// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
+/// <reference path="../Model/Module.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -534,8 +535,8 @@ interface DialogProps {
 */
 interface IRemoteInfo {
     remoteId: string;
-    face: IGFace;
-    mastarFace?: IGFace;
+    face: Garage.Model.Face;
+    mastarFace?: Garage.Model.Face;
 }
 
 //declare const enum EFaceCategory {

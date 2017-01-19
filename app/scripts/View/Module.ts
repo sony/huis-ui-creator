@@ -22,14 +22,14 @@ module Garage {
 
             private $facePages_: JQuery[];
 
-            private parentFace: IGFace;
+            private parentFace: Model.Face;
 
             private static PAGE_INDEX_CHANGED = "pageIndexChanged";
 
             /**
              * constructor
              */
-            constructor(parentFace?: IGFace, options?: Backbone.ViewOptions<Model.Module>) {
+            constructor(parentFace?: Model.Face, options?: Backbone.ViewOptions<Model.Module>) {
                 super(options);
                 this.parentFace = parentFace;
             }
@@ -113,7 +113,7 @@ module Garage {
                         cid: item.cid
                     }));
 
-                    if (this._isSeparatorNeeded(prevItem, item)) {
+                    if (this.parentFace.isSeparatorNeeded(prevItem, item)) {
                         this._renderSeparator(item.group.name, $moduleContainer);
                     }
 
@@ -173,34 +173,9 @@ module Garage {
                     return false;
                 }
 
-                let newName = this.remoteId_ + "_page_" + pageCount;
-
-                //もし、同名のリモコンがすでにある場合
-                //モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
-                let pageIndexNo: number = pageCount;
-                let tmpPageNames: string[] = [];
-                for (let i = 0; i < this.collection.length; i++) {
-                    if (this.collection.models[i].name == newName) {
-                        pageIndexNo++;
-                        newName = this.remoteId_ + "_page_" + pageIndexNo;
-                    }
-                }
-
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
-                newPageModuleModel.setInfoFromIModule(
-                    {
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT,
-                        },
-                    },
-                    this.remoteId_,
-                    newName
-                );
-                newPageModuleModel.offsetY = 0;
+                newPageModuleModel.setInfo(this.remoteId_, pageCount);
                 newPageModuleModel.pageIndex = pageCount;
 
                 // 空の Item View を追加しておく
@@ -909,34 +884,6 @@ module Garage {
                 });
 
                 return moduleIndex;
-            }
-
-            private _isSeparatorNeeded(prevItem: Model.Module, currentItem: Model.Module): boolean {
-                if (currentItem == null) {
-                    console.warn(TAG + "currentItem is null, skip moduleSeparator");
-                    return false;
-                }
-
-                if (this.parentFace == null || this.parentFace.category !== "Custom") {
-                    return false;
-                }
-
-                if (prevItem == null) {
-                    // First module of "custom" face
-                    return true;
-                } else {
-                    if (prevItem.group == null) {
-                        // Just null check
-                        return false;
-                    }
-                    if (prevItem.group.name !== currentItem.group.name
-                        || prevItem.group.original_remote_id !== currentItem.group.original_remote_id) {
-                        // currentItem is different from prevItem
-                        return true;
-                    }
-                }
-
-                return false;
             }
 
             private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {

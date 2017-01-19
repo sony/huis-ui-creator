@@ -124,7 +124,7 @@ module Garage {
              * @paran master {boolean} [in] masterface を取得したい場合は true を指定する。省略した場合は通常の face を返す。
              * @return {IGFace} face
              */
-            getFace(remoteId: string, master?: boolean): IGFace {
+            getFace(remoteId: string, master?: boolean): Model.Face {
                 var remoteInfos: IRemoteInfo[] = this.remoteInfos_;
                 if (!remoteInfos || !_.isArray(remoteInfos)) {
                     return null;
@@ -159,7 +159,7 @@ module Garage {
                     return [];
                 }
 
-                var faces: IGFace[] = [];
+                var faces: Model.Face[] = [];
                 this.remoteInfos_.forEach((remoteInfo) => {
                     if (master) {
                         faces.push(remoteInfo.mastarFace);
@@ -168,7 +168,7 @@ module Garage {
                     }
                 });
 
-                return faces.filter((face: IGFace) => {
+                return faces.filter((face: Model.Face) => {
                     if (!face) {
                         return false;
                     }
@@ -783,7 +783,7 @@ module Garage {
             /**
              * Common の face を取得する。
              */
-            getCommonFace(): IGFace {
+            getCommonFace(): Model.Face {
                 return this.commonRemoteInfo_.face;
             }
 
@@ -1484,7 +1484,7 @@ module Garage {
                 return normalizedImages;
             }
 
-            private _getMasterFace(remoteId: string): IGFace {
+            private _getMasterFace(remoteId: string): Model.Face {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
@@ -1524,12 +1524,12 @@ module Garage {
                 });
             }
 
-            get faces(): IGFace[]{
+            get faces(): Model.Face[]{
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
                 // remoteInfos から faces 情報を取り出す
-                var faces: IGFace[] = [];
+                var faces: Model.Face[] = [];
                 this.remoteInfos_.forEach((remoteInfo) => {
                     faces.push(remoteInfo.face);
                 });
@@ -1604,8 +1604,8 @@ module Garage {
                     let remoteId = this.remoteList_[i].remote_id;
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-                    let face: IGFace = this._parseFace(facePath, remoteId);
-                    let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
+                    let face: Model.Face = this._parseFace(facePath, remoteId);
+                    let masterFace: Model.Face = this._parseFace(masterFacePath, remoteId);
 
                     if (face != undefined && remoteId != undefined) {
                         if (masterFace != undefined){
@@ -1630,7 +1630,7 @@ module Garage {
             /**
              * 指定したパスの face を parse する
              */
-            _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+            _parseFace(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
                 // face ファイルを読み込む
                 if (!fs.existsSync(facePath)) {
                     //console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
@@ -1660,12 +1660,7 @@ module Garage {
                     return undefined;
                 }
 
-                var face: IGFace = {
-                    remoteId: remoteId,
-                    name: plainFace.name,
-                    category: plainFace.category,
-                    modules: []
-                };
+                var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category);
 
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
@@ -1683,19 +1678,8 @@ module Garage {
                 if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
                     face.modules.length == 0) {
 
-                    let imodule: IModule = {
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT
-                        }
-                    }
-
-                    let temporalName = remoteId + "_page_0";
-
                     let gmodule = new Model.Module();
-                    gmodule.setInfoFromIModule(imodule, remoteId, temporalName);
+                    gmodule.setInfo(remoteId, 0);
                     face.modules.push(gmodule);
                 }
 
