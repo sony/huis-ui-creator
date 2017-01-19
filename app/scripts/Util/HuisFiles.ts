@@ -716,11 +716,11 @@ module Garage {
                             for (let l = 0, al = actions.length; l < al; l++) {
                                 let learningCode = actions[l].code;
                                 let functionName = actions[l].code_db.function;
-                                if (learningCode != null && learningCode != undefined && learningCode != " ") {
-                                    if (functionName != null && functionName != undefined && functionName != " ") {
-                                        result[functionName] = learningCode;
-                                        
-                                    }    
+                                if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
+                                    (functionName != null && functionName != undefined && functionName != " ")) {
+
+                                    let key = this.createFunctionKeyName(functionName, result);
+                                    result[key] = learningCode;
                                 }
                             }
                         }
@@ -732,6 +732,46 @@ module Garage {
                 }
 
                 return result;
+
+            }
+
+            getPlainFunctionKey(functionName: string): string {
+                // HOGE_HOGE => HOGE_HOGE
+                // HOGE_HOGE#1 => HOGE_HOGE
+
+                let delimiterIndex = functionName.indexOf('#');// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                if (delimiterIndex === -1) {
+                    return functionName;
+                } else {
+                    return functionName.substring(0, delimiterIndex);
+                }
+            }
+
+            containsFunctionKey(functionName: string, functionCodeHash: IStringStringHash): boolean {
+                let plainFunctionName = this.getPlainFunctionKey(functionName);
+
+                for (let key in functionCodeHash) {
+                    if (key.indexOf(plainFunctionName) != -1) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            createFunctionKeyName(functionName: string, functionCodeHash: IStringStringHash): string {
+                if (!(functionName in functionCodeHash)) {
+                    return functionName;
+                }
+
+                let i = 0;
+                while (true) {
+                    let serialName = functionName + '#' + i++; // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+                    if (!(serialName in functionCodeHash)) {
+                        return serialName;
+                    }
+                }
 
             }
 
