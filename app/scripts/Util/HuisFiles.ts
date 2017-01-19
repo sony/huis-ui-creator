@@ -550,50 +550,51 @@ module Garage {
             }
 
             private _getMasterFunctions(remoteId: string): string[] {
-                var masterFace = this._getMasterFace(remoteId);
+                let masterFace = this._getMasterFace(remoteId);
                 if (!masterFace) {
                     //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
                     return null;
                 }
 
-                var functions: string[] = [];
-                var masterModules = masterFace.modules;
+                //var functions: string[] = [];
+                let functionCodeHash: IStringStringHash = {};
+                let masterModules = masterFace.modules;
 
-                var getFunctions_modules = function (modules: IModule[], functions: string[]) {
+                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(modules)) {
                         return;
                     }
 
                     modules.forEach((module: IModule) => {
                         let buttons = module.button;
-                        getFunctions_buttons(buttons, functions);
+                        getFunctions_buttons(buttons, functionCodeHash);
                     });
 
                 };
 
-                var getFunctions_buttons = function (buttons: IButton[], functions: string[]) {
+                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(buttons)) {
                         return;
                     }
 
                     buttons.forEach((button: IButton) => {
                         let states = button.state;
-                        getFunctions_states(states, functions);
+                        getFunctions_states(states, functionCodeHash);
                     });
                 };
 
-                var getFunctions_states = function (states: IState[], functions: string[]) {
+                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(states)) {
                         return;
                     }
 
                     states.forEach((state: IState) => {
                         let actions = state.action;
-                        getFunctions_actions(actions, functions);
+                        getFunctions_actions(actions, functionCodeHash);
                     });
                 };
 
-                var getFunctions_actions = function (actions: IAction[], functions: string[]) {
+                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
                     let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
 
                     if (!_.isArray(actions)) {
@@ -607,10 +608,23 @@ module Garage {
 
                             if (code != null && code != undefined && code != " ") {
                                 //学習によって登録された用 codeがある場合
-                                functions.push(code_db.function);
+                                //functions.push(code_db.function);
+
+                                if (functionCodeHash[code_db.function] != action.code) {
+                                    let key = huisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                    functionCodeHash[key] = action.code;
+                                }
                             } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
                                 //プリセット用 db_codeset と brand が空白文字で。
-                                functions.push(code_db.function);
+                                //functions.push(code_db.function);
+
+                                if (!(code_db.function in functionCodeHash) ||
+                                    functionCodeHash[code_db.function] != "") {
+                                    if (code_db.function in functionCodeHash) console.log('★★★★ ' + code_db.function + ': ' + functionCodeHash[code_db.function] + ' ★★★★');
+
+                                    let key = huisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                    functionCodeHash[key] = "";
+                                }
                             } else {
                                 //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
                                 //console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
@@ -625,12 +639,29 @@ module Garage {
                 };
 
                 // master の module にあるすべてのボタンの機能を取得する
-                getFunctions_modules(masterModules, functions);
+                getFunctions_modules(masterModules, functionCodeHash);
 
+
+                return Object.keys(functionCodeHash);
                 // 重複した機能を削除して返却
+                /*
                 return functions.filter((value, index, array) => {
                     return array.indexOf(value) === index;
                 });
+                */
+            }
+
+            
+            private getNumberedFunctions(functions: string[]): string[] {
+                // 重複していたらナンバリング
+                // 必ずナンバリングしていいのか？コードとの重複チェックしないとダメでは？（上位で）
+
+                let numberedFunctions: string[] = [];
+                for (let func of functions) {
+                    numberedFunctions.push(this.createFunctionKeyName(func, numberedFunctions));
+                }
+
+                return numberedFunctions;
             }
 
             /**
@@ -719,7 +750,7 @@ module Garage {
                                 if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
                                     (functionName != null && functionName != undefined && functionName != " ")) {
 
-                                    let key = this.createFunctionKeyName(functionName, result);
+                                    let key = this.createFunctionKeyName(functionName, Object.keys(result));
                                     result[key] = learningCode;
                                 }
                             }
@@ -759,17 +790,17 @@ module Garage {
                 return false;
             }
 
-            createFunctionKeyName(functionName: string, functionCodeHash: IStringStringHash): string {
-                if (!(functionName in functionCodeHash)) {
+            createFunctionKeyName(functionName: string, keys: string[]): string {
+                if (keys.indexOf(functionName) < 0) {
                     return functionName;
                 }
 
                 let i = 0;
                 while (true) {
-                    let serialName = functionName + '#' + i++; // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    let numberedName = functionName + '#' + i++; // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
-                    if (!(serialName in functionCodeHash)) {
-                        return serialName;
+                    if (keys.indexOf(numberedName) < 0) {
+                        return numberedName;
                     }
                 }
 
