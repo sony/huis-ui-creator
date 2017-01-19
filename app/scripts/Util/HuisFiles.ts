@@ -1662,14 +1662,18 @@ module Garage {
 
                 var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category);
 
+                let heightSum: number = 0;
+
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
                     var moduleName: string = plainFace.modules[i];
                     var module: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (module) {
+                        let pageIndex = Math.floor(heightSum / HUIS_FACE_PAGE_HEIGHT);
+                        heightSum += module.area.h;
                         //let gmodule: IGModule = $.extend(true, { offsetY: 0, remoteId: remoteId, name: moduleName }, module);
                         let gmodule = new Model.Module();
-                        gmodule.setInfoFromIModule(module, remoteId, moduleName);
+                        gmodule.setInfoFromIModule(module, remoteId, pageIndex, moduleName);
                         face.modules.push(gmodule);
                     }
                 }

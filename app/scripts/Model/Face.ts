@@ -47,7 +47,7 @@ module Garage {
                         module = new Model.Module();
                         module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
                     }
-                    if (isCrossPage || this.isSeparatorNeeded(prevElem, elem)) {
+                    if (this.isSeparatorNeeded(prevElem, elem)) {
                         let moduleSeparator = new Model.ModuleSeparator(elem.group.name);
                         moduleSeparator.insertTo(elem);
                     }

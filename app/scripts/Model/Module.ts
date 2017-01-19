@@ -72,14 +72,14 @@ module Garage {
              * @param remoteId ? : このモジュールを含むリモコンのID
              * @param moduleName ? : モジュールの定義ファイル名
              */
-            public setInfoFromIModule(imodule: IModule, remoteId: string, moduleName: string) {
+            public setInfoFromIModule(imodule: IModule, remoteId: string, pageIndex: number, moduleName: string) {
 
                 let gmodule: IGModule = {
                     offsetY: this.offsetY,
                     remoteId: remoteId,
                     name: moduleName,
                     area: imodule.area,
-                    pageIndex: 0,
+                    pageIndex: pageIndex,
                     group: imodule.group,
                 }
 
