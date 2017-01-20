@@ -127,6 +127,13 @@ module Garage {
 
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     var gmodules = this.faceRenderer_canvas_.getModules();
+
+                    huisFiles.applyNumberedFunctionName(gmodules);
+
+                    // 元リモコンが存在しない場合
+                        // gmodules内で同一function別Codeがあれば4桁のハッシュを付与：これも#区切りで良いのでは★★★★★★★★★★★★★★★★★★★★★
+                        // 画像パスをハッシングしてファイル名にする変換処理を流用可能？
+
                     // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
                     this.buttonDeviceInfoCache.load(gmodules);
 

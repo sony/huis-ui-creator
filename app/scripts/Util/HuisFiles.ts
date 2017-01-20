@@ -611,7 +611,7 @@ module Garage {
                                 //functions.push(code_db.function);
 
                                 if (functionCodeHash[code_db.function] != action.code) {
-                                    let key = huisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
                                     functionCodeHash[key] = action.code;
                                 }
                             } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
@@ -622,7 +622,7 @@ module Garage {
                                     functionCodeHash[code_db.function] != "") {
                                     if (code_db.function in functionCodeHash) console.log('★★★★ ' + code_db.function + ': ' + functionCodeHash[code_db.function] + ' ★★★★');
 
-                                    let key = huisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
                                     functionCodeHash[key] = "";
                                 }
                             } else {
@@ -654,11 +654,11 @@ module Garage {
             
             private getNumberedFunctions(functions: string[]): string[] {
                 // 重複していたらナンバリング
-                // 必ずナンバリングしていいのか？コードとの重複チェックしないとダメでは？（上位で）
+                // 必ずナンバリングするのでコードとの重複チェックは上位でしないとダメ
 
                 let numberedFunctions: string[] = [];
                 for (let func of functions) {
-                    numberedFunctions.push(this.createFunctionKeyName(func, numberedFunctions));
+                    numberedFunctions.push(HuisFiles.createFunctionKeyName(func, numberedFunctions));
                 }
 
                 return numberedFunctions;
@@ -750,7 +750,7 @@ module Garage {
                                 if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
                                     (functionName != null && functionName != undefined && functionName != " ")) {
 
-                                    let key = this.createFunctionKeyName(functionName, Object.keys(result));
+                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));
                                     result[key] = learningCode;
                                 }
                             }
@@ -763,6 +763,29 @@ module Garage {
                 }
 
                 return result;
+
+            }
+
+            private findFunctionKeyByFunctionName(funcName: string, code: string, remoteId: string): string {
+                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+
+                if (funcName in functionCodeHash) {
+                    // 連番付きかはともかく、同一機能は存在する
+
+                    for (let key in functionCodeHash) {
+                        if (HuisFiles.getPlainFunctionKey(key) === funcName &&
+                            functionCodeHash[key] === code) {
+                            return key;
+                        }
+                    }
+
+                    // 一致なし(フルカスタム上で再学習？）：このボタンに再学習されたボタン表示
+                    return funcName + '#ABCD'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
+                } else {
+                    // 基ボタン消失
+                    return funcName;
+                }
 
             }
 
@@ -790,7 +813,7 @@ module Garage {
                 return false;
             }
 
-            createFunctionKeyName(functionName: string, keys: string[]): string {
+            private static createFunctionKeyName(functionName: string, keys: string[]): string {
                 if (keys.indexOf(functionName) < 0) {
                     return functionName;
                 }
@@ -1801,7 +1824,7 @@ module Garage {
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
                     let face: IGFace = this._parseFace(facePath, remoteId);
-                    let masterFace: IGFace = this._parseFace(masterFacePath, remoteId);
+                    let masterFace: IGFace = this.parseMasterFace(masterFacePath, remoteId);
 
                     if (face != undefined && remoteId != undefined) {
                         if (masterFace != undefined){
@@ -1821,6 +1844,18 @@ module Garage {
                 }
 
                 return remoteInfos;
+            }
+
+            // 同一functionだが異なるcodeが存在する場合functionに連番を振る
+            // ★★★★★★★★★★★★★★★★
+            parseMasterFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+                let master: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
+
+                if (master != null && master.modules != null) {
+                    HuisFiles.numberFunctionNameInModules(master.modules);
+                }
+
+                return master;
             }
 
             /**
@@ -1913,8 +1948,64 @@ module Garage {
                     face.modules.push(gmodule);
                 }
 
-
                 return face;
+            }
+
+            // functionかぶりを検査してナンバリング。★★★normalizeで戻す
+            private static numberFunctionNameInModules(modules: IGModule[]) {
+                let functionCodeHash: IStringStringHash = {};
+
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code === "" ||
+                                    action.code_db == null) continue;
+
+                                if (!(action.code_db.function in functionCodeHash)) {
+                                    functionCodeHash[action.code_db.function] = action.code;
+                                } else if (functionCodeHash[action.code_db.function] != action.code) {
+                                    let numberedFunc = HuisFiles.createFunctionKeyName(action.code_db.function, Object.keys(functionCodeHash));
+
+                                    action.code_db.function = numberedFunc;
+                                    functionCodeHash[numberedFunc] = action.code;
+                                }
+                                    
+                            }
+                        }
+                    }
+                }
+            }
+
+            // modules内のfunctionに対応する元リモコンのnumberedFunctionKeyを設定★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            public applyNumberedFunctionName(modules: IGModule[]) {
+
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code_db == null ||
+                                    action.code_db.function == null) {
+                                    continue;
+                                }
+
+                                let remoteId = this.getRemoteIdByAction(action);
+                                if (remoteId == null) continue; // 基リモコンなし
+
+                                let newFuncName = this.findFunctionKeyByFunctionName(action.code_db.function, action.code, remoteId);
+                                action.code_db.function = newFuncName;
+                            }
+                        }
+                    }
+                }
             }
 
 

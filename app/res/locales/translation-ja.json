@@ -1072,7 +1072,9 @@
             "STR_REMOTE_BTN_FAN_HOT_MINUS":"温度 -",
             "STR_REMOTE_BTN_FAN_HOT_PLUS": "温度 +",
             "STR_REMOTE_BTN_FOCUS":"フォーカスモード",
-            "STR_REMOTE_BTN_WIDE": "ワイドモード"
+            "STR_REMOTE_BTN_WIDE": "ワイドモード",
+
+            "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)"
 
         }
     }

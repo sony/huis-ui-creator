@@ -466,6 +466,8 @@ module Garage {
                     return;
                 }
 
+                // valの存在チェック
+                // 存在しなければ（このボタンに再学習された信号）項目を追加してそれを設定
                 $functionNamePullDown.val(inputFunctionName);
             }
 
@@ -550,6 +552,12 @@ module Garage {
                 let functions: string[] = this.getFunctionsOf(order);
 
                 if (functions != null) {
+                    // functionsに自分のキーが存在しない場合は追加
+                    if (this.isValidValue(functionName) &&
+                        functions.indexOf(functionName) < 0) {
+                        functions.unshift(functionName);
+                    }
+
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
 
@@ -567,8 +575,7 @@ module Garage {
 
                     //inputにmodelがある場合、値を表示
                     if (this.isValidValue(functionName)) {
-                        this.setFunctionNamePullDownOf(order, functionName);    //codeHashから逆引きしないとダメなのでは？★★★★★★★★★★★★★★★★
-                        // codeHashに存在しない場合に「このボタンに再学習された信号」の項目を追加★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
@@ -579,6 +586,7 @@ module Garage {
                 }
             }
 
+            // 連番付信号名リストを表示用データに変換
             // HuisFilesに引っ越し？
             private translateFunctions(functions: string[]): any[] {
                 // 
@@ -591,28 +599,44 @@ module Garage {
                     let plainName = Util.HuisFiles.getPlainFunctionKey(func);
                     if (plainName != func) {
                         // 連番付き
-                        let num = Number(func.substring(func.indexOf('#') + 1)) + 2;
-
-                        translatedFuncs.push({
-                            key: func,
-                            label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
-                        });
+                        //let num = Number(func.substring(func.indexOf('#') + 1)) + 2;
+                        let numCode = func.substring(func.indexOf('#') + 1);
+                        if (numCode.length >= 4) {
+                            // フルカスタム再学習ボタン
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
+                            });
+                        } else {
+                            // 連番
+                            let num = Number(numCode) + 2;
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
+                            });
+                        }// else ★ 元リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
                         if (numberedFuncs.indexOf(plainName) < 0) {
-                            for (let translated of translatedFuncs) {
-                                if (translated.key === plainName) {
-                                    translated.label += ' (1)'
-                                }
-                            }
-
                             numberedFuncs.push(plainName);
                         }
+
                     } else {
                         // 連番なし
                         translatedFuncs.push({
                             key: func,
                             label: $.i18n.t('button.function.' + plainName)
                         });
+                    }
+                }
+
+                // 連番付きが存在する信号名のオリジナルに1番を付与
+                for (let numberedFunc of numberedFuncs) {
+
+                    for (let translated of translatedFuncs) {
+                        if (translated.key === numberedFunc) {
+                            translated.label += ' (1)';
+                            break;
+                        }
                     }
                 }
 
