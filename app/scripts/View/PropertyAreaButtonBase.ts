@@ -684,7 +684,16 @@ module Garage {
                     return;
                 }
 
-                let functions = huisFiles.getMasterFunctions(remoteId);
+                // masterじゃないfaceからも拾ってきてマージする必要があるのでは★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                let faceFunctions = huisFiles.getFaceFunctions(remoteId);
+                let masterFunctions = huisFiles.getMasterFunctions(remoteId);
+
+                let functions: string[] = masterFunctions
+                    .concat(faceFunctions)
+                    .filter((val, i, self) => {
+                        // 重複排除
+                        return self.indexOf(val) === i;
+                    });
 
                 if (functions) {
                     return functions;

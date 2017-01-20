@@ -507,7 +507,7 @@ module Garage {
                     return;
                 }
 
-                let masterFace = this._getMasterFace(remoteId);
+                let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
                     return null;
@@ -550,15 +550,24 @@ module Garage {
             }
 
             private _getMasterFunctions(remoteId: string): string[] {
-                let masterFace = this._getMasterFace(remoteId);
-                if (!masterFace) {
+                let masterFace = this._getFace(remoteId, true);
+                return HuisFiles.getFunctions(masterFace);
+            }
+
+            public getFaceFunctions(remoteId: string): string[] {
+                let face = this._getFace(remoteId, false);
+                return HuisFiles.getFunctions(face);
+            }
+
+            private static getFunctions(face: IGFace): string[] {
+                if (!face) {
                     //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
                     return null;
                 }
 
                 //var functions: string[] = [];
                 let functionCodeHash: IStringStringHash = {};
-                let masterModules = masterFace.modules;
+                let faceModules = face.modules;
 
                 var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(modules)) {
@@ -638,8 +647,8 @@ module Garage {
 
                 };
 
-                // master の module にあるすべてのボタンの機能を取得する
-                getFunctions_modules(masterModules, functionCodeHash);
+                // module にあるすべてのボタンの機能を取得する
+                getFunctions_modules(faceModules, functionCodeHash);
 
 
                 return Object.keys(functionCodeHash);
@@ -672,7 +681,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の code_db。見つからない場合は null。
              */
             getMasterCodeDb(remoteId: string): ICodeDB {
-                let masterFace = this._getMasterFace(remoteId);
+                let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
@@ -720,12 +729,14 @@ module Garage {
                     return null;
                 }
 
-                let masterFace : IGFace = this._getMasterFace(remoteId);
+                let masterFace : IGFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
+                return HuisFiles.getFunctionCodeMapByModules(masterFace.modules);
+                /*
                 let result: IStringStringHash = {};
 
                 var modules = masterFace.modules;
@@ -750,7 +761,7 @@ module Garage {
                                 if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
                                     (functionName != null && functionName != undefined && functionName != " ")) {
 
-                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));
+                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));//不要 あとで戻す★★★★★★★★★★★★★★★
                                     result[key] = learningCode;
                                 }
                             }
@@ -763,12 +774,54 @@ module Garage {
                 }
 
                 return result;
+                */
 
             }
 
-            private findFunctionKeyByFunctionName(funcName: string, code: string, remoteId: string): string {
+            private static getFunctionCodeMapByModules(modules: IGModule[]): IStringStringHash {
+                let result: IStringStringHash = {};
+
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                let learningCode = actions[l].code;
+                                let functionName = actions[l].code_db.function;
+                                if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
+                                    (functionName != null && functionName != undefined && functionName != " ")) {
+
+                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));//不要 あとで戻す★★★★★★★★★★★★★★★
+                                    result[key] = learningCode;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (Object.keys(result).length == 0) {
+                    return null;
+                }
+
+                return result;
+            }
+
+            private findFunctionKeyInHuisFilesByFunctionName(funcName: string, code: string, remoteId: string): string {
                 let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
 
+                return HuisFiles.findFunctionKeyByFunctionName(funcName, code, functionCodeHash, false);
+                /*
                 if (funcName in functionCodeHash) {
                     // 連番付きかはともかく、同一機能は存在する
 
@@ -786,7 +839,31 @@ module Garage {
                     // 基ボタン消失
                     return funcName;
                 }
+                */
+            }
 
+            private static findFunctionKeyByFunctionName(funcName: string, code: string, funcCodeHash: IStringStringHash, continueNumbering: boolean): string {
+                if (funcName in funcCodeHash) {
+                    // 連番付きかはともかく、同一機能は存在する
+
+                    for (let key in funcCodeHash) {
+                        if (HuisFiles.getPlainFunctionKey(key) === funcName &&
+                            funcCodeHash[key] === code) {
+                            // 既存codeと一致したらその信号名を返す
+                            return key;
+                        }
+                    }
+
+                    // 一致なし(フルカスタム上で再学習？）：このボタンに再学習されたボタン表示
+                    if (continueNumbering) {
+                        return HuisFiles.createFunctionKeyName(funcName, Object.keys(funcCodeHash));
+                    } else {
+                        return funcName + '#ABCD'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    }
+                } else {
+                    // 基ボタン消失
+                    return funcName;
+                }
             }
 
             static getPlainFunctionKey(functionName: string): string {
@@ -836,7 +913,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
              */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
-                let masterFace: IGFace = this._getMasterFace(remoteId);
+                let masterFace: IGFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
@@ -1524,7 +1601,7 @@ module Garage {
                     }
                     if (action.code_db) {
                         normalizedAction.code_db = {
-                            function: (action.code_db.function) ? action.code_db.function : "none",
+                            function: (action.code_db.function) ? HuisFiles.getPlainFunctionKey(action.code_db.function) : "none",
                             brand: action.code_db.brand,
                             device_type: action.code_db.device_type,
                             db_codeset: action.code_db.db_codeset
@@ -1703,7 +1780,7 @@ module Garage {
                 return normalizedImages;
             }
 
-            private _getMasterFace(remoteId: string): IGFace {
+            private _getFace(remoteId: string, isMaster: boolean): IGFace {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
@@ -1727,11 +1804,11 @@ module Garage {
                     return null;
                 }
 
-                var masterFace = targetRemoteInfos[0].mastarFace;
-                if (!masterFace) {
+                var face = isMaster ? targetRemoteInfos[0].mastarFace : targetRemoteInfos[0].face;
+                if (!face) {
                     return null;
                 }
-                return masterFace;
+                return face;
             }
 
             /**
@@ -1827,7 +1904,10 @@ module Garage {
                     let masterFace: IGFace = this.parseMasterFace(masterFacePath, remoteId);
 
                     if (face != undefined && remoteId != undefined) {
-                        if (masterFace != undefined){
+                        if (masterFace != undefined) {
+                            // MastarFaceの連番付き信号名をFaceに反映
+                            HuisFiles.applyNumberedFunctionNameByModule(face.modules, masterFace.modules);
+
                             remoteInfos.push({
                                 remoteId: remoteId,
                                 face: face,
@@ -1982,6 +2062,7 @@ module Garage {
             }
 
             // modules内のfunctionに対応する元リモコンのnumberedFunctionKeyを設定★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            // canvas つまり編集するfull-customのボタンと基リモコンボタンの信号名を一致させる
             public applyNumberedFunctionName(modules: IGModule[]) {
 
                 for (let mod of modules) {
@@ -2000,7 +2081,37 @@ module Garage {
                                 let remoteId = this.getRemoteIdByAction(action);
                                 if (remoteId == null) continue; // 基リモコンなし
 
-                                let newFuncName = this.findFunctionKeyByFunctionName(action.code_db.function, action.code, remoteId);
+                                let newFuncName = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
+                                action.code_db.function = newFuncName;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // faceのモジュールにmasterモジュールの信号名をマージ。
+            // このときはmasterモジュールにあるけどcodeが異なる信号には「このボタンに～」じゃなくてさらなる連番を振らねばならない
+            private static applyNumberedFunctionNameByModule(target: IGModule[], original: IGModule[]) {
+                let originalHash = HuisFiles.getFunctionCodeMapByModules(original);
+                if (originalHash == null ||
+                    Object.keys(originalHash).length < 1) {
+                    return;
+                }
+                
+                for (let mod of target) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code_db == null ||
+                                    action.code_db.function == null) {
+                                    continue;
+                                }
+
+                                let newFuncName = HuisFiles.findFunctionKeyByFunctionName(action.code_db.function, action.code, originalHash, true);
                                 action.code_db.function = newFuncName;
                             }
                         }

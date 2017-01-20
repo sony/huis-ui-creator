@@ -192,6 +192,10 @@ module Garage {
                                 let targetDeviceInfo = gbutton.state[stateIndex].action[actionIndex].deviceInfo;
                                 if (!targetDeviceInfo) continue;
 
+                                if (targetDeviceInfo.code_db.function != null &&
+                                    targetDeviceInfo.code_db.function.length > 0) {
+                                    targetDeviceInfo.code_db.function = HuisFiles.getPlainFunctionKey(targetDeviceInfo.code_db.function);
+                                }
                                 targetDeviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
                                 newList.push(targetDeviceInfo);
                             }
