@@ -290,6 +290,7 @@
       <DependentUpon>init.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\VersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ButtonDeviceInfoCache.ts" />
@@ -338,6 +339,7 @@
     <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonMacro.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonNormal.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
+    <TypeScriptCompile Include="app\scripts\View\VersionDialog.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
     <Content Include="tests\jasmine\Model.ButtonItem.js">
       <DependentUpon>Model.ButtonItem.ts</DependentUpon>
