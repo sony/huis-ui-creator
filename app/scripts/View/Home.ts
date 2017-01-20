@@ -439,11 +439,10 @@ module Garage {
                         }
 
                         this.contextMenu_.append(new MenuItem({
-                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                            label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
                             click: () => {
-                                let face :IGFace = huisFiles.getFace(remoteId);
-
-                                this.exportRemote(remoteId, face.name,face.modules); // true で警告なし
+                                let face: Model.Face = huisFiles.getFace(remoteId);
+                                this._copyAndEditRemote(face);
                             }
                         }));
 
@@ -466,10 +465,11 @@ module Garage {
                         }));
 
                         this.contextMenu_.append(new MenuItem({
-                            label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                             click: () => {
-                                let face: Model.Face = huisFiles.getFace(remoteId);
-                                this._copyAndEditRemote(face);
+                                let face: IGFace = huisFiles.getFace(remoteId);
+
+                                this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
                             }
                         }));
                     }
