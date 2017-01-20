@@ -548,11 +548,6 @@ module Garage {
 
                 //FunctionプルダウンのDOMを表示。
                 let functions: string[] = this.getFunctionsOf(order);
-                // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-                // functions
-                //   function
-                //     key: numbered function name
-                //     item: 表示名。keyを分解したリソースキー＋必要であれば連番
 
                 if (functions != null) {
                     let $functionlContainer = $target.find("#signal-function-container");
@@ -573,6 +568,7 @@ module Garage {
                     //inputにmodelがある場合、値を表示
                     if (this.isValidValue(functionName)) {
                         this.setFunctionNamePullDownOf(order, functionName);    //codeHashから逆引きしないとダメなのでは？★★★★★★★★★★★★★★★★
+                        // codeHashに存在しない場合に「このボタンに再学習された信号」の項目を追加★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                     } else {
                         //値がない場合、初期値をrender
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
