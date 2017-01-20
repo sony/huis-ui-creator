@@ -428,6 +428,16 @@ module Garage {
                     if (this.remoteIdToDelete) {
 
                         let remoteId = $face.data("remoteid");
+
+                        if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
+                            this.contextMenu_.append(new MenuItem({
+                                label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
+                                click: () => {
+                                    this._enterFullCustom(remoteId);
+                                }
+                            }));
+                        }
+
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                             click: () => {

@@ -145,6 +145,7 @@
             "STR_CONTEXT_GRID_SIZE_32PX": "32px",
             "STR_CONTEXT_GRID_SIZE_64PX": "64px"
         },
+        "STR_CONTEXT_EDIT_REMOTE": "編集",
         "STR_CONTEXT_DELETE_REMOTE": "削除",
         "STR_CONTEXT_EXPORT_REMOTE": "エクスポート",
         "STR_CONTEXT_COPY_AND_EDIT_REMOTE": "コピーして新規作成",
