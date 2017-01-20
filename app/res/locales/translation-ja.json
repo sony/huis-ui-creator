@@ -41,8 +41,8 @@
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
             "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING": "リモコンと同期中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うには\nUSBケーブルを抜いてください。",
-            "STR_GARAGE_DIALOG_MESSAGE_IN_COPYING": "★リモコンをコピー中です。\nUSBケーブルを抜かないでください。",
-            "STR_GARAGE_DIALOG_MESSAGE_COPY_DONE_ENTER_FULLCUSTOM": "★コピーが完了しました。\n編集画面に入ります。",
+            "STR_GARAGE_DIALOG_MESSAGE_IN_COPYING": "コピー中です。\nUSBケーブルを抜かないでください。",
+            "STR_GARAGE_DIALOG_MESSAGE_COPY_DONE_ENTER_FULLCUSTOM": "コピーしました。",
             "STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
             "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "パソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
@@ -145,9 +145,9 @@
             "STR_CONTEXT_GRID_SIZE_32PX": "32px",
             "STR_CONTEXT_GRID_SIZE_64PX": "64px"
         },
-        "STR_CONTEXT_DELETE_REMOTE": "リモコンを削除",
-        "STR_CONTEXT_EXPORT_REMOTE": "リモコンをエクスポート",
-        "STR_CONTEXT_COPY_AND_EDIT_REMOTE": "★リモコンをコピーして編集",
+        "STR_CONTEXT_DELETE_REMOTE": "削除",
+        "STR_CONTEXT_EXPORT_REMOTE": "エクスポート",
+        "STR_CONTEXT_COPY_AND_EDIT_REMOTE": "コピーして新規作成",
         "STR_CONTEXT_COPY_ITEM": "コピー",
         "STR_CONTEXT_PASTE_ITEM": "貼り付け",
         "STR_CONTEXT_DELETE_ITEM": "削除",
@@ -170,7 +170,7 @@
         "STR_TOAST_UNDO": "元に戻す",
         "STR_TOAST_REDO": "やり直し",
         "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません",
-        "STR_TOAST_CANT_EDIT": "★右クリックでオプションメニューが表示されます。"
+        "STR_TOAST_CANT_EDIT": "右クリックでオプションが表示されます"
     },
     "remote": {
         "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
