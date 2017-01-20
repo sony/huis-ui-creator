@@ -766,7 +766,7 @@ module Garage {
 
             }
 
-            getPlainFunctionKey(functionName: string): string {
+            static getPlainFunctionKey(functionName: string): string {
                 // HOGE_HOGE => HOGE_HOGE
                 // HOGE_HOGE#1 => HOGE_HOGE
 
@@ -779,7 +779,7 @@ module Garage {
             }
 
             containsFunctionKey(functionName: string, functionCodeHash: IStringStringHash): boolean {
-                let plainFunctionName = this.getPlainFunctionKey(functionName);
+                let plainFunctionName = HuisFiles.getPlainFunctionKey(functionName);
 
                 for (let key in functionCodeHash) {
                     if (key.indexOf(plainFunctionName) != -1) {

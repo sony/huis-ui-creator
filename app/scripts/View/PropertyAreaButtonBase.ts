@@ -548,6 +548,12 @@ module Garage {
 
                 //FunctionプルダウンのDOMを表示。
                 let functions: string[] = this.getFunctionsOf(order);
+                // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                // functions
+                //   function
+                //     key: numbered function name
+                //     item: 表示名。keyを分解したリソースキー＋必要であれば連番
+
                 if (functions != null) {
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
@@ -557,7 +563,7 @@ module Garage {
                     }
 
                     let inputSignalData = {
-                        functions: functions,
+                        functions: this.translateFunctions(functions),
                         id: stateId,
                         order: order
                     }
@@ -566,7 +572,7 @@ module Garage {
 
                     //inputにmodelがある場合、値を表示
                     if (this.isValidValue(functionName)) {
-                        this.setFunctionNamePullDownOf(order, functionName);
+                        this.setFunctionNamePullDownOf(order, functionName);    //codeHashから逆引きしないとダメなのでは？★★★★★★★★★★★★★★★★
                     } else {
                         //値がない場合、初期値をrender
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
@@ -577,6 +583,45 @@ module Garage {
                 }
             }
 
+            // HuisFilesに引っ越し？
+            private translateFunctions(functions: string[]): any[] {
+                // 
+                let translatedFuncs = [];
+
+                // 連番付与済みfunctionリスト
+                let numberedFuncs: string[] = [];
+
+                for (let func of functions) {
+                    let plainName = Util.HuisFiles.getPlainFunctionKey(func);
+                    if (plainName != func) {
+                        // 連番付き
+                        let num = Number(func.substring(func.indexOf('#') + 1)) + 2;
+
+                        translatedFuncs.push({
+                            key: func,
+                            label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
+                        });
+
+                        if (numberedFuncs.indexOf(plainName) < 0) {
+                            for (let translated of translatedFuncs) {
+                                if (translated.key === plainName) {
+                                    translated.label += ' (1)'
+                                }
+                            }
+
+                            numberedFuncs.push(plainName);
+                        }
+                    } else {
+                        // 連番なし
+                        translatedFuncs.push({
+                            key: func,
+                            label: $.i18n.t('button.function.' + plainName)
+                        });
+                    }
+                }
+
+                return translatedFuncs;
+            }
            
 
             /*
