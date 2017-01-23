@@ -1,15 +1,13 @@
 ﻿<article data-role="page" id="page-home" data-title="HUIS UI CREATOR" data-theme="b">
     <header data-role="header">
-        <h3>★HOME</h3>
+        <h3 data-i18n="home.STR_HOME_TITLE">HOME</h3>
         <div class="header-button-lline-alingn-right">
-            <button id="create-new-remote" title="★新規リモコン作成"></button>
             <!--<button id="sync-pc-to-huis"></button>-->
             <button id="option-pulldown-menu"></button>
         </div>
     </header>
     <section data-role="content">
         <section id="face-list-container">
-           
             <!-- リモコンリスト　-->
             <ul id="face-list">
                 <ui id="face-list-footer"></ui>
@@ -17,6 +15,11 @@
         </section>
 
         <script type="text/template" id="face-list-template">
+                <li class="face">
+                    <p class="title" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
+                    <section class="face-container" id="create-new-remote" >
+                    </section>
+                </li>
                 {{#faceList}}
                 <li class="face" data-remoteid="{{remoteId}}">
                     <p class="title">{{name}}</p>
@@ -27,15 +30,13 @@
         <section id="option-pulldown-menu-popup" data-role="popup" >
             <ul id="option-pulldown-menu-list">
                 <li id="command-import-remote" class="menu-item-text"
-                    data-i18n="option_menu.STR_OPTION_MENU_IMPORT_REMOTE">★リモコンをインポート</li>
+                    data-i18n="option_menu.STR_OPTION_MENU_IMPORT_REMOTE">リモコンをインポート</li>
                 <li class="menu-item-separator"></li>
                 <li id="command-visit-help" class="menu-item-text"
-                    data-i18n="option_menu.STR_OPTION_MENU_HELP">★ヘルプガイドを見る</li>
-                <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">★HUIS UI CREATOR のバージョン情報</li>
+                    data-i18n="option_menu.STR_OPTION_MENU_HELP">ヘルプガイドを見る</li>
+                <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">HUIS UI CREATOR のバージョン情報</li>
             </ul>
         </section>
-
-
 
     </section>
 </article>

@@ -68,7 +68,6 @@ module Garage {
                 return $.extend(ret,{
                     //"dblclick header .ui-title": "_onHeaderDblClick",
                     "click #create-new-remote": "_onCreateNewRemote",
-                    "mouseover #create-new-remote": "_onCreateNewRemoteHover",
                     "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
                     "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
                     "click #command-import-remote": "onOptionImport",
@@ -121,10 +120,10 @@ module Garage {
                 this.contextMenu_ = new Menu();
 
                 //お知らせダイアログを表示
-                //var informationDialog = new Util.InformationDialog();
-                //if (informationDialog.shouldNotify()) {
-                //    informationDialog.notify();
-                //}
+                var informationDialog = new Util.InformationDialog();
+                if (informationDialog.shouldNotify()) {
+                    informationDialog.notify();
+                }
                 
             }
 
@@ -171,9 +170,7 @@ module Garage {
               
 
                 //テキストのローカライズ
-                $("header h3").html($.i18n.t("home.STR_HOME_TITLE"));
-                $("#create-new-remote").attr("title", $.i18n.t("tooltip.STR_TOOLTIP_NEW_REMOTE"));
-                
+                $("#page-home").i18n();
             }
 
 
