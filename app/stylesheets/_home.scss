@@ -4,58 +4,7 @@
     text-shadow: none;
     overflow-y:hidden;
     background-color: $COLOR_HOME_BACKGROUND;
-    //リモコン数が0個の時の画面
-    #home-introductions{
-        position:absolute;
-        visibility:hidden;
-        width:100%;
-        overflow-x:auto;
-        overflow-y:hidden;
-
-        #home-introduction-vector{
-            position:absolute;
-            top:0;
-            right:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_MARGIN_RIGHT;
-            background-image:$PATH_IMG_HOME_INTRODUCTION_VECTOR;
-            width:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_WIDTH;
-            height:$SIZE_HOME_INTRODUCTION_VECTOR_IMAGE_HEIGHT;
-            background-position:center;
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-
-        //中央の画像とテキスト
-        .center-contents{
-            z-index:1;
-            position:relative;
-            margin:0 auto;
-            margin-top:$SIZE_HOME_INTRODUCTION_MARGIN_TOP;
-            width:$SIZE_HOME_INTRODUCTION_CENTER_CONTANTS;
-
-            #home-introduction-texts{
-                color:$COLOR_HOME_INTRODUCTION_TEXT;
-                text-align:center;
-                font-size:$FONT_SIZE_HOME_INTRODUCTION_TEXT;
-                font-family:$FONT_WEIGHT_HOME_INTRODUCTION_TEXT;
-                line-height:$FONT_LINE_HEIGHT_HOME_INTRODUCTION_TEXT;
-                margin:0;
-
-                .accent{
-                    color:$COLOR_HOME_INTRODUCTION_TEXT_ACCENT;
-                }
-            }
-
-            #home-introduction-image-remotes{
-                background-image:$PATH_IMG_HOME_INTRODUCTION_REMOTES;
-                width:$SIZE_HOME_INTRODUCTION_IMAGE_WIDTH;
-                height:$SIZE_HOME_INTRODUCTION_IMAGE_HEIGHT;
-                margin-top:$SIZE_HOME_INTRODUCTION_IMAGE_MARGIN_TOP;
-                background-position:center;
-                background-repeat: no-repeat;
-                background-size: contain;
-            }
-        }
-    }
+   
 
     .ui-header{
         #sync-pc-to-huis{

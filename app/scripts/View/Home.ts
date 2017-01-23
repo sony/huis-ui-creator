@@ -159,53 +159,20 @@ module Garage {
 
                 });
 
-                var numRemotes:number = faces.length;//ホームに出現するリモコン数
-
-                if (numRemotes !== 0) {//リモコン数が0ではないとき、通常通り表示
-                    this._disableIntroduction();//念のため、introductionを非表示にする。
-                    var $faceList = $("#face-list")
-                    $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
-                    $faceList.append($(faceItemTemplate({ faceList: faceList })));
-                    var elems: any = $faceList.children();
-                    for (let i = 0, l = elems.length; i < l; i++) {
-                        this._renderFace($(elems[i]));
-                    }
-                    this._calculateFaceListWidth();
-                } else {//リモコン数が0のとき導入画面を表示。
-                    console.log("numRemotes : " + numRemotes);
-                    //導入画面は初期状態は非表示なのでここで表示する。
-                    this._renderIntroduction();
+                var $faceList = $("#face-list")
+                $faceList.find(".face").remove(); // 当初_renderFaceListは$faceListに要素がないことが前提で作成されていたためこの行を追加、ないとリモコンがダブって表示される
+                $faceList.append($(faceItemTemplate({ faceList: faceList })));
+                var elems: any = $faceList.children();
+                for (let i = 0, l = elems.length; i < l; i++) {
+                    this._renderFace($(elems[i]));
                 }
+                this._calculateFaceListWidth();
+              
 
                 //テキストのローカライズ
                 $("#page-home").i18n();
             }
 
-
-            /*
-            *　導入画面をレンダリング
-            */
-
-            private _renderIntroduction() {
-                var STR_HOME_INTRODUCTION_TEXT_1: string = $.i18n.t("home.STR_HOME_INTRODUCTION_1");
-                var STR_HOME_INTRODUCTION_TEXT_2: string = $.i18n.t("home.STR_HOME_INTRODUCTION_2");
-                var STR_HOME_INTRODUCTION_TEXT_3: string = $.i18n.t("home.STR_HOME_INTRODUCTION_3");
-
-                var $indtroductionHome = $("#home-introductions");
-                $indtroductionHome.css("visibility", "visible");
-                $indtroductionHome.find("#home-introduction-text-1").html(STR_HOME_INTRODUCTION_TEXT_1);
-                $indtroductionHome.find("#home-introduction-text-2").html(STR_HOME_INTRODUCTION_TEXT_2);
-                $indtroductionHome.find("#home-introduction-text-3").html(STR_HOME_INTRODUCTION_TEXT_3);
-            }
-
-            /*
-             * 導入画面を非表示にする。
-             */
-            private _disableIntroduction() {
-                var $indtroductionHome = $("#home-introductions");
-                $indtroductionHome.css("visibility", "hidden");
-
-            }
 
 
             private _renderFace($face: JQuery): void {
