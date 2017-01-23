@@ -35,8 +35,7 @@ module Garage {
                     let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
                     let gmodule = new Model.Module();
                     gmodule.setInfo(remoteId, 0);
-
-                    this.face_ = new Model.Face(remoteId, name, "fullcustom", [gmodule]);
+                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [gmodule]);
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
