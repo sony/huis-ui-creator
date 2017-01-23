@@ -821,31 +821,14 @@ module Garage {
                 let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
 
                 return HuisFiles.findFunctionKeyByFunctionName(funcName, code, functionCodeHash, false);
-                /*
-                if (funcName in functionCodeHash) {
-                    // 連番付きかはともかく、同一機能は存在する
-
-                    for (let key in functionCodeHash) {
-                        if (HuisFiles.getPlainFunctionKey(key) === funcName &&
-                            functionCodeHash[key] === code) {
-                            return key;
-                        }
-                    }
-
-                    // 一致なし(フルカスタム上で再学習？）：このボタンに再学習されたボタン表示
-                    return funcName + '#ABCD'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-
-                } else {
-                    // 基ボタン消失
-                    return funcName;
-                }
-                */
             }
 
             private static findFunctionKeyByFunctionName(funcName: string, code: string, funcCodeHash: IStringStringHash, continueNumbering: boolean): string {
-                if (funcName in funcCodeHash) {
-                    // 連番付きかはともかく、同一機能は存在する
+                if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
+                    return funcName;
+                }
 
+                if (funcName in funcCodeHash) {
                     for (let key in funcCodeHash) {
                         if (HuisFiles.getPlainFunctionKey(key) === funcName &&
                             funcCodeHash[key] === code) {
@@ -2083,6 +2066,38 @@ module Garage {
 
                                 let newFuncName = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
                                 action.code_db.function = newFuncName;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * 信号名をキャッシュから取得し設定
+             */
+            public static applyCachedFunctionName(modules: IGModule[]) {
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code.length <= 0 ||
+                                    action.code_db == null ||
+                                    action.deviceInfo == null ||
+                                    action.deviceInfo.functionCodeHash == null) {
+                                    continue;
+                                }
+
+                                let funcCodeHash = action.deviceInfo.functionCodeHash;
+                                for (let funcName of Object.keys(funcCodeHash)) {
+                                    if (funcCodeHash[funcName] == action.code) {
+                                        action.code_db.function = funcName;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

@@ -128,6 +128,7 @@ module Garage {
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     var gmodules = this.faceRenderer_canvas_.getModules();
 
+                    // フルカスタム上のボタンの信号名を code 基準で基リモコンに合わせる
                     huisFiles.applyNumberedFunctionName(gmodules);
 
                     // 元リモコンが存在しない場合
@@ -137,6 +138,8 @@ module Garage {
 
                     // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
                     this.buttonDeviceInfoCache.load(gmodules);
+                    // 基リモコンが存在しない場合は信号名をキャッシュに合わせる
+                    Util.HuisFiles.applyCachedFunctionName(gmodules);
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
