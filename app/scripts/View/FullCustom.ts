@@ -2034,18 +2034,13 @@ module Garage {
                 //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
                 var stateNum = buttonModel.state.length;
                 var fucntions: string[] = [];
-                for (var i = 0; i < buttonModel.state.length; i++){
-                    for (let j = 0; j < buttonModel.state[i].action.length;j++){
-                        if (buttonModel.state[i].action[j] &&
-                            buttonModel.state[i].action[j].code_db &&
-                            buttonModel.state[i].action[j].code_db.function) {
-                            fucntions.push(buttonModel.state[i].action[j].code_db.function.toString());
-
+                for (let state of buttonModel.state) {
+                    for (let action of state.action) {
+                        if (action && action.code_db && action.code_db.function) {
+                            fucntions.push(action.code_db.function.toString());
                         }
-
                     }
                 }
-
                 return fucntions;
 
             }
@@ -4960,10 +4955,10 @@ module Garage {
 
                 let result: string[] = [];
 
-                for (let i = 0; i < button.state.length; i++) {
-                    for (let j = 0; j < button.state[i].action.length; j++) {
-                        if (button.state[i].action[j].code != undefined) {
-                            result.push(button.state[i].action[j].code);
+                for (let state of button.state) {
+                    for (let action of state.action) {
+                        if (action.code != undefined) {
+                            result.push(action.code);
                         }
                     }
                 }
@@ -5089,6 +5084,8 @@ module Garage {
                     return;
                 }
 
+                let codes: string[] = this.getCodesFrom(button);
+
                 // masterFunctions が未取得の場合は取得する
                 for (let state of button.state) {
                     if (!state.action) continue;
@@ -5100,7 +5097,6 @@ module Garage {
 
                         if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
                             let codeDb = deviceInfo.code_db;
-                            let codes: string[] = this.getCodesFrom(button);
 
                             if (codeDb.brand != " " && codeDb.brand != undefined &&
                                 codeDb.device_type != " " && codeDb.device_type != undefined &&
