@@ -283,6 +283,8 @@ body{
              }
  
              .information-img {
+                 box-sizing: border-box;
+                 border:$SIZE_INFORMATION_CONTAINER_HEIGHT_BORDER_THICKNESS solid $COLOR_INFORMATION_BOLD_SEPARATOR;
                  width: $SIZE_INFORMATION_IMG_WIDTH;
                  height: auto;
                  float: left;

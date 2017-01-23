@@ -120,10 +120,10 @@ module Garage {
                 this.contextMenu_ = new Menu();
 
                 //お知らせダイアログを表示
-                //var informationDialog = new Util.InformationDialog();
-                //if (informationDialog.shouldNotify()) {
-                //    informationDialog.notify();
-                //}
+                var informationDialog = new Util.InformationDialog();
+                if (informationDialog.shouldNotify()) {
+                    informationDialog.notify();
+                }
                 
             }
 
