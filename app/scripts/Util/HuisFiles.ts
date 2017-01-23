@@ -858,7 +858,7 @@ module Garage {
                     if (continueNumbering) {
                         return HuisFiles.createFunctionKeyName(funcName, Object.keys(funcCodeHash));
                     } else {
-                        return funcName + '#ABCD'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        return funcName + '##'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                     }
                 } else {
                     // 基ボタン消失
@@ -2117,6 +2117,18 @@ module Garage {
                         }
                     }
                 }
+            }
+
+
+            /**
+             * 編集中リモコンないに基リモコンが存在しない再学習ボタンが複数ある場合、信号名にCodeのハッシュを付与
+             * ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+             */
+            public appendHashToFunctionName(gmodules: IGModule[]) {
+                // 基リモコン削除時のプルダウン表示をまず確認
+
+                // 別リモコンでも同一リモコン扱いされるんじゃねーのっと
+                // そもそもプルダウンで同一扱いされる条件調べて同じことする（というか同じ関数使いたい）
             }
 
 

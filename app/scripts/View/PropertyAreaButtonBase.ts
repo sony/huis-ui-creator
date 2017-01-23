@@ -601,12 +601,15 @@ module Garage {
                         // 連番付き
                         //let num = Number(func.substring(func.indexOf('#') + 1)) + 2;
                         let numCode = func.substring(func.indexOf('#') + 1);
-                        if (numCode.length >= 4) {
-                            // フルカスタム再学習ボタン
+                        if (numCode == '#') {
+                            // フルカスタム再学習ボタン（基リモコン有り）
                             translatedFuncs.push({
                                 key: func,
                                 label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
                             });
+                        } else if (numCode.length == 4) {
+                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+
                         } else {
                             // 連番
                             let num = Number(numCode) + 2;
@@ -614,7 +617,7 @@ module Garage {
                                 key: func,
                                 label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
                             });
-                        }// else ★ 元リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        }
 
                         if (numberedFuncs.indexOf(plainName) < 0) {
                             numberedFuncs.push(plainName);
@@ -684,16 +687,15 @@ module Garage {
                     return;
                 }
 
-                // masterじゃないfaceからも拾ってきてマージする必要があるのでは★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                 let faceFunctions = huisFiles.getFaceFunctions(remoteId);
                 let masterFunctions = huisFiles.getMasterFunctions(remoteId);
 
-                let functions: string[] = masterFunctions
-                    .concat(faceFunctions)
-                    .filter((val, i, self) => {
-                        // 重複排除
-                        return self.indexOf(val) === i;
-                    });
+                let functions: string[] =
+                    masterFunctions
+                        .concat(faceFunctions)          // faceとmasterFaceの信号をマージ
+                        .filter((val, i, self) => {     // 重複排除
+                            return self.indexOf(val) === i;
+                        });
 
                 if (functions) {
                     return functions;
