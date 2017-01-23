@@ -369,7 +369,7 @@ module Garage {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
                     }else{
-                        //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                        //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none");
@@ -703,7 +703,7 @@ module Garage {
                 let functions: string[] = (masterFunctions != null) ? masterFunctions : [];
 
                 if (faceFunctions != null) {
-                    functions
+                    functions = functions
                         .concat(faceFunctions)          // faceとmasterFaceの信号をマージ
                         .filter((val, i, self) => {     // 重複排除
                             return self.indexOf(val) === i;

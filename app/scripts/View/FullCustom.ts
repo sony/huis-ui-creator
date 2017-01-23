@@ -125,21 +125,19 @@ module Garage {
                     var remoteId = this._getUrlQueryParameter("remoteId");
                     this._renderCanvas(remoteId);
 
-                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     var gmodules = this.faceRenderer_canvas_.getModules();
-
+                    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
                     // フルカスタム上のボタンの信号名を code 基準で基リモコンに合わせる
                     huisFiles.applyNumberedFunctionName(gmodules);
 
-                    // 元リモコンが存在しない場合
-                        // gmodules内で同一function別Codeがあれば4桁のハッシュを付与：これも#区切りで良いのでは★★★★★★★★★★★★★★★★★★★★★
-                        // 画像パスをハッシングしてファイル名にする変換処理を流用可能？
-                    huisFiles.appendHashToFunctionName(gmodules);
-
-                    // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     this.buttonDeviceInfoCache.load(gmodules);
-                    // 基リモコンが存在しない場合は信号名をキャッシュに合わせる
+                    // 信号名をキャッシュに合わせる
                     Util.HuisFiles.applyCachedFunctionName(gmodules);
+
+                    // 既存リモコンにもキャッシュにも存在しなかったが同一リモコン内扱いのボタンで同一function別CodeなものがあったらfunctionにIDを付与
+                    huisFiles.appendHashToFunctionName(gmodules);
+                    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 

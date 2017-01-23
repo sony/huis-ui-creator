@@ -722,61 +722,43 @@ module Garage {
             * @return functionのIDとcodenの対応表を返す
             */
             getMasterFunctionCodeMap(remoteId: string): IStringStringHash{
-                let FUNCTION_NAME = TAGS.HuisFiles + "getMasterFunctionCode";
-                
+                return this.getFunctionCodeMap(remoteId, true);
+            }
+
+
+            /**
+             * 対象リモコンの信号名：信号の連想配列を取得
+             */
+            private getFunctionCodeMap(remoteId: string, isMaster: boolean): IStringStringHash {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getFunctionCodeMap";
+
                 if (remoteId == undefined) {
                     console.warn(FUNCTION_NAME + "remoteId is undefined");
                     return null;
                 }
 
-                let masterFace : IGFace = this._getFace(remoteId, true);
-                if (!masterFace) {
+                let face: IGFace = this._getFace(remoteId, isMaster);
+                if (!face) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
-                return HuisFiles.getFunctionCodeMapByModules(masterFace.modules);
-                /*
-                let result: IStringStringHash = {};
-
-                var modules = masterFace.modules;
-                for (let i = 0, ml = modules.length; i < ml; i++) {
-                    var buttons = modules[i].button;
-                    if (!buttons) {
-                        continue;
-                    }
-                    for (let j = 0, bl = buttons.length; j < bl; j++) {
-                        var states = buttons[j].state;
-                        if (!states) {
-                            continue;
-                        }
-                        for (let k = 0, sl = states.length; k < sl; k++) {
-                            var actions = states[k].action;
-                            if (!actions) {
-                                continue;
-                            }
-                            for (let l = 0, al = actions.length; l < al; l++) {
-                                let learningCode = actions[l].code;
-                                let functionName = actions[l].code_db.function;
-                                if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
-                                    (functionName != null && functionName != undefined && functionName != " ")) {
-
-                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));//不要 あとで戻す★★★★★★★★★★★★★★★
-                                    result[key] = learningCode;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (Object.keys(result).length == 0) {
-                    return null;
-                }
-
-                return result;
-                */
-
+                return HuisFiles.getFunctionCodeMapByModules(face.modules);
             }
+
+
+            /**
+             * 対象リモコンのfaceおよびmasterFaceのマージされた信号名：信号の連想配列を取得
+             */
+            private getAllFunctionCodeMap(remoteId: string): IStringStringHash {
+                let master = this.getFunctionCodeMap(remoteId, true);
+                let face = this.getFunctionCodeMap(remoteId, false);
+
+                let merged = $.extend(true, face, master);
+
+                return merged;
+            }
+
 
             private static getFunctionCodeMapByModules(modules: IGModule[]): IStringStringHash {
                 let result: IStringStringHash = {};
@@ -818,7 +800,8 @@ module Garage {
             }
 
             private findFunctionKeyInHuisFilesByFunctionName(funcName: string, code: string, remoteId: string): string {
-                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = this.getAllFunctionCodeMap(remoteId); //this.getMasterFunctionCodeMap(remoteId);
+                // faceと合わせないとダメ
 
                 return HuisFiles.findFunctionKeyByFunctionName(funcName, code, functionCodeHash, false);
             }
@@ -2136,7 +2119,7 @@ module Garage {
 
 
             /**
-             * 編集中リモコンないに基リモコンが存在しない再学習ボタンが複数ある場合、信号名にCodeのハッシュを付与
+             * 編集中リモコン内に基リモコンが存在しない再学習ボタンが複数ある場合、信号名にCodeのハッシュを付与
              * ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
              */
             public appendHashToFunctionName(gmodules: IGModule[]) {
@@ -2144,6 +2127,27 @@ module Garage {
 
                 // 別リモコンでも同一リモコン扱いされるんじゃねーのっと
                 // そもそもプルダウンで同一扱いされる条件調べて同じことする（というか同じ関数使いたい）
+
+
+                for (let mod of gmodules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code_db == null ||
+                                    action.code_db.function == null) {
+                                    continue;
+                                }
+
+                                //let newFuncName = HuisFiles.findFunctionKeyByFunctionName(action.code_db.function, action.code, originalHash, true);
+                                //action.code_db.function = newFuncName;
+                            }
+                        }
+                    }
+                }
             }
 
 
