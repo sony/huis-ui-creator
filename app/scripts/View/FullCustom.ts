@@ -2557,7 +2557,7 @@ module Garage {
                         // 画像編集後に出力パスが変わる場合があるので、再度 model 更新
                         let editedImageName = path.basename(editedImage.path);
                         let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-
+                        image.path = editedImagePath;
                         let resolvedPath = editedImage.path.replace(/\\/g, "/");
 
                         //このバージョンでは、すべてのステートの画像を変更する。
