@@ -3211,22 +3211,19 @@ module Garage {
                     this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
                     let previewWidth = $preview.width();
                     let img = new Image();
+                    img.onload = () => {
+                        if (isBackground) {
+                            previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
+                        } else {
+                            //previewHeight = Nanのときもあるので MIN_HEIGHT_PREVIEW > previewHeightではない。
+                            previewHeight = Math.max(img.height * (previewWidth / img.width), MIN_HEIGHT_PREVIEW);
+                        }
+                        $preview.height(previewHeight);
+                    };
                     img.src = resolvedImagePathForCSS;
-                    let imgWidth = img.width;
-                    let imgHeight = img.height;
-                    previewHeight = imgHeight * (previewWidth / imgWidth);
 
-                    //previewHeight = Nanのときもあるので MIN_HEIGHT_PREVIEW > previewHeightではない。
-                    if (!(MIN_HEIGHT_PREVIEW < previewHeight)) {
-                        previewHeight = MIN_HEIGHT_PREVIEW;
-                    }
-
-                    if (isBackground) {
-                        previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
-                    }
                 }
 
-                $preview.height(previewHeight);
             }
 
             /**
