@@ -636,21 +636,23 @@ module Garage {
                                 //学習によって登録された用 codeがある場合
                                 //functions.push(code_db.function);
 
-                                if (functionCodeHash[code_db.function] != action.code) {
-                                    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
-                                    functionCodeHash[key] = action.code;
-                                }
+                                //if (functionCodeHash[code_db.function] != action.code) {
+                                //    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                //    functionCodeHash[key] = action.code;
+                                //}
+                                functionCodeHash[code_db.function] = action.code;
                             } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
                                 //プリセット用 db_codeset と brand が空白文字で。
                                 //functions.push(code_db.function);
 
-                                if (!(code_db.function in functionCodeHash) ||
-                                    functionCodeHash[code_db.function] != "") {
-                                    if (code_db.function in functionCodeHash) console.log('★★★★ ' + code_db.function + ': ' + functionCodeHash[code_db.function] + ' ★★★★');
-
-                                    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
-                                    functionCodeHash[key] = "";
-                                }
+                                //if (!(code_db.function in functionCodeHash) ||
+                                //    functionCodeHash[code_db.function] != "") {
+                                //    if (code_db.function in functionCodeHash) console.log('★★★★ ' + code_db.function + ': ' + functionCodeHash[code_db.function] + ' ★★★★');
+                                //
+                                //    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
+                                //    functionCodeHash[key] = "";
+                                //}
+                                functionCodeHash[code_db.function] = "";
                             } else {
                                 //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
                                 //console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
@@ -801,8 +803,7 @@ module Garage {
                                 if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
                                     (functionName != null && functionName != undefined && functionName != " ")) {
 
-                                    let key = HuisFiles.createFunctionKeyName(functionName, Object.keys(result));//不要 あとで戻す★★★★★★★★★★★★★★★
-                                    result[key] = learningCode;
+                                    result[functionName] = learningCode;
                                 }
                             }
                         }
