@@ -822,7 +822,7 @@ module Garage {
 
                 if (funcName in funcCodeHash) {
                     for (let key in funcCodeHash) {
-                        if (HuisFiles.getPlainFunctionKey(key) === funcName &&
+                        if (HuisFiles.getPlainFunctionKey(key) === HuisFiles.getPlainFunctionKey(funcName) &&
                             funcCodeHash[key] === code) {
                             // 既存codeと一致したらその信号名を返す
                             return key;
@@ -834,7 +834,7 @@ module Garage {
                         return HuisFiles.createFunctionKeyName(funcName, Object.keys(funcCodeHash));
                     } else {
                         // そのボタンに再学習された信号として特殊コードを付与
-                        return funcName + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                        return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
                     }
                 } else {
                     // 基ボタン消失
