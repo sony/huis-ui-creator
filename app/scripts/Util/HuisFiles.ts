@@ -1879,10 +1879,12 @@ module Garage {
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
                     let face: IGFace = this._parseFace(facePath, remoteId);
-                    let masterFace: IGFace = this.parseMasterFace(masterFacePath, remoteId);
+                    let masterFace: IGFace = this.parseFaceWithNumberingFuncName(masterFacePath, remoteId);
 
-                    if (face != undefined && remoteId != undefined) {
-                        if (masterFace != undefined) {
+                    if (masterFace != undefined && remoteId != undefined) {
+                        let face: IGFace = this._parseFace(facePath, remoteId);
+
+                        if (face != undefined) {
                             // MastarFaceの連番付き信号名をFaceに反映
                             HuisFiles.applyNumberedFunctionNameByModule(face.modules, masterFace.modules);
 
@@ -1891,7 +1893,12 @@ module Garage {
                                 face: face,
                                 mastarFace: masterFace
                             });
-                        }else{
+                        }
+                    } else {
+                        // Masterが無い場合はFace自体で連番作成
+                        let face: IGFace = this.parseFaceWithNumberingFuncName(facePath, remoteId);
+
+                        if (face != undefined) {
                             remoteInfos.push({
                                 remoteId: remoteId,
                                 face: face,
@@ -1912,7 +1919,7 @@ module Garage {
              * @param rootDirectory {string}
              * @return {IGFace}
              */
-            parseMasterFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+            parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
                 let master: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
 
                 if (master != null && master.modules != null) {
@@ -2119,7 +2126,7 @@ module Garage {
 
                                 if (!existFunc) {
                                     // 基リモコン無し && キャッシュにも存在しなかった場合はIDを振る
-                                    action.code_db.function = action.code_db.function + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
+                                    action.code_db.function = HuisFiles.getPlainFunctionKey(action.code_db.function) + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
                                 }
                             }
                         }
