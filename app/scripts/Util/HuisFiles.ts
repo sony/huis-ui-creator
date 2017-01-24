@@ -2187,7 +2187,6 @@ module Garage {
              * @return {IFunctionLabel[]}
              */
             public static translateFunctions(functions: string[]): IFunctionLabel[] {
-                // 
                 let translatedFuncs = [];
 
                 // 連番付与済みfunctionリスト
