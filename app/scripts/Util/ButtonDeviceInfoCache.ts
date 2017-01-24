@@ -152,7 +152,7 @@ module Garage {
                 let face             = huisFiles.getFace(remoteId);
                 let functions        = huisFiles.getMasterFunctions(remoteId);
                 let codeDb           = huisFiles.getMasterCodeDb(remoteId);
-                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId); //getMasterFunctionCodeMap(remoteId);
                 let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
 
                 if (face == null ||

@@ -885,7 +885,7 @@ module Garage {
                 let remoteId = this.faceRenderer_pallet_.getRemoteId();
                 let functions = huisFiles.getMasterFunctions(remoteId);
                 let codeDb = huisFiles.getMasterCodeDb(remoteId);
-                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
                 let remoteName = huisFiles.getFace(remoteId).name;
 
@@ -5115,7 +5115,7 @@ module Garage {
 
 
                                     deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-                                    deviceInfo.functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                                    deviceInfo.functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                                 }
                             } else if (deviceInfo.bluetooth_data != null) {
                                 //Bluetooth情報しかない場合

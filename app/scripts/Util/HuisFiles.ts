@@ -634,24 +634,9 @@ module Garage {
 
                             if (code != null && code != undefined && code != " ") {
                                 //学習によって登録された用 codeがある場合
-                                //functions.push(code_db.function);
-
-                                //if (functionCodeHash[code_db.function] != action.code) {
-                                //    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
-                                //    functionCodeHash[key] = action.code;
-                                //}
                                 functionCodeHash[code_db.function] = action.code;
                             } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
                                 //プリセット用 db_codeset と brand が空白文字で。
-                                //functions.push(code_db.function);
-
-                                //if (!(code_db.function in functionCodeHash) ||
-                                //    functionCodeHash[code_db.function] != "") {
-                                //    if (code_db.function in functionCodeHash) console.log('★★★★ ' + code_db.function + ': ' + functionCodeHash[code_db.function] + ' ★★★★');
-                                //
-                                //    let key = HuisFiles.createFunctionKeyName(code_db.function, Object.keys(functionCodeHash));
-                                //    functionCodeHash[key] = "";
-                                //}
                                 functionCodeHash[code_db.function] = "";
                             } else {
                                 //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
@@ -671,12 +656,6 @@ module Garage {
 
 
                 return Object.keys(functionCodeHash);
-                // 重複した機能を削除して返却
-                /*
-                return functions.filter((value, index, array) => {
-                    return array.indexOf(value) === index;
-                });
-                */
             }
 
             
@@ -769,7 +748,7 @@ module Garage {
             /**
              * 対象リモコンのfaceおよびmasterFaceのマージされた信号名：信号の連想配列を取得
              */
-            private getAllFunctionCodeMap(remoteId: string): IStringStringHash {
+            public getAllFunctionCodeMap(remoteId: string): IStringStringHash {
                 let master = this.getFunctionCodeMap(remoteId, true);
                 let face = this.getFunctionCodeMap(remoteId, false);
 
@@ -808,10 +787,6 @@ module Garage {
                             }
                         }
                     }
-                }
-
-                if (Object.keys(result).length == 0) {
-                    return null;
                 }
 
                 return result;
@@ -1024,7 +999,7 @@ module Garage {
 
                 let functions = this.getMasterFunctions(remoteId);
                 let codeDb = this.getMasterCodeDb(remoteId);
-                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = this.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = this.getMasterBluetoothData(remoteId);
 
                 let face = huisFiles.getFace(remoteId);
