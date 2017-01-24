@@ -566,7 +566,7 @@ module Garage {
                     }
 
                     let inputSignalData = {
-                        functions: this.translateFunctions(functions),
+                        functions: Util.HuisFiles.translateFunctions(functions),
                         id: stateId,
                         order: order
                     }
@@ -586,65 +586,6 @@ module Garage {
                 }
             }
 
-            // 連番付信号名リストを表示用データに変換
-            // HuisFilesに引っ越し？
-            private translateFunctions(functions: string[]): any[] {
-                // 
-                let translatedFuncs = [];
-
-                // 連番付与済みfunctionリスト
-                let numberedFuncs: string[] = [];
-
-                for (let func of functions) {
-                    let plainName = Util.HuisFiles.getPlainFunctionKey(func);
-                    if (plainName != func) {
-                        // 連番付き
-                        //let num = Number(func.substring(func.indexOf('#') + 1)) + 2;
-                        let numCode = func.substring(func.indexOf('#') + 1);
-                        if (numCode == '#') {
-                            // フルカスタム再学習ボタン（基リモコン有り）
-                            translatedFuncs.push({
-                                key: func,
-                                label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
-                            });
-                        } else if (numCode.length == 4) {
-                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-
-                        } else {
-                            // 連番
-                            let num = Number(numCode) + 2;
-                            translatedFuncs.push({
-                                key: func,
-                                label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
-                            });
-                        }
-
-                        if (numberedFuncs.indexOf(plainName) < 0) {
-                            numberedFuncs.push(plainName);
-                        }
-
-                    } else {
-                        // 連番なし
-                        translatedFuncs.push({
-                            key: func,
-                            label: $.i18n.t('button.function.' + plainName)
-                        });
-                    }
-                }
-
-                // 連番付きが存在する信号名のオリジナルに1番を付与
-                for (let numberedFunc of numberedFuncs) {
-
-                    for (let translated of translatedFuncs) {
-                        if (translated.key === numberedFunc) {
-                            translated.label += ' (1)';
-                            break;
-                        }
-                    }
-                }
-
-                return translatedFuncs;
-            }
            
 
             /*

@@ -1074,7 +1074,8 @@
             "STR_REMOTE_BTN_FOCUS":"フォーカスモード",
             "STR_REMOTE_BTN_WIDE": "ワイドモード",
 
-            "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)"
+            "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)",
+            "STR_REMOTE_BTN_ID":  "ID"
 
         }
     }

@@ -24,7 +24,24 @@ module Garage {
             params: Model.IImageResizeParams;
         }
 
-        
+
+        export interface IFunctionLabel {
+            /** 信号名 */
+            key: string;
+
+            /** 信号名表示 */
+            label: string;
+        }
+
+
+        /** 信号名に付与されるIDの文字長 */
+        const FUNC_ID_LEN: number = 4;
+
+        /** 信号名と連番を分ける区切り文字 */
+        const FUNC_NUM_DELIMITER: string = '#';
+
+        /** 信号がフルカスタムで再学習されたことを示すコード */
+        const FUNC_CODE_RELEARNED: string = '#';
 
 
         /**
@@ -727,7 +744,7 @@ module Garage {
 
 
             /**
-             * 対象リモコンの信号名：信号の連想配列を取得
+             * 指定リモコンの信号名：信号の連想配列を取得
              */
             private getFunctionCodeMap(remoteId: string, isMaster: boolean): IStringStringHash {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getFunctionCodeMap";
@@ -820,11 +837,12 @@ module Garage {
                         }
                     }
 
-                    // 一致なし(フルカスタム上で再学習？）：このボタンに再学習されたボタン表示
                     if (continueNumbering) {
+                        // 連番を付与
                         return HuisFiles.createFunctionKeyName(funcName, Object.keys(funcCodeHash));
                     } else {
-                        return funcName + '##'; //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                        // そのボタンに再学習された信号として特殊コードを付与
+                        return funcName + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
                     }
                 } else {
                     // 基ボタン消失
@@ -832,11 +850,15 @@ module Garage {
                 }
             }
 
-            static getPlainFunctionKey(functionName: string): string {
-                // HOGE_HOGE => HOGE_HOGE
-                // HOGE_HOGE#1 => HOGE_HOGE
 
-                let delimiterIndex = functionName.indexOf('#');// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+            /**
+             * 信号名から特殊文字を排除し、素の信号名を取得
+             *
+             * @param functionName {string} 
+             * @return {string}
+             */
+            static getPlainFunctionKey(functionName: string): string {
+                let delimiterIndex = functionName.indexOf(FUNC_NUM_DELIMITER);
                 if (delimiterIndex === -1) {
                     return functionName;
                 } else {
@@ -844,26 +866,24 @@ module Garage {
                 }
             }
 
-            containsFunctionKey(functionName: string, functionCodeHash: IStringStringHash): boolean {
-                let plainFunctionName = HuisFiles.getPlainFunctionKey(functionName);
 
-                for (let key in functionCodeHash) {
-                    if (key.indexOf(plainFunctionName) != -1) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
+            /**
+             * 既存の信号名リストに対して対象信号を追加する際の信号名を生成
+             *
+             * @param functionName {string} 基にする信号名
+             * @param keys {string[]} 既存の信号名リスト
+             * @return {string} 追加すべき信号名
+             */
             private static createFunctionKeyName(functionName: string, keys: string[]): string {
                 if (keys.indexOf(functionName) < 0) {
+                    // 新規の信号
                     return functionName;
                 }
 
+                // 既存信号なので連番を付与
                 let i = 0;
                 while (true) {
-                    let numberedName = functionName + '#' + i++; // ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    let numberedName = functionName + FUNC_NUM_DELIMITER + i++;
 
                     if (keys.indexOf(numberedName) < 0) {
                         return numberedName;
@@ -1892,8 +1912,14 @@ module Garage {
                 return remoteInfos;
             }
 
-            // 同一functionだが異なるcodeが存在する場合functionに連番を振る
-            // ★★★★★★★★★★★★★★★★
+            /**
+             * 指定したパスの master face を読み込む
+             *
+             * @param facePath {string}
+             * @param remoteId {string}
+             * @param rootDirectory {string}
+             * @return {IGFace}
+             */
             parseMasterFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
                 let master: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
 
@@ -1997,7 +2023,11 @@ module Garage {
                 return face;
             }
 
-            // functionかぶりを検査してナンバリング。★★★normalizeで戻す
+            /**
+             * モジュール内において同一信号名にもかかわらず異なる信号が設定されているものに連番を付与する
+             *
+             * @param modules {IGModule[]} 検査対象モジュール
+             */
             private static numberFunctionNameInModules(modules: IGModule[]) {
                 let functionCodeHash: IStringStringHash = {};
 
@@ -2027,8 +2057,11 @@ module Garage {
                 }
             }
 
-            // modules内のfunctionに対応する元リモコンのnumberedFunctionKeyを設定★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-            // canvas つまり編集するfull-customのボタンと基リモコンボタンの信号名を一致させる
+            /**
+             * HuisFiles内の信号名を対象モジュールに反映する
+             *
+             * @param modules {IGModule[]}
+             */
             public applyNumberedFunctionName(modules: IGModule[]) {
 
                 for (let mod of modules) {
@@ -2057,8 +2090,10 @@ module Garage {
 
             /**
              * 信号名をキャッシュから取得し設定
+             *
+             * @param modules {IGModule[]} 更新対象のアイテムおよびキャッシュを含むモジュール
              */
-            public static applyCachedFunctionName(modules: IGModule[]) {
+            public applyCachedFunctionName(modules: IGModule[]) {
                 for (let mod of modules) {
                     if (mod.button == null) continue;
                     for (let button of mod.button) {
@@ -2074,12 +2109,25 @@ module Garage {
                                     continue;
                                 }
 
+                                let remoteId = this.getRemoteIdByAction(action);
+                                if (remoteId == null) {
+                                    // 基リモコンが存在する場合はそちらを優先するため、ここでは信号名を更新しない
+                                    continue;
+                                }
+
+                                let existFunc = false;
                                 let funcCodeHash = action.deviceInfo.functionCodeHash;
                                 for (let funcName of Object.keys(funcCodeHash)) {
                                     if (funcCodeHash[funcName] == action.code) {
                                         action.code_db.function = funcName;
+                                        existFunc = true;
                                         break;
                                     }
+                                }
+
+                                if (!existFunc) {
+                                    // 基リモコン無し && キャッシュにも存在しなかった場合はIDを振る
+                                    action.code_db.function = action.code_db.function + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
                                 }
                             }
                         }
@@ -2087,8 +2135,12 @@ module Garage {
                 }
             }
 
-            // faceのモジュールにmasterモジュールの信号名をマージ。
-            // このときはmasterモジュールにあるけどcodeが異なる信号には「このボタンに～」じゃなくてさらなる連番を振らねばならない
+            /**
+             * 対象モジュール内の信号名を基モジュール内にある信号名に合わせる
+             *
+             * @param target {IGModule[]} 更新対象を含むモジュール
+             * @param original {IGModule[]} 基にするモジュール
+             */
             private static applyNumberedFunctionNameByModule(target: IGModule[], original: IGModule[]) {
                 let originalHash = HuisFiles.getFunctionCodeMapByModules(original);
                 if (originalHash == null ||
@@ -2119,35 +2171,88 @@ module Garage {
 
 
             /**
-             * 編集中リモコン内に基リモコンが存在しない再学習ボタンが複数ある場合、信号名にCodeのハッシュを付与
-             * ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+             * 信号コードからIDとなるハッシュ値を生成
+             *
+             * @param code {string} 基にする信号
+             * @return {string} 生成したハッシュ値
              */
-            public appendHashToFunctionName(gmodules: IGModule[]) {
-                // 基リモコン削除時のプルダウン表示をまず確認
+            private createHashBySignalCode(code: string): string {
+                const hash = node_crypt.createHash('sha1');
+                hash.update(code, 'utf8');
 
-                // 別リモコンでも同一リモコン扱いされるんじゃねーのっと
-                // そもそもプルダウンで同一扱いされる条件調べて同じことする（というか同じ関数使いたい）
+                return parseInt(hash.digest('hex'), 16)
+                    .toString(36)
+                    .toUpperCase()
+                    .substring(0, FUNC_ID_LEN);
+            }
 
 
-                for (let mod of gmodules) {
-                    if (mod.button == null) continue;
-                    for (let button of mod.button) {
-                        if (button.state == null) continue;
-                        for (let state of button.state) {
-                            if (state.action == null) continue;
-                            for (let action of state.action) {
-                                if (action.code == null ||
-                                    action.code_db == null ||
-                                    action.code_db.function == null) {
-                                    continue;
-                                }
 
-                                //let newFuncName = HuisFiles.findFunctionKeyByFunctionName(action.code_db.function, action.code, originalHash, true);
-                                //action.code_db.function = newFuncName;
-                            }
+            /**
+             * 連番付き信号名リストを表示用データに変換
+             *
+             * @param functions {string[]}
+             * @return {IFunctionLabel[]}
+             */
+            public static translateFunctions(functions: string[]): IFunctionLabel[] {
+                // 
+                let translatedFuncs = [];
+
+                // 連番付与済みfunctionリスト
+                let numberedFuncs: string[] = [];
+
+                for (let func of functions) {
+                    let plainName = Util.HuisFiles.getPlainFunctionKey(func);
+                    if (plainName != func) {
+                        // 連番付き
+                        let numCode = func.substring(func.indexOf(FUNC_NUM_DELIMITER) + 1);
+                        if (numCode == FUNC_CODE_RELEARNED) {
+                            // フルカスタム再学習ボタン（基リモコン有り）
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
+                            });
+                        } else if (numCode.length == FUNC_ID_LEN) {
+                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + ' (' + $.i18n.t('button.function.STR_REMOTE_BTN_ID') +':' + numCode + ')'
+                            });
+                        } else {
+                            // 連番
+                            let num = Number(numCode) + 2;
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
+                            });
+                        }
+
+                        if (numberedFuncs.indexOf(plainName) < 0) {
+                            // 連番付きの信号名のオリジナルを記憶しておく
+                            numberedFuncs.push(plainName);
+                        }
+
+                    } else {
+                        // 連番なし
+                        translatedFuncs.push({
+                            key: func,
+                            label: $.i18n.t('button.function.' + plainName)
+                        });
+                    }
+                }
+
+                // 連番付きが存在する信号名のオリジナルに1番を付与
+                for (let numberedFunc of numberedFuncs) {
+
+                    for (let translated of translatedFuncs) {
+                        if (translated.key === numberedFunc) {
+                            translated.label += ' (1)';
+                            break;
                         }
                     }
                 }
+
+                return translatedFuncs;
             }
 
 

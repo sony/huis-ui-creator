@@ -126,18 +126,14 @@ module Garage {
                     this._renderCanvas(remoteId);
 
                     var gmodules = this.faceRenderer_canvas_.getModules();
-                    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-                    // フルカスタム上のボタンの信号名を code 基準で基リモコンに合わせる
+
+                    // ボタンに設定された信号名を基リモコンに合わせる
                     huisFiles.applyNumberedFunctionName(gmodules);
 
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     this.buttonDeviceInfoCache.load(gmodules);
-                    // 信号名をキャッシュに合わせる
-                    Util.HuisFiles.applyCachedFunctionName(gmodules);
-
-                    // 既存リモコンにもキャッシュにも存在しなかったが同一リモコン内扱いのボタンで同一function別CodeなものがあったらfunctionにIDを付与
-                    huisFiles.appendHashToFunctionName(gmodules);
-                    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+                    // ボタンに設定された信号名をキャッシュに合わせる
+                    huisFiles.applyCachedFunctionName(gmodules);
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -1957,7 +1953,7 @@ module Garage {
                 $tooltip.find(".remote-info").text(remoteInfo);
 
                 //ファンクション情報をローカライズ
-                let outputFunctionName = functions[0];
+                let outputFunctionName = Util.HuisFiles.getPlainFunctionKey(functions[0]);
                 let $functionName:JQuery= $tooltip.find(".function-name");
                 $functionName.text(outputFunctionName);
                 var localizedString = null;
