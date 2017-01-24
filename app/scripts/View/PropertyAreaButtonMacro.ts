@@ -770,7 +770,7 @@ module Garage {
 
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
-                this.renderFunctionsOf(order, this.defaultState.id, functionName);  //actionごと渡してfunctionName＋codeの複合キーでnumberedFunctionKeyを取得？
+                this.renderFunctionsOf(order, this.defaultState.id, functionName);
 
               
             }

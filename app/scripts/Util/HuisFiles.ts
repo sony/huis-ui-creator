@@ -792,13 +792,29 @@ module Garage {
                 return result;
             }
 
+            /**
+             * HuisFilesを検索し、設定すべき信号名を取得
+             *
+             * @param funcName {string}
+             * @param code {string}
+             * @param remoteId {string}
+             * @return {string}
+             */
             private findFunctionKeyInHuisFilesByFunctionName(funcName: string, code: string, remoteId: string): string {
-                let functionCodeHash = this.getAllFunctionCodeMap(remoteId); //this.getMasterFunctionCodeMap(remoteId);
-                // faceと合わせないとダメ
+                let functionCodeHash = this.getAllFunctionCodeMap(remoteId);
 
                 return HuisFiles.findFunctionKeyByFunctionName(funcName, code, functionCodeHash, false);
             }
 
+            /**
+             * 渡された信号名：信号の情報から設定すべき信号名を取得
+             *
+             * @param funcName {string} 対象信号名
+             * @param code {string} 信号
+             * @param funcCoeHash {IStringStringHash} 
+             * @param continueNumbering {boolean} 連番を付与するかどうか
+             * @return {string}
+             */
             private static findFunctionKeyByFunctionName(funcName: string, code: string, funcCodeHash: IStringStringHash, continueNumbering: boolean): string {
                 if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
                     return funcName;

@@ -466,8 +466,6 @@ module Garage {
                     return;
                 }
 
-                // valの存在チェック
-                // 存在しなければ（このボタンに再学習された信号）項目を追加してそれを設定
                 $functionNamePullDown.val(inputFunctionName);
             }
 
@@ -631,7 +629,10 @@ module Garage {
                 let faceFunctions = huisFiles.getFaceFunctions(remoteId);
                 let masterFunctions = huisFiles.getMasterFunctions(remoteId);
 
+                //let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
+
                 if (faceFunctions == null && masterFunctions == null) {
+                //if (functionCodeHash == null || Object.keys(functionCodeHash).length <= 0) {
                     try {
                         // HuisFilesに存在しない場合はキャッシュから表示
                         return this.getDeviceInfoByRemoteId(remoteId).functions;
@@ -642,7 +643,7 @@ module Garage {
                 }
 
                 let functions: string[] = (masterFunctions != null) ? masterFunctions : [];
-
+                
                 if (faceFunctions != null) {
                     functions = functions
                         .concat(faceFunctions)          // faceとmasterFaceの信号をマージ
@@ -650,8 +651,9 @@ module Garage {
                             return self.indexOf(val) === i;
                         });
                 }
-
+                
                 return functions;
+                //return Object.keys(functionCodeHash);
             }
           
           /*
