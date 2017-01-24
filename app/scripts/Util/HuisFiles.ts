@@ -658,19 +658,6 @@ module Garage {
                 return Object.keys(functionCodeHash);
             }
 
-            
-            private getNumberedFunctions(functions: string[]): string[] {
-                // 重複していたらナンバリング
-                // 必ずナンバリングするのでコードとの重複チェックは上位でしないとダメ
-
-                let numberedFunctions: string[] = [];
-                for (let func of functions) {
-                    numberedFunctions.push(HuisFiles.createFunctionKeyName(func, numberedFunctions));
-                }
-
-                return numberedFunctions;
-            }
-
             /**
              * 機器の master face に記述されている最初の code_db を取得する。
              * 取得した code_db は、機器の「ブランド」、「種類」等の情報のために使用されることを想定している。
@@ -726,6 +713,10 @@ module Garage {
 
             /**
              * 指定リモコンの信号名：信号の連想配列を取得
+             *
+             * @param remoteId {string}
+             * @param isMaster {boolean} master face を取得するかどうか
+             * @return {IStringStringHash}
              */
             private getFunctionCodeMap(remoteId: string, isMaster: boolean): IStringStringHash {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getFunctionCodeMap";
@@ -746,7 +737,10 @@ module Garage {
 
 
             /**
-             * 対象リモコンのfaceおよびmasterFaceのマージされた信号名：信号の連想配列を取得
+             * 対象リモコンのfaceおよびmasterFaceのマージされた 信号名：信号 の連想配列を取得
+             *
+             * @param remoteId {string}
+             * @return {IStringStringHash}
              */
             public getAllFunctionCodeMap(remoteId: string): IStringStringHash {
                 let master = this.getFunctionCodeMap(remoteId, true);
@@ -758,6 +752,12 @@ module Garage {
             }
 
 
+            /**
+             * 渡されたモジュールから 信号名：信号 の連想配列を取得
+             *
+             * @param modules {IGModule[]}
+             * @return {IStringSringHash}
+             */
             private static getFunctionCodeMapByModules(modules: IGModule[]): IStringStringHash {
                 let result: IStringStringHash = {};
 
@@ -2102,7 +2102,7 @@ module Garage {
                                 }
 
                                 let remoteId = this.getRemoteIdByAction(action);
-                                if (remoteId == null) {
+                                if (this.remoteList.filter((remote) => { return remote.remote_id == remoteId }).length > 0) {
                                     // 基リモコンが存在する場合はそちらを優先するため、ここでは信号名を更新しない
                                     continue;
                                 }
