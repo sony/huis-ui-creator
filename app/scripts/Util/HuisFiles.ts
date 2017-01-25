@@ -1669,8 +1669,9 @@ module Garage {
                     var moduleName: string = plainFace.modules[i];
                     var module: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (module) {
-                        let pageIndex = Math.floor(heightSum / HUIS_FACE_PAGE_HEIGHT);
                         heightSum += module.area.h;
+                        let pageIndex = Math.floor((heightSum-1) / HUIS_FACE_PAGE_HEIGHT);
+
                         //let gmodule: IGModule = $.extend(true, { offsetY: 0, remoteId: remoteId, name: moduleName }, module);
                         let gmodule = new Model.Module();
                         gmodule.setInfoFromIModule(module, remoteId, pageIndex, moduleName);
