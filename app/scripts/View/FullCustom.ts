@@ -765,6 +765,7 @@ module Garage {
                 let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
                 this._updateItemElementsOnCanvas(updatedItem);
+                this._loseTarget();
             }
 
             /*
@@ -1350,7 +1351,7 @@ module Garage {
                         // 履歴に登録せずに実行
                         let delModel = delCommand.invoke();
                         this._updateItemElementsOnCanvas(delModel);
-
+                        this._loseTarget();
                         return;
                     }
                 }
