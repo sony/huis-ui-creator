@@ -576,6 +576,65 @@ module Garage {
                 return HuisFiles.getFunctions(face);
             }
 
+            public getAllFunctions(remoteId: string): string[] {
+                let faceFunc = this.getFaceFunctions(remoteId);
+                let masterFunc = this.getMasterFunctions(remoteId);
+
+                return HuisFiles.mergeFunctions(masterFunc, faceFunc);
+            }
+
+            private static mergeFunctions(base: string[], additional: string[]): string[] {
+                if (base == null || base.length <= 0) {
+                    return additional;
+                } else if (additional.length <= 0) {
+                    return base;
+                }
+
+                let merged: string[] = base.concat();
+
+                for (let addFunc of additional) {
+                    if (merged.indexOf(addFunc) < 0) {
+                        // 存在しないので追加
+
+                        let sameFuncs =
+                            merged.filter((func) => {
+                                return HuisFiles.getPlainFunctionKey(func) === HuisFiles.getPlainFunctionKey(addFunc);
+                            });
+
+                        if (sameFuncs.length <= 0) {
+                            // 同名信号なし
+                            merged.push(addFunc);
+                            continue;
+                        }
+
+                        sameFuncs.push(addFunc);
+                        sameFuncs.sort((a, b) => {
+                            let numA = HuisFiles.extractFuncNumber(a);
+                            let numB = HuisFiles.extractFuncNumber(b);
+                            return (numA < numB) ? -1 : 1;
+                        });
+
+                        let insertIndex: number;
+                        let index = sameFuncs.indexOf(addFunc);
+                        if (index == sameFuncs.length - 1) {
+                            // 既存の最大番号を持つ信号の後に挿入
+                            insertIndex = merged.indexOf(sameFuncs[index - 1]) + 1;
+                        } else {
+                            // 自分の次に大きい番号を持つ信号の位置に挿入
+                            insertIndex = merged.indexOf(sameFuncs[index + 1]);
+                        }
+
+                        merged.splice(insertIndex, 0, addFunc);
+                    }
+                }
+
+                return merged;
+            }
+
+
+            /**
+             * face内に存在する信号名を取得
+             */
             private static getFunctions(face: IGFace): string[] {
                 if (!face) {
                     //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
@@ -777,12 +836,11 @@ module Garage {
                                 continue;
                             }
                             for (let l = 0, al = actions.length; l < al; l++) {
-                                let learningCode = actions[l].code;
+                                let code = (actions[l].code != null) ? actions[l].code : "";
                                 let functionName = actions[l].code_db.function;
-                                if ((learningCode != null && learningCode != undefined && learningCode != " ") &&
-                                    (functionName != null && functionName != undefined && functionName != " ")) {
+                                if (functionName != null && functionName != undefined && functionName != " ") {
 
-                                    result[functionName] = learningCode;
+                                    result[functionName] = code;
                                 }
                             }
                         }
@@ -1912,7 +1970,7 @@ module Garage {
             }
 
             /**
-             * 指定したパスの master face を読み込む
+             * face を読み込み、信号名に連番を付与する
              *
              * @param facePath {string}
              * @param remoteId {string}
@@ -1920,13 +1978,13 @@ module Garage {
              * @return {IGFace}
              */
             parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
-                let master: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
+                let face: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
 
-                if (master != null && master.modules != null) {
-                    HuisFiles.numberFunctionNameInModules(master.modules);
+                if (face != null && face.modules != null) {
+                    HuisFiles.numberFunctionNameInModules(face.modules);
                 }
 
-                return master;
+                return face;
             }
 
             /**
@@ -2037,17 +2095,28 @@ module Garage {
                         for (let state of button.state) {
                             if (state.action == null) continue;
                             for (let action of state.action) {
-                                if (action.code == null ||
-                                    action.code === "" ||
-                                    action.code_db == null) continue;
+                                if (action.code_db == null || action.code_db.function == null) {
+                                    continue; // 信号名が無い場合
+                                }
 
-                                if (!(action.code_db.function in functionCodeHash)) {
-                                    functionCodeHash[action.code_db.function] = action.code;
-                                } else if (functionCodeHash[action.code_db.function] != action.code) {
-                                    let numberedFunc = HuisFiles.createFunctionKeyName(action.code_db.function, Object.keys(functionCodeHash));
+                                if (action.code == null || action.code.length <= 0) {
+                                    let code_db = action.code_db;
+                                    if (code_db.db_codeset == " " && code_db.brand == " " && action.bluetooth_data == null) {
+                                        // 信号が無く かつ プリセットやBluetoothでもない
+                                        continue;
+                                    }
+                                }
+
+                                let func = action.code_db.function;
+                                let code = (action.code != null) ? action.code : "";
+
+                                if (!(func in functionCodeHash)) {
+                                    functionCodeHash[func] = code;
+                                } else if (functionCodeHash[func] != code) {
+                                    let numberedFunc = HuisFiles.createFunctionKeyName(func, Object.keys(functionCodeHash));
 
                                     action.code_db.function = numberedFunc;
-                                    functionCodeHash[numberedFunc] = action.code;
+                                    functionCodeHash[numberedFunc] = code;
                                 }
                                     
                             }
@@ -2251,6 +2320,34 @@ module Garage {
                 }
 
                 return translatedFuncs;
+            }
+
+            /**
+             * 連番付き信号名から番号を抽出
+             * 連番なしの場合は１、特殊コード付きの場合は0を返す
+             *
+             * @param funcKey {string} 信号名
+             * @return {number} 番号
+             */
+            private static extractFuncNumber(funcKey: string): number {
+                let delimiterIndex = funcKey.indexOf(FUNC_NUM_DELIMITER);
+                if (delimiterIndex < 0) {
+                    return 1;
+                }
+
+                let numCode = funcKey.substring(delimiterIndex + 1);
+
+                if (numCode.length == FUNC_ID_LEN || numCode == FUNC_CODE_RELEARNED) {
+                    // IDは4桁全て数字の可能性もあるので先にチェック
+                    return 0;
+                }
+
+                let num = Number(numCode);
+                if (isNaN(num)) {
+                    return 0;
+                } else {
+                    return num + 2;
+                }
             }
 
 

@@ -626,13 +626,9 @@ module Garage {
                     return;
                 }
 
-                let faceFunctions = huisFiles.getFaceFunctions(remoteId);
-                let masterFunctions = huisFiles.getMasterFunctions(remoteId);
+                let functions = huisFiles.getAllFunctions(remoteId);
 
-                //let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
-
-                if (faceFunctions == null && masterFunctions == null) {
-                //if (functionCodeHash == null || Object.keys(functionCodeHash).length <= 0) {
+                if (functions == null || functions.length <= 0) {
                     try {
                         // HuisFilesに存在しない場合はキャッシュから表示
                         return this.getDeviceInfoByRemoteId(remoteId).functions;
@@ -642,18 +638,7 @@ module Garage {
                     }
                 }
 
-                let functions: string[] = (masterFunctions != null) ? masterFunctions : [];
-                
-                if (faceFunctions != null) {
-                    functions = functions
-                        .concat(faceFunctions)          // faceとmasterFaceの信号をマージ
-                        .filter((val, i, self) => {     // 重複排除
-                            return self.indexOf(val) === i;
-                        });
-                }
-                
                 return functions;
-                //return Object.keys(functionCodeHash);
             }
           
           /*
