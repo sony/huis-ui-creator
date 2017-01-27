@@ -272,7 +272,11 @@ module Garage {
                         garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
-                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, null, (err) => {
+                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
+                                huisFiles.init(HUIS_FILES_ROOT);
+                                this._calculateFaceListWidth();
+                                this._renderFaceList();
+                            }, (err) => {
                                 if (err) {
                                     // [TODO] エラー値のハンドリング
                                     electronDialog.showMessageBox({
@@ -282,7 +286,6 @@ module Garage {
                                         title: PRODUCT_NAME,
                                     });
                                 } else {
-                                    this._initializeHomeView();
                                     this._enterFullCustom(face.remoteId);
                                 }
                             });
