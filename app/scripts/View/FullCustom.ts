@@ -2548,17 +2548,16 @@ module Garage {
                 // image.path には remoteimages 起点の画像パスを指定する。
                 var image = targetState.image[0];
                 image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                // resolvedPath ( [HUIS_FILES_ROOT]/[remoteId]/imageName)
                 let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, image.path)).replace(/\\/g, "/");
-                image.resolvedPath = resolvedPath;
                 // 画像のリサイズとグレースケール化
                 Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
                     .done((editedImage) => {
                         // 画像編集後に出力パスが変わる場合があるので、再度 model 更新
                         let editedImageName = path.basename(editedImage.path);
                         let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-                        image.path = editedImagePath;
                         let resolvedPath = editedImage.path.replace(/\\/g, "/");
+                        image.path = editedImagePath;
+                        image.resolvedPath = resolvedPath;
 
                         //このバージョンでは、すべてのステートの画像を変更する。
                         this._updateCurrentModelStateData(TARGET_ALL_STATE, {
