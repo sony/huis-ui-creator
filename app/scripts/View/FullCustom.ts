@@ -5598,11 +5598,18 @@ module Garage {
                 if (currentTargetArea.h + px*2 < this.minItemSize_) {
                     px = (this.minItemSize_ - currentTargetArea.h) / 2;
                 }
+
+                let newY = Math.max(currentTargetArea.y - px, 0);
+
+                let newLowerY = currentTargetArea.y + currentTargetArea.h + px;
+                newLowerY = Math.min(newLowerY, GRID_AREA_HEIGHT);
+                let newH = newLowerY - newY;
+
                 let newArea = {
                     x: currentTargetArea.x,
-                    y: currentTargetArea.y - px,
+                    y: newY,
                     w: currentTargetArea.w,
-                    h: currentTargetArea.h + px*2,
+                    h: newH,
                 }
                 this._resizeItem(newArea, true);
             }
@@ -5613,14 +5620,22 @@ module Garage {
 
             private _widenItem(px: number) {
                 let currentTargetArea = this._getCurrentTargetArea();
+
                 // check item doesn't become smaller than minItemSize_
                 if (currentTargetArea.w + px*2 < this.minItemSize_) {
                     px = (this.minItemSize_ - currentTargetArea.w) / 2;
                 }
+
+                let newX = Math.max(currentTargetArea.x - px, BIAS_X_DEFAULT_GRID_LEFT);
+
+                let newRightX = currentTargetArea.x + currentTargetArea.w + px;
+                newRightX = Math.min(newRightX, BIAS_X_DEFAULT_GRID_LEFT + GRID_AREA_WIDTH);
+                let newW = newRightX - newX;
+
                 let newArea = {
-                    x: currentTargetArea.x - px,
+                    x: newX,
                     y: currentTargetArea.y,
-                    w: currentTargetArea.w + px * 2,
+                    w: newW,
                     h: currentTargetArea.h,
                 }
 
