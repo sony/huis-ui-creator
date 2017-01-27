@@ -196,6 +196,10 @@ module Garage {
                     //"dblclick #face-pallet .item": "onPalletItemDblClick",
                     "mousedown #face-pallet .item": "onPalletItemMouseDown",
 
+                    "mousedown #face-pages-area .item": "onCanvasItemMouseDown",
+                    "mousedown #face-pages-area": "onFacePagesAreaMouseDown",
+                    "mousedown #face-item-detail-area": "onItemDetailAreaMouseDown",
+
                     // 画面内のマウスイベント
                     "mousedown #main": "onMainMouseDown",
                     "mousemove #main": "onMainMouseMove",
@@ -758,6 +762,79 @@ module Garage {
                 this._updateItemElementsOnCanvas(updatedItem);
             }
 
+            /*
+             * #face-item-detail-areaがクリックされた時のイベントハンドラ。
+             */
+            private onItemDetailAreaMouseDown(event: Event) {
+                // call stopPropagation so sa not to call loseTarget in onMainMouseDown
+                event.stopPropagation();
+            }
+
+            /*
+             * face-pages-area内のItem要素以外の部分がクリックされた時のイベントハンドラ。
+             */
+            private onFacePagesAreaMouseDown(event: Event) {
+                var mousePosition = new Model.Position(event.pageX, event.pageY);
+                // マウスポインター位置にアイテムが存在しない場合で、
+                // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
+                let $page = this._getTargetPageModule(mousePosition);
+                if ($page) {
+                    // ページ背景の model の作成、もしくは既存のものを取得する
+                    let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
+                    this.currentItem_ = backgroundImageModel;
+                    $("#face-item-detail-area").addClass("active");
+                    // ページの背景の detail エリアを作成する
+                    this._showDetailItemAreaOfPage($page);
+                }
+                this._loseTarget();
+                event.stopPropagation();
+            }
+
+            /*
+             * Canvas内のItem要素がクリックされた時のイベントハンドラ。
+             */
+            private onCanvasItemMouseDown(event: Event) {
+                this.selectedResizer_ = null;
+
+                var mousePosition = new Model.Position(event.pageX, event.pageY);
+
+                // 直前に選択していたものと同一のアイテムを選択しているかチェック
+                var remainsTarget = this._remainsTarget(mousePosition);
+                // 選択しているリサイザーをチェック
+                var selectedResizer = this._checkResizerSelected(mousePosition);
+
+                // マウスポインター位置が、選択中のターゲット上は、
+                // ターゲットを外す
+                if (!remainsTarget && !selectedResizer) {
+                    // 直前に選択されていたボタンの状態更新があれば行う
+                    this._updateCurrentModelButtonStatesData();
+
+                    // 現在のターゲットを外す
+                    this._loseTarget();
+
+                    //CanvasのFacePagesArea上でない場合は反応しない
+                    if (this.isOnCanvasFacePagesArea(mousePosition)) {
+                        // マウスポインター位置にアイテムがあれば取得する
+                        let $target = this._getTarget(mousePosition);
+                        if ($target) {
+                            this.setDragTarget($target);
+                        }
+
+                    }
+                }
+                if (remainsTarget) {
+                    // 選択中のアイテムがボタンの場合、状態の更新を行う
+                    this._updateCurrentModelButtonStatesData();
+                }
+                if (selectedResizer) {
+                    this.selectedResizer_ = selectedResizer;
+                    console.log(this.selectedResizer_);
+                }
+
+                this.startDraggingCanvasItem(mousePosition);
+                event.stopPropagation();
+            }
+
             /**
              * パレット内のアイテム上でマウス押下
              * 対象アイテムをCanvasに追加しドラッグ状態にする
@@ -979,63 +1056,7 @@ module Garage {
              * フルカスタム編集画面での mousedown イベントのハンドリング
              */
             private onMainMouseDown(event: Event) {
-                if (event.type !== "mousedown") {
-                    console.error(TAG + "onMainMouseDown() Invalid event type: " + event.type);
-                    return;
-                }
-
-                this.selectedResizer_ = null;
-
-                var mousePosition = new Model.Position(event.pageX, event.pageY);
-
-                // 直前に選択していたものと同一のアイテムを選択しているかチェック
-                var remainsTarget = this._remainsTarget(mousePosition);
-                // 選択しているリサイザーをチェック
-                var selectedResizer = this._checkResizerSelected(mousePosition);
-                // 詳細編集エリア上を選択しているかをチェック
-                var overDetailArea = this._checkDetailItemAreaPosition(mousePosition);
-
-                // マウスポインター位置が、選択中のターゲット上は、
-                // ターゲットを外す
-                if (!remainsTarget && !selectedResizer && !overDetailArea) {
-                    // 直前に選択されていたボタンの状態更新があれば行う
-                    this._updateCurrentModelButtonStatesData();
-
-                    // 現在のターゲットを外す
-                    this._loseTarget();
-
-                    //CanvasのFacePagesArea上でない場合は反応しない
-                    if (this.isOnCanvasFacePagesArea(mousePosition)) {
-                        // マウスポインター位置にアイテムがあれば取得する
-                        let $target = this._getTarget(mousePosition);
-                        if ($target) {
-                            this.setDragTarget($target);
-                        } else {
-                            // マウスポインター位置にアイテムが存在しない場合で、
-                            // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
-                            let $page = this._getTargetPageModule(mousePosition);
-                            if ($page) {
-                                // ページ背景の model の作成、もしくは既存のものを取得する
-                                let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
-                                this.currentItem_ = backgroundImageModel;
-                                $("#face-item-detail-area").addClass("active");
-                                // ページの背景の detail エリアを作成する
-                                this._showDetailItemAreaOfPage($page);
-                            }
-                        }
-
-                    }
-                }
-                if (remainsTarget) {
-                    // 選択中のアイテムがボタンの場合、状態の更新を行う
-                    this._updateCurrentModelButtonStatesData();
-                }
-                if (selectedResizer) {
-                    this.selectedResizer_ = selectedResizer;
-                    console.log(this.selectedResizer_);
-                }
-
-                this.startDraggingCanvasItem(mousePosition);
+                this._loseTarget();
             }
 
             /**
@@ -2013,18 +2034,13 @@ module Garage {
                 //ボタンの中の、すべてのstate,actionに設定されているfunctionを収集する。
                 var stateNum = buttonModel.state.length;
                 var fucntions: string[] = [];
-                for (var i = 0; i < buttonModel.state.length; i++){
-                    for (let j = 0; j < buttonModel.state[i].action.length;j++){
-                        if (buttonModel.state[i].action[j] &&
-                            buttonModel.state[i].action[j].code_db &&
-                            buttonModel.state[i].action[j].code_db.function) {
-                            fucntions.push(buttonModel.state[i].action[j].code_db.function.toString());
-
+                for (let state of buttonModel.state) {
+                    for (let action of state.action) {
+                        if (action && action.code_db && action.code_db.function) {
+                            fucntions.push(action.code_db.function.toString());
                         }
-
                     }
                 }
-
                 return fucntions;
 
             }
@@ -4939,10 +4955,10 @@ module Garage {
 
                 let result: string[] = [];
 
-                for (let i = 0; i < button.state.length; i++) {
-                    for (let j = 0; j < button.state[i].action.length; j++) {
-                        if (button.state[i].action[j].code != undefined) {
-                            result.push(button.state[i].action[j].code);
+                for (let state of button.state) {
+                    for (let action of state.action) {
+                        if (action.code != undefined) {
+                            result.push(action.code);
                         }
                     }
                 }
@@ -5068,6 +5084,8 @@ module Garage {
                     return;
                 }
 
+                let codes: string[] = this.getCodesFrom(button);
+
                 // masterFunctions が未取得の場合は取得する
                 for (let state of button.state) {
                     if (!state.action) continue;
@@ -5079,7 +5097,6 @@ module Garage {
 
                         if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
                             let codeDb = deviceInfo.code_db;
-                            let codes: string[] = this.getCodesFrom(button);
 
                             if (codeDb.brand != " " && codeDb.brand != undefined &&
                                 codeDb.device_type != " " && codeDb.device_type != undefined &&

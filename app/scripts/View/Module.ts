@@ -22,13 +22,16 @@ module Garage {
 
             private $facePages_: JQuery[];
 
+            private parentFace: Model.Face;
+
             private static PAGE_INDEX_CHANGED = "pageIndexChanged";
 
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.Module>) {
+            constructor(parentFace?: Model.Face, options?: Backbone.ViewOptions<Model.Module>) {
                 super(options);
+                this.parentFace = parentFace;
             }
 
             events() {
@@ -58,7 +61,9 @@ module Garage {
                 var modules: Model.Module[] = [];
                 for (var i = 0, l = modulesData.length; i < l; i++) {
                     
-                    let moduleModel = this.getModuleModel(modulesData[i]);
+                    let moduleModel: Model.Module = new Model.Module();
+                    moduleModel.setInfoFromGModule(modulesData[i]);
+                    this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
 
                     modules.push(moduleModel);
@@ -95,6 +100,7 @@ module Garage {
                 }
 
 
+                let prevItem: Model.Module;
                 this.collection.each((item, index) => {
                     let pageIndex: number = item.get("pageIndex");
                     let $targetFacePage = this.$facePages_[pageIndex];
@@ -107,6 +113,10 @@ module Garage {
                         cid: item.cid
                     }));
 
+                    if (this.parentFace.isSeparatorNeeded(prevItem, item)) {
+                        this._renderSeparator(item.group.name, $moduleContainer);
+                    }
+
                     // ラベルをレンダリング
                     this._renderLabels(item.label, index, $moduleContainer);
                     // 画像をレンダリング
@@ -117,6 +127,7 @@ module Garage {
                     // DOM に追加
                     $targetFacePage.append($moduleContainer);
                     this.$el.append($targetFacePage);
+                    prevItem = item;
                 });
 
                 //Jsonファイルが破壊されているなどの理由で、moduleがひとつもないとき
@@ -164,29 +175,8 @@ module Garage {
 
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
-
-                newPageModuleModel.name = this.remoteId_ + "_page_" + pageCount;
-
-                //もし、同名のリモコンがすでにある場合
-                //モジュール名は、"[remoteId]_page_[pageIndexNo+1]"とする
-                let pageIndexNo :number = pageCount;
-                let tmpPageNames: string[] = [];
-                for (let i = 0; i < this.collection.length; i++){
-                    if (this.collection.models[i].name == newPageModuleModel.name) {
-                        pageIndexNo++;
-                        newPageModuleModel.name = this.remoteId_ + "_page_" + pageIndexNo;
-                    }
-                }
-        
-                newPageModuleModel.remoteId = this.remoteId_;
-                newPageModuleModel.offsetY = 0;
+                newPageModuleModel.setInfo(this.remoteId_, pageCount);
                 newPageModuleModel.pageIndex = pageCount;
-                newPageModuleModel.area = {
-                    x: 0,
-                    y: 0,
-                    w: HUIS_FACE_PAGE_WIDTH,
-                    h: HUIS_FACE_PAGE_HEIGHT
-                };
 
                 // 空の Item View を追加しておく
                 this.buttonViews_.push(null);
@@ -701,10 +691,10 @@ module Garage {
              * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(areaFilter?: (area) => boolean): IGModule[] {
+            getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
 
-                var modules: IGModule[] = $.extend(true, [], this.collection.models);
+                var modules: Model.Module[] = $.extend(true, [], this.collection.models);
                 modules.forEach((module: IGModule, index: number) => {
                     let buttonView = this.buttonViews_[index],
                         imageView = this.imageViews_[index],
@@ -753,28 +743,14 @@ module Garage {
             }
 
 
-
-            /*
-            * IGModuleから、Model.Moduleを取得する。
-            */
-            
-            private getModuleModel(gmodule: IGModule): Model.Module {
-                let moduleData: IGModule = gmodule;
-                let moduleModel: Model.Module = new Model.Module();
-                moduleModel.set("area", moduleData.area);
-                moduleModel.name = moduleData.name;
-                moduleModel.remoteId = moduleData.remoteId;
-                moduleModel.pageIndex = moduleData.pageIndex;
-                moduleModel.offsetY = moduleData.offsetY;
-
+            private generateViews(gmodule: Model.Module) {
                 // モジュール内に button があったら、ButtonItem View を生成
-                if (moduleData.button) {
-                    moduleModel.set("button", moduleData.button);
+                if (gmodule.button) {
                     this.buttonViews_.push(new ButtonItem({
                         attributes: {
-                            buttons: moduleData.button,
+                            buttons: gmodule.button,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: moduleData.remoteId
+                            remoteId: gmodule.remoteId
                         }
                     }));
                 } else {
@@ -782,11 +758,10 @@ module Garage {
                 }
 
                 // モジュール内に label があったら、LabelItem View を生成
-                if (moduleData.label) {
-                    moduleModel.set("label", moduleData.label);
+                if (gmodule.label) {
                     this.labelViews_.push(new LabelItem({
                         attributes: {
-                            labels: moduleData.label,
+                            labels: gmodule.label,
                             materialsRootPath: this.materialsRootPath_
                         }
                     }));
@@ -795,23 +770,18 @@ module Garage {
                 }
 
                 // モジュール内に image があったら、ImageItem View を生成
-                if (moduleData.image) {
-                    moduleModel.set("image", moduleData.image);
+                if (gmodule.image) {
                     this.imageViews_.push(new ImageItem({
                         attributes: {
-                            images: moduleData.image,
+                            images: gmodule.image,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: moduleData.remoteId
+                            remoteId: gmodule.remoteId
                         }
                     }));
                 } else {
                     this.imageViews_.push(null);
-                }
-
-                return moduleModel;
+                }                                
             }
-
-
 
             addModuleInNewFacePages(inputModules: IGModule[]) {
                 let FUNCTION_NAME = TAG + "addModules : ";
@@ -829,10 +799,13 @@ module Garage {
                     }
 
                     //ページカウントは、すでに記述されているページに追加する
-                    let moduleModel = this.getModuleModel(inputModules[i]);
+                    let moduleModel: Model.Module = new Model.Module();
+                    moduleModel.setInfoFromGModule(inputModules[i]);
+                    this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
                     modulesModels.push(moduleModel);
                 }
+
                 (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
                 
                 
@@ -911,6 +884,13 @@ module Garage {
                 });
 
                 return moduleIndex;
+            }
+
+            private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {
+
+                let moduleSeparator = new ModuleSeparator(moduleName);
+                moduleSeparator.setElement($targetModuleContainer);
+                moduleSeparator.render();
             }
 
             private _renderButtons(buttons: IButton[], index: number, $targetModuleContainer: JQuery) {

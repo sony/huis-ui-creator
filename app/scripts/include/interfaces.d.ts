@@ -14,6 +14,7 @@
 /// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
+/// <reference path="../Model/Module.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -426,6 +427,7 @@ interface IGModule {
     pageIndex: number; //!< ページ番号 (最初のページが 0
     remoteId: string; //!< モジュールが属する face の ID
     name: string; //!< モジュールの名前
+    group?: IGroup;
 }
 
 /**
@@ -438,6 +440,16 @@ interface IModule {
     button?: IButton[];
     label?: ILabel[];
     image?: IImage[];
+    group?: IGroup;
+}
+
+/**
+ * @interface IGroup
+ * @brief HUIS の moduleのgroup情報
+ */
+interface IGroup {
+    name: string;
+    original_remote_id: number;
 }
 
 /**
@@ -464,7 +476,7 @@ interface IFace {
     /**
      * face が参照する module (module ファイルを展開したもの)
      */
-    modules: IGModule[];
+    modules: Garage.Model.Module[];
 }
 
 /**
@@ -523,8 +535,8 @@ interface DialogProps {
 */
 interface IRemoteInfo {
     remoteId: string;
-    face: IGFace;
-    mastarFace?: IGFace;
+    face: Garage.Model.Face;
+    mastarFace?: Garage.Model.Face;
 }
 
 //declare const enum EFaceCategory {
@@ -622,6 +634,10 @@ declare module Garage {
     */
     var DIALOG_PROPS_CREATE_NEW_REMOTE: DialogProps;
     /**
+     * 既存リモコンをコピーして編集を開始したときのダイアログパラメーター
+     */
+    var DIALOG_PROPS_COPY_AND_EDIT_REMOTE: DialogProps;
+    /**
      * リモコンを削除した際のダイアログパラメーター
     */
     var DIALOG_PROPS_DELTE_REMOTE: DialogProps;
@@ -709,6 +725,9 @@ declare module Garage {
     var DEVICE_TYPE_SPECIAL: string;
     /** デバイスタイプ 学習リモコン */
     var DEVICE_TYPE_LEARNED: string;
+
+    var FACE_TYPE_FULL_CUSTOM: string;
+    var FACE_TYPE_NOT_FULL_CUSTOM: string;
 
     /**
     * DetailAreaの機能に表示されないデバイスタイプ

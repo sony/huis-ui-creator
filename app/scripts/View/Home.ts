@@ -63,19 +63,32 @@ module Garage {
 
             //! events binding
             events(): any {
-                var ret:any = {};
-                ret = super.events();
-                return $.extend(ret,{
-                    //"dblclick header .ui-title": "_onHeaderDblClick",
-                    "click #create-new-remote": "_onCreateNewRemote",
-                    "click #sync-pc-to-huis": "_onSyncPcToHuisClick",
-                    "click #option-pulldown-menu": "_onOptionPullDownMenuClick",
-                    "click #command-import-remote": "onOptionImport",
-                    // ショートカットキー
-                    //"keydown": "_onKeyDown",
-                    // コンテキストメニュー
-                    "contextmenu": "_onContextMenu",
-                });
+                var events:any = {};
+                events = super.events();
+                events["click #create-new-remote"] = "_onCreateNewRemote";
+                events["click #sync-pc-to-huis"] = "_onSyncPcToHuisClick";
+                events["click #option-pulldown-menu"] = "_onOptionPullDownMenuClick";
+                events["click #command-import-remote"] = "onOptionImport";
+                events["contextmenu"] = "_onContextMenu";
+                events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
+                events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
+                return events;
+            }
+
+            private onClickFullCustomFace(event: Event) {
+                console.log("onClickFullCustomFace");
+                let $clickedFace = $(event.currentTarget);
+                let remoteId = $clickedFace.data("remoteid");
+                if (remoteId) {
+                    this._enterFullCustom(remoteId);
+                }
+            }
+
+            private onClickNotFullCustomFace(event: Event) {
+                console.log("onClickNotFullCustomFace");
+                let $clickedFace = $(event.currentTarget);
+                let remoteId = $clickedFace.data("remoteid");
+                this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
             }
 
             render(): Home {
@@ -137,25 +150,23 @@ module Garage {
 
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
-                var faces = huisFiles.getFilteredFacesByCategories({ matchingCategories: ["fullcustom"] });
-                var faceList: { remoteId: string, name: string }[] = [];
+                var faces = huisFiles.getFilteredFacesByCategories({});
+                var faceList: { remoteId: string, name: string, category: string }[] = [];
                 faces.forEach((face: IGFace) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
                     let tmpFaceName: string =face.name;
                     var regExp = new RegExp(" ", "g");
                     tmpFaceName = tmpFaceName.replace(regExp, "");
-                    if (tmpFaceName == "") {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: "　"
-                        });
-                    } else {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: face.name
-                        });
-                    }
+
+                    let faceName = (tmpFaceName == "") ? "　" : face.name;
+                    let faceCategory = (face.category == DEVICE_TYPE_FULL_CUSTOM) ? FACE_TYPE_FULL_CUSTOM : FACE_TYPE_NOT_FULL_CUSTOM;
+
+                    faceList.push({
+                        remoteId: face.remoteId,
+                        name: faceName,
+                        category: faceCategory
+                    });
 
                 });
 
@@ -190,13 +201,6 @@ module Garage {
                 });
                 faceRenderer.render();
 
-                $face.find(".face-container").on("click", (event) => {
-                    let $clickedFace = $(event.currentTarget);
-                    let remoteId = $clickedFace.data("remoteid");
-                     if (remoteId) {
-                        Framework.Router.navigate("#full-custom?remoteId=" + remoteId);
-                    }
-                });
                 //// シングルクリックしたら「選択状態」になる
                 //$face.find(".face-container").on("click", (event) => {
                 //    let $clickedFace = $(event.currentTarget);
@@ -224,10 +228,81 @@ module Garage {
             //    }
             //}
 
-            private _onCreateNewRemote() {
+           /**
+             * faceのcloneを作成する。型情報はコピーされない事に注意。
+             *
+             * @param face {IGFace} コピーしたいface。
+             */
+            private _cloneFace(face: IGFace) {
+                return $.extend(true, {}, face);
+            }
+
+           /**
+             * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
+             *
+             * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
+             */
+            private _enterFullCustom(remoteId?: string) {
+                let urlQueryParameter: string = "";
+                if (remoteId != null) {
+                    urlQueryParameter = "?remoteId=" + remoteId;
+                }
+                Framework.Router.navigate("#full-custom" + urlQueryParameter);
+            }
+
+           /**
+             * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
+             *
+             * @param face {IGFace} コピーを作成するリモコンのface。
+             */
+            private _copyAndEditRemote(face: Model.Face) {
+
+                if (!this._checkCanCreateNewRemote()) {
+                    return;
+                }
+                face = this._cloneFace(face);
+                face.setWholeRemoteId(huisFiles.createNewRemoteId());
+
+                if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
+                    face.convertToFullCustomFace();
+                }
+
+                huisFiles.updateFace(face.remoteId, face.name, face.modules, null)
+                    .always(() => {
+                        garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
+                        if (HUIS_ROOT_PATH) {
+                            let syncTask = new Util.HuisDev.FileSyncTask();
+                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, null, (err) => {
+                                if (err) {
+                                    // [TODO] エラー値のハンドリング
+                                    electronDialog.showMessageBox({
+                                        type: "error",
+                                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR"),
+                                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                                        title: PRODUCT_NAME,
+                                    });
+                                } else {
+                                    this._initializeHomeView();
+                                    this._enterFullCustom(face.remoteId);
+                                }
+                            });
+                        } else {
+                            console.error("HUIS_ROOT_PATH is empty");
+                        }
+                    }).fail(() => {
+                        console.error("updateFace is fail");
+                    });
+            }
+
+           /**
+             * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
+             *
+             * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
+             */
+            private _checkCanCreateNewRemote(): boolean {
                 let canCreateResult = huisFiles.canCreateNewRemote();
                 if (canCreateResult == 0) {
-                    Framework.Router.navigate("#full-custom");
+                    return true;
                 } else if (canCreateResult == -2) {
                     electronDialog.showMessageBox({
                         type: "error",
@@ -239,6 +314,13 @@ module Garage {
                     this.showErrorDialogRemoteNumLimit()
                 } else {
                     console.warn("no alert dialog in _onCreateNewRemote()");
+                }
+                return false;
+            }
+
+            private _onCreateNewRemote() {
+                if (this._checkCanCreateNewRemote()) {
+                    this._enterFullCustom();
                 }
             }
 
@@ -298,7 +380,6 @@ module Garage {
                 }
             }
 
-
             private _onContextMenu() {
                 event.preventDefault();
                 this.rightClickPosition_.setPositionXY(event.pageX, event.pageY);
@@ -313,13 +394,22 @@ module Garage {
                     this.remoteIdToDelete = $face.data("remoteid");
                     if (this.remoteIdToDelete) {
 
-                        let remoteIdToExport = $face.data("remoteid");
-                        this.contextMenu_.append(new MenuItem({
-                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
-                            click: () => {
-                                let face :IGFace = huisFiles.getFace(remoteIdToExport);
+                        let remoteId = $face.data("remoteid");
 
-                                this.exportRemote(remoteIdToExport, face.name,face.modules); // true で警告なし
+                        if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
+                            this.contextMenu_.append(new MenuItem({
+                                label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
+                                click: () => {
+                                    this._enterFullCustom(remoteId);
+                                }
+                            }));
+                        }
+
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
+                            click: () => {
+                                let face: Model.Face = huisFiles.getFace(remoteId);
+                                this._copyAndEditRemote(face);
                             }
                         }));
 
@@ -340,7 +430,17 @@ module Garage {
                                }
                             }
                         }));
+
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                            click: () => {
+                                let face: IGFace = huisFiles.getFace(remoteId);
+
+                                this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
+                            }
+                        }));
                     }
+
                 }
                 
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
