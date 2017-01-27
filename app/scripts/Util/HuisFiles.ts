@@ -861,43 +861,7 @@ module Garage {
             private findFunctionKeyInHuisFilesByFunctionName(funcName: string, code: string, remoteId: string): string {
                 let functionCodeHash = this.getAllFunctionCodeMap(remoteId);
 
-                return HuisFiles.findFunctionKeyByFunctionName(funcName, code, functionCodeHash, false);
-            }
-
-            /**
-             * 渡された信号名：信号の情報から設定すべき信号名を取得
-             *
-             * @param funcName {string} 対象信号名
-             * @param code {string} 信号
-             * @param funcCoeHash {IStringStringHash} 
-             * @param continueNumbering {boolean} 連番を付与するかどうか
-             * @return {string}
-             */
-            private static findFunctionKeyByFunctionName(funcName: string, code: string, funcCodeHash: IStringStringHash, continueNumbering: boolean): string {
-                if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
-                    return funcName;
-                }
-
-                if (funcName in funcCodeHash) {
-                    for (let key in funcCodeHash) {
-                        if (HuisFiles.getPlainFunctionKey(key) === HuisFiles.getPlainFunctionKey(funcName) &&
-                            funcCodeHash[key] === code) {
-                            // 既存codeと一致したらその信号名を返す
-                            return key;
-                        }
-                    }
-
-                    if (continueNumbering) {
-                        // 連番を付与
-                        return HuisFiles.createFunctionKeyName(funcName, Object.keys(funcCodeHash));
-                    } else {
-                        // そのボタンに再学習された信号として特殊コードを付与
-                        return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
-                    }
-                } else {
-                    // 基ボタン消失
-                    return funcName;
-                }
+                return HuisFiles.findFuncNameOrCreateSpecialName(funcName, code, functionCodeHash);
             }
 
 
@@ -918,28 +882,79 @@ module Garage {
 
 
             /**
-             * 既存の信号名リストに対して対象信号を追加する際の信号名を生成
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は連番を付与した新規の信号名を返す。
              *
-             * @param functionName {string} 基にする信号名
-             * @param keys {string[]} 既存の信号名リスト
-             * @return {string} 追加すべき信号名
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
              */
-            private static createFunctionKeyName(functionName: string, keys: string[]): string {
-                if (keys.indexOf(functionName) < 0) {
-                    // 新規の信号
-                    return functionName;
+            private static findFuncNameOrCreateNumberedName(funcName: string, code: string, funcCodeHash: IStringStringHash): string {
+                return HuisFiles.findFuncNameOrCreate(
+                    funcName,
+                    code,
+                    funcCodeHash,
+                    (name, sameFuncs) => {
+                        let newKey = HuisFiles.getPlainFunctionKey(funcName);
+
+                        let i = 0;
+                        while (sameFuncs.indexOf(newKey) >= 0) {
+                            newKey = HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + i++;
+                        }
+
+                        return newKey;
+                    });
+            }
+
+
+            /**
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は該当ボタン独自の信号名を表すコードを付与した信号名を返す。
+             *
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
+             */
+            private static findFuncNameOrCreateSpecialName(funcName: string, code: string, funcCodeHash: IStringStringHash): string {
+                return HuisFiles.findFuncNameOrCreate(
+                    funcName,
+                    code,
+                    funcCodeHash,
+                    (name, sameFuncs) => {
+                        return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                    });
+            }
+
+
+            /**
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は指定された新規信号名生成関数を呼び出す。
+             *
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @param createFunc {(name, sameFuncs) => string} 該当信号が無かった場合の新規信号名生成関数
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
+             */
+            private static findFuncNameOrCreate(funcName: string, code: string, funcCodeHash: IStringStringHash, createFunc: (name, sameFuncs) => string): string {
+                if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
+                    return HuisFiles.getPlainFunctionKey(funcName);
                 }
 
-                // 既存信号なので連番を付与
-                let i = 0;
-                while (true) {
-                    let numberedName = functionName + FUNC_NUM_DELIMITER + i++;
+                let sameFuncs: string[] = [];
+                for (let key in funcCodeHash) {
+                    if (HuisFiles.getPlainFunctionKey(funcName) == HuisFiles.getPlainFunctionKey(key)) {
+                        if (code == funcCodeHash[key]) {
+                            return key;
+                        }
 
-                    if (keys.indexOf(numberedName) < 0) {
-                        return numberedName;
+                        sameFuncs.push(key);
                     }
                 }
 
+                return createFunc(funcName, sameFuncs);
             }
 
             /**
@@ -1936,7 +1951,6 @@ module Garage {
                     let remoteId = this.remoteList_[i].remote_id;
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-                    let face: IGFace = this._parseFace(facePath, remoteId);
                     let masterFace: IGFace = this.parseFaceWithNumberingFuncName(masterFacePath, remoteId);
 
                     if (masterFace != undefined && remoteId != undefined) {
@@ -2112,8 +2126,9 @@ module Garage {
 
                                 if (!(func in functionCodeHash)) {
                                     functionCodeHash[func] = code;
+                                    console.log(func + ':' + code);
                                 } else if (functionCodeHash[func] != code) {
-                                    let numberedFunc = HuisFiles.createFunctionKeyName(func, Object.keys(functionCodeHash));
+                                    let numberedFunc = HuisFiles.findFuncNameOrCreateNumberedName(func, code, functionCodeHash);
 
                                     action.code_db.function = numberedFunc;
                                     functionCodeHash[numberedFunc] = code;
@@ -2148,8 +2163,8 @@ module Garage {
                                 let remoteId = this.getRemoteIdByAction(action);
                                 if (remoteId == null) continue; // 基リモコンなし
 
-                                let newFuncName = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
-                                action.code_db.function = newFuncName;
+                                let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
+                                action.code_db.function = numberedFunc;
                             }
                         }
                     }
@@ -2204,17 +2219,14 @@ module Garage {
             }
 
             /**
-             * 対象モジュール内の信号名を基モジュール内にある信号名に合わせる
+             * 対象モジュール内の信号名を基モジュール内にある信号名に合わせる。
+             * 基モジュールに同信号名別信号が存在する場合は連番を付与した新しい信号名に変更する。
              *
              * @param target {IGModule[]} 更新対象を含むモジュール
              * @param original {IGModule[]} 基にするモジュール
              */
             private static applyNumberedFunctionNameByModule(target: IGModule[], original: IGModule[]) {
-                let originalHash = HuisFiles.getFunctionCodeMapByModules(original);
-                if (originalHash == null ||
-                    Object.keys(originalHash).length < 1) {
-                    return;
-                }
+                let funcCodeHash = HuisFiles.getFunctionCodeMapByModules(original);
                 
                 for (let mod of target) {
                     if (mod.button == null) continue;
@@ -2229,8 +2241,9 @@ module Garage {
                                     continue;
                                 }
 
-                                let newFuncName = HuisFiles.findFunctionKeyByFunctionName(action.code_db.function, action.code, originalHash, true);
-                                action.code_db.function = newFuncName;
+                                let funcName = HuisFiles.findFuncNameOrCreateNumberedName(action.code_db.function, action.code, funcCodeHash);
+                                action.code_db.function = funcName;
+                                funcCodeHash[funcName] = action.code;
                             }
                         }
                     }
