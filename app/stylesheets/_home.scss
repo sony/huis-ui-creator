@@ -108,22 +108,25 @@
             }    
 
             .face.#{$FACE_TYPE_FULL_CUSTOM} {
-                p {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    width: 100%;
-                    height: 30px;
-                }
-                p.title:before {
-                    content: $PATH_IMG_FACE_ITEM_LIST_EDITABLE_ICON;
-                    margin-left: -8px;
-                    margin-right: 16px;
-                    vertical-align: -6px;
+                .edit-lock-icon {
+                    visibility: hidden;
                 }
             }
 
             .face.#{$FACE_TYPE_NOT_FULL_CUSTOM} {
+                p.remote-title-text {
+                    max-width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_HOME_REMOTE_EDIT_LOCK_ICON;
+                    float: left;
+                    display: inline-block;
+                }
+
+                .edit-lock-icon {
+                    background-image: $PATH_IMG_FACE_ITEM_LIST_EDIT_LOCK_ICON;
+                    width: $SIZE_HOME_REMOTE_EDIT_LOCK_ICON;
+                    height: $SIZE_HOME_REMOTE_EDIT_LOCK_ICON;
+                    float: right;
+                    vertical-align: bottom;
+                }
             }
 
             .face {
@@ -134,14 +137,31 @@
                 overflow: hidden;
                 width: $SIZE_HOME_REMOTE_WIDTH;
 
-                .title {
-                    margin-top:$SIZE_HOME_TITLE_MARGIN_TOP;
-                    margin-bottom:$SIZE_HOME_TITLE_MARGIN_BOTTOM;
+                .remote-title-container {
+                    margin-top: $SIZE_HOME_TITLE_MARGIN_TOP;
+                    margin-bottom: $SIZE_HOME_TITLE_MARGIN_BOTTOM;
                     text-align: center;
                     color: $COLOR_TEXT_MAIN;
                     font-size:$FONT_HOME_REMOTE_TITLE;
                     font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
-                    line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                    line-height: $FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                }
+
+                .remote-title {
+                    width: auto;
+                    height: 30px;
+                    margin-bottom: 20px;
+                    display: inline-flex;
+                }
+
+                p.remote-title-text {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    width: auto;
+                    max-width: $SIZE_HOME_REMOTE_WIDTH;
+                    margin: 0px;
+                    height: 30px;
                 }
 
                 #face-pages-area {
@@ -205,7 +225,7 @@
         ul#face-history-list {
             margin: 0;
 
-            p.title {
+            .remote-title-container {
                 margin-top: 0;
             }
         }
@@ -218,8 +238,7 @@
             overflow: hidden;
             width: 160px;
             //height: 380px;
-
-            .title {
+            .remote-title-container {
                 text-align: center;
                 color: $COLOR_TEXT_MAIN;
                 font-family: $FONT_FAMILY_LIGHT;

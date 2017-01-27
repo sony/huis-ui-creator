@@ -29,14 +29,22 @@
 
         <script type="text/template" id="face-list-template">
                 <li class="face">
-                    <p class="title" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
-                    <section class="face-container" id="create-new-remote" >
-                    </section>
+                    <div class="remote-title-container">
+                        <div class="remote-title">
+                            <p class="remote-title-text" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
+                        </div>
+                        <section class="face-container" id="create-new-remote"></section>
+                    </div>
                 </li>
                 {{#faceList}}
                 <li class="face {{category}}" data-remoteid="{{remoteId}}">
-                    <p class="title">{{name}}</p>
-                    <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                    <div class="remote-title-container">
+                        <div class="remote-title">
+                            <p class="remote-title-text">{{name}}</p>
+                            <div class="edit-lock-icon"></div>
+                        </div>
+                        <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                    </div>
                 </li>
                 {{/faceList}}
         </script>
