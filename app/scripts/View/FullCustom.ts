@@ -3203,15 +3203,13 @@ module Garage {
                     isBackground = false;
                 }
 
-            
-
-                let previewHeight: number = MIN_HEIGHT_PREVIEW;
                 if (resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
-                    && resolvedImagePathForCSS != "") {
+                    && resolvedImagePathForCSS != "" && resolvedImagePathForCSS != "none") {
                     this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
                     let previewWidth = $preview.width();
                     let img = new Image();
                     img.onload = () => {
+                        let previewHeight: number = MIN_HEIGHT_PREVIEW;
                         if (isBackground) {
                             previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
                         } else {
@@ -3222,6 +3220,8 @@ module Garage {
                     };
                     img.src = resolvedImagePathForCSS;
 
+                } else {
+                    $preview.height(MIN_HEIGHT_PREVIEW);
                 }
 
             }
