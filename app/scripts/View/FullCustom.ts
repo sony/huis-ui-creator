@@ -5782,10 +5782,14 @@ module Garage {
                             this._deleteCurrentTargetItem();
                             break;
                         case 67: // c Copy
-                            this.setClipboadToItem();
+                            if (event.ctrlKey) {
+                                this.setClipboadToItem();
+                            }
                             break;
                         case 86: // v Paste
-                            this.pasteItemFromClipboard();
+                            if (event.ctrlKey) {
+                                this.pasteItemFromClipboard();
+                            }
                             break;
                         case 90: // z Undo
                             if (event.ctrlKey) {
