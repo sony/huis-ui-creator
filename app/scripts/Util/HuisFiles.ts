@@ -141,7 +141,7 @@ module Garage {
              * @paran master {boolean} [in] masterface を取得したい場合は true を指定する。省略した場合は通常の face を返す。
              * @return {IGFace} face
              */
-            getFace(remoteId: string, master?: boolean): IGFace {
+            getFace(remoteId: string, master?: boolean): Model.Face {
                 var remoteInfos: IRemoteInfo[] = this.remoteInfos_;
                 if (!remoteInfos || !_.isArray(remoteInfos)) {
                     return null;
@@ -176,7 +176,7 @@ module Garage {
                     return [];
                 }
 
-                var faces: IGFace[] = [];
+                var faces: Model.Face[] = [];
                 this.remoteInfos_.forEach((remoteInfo) => {
                     if (master) {
                         faces.push(remoteInfo.mastarFace);
@@ -185,7 +185,7 @@ module Garage {
                     }
                 });
 
-                return faces.filter((face: IGFace) => {
+                return faces.filter((face: Model.Face) => {
                     if (!face) {
                         return false;
                     }
@@ -1005,7 +1005,7 @@ module Garage {
             /**
              * Common の face を取得する。
              */
-            getCommonFace(): IGFace {
+            getCommonFace(): Model.Face {
                 return this.commonRemoteInfo_.face;
             }
 
@@ -1244,7 +1244,7 @@ module Garage {
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            updateFace(remoteId: string, faceName: string, gmodules: IGModule[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
                 let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
 
                 let df = $.Deferred<void>();
@@ -1414,15 +1414,15 @@ module Garage {
              * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            private _updateModule(remoteId: string, gmodule: IGModule, outputDirPath ? :string): {module: IModule, name: string} {
+            private _updateModule(remoteId: string, gmodule: Model.Module, outputDirPath ? :string): {module: IModule, name: string} {
                 // IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
 
                 
                 var module: IModule = {
-                    area: gmodule.area
+                    area: gmodule.area,
                 };
 
-                let versionString: string = this.getModuleVersion(gmodule);
+                let versionString: string = gmodule.getModuleVersion();
                 if(versionString != null){
                     module = {
                         version: versionString,
@@ -1455,131 +1455,6 @@ module Garage {
                     module: module
                 };
             }
-
-            /*
-            * gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
-            * @param gModule : IGModule バージョン情報を内在した構成要素をもつGarageないで使われていたモジュール
-            * @return oldestVersionString : string gModule内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
-            */
-            private getModuleVersion(gModule: IGModule) :string{
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getModuleVersion : ";
-
-                if (gModule == undefined) {
-                    console.warn(FUNCTION_NAME + "gModule is undefined");
-                    return null;
-                }
-
-                let versions: Model.VersionString[] = this.getVersions(gModule.button, gModule.image, gModule.label);
-                let oldestVersion: Model.VersionString= this.getOldestVersionOf(versions);
-
-                if (oldestVersion != null) {
-                    let oldestVersionString: string = oldestVersion.getVersionString();
-                    return oldestVersionString;
-                } else {
-                    return null;
-                }
-
-            }
-
-            /*
-            * 入力された　最も古いバージョン情報値:string を返す
-            * @param versions : string[]
-            * return :string 最古のボタンバージョン
-            */
-            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOldestVersionOfGButton : ";
-
-                if (versions == undefined) {
-                    console.warn(FUNCTION_NAME + "versions is undefined");
-                    return;
-                }
-
-                let oldestVersion: Model.VersionString= null;
-
-                for (let i = 0; i < versions.length; i++){
-                    oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
-                }
-
-                return oldestVersion;
-            }
-
-            /*
-            * IGButton, IGLabel, IGImageからバージョン情報を抽出する。
-            * @param buttons ? : IGButtons
-            * @param imagess ? : IGImages
-            * @param labels ? : IGLabels
-            * return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
-            */
-            private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): Model.VersionString[] {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getVersions : ";
-                if (!buttons && !images && !labels) {
-                    console.warn(FUNCTION_NAME + "no inputs");
-                    return;
-                }
-                let result: Model.VersionString[] = [];
-
-                if (buttons) {
-                    for (let i = 0; i < buttons.length; i++){
-                        if (buttons[i].version) {
-                            result.push(new Model.VersionString(buttons[i].version));
-                        }
-                    }
-                }
-
-                if (images) {
-                    for (let i = 0; i < images.length; i++) {
-                        if (images[i].version) {
-                            result.push(new Model.VersionString(images[i].version));
-                        }
-                    }
-                }
-
-                if (labels) {
-                    for (let i = 0; i < labels.length; i++) {
-                        if (labels[i].version) {
-                            result.push(new Model.VersionString(labels[i].version));
-                        }
-                    }
-                }
-
-                
-                return result;
-            }
-
-            /*
-            * ２つのバージョン情報から、より番号が若い方を返す。
-            * @param version1 :string 比較対象のバージョン情報１ 
-            * @param version2 :string 比較対象のバージョン情報２
-            * return より番号が若い方のバージョン情報 : string
-            */
-            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getOlderVersion : ";
-
-                if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
-                    return null;
-                }
-
-                if (version1 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version2) {
-                        return version2;
-                    }
-                    return null;
-                }
-
-                if (version2 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version1) {
-                        return version1;
-                    }
-                    return null;
-                }
-
-                if (version1.isOlderThan(version2)) {
-                    return version1;
-                } else {
-                    return version2;
-                }
-            }
-
 
             /**
              * Button データから module 化に不要なものを間引く
@@ -1831,7 +1706,7 @@ module Garage {
                 return normalizedImages;
             }
 
-            private _getFace(remoteId: string, isMaster: boolean): IGFace {
+            private _getFace(remoteId: string, isMaster: boolean): Model.Face {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
@@ -1871,12 +1746,12 @@ module Garage {
                 });
             }
 
-            get faces(): IGFace[]{
+            get faces(): Model.Face[]{
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
                 // remoteInfos から faces 情報を取り出す
-                var faces: IGFace[] = [];
+                var faces: Model.Face[] = [];
                 this.remoteInfos_.forEach((remoteInfo) => {
                     faces.push(remoteInfo.face);
                 });
@@ -1951,10 +1826,10 @@ module Garage {
                     let remoteId = this.remoteList_[i].remote_id;
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-                    let masterFace: IGFace = this.parseFaceWithNumberingFuncName(masterFacePath, remoteId);
+                    let masterFace: Model.Face = this.parseFaceWithNumberingFuncName(masterFacePath, remoteId);
 
                     if (masterFace != undefined && remoteId != undefined) {
-                        let face: IGFace = this._parseFace(facePath, remoteId);
+                        let face: Model.Face = this._parseFace(facePath, remoteId);
 
                         if (face != undefined) {
                             // MastarFaceの連番付き信号名をFaceに反映
@@ -1968,7 +1843,7 @@ module Garage {
                         }
                     } else {
                         // Masterが無い場合はFace自体で連番作成
-                        let face: IGFace = this.parseFaceWithNumberingFuncName(facePath, remoteId);
+                        let face: Model.Face = this.parseFaceWithNumberingFuncName(facePath, remoteId);
 
                         if (face != undefined) {
                             remoteInfos.push({
@@ -1991,8 +1866,8 @@ module Garage {
              * @param rootDirectory {string}
              * @return {IGFace}
              */
-            parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
-                let face: IGFace = this._parseFace(facePath, remoteId, rootDirectory);
+            parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
+                let face: Model.Face = this._parseFace(facePath, remoteId, rootDirectory);
 
                 if (face != null && face.modules != null) {
                     HuisFiles.numberFunctionNameInModules(face.modules);
@@ -2004,7 +1879,7 @@ module Garage {
             /**
              * 指定したパスの face を parse する
              */
-            _parseFace(facePath: string, remoteId: string, rootDirectory?: string): IGFace {
+            _parseFace(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
                 // face ファイルを読み込む
                 if (!fs.existsSync(facePath)) {
                     //console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
@@ -2034,40 +1909,21 @@ module Garage {
                     return undefined;
                 }
 
-                var face: IGFace = {
-                    remoteId: remoteId,
-                    name: plainFace.name,
-                    category: plainFace.category,
-                    modules: []
-                };
+                var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category);
+
+                let heightSum: number = 0;
 
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
                     var moduleName: string = plainFace.modules[i];
                     var module: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (module) {
+                        heightSum += module.area.h;
+                        let pageIndex = Math.floor((heightSum-1) / HUIS_FACE_PAGE_HEIGHT);
+
                         //let gmodule: IGModule = $.extend(true, { offsetY: 0, remoteId: remoteId, name: moduleName }, module);
-                        let gmodule: IGModule = {
-                            offsetY: 0,
-                            remoteId: remoteId,
-                            name: moduleName,
-                            area: $.extend(true, {}, module.area),
-                            pageIndex: 0
-                        };
-                        if (module.button) {
-                            // [TODO] button.state.image.garage_extensions 対応
-                            //gmodule.button = $.extend(true, [], module.button);
-                            gmodule.button = this._buttons2gbuttons(module.button);
-                            this.setVersionInfoToIGButton(module, gmodule.button);
-                        }
-                        if (module.image) {
-                            gmodule.image = this._images2gimages(module.image);
-                            this.setVersionInfoToIGImage(module, gmodule.image);
-                        }
-                        if (module.label) {
-                            gmodule.label = $.extend(true, [], module.label);
-                            this.setVersionInfoToIGLabel(module, gmodule.label);
-                        }
+                        let gmodule = new Model.Module();
+                        gmodule.setInfoFromIModule(module, remoteId, pageIndex, moduleName);
                         face.modules.push(gmodule);
                     }
                 }
@@ -2076,18 +1932,8 @@ module Garage {
                 if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
                     face.modules.length == 0) {
 
-                    let gmodule: IGModule = {
-                        offsetY: 0,
-                        pageIndex: 0,
-                        remoteId: remoteId,
-                        area: {
-                            x: 0,
-                            y: 0,
-                            w: HUIS_FACE_PAGE_WIDTH,
-                            h: HUIS_FACE_PAGE_HEIGHT
-                        },
-                        name: remoteId + "_page_0" // 暫定
-                    }
+                    let gmodule = new Model.Module();
+                    gmodule.setInfo(remoteId, 0);
                     face.modules.push(gmodule);
                 }
 

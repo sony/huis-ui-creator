@@ -9,7 +9,7 @@ module Garage {
         export class FaceRenderer extends Backbone.View<any> {
 
 
-            private face_: IGFace;
+            private face_: Model.Face;
             private moduleView_: Module;
             private type_: string;
             private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
@@ -33,23 +33,9 @@ module Garage {
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
                     let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
-                    this.face_ = {
-                        name: "New Remote",
-                        remoteId: remoteId,
-                        category: "fullcustom",
-                        modules: [{
-                            offsetY: 0,
-                            pageIndex: 0,
-                            remoteId: remoteId,
-                            area: {
-                                x: 0,
-                                y: 0,
-                                w: HUIS_FACE_PAGE_WIDTH,
-                                h: HUIS_FACE_PAGE_HEIGHT
-                            },
-                            name: remoteId + "_page_0" // 暫定
-                        }]
-                    };
+                    let gmodule = new Model.Module();
+                    gmodule.setInfo(remoteId, 0);
+                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [gmodule]);
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
@@ -293,7 +279,7 @@ module Garage {
              * @param areaFilter module の area によるフィルタ
              * @return {IGModule[]} Module View がもつ module の配列
              */
-            getModules(areaFilter?: (area) => boolean): IGModule[] {
+            getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 return this.moduleView_.getModules(areaFilter);
             }
 
@@ -319,7 +305,8 @@ module Garage {
                 }));
                 var $facePagesArea = $faceCanvas.find("#face-pages-area");
 
-                this.moduleView_ = new Module({
+                this.moduleView_ = new Module(
+                    this.face_, {
                     el: $facePagesArea,
                     attributes: {
                         remoteId: this.face_.remoteId,
@@ -346,7 +333,8 @@ module Garage {
 
                 this.$facePlane_ = $(template());
 
-                this.moduleView_ = new Module({
+                this.moduleView_ = new Module(
+                    this.face_, {
                     el: this.$facePlane_,
                     attributes: {
                         remoteId: this.face_.remoteId,
