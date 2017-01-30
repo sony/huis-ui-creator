@@ -20,6 +20,28 @@ module Garage {
                 this.category = category;
             }
 
+            private _createEmptyModule(remoteId: string, pageIndex: number): Model.Module {
+                let emptyModuleArea = {
+                    x: 0,
+                    y: 0,
+                    w: HUIS_FACE_PAGE_WIDTH,
+                    h: 0,
+                }
+                let module = new Model.Module();
+                module.setInfo(remoteId, pageIndex, emptyModuleArea);
+                return module;
+            }
+
+            private _finalizeModule(module: Model.Module): Model.Module {
+                module.area = {
+                    x: 0,
+                    y: 0,
+                    w: HUIS_FACE_PAGE_WIDTH,
+                    h: HUIS_FACE_PAGE_HEIGHT
+                }
+                return module;
+            }
+
             /*
              * このFaceをfullcustomで生成されるModuleと同様のフォーマットのFaceに変換する。
              */
@@ -28,24 +50,14 @@ module Garage {
                 let convertedModules: Model.Module[] = [];
                 let pageIndex = 0;
 
-                let emptyModuleArea = {
-                    x: 0,
-                    y: 0,
-                    w: HUIS_FACE_PAGE_WIDTH,
-                    h: 0,
-                }
-
-                let module = new Model.Module();
-                module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
-
-                let prevElem;
+                let module = this._createEmptyModule(this.remoteId, pageIndex);
+                let prevElem: Model.Module;
                 for (let elem of this.modules) {
                     let isCrossPage = module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT;
                     if (isCrossPage) {
-                        convertedModules.push(module);
+                        convertedModules.push( this._finalizeModule(module) );
                         pageIndex++;
-                        module = new Model.Module();
-                        module.setInfo(this.remoteId, pageIndex, emptyModuleArea);
+                        module = this._createEmptyModule(this.remoteId, pageIndex);
                     }
                     if (this.isSeparatorNeeded(prevElem, elem)) {
                         let moduleSeparator = new Model.ModuleSeparator(elem.group.name);
@@ -54,7 +66,7 @@ module Garage {
                     module.merge(elem);
                     prevElem = elem;
                 }
-                convertedModules.push(module);
+                convertedModules.push( this._finalizeModule(module) );
 
                 this.modules = convertedModules;
                 return this;
