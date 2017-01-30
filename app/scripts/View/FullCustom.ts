@@ -765,6 +765,7 @@ module Garage {
                 let updatedItem: ItemModel[] = this.commandManager_.invoke(mementoCommand);
 
                 this._updateItemElementsOnCanvas(updatedItem);
+                this._loseTarget();
             }
 
             /*
@@ -1310,6 +1311,10 @@ module Garage {
                 if (this.isDoubleClick(event)) {
                     this.onPalletItemDblClick();
                     this.clearPalletItemClickCount(this);
+                } else {
+                    if (this.isFromPallet()) {
+                        this._loseTarget();
+                    }
                 }
 
             }
@@ -1325,6 +1330,10 @@ module Garage {
                 this._updateCurrentModelData("area", newArea, false);
             }
 
+            private isFromPallet(): boolean {
+                return !(this._getTargetPageModule(this.mouseMoveStartPosition_));
+            }
+
             /**
              * アイテムの移動を行い、位置を確定する
              */
@@ -1336,7 +1345,7 @@ module Garage {
                 let newPosition: IPosition = this._getGriddedDraggingItemPosition(position, isCrossPageMoving);
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
-                let isFromPallet: boolean = !(this._getTargetPageModule(this.mouseMoveStartPosition_));
+                let isFromPallet: boolean = this.isFromPallet();
 
                 if (isFromPallet) {
                     // 開始位置がキャンバス外の場合＝パレットからの配置の場合
@@ -1350,7 +1359,7 @@ module Garage {
                         // 履歴に登録せずに実行
                         let delModel = delCommand.invoke();
                         this._updateItemElementsOnCanvas(delModel);
-
+                        this._loseTarget();
                         return;
                     }
                 }
