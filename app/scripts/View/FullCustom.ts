@@ -2557,6 +2557,7 @@ module Garage {
                         let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
                         let resolvedPath = editedImage.path.replace(/\\/g, "/");
                         image.path = editedImagePath;
+                        image.resizeOriginal = editedImagePath;
                         image.resolvedPath = resolvedPath;
 
                         //このバージョンでは、すべてのステートの画像を変更する。
