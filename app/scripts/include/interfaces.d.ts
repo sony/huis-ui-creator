@@ -851,3 +851,4 @@ declare var Remote: any; //! remote module
 declare var Menu: any; //! menu module
 declare var MenuItem: any; //! menu-item module
 declare var app: any; //! app module
+declare var node_crypt: any;

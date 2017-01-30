@@ -32,6 +32,8 @@ module Garage {
         Menu = require("electron").remote.Menu;
         MenuItem = require("electron").remote.MenuItem;
 
+        node_crypt = Remote.require('crypto');
+
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
         
         APP_VERSION = "";

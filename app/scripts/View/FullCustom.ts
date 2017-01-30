@@ -125,10 +125,15 @@ module Garage {
                     var remoteId = this._getUrlQueryParameter("remoteId");
                     this._renderCanvas(remoteId);
 
-                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     var gmodules = this.faceRenderer_canvas_.getModules();
-                    // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+
+                    // ボタンに設定された信号名を基リモコンに合わせる
+                    huisFiles.applyNumberedFunctionName(gmodules);
+
+                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
                     this.buttonDeviceInfoCache.load(gmodules);
+                    // ボタンに設定された信号名をキャッシュに合わせる
+                    huisFiles.applyCachedFunctionName(gmodules);
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -957,7 +962,7 @@ module Garage {
                 let remoteId = this.faceRenderer_pallet_.getRemoteId();
                 let functions = huisFiles.getMasterFunctions(remoteId);
                 let codeDb = huisFiles.getMasterCodeDb(remoteId);
-                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
                 let remoteName = huisFiles.getFace(remoteId).name;
 
@@ -1969,7 +1974,7 @@ module Garage {
                 $tooltip.find(".remote-info").text(remoteInfo);
 
                 //ファンクション情報をローカライズ
-                let outputFunctionName = functions[0];
+                let outputFunctionName = Util.HuisFiles.getPlainFunctionKey(functions[0]);
                 let $functionName:JQuery= $tooltip.find(".function-name");
                 $functionName.text(outputFunctionName);
                 var localizedString = null;
@@ -5127,7 +5132,7 @@ module Garage {
 
 
                                     deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-                                    deviceInfo.functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                                    deviceInfo.functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                                 }
                             } else if (deviceInfo.bluetooth_data != null) {
                                 //Bluetooth情報しかない場合

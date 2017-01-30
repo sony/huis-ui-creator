@@ -24,7 +24,24 @@ module Garage {
             params: Model.IImageResizeParams;
         }
 
-        
+
+        export interface IFunctionLabel {
+            /** 信号名 */
+            key: string;
+
+            /** 信号名表示 */
+            label: string;
+        }
+
+
+        /** 信号名に付与されるIDの文字長 */
+        const FUNC_ID_LEN: number = 4;
+
+        /** 信号名と連番を分ける区切り文字 */
+        const FUNC_NUM_DELIMITER: string = '#';
+
+        /** 信号がフルカスタムで再学習されたことを示すコード */
+        const FUNC_CODE_RELEARNED: string = '#';
 
 
         /**
@@ -507,7 +524,7 @@ module Garage {
                     return;
                 }
 
-                let masterFace = this._getMasterFace(remoteId);
+                let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
                     return null;
@@ -550,50 +567,119 @@ module Garage {
             }
 
             private _getMasterFunctions(remoteId: string): string[] {
-                var masterFace = this._getMasterFace(remoteId);
-                if (!masterFace) {
+                let masterFace = this._getFace(remoteId, true);
+                return HuisFiles.getFunctions(masterFace);
+            }
+
+            public getFaceFunctions(remoteId: string): string[] {
+                let face = this._getFace(remoteId, false);
+                return HuisFiles.getFunctions(face);
+            }
+
+            public getAllFunctions(remoteId: string): string[] {
+                let faceFunc = this.getFaceFunctions(remoteId);
+                let masterFunc = this.getMasterFunctions(remoteId);
+
+                return HuisFiles.mergeFunctions(masterFunc, faceFunc);
+            }
+
+            private static mergeFunctions(base: string[], additional: string[]): string[] {
+                if (base == null || base.length <= 0) {
+                    return additional;
+                } else if (additional.length <= 0) {
+                    return base;
+                }
+
+                let merged: string[] = base.concat();
+
+                for (let addFunc of additional) {
+                    if (merged.indexOf(addFunc) < 0) {
+                        // 存在しないので追加
+
+                        let sameFuncs =
+                            merged.filter((func) => {
+                                return HuisFiles.getPlainFunctionKey(func) === HuisFiles.getPlainFunctionKey(addFunc);
+                            });
+
+                        if (sameFuncs.length <= 0) {
+                            // 同名信号なし
+                            merged.push(addFunc);
+                            continue;
+                        }
+
+                        sameFuncs.push(addFunc);
+                        sameFuncs.sort((a, b) => {
+                            let numA = HuisFiles.extractFuncNumber(a);
+                            let numB = HuisFiles.extractFuncNumber(b);
+                            return (numA < numB) ? -1 : 1;
+                        });
+
+                        let insertIndex: number;
+                        let index = sameFuncs.indexOf(addFunc);
+                        if (index == sameFuncs.length - 1) {
+                            // 既存の最大番号を持つ信号の後に挿入
+                            insertIndex = merged.indexOf(sameFuncs[index - 1]) + 1;
+                        } else {
+                            // 自分の次に大きい番号を持つ信号の位置に挿入
+                            insertIndex = merged.indexOf(sameFuncs[index + 1]);
+                        }
+
+                        merged.splice(insertIndex, 0, addFunc);
+                    }
+                }
+
+                return merged;
+            }
+
+
+            /**
+             * face内に存在する信号名を取得
+             */
+            private static getFunctions(face: IGFace): string[] {
+                if (!face) {
                     //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
                     return null;
                 }
 
-                var functions: string[] = [];
-                var masterModules = masterFace.modules;
+                //var functions: string[] = [];
+                let functionCodeHash: IStringStringHash = {};
+                let faceModules = face.modules;
 
-                var getFunctions_modules = function (modules: IModule[], functions: string[]) {
+                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(modules)) {
                         return;
                     }
 
                     modules.forEach((module: IModule) => {
                         let buttons = module.button;
-                        getFunctions_buttons(buttons, functions);
+                        getFunctions_buttons(buttons, functionCodeHash);
                     });
 
                 };
 
-                var getFunctions_buttons = function (buttons: IButton[], functions: string[]) {
+                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(buttons)) {
                         return;
                     }
 
                     buttons.forEach((button: IButton) => {
                         let states = button.state;
-                        getFunctions_states(states, functions);
+                        getFunctions_states(states, functionCodeHash);
                     });
                 };
 
-                var getFunctions_states = function (states: IState[], functions: string[]) {
+                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
                     if (!_.isArray(states)) {
                         return;
                     }
 
                     states.forEach((state: IState) => {
                         let actions = state.action;
-                        getFunctions_actions(actions, functions);
+                        getFunctions_actions(actions, functionCodeHash);
                     });
                 };
 
-                var getFunctions_actions = function (actions: IAction[], functions: string[]) {
+                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
                     let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
 
                     if (!_.isArray(actions)) {
@@ -607,10 +693,10 @@ module Garage {
 
                             if (code != null && code != undefined && code != " ") {
                                 //学習によって登録された用 codeがある場合
-                                functions.push(code_db.function);
+                                functionCodeHash[code_db.function] = action.code;
                             } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
                                 //プリセット用 db_codeset と brand が空白文字で。
-                                functions.push(code_db.function);
+                                functionCodeHash[code_db.function] = "";
                             } else {
                                 //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
                                 //console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
@@ -624,13 +710,11 @@ module Garage {
 
                 };
 
-                // master の module にあるすべてのボタンの機能を取得する
-                getFunctions_modules(masterModules, functions);
+                // module にあるすべてのボタンの機能を取得する
+                getFunctions_modules(faceModules, functionCodeHash);
 
-                // 重複した機能を削除して返却
-                return functions.filter((value, index, array) => {
-                    return array.indexOf(value) === index;
-                });
+
+                return Object.keys(functionCodeHash);
             }
 
             /**
@@ -641,7 +725,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の code_db。見つからない場合は null。
              */
             getMasterCodeDb(remoteId: string): ICodeDB {
-                let masterFace = this._getMasterFace(remoteId);
+                let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
@@ -682,22 +766,60 @@ module Garage {
             * @return functionのIDとcodenの対応表を返す
             */
             getMasterFunctionCodeMap(remoteId: string): IStringStringHash{
-                let FUNCTION_NAME = TAGS.HuisFiles + "getMasterFunctionCode";
-                
+                return this.getFunctionCodeMap(remoteId, true);
+            }
+
+
+            /**
+             * 指定リモコンの信号名：信号の連想配列を取得
+             *
+             * @param remoteId {string}
+             * @param isMaster {boolean} master face を取得するかどうか
+             * @return {IStringStringHash}
+             */
+            private getFunctionCodeMap(remoteId: string, isMaster: boolean): IStringStringHash {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getFunctionCodeMap";
+
                 if (remoteId == undefined) {
                     console.warn(FUNCTION_NAME + "remoteId is undefined");
                     return null;
                 }
 
-                let masterFace : IGFace = this._getMasterFace(remoteId);
-                if (!masterFace) {
+                let face: IGFace = this._getFace(remoteId, isMaster);
+                if (!face) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
+                return HuisFiles.getFunctionCodeMapByModules(face.modules);
+            }
+
+
+            /**
+             * 対象リモコンのfaceおよびmasterFaceのマージされた 信号名：信号 の連想配列を取得
+             *
+             * @param remoteId {string}
+             * @return {IStringStringHash}
+             */
+            public getAllFunctionCodeMap(remoteId: string): IStringStringHash {
+                let master = this.getFunctionCodeMap(remoteId, true);
+                let face = this.getFunctionCodeMap(remoteId, false);
+
+                let merged = $.extend(true, face, master);
+
+                return merged;
+            }
+
+
+            /**
+             * 渡されたモジュールから 信号名：信号 の連想配列を取得
+             *
+             * @param modules {IGModule[]}
+             * @return {IStringSringHash}
+             */
+            private static getFunctionCodeMapByModules(modules: IGModule[]): IStringStringHash {
                 let result: IStringStringHash = {};
 
-                var modules = masterFace.modules;
                 for (let i = 0, ml = modules.length; i < ml; i++) {
                     var buttons = modules[i].button;
                     if (!buttons) {
@@ -714,25 +836,125 @@ module Garage {
                                 continue;
                             }
                             for (let l = 0, al = actions.length; l < al; l++) {
-                                let learningCode = actions[l].code;
+                                let code = (actions[l].code != null) ? actions[l].code : "";
                                 let functionName = actions[l].code_db.function;
-                                if (learningCode != null && learningCode != undefined && learningCode != " ") {
-                                    if (functionName != null && functionName != undefined && functionName != " ") {
-                                        result[functionName] = learningCode;
-                                        
-                                    }    
+                                if (functionName != null && functionName != undefined && functionName != " ") {
+
+                                    result[functionName] = code;
                                 }
                             }
                         }
                     }
                 }
 
-                if (Object.keys(result).length == 0) {
-                    return null;
+                return result;
+            }
+
+            /**
+             * HuisFilesを検索し、設定すべき信号名を取得
+             *
+             * @param funcName {string}
+             * @param code {string}
+             * @param remoteId {string}
+             * @return {string}
+             */
+            private findFunctionKeyInHuisFilesByFunctionName(funcName: string, code: string, remoteId: string): string {
+                let functionCodeHash = this.getAllFunctionCodeMap(remoteId);
+
+                return HuisFiles.findFuncNameOrCreateSpecialName(funcName, code, functionCodeHash);
+            }
+
+
+            /**
+             * 信号名から特殊文字を排除し、素の信号名を取得
+             *
+             * @param functionName {string} 
+             * @return {string}
+             */
+            static getPlainFunctionKey(functionName: string): string {
+                let delimiterIndex = functionName.indexOf(FUNC_NUM_DELIMITER);
+                if (delimiterIndex === -1) {
+                    return functionName;
+                } else {
+                    return functionName.substring(0, delimiterIndex);
+                }
+            }
+
+
+            /**
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は連番を付与した新規の信号名を返す。
+             *
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
+             */
+            private static findFuncNameOrCreateNumberedName(funcName: string, code: string, funcCodeHash: IStringStringHash): string {
+                return HuisFiles.findFuncNameOrCreate(
+                    funcName,
+                    code,
+                    funcCodeHash,
+                    (name, sameFuncs) => {
+                        let newKey = HuisFiles.getPlainFunctionKey(funcName);
+
+                        let i = 0;
+                        while (sameFuncs.indexOf(newKey) >= 0) {
+                            newKey = HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + i++;
+                        }
+
+                        return newKey;
+                    });
+            }
+
+
+            /**
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は該当ボタン独自の信号名を表すコードを付与した信号名を返す。
+             *
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
+             */
+            private static findFuncNameOrCreateSpecialName(funcName: string, code: string, funcCodeHash: IStringStringHash): string {
+                return HuisFiles.findFuncNameOrCreate(
+                    funcName,
+                    code,
+                    funcCodeHash,
+                    (name, sameFuncs) => {
+                        return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                    });
+            }
+
+
+            /**
+             * 既存の信号リストから該当する信号名を取得する。
+             * 該当する信号が無い場合は指定された新規信号名生成関数を呼び出す。
+             *
+             * @param funcName {string} 信号名
+             * @param code {string} 信号
+             * @param funcCodeHash {IStringStringHash} 既存の信号名リスト
+             * @param createFunc {(name, sameFuncs) => string} 該当信号が無かった場合の新規信号名生成関数
+             * @return {string} 同一とみなされた信号の信号名、または新規の信号名
+             */
+            private static findFuncNameOrCreate(funcName: string, code: string, funcCodeHash: IStringStringHash, createFunc: (name, sameFuncs) => string): string {
+                if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
+                    return HuisFiles.getPlainFunctionKey(funcName);
                 }
 
-                return result;
+                let sameFuncs: string[] = [];
+                for (let key in funcCodeHash) {
+                    if (HuisFiles.getPlainFunctionKey(funcName) == HuisFiles.getPlainFunctionKey(key)) {
+                        if (code == funcCodeHash[key]) {
+                            return key;
+                        }
 
+                        sameFuncs.push(key);
+                    }
+                }
+
+                return createFunc(funcName, sameFuncs);
             }
 
             /**
@@ -742,7 +964,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
              */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
-                let masterFace: IGFace = this._getMasterFace(remoteId);
+                let masterFace: IGFace = this._getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
@@ -866,7 +1088,7 @@ module Garage {
 
                 let functions = this.getMasterFunctions(remoteId);
                 let codeDb = this.getMasterCodeDb(remoteId);
-                let functionCodeHash = this.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = this.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = this.getMasterBluetoothData(remoteId);
 
                 let face = huisFiles.getFace(remoteId);
@@ -1305,7 +1527,7 @@ module Garage {
                     }
                     if (action.code_db) {
                         normalizedAction.code_db = {
-                            function: (action.code_db.function) ? action.code_db.function : "none",
+                            function: (action.code_db.function) ? HuisFiles.getPlainFunctionKey(action.code_db.function) : "none",
                             brand: action.code_db.brand,
                             device_type: action.code_db.device_type,
                             db_codeset: action.code_db.db_codeset
@@ -1484,7 +1706,7 @@ module Garage {
                 return normalizedImages;
             }
 
-            private _getMasterFace(remoteId: string): Model.Face {
+            private _getFace(remoteId: string, isMaster: boolean): Model.Face {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
@@ -1508,11 +1730,11 @@ module Garage {
                     return null;
                 }
 
-                var masterFace = targetRemoteInfos[0].mastarFace;
-                if (!masterFace) {
+                var face = isMaster ? targetRemoteInfos[0].mastarFace : targetRemoteInfos[0].face;
+                if (!face) {
                     return null;
                 }
-                return masterFace;
+                return face;
             }
 
             /**
@@ -1604,17 +1826,26 @@ module Garage {
                     let remoteId = this.remoteList_[i].remote_id;
                     let facePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
                     let masterFacePath = path.join(this.huisFilesRoot_, remoteId, "master_" + remoteId + ".face");
-                    let face: Model.Face = this._parseFace(facePath, remoteId);
-                    let masterFace: Model.Face = this._parseFace(masterFacePath, remoteId);
+                    let masterFace: Model.Face = this.parseFaceWithNumberingFuncName(masterFacePath, remoteId);
 
-                    if (face != undefined && remoteId != undefined) {
-                        if (masterFace != undefined){
+                    if (masterFace != undefined && remoteId != undefined) {
+                        let face: Model.Face = this._parseFace(facePath, remoteId);
+
+                        if (face != undefined) {
+                            // MastarFaceの連番付き信号名をFaceに反映
+                            HuisFiles.applyNumberedFunctionNameByModule(face.modules, masterFace.modules);
+
                             remoteInfos.push({
                                 remoteId: remoteId,
                                 face: face,
                                 mastarFace: masterFace
                             });
-                        }else{
+                        }
+                    } else {
+                        // Masterが無い場合はFace自体で連番作成
+                        let face: Model.Face = this.parseFaceWithNumberingFuncName(facePath, remoteId);
+
+                        if (face != undefined) {
                             remoteInfos.push({
                                 remoteId: remoteId,
                                 face: face,
@@ -1625,6 +1856,24 @@ module Garage {
                 }
 
                 return remoteInfos;
+            }
+
+            /**
+             * face を読み込み、信号名に連番を付与する
+             *
+             * @param facePath {string}
+             * @param remoteId {string}
+             * @param rootDirectory {string}
+             * @return {IGFace}
+             */
+            parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
+                let face: Model.Face = this._parseFace(facePath, remoteId, rootDirectory);
+
+                if (face != null && face.modules != null) {
+                    HuisFiles.numberFunctionNameInModules(face.modules);
+                }
+
+                return face;
             }
 
             /**
@@ -1688,8 +1937,444 @@ module Garage {
                     face.modules.push(gmodule);
                 }
 
-
                 return face;
+            }
+
+            /**
+             * モジュール内において同一信号名にもかかわらず異なる信号が設定されているものに連番を付与する
+             *
+             * @param modules {IGModule[]} 検査対象モジュール
+             */
+            private static numberFunctionNameInModules(modules: IGModule[]) {
+                let functionCodeHash: IStringStringHash = {};
+
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code_db == null || action.code_db.function == null) {
+                                    continue; // 信号名が無い場合
+                                }
+
+                                if (action.code == null || action.code.length <= 0) {
+                                    let code_db = action.code_db;
+                                    if (code_db.db_codeset == " " && code_db.brand == " " && action.bluetooth_data == null) {
+                                        // 信号が無く かつ プリセットやBluetoothでもない
+                                        continue;
+                                    }
+                                }
+
+                                let func = action.code_db.function;
+                                let code = (action.code != null) ? action.code : "";
+
+                                if (!(func in functionCodeHash)) {
+                                    functionCodeHash[func] = code;
+                                    console.log(func + ':' + code);
+                                } else if (functionCodeHash[func] != code) {
+                                    let numberedFunc = HuisFiles.findFuncNameOrCreateNumberedName(func, code, functionCodeHash);
+
+                                    action.code_db.function = numberedFunc;
+                                    functionCodeHash[numberedFunc] = code;
+                                }
+                                    
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * HuisFiles内の信号名を対象モジュールに反映する
+             *
+             * @param modules {IGModule[]}
+             */
+            public applyNumberedFunctionName(modules: IGModule[]) {
+
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code_db == null ||
+                                    action.code_db.function == null) {
+                                    continue;
+                                }
+
+                                let remoteId = this.getRemoteIdByAction(action);
+                                if (remoteId == null) continue; // 基リモコンなし
+
+                                let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
+                                action.code_db.function = numberedFunc;
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * 信号名をキャッシュから取得し設定
+             *
+             * @param modules {IGModule[]} 更新対象のアイテムおよびキャッシュを含むモジュール
+             */
+            public applyCachedFunctionName(modules: IGModule[]) {
+                for (let mod of modules) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code.length <= 0 ||
+                                    action.code_db == null ||
+                                    action.deviceInfo == null ||
+                                    action.deviceInfo.functionCodeHash == null) {
+                                    continue;
+                                }
+
+                                let remoteId = this.getRemoteIdByAction(action);
+                                if (this.remoteList.filter((remote) => { return remote.remote_id == remoteId }).length > 0) {
+                                    // 基リモコンが存在する場合はそちらを優先するため、ここでは信号名を更新しない
+                                    continue;
+                                }
+
+                                let existFunc = false;
+                                let funcCodeHash = action.deviceInfo.functionCodeHash;
+                                for (let funcName of Object.keys(funcCodeHash)) {
+                                    if (funcCodeHash[funcName] == action.code) {
+                                        action.code_db.function = funcName;
+                                        existFunc = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!existFunc) {
+                                    // 基リモコン無し && キャッシュにも存在しなかった場合はIDを振る
+                                    action.code_db.function = HuisFiles.getPlainFunctionKey(action.code_db.function) + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * 対象モジュール内の信号名を基モジュール内にある信号名に合わせる。
+             * 基モジュールに同信号名別信号が存在する場合は連番を付与した新しい信号名に変更する。
+             *
+             * @param target {IGModule[]} 更新対象を含むモジュール
+             * @param original {IGModule[]} 基にするモジュール
+             */
+            private static applyNumberedFunctionNameByModule(target: IGModule[], original: IGModule[]) {
+                let funcCodeHash = HuisFiles.getFunctionCodeMapByModules(original);
+                
+                for (let mod of target) {
+                    if (mod.button == null) continue;
+                    for (let button of mod.button) {
+                        if (button.state == null) continue;
+                        for (let state of button.state) {
+                            if (state.action == null) continue;
+                            for (let action of state.action) {
+                                if (action.code == null ||
+                                    action.code_db == null ||
+                                    action.code_db.function == null) {
+                                    continue;
+                                }
+
+                                let funcName = HuisFiles.findFuncNameOrCreateNumberedName(action.code_db.function, action.code, funcCodeHash);
+                                action.code_db.function = funcName;
+                                funcCodeHash[funcName] = action.code;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            /**
+             * 信号コードからIDとなるハッシュ値を生成
+             *
+             * @param code {string} 基にする信号
+             * @return {string} 生成したハッシュ値
+             */
+            private createHashBySignalCode(code: string): string {
+                const hash = node_crypt.createHash('sha1');
+                hash.update(code, 'utf8');
+
+                return parseInt(hash.digest('hex'), 16)
+                    .toString(36)
+                    .toUpperCase()
+                    .substring(0, FUNC_ID_LEN);
+            }
+
+
+
+            /**
+             * 連番付き信号名リストを表示用データに変換
+             *
+             * @param functions {string[]}
+             * @return {IFunctionLabel[]}
+             */
+            public static translateFunctions(functions: string[]): IFunctionLabel[] {
+                let translatedFuncs = [];
+
+                // 連番付与済みfunctionリスト
+                let numberedFuncs: string[] = [];
+
+                for (let func of functions) {
+                    let plainName = Util.HuisFiles.getPlainFunctionKey(func);
+                    if (plainName != func) {
+                        // 連番付き
+                        let numCode = func.substring(func.indexOf(FUNC_NUM_DELIMITER) + 1);
+                        if (numCode == FUNC_CODE_RELEARNED) {
+                            // フルカスタム再学習ボタン（基リモコン有り）
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
+                            });
+                        } else if (numCode.length == FUNC_ID_LEN) {
+                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + ' (' + $.i18n.t('button.function.STR_REMOTE_BTN_ID') +':' + numCode + ')'
+                            });
+                        } else {
+                            // 連番
+                            let num = Number(numCode) + 2;
+                            translatedFuncs.push({
+                                key: func,
+                                label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
+                            });
+                        }
+
+                        if (numberedFuncs.indexOf(plainName) < 0) {
+                            // 連番付きの信号名のオリジナルを記憶しておく
+                            numberedFuncs.push(plainName);
+                        }
+
+                    } else {
+                        // 連番なし
+                        translatedFuncs.push({
+                            key: func,
+                            label: $.i18n.t('button.function.' + plainName)
+                        });
+                    }
+                }
+
+                // 連番付きが存在する信号名のオリジナルに1番を付与
+                for (let numberedFunc of numberedFuncs) {
+
+                    for (let translated of translatedFuncs) {
+                        if (translated.key === numberedFunc) {
+                            translated.label += ' (1)';
+                            break;
+                        }
+                    }
+                }
+
+                return translatedFuncs;
+            }
+
+            /**
+             * 連番付き信号名から番号を抽出
+             * 連番なしの場合は１、特殊コード付きの場合は0を返す
+             *
+             * @param funcKey {string} 信号名
+             * @return {number} 番号
+             */
+            private static extractFuncNumber(funcKey: string): number {
+                let delimiterIndex = funcKey.indexOf(FUNC_NUM_DELIMITER);
+                if (delimiterIndex < 0) {
+                    return 1;
+                }
+
+                let numCode = funcKey.substring(delimiterIndex + 1);
+
+                if (numCode.length == FUNC_ID_LEN || numCode == FUNC_CODE_RELEARNED) {
+                    // IDは4桁全て数字の可能性もあるので先にチェック
+                    return 0;
+                }
+
+                let num = Number(numCode);
+                if (isNaN(num)) {
+                    return 0;
+                } else {
+                    return num + 2;
+                }
+            }
+
+
+            /*
+            * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
+            * @param module :IModule 参照元のモジュール
+            * @param gImages :IGImage[] 代入先のモジュール
+            */
+            private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
+                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
+
+                if (iModule == null) {
+                    console.warn(FUNCTION_NAME + "iModule is null");
+                    return;
+                }
+
+                if (gImages == null) {
+                    console.warn(FUNCTION_NAME + "gImages is null");
+                    return;
+                }
+
+                if (!iModule.version) {
+                    return;//バージョン情報が存在しない場合、なにもしない。
+                }
+            
+                for (let i = 0; i < gImages.length; i++){
+                    gImages[i].version = iModule.version;
+                }
+            }
+
+
+            /*
+            * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+            * @param module :IModule 参照元のモジュール
+            * @param gButtons :IGButton[] 代入先のモジュール
+            */
+            private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
+                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
+
+                if (iModule == null) {
+                    console.warn(FUNCTION_NAME + "iModule is null");
+                    return;
+                }
+
+                if (gButtons == null) {
+                    console.warn(FUNCTION_NAME + "gButtons is null");
+                    return;
+                }
+
+                if (!iModule.version) {
+                    return;//バージョン情報が存在しない場合、なにもしない。
+                }
+
+                for (let i = 0; i < gButtons.length; i++) {
+                    gButtons[i].version = iModule.version;
+                }
+            }
+
+
+            /*
+            * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
+            * @param module :IModule 参照元のモジュール
+            * @param gLabel :IGLabel[] 代入先のモジュール
+            */
+            private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
+                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGLabel : ";
+
+                if (iModule == null) {
+                    console.warn(FUNCTION_NAME + "iModule is null");
+                    return;
+                }
+
+                if (gLabel == null) {
+                    console.warn(FUNCTION_NAME + "gLabel is null");
+                    return;
+                }
+
+                if (!iModule.version) {
+                    return;//バージョン情報が存在しない場合、なにもしない。
+                }
+
+                for (let i = 0; i < gLabel.length; i++) {
+                    gLabel[i].version = iModule.version;
+                }
+            }
+
+            /**
+             * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
+             * 
+             * @param images {IImage[]} [in] IGImage[] に変換する IImage[]
+             * @return {IGImage[]} 変換された IGImage[]
+             */
+            private _images2gimages(images: IImage[]): IGImage[] {
+                let gimages: IGImage[] = $.extend(true, [], images);
+                gimages.forEach((image) => {
+                    let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
+                    if (garage_extensions) {
+                        image.garageExtensions = {
+                            original: garage_extensions.original,
+                            resolvedOriginalPath: "",
+                            resizeMode: garage_extensions.resize_mode
+                        };
+                        delete image["garage_extensions"];
+                    }
+                });
+
+                return gimages;
+            }
+
+            /**
+             * IButton[] を IGButton[] に変換する。
+             * 
+             * @param buttons {IButton[]} IGButton[] に変換する IButton[]
+             * @return {IGButton[]} 変換された IGButton[]
+             */
+            private _buttons2gbuttons(buttons: IButton[]): IGButton[] {
+                let gbuttons: IGButton[] = [];
+                buttons.forEach((button) => {
+                    let gstates: IGState[] = this._states2gstates(button.state);
+                    let gbutton: IGButton = {
+                        area: $.extend(true, {}, button.area),
+                        state: gstates,
+                        currentStateId: undefined
+                    };
+                    if (button.default) {
+                        gbutton.default = button.default;
+                    }
+                    if (button.name) {
+                        gbutton.name = button.name;
+                    }
+                    gbuttons.push(gbutton);
+                });
+
+                return gbuttons;
+            }
+
+            /**
+             * IState[] を IGState[] に変換する。
+             * 
+             * @param buttons {IState[]} IGState[] に変換する IState[]
+             * @return {IGState[]} 変換された IGState[]
+             */
+            private _states2gstates(states: IState[]): IGState[] {
+                let gstates: IGState[] = [];
+                states.forEach((state) => {
+                    let gstate: IGState = {};
+                    if (!_.isUndefined(state.id)) {
+                        gstate.id = state.id;
+                    }
+                    if (state.image) {
+                        gstate.image = this._images2gimages(state.image);
+                    }
+                    if (state.label) {
+                        gstate.label = $.extend(true, [], state.label);
+                    }
+                    if (state.action) {
+                        gstate.action = $.extend(true, [], state.action);
+                    }
+                    if (state.translate) {
+                        gstate.translate = $.extend(true, [], state.translate);
+                    }
+                    if (!_.isUndefined(state.active)) {
+                        gstate.active = state.active;
+                    }
+                    gstates.push(gstate);
+                });
+
+                return gstates;
             }
 
             /**

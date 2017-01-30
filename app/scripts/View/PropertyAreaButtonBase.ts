@@ -369,7 +369,7 @@ module Garage {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId);
                     }else{
-                        //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                        //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none");
@@ -548,7 +548,14 @@ module Garage {
 
                 //FunctionプルダウンのDOMを表示。
                 let functions: string[] = this.getFunctionsOf(order);
+
                 if (functions != null) {
+                    // functionsに自分のキーが存在しない場合は追加
+                    if (this.isValidValue(functionName) &&
+                        functions.indexOf(functionName) < 0) {
+                        functions.unshift(functionName);
+                    }
+
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
 
@@ -557,7 +564,7 @@ module Garage {
                     }
 
                     let inputSignalData = {
-                        functions: functions,
+                        functions: Util.HuisFiles.translateFunctions(functions),
                         id: stateId,
                         order: order
                     }
@@ -619,11 +626,9 @@ module Garage {
                     return;
                 }
 
-                let functions = huisFiles.getMasterFunctions(remoteId);
+                let functions = huisFiles.getAllFunctions(remoteId);
 
-                if (functions) {
-                    return functions;
-                } else {
+                if (functions == null || functions.length <= 0) {
                     try {
                         // HuisFilesに存在しない場合はキャッシュから表示
                         return this.getDeviceInfoByRemoteId(remoteId).functions;
@@ -632,6 +637,8 @@ module Garage {
                         return;
                     }
                 }
+
+                return functions;
             }
           
           /*

@@ -1,7 +1,6 @@
 ﻿/// <reference path="../include/Interfaces.d.ts" />
 
 /* tslint:disable:max-line-length */
-var node_crypt = Remote.require('crypto');
 
 module Garage {
     export module Model {

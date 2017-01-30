@@ -152,7 +152,7 @@ module Garage {
                 let face             = huisFiles.getFace(remoteId);
                 let functions        = huisFiles.getMasterFunctions(remoteId);
                 let codeDb           = huisFiles.getMasterCodeDb(remoteId);
-                let functionCodeHash = huisFiles.getMasterFunctionCodeMap(remoteId);
+                let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
 
                 if (face == null ||
@@ -192,6 +192,10 @@ module Garage {
                                 let targetDeviceInfo = gbutton.state[stateIndex].action[actionIndex].deviceInfo;
                                 if (!targetDeviceInfo) continue;
 
+                                if (targetDeviceInfo.code_db.function != null &&
+                                    targetDeviceInfo.code_db.function.length > 0) {
+                                    targetDeviceInfo.code_db.function = HuisFiles.getPlainFunctionKey(targetDeviceInfo.code_db.function);
+                                }
                                 targetDeviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
                                 newList.push(targetDeviceInfo);
                             }
