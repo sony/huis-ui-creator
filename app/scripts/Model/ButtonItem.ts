@@ -124,6 +124,11 @@ module Garage {
                 //console.log("Model.ButtonItem initialize");
             }
 
+            public isAirconButton() {
+                let airconButtonNamePrefix = "STR_REMOTE_BTN_AIRCON";
+                return (this.name.indexOf(airconButtonNamePrefix) == 0);
+            }
+
             get area(): IArea {
                 return this.get("area");
             }

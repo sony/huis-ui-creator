@@ -270,7 +270,7 @@ module Garage {
                 }
 
 
-                if (this.isIncludeSpecificDeviceType(this.model, DEVICE_TYPE_AC) ||
+                if (this.model.isAirconButton() ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_UP_VALUE) ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_LEFT_VALUE) ||

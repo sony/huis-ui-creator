@@ -5172,21 +5172,7 @@ module Garage {
                 if (this.currentTargetButtonStates_) {
                     let templateState: Tools.JST = null;
 
-                    // エアコンの有無を検査
-                    let containsAircon: boolean = false;
-                    for (let state of button.state) {
-                        if (!state.action) continue;
-
-                        for (let action of state.action) {
-                            if (!action.deviceInfo || !action.deviceInfo.code_db || !action.deviceInfo.code_db.device_type) continue;
-
-                            if (action.deviceInfo.code_db.device_type == "Air conditioner") {
-                                containsAircon = true;
-                            }
-                        }
-                    }
-
-                    if (containsAircon) {
+                    if (button.isAirconButton()) {
                     // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
                         // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
                         templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
