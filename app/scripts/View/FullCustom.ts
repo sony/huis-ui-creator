@@ -1311,10 +1311,6 @@ module Garage {
                 if (this.isDoubleClick(event)) {
                     this.onPalletItemDblClick();
                     this.clearPalletItemClickCount(this);
-                } else {
-                    if (this.isFromPallet()) {
-                        this._loseTarget();
-                    }
                 }
 
             }
@@ -1330,8 +1326,8 @@ module Garage {
                 this._updateCurrentModelData("area", newArea, false);
             }
 
-            private isFromPallet(): boolean {
-                return !(this._getTargetPageModule(this.mouseMoveStartPosition_));
+            private isOutsideOfCanvas(position: Model.Position): boolean {
+                return !(this._getTargetPageModule(position));
             }
 
             /**
@@ -1345,7 +1341,7 @@ module Garage {
                 let newPosition: IPosition = this._getGriddedDraggingItemPosition(position, isCrossPageMoving);
                 let newArea: IArea = this._validateArea({ x: newPosition.x, y: newPosition.y });
 
-                let isFromPallet: boolean = this.isFromPallet();
+                let isFromPallet: boolean = this.isOutsideOfCanvas(this.mouseMoveStartPosition_);
 
                 if (isFromPallet) {
                     // 開始位置がキャンバス外の場合＝パレットからの配置の場合
@@ -3824,6 +3820,10 @@ module Garage {
                 if (this.$currentTarget_ == null) {
                     return;
                 }
+                let currentItemCenterPosition = this._getCurrentTargetCenterPosition();
+                if (this.isOutsideOfCanvas(currentItemCenterPosition)) {
+                    return;
+                }
 
                 this.clipboard.clear();
                 this.clipboard.setItem(
@@ -5554,6 +5554,12 @@ module Garage {
                     x: this.$currentTarget_.offset().left,
                     y: this.$currentTarget_.offset().top,
                 }
+            }
+
+            private _getCurrentTargetCenterPosition(): Model.Position {
+                return new Model.Position(
+                    this.$currentTarget_.offset().left + this.$currentTarget_.width() / 2,
+                    this.$currentTarget_.offset().top + this.$currentTarget_.height() / 2);
             }
 
             private _getCurrentCanvasPosition(): IPosition {
