@@ -2306,7 +2306,6 @@ module Garage {
              */
             private onItemPropertySelectClicked(event: Event) {
                 var $target = $(event.currentTarget);
-                var $customSelect = $("#face-item-detail-area").find(".custom-select");
                 var selectId = $target.find("select").attr("id");
                 var $selectMenu = $("#" + selectId + "-listbox");
 
