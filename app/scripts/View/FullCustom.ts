@@ -2316,7 +2316,7 @@ module Garage {
 
                 var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
 
-                $selectMenu.outerWidth(targetWidth);
+                $selectMenu.outerWidth(Math.max(popupMenuWidth, targetWidth));
 
                 var options: PopupOptions = {
                     x: 0,
