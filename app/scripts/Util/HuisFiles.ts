@@ -836,10 +836,12 @@ module Garage {
                                 continue;
                             }
                             for (let l = 0, al = actions.length; l < al; l++) {
-                                let code = (actions[l].code != null) ? actions[l].code : "";
-                                let functionName = actions[l].code_db.function;
-                                if (functionName != null && functionName != undefined && functionName != " ") {
-
+                                let action = actions[l];
+                                let code = (action.code != null) ? action.code : "";
+                                let codeDb = action.code_db;
+                                let functionName = action.code_db.function;
+                                if (functionName != null && functionName != undefined && functionName != " " &&
+                                    (code != "" || codeDb.db_codeset != " " || codeDb.brand != " " || action.bluetooth_data != null)) {
                                     result[functionName] = code;
                                 }
                             }
@@ -942,11 +944,12 @@ module Garage {
                 if (funcCodeHash == null || Object.keys(funcCodeHash).length <= 0) {
                     return HuisFiles.getPlainFunctionKey(funcName);
                 }
+                let tmpCode = code ? code : "";
 
                 let sameFuncs: string[] = [];
                 for (let key in funcCodeHash) {
                     if (HuisFiles.getPlainFunctionKey(funcName) == HuisFiles.getPlainFunctionKey(key)) {
-                        if (code == funcCodeHash[key]) {
+                        if (tmpCode == funcCodeHash[key]) {
                             return key;
                         }
 
@@ -1972,7 +1975,6 @@ module Garage {
 
                                 if (!(func in functionCodeHash)) {
                                     functionCodeHash[func] = code;
-                                    console.log(func + ':' + code);
                                 } else if (functionCodeHash[func] != code) {
                                     let numberedFunc = HuisFiles.findFuncNameOrCreateNumberedName(func, code, functionCodeHash);
 
@@ -2000,8 +2002,7 @@ module Garage {
                         for (let state of button.state) {
                             if (state.action == null) continue;
                             for (let action of state.action) {
-                                if (action.code == null ||
-                                    action.code_db == null ||
+                                if (action.code_db == null ||
                                     action.code_db.function == null) {
                                     continue;
                                 }
