@@ -2310,7 +2310,7 @@ module Garage {
                 var $selectMenu = $("#" + selectId + "-listbox");
 
                 var targetWidth = $target.width();
-                var targeHeight = $target.height()
+                var targeHeight = $target.height();
                 var popupMenuWidth = $selectMenu.outerWidth(true);
                 var popupMenuHeight = $selectMenu.outerHeight(true);
 
