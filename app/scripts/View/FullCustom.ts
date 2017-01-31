@@ -4016,8 +4016,8 @@ module Garage {
                     var BIAS_X = BIAS_X_DEFAULT_GRID_LEFT;
                     var BIAS_Y = 0
 
-                    newX = Math.round(position.x / this.gridSize_) * this.gridSize_ + BIAS_X;
-                    newY = Math.round(position.y / this.gridSize_) * this.gridSize_ + BIAS_Y;
+                    newX = Math.round((position.x-BIAS_X) / this.gridSize_) * this.gridSize_ + BIAS_X;
+                    newY = Math.round((position.y-BIAS_Y) / this.gridSize_) * this.gridSize_ + BIAS_Y;
 
                 } else {
                     newX = Math.round(position.x / this.gridSize_) * this.gridSize_;
