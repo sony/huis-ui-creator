@@ -290,28 +290,32 @@ module Garage {
                         remoteId = this.getRemoteIdByCode(checkCode);
                     }
 
-                    // functionCodeHashでみつからない場合、deviceinfoで検索
-                    if (remoteId == null &&
-                        action.deviceInfo) {
-                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
-                    }
+                    //DEVICE_TYPE_LEARNEDの場合、間違ったremoteIdを検索してしまうので防止する。
+                    if (action.code_db.device_type !== DEVICE_TYPE_LEARNED) {
 
-                    //deviceinfoでみつからない場合、bluetoothの情報で検索
-                    if (remoteId == null &&
-                        action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device &&
-                        action.deviceInfo &&
-                        action.deviceInfo.remoteName != null) {
-                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
-                    }
+                        // functionCodeHashでみつからない場合、deviceinfoで検索
+                        if (remoteId == null &&
+                            action.deviceInfo) {
+                            remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                        }
+
+                        //deviceinfoでみつからない場合、bluetoothの情報で検索
+                        if (remoteId == null &&
+                            action.bluetooth_data &&
+                            action.bluetooth_data.bluetooth_device &&
+                            action.deviceInfo &&
+                            action.deviceInfo.remoteName != null) {
+                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                        }
 
 
-                    // codebluetoothでみつからない場合、code_dbで検索
-                    if (remoteId == null &&
-                        action.deviceInfo &&
-                        action.deviceInfo.code_db) {
-                        let codeDb = action.deviceInfo.code_db;
-                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                        // codebluetoothでみつからない場合、code_dbで検索
+                        if (remoteId == null &&
+                            action.deviceInfo &&
+                            action.deviceInfo.code_db) {
+                            let codeDb = action.deviceInfo.code_db;
+                            remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                        }
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
