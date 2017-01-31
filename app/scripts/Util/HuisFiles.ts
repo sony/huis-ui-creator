@@ -836,10 +836,12 @@ module Garage {
                                 continue;
                             }
                             for (let l = 0, al = actions.length; l < al; l++) {
-                                let code = (actions[l].code != null) ? actions[l].code : "";
-                                let functionName = actions[l].code_db.function;
-                                if (functionName != null && functionName != undefined && functionName != " ") {
-
+                                let action = actions[l];
+                                let code = (action.code != null) ? action.code : "";
+                                let codeDb = action.code_db;
+                                let functionName = action.code_db.function;
+                                if (functionName != null && functionName != undefined && functionName != " " &&
+                                    (code != "" || codeDb.db_codeset != " " || codeDb.brand != " " || action.bluetooth_data != null)) {
                                     result[functionName] = code;
                                 }
                             }
