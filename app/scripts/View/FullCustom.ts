@@ -2730,6 +2730,13 @@ module Garage {
             private onEditDoneButtonClicked(event: Event) {
                 let FUNCTION_NAME = TAG + "onEditDoneButtonClicked : ";
 
+                let dialogProps = DIALOG_PROPS_CREATE_NEW_REMOTE;
+
+                let dialog = new CDP.UI.Dialog(dialogProps.id, {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: dialogProps.options.title,
+                });
+                dialog.show().css("color", "white");
 
                 $("#button-edit-done").prop("disabled", true); // 二度押し対策
                 // 直前に選択されていたボタンの状態更新があれば行う

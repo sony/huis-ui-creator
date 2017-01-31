@@ -10,6 +10,8 @@
             import DialogOptions = CDP.UI.DialogOptions;
 
             var TAG = "Util.HuisDev";
+            const SPINNER_ID_SELECTER = "#common-dialog-center-spinner";
+            const SPINNER_DIALOG_CLASS_SELECTER = ".spinner-dialog";
 
             var usb_dev = require("usb_dev");
 
@@ -238,6 +240,7 @@
              */
             export class FileSyncTask {
                 static ERROR_TYPE_CANCELED: string = "canceled";
+                private $dialog;
 
                 private _isCanceled: boolean;
 
@@ -247,6 +250,33 @@
 
                 private _cancel(): void {
                     this._isCanceled = true;
+                }
+
+                private _stopSpinner() {
+                    var $spinner = $(SPINNER_ID_SELECTER);
+                    $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                }
+
+                private _changeDialog(msg: string, imgPath: string) {
+                    if (msg != null) {
+                        var $dialog = $(SPINNER_DIALOG_CLASS_SELECTER);
+                        $dialog.find("p").html(msg);
+                    }
+                    if (imgPath != null) {
+                        var $spinner = $(SPINNER_ID_SELECTER);
+                        $spinner.css("background-image", imgPath);
+                    }
+                }
+
+                private _getDialog(): JQuery {
+                    if (this.$dialog == null) {
+                        this.$dialog = $(SPINNER_DIALOG_CLASS_SELECTER);
+                    }
+                    return this.$dialog;
+                }
+
+                private _isOpeningDialog(): boolean {
+                    return this._getDialog()[0] != null;
                 }
 
                 /**
@@ -272,16 +302,20 @@
                             } else {
                                 dialogTitle = "同期中です。";
                             }
-                            dialog = new CDP.UI.Dialog(dialogProps.id, {
-                                src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                                title: dialogTitle,
-                            });
-                            console.log("sync.exec dialog.show()");
-                            dialog.show().css("color", "white");
+                            let dialogSrc = CDP.Framework.toUrl("/templates/dialogs.html");
 
+                            if (this._isOpeningDialog()) {
+                                this._changeDialog(dialogTitle, dialogSrc);
+                            } else {
+                                dialog = new CDP.UI.Dialog(dialogProps.id, {
+                                    src: dialogSrc,
+                                    title: dialogTitle,
+                                });
+                                console.log("sync.exec dialog.show()");
+                                dialog.show().css("color", "white");
+                            }
                         }
                     }
-
 
                     setTimeout(() => {
                         this._syncHuisFiles(srcRootDir, destRootDir, (err) => {
@@ -296,16 +330,10 @@
 
                                 // ダイアログが閉じられたら、コールバックを呼び出し終了
                                 if (dialogProps.options.anotherOption.title && dialogProps.id === "#common-dialog-spinner") {//スピナーダイアログの場合
-                                    var $dialog = $(".spinner-dialog");
-                                    var $spinner = $("#common-dialog-center-spinner");
-                        
-                                    $spinner.removeClass("spinner");//アイコンが回転しないようにする。
-                                    if (dialogProps.options.anotherOption.src) {//アイコンの見た目を変える。
-                                        $spinner.css("background-image", dialogProps.options.anotherOption.src);
-                                    }
-                                    if (dialogProps.options.anotherOption.title) {//メッセージを変える
-                                        $dialog.find("p").html(dialogProps.options.anotherOption.title);
-                                    }
+                                    //アイコンが回転しないようにする
+                                    this._stopSpinner();
+                                    //アイコンの見た目、メッセージを変える。
+                                    this._changeDialog(dialogProps.options.anotherOption.title, dialogProps.options.anotherOption.src);
                                 }
 
                                 setTimeout(() => {
