@@ -135,9 +135,7 @@ module Garage {
 
                 let cssPath = JQueryUtils.decodeUriValidInWindowsAndCSS(backgroundImageCss);
 
-                //url("file:／／／  ?[任意の数字]" の間を抽出。 ここで、?[任意の数字]")にしてしまうと、ユーザー名に)があった場合バグを起こす。
-                let path = cssPath.match(/[^url\("file:\/\/\/][^\?"]*/);
-
+                let path = cssPath.match(/[^url\("file:\/\/\/][^\?"\)]*/);
                 if (path && path[0]) {
                     return path[0];
                 } else {
