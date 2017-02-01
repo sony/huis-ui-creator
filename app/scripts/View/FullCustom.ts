@@ -1297,13 +1297,11 @@ module Garage {
 
                 var position: Model.Position = new Model.Position(event.pageX, event.pageY);
 
-                if (!position.isSame(this.mouseMoveStartPosition_)) {
-                    // リサイザーが選択されている場合は、アイテムのリサイズを行う
-                    if (this.selectedResizer_) {
-                        this._resizeItemWithMouse(position, true);
-                    } else { // それ以外の場合は、アイテムの移動
-                        this._moveItemWithMouse(position);
-                    }
+                // リサイザーが選択されている場合は、アイテムのリサイズを行う
+                if (this.selectedResizer_) {
+                    this._resizeItemWithMouse(position, true);
+                } else { // それ以外の場合は、アイテムの移動
+                    this._moveItemWithMouse(position);
                 }
 
                 this.$currentTarget_.removeClass("moving-item");
@@ -1355,7 +1353,6 @@ module Garage {
                         // 履歴に登録せずに実行
                         let delModel = delCommand.invoke();
                         this._updateItemElementsOnCanvas(delModel);
-                        this._loseTarget();
                         return;
                     }
                 }
