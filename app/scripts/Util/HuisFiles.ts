@@ -347,7 +347,7 @@ module Garage {
                     if (!face) {
                         continue;
                     }
-                    let codesMaster: string[] = this.getMasterCodes(remoteId);
+                    let codesMaster: string[] = this.getMasterFaceCodes(remoteId);
                     let deviceType = face.category;
 
                     //サポート外のdeviceTypeだった場合、次のremoteIdへ
@@ -521,8 +521,8 @@ module Garage {
              * @param remoteId {string} リモコンの remoteId
              * @return {strings[]} master face に記述されている codeをすべて格納した配列。見つからない場合は null。
              */
-            private getMasterCodes(remoteId: string): string[] {
-                let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterCode: ";
+            private getMasterFaceCodes(remoteId: string): string[] {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterFaceCode: ";
                 if (remoteId == undefined) {
                     console.warn(FUNCTION_NAME + "remoteId is undefined");
                     return;
@@ -530,7 +530,7 @@ module Garage {
 
                 let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
-                    console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
+                    console.warn(TAGS.HuisFiles + "getMasterFaceCode() masterFace is not found.");
                     return null;
                 }
 
