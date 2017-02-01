@@ -347,7 +347,7 @@ module Garage {
                     if (!face) {
                         continue;
                     }
-                    let codesMaster: string[] = this.getMasterFaceCodes(remoteId);
+                    let codesMaster: string[] = this.getAllFaceCodes(remoteId);
                     let deviceType = face.category;
 
                     //サポート外のdeviceTypeだった場合、次のremoteIdへ
@@ -543,12 +543,12 @@ module Garage {
 
                 let faceCodes = this.getFaceCodes(remoteId);
                 if (faceCodes != null) {
-                    codes.concat(faceCodes);
+                    codes = faceCodes;
                 }
 
                 let masterCodes = codes.concat(this.getMasterFaceCodes(remoteId));
                 if (masterCodes != null) {
-                    codes.concat(masterCodes);
+                    codes = codes.concat(masterCodes);
                 }
 
                 codes.filter((x, i, self) => self.indexOf(x) === i);
