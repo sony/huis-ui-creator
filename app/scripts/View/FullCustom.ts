@@ -2306,18 +2306,17 @@ module Garage {
              */
             private onItemPropertySelectClicked(event: Event) {
                 var $target = $(event.currentTarget);
-                var $customSelect = $("#face-item-detail-area").find(".custom-select");
                 var selectId = $target.find("select").attr("id");
                 var $selectMenu = $("#" + selectId + "-listbox");
 
                 var targetWidth = $target.width();
-                var targeHeight = $target.height()
+                var targeHeight = $target.height();
                 var popupMenuWidth = $selectMenu.outerWidth(true);
                 var popupMenuHeight = $selectMenu.outerHeight(true);
 
                 var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
 
-                $selectMenu.outerWidth(targetWidth);
+                $selectMenu.outerWidth(Math.max(popupMenuWidth, targetWidth));
 
                 var options: PopupOptions = {
                     x: 0,
