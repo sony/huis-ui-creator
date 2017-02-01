@@ -538,6 +538,39 @@ module Garage {
 
             }
 
+            private getAllFaceCodes(remoteId: string) {
+                let codes = [];
+
+                let faceCodes = this.getFaceCodes(remoteId);
+                if (faceCodes != null) {
+                    codes.concat(faceCodes);
+                }
+
+                let masterCodes = codes.concat(this.getMasterFaceCodes(remoteId));
+                if (masterCodes != null) {
+                    codes.concat(masterCodes);
+                }
+
+                codes.filter((x, i, self) => self.indexOf(x) === i);
+                return codes;
+            }
+
+            private getFaceCodes(remoteId: string): string[] {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " :getMasterCode: ";
+                if (remoteId == undefined) {
+                    console.warn(FUNCTION_NAME + "remoteId is undefined");
+                    return;
+                }
+
+                let face = this._getFace(remoteId, false);
+                if (!face) {
+                    console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
+                    return null;
+                }
+
+                return face.getCodes();
+            }
+
             private _getMasterFunctions(remoteId: string): string[] {
                 let masterFace = this._getFace(remoteId, true);
                 return HuisFiles.getFunctions(masterFace);
