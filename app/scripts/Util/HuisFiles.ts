@@ -534,39 +534,7 @@ module Garage {
                     return null;
                 }
 
-                let resultCodes: string[] = [];
-
-                var modules = masterFace.modules;
-                for (let i = 0, ml = modules.length; i < ml; i++) {
-                    var buttons = modules[i].button;
-                    if (!buttons) {
-                        continue;
-                    }
-                    for (let j = 0, bl = buttons.length; j < bl; j++) {
-                        var states = buttons[j].state;
-                        if (!states) {
-                            continue;
-                        }
-                        for (let k = 0, sl = states.length; k < sl; k++) {
-                            var actions = states[k].action;
-                            if (!actions) {
-                                continue;
-                            }
-                            for (let l = 0, al = actions.length; l < al; l++) {
-                                var code = actions[l].code;
-                                if (code) {
-                                    resultCodes.push(code);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (resultCodes.length == 0) {
-                    return null;
-                }
-
-                return resultCodes;
+                return masterFace.getCodes();
 
             }
 
