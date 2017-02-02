@@ -1008,9 +1008,19 @@ module Garage {
                 }
                 var moduleOffsetY_pallet: number = parseInt(JQUtils.data($parent, "moduleOffsetY"), 10);
 
+
+                //ボタンの場合、palletエリア選択されているリモコンから、データを引き継ぐ
+                //この処理はsetItemOnCanvasで同様の判定があるので無駄。修正したほうがいい。
+                let itemSetted: Model.Item = item;
+                if (item instanceof Model.ButtonItem) {
+                    itemSetted = this.setButtonItemState(item);
+                }
+
                 return this.setItemOnCanvas(item, moduleOffsetY_pallet, position);
             }
 
+         
+            
             private setItemOnCanvas(item: Model.Item, moduleOffsetY_pallet, position?: IPosition): Model.Item {
                 item = item.clone();
 
@@ -1022,9 +1032,8 @@ module Garage {
                 }
 
                 if (item instanceof Model.ButtonItem) {
-                    let buttonItem: Model.ButtonItem = this.setButtonItemState(item);
-                    return this.faceRenderer_canvas_.addButton(buttonItem, moduleId_canvas, moduleOffsetY_pallet);
-
+                    //ペースト時にもこの関数は呼ばれるため、setPalletItemOnCanvasにある setButtonItemStateを呼ぶとバグを起こす。
+                    return this.faceRenderer_canvas_.addButton(item, moduleId_canvas, moduleOffsetY_pallet);
                 } else if (item instanceof Model.LabelItem) {
                     return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
 
