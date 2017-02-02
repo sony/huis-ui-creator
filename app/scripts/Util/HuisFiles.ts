@@ -232,10 +232,10 @@ module Garage {
              * 
              * @param brand {string} メーカー名
              * @param deviceType {string} カテゴリー
-             * @param modelNumber {string} 型番。機器によっては省略。
+             * @param codeset {string} コードセット
              * @return {string[]} 機能の一覧。取得できない場合は null
              */
-            getMasterFunctions(brand: string, deviceType: string, modelNumber?: string): string[];
+            getMasterFunctions(brand: string, deviceType: string, codeset?: string): string[];
 
             getMasterFunctions(param1: string, param2?: string, param3?: string): string[] {
                 // param2 が指定されている場合は、param1: メーカー名, param2: カテゴリー, param3: 型番
@@ -243,9 +243,9 @@ module Garage {
                 if (param2) {
                     let brand = param1,
                         deviceType = param2,
-                        modelNumber = param3;
+                        codeset = param3;
 
-                    return this._getMasterFunctions(this.getRemoteIdByCodeDbElements(brand,deviceType, modelNumber));
+                    return this._getMasterFunctions(this.getRemoteIdByCodeDbElements(brand, deviceType, codeset));
 
                 } else { // param2 が指定されていない場合は、param1: remoteId
                     let remoteId = param1;
@@ -366,13 +366,13 @@ module Garage {
             }
 
             /**
-            * 同じbrand, deviceType, modelNumberをもつリモコンのremoteIdを取得する。
+            * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
             * @param brand{string} 機器のブランド
             * @param deviceType{string} 機器のタイプ
-            * @param codeSet{string} 機器のコードセット
+            * @param codeset{string} 機器のコードセット
             * @return remoteId{string}リモコンのID
             */
-            getRemoteIdByCodeDbElements(brand, deviceType, codeSet):string {
+            getRemoteIdByCodeDbElements(brand, deviceType, codeset):string {
                 let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
     
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
@@ -381,7 +381,7 @@ module Garage {
                     if (codeDb) {
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
-                            codeDb.db_codeset === codeSet) {
+                            codeDb.db_codeset === codeset) {
                             return remoteId;
                         }
                     }
