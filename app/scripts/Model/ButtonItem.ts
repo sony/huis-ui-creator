@@ -262,16 +262,19 @@ module Garage {
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);
                     if (stateModel && stateModel.action && stateModel.action.length) {
-                        let action = stateModel.action[0];
-                        if (action && action.code_db && !action.deviceInfo) {
-                            // 機器情報が設定されていない場合はactionに設定されている情報をコピー
-                            action.deviceInfo = {
-                                id: "",
-                                code_db: action.code_db,
-                                bluetooth_data: (action.bluetooth_data) ? action.bluetooth_data : null,
-                                functions: []
-                            };
+                        for (let j = 0; stateModel.action.length > j; j++){
+                            let action = stateModel.action[j];
+                            if (action && action.code_db && !action.deviceInfo) {
+                                // 機器情報が設定されていない場合はactionに設定されている情報をコピー
+                                action.deviceInfo = {
+                                    id: "",
+                                    code_db: action.code_db,
+                                    bluetooth_data: (action.bluetooth_data) ? action.bluetooth_data : null,
+                                    functions: []
+                                };
+                            }
                         }
+                        
                     }
                 }
                 this._setStateItemsArea(this.area);
