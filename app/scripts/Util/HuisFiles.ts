@@ -290,32 +290,28 @@ module Garage {
                         remoteId = this.getRemoteIdByCode(checkCode);
                     }
 
-                    //DEVICE_TYPE_LEARNEDの場合、間違ったremoteIdを検索してしまうので防止する。
-                    if (action.code_db.device_type !== DEVICE_TYPE_LEARNED) {
+                    // functionCodeHashでみつからない場合、deviceinfoで検索
+                    if (remoteId == null &&
+                        action.deviceInfo) {
+                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                    }
 
-                        // functionCodeHashでみつからない場合、deviceinfoで検索
-                        if (remoteId == null &&
-                            action.deviceInfo) {
-                            remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
-                        }
-
-                        //deviceinfoでみつからない場合、bluetoothの情報で検索
-                        if (remoteId == null &&
-                            action.bluetooth_data &&
-                            action.bluetooth_data.bluetooth_device &&
-                            action.deviceInfo &&
-                            action.deviceInfo.remoteName != null) {
-                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
-                        }
+                    //deviceinfoでみつからない場合、bluetoothの情報で検索
+                    if (remoteId == null &&
+                        action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device &&
+                        action.deviceInfo &&
+                        action.deviceInfo.remoteName != null) {
+                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                    }
 
 
-                        // codebluetoothでみつからない場合、code_dbで検索
-                        if (remoteId == null &&
-                            action.deviceInfo &&
-                            action.deviceInfo.code_db) {
-                            let codeDb = action.deviceInfo.code_db;
-                            remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-                        }
+                    // codebluetoothでみつからない場合、code_dbで検索
+                    if (remoteId == null &&
+                        action.deviceInfo &&
+                        action.deviceInfo.code_db) {
+                        let codeDb = action.deviceInfo.code_db;
+                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
@@ -2012,7 +2008,7 @@ module Garage {
                                     continue;
                                 }
 
-                                let remoteId = this.getRemoteIdByAction(action);
+                                let remoteId = this.traceOriginalRemoteIdByAction(action);
                                 if (remoteId == null || remoteId == "") {
                                     // 基リモコンなし
                                     remoteId = null;
@@ -2047,7 +2043,7 @@ module Garage {
                                     continue;
                                 }
 
-                                let remoteId = this.getRemoteIdByAction(action);
+                                let remoteId = this.traceOriginalRemoteIdByAction(action);
                                 if (this.remoteList.filter((remote) => { return remote.remote_id == remoteId }).length > 0) {
                                     // 基リモコンが存在する場合はそちらを優先するため、ここでは信号名を更新しない
                                     continue;
@@ -2073,6 +2069,61 @@ module Garage {
                         }
                     }
                 }
+            }
+
+            traceOriginalRemoteIdByAction(action: IAction) {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return;
+                }
+                let remoteId: string = undefined;
+
+                if (action != null) {
+
+                    // codeで検索
+                    let code = action.code;
+                    if (remoteId == null && code != null) {
+                        remoteId = this.getRemoteIdByCode(code);
+                    }
+
+                    //DEVICE_TYPE_LEARNEDの場合、間違ったremoteIdを検索してしまうので防止する。
+                    if (action.code_db.device_type !== DEVICE_TYPE_LEARNED) {
+
+                        // functionCodeHashでみつからない場合、deviceinfoで検索
+                        if (remoteId == null &&
+                            action.deviceInfo) {
+                            remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                        }
+
+                        //deviceinfoでみつからない場合、bluetoothの情報で検索
+                        if (remoteId == null &&
+                            action.bluetooth_data &&
+                            action.bluetooth_data.bluetooth_device &&
+                            action.deviceInfo &&
+                            action.deviceInfo.remoteName != null) {
+                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                        }
+
+
+                        // codebluetoothでみつからない場合、code_dbで検索
+                        if (remoteId == null &&
+                            action.deviceInfo &&
+                            action.deviceInfo.code_db) {
+                            let codeDb = action.deviceInfo.code_db;
+                            remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                        }
+                    }
+
+                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
+                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
+                        remoteId = action.deviceInfo.id;
+                    }
+
+                }
+
+                return remoteId;
+
             }
 
             /**
