@@ -311,7 +311,7 @@ module Garage {
                         action.deviceInfo &&
                         action.deviceInfo.code_db) {
                         let codeDb = action.deviceInfo.code_db;
-                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
@@ -369,10 +369,10 @@ module Garage {
             * 同じbrand, deviceType, modelNumberをもつリモコンのremoteIdを取得する。
             * @param brand{string} 機器のブランド
             * @param deviceType{string} 機器のタイプ
-            * @param modelNumber{string} 機器のモデルナンバー
+            * @param codeSet{string} 機器のコードセット
             * @return remoteId{string}リモコンのID
             */
-            getRemoteIdByCodeDbElements(brand, deviceType, modelNumber):string {
+            getRemoteIdByCodeDbElements(brand, deviceType, codeSet):string {
                 let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
     
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
@@ -381,7 +381,7 @@ module Garage {
                     if (codeDb) {
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
-                            (!modelNumber || codeDb.model_number === modelNumber)) {
+                            codeDb.db_codeset === codeSet) {
                             return remoteId;
                         }
                     }
