@@ -414,7 +414,7 @@ module Garage {
 
 
 
-                //bluetooth_dataがある場合
+                //bluetooth_dataがある場合、別の判定基準を設ける。
                 if (inputDeviceInfo.bluetooth_data != null && 
                     inputDeviceInfo.bluetooth_data.bluetooth_device != null) {
                     return this.getRemoteIdByBluetoothDevice(inputDeviceInfo.bluetooth_data.bluetooth_device, remoteName);
@@ -448,7 +448,7 @@ module Garage {
                 }
                 let codeset = codeDb.db_codeset;
 
-               
+               //ブランド、デバイスタイプ、コードセットが同一の場合、同じリモコンだと判定する。
                 for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
                     let targetRemoteId = this.remoteInfos_[i].remoteId;
                     let targetRemoteName = this.remoteInfos_[i].face.name;
