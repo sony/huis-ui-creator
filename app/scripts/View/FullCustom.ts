@@ -1029,7 +1029,6 @@ module Garage {
                     return this.faceRenderer_canvas_.addLabel(item, moduleId_canvas, moduleOffsetY_pallet);
 
                 } else if (item instanceof Model.ImageItem) {
-                    let remoteId = this.faceRenderer_pallet_.getRemoteId();
                     return this.faceRenderer_canvas_.addImageWithoutCopy(item, moduleId_canvas, moduleOffsetY_pallet);
 
                 } else {
