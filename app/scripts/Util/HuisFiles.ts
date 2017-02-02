@@ -2054,12 +2054,14 @@ module Garage {
                                 }
 
                                 let existFunc = false;
-                                let funcCodeHash = action.deviceInfo.functionCodeHash;
-                                for (let funcName of Object.keys(funcCodeHash)) {
-                                    if (funcCodeHash[funcName] == action.code) {
-                                        action.code_db.function = funcName;
-                                        existFunc = true;
-                                        break;
+                                if (action.deviceInfo.functionCodeHash != null) {
+                                    let funcCodeHash = action.deviceInfo.functionCodeHash;
+                                    for (let funcName of Object.keys(funcCodeHash)) {
+                                        if (funcCodeHash[funcName] == action.code) {
+                                            action.code_db.function = funcName;
+                                            existFunc = true;
+                                            break;
+                                        }
                                     }
                                 }
 
