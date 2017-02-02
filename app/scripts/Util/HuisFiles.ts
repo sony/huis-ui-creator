@@ -2013,10 +2013,13 @@ module Garage {
                                 }
 
                                 let remoteId = this.getRemoteIdByAction(action);
-                                if (remoteId == null) continue; // 基リモコンなし
-
-                                let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
-                                action.code_db.function = numberedFunc;
+                                if (remoteId == null || remoteId == "") {
+                                    // 基リモコンなし
+                                    remoteId = null;
+                                } else {
+                                    let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
+                                    action.code_db.function = numberedFunc;
+                                }
                             }
                         }
                     }
