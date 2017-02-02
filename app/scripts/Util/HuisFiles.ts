@@ -448,13 +448,7 @@ module Garage {
                 }
                 let codeset = codeDb.db_codeset;
 
-                //model_numberを取得
-                if (codeDb.model_number == null) {
-                    console.warn(FUNCTION_NAME + "codeDb.model_number is null");
-                    return;
-                }
-                let modelNumber = codeDb.model_number;
-                
+               
                 for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
                     let targetRemoteId = this.remoteInfos_[i].remoteId;
                     let targetRemoteName = this.remoteInfos_[i].face.name;
@@ -462,7 +456,6 @@ module Garage {
                     if (codeDb) {
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
-                            (!modelNumber || codeDb.model_number === modelNumber) &&
                             remoteName == targetRemoteName) {
                             return targetRemoteId;
                         }
