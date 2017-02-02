@@ -456,6 +456,7 @@ module Garage {
                     if (codeDb) {
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
+                            codeDb.db_codeset === codeset &&
                             remoteName == targetRemoteName) {
                             return targetRemoteId;
                         }
