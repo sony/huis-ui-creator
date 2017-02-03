@@ -21,6 +21,7 @@ module Garage {
             public setInfo(remoteId: string, pageIndex: number, area?: IArea) {
                 this.remoteId = remoteId;
                 this.name = remoteId + "_page_" + pageIndex;
+                this.pageIndex = pageIndex;
                 this.offsetY = 0;
                 this.button = [];
                 this.image = [];

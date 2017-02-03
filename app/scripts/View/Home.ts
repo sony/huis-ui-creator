@@ -267,7 +267,8 @@ module Garage {
                     face.convertToFullCustomFace();
                 }
 
-                huisFiles.updateFace(face.remoteId, face.name, face.modules, null)
+                let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
+                huisFiles.updateFace(face.remoteId, face.name, face.modules, buttonDeviceInfoCache)
                     .always(() => {
                         garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
                         if (HUIS_ROOT_PATH) {

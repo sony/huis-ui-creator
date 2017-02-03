@@ -315,12 +315,9 @@ module Garage {
                     }
 
 
-
                     // それでもみつからない場合、code_dbで検索
-                    if (remoteId == null &&
-                        action.deviceInfo &&
-                        action.deviceInfo.code_db) {
-                        let codeDb = action.deviceInfo.code_db;
+                    if (remoteId == null && action.code_db) {
+                        let codeDb = action.code_db;
                         remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
                     }
 
