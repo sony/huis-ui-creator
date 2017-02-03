@@ -216,6 +216,10 @@ module Garage {
                     return;
                 }
 
+                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
+                    $('#select-remote-input-0-menu li:first-child').remove();
+                }
+
                 // プルダウンに設定されている Actionの順番を取得
                 let order = this.getOrderFrom($target);
 
