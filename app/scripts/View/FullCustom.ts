@@ -780,6 +780,8 @@ module Garage {
              * face-pages-area内のItem要素以外の部分がクリックされた時のイベントハンドラ。
              */
             private onFacePagesAreaMouseDown(event: Event) {
+                this._loseTarget();
+
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
                 // マウスポインター位置にアイテムが存在しない場合で、
                 // canvas 上のページモジュールを選択した場合は、ページの背景編集を行う
@@ -792,7 +794,6 @@ module Garage {
                     // ページの背景の detail エリアを作成する
                     this._showDetailItemAreaOfPage($page);
                 }
-                this._loseTarget();
                 event.stopPropagation();
             }
 
