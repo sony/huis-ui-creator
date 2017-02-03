@@ -296,7 +296,7 @@ module Garage {
                         remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
                     }
 
-                    //deviceinfoでみつからない場合、bluetoothの情報で検索
+                    //deviceinfoでみつからない場合、deviceInfo内のbluetoothの情報で検索
                     if (remoteId == null &&
                         action.bluetooth_data &&
                         action.bluetooth_data.bluetooth_device &&
@@ -305,8 +305,18 @@ module Garage {
                         remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
                     }
 
+                    //TODO
+                    //remoteNameがない場合のBluetoothDeviceの検索
+                    //！！！！！！！！！負債コード！！！！！！
+                    if (remoteId == null &&
+                        action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device) {
+                        remoteId = this.getRemoteIdByBluetoothDeviceNoRemoteName(action.bluetooth_data.bluetooth_device);
+                    }
 
-                    // codebluetoothでみつからない場合、code_dbで検索
+
+
+                    // それでもみつからない場合、code_dbで検索
                     if (remoteId == null &&
                         action.deviceInfo &&
                         action.deviceInfo.code_db) {
@@ -503,6 +513,37 @@ module Garage {
 
                 return null;
             }
+
+
+
+            /**
+            * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
+            * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+            * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
+            */
+            getRemoteIdByBluetoothDeviceNoRemoteName(bluetoothDevice: IBluetoothDevice): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDeviceNoRemoteName: ";
+
+                if (bluetoothDevice == null) {
+                    console.warn(FUNCTION_NAME + "bluetoothDevice is null");
+                    return null;
+                }
+
+
+                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
+                    let targetRemoteId = this.remoteInfos_[i].remoteId;
+                    let bluetoothData = this.getMasterBluetoothData(targetRemoteId);
+                    if (bluetoothData &&
+                        bluetoothData.bluetooth_device &&
+                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address
+                    ) {
+                        return targetRemoteId;
+                    }
+                }
+
+                return null;
+            }
+
 
             /**
              * 機器の master face に記述されている最初の code を取得する。
