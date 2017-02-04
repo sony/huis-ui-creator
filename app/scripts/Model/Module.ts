@@ -38,10 +38,35 @@ module Garage {
                 }
             }
 
+            private isActionInvalid(action: IAction) {
+                return (action.code == null
+                    && (action.code_db == null
+                        || action.code_db.brand === " "
+                        && action.code_db.db_codeset === " "
+                        && action.code_db.function !== "none")
+                    && action.bluetooth_data == null);
+            }
+
+            /**
+             * 有効なactionを1つも持っていない場合にtrueを返す。
+             */
+            public isButtonInvalid(button: IGButton): boolean {
+                for (let state of button.state) {
+                    for (let action of state.action) {
+                        if (!this.isActionInvalid(action)) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
             /*
              * 引数で与えられたModuleをこのオブジェクトにmergeする。
              * 基本的には、moduleに含まれるItemを全て追加して、高さを足す。
              * Itemのcloneは作成されないので、注意。
+             * また、無効なボタンはこのmergeの際に削除される。
+             *
              * @param module: Model.module このオブジェクトにmergeする対象のmodule
              */
             public merge(module: Model.Module) {
@@ -50,7 +75,11 @@ module Garage {
                     for (let elem of module.button) {
                         elem.area.y += this.area.h;
                     }
-                    this.button = this.button.concat(module.button);
+                    for (let button of module.button) {
+                        if (!this.isButtonInvalid(button)) {
+                            this.button.push(button);
+                        }
+                    }
                 }
                 if (module.image != null) {
                     for (let elem of module.image) {
