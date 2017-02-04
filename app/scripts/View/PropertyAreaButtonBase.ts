@@ -285,13 +285,21 @@ module Garage {
                     return;
                 }
 
-                let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
-                if (this.isValidValue(cachedDeviceInfo)) {
-                    //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                let remoteName = null;
+                if (inputRemoteId === "unknown") {
+                    remoteName = "不明なリモコン";
+                } else {
+                    let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
+                    if (this.isValidValue(cachedDeviceInfo)) {
+                        remoteName = cachedDeviceInfo.remoteName;
+                    }
+                }
+
+                if (remoteName != null) {
                     let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.templateItemDetailFile_);
                     let inputSignalData = {
                         remoteId: inputRemoteId,
-                        name : cachedDeviceInfo.remoteName
+                        name: remoteName
                     }
 
                     let $additionalRemote = $(additionalRemoteTemplrate(inputSignalData));
@@ -546,8 +554,13 @@ module Garage {
                     return;
                 }
 
-                //FunctionプルダウンのDOMを表示。
-                let functions: string[] = this.getFunctionsOf(order);
+                let functions: string[];
+                let remoteId: string = this.getRemoteIdFromPullDownOf(order);
+                if (remoteId == "unknown") {
+                    functions = [functionName];
+                } else {
+                    functions = this.getFunctionsOf(order);
+                }
 
                 if (functions != null) {
                     // functionsに自分のキーが存在しない場合は追加

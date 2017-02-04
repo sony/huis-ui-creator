@@ -529,7 +529,9 @@ module Garage {
                     let actionInput: string = targetAction.input;
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
-
+                    if (remoteId == "" && targetAction.code_db != null) {
+                        remoteId = "unknown";
+                    }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
 
                     //function設定用pulldownをレンダリング
