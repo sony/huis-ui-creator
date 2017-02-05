@@ -96,7 +96,7 @@ module Garage {
                             filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
                                 //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
                                 return (a.code == null &&
-                                    (a.code_db == null || a.code_db.brand === " " && a.code_db.db_codeset === " " && a.code_db.function !== "none") &&
+                                    (a.code_db == null || (a.code_db.brand === " " || a.code_db.brand === "") && (a.code_db.db_codeset === " " || a.code_db.db_codeset === "") && a.code_db.function !== "none") &&
                                     a.bluetooth_data == null);
                             });
                             return (filtered_action.length >= s.action.length);
