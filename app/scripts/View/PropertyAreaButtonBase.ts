@@ -287,7 +287,7 @@ module Garage {
 
                 let remoteName = null;
                 if (inputRemoteId === UNKNOWN_REMOTE) {
-                    remoteName = "不明なリモコン";
+                    remoteName = $.i18n.t("remote.STR_UNKNOWN_REMOTE");
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
                     if (this.isValidValue(cachedDeviceInfo)) {
