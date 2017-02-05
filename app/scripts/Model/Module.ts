@@ -41,8 +41,8 @@ module Garage {
             private isActionInvalid(action: IAction) {
                 return (action.code == null
                     && (action.code_db == null
-                        || action.code_db.brand === " "
-                        && action.code_db.db_codeset === " "
+                    || (action.code_db.brand === " " || action.code_db.brand === "")
+                && (action.code_db.db_codeset === " " || action.code_db.db_codeset === "")
                         && action.code_db.function !== "none")
                     && action.bluetooth_data == null);
             }
