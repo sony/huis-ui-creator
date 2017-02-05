@@ -286,7 +286,7 @@ module Garage {
                 }
 
                 let remoteName = null;
-                if (inputRemoteId === "unknown") {
+                if (inputRemoteId === UNKNOWN_REMOTE) {
                     remoteName = "不明なリモコン";
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
@@ -556,7 +556,7 @@ module Garage {
 
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
-                if (remoteId == "unknown") {
+                if (remoteId == UNKNOWN_REMOTE) {
                     functions = [functionName];
                 } else {
                     functions = this.getFunctionsOf(order);

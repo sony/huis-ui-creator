@@ -217,7 +217,7 @@ module Garage {
                 }
 
                 if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)
-                    || $("#select-remote-input-0 option").val().match("unknown")) {
+                    || $("#select-remote-input-0 option").val().match(UNKNOWN_REMOTE)) {
                     $('#select-remote-input-0-menu li:first-child').remove();
                 }
 
@@ -531,7 +531,7 @@ module Garage {
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
                     if (remoteId == "" && targetAction.code_db != null) {
-                        remoteId = "unknown";
+                        remoteId = UNKNOWN_REMOTE;
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
 
