@@ -400,6 +400,7 @@ module Garage {
 
                         let remoteId = $face.data("remoteid");
 
+                        //対象がフルカスタムリモコンのときのみ表示
                         if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
                             this.contextMenu_.append(new MenuItem({
                                 label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
@@ -435,14 +436,18 @@ module Garage {
                             }
                         }));
 
-                        this.contextMenu_.append(new MenuItem({
-                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
-                            click: () => {
-                                let face: IGFace = huisFiles.getFace(remoteId);
+                        //対象がフルカスタムリモコンのときのみ表示
+                        if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
+                            this.contextMenu_.append(new MenuItem({
+                                label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                                click: () => {
+                                    let face: IGFace = huisFiles.getFace(remoteId);
 
-                                this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
-                            }
-                        }));
+                                    this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
+                                }
+                            }));
+                        }
+                        
                     }
 
                 }
