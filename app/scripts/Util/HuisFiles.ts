@@ -2137,8 +2137,8 @@ module Garage {
                             remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
                         }
 
-                        // それでもみつからない場合、code_dbで検索
-                        if (remoteId == null && action.code_db) {
+                        // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
+                        if (remoteId == null && action.code_db && !action.bluetooth_data) {
                             let codeDb = action.code_db;
                             remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
                         }
