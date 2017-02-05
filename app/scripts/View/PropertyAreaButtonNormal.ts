@@ -216,7 +216,8 @@ module Garage {
                     return;
                 }
 
-                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
+                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)
+                    || $("#select-remote-input-0 option").val().match("unknown")) {
                     $('#select-remote-input-0-menu li:first-child').remove();
                 }
 
