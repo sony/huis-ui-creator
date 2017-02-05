@@ -844,6 +844,10 @@ declare module Garage {
      * インポート・エクスポート用拡張子の日本語の説明
      */
     var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
+    /*
+     * リモコンが見つからない場合を表す定数
+     */
+    var UNKNOWN_REMOTE: string;
 }
 
 

@@ -216,7 +216,8 @@ module Garage {
                     return;
                 }
 
-                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
+                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)
+                    || $("#select-remote-input-0 option").val().match(UNKNOWN_REMOTE)) {
                     $('#select-remote-input-0-menu li:first-child').remove();
                 }
 
@@ -529,7 +530,9 @@ module Garage {
                     let actionInput: string = targetAction.input;
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
-
+                    if (remoteId == "" && targetAction.code_db != null) {
+                        remoteId = UNKNOWN_REMOTE;
+                    }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
 
                     //function設定用pulldownをレンダリング

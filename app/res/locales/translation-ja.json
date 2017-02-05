@@ -174,7 +174,8 @@
         "STR_TOAST_CANT_EDIT": "右クリックでオプションが表示されます"
     },
     "remote": {
-        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
+        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
+        "STR_UNKNOWN_REMOTE" :  "不明なリモコン"
     },
     "button": {
         "text_button": {
