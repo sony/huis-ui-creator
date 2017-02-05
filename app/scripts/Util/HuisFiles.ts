@@ -2042,8 +2042,12 @@ module Garage {
 
                                 let remoteId = this.traceOriginalRemoteIdByAction(action);
                                 if (remoteId == null || remoteId == "") {
-                                    // 基リモコンなし
-                                    remoteId = null;
+                                    // 基リモコンなしの場合、学習されたコードであればfunctionに"##"を付ける
+                                    if (action.code_db != null && action.code != null) {
+                                        action.code_db.function = action.code_db.function + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                                    } else {
+                                        remoteId = null;
+                                    }
                                 } else {
                                     let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
                                     action.code_db.function = numberedFunc;
