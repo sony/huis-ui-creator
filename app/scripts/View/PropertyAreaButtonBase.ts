@@ -598,9 +598,11 @@ module Garage {
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId != null && remoteId.indexOf(UNKNOWN_REMOTE) == 0) {
-                    functions = [functionName];
+                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                    functions = $.extend(true, [] ,[functionName]);
                 } else {
-                    functions = this.getFunctionsOf(order);
+                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                    functions = $.extend(true, [], this.getFunctionsOf(order));
                 }
 
                 if (functions != null) {
