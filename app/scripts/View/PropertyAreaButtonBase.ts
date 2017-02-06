@@ -414,7 +414,7 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (this.isValidValue(inputRemoteId)) {
+                    if (this.isValidValue(inputRemoteId) ) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
@@ -600,23 +600,15 @@ module Garage {
 
                 if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
                     if (functionName == null) {
-                        let tmpFunctionName = this.model.state[0].action[order - 1].code_db.function;
-                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
-                        functions = $.extend(true, [], [tmpFunctionName]);
-                        //functions = [tmpFunctionName];
+                        functions = null;
                     } else {
                         functions = $.extend(true, [], [functionName]);
                     }
                 } else {
-                    if (remoteId != null && remoteId.match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
-                        let tmpFunctionName = this.model.state[0].action[order - 1].code_db.function;
-                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
-                        functions = $.extend(true, [], [tmpFunctionName]);
-                        //functions = [tmpFunctionName];
-                    } else {
-                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
-                        functions = $.extend(true, [], this.getFunctionsOf(order));
-                    }
+                  
+                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                    functions = $.extend(true, [], this.getFunctionsOf(order));
+                    
                 }
 
                 if (functions != null && functions.length != 0) {
