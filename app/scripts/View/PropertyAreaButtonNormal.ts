@@ -498,6 +498,48 @@ module Garage {
 
             }
 
+            private _getRemoteIdOfUnknownRemote(action: IAction) {
+                let deviceType = action.code_db.device_type;
+                let remoteId: string;
+                switch (deviceType) {
+                    case DEVICE_TYPE_TV:
+                        remoteId = UNKNOWN_REMOTE_TV;
+                        break;
+                    case DEVICE_TYPE_AC:
+                        remoteId = UNKNOWN_REMOTE_AC;
+                        break;
+                    case DEVICE_TYPE_LIGHT:
+                        remoteId = UNKNOWN_REMOTE_LIGHT;
+                        break;
+                    case DEVICE_TYPE_AUDIO:
+                        remoteId = UNKNOWN_REMOTE_AUDIO;
+                        break;
+                    case DEVICE_TYPE_PLAYER:
+                        remoteId = UNKNOWN_REMOTE_PLAYER;
+                        break;
+                    case DEVICE_TYPE_RECORDER:
+                        remoteId = UNKNOWN_REMOTE_RECORDER;
+                        break;
+                    case DEVICE_TYPE_PROJECTOR:
+                        remoteId = UNKNOWN_REMOTE_PROJECTOR;
+                        break;
+                    case DEVICE_TYPE_STB:
+                        remoteId = UNKNOWN_REMOTE_STB;
+                        break;
+                    case DEVICE_TYPE_FAN:
+                        remoteId = UNKNOWN_REMOTE_FAN;
+                        break;
+                    default:
+                        if (action.bluetooth_data != null) {
+                            remoteId = UNKNOWN_REMOTE_BT;
+                        } else {
+                            remoteId = UNKNOWN_REMOTE;
+                        }
+                        break;
+                }
+                return remoteId;
+            }
+
             /*
             * 信号プルダウンメニューたちをレンダリングする
             * @param stateId{number} ターゲットとなるstateId
@@ -537,7 +579,7 @@ module Garage {
                     if (
                         (!this.isValidValue(remoteId) && targetAction.code_db != null) ||
                         (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId)) ) {
-                        remoteId = UNKNOWN_REMOTE;
+                        remoteId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
 

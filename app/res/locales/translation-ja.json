@@ -175,7 +175,17 @@
     },
     "remote": {
         "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
-        "STR_UNKNOWN_REMOTE" :  "不明なリモコン"
+        "STR_UNKNOWN_REMOTE_TV": "不明なテレビ",
+        "STR_UNKNOWN_REMOTE_AC": "不明なエアコン",
+        "STR_UNKNOWN_REMOTE_LIGHT": "不明な照明",
+        "STR_UNKNOWN_REMOTE_AUDIO": "不明なオーディオ",
+        "STR_UNKNOWN_REMOTE_PLAYER": "不明なプレーヤー",
+        "STR_UNKNOWN_REMOTE_RECORDER": "不明なレコーダー",
+        "STR_UNKNOWN_REMOTE_PROJECTOR": "不明なプロジェクター",
+        "STR_UNKNOWN_REMOTE_STB": "不明なセットトップボックス",
+        "STR_UNKNOWN_REMOTE_FAN": "不明な扇風機",
+        "STR_UNKNOWN_REMOTE_BT": "不明なBluetooth機器",
+        "STR_UNKNOWN_REMOTE": "不明なリモコン"
     },
     "button": {
         "text_button": {

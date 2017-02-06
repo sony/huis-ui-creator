@@ -254,6 +254,47 @@ module Garage {
             }
 
 
+            private _getRemoteNameOfUnknownRemote(unknownRemoteId: string) {
+                let remoteId: string;
+                switch (unknownRemoteId) {
+                    case UNKNOWN_REMOTE_TV:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV");
+                        break;
+                    case UNKNOWN_REMOTE_AC:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC");
+                        break;
+                    case UNKNOWN_REMOTE_LIGHT:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT");
+                        break;
+                    case UNKNOWN_REMOTE_AUDIO:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_AUDIO");
+                        break;
+                    case UNKNOWN_REMOTE_PLAYER:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_PLAYER");
+                        break;
+                    case UNKNOWN_REMOTE_RECORDER:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_RECORDER");
+                        break;
+                    case UNKNOWN_REMOTE_PROJECTOR:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_PROJECTOR");
+                        break;
+                    case UNKNOWN_REMOTE_STB:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_STB");
+                        break;
+                    case UNKNOWN_REMOTE_FAN:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_FAN");
+                        break;
+                    case UNKNOWN_REMOTE_BT:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_BT");
+                        break;
+                    default:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE");
+                        break;
+                }
+                return remoteId;
+            }
+
+
 
             /**
           * 入力したorderのremoteプルダウンに、inputの値を代入する。
@@ -286,8 +327,8 @@ module Garage {
                 }
 
                 let remoteName = null;
-                if (inputRemoteId === UNKNOWN_REMOTE) {
-                    remoteName = $.i18n.t("remote.STR_UNKNOWN_REMOTE");
+                if (inputRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
+                    remoteName = this._getRemoteNameOfUnknownRemote(inputRemoteId);
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
                     if (this.isValidValue(cachedDeviceInfo)) {
@@ -556,7 +597,7 @@ module Garage {
 
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
-                if (remoteId == UNKNOWN_REMOTE) {
+                if (remoteId.indexOf(UNKNOWN_REMOTE) == 0) {
                     functions = [functionName];
                 } else {
                     functions = this.getFunctionsOf(order);
