@@ -368,6 +368,7 @@ module Garage {
 
             /**
             * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
+            * ただし、ご検出の懸念から、Bluetoothは対象外とする
             * @param brand{string} 機器のブランド
             * @param deviceType{string} 機器のタイプ
             * @param codeset{string} 機器のコードセット
@@ -379,6 +380,12 @@ module Garage {
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
                     let remoteId = this.remoteList_[i].remote_id;
                     let codeDb = this.getMasterCodeDb(remoteId);
+                    let deviceInfo :IButtonDeviceInfo= this.getDeviceInfo(remoteId);
+
+                    if (deviceInfo != null && deviceInfo.bluetooth_data != null) {
+                        continue;
+                    }
+
                     if (codeDb) {
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
