@@ -2242,11 +2242,10 @@ module Garage {
                                 key: func,
                                 label: $.i18n.t('button.function.' + plainName) + ' (' + num + ')'
                             });
-                        }
-
-                        if (numberedFuncs.indexOf(plainName) < 0) {
-                            // 連番付きの信号名のオリジナルを記憶しておく
-                            numberedFuncs.push(plainName);
+                            if (numberedFuncs.indexOf(plainName) < 0) {
+                                // 連番付きの信号名のオリジナルを記憶しておく
+                                numberedFuncs.push(plainName);
+                            }
                         }
 
                     } else {
