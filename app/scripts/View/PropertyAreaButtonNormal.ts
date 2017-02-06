@@ -530,7 +530,14 @@ module Garage {
                     let actionInput: string = targetAction.input;
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
-                    if (remoteId == "" && targetAction.code_db != null) {
+
+                    //remoteIDがみつからない場合、
+                    //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
+                    //UNKNOWNに
+                    targetAction.deviceInfo = null;
+                    if (
+                        (this.isValidValue(remoteId) && targetAction.code_db != null) ||
+                        (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId)) ) {
                         remoteId = UNKNOWN_REMOTE;
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
