@@ -34,14 +34,7 @@ module Garage {
         }
 
 
-        /** 信号名に付与されるIDの文字長 */
-        const FUNC_ID_LEN: number = 4;
-
-        /** 信号名と連番を分ける区切り文字 */
-        const FUNC_NUM_DELIMITER: string = '#';
-
-        /** 信号がフルカスタムで再学習されたことを示すコード */
-        const FUNC_CODE_RELEARNED: string = '#';
+       
 
 
         /**
