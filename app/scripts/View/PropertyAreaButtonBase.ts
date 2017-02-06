@@ -608,7 +608,7 @@ module Garage {
                         functions = $.extend(true, [], [functionName]);
                     }
                 } else {
-                    if (remoteId.match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
+                    if (remoteId != null && remoteId.match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
                         let tmpFunctionName = this.model.state[0].action[order - 1].code_db.function;
                         //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
                         functions = $.extend(true, [], [tmpFunctionName]);
