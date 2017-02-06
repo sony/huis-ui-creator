@@ -356,6 +356,15 @@ module Garage {
                     }
 
                     let tmpDeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                    if (tmpDeviceInfo == null) {
+                        if (i >= 1 && (i + 1) == $signalContainers.length) {
+                            // 新しく追加されたactionについては、直前のactionのdeviceInfoを取得する
+                            tmpDeviceInfo = this.model.state[0].action[i-1].deviceInfo;
+                        } else {
+                            // それ以外は、対応するactionのdeviceInfoを取得する
+                            tmpDeviceInfo = this.model.state[0].action[i].deviceInfo;
+                        }
+                    }
                    
                     if (!tmpDeviceInfo) {
                         try {
@@ -917,7 +926,7 @@ module Garage {
                     let $remoteIdlPulllDown = $target.find("select.remote-input");
                     if ($remoteIdlPulllDown.length != 0) {
                         let value = $remoteIdlPulllDown.val();
-                        if (!this.isValidValue(value)) {
+                        if (!this.isValidValue(value) && !this.isUnknownRemoteIdInPulldownOf) {
                             return false;
                         }
                     }
