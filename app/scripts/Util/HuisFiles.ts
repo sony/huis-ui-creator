@@ -340,8 +340,9 @@ module Garage {
             */
             getRemoteIdByCode(code: string): string {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
-                if (code == undefined) {
+                if (code == null) {
                     console.warn(FUNCTION_NAME + "code is undefined");
+                    return;
                 }
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
