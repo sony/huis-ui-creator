@@ -379,6 +379,13 @@ module Garage {
 
                         if (deviceInfo.functionCodeHash) {
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
+                            if (tmpCode == null && this.isRelearnedIDFunctionName(tmpFunction)){
+                                //functionCodeHashではcodeがみつからず
+                                //functionNameに #IDがついていた場合、
+
+                                tmpCode = this.getCodeFromThisModel(tmpFunction);
+                            }
+                            
                         }
                         if (tmpCode != null) {
                             tmpAction.code = tmpCode;
@@ -458,6 +465,40 @@ module Garage {
 
 
             }
+
+            /*
+            * 現在のモデルから、入力したファンクション名のcodeを検索。容易につかわないこと
+            * @param functionName {string} ファンクション名の後ろにIDがついているに限り、現在のmodelからコードを検索する。
+            * @return {string} モデルの中に同じファンクション名の信号があったら、codeを取得する。みつからない場合nullを返す。
+            */
+            private getCodeFromThisModel(functionNameWithID: string): string {
+                let FUNCTION_NAME: string = TAG + "getSgetCodeFromThisModeltateId : ";
+
+                if (!this.isValidValue(functionNameWithID)) {
+                    console.warn(FUNCTION_NAME + "functionNameWithID is invalid");
+                    return;
+                }
+
+                for (let targetState of this.model.state) {
+
+                    if (targetState.action != null) {
+                        for (let targetAction of targetState.action) {
+                            if (targetAction.code_db !== null &&
+                                targetAction.code_db.function != null &&
+                                targetAction.code_db.function == functionNameWithID &&
+                                targetAction.code != null
+                            ) {
+                                return targetAction.code;
+                            }
+                        }
+
+                    }
+                }
+
+                return null;
+
+            }
+
 
             /*
             * 現在、表示されているStateIdを取得する

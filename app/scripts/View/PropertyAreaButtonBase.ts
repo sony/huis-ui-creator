@@ -674,6 +674,31 @@ module Garage {
 
 
             /*
+            * 入力した信号名が #ID (例STR_REMOTE_BTN_TOGGLE#fads)なのか判定する。 危険多様しないこと。
+            * @param functionName {string}
+            * @return {boolean} #ID付きのfunction
+            */
+            protected isRelearnedIDFunctionName(functionName: string): boolean {
+                let FUNCTION_NAME = TAG + "isRelearnedIDFunctionName "; 
+                if (!this.isValidValue(functionName)) {
+                    console.warn(FUNCTION_NAME + "src is invalid");
+                    return false;
+                }
+
+                let tmpFunctionNameParts = functionName.split(FUNC_CODE_RELEARNED);
+
+
+                //#で区切った先がID文字数と同じな場合、trueを返す。
+                if (tmpFunctionNameParts.length >= 2 &&
+                    tmpFunctionNameParts[1].length == FUNC_ID_LEN) {
+                    return true;
+                } else {
+                    return false;
+                }
+                  
+            } 
+
+            /*
             * 設定したOrderのfunction用PullDownを消す。
             * @param order {number}
             */
