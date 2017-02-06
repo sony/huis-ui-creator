@@ -2044,6 +2044,10 @@ module Garage {
                                 if (remoteId == null || remoteId == "") {
                                     // 基リモコンなしの場合、学習されたコードであればfunctionに"##"を付ける
                                     if (action.code_db != null && action.code != null) {
+                                        // 既に#IDや#HASHが付いている場合には取り除く
+                                        //   ※action.code_db.functionには#は使われない想定
+                                        action.code_db.function = action.code_db.function.replace(/#.+$/, "");
+                                        // 改めて##を付け直す
                                         action.code_db.function = action.code_db.function + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
                                     } else {
                                         remoteId = null;
