@@ -638,7 +638,7 @@ module Garage {
                     //remoteIDがみつからない場合、
                     //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
                     //UNKNOWNに
-                    if ((!this.isValidValue(remoteId) && targetAction.code_db != null) ||
+                    if ((!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) ||
                         (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
                         unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
