@@ -1340,7 +1340,7 @@ module Garage {
                     });
 
                 if (cache != null) {
-                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules);
+                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules, faceName);
                     cache.save(gmodules);
                 }
                 
@@ -2221,6 +2221,9 @@ module Garage {
                 let numberedFuncs: string[] = [];
 
                 for (let func of functions) {
+                    if (func == null) {
+                        continue;
+                    }
                     let plainName = Util.HuisFiles.getPlainFunctionKey(func);
                     if (plainName != func) {
                         // 連番付き

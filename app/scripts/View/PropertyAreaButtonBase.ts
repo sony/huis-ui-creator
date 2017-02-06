@@ -301,7 +301,7 @@ module Garage {
           * order{number} ： マクロ信号の順番
           * inputRemoteId{string} : プルダウンに設定する値。
           */
-            protected setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
+            protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
 
                 if (!this.isValidOrder(order)) {
@@ -327,8 +327,8 @@ module Garage {
                 }
 
                 let remoteName = null;
-                if (inputRemoteId!= null && inputRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
-                    remoteName = this._getRemoteNameOfUnknownRemote(inputRemoteId);
+                if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
+                    remoteName = this._getRemoteNameOfUnknownRemote(unknownRcId);
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
                     if (this.isValidValue(cachedDeviceInfo)) {
@@ -377,7 +377,7 @@ module Garage {
             * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
             * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
+            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -416,12 +416,12 @@ module Garage {
 
                     if (this.isValidValue(inputRemoteId)) {
                         //inputにmodelがある場合、値を表示
-                        this.setRemoteIdPullDownOf(order, inputRemoteId);
+                        this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
                         $remoteContainer.find("select").prepend(noneOption);
-                        this.setRemoteIdPullDownOf(order, "none");
+                        this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
 
                 }
@@ -577,7 +577,7 @@ module Garage {
          * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
          * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
          */
-            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string) {
+            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -597,12 +597,26 @@ module Garage {
 
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
-                if (remoteId != null && remoteId.indexOf(UNKNOWN_REMOTE) == 0) {
-                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
-                    functions = $.extend(true, [] ,[functionName]);
+
+                if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
+                    if (functionName == null) {
+                        let tmpFunctionName = this.model.state[0].action[order - 1].code_db.function;
+                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                        functions = $.extend(true, [], [tmpFunctionName]);
+                        //functions = [tmpFunctionName];
+                    } else {
+                        functions = $.extend(true, [], [functionName]);
+                    }
                 } else {
-                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
-                    functions = $.extend(true, [], this.getFunctionsOf(order));
+                    if (remoteId.match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
+                        let tmpFunctionName = this.model.state[0].action[order - 1].code_db.function;
+                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                        functions = $.extend(true, [], [tmpFunctionName]);
+                        //functions = [tmpFunctionName];
+                    } else {
+                        //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                        functions = $.extend(true, [], this.getFunctionsOf(order));
+                    }
                 }
 
                 if (functions != null && functions.length != 0) {

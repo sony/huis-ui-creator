@@ -59,7 +59,7 @@ module Garage {
              * 全てのモジュールに対してHuisFilesから検索したDeviceInfoを設定する
              * @param gmodules {IGModule[]} 対象とするモジュールオブジェクト
              */
-            static injectAllDeviceInfoFromHuisFiles(gmodules: IGModule[]) {
+            static injectAllDeviceInfoFromHuisFiles(gmodules: IGModule[], faceName: string) {
                 for (let gmodule of gmodules) {
                     if (!gmodule.button) continue;
 
@@ -80,7 +80,8 @@ module Garage {
                                     gmodule.area.y,
                                     stateIndex,
                                     actionIndex,
-                                    tmpAction);
+                                    tmpAction,
+                                    faceName);
 
                                 if (deviceInfo) {
                                     tmpAction.deviceInfo = deviceInfo;
@@ -140,31 +141,29 @@ module Garage {
                 buttonAreaY: number,
                 stateIndex: number,
                 actionIndex: number,
-                action: IAction
+                action: IAction,
+                faceName: string
             ): IButtonDeviceInfo {
+
+                let id = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
 
                 let remoteId = huisFiles.getRemoteIdByAction(action);
                 if (remoteId == null) {
-                    return null;
+                    return {
+                        id: id,
+                        remoteName: faceName,
+                        code_db: action.code_db,
+                    };
                 }
 
-                let id               = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
-                let face             = huisFiles.getFace(remoteId);
                 let functions        = huisFiles.getMasterFunctions(remoteId);
                 let codeDb           = huisFiles.getMasterCodeDb(remoteId);
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
-                let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
-
-                if (face == null ||
-                    functions == null ||
-                    codeDb == null) {
-                    // functionCodeHash, bluetoothDataは必須ではない
-                    return null;
-                }
+                let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
                     
                 return {
                     id              : id,
-                    remoteName      : face.name,
+                    remoteName      : faceName,
                     functions       : functions,
                     code_db         : codeDb,
                     functionCodeHash: functionCodeHash,
