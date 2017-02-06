@@ -952,7 +952,11 @@ module Garage {
                     code,
                     funcCodeHash,
                     (name, sameFuncs) => {
-                        return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                        if (funcName != "none") {
+                            return HuisFiles.getPlainFunctionKey(funcName) + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                        } else {
+                            return funcName;
+                        }
                     });
             }
 
