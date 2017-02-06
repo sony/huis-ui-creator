@@ -483,19 +483,22 @@ module Garage {
                         tmpFunction = null;
                     }
 
-                    let deviceInfo = null;
+                    let tmpdeviceInfo = null;
                     if (tmpRemoteId != null) {
-                        deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                        if (!deviceInfo) {
+                        tmpdeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                        if (!tmpdeviceInfo) {
                             try {
                                 // HuisFilesに存在しない場合はキャッシュを使用
-                                deviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
+                                tmpdeviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
                             } catch (e) {
                                 // キャッシュもなかった場合
                                 console.warn(FUNCTION_NAME + "deviceInfo not found");
                             }
                         }
                     }
+
+                    //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
 
 
                     let tmpAction: IAction = {

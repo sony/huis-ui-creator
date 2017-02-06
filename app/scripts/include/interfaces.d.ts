@@ -848,6 +848,25 @@ declare module Garage {
      * リモコンが見つからない場合を表す定数
      */
     var UNKNOWN_REMOTE: string;
+    var UNKNOWN_REMOTE_TV: string;
+    var UNKNOWN_REMOTE_AC: string;
+    var UNKNOWN_REMOTE_LIGHT: string;
+    var UNKNOWN_REMOTE_AUDIO: string;
+    var UNKNOWN_REMOTE_PLAYER: string;
+    var UNKNOWN_REMOTE_RECORDER: string;
+    var UNKNOWN_REMOTE_PROJECTOR: string;
+    var UNKNOWN_REMOTE_STB: string;
+    var UNKNOWN_REMOTE_FAN: string;
+    var UNKNOWN_REMOTE_BT: string;
+    /** 信号名に付与されるIDの文字長 */
+    var FUNC_ID_LEN: number;
+
+    /** 信号名と連番を分ける区切り文字 */
+    var FUNC_NUM_DELIMITER: string ;
+
+    /** 信号がフルカスタムで再学習されたことを示すコード */
+    var FUNC_CODE_RELEARNED: string ;
+
 }
 
 

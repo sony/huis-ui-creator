@@ -34,14 +34,7 @@ module Garage {
         }
 
 
-        /** 信号名に付与されるIDの文字長 */
-        const FUNC_ID_LEN: number = 4;
-
-        /** 信号名と連番を分ける区切り文字 */
-        const FUNC_NUM_DELIMITER: string = '#';
-
-        /** 信号がフルカスタムで再学習されたことを示すコード */
-        const FUNC_CODE_RELEARNED: string = '#';
+       
 
 
         /**
@@ -340,8 +333,9 @@ module Garage {
             */
             getRemoteIdByCode(code: string): string {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
-                if (code == undefined) {
+                if (code == null) {
                     console.warn(FUNCTION_NAME + "code is undefined");
+                    return;
                 }
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
@@ -2042,8 +2036,16 @@ module Garage {
 
                                 let remoteId = this.traceOriginalRemoteIdByAction(action);
                                 if (remoteId == null || remoteId == "") {
-                                    // 基リモコンなし
-                                    remoteId = null;
+                                    // 基リモコンなしの場合、学習されたコードであればfunctionに"##"を付ける
+                                    if (action.code_db != null && action.code != null) {
+                                        // 既に#IDや#HASHが付いている場合には取り除く
+                                        //   ※action.code_db.functionには#は使われない想定
+                                        action.code_db.function = action.code_db.function.replace(/#.+$/, "");
+                                        // 改めて##を付け直す
+                                        action.code_db.function = action.code_db.function + FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED;
+                                    } else {
+                                        remoteId = null;
+                                    }
                                 } else {
                                     let numberedFunc = this.findFunctionKeyInHuisFilesByFunctionName(action.code_db.function, action.code, remoteId);
                                     action.code_db.function = numberedFunc;
@@ -2219,6 +2221,9 @@ module Garage {
                 let numberedFuncs: string[] = [];
 
                 for (let func of functions) {
+                    if (func == null) {
+                        continue;
+                    }
                     let plainName = Util.HuisFiles.getPlainFunctionKey(func);
                     if (plainName != func) {
                         // 連番付き

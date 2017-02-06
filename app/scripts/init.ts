@@ -105,7 +105,21 @@ module Garage {
         MAX_NUM_MACRO_SIGNAL = 63;
         DEFAULT_INTERVAL_MACRO = 400;
 
-        UNKNOWN_REMOTE = "unknown"
+        FUNC_ID_LEN = 4;
+        FUNC_NUM_DELIMITER  = '#';
+        FUNC_CODE_RELEARNED = '#';
+
+        UNKNOWN_REMOTE = "unknown";
+        UNKNOWN_REMOTE_TV = "unknown-tv";
+        UNKNOWN_REMOTE_AC = "unknown-ac";
+        UNKNOWN_REMOTE_LIGHT = "unknown-light";
+        UNKNOWN_REMOTE_AUDIO = "unknown-audio";
+        UNKNOWN_REMOTE_PLAYER = "unknown-player";
+        UNKNOWN_REMOTE_RECORDER = "unknown-recorder";
+        UNKNOWN_REMOTE_PROJECTOR = "unknown-projector";
+        UNKNOWN_REMOTE_STB = "unknown-stb";
+        UNKNOWN_REMOTE_FAN = "unknown-fan";
+        UNKNOWN_REMOTE_BT = "unknown-bt";
 
         ACTION_INPUT_TAP_KEY = "STR_ACTION_INPUT_TAP";
         ACTION_INPUT_LONG_PRESS_KEY = "STR_ACTION_INPUT_LONG_PRESS";
