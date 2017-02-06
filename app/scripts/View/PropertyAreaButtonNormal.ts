@@ -337,7 +337,7 @@ module Garage {
 
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
-                    if (!this.isValidValue(tmpRemoteId)) {
+                    if (!this.isValidValue(tmpRemoteId) || tmpRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
                         tmpRemoteId = null;
                     }
 
@@ -347,16 +347,23 @@ module Garage {
                         tmpFunction = null;
                     }
 
-                    let deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                    if (!deviceInfo) {
+                    let tmpDeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                   
+                    if (!tmpDeviceInfo) {
                         try {
                             // HuisFilesに存在しない場合はキャッシュを使用
-                            deviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
+                            tmpDeviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
                         } catch (e) {
                             // キャッシュもなかった場合
                             console.warn(FUNCTION_NAME + "deviceInfo not found");
                         }
                     }
+
+
+
+                    //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
+
 
                     let tmpAction: IAction = {
                         input: tmpInput,

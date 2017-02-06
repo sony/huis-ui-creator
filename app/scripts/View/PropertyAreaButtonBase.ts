@@ -645,7 +645,33 @@ module Garage {
                 }
             }
 
-           
+            /*
+            * IButtonDeviceInfoをディープコピーする.
+            * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
+            * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
+            */
+            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo{
+                let FUNCTION_NAME = TAG + "cloneDeviceInfo"; 
+
+                if (!this.isValidValue(src)) {
+                    console.warn(FUNCTION_NAME + "src is invalid");
+                    return;
+                }
+
+                //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                let result: IButtonDeviceInfo = {
+                    id: src.id,
+                    remoteName: (src.remoteName) ? src.remoteName : undefined,
+                    functions: $.extend(true, [], src.functions),
+                    code_db: $.extend(true, {}, src.code_db),
+                    bluetooth_data: (src.bluetooth_data) ? $.extend(true, {}, src.bluetooth_data) : undefined,
+                    functionCodeHash: (src.functionCodeHash) ? $.extend(true, [], src.functionCodeHash) : undefined
+                }
+
+                return result;
+
+            }
+
 
             /*
             * 設定したOrderのfunction用PullDownを消す。
