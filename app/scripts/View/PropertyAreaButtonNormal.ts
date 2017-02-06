@@ -379,10 +379,12 @@ module Garage {
 
                         if (deviceInfo.functionCodeHash) {
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
-                            if (tmpCode == null && this.isRelearnedIDFunctionName(tmpFunction)){
+                            if (!this.isValidValue(tmpCode) &&
+                                (this.isRelearnedFunctionName(tmpFunction) ||
+                                this.isRelearnedIDFunctionName(tmpFunction))) {
                                 //functionCodeHashではcodeがみつからず
                                 //functionNameに #IDがついていた場合、
-
+                                //functionNameに##がついていた場合、再学習なのでmodelからcodeを検索
                                 tmpCode = this.getCodeFromThisModel(tmpFunction);
                             }
                             

@@ -678,12 +678,11 @@ module Garage {
             /*
             * 入力した信号名が #ID (例STR_REMOTE_BTN_TOGGLE#fads)なのか判定する。 危険多様しないこと。
             * @param functionName {string}
-            * @return {boolean} #ID付きのfunction
+            * @return {boolean} #ID付きのfunctionの場合true,それ以外はfalse;
             */
             protected isRelearnedIDFunctionName(functionName: string): boolean {
                 let FUNCTION_NAME = TAG + "isRelearnedIDFunctionName "; 
                 if (!this.isValidValue(functionName)) {
-                    console.warn(FUNCTION_NAME + "src is invalid");
                     return false;
                 }
 
@@ -698,6 +697,28 @@ module Garage {
                     return false;
                 }
                   
+            } 
+
+            /*
+            * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
+            * @param functionName {string}
+            * @return {boolean} ##付きのfunctionの場合true,それ以外はfalse
+            */
+            protected isRelearnedFunctionName(functionName: string): boolean {
+                let FUNCTION_NAME = TAG + "isRelearnedFunctionName ";
+                if (!this.isValidValue(functionName)) {
+                    return false;
+                }
+
+
+
+                //## を含んでいるとき、trueを返す。
+                if (functionName.indexOf(FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED) != -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             } 
 
             /*
