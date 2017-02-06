@@ -327,7 +327,7 @@ module Garage {
                 }
 
                 let remoteName = null;
-                if (inputRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
+                if (inputRemoteId!= null && inputRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
                     remoteName = this._getRemoteNameOfUnknownRemote(inputRemoteId);
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
@@ -597,7 +597,7 @@ module Garage {
 
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
-                if (remoteId.indexOf(UNKNOWN_REMOTE) == 0) {
+                if (remoteId != null && remoteId.indexOf(UNKNOWN_REMOTE) == 0) {
                     functions = [functionName];
                 } else {
                     functions = this.getFunctionsOf(order);
