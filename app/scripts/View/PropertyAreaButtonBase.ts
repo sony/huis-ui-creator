@@ -605,7 +605,7 @@ module Garage {
                     functions = $.extend(true, [], this.getFunctionsOf(order));
                 }
 
-                if (functions != null || functions.length != 0) {
+                if (functions != null && functions.length != 0) {
                     // functionsに自分のキーが存在しない場合は追加
                     if (this.isValidValue(functionName) &&
                         functions.indexOf(functionName) < 0) {
