@@ -1862,9 +1862,13 @@ module Garage {
                         let face: Model.Face = this._parseFace(facePath, remoteId);
 
                         if (face != undefined) {
-                            // MastarFaceの連番付き信号名をFaceに反映
-                            HuisFiles.applyNumberedFunctionNameByModule(face.modules, masterFace.modules);
 
+                            // MastarFaceの連番付き信号名をFaceに反映
+                            // ただし、fullcustomは対象外とする。
+                            if (face.category != DEVICE_TYPE_FULL_CUSTOM){
+                                HuisFiles.applyNumberedFunctionNameByModule(face.modules, masterFace.modules);
+                            }
+                            
                             remoteInfos.push({
                                 remoteId: remoteId,
                                 face: face,
@@ -1899,7 +1903,7 @@ module Garage {
             parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
                 let face: Model.Face = this._parseFace(facePath, remoteId, rootDirectory);
 
-                if (face != null && face.modules != null) {
+                if (face != null && face.modules != null && face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     HuisFiles.numberFunctionNameInModules(face.modules);
                 }
 
