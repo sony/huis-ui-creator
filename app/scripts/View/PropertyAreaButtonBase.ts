@@ -617,8 +617,16 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
+
+
+                    //functionsが0個の場合のエラーケース対応
+                    let inputFunctions = [];
+                    if (!(functions.length == 1 && functions[0] == null)) {
+                        inputFunctions = Util.HuisFiles.translateFunctions(functions);
+                    }
+
                     let inputSignalData = {
-                        functions: Util.HuisFiles.translateFunctions(functions),
+                        functions: inputFunctions,
                         id: stateId,
                         order: order
                     }
@@ -634,7 +642,6 @@ module Garage {
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
-
                 }
             }
 
