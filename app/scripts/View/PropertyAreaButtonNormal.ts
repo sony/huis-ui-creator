@@ -356,15 +356,6 @@ module Garage {
                     }
 
                     let tmpDeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                    if (tmpDeviceInfo == null) {
-                        if (i >= 1 && (i + 1) == $signalContainers.length) {
-                            // 新しく追加されたactionについては、直前のactionのdeviceInfoを取得する
-                            tmpDeviceInfo = this.model.state[0].action[i-1].deviceInfo;
-                        } else {
-                            // それ以外は、対応するactionのdeviceInfoを取得する
-                            tmpDeviceInfo = this.model.state[0].action[i].deviceInfo;
-                        }
-                    }
                    
                     if (!tmpDeviceInfo) {
                         try {
@@ -376,6 +367,10 @@ module Garage {
                         }
                     }
 
+                    //キャッシュでも、deviceInfoを取得できない。かつ remoteId用のpulldownがunknownのとき、this.modeから取得する。
+                    if (!tmpDeviceInfo && this.isUnknownRemoteIdInPulldownOf(order)) {
+                        tmpDeviceInfo = this.model.state[0].action[order].deviceInfo;
+                    }
 
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
