@@ -105,6 +105,10 @@ module Garage {
         MAX_NUM_MACRO_SIGNAL = 63;
         DEFAULT_INTERVAL_MACRO = 400;
 
+        FUNC_ID_LEN = 4;
+        FUNC_NUM_DELIMITER  = '#';
+        FUNC_CODE_RELEARNED = '#';
+
         UNKNOWN_REMOTE = "unknown";
         UNKNOWN_REMOTE_TV = "unknown-tv";
         UNKNOWN_REMOTE_AC = "unknown-ac";
