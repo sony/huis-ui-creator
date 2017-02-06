@@ -1340,7 +1340,7 @@ module Garage {
                     });
 
                 if (cache != null) {
-                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules, faceName);
+                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules);
                     cache.save(gmodules);
                 }
                 
