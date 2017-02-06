@@ -296,7 +296,7 @@ module Garage {
 
 
 
-            /**
+         /**
           * 入力したorderのremoteプルダウンに、inputの値を代入する。
           * order{number} ： マクロ信号の順番
           * inputRemoteId{string} : プルダウンに設定する値。
@@ -371,6 +371,61 @@ module Garage {
                 let $targetFunctionPullDownContainer: JQuery = $targetSignalContainer.find("#signal-remote-container");
                 $targetFunctionPullDownContainer.children().remove();
             }
+
+
+            /*
+            * 入力したorderのremoteId用プルダウンに表示されている文字列を取得する
+            * @param order{number}
+            * @return {string} プルダウンに表示されている文字列
+            */
+            protected getTextInRemoteIdOf(order: number) :string{
+                let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                //対象orderのremoteIdPullDown用のテキストを返す。
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                return $targetSignalContainer.find("#signal-remote-container option:selected").text();
+
+            }
+
+            /*
+            * 入力したorderのremoteId用プルダウンに入力されているのが「不明なリモコン」か判定する
+            * @param order{number}
+            * @return {boolean}
+            */
+            protected isUnknownRemoteIdInPulldownOf(order: number): boolean {
+                let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let pullldownText = this.getTextInRemoteIdOf(order);
+
+                switch (pullldownText) {
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AUDIO"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_PLAYER"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_RECORDER"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_PROJECTOR"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_STB"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_FAN"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_BT"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE"):
+                        return true;
+                    default: return false;
+
+                }
+
+            }
+
 
             /*
             * 入力したorderRemoteId用のプルダウンを描画する。

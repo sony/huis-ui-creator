@@ -168,15 +168,12 @@ module Garage {
 
                         if (this.isValidValue(prevRemoteId)) {
 
-                            if (prevRemoteId.match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)) {
 
-                                let unknownRcId = this._getRemoteIdOfUnknownRemote(
-                                    this.model.state[this.DEFAULT_STATE_ID].action[prevOrder]);
-
-                                if (unknownRcId !=null) {
-                                    prevRemoteId = null;
-                                }
+                            //前のpulldownがunknownだった場合、次のプルダウンはリモコンはみ選択状態に。
+                            if (this.isUnknownRemoteIdInPulldownOf(prevOrder)) {
+                                prevRemoteId = null;
                             }
+                            
 
                             this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,prevRemoteId);
                             this.renderFunctionsOf(order);
