@@ -3,81 +3,114 @@
 /* tslint:disable:max-line-length */
 
 module Garage {
-	export module Model {
-		var TAG = "[Garage.Model.ImageItem] ";
+    export module Model {
+        var TAG = "[Garage.Model.ImageItem] ";
         import JQUtils = Util.JQueryUtils;
 
-		export class ImageItem extends Backbone.Model implements IGImage, ItemModel {
+        export class ImageItem extends Model.Item implements IGImage {
 
-			private resolvedPathDirectory_: string;
-			private remoteId_: string;
-			private initialArea_: IArea;
-			private initialResizeMode_: string;
+            private resolvedPathDirectory_: string;
+            private remoteId_: string;
+            private initialArea_: IArea;
+            private initialResizeMode_: string;
 
-			constructor(attributes?: any) {
-				super(attributes, null);
-				if (attributes) {
-					if (attributes.materialsRootPath && attributes.remoteId) {
-						this.resolvedPathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
-						this.remoteId_ = attributes.remoteId;
-					}
-				}
-			}
+            constructor(attributes?: any) {
+                super(attributes, null);
+                if (attributes) {
+                    if (attributes.materialsRootPath && attributes.remoteId) {
+                        this.resolvedPathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                        this.remoteId_ = attributes.remoteId;
+                    }
+                }
+            }
 
-			/**
+            /**
+             * ImageItemの複製を生成
+             *
+             * @param materialsRootPath {string}
+             * @param dstRemoteId {string}
+             * @param offsetY {number}
+             * @return {ImageItem}
+             */
+            public clone(materialsRootPath: string = null, dstRemoteId: string = this.remoteId_, offsetY: number = 0): ImageItem {
+                var newImage = new Model.ImageItem({
+                    materialsRootPath: materialsRootPath,
+                    remoteId: dstRemoteId
+                });
+
+                if (materialsRootPath == null) {
+                    newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
+                }
+
+                var newArea: IArea = $.extend(true, {}, this.area);
+                newArea.y += offsetY;
+                newImage.area = newArea;
+                // 画像の path を出力先の remoteId のディレクトリーになるように指定
+                newImage.path = dstRemoteId + "/" + path.basename(this.path);
+                newImage.resizeOriginal = this.resizeOriginal;
+
+                //バージョン情報をもっている場合、引き継ぐ
+                if (this.version != null) {
+                    newImage.version = this.version;
+                }
+
+                return newImage;
+            }
+
+            /**
              * getters and setters
              */
             get area(): IArea {
-				return this.get("area");
-			}
+                return this.get("area");
+            }
 
             set area(val: IArea) {
-				if (!this.initialArea_) {
-					this.initialArea_ = $.extend(true, {}, val);
-				} else {
-					// 最初に指定した width / height と異なるものが指定されたら、resized を true にする。
-					// ただし一度 resized を true にしたら false にすることはない。
-					if (this.initialArea_.w !== val.w || this.initialArea_.h !== val.h) {
-						this.resized = true;
-					}
-				}
-				this.set("area", val);
-			}
+                if (!this.initialArea_) {
+                    this.initialArea_ = $.extend(true, {}, val);
+                } else {
+                    // 最初に指定した width / height と異なるものが指定されたら、resized を true にする。
+                    // ただし一度 resized を true にしたら false にすることはない。
+                    if (this.initialArea_.w !== val.w || this.initialArea_.h !== val.h) {
+                        this.resized = true;
+                    }
+                }
+                this.set("area", val);
+            }
 
-			get version(): string {
-				return this.get("version");
-			}
+            get version(): string {
+                return this.get("version");
+            }
 
-			set version(val : string){
-				this.set("version", val);
-			}
+            set version(val : string){
+                this.set("version", val);
+            }
 
             get path(): string {
-				return this.get("path");
-			}
+                return this.get("path");
+            }
 
             set path(val: string) {
-				this.set("path", val);
-				// resolvedPath (PC上のフルパス) を設定する
-				if (!path) {
-					// path が指定されていない場合は、resolvedPath も指定しない
-					this.resolvedPath = "";
+                this.set("path", val);
+                // resolvedPath (PC上のフルパス) を設定する
+                if (!path) {
+                    // path が指定されていない場合は、resolvedPath も指定しない
+                    this.resolvedPath = "";
 
                 } else if (this.resolvedPathDirectory_) {
-					this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-				}
-			}
+                    this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                }
+            }
 
-			get resolvedPath(): string {
-				return this.get("resolvedPath");
-			}
+            get resolvedPath(): string {
+                return this.get("resolvedPath");
+            }
 
             set resolvedPath(val: string) {
 
                 this.resolvedPathCSS = JQUtils.enccodeUriValidInCSS(val);
 
                 this.set("resolvedPath", val);
-			}
+            }
 
             get resolvedPathCSS(): string {
                 return this.get("resolvedPathCSS");
@@ -87,155 +120,147 @@ module Garage {
                 this.set("resolvedPathCSS", val);
             }
 
-			get properties(): string[]{
-				return ["enabled", "area", "path", "resizeMode"];
-			}
+            get properties(): string[]{
+                return ["enabled", "area", "path", "resizeMode"];
+            }
 
-			get itemType(): string {
-				return "image";
-			}
+            get itemType(): string {
+                return "image";
+            }
 
-			get enabled(): boolean {
-				return this.get("enabled");
-			}
+            get pageBackground(): boolean {
+                return this.get("pageBackground");
+            }
 
-			set enabled(val: boolean) {
-				this.set("enabled", val);
-			}
+            set pageBackground(val: boolean) {
+                this.set("pageBackground", val);
+            }
 
-			get pageBackground(): boolean {
-				return this.get("pageBackground");
-			}
+            get areaRatio(): IGAreaRatio {
+                let areaRatio: IGAreaRatio = this.get("areaRatio");
+                if (!areaRatio) {
+                    // 未指定の場合は、親要素の全体の領域として返す
+                    areaRatio = {
+                        x: 0,
+                        y: 0,
+                        w: 1,
+                        h: 1
+                    };
+                }
+                return areaRatio;
+            }
 
-			set pageBackground(val: boolean) {
-				this.set("pageBackground", val);
-			}
+            set areaRatio(val: IGAreaRatio) {
+                this.set("areaRatio", val);
+            }
 
-			get areaRatio(): IGAreaRatio {
-				let areaRatio: IGAreaRatio = this.get("areaRatio");
-				if (!areaRatio) {
-					// 未指定の場合は、親要素の全体の領域として返す
-					areaRatio = {
-						x: 0,
-						y: 0,
-						w: 1,
-						h: 1
-					};
-				}
-				return areaRatio;
-			}
+            get garageExtensions(): IGGarageImageExtensions {
+                return this.get("garageExtensions");
+            }
 
-			set areaRatio(val: IGAreaRatio) {
-				this.set("areaRatio", val);
-			}
+            set garageExtensions(val: IGGarageImageExtensions) {
+                this.set("garageExtensions", val);
+            }
 
-			get garageExtensions(): IGGarageImageExtensions {
-				return this.get("garageExtensions");
-			}
+            get resizeMode(): string {
+                let garageExtensions = this.garageExtensions;
+                let resizeMode = "contain";
+                if (garageExtensions) {
+                    if (garageExtensions.resizeMode) {
+                        resizeMode = garageExtensions.resizeMode;
+                    }
+                }
+                return resizeMode;
+            }
 
-			set garageExtensions(val: IGGarageImageExtensions) {
-				this.set("garageExtensions", val);
-			}
+            set resizeMode(val: string) {
+                let garageExtensions: IGGarageImageExtensions = this.garageExtensions;
+                if (garageExtensions) {
+                    garageExtensions.resizeMode = val;
+                } else {
+                    garageExtensions = {
+                        original: "",
+                        resolvedOriginalPath: "",
+                        resizeMode: val
+                    };
+                }
+                this.resized = true;
+                this.garageExtensions = garageExtensions;
+            }
 
-			get resizeMode(): string {
-				let garageExtensions = this.garageExtensions;
-				let resizeMode = "contain";
-				if (garageExtensions) {
-					if (garageExtensions.resizeMode) {
-						resizeMode = garageExtensions.resizeMode;
-					}
-				}
-				return resizeMode;
-			}
+            get resizeOriginal(): string {
+                let garageExtensions = this.garageExtensions;
+                if (garageExtensions) {
+                    return garageExtensions.original;
+                }
+                return "";
+            }
 
-			set resizeMode(val: string) {
-				let garageExtensions: IGGarageImageExtensions = this.garageExtensions;
-				if (garageExtensions) {
-					garageExtensions.resizeMode = val;
-				} else {
-					garageExtensions = {
-						original: "",
-						resolvedOriginalPath: "",
-						resizeMode: val
-					};
-				}
-				this.resized = true;
-				this.garageExtensions = garageExtensions;
-			}
+            set resizeOriginal(val: string) {
+                let garageExtensions = this.garageExtensions;
+                if (garageExtensions) {
+                    garageExtensions.original = val;
+                    if (this.remoteId_ === "common") {
+                        // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
+                        // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
+                        //let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
+                        //if (resolvedOriginalPath.indexOf("file:///") === 0) {
+                        //    resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
+                        //}
+                        let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/"+val), true);
+                        garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
+                    } else {
+                        garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                    }
+                } else {
+                    if (this.remoteId_ === "common") {
+                        // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
+                        // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
+                        //let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
+                        //if (resolvedOriginalPath.indexOf("file:///") === 0) {
+                        //    resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
+                        //}
+                        let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
+                        garageExtensions = {
+                            original: val,
+                            resizeMode: "contain",
+                            resolvedOriginalPath: resolvedOriginalPath
+                        };
+                    } else {
+                        garageExtensions = {
+                            original: val,
+                            resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
+                            resizeMode: "contain"
+                        };
+                    }
+                }
+                this.garageExtensions = garageExtensions;
+            }
 
-			get resizeOriginal(): string {
-				let garageExtensions = this.garageExtensions;
-				if (garageExtensions) {
-					return garageExtensions.original;
-				}
-				return "";
-			}
-
-			set resizeOriginal(val: string) {
-				let garageExtensions = this.garageExtensions;
-				if (garageExtensions) {
-					garageExtensions.original = val;
-					if (this.remoteId_ === "common") {
-						// common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
-						// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-						//let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
-						//if (resolvedOriginalPath.indexOf("file:///") === 0) {
-						//	resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
-						//}
-						let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/"+val), true);
-						garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
-					} else {
-						garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-					}
-				} else {
-					if (this.remoteId_ === "common") {
-						// common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
-						// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-						//let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
-						//if (resolvedOriginalPath.indexOf("file:///") === 0) {
-						//	resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
-						//}
-						let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
-						garageExtensions = {
-							original: val,
-							resizeMode: "contain",
-							resolvedOriginalPath: resolvedOriginalPath
-						};
-					} else {
-						garageExtensions = {
-							original: val,
-							resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
-							resizeMode: "contain"
-						};
-					}
-				}
-				this.garageExtensions = garageExtensions;
-			}
-
-			get resizeResolvedOriginalPath(): string {
-				let garageExtensions = this.garageExtensions;
+            get resizeResolvedOriginalPath(): string {
+                let garageExtensions = this.garageExtensions;
                 if (garageExtensions) {
 
-					if (garageExtensions.resolvedOriginalPath) {
-						return garageExtensions.resolvedOriginalPath;
-					} else {
-						garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, garageExtensions.original)).replace(/\\/g, "/");
-						this.garageExtensions = garageExtensions;
-						return garageExtensions.resolvedOriginalPath;
-					}
-				}
-				return "";
-			}
+                    if (garageExtensions.resolvedOriginalPath) {
+                        return garageExtensions.resolvedOriginalPath;
+                    } else {
+                        garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, garageExtensions.original)).replace(/\\/g, "/");
+                        this.garageExtensions = garageExtensions;
+                        return garageExtensions.resolvedOriginalPath;
+                    }
+                }
+                return "";
+            }
 
-			set resizeResolvedOriginalPath(val: string) {
-				let garageExtensions = this.garageExtensions;
+            set resizeResolvedOriginalPath(val: string) {
+                let garageExtensions = this.garageExtensions;
                 if (garageExtensions) {
                     garageExtensions.resolvedOriginalPath = val;
                     this.garageExtensions = garageExtensions;
                 }
 
                 this.set("resizeResolvedOriginalPath", val);
-			}
+            }
 
             get resizeResolvedOriginalPathCSS(): string {
                 //resizeResolvedOriginalPathCSSは、Windows用のパスを、CSSが読み取れるようにエンコードされた形。
@@ -246,13 +271,13 @@ module Garage {
                 this.set("resizeResolvedOriginalPathCSS", val);
             }
 
-			get resized(): boolean {
-				return this.get("resized");
-			}
+            get resized(): boolean {
+                return this.get("resized");
+            }
 
-			set resized(val: boolean) {
-				this.set("resized", val);
-			}
+            set resized(val: boolean) {
+                this.set("resized", val);
+            }
 
             /**
              * モデルの初期値を返す。
@@ -261,15 +286,15 @@ module Garage {
             defaults() {
 
                 var image: IGImage = {
-					"enabled": true,
+                    "enabled": true,
                     "area": { "x": 0, "y": 0, "w": 100, "h": 100 },
                     "path": "",
-					"resolvedPath": "",
-					"resized": false
+                    "resolvedPath": "",
+                    "resized": false
                 };
 
                 return image;
             }
-		}
-	}
+        }
+    }
 }

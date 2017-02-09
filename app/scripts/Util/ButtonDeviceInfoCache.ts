@@ -56,6 +56,42 @@ module Garage {
             }
 
             /**
+             * 全てのモジュールに対してHuisFilesから検索したDeviceInfoを設定する
+             * @param gmodules {IGModule[]} 対象とするモジュールオブジェクト
+             */
+            static injectAllDeviceInfoFromHuisFiles(gmodules: IGModule[]) {
+                for (let gmodule of gmodules) {
+                    if (!gmodule.button) continue;
+
+                    for (let button of gmodule.button) {
+                        if (!button.state) continue;
+
+                        for (let stateIndex = 0; stateIndex < button.state.length; stateIndex++) {
+                            let tmpState = button.state[stateIndex];
+                            if (!tmpState.action) continue;
+
+                            for (let actionIndex = 0; actionIndex < tmpState.action.length; actionIndex++) {
+                                let tmpAction = tmpState.action[actionIndex];
+                                if (tmpAction.deviceInfo && tmpAction.deviceInfo.functions) continue;
+
+                                let deviceInfo = ButtonDeviceInfoCache.createDeviceInfo(
+                                    gmodule.pageIndex,
+                                    gmodule.area.x,
+                                    gmodule.area.y,
+                                    stateIndex,
+                                    actionIndex,
+                                    tmpAction);
+
+                                if (deviceInfo) {
+                                    tmpAction.deviceInfo = deviceInfo;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            /**
              * 渡されたページ番号、x座標、y座標、stateインデックス番号、actionインデックス番号から一致するIButtonDeviceInfoを返却
              * 一致するものが無い場合はnullを返却
              */
@@ -71,6 +107,7 @@ module Garage {
                 return null;
             }
 
+
             /**
              * ButtonDeviceInfoCacheのIDを生成
              * @param page        {number} ボタンのあるページ番号
@@ -83,6 +120,58 @@ module Garage {
             private static createId(page: number, x: number, y: number, stateIndex: number, actionIndex: number): string {
                 return page + "-" + x + "-" + y + "-" + stateIndex + "-" + actionIndex;
             }
+
+
+            /**
+             * ボタンのデバイス情報オブジェクトを生成する
+             * 生成に失敗した場合は null を返す
+             *
+             * @param page        {number}  ボタンのあるページ番号
+             * @param x           {number}  ボタンのx座標
+             * @param y           {number}  ボタンのy座標
+             * @param stateIndex  {number}  stateのインデックス番号
+             * @param actionIndex {number}  actionのインデックス番号
+             * @param action      {IAction} actionオブジェクト
+             * @return 新しく生成されたIButtonDeviceInfo
+             */
+            private static createDeviceInfo(
+                page: number,
+                buttonAreaX: number,
+                buttonAreaY: number,
+                stateIndex: number,
+                actionIndex: number,
+                action: IAction
+            ): IButtonDeviceInfo {
+
+                let remoteId = huisFiles.getRemoteIdByAction(action);
+                if (remoteId == null) {
+                    return null;
+                }
+
+                let id               = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
+                let face             = huisFiles.getFace(remoteId);
+                let functions        = huisFiles.getMasterFunctions(remoteId);
+                let codeDb           = huisFiles.getMasterCodeDb(remoteId);
+                let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
+                let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
+
+                if (face == null ||
+                    functions == null ||
+                    codeDb == null) {
+                    // functionCodeHash, bluetoothDataは必須ではない
+                    return null;
+                }
+                    
+                return {
+                    id              : id,
+                    remoteName      : face.name,
+                    functions       : functions,
+                    code_db         : codeDb,
+                    functionCodeHash: functionCodeHash,
+                    bluetooth_data  : bluetoothData
+                };
+            }
+
 
             /**
              * 渡されたIGModule内のボタン情報をキャッシュファイルに出力
@@ -103,6 +192,10 @@ module Garage {
                                 let targetDeviceInfo = gbutton.state[stateIndex].action[actionIndex].deviceInfo;
                                 if (!targetDeviceInfo) continue;
 
+                                if (targetDeviceInfo.code_db.function != null &&
+                                    targetDeviceInfo.code_db.function.length > 0) {
+                                    targetDeviceInfo.code_db.function = HuisFiles.getPlainFunctionKey(targetDeviceInfo.code_db.function);
+                                }
                                 targetDeviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
                                 newList.push(targetDeviceInfo);
                             }

@@ -2,159 +2,159 @@
 
 
     <!--ボタンアイテムの詳細情報エリア-->
-	<script type="text/template" id="template-button-detail">
-		{{! ボタンの詳細情報エリア}}
+    <script type="text/template" id="template-button-detail">
+        {{! ボタンの詳細情報エリア}}
 
 
-		<h3 id="face-item-detail-title">
-			<span class="title-label">★Button</span>
-		</h3>
+        <h3 id="face-item-detail-title">
+            <span class="title-label">Button</span>
+        </h3>
 
 
-		<div id="states-container"></div>
-	</script>
+        <div id="states-container"></div>
+    </script>
 
 
 
 
     <!--画像アイテムの詳細情報エリア-->
-	<script type="text/template" id="template-image-detail">
+    <script type="text/template" id="template-image-detail">
 
-		<h3 id="face-item-detail-title">★Image<span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">Image<span class="property-cid"></span></h3>
 
         <!-- プレビュー -->
         <div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
             <div id="edit-image-non-button-image"></div>
         </div>
 
-	</script>
+    </script>
 
 
 
 
 
     <!-- ラベルアイテムの詳細情報エリア-->
-	<script type="text/template" id="template-label-detail">
+    <script type="text/template" id="template-label-detail">
 
-		<h3 id="face-item-detail-title">★Lalel<span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">Lalel<span class="property-cid"></span></h3>
 
-		<!-- プレビュー -->
-		<div id="property-image-preview">
-			<div class="text-field-in-preview">
-				<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">★ラベルを編集</div></div>
-				<input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
-				<div class="custom-select text-size-pulldown">
-					<select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
-						<option value="12">12px</option>
-						<option value="14">14px</option>
-						<option value="16">16px</option>
-						<option value="18">18px</option>
-						<option value="20">20px</option>
-						<option value="23" selected>23px</option>
-						<option value="28">28px</option>
-						<option value="30">30px</option>
-						<option value="32">32px</option>
-						<option value="36">36px</option>
-						<option value="40">40px</option>
-						<option value="44">44px</option>
-						<option value="48">48px</option>
-						<option value="54">54px</option>
-						<option value="60">60px</option>
-						<option value="72">72px</option>
-						<option value="80">80px</option>
-						<option value="88">88px</option>
-						<option value="96">96px</option>
-					</select>
-				</div>
-			</div>
-		</div>
+        <!-- プレビュー -->
+        <div id="property-image-preview">
+            <div class="text-field-in-preview">
+                <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">ラベルを編集</div></div>
+                <input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
+                <div class="custom-select text-size-pulldown">
+                    <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
+                        <option value="12">12px</option>
+                        <option value="14">14px</option>
+                        <option value="16">16px</option>
+                        <option value="18">18px</option>
+                        <option value="20">20px</option>
+                        <option value="23" selected>23px</option>
+                        <option value="28">28px</option>
+                        <option value="30">30px</option>
+                        <option value="32">32px</option>
+                        <option value="36">36px</option>
+                        <option value="40">40px</option>
+                        <option value="44">44px</option>
+                        <option value="48">48px</option>
+                        <option value="54">54px</option>
+                        <option value="60">60px</option>
+                        <option value="72">72px</option>
+                        <option value="80">80px</option>
+                        <option value="88">88px</option>
+                        <option value="96">96px</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-	</script>
+    </script>
 
 
 
 
 
     <!--背景画像の詳細編集エリア-->
-	<script type="text/template" id="template-page-background-detail">
+    <script type="text/template" id="template-page-background-detail">
 
-		<h3 id="face-item-detail-title">★Background<span class="property-cid"></span></h3>
+        <h3 id="face-item-detail-title">Background<span class="property-cid"></span></h3>
 
         <!-- プレビュー -->
         <div id="property-image-preview" {{#enabled}}style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
-			<div id="edit-image-background"></div>
-			<div id="delete-background-image"></div>
-		</div>
+            <div id="edit-image-background"></div>
+            <div id="delete-background-image"></div>
+        </div>
 
-	</script>
+    </script>
 
 
 
 
     <!--CID表示用のテンプレート-->
-	<script type="text/template" id="template-property-cid">
-		<div id="property-cid">
-			<p class="inline property-title">CID</p>
-			<p class="inline property-value small">{{cid}}</p>
-		</div>
-	</script>
+    <script type="text/template" id="template-property-cid">
+        <div id="property-cid">
+            <p class="inline property-title">CID</p>
+            <p class="inline property-value small">{{cid}}</p>
+        </div>
+    </script>
 
 
 
 
 
     <!--通常ボタンのステート用のテンプレート-->
-	<script type="text/template" id="template-property-button-state">
-		<div class="state-container">
+    <script type="text/template" id="template-property-button-state">
+        <div class="state-container">
 
-			<!-- プレビュー -->
-			<div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}">
-				<div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
-				<div class="text-field-in-preview">
-					<div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">★ラベルを編集</div></div>
-					<input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+            <!-- プレビュー -->
+            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}">
+                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
+                <div class="text-field-in-preview">
+                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">ラベルを編集</div></div>
+                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
 
-					<div class="custom-select text-size-pulldown">
-						<select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
-							<option value="12">12px</option>
-							<option value="14">14px</option>
-							<option value="16">16px</option>
-							<option value="18">18px</option>
-							<option value="20">20px</option>
-							<option value="23">23px</option>
-							<option value="28">28px</option>
-							<option value="30" selected>30px</option>
-							<option value="32">32px</option>
-							<option value="36">36px</option>
-							<option value="40">40px</option>
-							<option value="44">44px</option>
-							<option value="48">48px</option>
-							<option value="54">54px</option>
-							<option value="60">60px</option>
-							<option value="72">72px</option>
-							<option value="80">80px</option>
-							<option value="88">88px</option>
-							<option value="96">96px</option>
-						</select>
-					</div>
-				</div>
-			</div>
+                    <div class="custom-select text-size-pulldown">
+                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="23">23px</option>
+                            <option value="28">28px</option>
+                            <option value="30" selected>30px</option>
+                            <option value="32">32px</option>
+                            <option value="36">36px</option>
+                            <option value="40">40px</option>
+                            <option value="44">44px</option>
+                            <option value="48">48px</option>
+                            <option value="54">54px</option>
+                            <option value="60">60px</option>
+                            <option value="72">72px</option>
+                            <option value="80">80px</option>
+                            <option value="88">88px</option>
+                            <option value="96">96px</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-			<!-- アクション -->
-			<div class="property-state-action">
+            <!-- アクション -->
+            <div class="property-state-action">
                 <div id="signals-container" ></div>
-			</div>
+            </div>
 
 
             <div class="add-btn-container">
                 <div id="add-signal-btn" data-state-id="{{id}}">
                     <div class="btn-image"></div>
-                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">★操作を追加</span>
+                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">操作を追加</span>
                 </div>
             </div>
 
-		</div>
-	</script>
+        </div>
+    </script>
 
 
 
@@ -167,7 +167,7 @@
 
             <div class="separate-line" ></div>
 
-            <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</span><span>{{order_plus_one}}</span></h4>
+            <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</span><span>{{order_plus_one}}</span></h4>
             <div class="signals">
                 <!--アクション選択用のテンプレート-->
                 <div id="signal-action-container"></div>
@@ -186,7 +186,7 @@
         </div>
 
     </script>
-	
+    
 
 
 
@@ -205,7 +205,7 @@
     </script>
     <!--アクションのnone用-->
     <script type="text/template" id="template-property-button-signal-action-none-option">
-        <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">★操作を選択</option>
+        <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">操作を選択</option>
     </script>
 
 
@@ -217,7 +217,7 @@
 
             <div class="header">
                 <h3 id="face-item-detail-title">
-                    <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">★Macro Button</span>
+                    <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">Macro Button</span>
 
                 </h3>
                 <div id="about-macro">
@@ -225,8 +225,8 @@
                         <div class="component">
                             <div id="popup-arrow"></div>
                             <p>
-                                <span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE">★マクロとは？</span>
-                                <br><span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT">★マクロとは？</span>
+                                <span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE">マクロとは？</span>
+                                <br><span data-i18n="edit.property.STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT">マクロとは？</span>
                             </p>
                         </div>
                     </div>
@@ -248,7 +248,7 @@
                 <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}">
                     <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
                     <div class="text-field-in-preview">
-                        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">★ラベルを編集</div></div>
+                        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
                         <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
 
                         <div class="custom-select text-size-pulldown">
@@ -278,7 +278,7 @@
                 </div>
 
                 <div class="button-macro-action-container-element">
-                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">★操作</h4>
+                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
                 </div>
 
                 <div class="custom-select">
@@ -296,7 +296,7 @@
                 <div class="add-btn-container">
                     <div id="add-signal-btn">
                         <div class="btn-image"></div>
-                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">★操作を追加</span>
+                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">操作を追加</span>
                     </div>
                 </div>
                 </div>
@@ -374,7 +374,7 @@
         </script>
         <!-- none用-->
         <script type="text/template" id="template-property-button-signal-remote-none-option">
-            <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">★リモコンを選択してください</option>
+            <option class="default-value" value="none" data-i18n="remote.STR_PLEASE_INPUT_REMOTE">リモコンを選択してください</option>
         </script>
         <!--後からプルダウンにリモコンを追加する用-->
         <script type="text/template" id="template-property-button-signal-remote-additional-option">
@@ -390,14 +390,14 @@
                 <div class="custom-select">
                     <select class="function-input" id="select-signal-function-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
                         {{#functions}}
-                        <option value="{{.}}" data-i18n="button.function.{{.}}">{{.}}</option>
+                        <option value="{{key}}" >{{label}}</option>
                         {{/functions}}
                     </select>
                 </div>
             </div>
         </script>
         <script type="text/template" id="template-property-button-signal-functions-none-option">
-            <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">★信号を選択</option>
+            <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">信号を選択</option>
         </script>
 
 
@@ -409,30 +409,30 @@
                 <div class="custom-select">
 
                     <select class="interval-input" id="select-macro-signal-interval-{{order}}" data-state-id="{{id}}" data-native-menu="false" data-signal-order="{{order}}">
-                        <option value="0" data-i18n="button.interval.STR_00_POINT_0_SECOND_AFTER">★0.0秒後</option>
-                        <option value="100" data-i18n="button.interval.STR_00_POINT_1_SECOND_AFTER">★0.1秒後</option>
-                        <option value="200" data-i18n="button.interval.STR_00_POINT_2_SECOND_AFTER">★0.2秒後</option>
-                        <option value="300" data-i18n="button.interval.STR_00_POINT_3_SECOND_AFTER">★0.3秒後</option>
-                        <option value="400" data-i18n="button.interval.STR_00_POINT_4_SECOND_AFTER">★0.4秒後</option>
-                        <option value="500" data-i18n="button.interval.STR_00_POINT_5_SECOND_AFTER">★0.5秒後</option>
-                        <option value="600" data-i18n="button.interval.STR_00_POINT_6_SECOND_AFTER">★0.6秒後</option>
-                        <option value="700" data-i18n="button.interval.STR_00_POINT_7_SECOND_AFTER">★0.7秒後</option>
-                        <option value="800" data-i18n="button.interval.STR_00_POINT_8_SECOND_AFTER">★0.8秒後</option>
-                        <option value="900" data-i18n="button.interval.STR_00_POINT_9_SECOND_AFTER">★0.9秒後</option>
-                        <option value="1000" data-i18n="button.interval.STR_01_POINT_0_SECOND_AFTER">★1秒後</option>
-                        <option value="2000" data-i18n="button.interval.STR_02_POINT_0_SECOND_AFTER">★2秒後</option>
-                        <option value="3000" data-i18n="button.interval.STR_03_POINT_0_SECOND_AFTER">★3秒後</option>
-                        <option value="4000" data-i18n="button.interval.STR_04_POINT_0_SECOND_AFTER">★4秒後</option>
-                        <option value="5000" data-i18n="button.interval.STR_05_POINT_0_SECOND_AFTER">★5秒後</option>
-                        <option value="6000" data-i18n="button.interval.STR_06_POINT_0_SECOND_AFTER">★6秒後</option>
-                        <option value="7000" data-i18n="button.interval.STR_07_POINT_0_SECOND_AFTER">★7秒後</option>
-                        <option value="8000" data-i18n="button.interval.STR_08_POINT_0_SECOND_AFTER">★8秒後</option>
-                        <option value="9000" data-i18n="button.interval.STR_09_POINT_0_SECOND_AFTER">★9秒後</option>
-                        <option value="10000" data-i18n="button.interval.STR_10_POINT_0_SECOND_AFTER">★10秒後</option>
-                        <option value="15000" data-i18n="button.interval.STR_15_POINT_0_SECOND_AFTER">★15秒後</option>
-                        <option value="20000" data-i18n="button.interval.STR_20_POINT_0_SECOND_AFTER">★20秒後</option>
-                        <option value="25000" data-i18n="button.interval.STR_25_POINT_0_SECOND_AFTER">★25秒後</option>
-                        <option value="30000" data-i18n="button.interval.STR_30_POINT_0_SECOND_AFTER">★30秒後</option>
+                        <option value="0" data-i18n="button.interval.STR_00_POINT_0_SECOND_AFTER">0.0秒後</option>
+                        <option value="100" data-i18n="button.interval.STR_00_POINT_1_SECOND_AFTER">0.1秒後</option>
+                        <option value="200" data-i18n="button.interval.STR_00_POINT_2_SECOND_AFTER">0.2秒後</option>
+                        <option value="300" data-i18n="button.interval.STR_00_POINT_3_SECOND_AFTER">0.3秒後</option>
+                        <option value="400" data-i18n="button.interval.STR_00_POINT_4_SECOND_AFTER">0.4秒後</option>
+                        <option value="500" data-i18n="button.interval.STR_00_POINT_5_SECOND_AFTER">0.5秒後</option>
+                        <option value="600" data-i18n="button.interval.STR_00_POINT_6_SECOND_AFTER">0.6秒後</option>
+                        <option value="700" data-i18n="button.interval.STR_00_POINT_7_SECOND_AFTER">0.7秒後</option>
+                        <option value="800" data-i18n="button.interval.STR_00_POINT_8_SECOND_AFTER">0.8秒後</option>
+                        <option value="900" data-i18n="button.interval.STR_00_POINT_9_SECOND_AFTER">0.9秒後</option>
+                        <option value="1000" data-i18n="button.interval.STR_01_POINT_0_SECOND_AFTER">1秒後</option>
+                        <option value="2000" data-i18n="button.interval.STR_02_POINT_0_SECOND_AFTER">2秒後</option>
+                        <option value="3000" data-i18n="button.interval.STR_03_POINT_0_SECOND_AFTER">3秒後</option>
+                        <option value="4000" data-i18n="button.interval.STR_04_POINT_0_SECOND_AFTER">4秒後</option>
+                        <option value="5000" data-i18n="button.interval.STR_05_POINT_0_SECOND_AFTER">5秒後</option>
+                        <option value="6000" data-i18n="button.interval.STR_06_POINT_0_SECOND_AFTER">6秒後</option>
+                        <option value="7000" data-i18n="button.interval.STR_07_POINT_0_SECOND_AFTER">7秒後</option>
+                        <option value="8000" data-i18n="button.interval.STR_08_POINT_0_SECOND_AFTER">8秒後</option>
+                        <option value="9000" data-i18n="button.interval.STR_09_POINT_0_SECOND_AFTER">9秒後</option>
+                        <option value="10000" data-i18n="button.interval.STR_10_POINT_0_SECOND_AFTER">10秒後</option>
+                        <option value="15000" data-i18n="button.interval.STR_15_POINT_0_SECOND_AFTER">15秒後</option>
+                        <option value="20000" data-i18n="button.interval.STR_20_POINT_0_SECOND_AFTER">20秒後</option>
+                        <option value="25000" data-i18n="button.interval.STR_25_POINT_0_SECOND_AFTER">25秒後</option>
+                        <option value="30000" data-i18n="button.interval.STR_30_POINT_0_SECOND_AFTER">30秒後</option>
 
                     </select>
                 </div>
