@@ -5681,7 +5681,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(-1);
                                 } else {
@@ -5710,7 +5710,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(1);
                                 } else {
@@ -5739,7 +5739,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(1);
                                 } else {
@@ -5768,7 +5768,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(-1);
                                 } else {
