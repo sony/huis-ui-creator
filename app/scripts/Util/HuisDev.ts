@@ -17,8 +17,6 @@
                 var usb_dev = require("usb_dev");
             }
 
-            var usb_dev = require("usb_dev");
-
             interface IDiffInfo    {
                 diff: string[];
                 dir1Extra: string[];
