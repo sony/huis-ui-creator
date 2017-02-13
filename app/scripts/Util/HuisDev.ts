@@ -13,6 +13,10 @@
             const SPINNER_ID_SELECTER = "#common-dialog-center-spinner";
             const SPINNER_DIALOG_CLASS_SELECTER = ".spinner-dialog";
 
+            if (process.platform == PLATFORM_WIN32) {
+                var usb_dev = require("usb_dev");
+            }
+
             var usb_dev = require("usb_dev");
 
             interface IDiffInfo    {
@@ -751,10 +755,13 @@
              * 
              * @return {string} vendorId, productId となるデバイするのルートパスを返す。見つからない場合は null
              */
-            export function    getHuisRootPath(vendorId: number, productId: number): string {
-                var    rootPath = usb_dev.getPath(vendorId, productId);
-                if (rootPath === "") {
-                    return null;
+            export function getHuisRootPath(vendorId: number, productId: number): string {
+                let rootPath = null;
+                if (process.platform === PLATFORM_WIN32) {
+                    rootPath = usb_dev.getPath(vendorId, productId);
+                    if (rootPath === "") {
+                        return null;
+                    }
                 }
                 return rootPath;
             }

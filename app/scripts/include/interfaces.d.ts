@@ -865,7 +865,10 @@ declare module Garage {
     var FUNC_NUM_DELIMITER: string ;
 
     /** 信号がフルカスタムで再学習されたことを示すコード */
-    var FUNC_CODE_RELEARNED: string ;
+    var FUNC_CODE_RELEARNED: string;
+
+    var PLATFORM_WIN32;
+    var PLATFORM_DARWIN;
 
 }
 
