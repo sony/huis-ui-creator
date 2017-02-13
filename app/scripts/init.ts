@@ -190,6 +190,9 @@ module Garage {
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
             fs.mkdirSync(HUIS_FILES_ROOT);
         }
+        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
+            fs.mkdirSync(GARAGE_FILES_ROOT);
+        }
         REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
         // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
         HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
