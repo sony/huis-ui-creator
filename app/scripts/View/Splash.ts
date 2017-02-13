@@ -49,6 +49,28 @@ module Garage {
                     }
                 })();
 
+
+                //現状アプリのバージョン情報を代入。
+
+                let targetVersionFilePath = null;
+                // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+                if (process.platform == PLATFORM_WIN32) {
+                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
+                } else if (process.platform == PLATFORM_DARWIN) {
+                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
+                } else {
+                    console.error("Error: unsupported platform");
+                }
+
+                try {
+                    if (targetVersionFilePath != null) {
+                        APP_VERSION = fs.readFileSync(targetVersionFilePath, 'utf8');
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+
+
                 this.checkRcVersionFromDevice();
 
                 this.syncWithHUIS(() => {

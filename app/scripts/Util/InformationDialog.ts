@@ -24,7 +24,7 @@
                 let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
 
                 try {
-                    let preVersion: string = fs.readFileSync(VERSION_TEXT_PATH).toString();
+                    let preVersion: string = APP_VERSION;
                     let lastNotifiedVersion: string;
                     if (fs.existsSync(LAST_NOTIFIED_VERSION_TEXT_PATH)) {
                         lastNotifiedVersion = fs.readFileSync(LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
