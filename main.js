@@ -27,11 +27,8 @@ if (shouldQuit) {
 
 // すべてのウィンドウが閉じられたら終了
 app.on('window-all-closed', function() {
-  // OSX だと、ユーザーが Cmd + Q で明示的に終了するまで
-  // アプリケーションとメニューバーがアクティブになっているのが一般的
-  if (process.platform !== 'darwin') {
+  // OSXでもwindowを閉じる際にUI Creatorを終了する
     app.quit();
-  }
 });
 
 // Electron の初期化が終わってブラウザウィンドウを作る準備ができたら呼ばれる
