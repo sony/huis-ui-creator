@@ -41,8 +41,14 @@ module Garage {
             getAppropriatePath(path: string, en?: Boolean): string {
                 console.log("MiscUtil::getAppropriatePath path=" + path);
                 path = decodeURIComponent(path);
-                if (path.indexOf('file:///') === 0) {
-                    path = path.split('file:///')[1];
+                let removePrefix: string;
+                if (process.platform === PLATFORM_DARWIN) {
+                    removePrefix = 'file://';
+                } else {
+                    removePrefix = 'file:///';
+                }
+                if (path.indexOf(removePrefix) === 0) {
+                    path = path.split(removePrefix)[1];
                 }
                 if (en) {
                     path = path.replace(/\\/g, "/");
