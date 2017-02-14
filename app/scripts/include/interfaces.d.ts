@@ -870,6 +870,11 @@ declare module Garage {
     var PLATFORM_WIN32;
     var PLATFORM_DARWIN;
 
+    /** MacとWindowsで参照するフォルダが変わる場合の、フォルダ名 */
+    var DIR_NAME_WINDOWS;
+    var DIR_NAME_MAC;
+
+
 }
 
 

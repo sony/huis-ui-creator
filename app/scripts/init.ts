@@ -185,6 +185,9 @@ module Garage {
             console.error("Error: unsupported platform");
         }
 
+        DIR_NAME_WINDOWS = "Windows";
+        DIR_NAME_MAC = "Mac";
+
         // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
         HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
