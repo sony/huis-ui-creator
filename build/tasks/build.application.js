@@ -128,6 +128,24 @@ module.exports = function (grunt) {
                         src: ['<%= stylesheets %>/**', '!**/*.scss', '!**/*.rb'],
                         dest: '<%= pkgdir %>'
                     },
+                    {
+                        expand: true,
+                        src: ['<%= pkgFileName %>'],
+                        dest: ['./'],
+                        rename:
+                            function(dest, src) {
+                                return dest+"package.json";
+                            },
+                    },
+                    {
+                        expand: true,
+                        src: ['<%= pkgFileName %>'],
+                        dest: ['<%= pkgdir %>'+'/../'],
+                        rename:
+                            function(dest, src) {
+                                return dest+"/package.json";
+                            },
+                    },
                 ]
             },
         },
