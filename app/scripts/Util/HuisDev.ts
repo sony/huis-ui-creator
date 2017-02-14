@@ -395,8 +395,8 @@
                             this._removeFiles(destRootDir, removeTargetFiles)
                                 .then(() => {
                                     df.resolve();
-                                    fs.rmdir(emptyDirectory);
-                                    fs.rmdirSync(targetDirectoryPath);
+                                    fs.remove(emptyDirectory);
+                                    fs.removeSync(targetDirectoryPath);
 
                                     if (callback) {
                                         callback(null);
@@ -553,8 +553,8 @@
                                     let fileStat = fs.lstatSync(filePath);
                                     if (fileStat) {
                                         if (fileStat.isDirectory()) {
-                                            console.log("rmdirSync: " + file);
-                                            fs.rmdirSync(filePath);
+                                            console.log("remove: " + file);
+                                            fs.removeSync(filePath);
                                         } else {
                                             console.log("unlinkSync: " + file);
                                             fs.unlinkSync(filePath);
