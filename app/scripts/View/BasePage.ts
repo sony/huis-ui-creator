@@ -182,8 +182,9 @@ module Garage {
                 var props: DialogProps = null;
                 var text: string = "";
 
+                let licensesFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/licenses.txt"));
                 try {
-                    text = fs.readFileSync('licenses.txt', 'utf8');
+                    text = fs.readFileSync(licensesFilePath, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }
