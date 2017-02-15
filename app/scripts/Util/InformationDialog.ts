@@ -68,8 +68,10 @@
 
                     var notePaths: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
 
-                    //もしコンテンツ数が0こなら、何もしない。
-                    if (notePaths.length == 0) {
+                    //もしコンテンツ数が3未満なら、何もしない。
+                    // .gitkeepがあるので、1個は必ず存在する。
+                    // 表示したいコンテンツがある場合、.date .note .iamge の3個以上存在する
+                    if (notePaths.length < 3) {
                         return;
                     }
 
