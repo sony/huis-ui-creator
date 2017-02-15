@@ -5674,8 +5674,6 @@ module Garage {
 
                 if (!this.isTextBoxFocused) {
                     switch (event.keyCode) {
-                        case 8: // BackSpace
-                            break;
                         case 37: {// LeftKey
                             if (this.$currentTarget_ == null) {
                                 break;
@@ -5683,7 +5681,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(-1);
                                 } else {
@@ -5712,7 +5710,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(1);
                                 } else {
@@ -5741,7 +5739,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(1);
                                 } else {
@@ -5770,7 +5768,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(-1);
                                 } else {
@@ -5793,20 +5791,21 @@ module Garage {
                             }
                             break;
                         } case 46: // DEL
+                          case 8: // BackSpace
                             this._deleteCurrentTargetItem();
                             break;
-                        case 67: // c Copy
-                            if (event.ctrlKey) {
+                        case 67: // c Copy Ctrl+C / Command+C
+                            if (event.ctrlKey || event.metaKey) {
                                 this.setClipboadToItem();
                             }
                             break;
                         case 86: // v Paste
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 this.pasteItemFromClipboard();
                             }
                             break;
                         case 90: // z Undo
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 var targetModels = this.commandManager_.undo();
                                 this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
@@ -5815,7 +5814,7 @@ module Garage {
                             }
                             break;
                         case 89: // y Redo
-                            if (event.ctrlKey) {
+                            if (event.ctrlKey || event.metaKey) {
                                 var targetModels = this.commandManager_.redo();
                                 this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
