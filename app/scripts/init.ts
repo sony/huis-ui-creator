@@ -37,11 +37,7 @@ module Garage {
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
         
         APP_VERSION = "";
-        try{
-            APP_VERSION = fs.readFileSync('version.txt', 'utf8');
-        } catch (err) {
-            console.error(err);
-        }
+        
 
         PLATFORM_WIN32 = "win32";
         PLATFORM_DARWIN = "darwin";
