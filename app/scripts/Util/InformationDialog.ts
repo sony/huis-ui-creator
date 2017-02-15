@@ -49,13 +49,32 @@
                 let FUNCTION_NAME: string = TAG + " : Notify : ";
 
                 try {
-                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
                     var informationList: { dirName: string, date: string, imagePath: string, text: string }[] = [];
+
+
+                    //お知らせダイアログにだすコンテンツがあるフォルダを指定
                     var pathToNotes: string = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
+                    // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+                    if (process.platform == PLATFORM_WIN32) {
+                        pathToNotes = path.join(pathToNotes, DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
+                    } else if (process.platform == PLATFORM_DARWIN) {
+                        pathToNotes = path.join(pathToNotes, DIR_NAME_MAC + "/");
+                    } else {
+                        console.error("Error: unsupported platform");
+                    }
+
                     var notePaths: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
+
+                    //もしコンテンツ数が3未満なら、何もしない。
+                    // .gitkeepがあるので、1個は必ず存在する。
+                    // 表示したいコンテンツがある場合、date.txt note.txt iamge.png の3個以上存在する
+                    if (notePaths.length < 3) {
+                        return;
+                    }
+
                     notePaths.reverse(); // 新しいnoteから表示させるために反転させる
 
                     // ダイアログにnoteを追加させていく
@@ -76,6 +95,9 @@
                         dismissible: true,
                     });
                     dialog.show();
+
+                    //お知らせダイアログを出すか否か判定するファイルを書き出す。
+                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, fs.readFileSync(VERSION_TEXT_PATH), function (err) { console.log(err); });
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }
