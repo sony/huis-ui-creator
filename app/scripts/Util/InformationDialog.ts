@@ -70,7 +70,7 @@
 
                     //もしコンテンツ数が3未満なら、何もしない。
                     // .gitkeepがあるので、1個は必ず存在する。
-                    // 表示したいコンテンツがある場合、.date .note .iamge の3個以上存在する
+                    // 表示したいコンテンツがある場合、date.txt note.txt iamge.png の3個以上存在する
                     if (notePaths.length < 3) {
                         return;
                     }
