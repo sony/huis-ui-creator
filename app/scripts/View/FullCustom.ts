@@ -5658,6 +5658,34 @@ module Garage {
                 this._resizeItem(newArea, true);
             }
 
+            /**
+             * Mac OS XのメタキーをWindows環境で対応付けたキーに変更する。
+             * @param: JQueryEventObject onKeyDownに渡されたイベントオブジェクト
+             * @return: JQueryEventObject 変更されたイベントオブジェクト
+             */
+            private _translateDarwinMetaKeyEvent(event: JQueryEventObject): JQueryEventObject {
+                //   <win>        <darwin>
+                //  control   <--  command
+                let winCtrlKey = event.metaKey;
+
+                //   <win>       <darwin>
+                //    alt    <--  option
+                let winAltKey = event.altKey;
+
+                //   <win>         <darwin>
+                //   shift     <--  shift
+                let winShiftKey = event.shiftKey;
+
+                // Unassigned key
+                let winMetaKey = false;
+
+                event.ctrlKey = winCtrlKey;
+                event.metaKey = winMetaKey;
+                event.altKey = winAltKey;
+                event.shiftKey = winShiftKey;
+                return event;
+            }
+
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
@@ -5673,6 +5701,9 @@ module Garage {
                 }
 
                 if (!this.isTextBoxFocused) {
+                    if (process.platform === PLATFORM_DARWIN) {
+                        event = this._translateDarwinMetaKeyEvent(event);
+                    }
                     switch (event.keyCode) {
                         case 37: {// LeftKey
                             if (this.$currentTarget_ == null) {
