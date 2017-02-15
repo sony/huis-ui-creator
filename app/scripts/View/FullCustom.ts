@@ -5821,8 +5821,9 @@ module Garage {
                                 }
                             }
                             break;
-                        } case 46: // DEL
-                          case 8: // BackSpace
+                        }
+                        case 8: // BackSpace
+                        case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
                         case 67: // c Copy Ctrl+C / Command+C
