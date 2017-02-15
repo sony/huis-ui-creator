@@ -5712,7 +5712,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(-1);
                                 } else {
@@ -5741,7 +5741,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(1);
                                 } else {
@@ -5770,7 +5770,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 if (event.shiftKey) {
                                     this._widenItem(1);
                                 } else {
@@ -5799,7 +5799,7 @@ module Garage {
                             let currentTargetPositionInCanvas: IPosition = this._getCurrentTargetPositionInCanvas();
                             let moveSize: number;
                             let css_margin: number = parseInt(this.$currentTarget_.css("margin"), 10);
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 if (event.shiftKey) {
                                     this._heightenItem(-1);
                                 } else {
@@ -5826,17 +5826,17 @@ module Garage {
                             this._deleteCurrentTargetItem();
                             break;
                         case 67: // c Copy Ctrl+C / Command+C
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 this.setClipboadToItem();
                             }
                             break;
                         case 86: // v Paste
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 this.pasteItemFromClipboard();
                             }
                             break;
                         case 90: // z Undo
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 var targetModels = this.commandManager_.undo();
                                 this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
@@ -5845,7 +5845,7 @@ module Garage {
                             }
                             break;
                         case 89: // y Redo
-                            if (event.ctrlKey || event.metaKey) {
+                            if (event.ctrlKey) {
                                 var targetModels = this.commandManager_.redo();
                                 this._updateItemElementsOnCanvas(targetModels);
                                 // 現在のターゲットを外す
