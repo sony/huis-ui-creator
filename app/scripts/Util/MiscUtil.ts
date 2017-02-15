@@ -42,6 +42,7 @@ module Garage {
                 console.log("MiscUtil::getAppropriatePath path=" + path);
                 path = decodeURIComponent(path);
                 let removePrefix: string;
+                // darwinでは絶対パス表現として/を先頭に残す
                 if (process.platform === PLATFORM_DARWIN) {
                     removePrefix = 'file://';
                 } else {
