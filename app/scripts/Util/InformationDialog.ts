@@ -5,7 +5,6 @@
 
         var TAG: string = "[Garage.Util.InformationDialog]";
 
-        var VERSION_TEXT_PATH: string = "./version.txt";
         var LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
         var FILE_NAME_DATE  = "date.txt";
         var FILE_NAME_IMAGE = "image.png";
