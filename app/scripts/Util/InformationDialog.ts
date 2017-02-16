@@ -71,19 +71,17 @@
                         console.error("Error: unsupported platform");
                     }
 
-                    var notePaths: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
+                    var contentsDirs: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
 
-                    //もしコンテンツ数が3未満なら、何もしない。
-                    // .gitkeepがあるので、1個は必ず存在する。
-                    // 表示したいコンテンツがある場合、date.txt note.txt iamge.png の3個以上存在する
-                    if (notePaths.length < 3) {
+                    //もしコンテンツがない場合、なにも表示しない
+                    if (!this.isExistValidContents(contentsDirs)) {
                         return;
                     }
 
-                    notePaths.reverse(); // 新しいnoteから表示させるために反転させる
+                    contentsDirs.reverse(); // 新しいnoteから表示させるために反転させる
 
                     // ダイアログにnoteを追加させていく
-                    notePaths.forEach(function (dirName) {
+                    contentsDirs.forEach(function (dirName) {
                         let path = pathToNotes + dirName + "/";
                         informationList.push({
                             dirName   : dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
@@ -115,6 +113,30 @@
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////private method///////////////////////////////////////////////////////////////////////
             //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            /*
+            * お知らせダイアログに表示するコンテンツが存在するか判定する。
+            * @param {string[]} お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
+            * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
+            */
+            private isExistValidContents(contentsDirs: string[]):boolean {
+                let FUNCTION_NAME: string = TAG + " : isExistValidContents : ";
+
+                //対象のパスにひとつもファイルもフォルダもない場合false;
+                if (contentsDirs.length == 0) {
+                    return false;
+                }
+
+                //一つでも、有効なコンテンツ名がある場合、true
+                for (let dirName of contentsDirs) {
+                    if (dirName.match(/[0-9]+[0-9]+[0-9]/)) {
+                        return true;
+                    }
+                }
+
+                //ひとつも、有効なコンテンツ名がない場合、false;
+                return false;
+            }
 
 
         }
