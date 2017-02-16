@@ -642,10 +642,11 @@ module Garage {
                         (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
                         unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
-                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
+
+                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
 
                     //function設定用pulldownをレンダリング
-                    this.renderFunctionsOf(i, stateId, functionName, unknownRcId);
+                    this.renderFunctionsOf(i, stateId, functionName);
 
                 }
 
@@ -687,7 +688,7 @@ module Garage {
             * @param inputAction{string}
             * @param remoteId?{string}
             */
-            private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string, unknownRcId?: string) {
+            private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
                 if (!this.isValidOrder(order)) {
@@ -712,7 +713,7 @@ module Garage {
                 //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, stateId, remoteId, unknownRcId);
+                this.renderRemoteIdOf(order, stateId, remoteId);
             }
 
             /*

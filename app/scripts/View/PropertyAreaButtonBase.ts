@@ -632,7 +632,7 @@ module Garage {
          * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
          * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
          */
-            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string, unknownRcId?: string) {
+            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -653,7 +653,7 @@ module Garage {
                 let functions: string[];
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
 
-                if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
+                if (this.isUnknownRemoteIdInPulldownOf(order)) {
                     if (functionName == null) {
                         functions = null;
                     } else {
