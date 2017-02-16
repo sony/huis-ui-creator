@@ -635,11 +635,8 @@ module Garage {
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
                     let unknownRcId: string = null;
-                    //remoteIDがみつからない場合、
-                    //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
-                    //UNKNOWNに
-                    if ((!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) ||
-                        (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
+                    //remoteIDがみつからない かつ、 コードとファンクション名がある場合、UNKNOWNに。
+                    if (!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) {
                         unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
