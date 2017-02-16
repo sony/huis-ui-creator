@@ -386,7 +386,25 @@ module Garage {
                         continue;
                     }
 
+
+                    
+
                     if (codeDb) {
+                        //brandを取得
+                        if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
+                            continue;
+                        }
+
+                        //deviceTypeを取得
+                        if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
+                            continue;
+                        }
+
+                        //codesetを取得
+                        if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
+                            continue;
+                        }
+
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
                             codeDb.db_codeset === codeset) {
