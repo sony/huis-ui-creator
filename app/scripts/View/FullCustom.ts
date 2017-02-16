@@ -5676,7 +5676,7 @@ module Garage {
                 //   shift     <--  shift
                 let winShiftKey = event.shiftKey;
 
-                // Unassigned key
+                //  ウィンドウズキーは win,darwin 両方で使わない
                 let winMetaKey = false;
 
                 event.ctrlKey = winCtrlKey;
