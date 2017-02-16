@@ -94,10 +94,13 @@
                         informationList: informationList,
                         dismissible: true,
                     });
-                    dialog.show();
 
                     //お知らせダイアログを出すか否か判定するファイルを書き出す。
-                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, fs.readFileSync(VERSION_TEXT_PATH), function (err) { console.log(err); });
+                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
+
+                    dialog.show();
+
+                    
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }
