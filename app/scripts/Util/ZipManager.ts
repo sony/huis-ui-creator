@@ -33,7 +33,7 @@ module Garage {
                             return;
                         }
 
-                        writer.add(files[index], new zip.BlobReader(fileBlob), () => {
+                        writer.add(files[index].replace(/\\/g, "/"), new zip.BlobReader(fileBlob), () => {
                             index++;
 
                             if (index < files.length) {
