@@ -121,7 +121,7 @@
 
                 //一つでも、有効なコンテンツ名がある場合、true
                 for (let dirName of contentsDirs) {
-                    if (dirName.match(/[0-9]+[0-9]+[0-9]/)) {
+                    if (dirName.match(/^[0-9]{3}$/)) {
                         return true;
                     }
                 }
