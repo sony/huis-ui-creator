@@ -386,7 +386,25 @@ module Garage {
                         continue;
                     }
 
+
+                    
+
                     if (codeDb) {
+                        //brandを取得
+                        if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
+                            continue;
+                        }
+
+                        //deviceTypeを取得
+                        if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
+                            continue;
+                        }
+
+                        //codesetを取得
+                        if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
+                            continue;
+                        }
+
                         if (codeDb.brand === brand &&
                             codeDb.device_type === deviceType &&
                             codeDb.db_codeset === codeset) {
@@ -436,22 +454,19 @@ module Garage {
                 let codeDb = inputDeviceInfo.code_db;
 
                 //brandを取得
-                if (codeDb.brand == null) {
-                    console.warn(FUNCTION_NAME + "codeDb.brand is null");
+                if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
                     return;
                 }
                 let brand = codeDb.brand;
 
                 //deviceTypeを取得
-                if (codeDb.device_type == null) {
-                    console.warn(FUNCTION_NAME + "codeDb.device_type is null");
+                if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
                     return;
                 }
                 let deviceType = codeDb.device_type;
 
                 //codesetを取得
-                if (codeDb.db_codeset == null) {
-                    console.warn(FUNCTION_NAME + "codeDb.db_codeset is null");
+                if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
                     return;
                 }
                 let codeset = codeDb.db_codeset;
