@@ -761,7 +761,6 @@ module Garage {
             getMasterCodeDb(remoteId: string): ICodeDB {
                 let masterFace = this._getFace(remoteId, true);
                 if (!masterFace) {
-                    console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
@@ -821,7 +820,6 @@ module Garage {
 
                 let face: IGFace = this._getFace(remoteId, isMaster);
                 if (!face) {
-                    console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
@@ -1007,7 +1005,6 @@ module Garage {
             getMasterBluetoothData(remoteId: string): IBluetoothData {
                 let masterFace: IGFace = this._getFace(remoteId, true);
                 if (!masterFace) {
-                    console.warn(TAGS.HuisFiles + "getMasterCodeDb() masterFace is not found.");
                     return null;
                 }
 
