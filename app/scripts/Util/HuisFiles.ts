@@ -507,7 +507,6 @@ module Garage {
                 }
 
                 if (remoteName == null) {
-                    console.warn(FUNCTION_NAME + "remoteName is null");
                     return null;
                 }
 
