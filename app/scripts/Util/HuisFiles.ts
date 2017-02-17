@@ -426,14 +426,12 @@ module Garage {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByButtonDeviceInfo : ";
 
                 if (inputDeviceInfo == null) {
-                    console.warn(FUNCTION_NAME + "inputDeviceInfo is null");
                     return null;
                     
                 }
 
                 // remtoeNameを取得
                 if (inputDeviceInfo.remoteName == null) {
-                    console.warn(FUNCTION_NAME + "inputDeviceInfo.remoteName is null");
                     return null;
                 }
                 let remoteName = inputDeviceInfo.remoteName;
@@ -1134,7 +1132,6 @@ module Garage {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getDevieInfo:";
 
                 if (remoteId == null) {
-                    console.warn(FUNCTION_NAME + "remoteId is null");
                     return;
                 }
 
@@ -2134,7 +2131,6 @@ module Garage {
             traceOriginalRemoteIdByAction(action: IAction) {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
                 if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
                 let remoteId: string = undefined;
