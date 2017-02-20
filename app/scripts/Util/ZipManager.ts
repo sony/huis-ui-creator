@@ -33,7 +33,7 @@ module Garage {
                             return;
                         }
 
-                        writer.add(files[index], new zip.BlobReader(fileBlob), () => {
+                        writer.add(files[index].replace(/\\/g, "/"), new zip.BlobReader(fileBlob), () => {
                             index++;
 
                             if (index < files.length) {
@@ -183,12 +183,15 @@ module Garage {
                 }
 
                 entry.getData(new zip.BlobWriter(""), (blob) => {
-                    ZipManager.saveBlobToFile(blob, path.join(dstDir, entry.filename))
+                    // Replacement of next line assumes that each file path in zip doesn't contain "\".
+                    // Note that this assumption VIOLATE zip file format.
+                    let fileName = entry.filename.replace(/\\/g, "/");
+                    ZipManager.saveBlobToFile(blob, path.join(dstDir, fileName))
                         .done(() => {
-                            console.log("succeeded to decompress: " + entry.filename);
+                            console.log("succeeded to decompress: " + fileName);
                             df.resolve();
                         }).fail(() => {
-                            console.error("failed to decompress: " + entry.filename);
+                            console.error("failed to decompress: " + fileName);
                             df.reject();
                         });
                 });
