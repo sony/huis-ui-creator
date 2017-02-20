@@ -374,8 +374,10 @@ module Garage {
 
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
-                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
-
+                    let deviceInfo: IButtonDeviceInfo = null
+                    if (tmpDeviceInfo != null) {
+                        deviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
+                    }
 
                     let tmpAction: IAction = {
                         input: tmpInput,
@@ -389,7 +391,8 @@ module Garage {
 
                         tmpAction.deviceInfo = deviceInfo;
 
-                        if (deviceInfo.functionCodeHash) {
+                        if (deviceInfo.functionCodeHash && tmpFunction != null) {
+
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
                             if (!this.isValidValue(tmpCode) &&
                                 (this.isRelearnedFunctionName(tmpFunction) ||
