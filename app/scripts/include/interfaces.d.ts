@@ -822,6 +822,9 @@ declare module Garage {
      * インポート・エクスポート用拡張子の日本語の説明
      */
     var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
+
+    var PLATFORM_WIN32: string;
+    var PLATFORM_DARWIN: string;
 }
 
 

@@ -103,7 +103,7 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
 
         $ npm install
 
-4. 以下のコマンドでネイティブ モジュールのビルドを行います。(Windows 32bit 向けの場合)
+4. 以下のコマンドでネイティブ モジュールのビルドを行います。(Windows 32bit 向けの場合, Mac向けの場合 不要)
 
         $ cd node_modules
         $ cd usb_dev
@@ -117,6 +117,10 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
 6. 以下のコマンドで TypeScript と SCSS のビルドを行います。
 
         $ grunt build
+
+Mac 向けの場合は、　　以下のように"--platform=darwin"をつけてください。
+
+        $ grunt build --platform=darwin
 
 7. grunt によるビルドが完了したら、`www/app`以下に TypeScript と SCSS がコンパイルされたものが出力されます。Electron のパッケージングを行うために、`www` ディレクトリーに以下のファイルとディレクトリーをコピーします。
 
@@ -133,13 +137,13 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
     $ electron-packager . <アプリ名> --platform=win32 --arch=ia32 --version=1.4.1 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
 
 Electron のバージョン`--target`は、適宜変更してください。また、Windows 64bit 向けにビルドを行う場合は、`--arch=x64` に変更してください。ただし、前述のネイティブ モジュールのビルド時の `--target`, `--arch` オプションと同じものを指定してください。
+Mac 64bit 向けにビルドを行う場合は、`--platform=darwin`,　`--arch=x64`に変更してください。
 
 `<アプリ名>`はパッケージングしたファイルが格納されるディレクトリーや、実行ファイル名等に使用されます。任意のアプリ名を指定してください。
 
-パッケージングが完了したら、`<アプリ名>-win32-ia32` ディレクトリーにパッケージングされたものが生成されます (Windows 32bit 向けの場合)。
+パッケージングが完了したら、`<アプリ名>-win32-ia32` ディレクトリーにパッケージングされたものが生成されます (Windows 32bit 向けの場合。Mac 64bit 向けの場合　`<アプリ名>-darwin-x64`)。
 
-`<アプリ名>.exe` を起動して動作することを確認してください。
-
+`<アプリ名>.exe` (Mac向けの場合`<アプリ名>.app`)を起動して動作することを確認してください。
 ## 免責事項
 本ソースコードは開発用のものであり、製品版はデザイン等が異なります。
 

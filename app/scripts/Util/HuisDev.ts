@@ -9,9 +9,11 @@
 			import Dialog = CDP.UI.Dialog;
 			import DialogOptions = CDP.UI.DialogOptions;
 
-			var TAG = "Util.HuisDev";
+            var TAG = "Util.HuisDev";
 
-			var usb_dev = require("usb_dev");
+            if (process.platform == PLATFORM_WIN32) {
+                var usb_dev = require("usb_dev");
+            }
 
 			interface IDiffInfo	{
 				diff: string[];
@@ -720,11 +722,14 @@
 			 * 
 			 * @return {string} vendorId, productId となるデバイするのルートパスを返す。見つからない場合は null
 			 */
-			export function	getHuisRootPath(vendorId: number, productId: number): string {
-				var	rootPath = usb_dev.getPath(vendorId, productId);
-				if (rootPath === "") {
-					return null;
-				}
+            export function getHuisRootPath(vendorId: number, productId: number): string {
+                let rootPath = null;
+                if (process.platform === PLATFORM_WIN32) {
+                    rootPath = usb_dev.getPath(vendorId, productId);
+                    if (rootPath === "") {
+                        return null;
+                    }
+                }
 				return rootPath;
 			}
 		}
