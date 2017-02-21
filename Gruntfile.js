@@ -7,9 +7,18 @@ module.exports = function (grunt) {
         window = jsdom.jsdom().defaultView,
         $ = require('jquery')(window);
 
+    var targetPlatform = grunt.option("platform");
+    if (targetPlatform === "darwin") {
+	grunt.log.writeln("Target platform is darwin, so exclude usb_dev");
+	var pkgFileName = 'package_darwin.json'
+    } else {
+	var pkgFileName = 'package_win.json'
+    }
+
     // Project configuration.
     var config = {
-        pkg: grunt.file.readJSON('package.json'),
+        pkgFileName: pkgFileName,
+        pkg: grunt.file.readJSON(pkgFileName),
 
         // config variable entries: root
         orgsrc: 'app',
