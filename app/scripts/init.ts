@@ -217,7 +217,7 @@ module Garage {
             imageType: "image/png"
         };
 
-        HELP_SITE_URL = "http://rd1.sony.net/help/remote/huis_ui_creator/ja/";
+        HELP_SITE_URL = "http://huis.jp/extended-feature.html";
 
         //if (fs.existsSync("debug")) {
         //    DEBUG_MODE = true;
