@@ -429,11 +429,17 @@
                 private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
-                    let appFileFilter = (path: string) => {
-                        return (path.match(/\.app($|\/)/) == null);
+                    let syncFileFilter = (path: string) => {
+                        if (path.match(/\.app($|\/)/) == null
+                            && path.match(/\.Trashes/) == null) {
+                            return true;
+                        } else {
+                            console.log("filtered from sync " + path);
+                            return false;
+                        }
                     }
 
-                    this._compDirs(srcRootDir, destRootDir, appFileFilter)  // Directory間の差分を取得
+                    this._compDirs(srcRootDir, destRootDir, syncFileFilter)  // Directory間の差分を取得
                     .then((diffInfo: IDiffInfo)    => {
                         // TODO: ディスクの容量チェック
 
