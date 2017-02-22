@@ -1786,4 +1786,6 @@ IN THE SOFTWARE.
    See the License for the specific language governing permissions and
    limitations under the License.
 
+   ==> Special thanks <==
 
+    HUIS Team of Sony Corporation would like to take this opportunity to especially thank “Kazuto Kusama(@jacopen)” for his contribution to "HUIS UI CREATOR for Mac" development.
