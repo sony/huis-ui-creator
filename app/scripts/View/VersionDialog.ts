@@ -46,7 +46,8 @@ module Garage {
 
                 let text = "";
                 try {
-                    text = fs.readFileSync('license-link.html', 'utf8');
+                    let licenseLinkFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/license-link.html"));
+                    text = fs.readFileSync(licenseLinkFilePath, 'utf8');
                 } catch (err) {
                     console.error(err);
                 }

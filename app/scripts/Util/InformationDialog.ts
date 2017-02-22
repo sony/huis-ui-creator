@@ -41,7 +41,7 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
 
                 try {
-                    let preVersion: string = fs.readFileSync(VERSION_TEXT_PATH).toString();
+                    let preVersion: string = APP_VERSION;
                     let lastNotifiedVersion: string;
                     if (fs.existsSync(LAST_NOTIFIED_VERSION_TEXT_PATH)) {
                         lastNotifiedVersion = fs.readFileSync(LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
@@ -66,7 +66,7 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : Notify : ";
 
                 try {
-                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, fs.readFileSync(VERSION_TEXT_PATH), function (err) { console.log(err); });
+                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
