@@ -68,6 +68,8 @@ module Garage {
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
             private clipboard: Util.ItemClipboard;
+            private delayedContextMenuEvent: Event;
+            private isMouseDown: Boolean;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -163,6 +165,9 @@ module Garage {
 
                     this.isTextBoxFocused = false;
                     this.isDragging = false;
+
+                    this.isMouseDown = false;
+                    this.delayedContextMenuEvent = null;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -772,6 +777,7 @@ module Garage {
              * #face-item-detail-areaがクリックされた時のイベントハンドラ。
              */
             private onItemDetailAreaMouseDown(event: Event) {
+                this.isMouseDown = true;
                 // call stopPropagation so sa not to call loseTarget in onMainMouseDown
                 event.stopPropagation();
             }
@@ -780,6 +786,7 @@ module Garage {
              * face-pages-area内のItem要素以外の部分がクリックされた時のイベントハンドラ。
              */
             private onFacePagesAreaMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this._loseTarget();
 
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
@@ -801,6 +808,8 @@ module Garage {
              * Canvas内のItem要素がクリックされた時のイベントハンドラ。
              */
             private onCanvasItemMouseDown(event: Event) {
+                this.isMouseDown = true;
+
                 this.selectedResizer_ = null;
 
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
@@ -847,6 +856,7 @@ module Garage {
              * 対象アイテムをCanvasに追加しドラッグ状態にする
              */
             private onPalletItemMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this.countPalletItemClick(event);
 
                 this.selectedResizer_ = null;
@@ -1071,6 +1081,7 @@ module Garage {
              * フルカスタム編集画面での mousedown イベントのハンドリング
              */
             private onMainMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this._loseTarget();
             }
 
@@ -1242,6 +1253,7 @@ module Garage {
                 if (event.pageX < 0 + MARGIN_MOUSEMOVABLE_LEFT || event.pageX > innerWidth - MARGIN_MOUSEMOVABLE_RIGHT
                     || event.pageY < 0 + MARGIN_MOUSEMOVALBE_TOP || event.pageY > innerHeight - MARGIN_MOUSEMOVALBE_BOTTOM) {
                     event.type = "mouseup";
+                    this.delayedContextMenuEvent = null;
                     this.onMainMouseUp(event);
                     return;
                 }
@@ -1288,8 +1300,13 @@ module Garage {
              * フルカスタム編集画面での mouseup イベントのハンドリング
              */
             private onMainMouseUp(event: Event) {
-
+                this.isMouseDown = false;
                 this.isDragging = false;
+
+                if (this.delayedContextMenuEvent != null) {
+                    this.onContextMenu(this.delayedContextMenuEvent);
+                    this.delayedContextMenuEvent = null;
+                }
 
                 if (this.$currentTargetDummy_) {
                     this.$currentTargetDummy_.remove();
@@ -1628,6 +1645,12 @@ module Garage {
              * コンテキストメニュー
              */
             private onContextMenu(event: Event) {
+                // darwin platform fire onContextMenu just after mousedown,
+                // so delay it until mouseup event occurs
+                if (process.platform == PLATFORM_DARWIN && this.isMouseDown) {
+                    this.delayedContextMenuEvent = event;
+                    return;
+                }
                 event.preventDefault();
                 this.rightClickPosition_.setPositionXY(event.pageX, event.pageY);
 
