@@ -133,7 +133,7 @@ Mac 向けの場合は、　　以下のように"--platform=darwin"をつけて
 前述の grunt によるビルドのあとのファイルコピーが終わったら、以下のコマンドを実行すると、パッケージングができます。(Windows 32bit 向けの場合)
 
     $ cd <huis-ui-creator dir>\www
-    $ electron-packager . <アプリ名> --platform=win32 --arch=ia32 --version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
+    $ electron-packager . <アプリ名> --platform=win32 --arch=ia32 --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
 
 Electron のバージョン`--target`は、適宜変更してください。また、Windows 64bit 向けにビルドを行う場合は、`--arch=x64` に変更してください。ただし、前述のネイティブ モジュールのビルド時の `--target`, `--arch` オプションと同じものを指定してください。
 Mac 64bit 向けにビルドを行う場合は、`--platform=darwin`,　`--arch=x64`に変更してください。
