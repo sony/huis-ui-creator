@@ -65,6 +65,12 @@
     </script>
     <script defer type="lazy" src="scripts/Util/ImportManager.js" data-atelier="utilName=ImportManager"></script>
 
+    <!-- For disable zoom -->
+    <script>
+        var webFrame = require('electron').webFrame;
+        webFrame.setZoomLevelLimits(1, 1);
+    </script>`
+
 </head>
 <body bgcolor="black" style="background-color:black;">
     <div data-role="page" id="splash"></div>
