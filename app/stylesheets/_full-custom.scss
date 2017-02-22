@@ -1,4 +1,21 @@
-﻿@import "variables/variable";
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+@import "variables/variable";
 
 #page-full-custom {
     #main {
@@ -68,41 +85,41 @@
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
 
-			//ボタン情報表示用 ツールチップ 非表示
-			#canvas-tooltip{						
-				overflow:initial;
-				text-shadow:none;
-					
-				visibility:visible;
-				display: flex;
-				align-items: center;
-				position: fixed; 
+            //ボタン情報表示用 ツールチップ 非表示
+            #canvas-tooltip{                        
+                overflow:initial;
+                text-shadow:none;
+                    
+                visibility:visible;
+                display: flex;
+                align-items: center;
+                position: fixed; 
 
-				margin-top: $SIZE_TOOLTIP_MAGIN_TOP;
-				height:$SIZE_TOOLTIP_HEIGHT;
-				width:initial;
-				font-size: $FONT_SIZE_SSS;
-				font-family:$FONT_FAMILY_TOOL_TIP;
-				color: $COLOR_TOOLTIP_TEXT;
-				background-color: $COLOR_TOOLTIP_BACKGROUND;
-				border : $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
-				padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
-				box-shadow:$COLOR_TOOLTIP_SHADOW;
-				z-index:100;				
-			}
+                margin-top: $SIZE_TOOLTIP_MAGIN_TOP;
+                height:$SIZE_TOOLTIP_HEIGHT;
+                width:initial;
+                font-size: $FONT_SIZE_SSS;
+                font-family:$FONT_FAMILY_TOOL_TIP;
+                color: $COLOR_TOOLTIP_TEXT;
+                background-color: $COLOR_TOOLTIP_BACKGROUND;
+                border : $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
+                padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
+                box-shadow:$COLOR_TOOLTIP_SHADOW;
+                z-index:100;                
+            }
 
 
-			//ボタン情報表示用 ツールチップ 非表示
-			#canvas-tooltip.disable{
-					display :none;
-			}
+            //ボタン情報表示用 ツールチップ 非表示
+            #canvas-tooltip.disable{
+                    display :none;
+            }
 
             #face-canvas {
                 
                 #face-pages-area{
                     transform: scale(0.5);
-					transform-origin: left top;
-				}
+                    transform-origin: left top;
+                }
                
                 #face-canvas-inner{
                     height:$SIZE_CANVAS_INNER_HEIGHT;
@@ -134,9 +151,9 @@
 
                 }
 
-				.button-item.overlayed{
-					border-color : $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
-				}
+                .button-item.overlayed{
+                    border-color : $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
+                }
 
                 .item-resizer {
                     position: absolute;
@@ -174,16 +191,16 @@
                 }
 
                 
-				.image-item.background{
-					border :none;
+                .image-item.background{
+                    border :none;
 
-					&:hover{
-						background:none;
-						background-position:center;
-						background-repeat: no-repeat;
-						background-size: contain;
-					}
-				}
+                    &:hover{
+                        background:none;
+                        background-position:center;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                    }
+                }
                 
             }
         }
@@ -232,7 +249,7 @@
                     // ツールチップ部分を隠す
                     .popup{
                         display: none;
-            }
+                    }
                     
                     &:hover{
                          background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER;
@@ -253,8 +270,8 @@
                                 position:relative;
                                 #popup-arrow{
                                     margin-left:auto;
-			                        margin-right:$SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
-            }
+                                    margin-right:$SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
+                                }
 
                                 p{
                                     margin:0;
@@ -262,8 +279,8 @@
                                     z-index:-1;
                                     padding:$SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
                                     background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-			                        border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
-			                        box-sizing:border-box;
+                                    border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+                                    box-sizing:border-box;
                                     display: block;      // ボックス要素にする
                                     color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
                                     font-family:$FONT_FAMILY_PROPATY_POPUP;
@@ -493,9 +510,9 @@
                             margin-left:auto;
                             margin-right:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
                             align-self:center;
-					        background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
-					        width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
-					        height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
+                            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
+                            width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
+                            height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
                             &:hover{
                                 background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER;
@@ -562,9 +579,9 @@
                                 background-position:center;
                                 background-repeat: no-repeat;
                                 background-size: contain;
-					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
-					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
-					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
+                                width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
+                                height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
                             
                                 &:hover{
                                     background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER;
@@ -586,9 +603,9 @@
                                 background-position:center;
                                 background-repeat: no-repeat;
                                 background-size: contain;
-					            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
-					            width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
-					            height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
+                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
+                                width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
+                                height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
                                 margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
 
                                 &:hover{
@@ -645,27 +662,27 @@
                 margin:0;
 
                 .button-info-brand-and-type{
-					display:inline-flex;
-					align-items:baseline;
-					text-shadow:none;
+                    display:inline-flex;
+                    align-items:baseline;
+                    text-shadow:none;
                     padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
                     font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
                     font-family: $FONT_FAMILY_NORMAL;
                     color:$COLOR_PROPATY_AREA_SUBTITLE;
                     margin:0;
-					
+                    
 
-					.slash{
-						text-align:center;
-						width:$SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
-					}
+                    .slash{
+                        text-align:center;
+                        width:$SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
+                    }
 
-					.brand_name{
-						overflow: hidden;
-						white-space: nowrap;
-						text-overflow: ellipsis;
-						max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
-					}
+                    .brand_name{
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
+                    }
 
                 }
                 
@@ -742,11 +759,11 @@
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
                 border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
-			
-				//画像編集ボタン
+            
+                //画像編集ボタン
                 #edit-image-or-text,
-				#edit-image-background,
-				#edit-image-non-button-image{
+                #edit-image-background,
+                #edit-image-non-button-image{
                     position:absolute;
                     z-index:1;
                     bottom:0;
@@ -763,62 +780,62 @@
                     }
                 }
 
-				//背景画像削除ボタン
-				#delete-background-image{
-					position:absolute;
+                //背景画像削除ボタン
+                #delete-background-image{
+                    position:absolute;
                     z-index:1;
                     top:0;
                     right:0;
-					background-position:center;
+                    background-position:center;
                     background-repeat: no-repeat;
                     background-size: contain;
-					background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
-					width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-					height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                    background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+                    width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+                    height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
 
-					&:hover, &:active{
+                    &:hover, &:active{
                         background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
                     }
-				}
+                }
 
-				//テキストエリア
-				.text-field-in-preview{
-					margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+                //テキストエリア
+                .text-field-in-preview{
+                    margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
-					.title-edit-label{
-						height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
-						display: flex;
+                    .title-edit-label{
+                        height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
+                        display: flex;
                         align-items: center;
-						justify-content:center;
+                        justify-content:center;
 
-						#icon-title-edit-label{
-							background-position:center;
-							background-repeat: no-repeat;
-							background-size: contain;
-							background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
-							width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
-							height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
-						}
+                        #icon-title-edit-label{
+                            background-position:center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                            background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
+                            width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
+                            height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
+                        }
 
-						.text-title-edit-label{
-							font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
-							font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
-							
-						}	
-					}
+                        .text-title-edit-label{
+                            font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
+                            font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
+                            
+                        }    
+                    }
 
-					.text-size-pulldown{
-							margin:0 auto;
-							width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
-					}
+                    .text-size-pulldown{
+                            margin:0 auto;
+                            width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+                    }
 
-					.property-text-value,
-					.property-state-text-value{
-						display:flex;
-						margin : 0 auto;
-						width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
-					}
-				}
+                    .property-text-value,
+                    .property-state-text-value{
+                        display:flex;
+                        margin : 0 auto;
+                        width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
+                    }
+                }
             }
 
             .property-state-image{
@@ -885,7 +902,7 @@
 
         #popup-arrow{
             margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
-			margin-right:auto;
+            margin-right:auto;
         }
 
         .popup-list{
@@ -896,12 +913,12 @@
             font-family:$FONT_FAMILY_PROPATY_POPUP;
             font-size:$FONT_SIZE_PROPATY_POPUP;
             background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-			border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
-			box-sizing:border-box;
-			position:absolute;
-			z-index:-1;
+            border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+            box-sizing:border-box;
+            position:absolute;
+            z-index:-1;
 
-			
+            
 
 
             .popup-menu-item-text-black{
@@ -909,17 +926,17 @@
                 align-items: center;
                 height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
 
-				&:hover, &:active{
-				background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
-				color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
-					#popup-icon-image-image-button{
-						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
-					}
+                &:hover, &:active{
+                background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+                color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+                    #popup-icon-image-image-button{
+                        background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+                    }
 
-					#popup-icon-image-text-button{
-						background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;	
-					}
-				}
+                    #popup-icon-image-text-button{
+                        background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;    
+                    }
+                }
 
                 #popup-icon-image-image-button, #popup-icon-image-text-button{
                     background-position:center;
@@ -931,7 +948,7 @@
                     height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
                 }
 
-				#popup-icon-image-image-button{
+                #popup-icon-image-image-button{
                     background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
                 }
 
@@ -1096,9 +1113,9 @@
             width: $SIZE_FACE_IN_PALLET_WIDTH;
             height: $SIZE_FACE_IN_PALLET_HEIGHT;
             margin-top:$SIZE_FACE_IN_PALLET_MARING_TOP;
-			margin-right:$SIZE_FACE_IN_PALLET_MARING_RIGHT;
-			margin-left:$SIZE_FACE_IN_PALLET_MARING_LEFT;
-			margin-bottom:$SIZE_FACE_IN_PALLET_MARING_BOTTOM;
+            margin-right:$SIZE_FACE_IN_PALLET_MARING_RIGHT;
+            margin-left:$SIZE_FACE_IN_PALLET_MARING_LEFT;
+            margin-bottom:$SIZE_FACE_IN_PALLET_MARING_BOTTOM;
             border : $SIZE_PALLET_BORDER solid $COLOR_PALLET_BORDER;
 
             #face-pages-area {
@@ -1132,7 +1149,7 @@
                             color : $COLOR_PALLET_SEPARATOR_TEXT;
                             text-align:center;
                             font-size: $FONT_SIZE_PALLET_SEPARATOR;
-				            font-family:$FONT_FAMILY_LIGHT;
+                            font-family:$FONT_FAMILY_LIGHT;
                         }
                     }
 
@@ -1167,6 +1184,7 @@
         }
 
     }
+
     // ドラッグ中アイテムのダミー表示
     #face-dummy-area {
         position: absolute;

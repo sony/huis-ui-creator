@@ -1,7 +1,24 @@
-﻿/// <referecen path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <referecen path="../include/interfaces.d.ts" />
 
 module Garage {
-	export module Util {
+    export module Util {
         let TAG = "[ExportManager]";
 
         export class ExportManager {
@@ -9,7 +26,7 @@ module Garage {
             private filePathBeforeCompressionFile: string; //一時的な作業フォルダのパス
             private targetRemoteId: string;
             private targetFaceName: string;
-            private targetModules: IGModule[];
+            private targetModules: Model.Module[];
 
             /**
              * コンストラクター
@@ -17,7 +34,7 @@ module Garage {
              * @param faceName エクスポート対象のリモコンのfaceファイル名
              * @param modules エクスポート対象のリモコンのモジュール
              */
-             constructor(remoteId :string, faceName: string, modules: IGModule[]) {
+             constructor(remoteId :string, faceName: string, modules: Model.Module[]) {
                  this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
                  this.targetRemoteId = remoteId;
                  this.targetFaceName = faceName;
@@ -139,7 +156,7 @@ module Garage {
              * @param faceName{string}:リモコン名
              * @param gmodules{IGModules} :書き出すリモコンにあるModule
              */
-             private outputTemporaryFolder(faceName: string, gmodules: IGModule[]): CDP.IPromise<void> {
+             private outputTemporaryFolder(faceName: string, gmodules: Model.Module[]): CDP.IPromise<void> {
                  let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
                  console.log("create temporary files: " + faceName);
 
@@ -331,6 +348,6 @@ module Garage {
 
             
 
-		}
-	}
+        }
+    }
 }

@@ -1,4 +1,21 @@
-﻿@import "variables/variable";
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+@import "variables/variable";
 
 #face-canvas {
     position: relative;
@@ -39,16 +56,16 @@
         text-align:center;
         font-size: $FONT_SIZE_CANVAS_NAME_AREA;
         font-family:$FONT_WEIGHT_BUTTON_ITEM;
-		
+        
         &:hover{
-			background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
-			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
+            background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
+            //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
         }
 
         &:focus{
-			outline:none;
-			background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
-			//border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
+            outline:none;
+            background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
+            //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
         }     
     }
 }
@@ -95,6 +112,20 @@
     right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
     bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
     font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
+}
+
+.module-separator{
+    margin: 0 auto;
+    text-align: center;
+    font-size: $SIZE_MODULE_SEPARATOR_FONT_SIZE;
+    font-weight: normal;
+    left:0px;
+    top:0px;
+    width: $SIZE_MODULE_SEPARATOR_WIDTH;
+    height: auto;
+    padding-top: $SIZE_MODULE_SEPARATOR_PADDING_TOP;
+    color: $COLOR_BLACK;
+    border-top: solid $SIZE_MODULE_SEPARATOR_BORDER_WIDTH $COLOR_MODULE_SEPARATOR_BORDER;
 }
 
 .button-item {

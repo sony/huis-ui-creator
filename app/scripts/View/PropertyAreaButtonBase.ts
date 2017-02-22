@@ -1,14 +1,31 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <reference path="../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaButtonBase] ";
+        var TAG = "[Garage.View.PropertyAreaButtonBase] ";
 
        
         export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
@@ -21,9 +38,9 @@ module Garage {
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
             protected defaultState: IGState; // Defaultのstate
 
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
@@ -188,87 +205,12 @@ module Garage {
             }
 
 
-            /*
-             * actionから、remoteIdを取得する
-             * @param action {IAction} : remoteIdを取得する情報源となるaction
-             * @return {string} : remoteId 見つからない場合、undefinedを返す。
+            /**
+             * 入力したorderの信号に登録されているremoteIdをpulldownから取得する。
+             * 見つからなかった場合、undefinedを返す。
+             * @order{number} : remoeIdを取得したい信号の順番
+             * @{string} remoteId
              */
-            protected getRemoteIdByAction(action: IAction): string {
-                let FUNCTION_NAME = TAG + "getRemoteIdByAction";
-                if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
-                    return;
-                }
-                let remoteId: string = undefined;
-
-                if (action != null) {
-
-                    //bluetoothの情報で検索
-                    if (action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        return huisFiles.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
-                    }
-
-                    // blueooth情報でわからない場合、codeで検索
-                    let code = action.code;
-                    if (remoteId == null && code != null) {
-                        remoteId = huisFiles.getRemoteIdByCode(code);
-                    }
-
-                    //codeで検索でわからないばあい、functionCodeHashで取得
-                    if (remoteId == null &&
-                        action.deviceInfo &&
-                        action.deviceInfo.functionCodeHash != null) {
-                        let functionCodeHash = action.deviceInfo.functionCodeHash;
-                        let checkCode: string = null;
-
-                        //functionCodeHashのうち、適当なcodeで検索
-                        for (let key in functionCodeHash) {
-                            checkCode = functionCodeHash[key];
-                            break;
-                        }
-                        remoteId = huisFiles.getRemoteIdByCode(checkCode);
-                    }
-                   
-
-                    // codeで見つからない場合、code_dbで検索
-                    if (remoteId == null &&
-                        action.deviceInfo &&
-                        action.deviceInfo.code_db) {
-                        let codeDb = action.deviceInfo.code_db;
-                        remoteId =  huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-                    }
-
-                  
-                    if (remoteId == null) {
-                        //codeでは取得できない場合、brand,
-                        let codeDb = action.code_db;
-                        if (codeDb != null) {
-                            let brand = codeDb.brand;
-                            let deviceType = codeDb.device_type;
-                            let modelNumber = codeDb.model_number
-
-                            remoteId = huisFiles.getRemoteIdByCodeDbElements(brand, deviceType, modelNumber);
-                        }
-                    }
-
-                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
-                        remoteId = action.deviceInfo.id;       
-                    }
-
-                }
-
-                return remoteId;
-
-            }
-
-            /*
-         * 入力したorderの信号に登録されているremoteIdをpulldownから取得する。
-         * 見つからなかった場合、undefinedを返す。
-         * @order{number} : remoeIdを取得したい信号の順番
-         * @{string} remoteId
-         */
             protected getRemoteIdFromPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getRemoteIdOf";
 
@@ -329,13 +271,54 @@ module Garage {
             }
 
 
+            private _getRemoteNameOfUnknownRemote(unknownRemoteId: string) {
+                let remoteId: string;
+                switch (unknownRemoteId) {
+                    case UNKNOWN_REMOTE_TV:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV");
+                        break;
+                    case UNKNOWN_REMOTE_AC:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC");
+                        break;
+                    case UNKNOWN_REMOTE_LIGHT:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT");
+                        break;
+                    case UNKNOWN_REMOTE_AUDIO:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_AUDIO");
+                        break;
+                    case UNKNOWN_REMOTE_PLAYER:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_PLAYER");
+                        break;
+                    case UNKNOWN_REMOTE_RECORDER:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_RECORDER");
+                        break;
+                    case UNKNOWN_REMOTE_PROJECTOR:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_PROJECTOR");
+                        break;
+                    case UNKNOWN_REMOTE_STB:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_STB");
+                        break;
+                    case UNKNOWN_REMOTE_FAN:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_FAN");
+                        break;
+                    case UNKNOWN_REMOTE_BT:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_BT");
+                        break;
+                    default:
+                        remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE");
+                        break;
+                }
+                return remoteId;
+            }
 
-            /**
+
+
+         /**
           * 入力したorderのremoteプルダウンに、inputの値を代入する。
           * order{number} ： マクロ信号の順番
           * inputRemoteId{string} : プルダウンに設定する値。
           */
-            protected setRemoteIdPullDownOf(order: number, inputRemoteId: string) {
+            protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
 
                 if (!this.isValidOrder(order)) {
@@ -360,13 +343,21 @@ module Garage {
                     return;
                 }
 
-                let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
-                if (this.isValidValue(cachedDeviceInfo)) {
-                    //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                let remoteName = null;
+                if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
+                    remoteName = this._getRemoteNameOfUnknownRemote(unknownRcId);
+                } else {
+                    let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
+                    if (this.isValidValue(cachedDeviceInfo)) {
+                        remoteName = cachedDeviceInfo.remoteName;
+                    }
+                }
+
+                if (remoteName != null) {
                     let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.templateItemDetailFile_);
                     let inputSignalData = {
                         remoteId: inputRemoteId,
-                        name : cachedDeviceInfo.remoteName
+                        name: remoteName
                     }
 
                     let $additionalRemote = $(additionalRemoteTemplrate(inputSignalData));
@@ -398,12 +389,67 @@ module Garage {
                 $targetFunctionPullDownContainer.children().remove();
             }
 
+
+            /*
+            * 入力したorderのremoteId用プルダウンに表示されている文字列を取得する
+            * @param order{number}
+            * @return {string} プルダウンに表示されている文字列
+            */
+            protected getTextInRemoteIdOf(order: number) :string{
+                let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                //対象orderのremoteIdPullDown用のテキストを返す。
+                let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                return $targetSignalContainer.find("#signal-remote-container option:selected").text();
+
+            }
+
+            /*
+            * 入力したorderのremoteId用プルダウンに入力されているのが「不明なリモコン」か判定する
+            * @param order{number}
+            * @return {boolean}
+            */
+            protected isUnknownRemoteIdInPulldownOf(order: number): boolean {
+                let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let pullldownText = this.getTextInRemoteIdOf(order);
+
+                switch (pullldownText) {
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AUDIO"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_PLAYER"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_RECORDER"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_PROJECTOR"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_STB"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_FAN"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE_BT"):
+                    case $.i18n.t("remote.STR_UNKNOWN_REMOTE"):
+                        return true;
+                    default: return false;
+
+                }
+
+            }
+
+
             /*
             * 入力したorderRemoteId用のプルダウンを描画する。
             * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
             * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string) {
+            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -440,14 +486,14 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (this.isValidValue(inputRemoteId)) {
+                    if (this.isValidValue(inputRemoteId) ) {
                         //inputにmodelがある場合、値を表示
-                        this.setRemoteIdPullDownOf(order, inputRemoteId);
+                        this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
-                        //まだ、値がない場合、リストンの一番上に、noneの値のDOMを追加。
+                        //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
                         $remoteContainer.find("select").prepend(noneOption);
-                        this.setRemoteIdPullDownOf(order, "none");
+                        this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
 
                 }
@@ -495,7 +541,7 @@ module Garage {
                     return;
                 }
 
-                let remoteId = this.getRemoteIdByAction(action);
+                let remoteId = huisFiles.getRemoteIdByAction(action);
                 if (remoteId == null) {
                     return;
                 }
@@ -603,7 +649,7 @@ module Garage {
          * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
          * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
          */
-            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string) {
+            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -621,9 +667,29 @@ module Garage {
                     return;
                 }
 
-                //FunctionプルダウンのDOMを表示。
-                let functions: string[] = this.getFunctionsOf(order);
-                if (functions != null) {
+                let functions: string[];
+                let remoteId: string = this.getRemoteIdFromPullDownOf(order);
+
+                if (unknownRcId != null && unknownRcId.indexOf(UNKNOWN_REMOTE) == 0) {
+                    if (functionName == null) {
+                        functions = null;
+                    } else {
+                        functions = $.extend(true, [], [functionName]);
+                    }
+                } else {
+                  
+                    //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
+                    functions = $.extend(true, [], this.getFunctionsOf(order));
+                    
+                }
+
+                if (functions != null && functions.length != 0) {
+                    // functionsに自分のキーが存在しない場合は追加
+                    if (this.isValidValue(functionName) &&
+                        functions.indexOf(functionName) < 0) {
+                        functions.unshift(functionName);
+                    }
+
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
 
@@ -631,8 +697,16 @@ module Garage {
                         stateId = this.DEFAULT_STATE_ID;
                     }
 
+
+
+                    //functionsが0個の場合のエラーケース対応
+                    let inputFunctions = [];
+                    if (!(functions.length == 1 && functions[0] == null)) {
+                        inputFunctions = Util.HuisFiles.translateFunctions(functions);
+                    }
+
                     let inputSignalData = {
-                        functions: functions,
+                        functions: inputFunctions,
                         id: stateId,
                         order: order
                     }
@@ -648,11 +722,82 @@ module Garage {
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
-
                 }
             }
 
-           
+            /*
+            * IButtonDeviceInfoをディープコピーする.
+            * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
+            * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
+            */
+            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo{
+                let FUNCTION_NAME = TAG + "cloneDeviceInfo"; 
+
+                if (!this.isValidValue(src)) {
+                    console.warn(FUNCTION_NAME + "src is invalid");
+                    return;
+                }
+
+                //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                let result: IButtonDeviceInfo = {
+                    id: src.id,
+                    remoteName: (src.remoteName) ? src.remoteName : undefined,
+                    functions: $.extend(true, [], src.functions),
+                    code_db: $.extend(true, {}, src.code_db),
+                    bluetooth_data: (src.bluetooth_data) ? $.extend(true, {}, src.bluetooth_data) : undefined,
+                    functionCodeHash: (src.functionCodeHash) ? $.extend(true, [], src.functionCodeHash) : undefined
+                }
+
+                return result;
+
+            }
+
+
+            /*
+            * 入力した信号名が #ID (例STR_REMOTE_BTN_TOGGLE#fads)なのか判定する。 危険多様しないこと。
+            * @param functionName {string}
+            * @return {boolean} #ID付きのfunctionの場合true,それ以外はfalse;
+            */
+            protected isRelearnedIDFunctionName(functionName: string): boolean {
+                let FUNCTION_NAME = TAG + "isRelearnedIDFunctionName "; 
+                if (!this.isValidValue(functionName)) {
+                    return false;
+                }
+
+                let tmpFunctionNameParts = functionName.split(FUNC_CODE_RELEARNED);
+
+
+                //#で区切った先がID文字数と同じな場合、trueを返す。
+                if (tmpFunctionNameParts.length >= 2 &&
+                    tmpFunctionNameParts[1].length == FUNC_ID_LEN) {
+                    return true;
+                } else {
+                    return false;
+                }
+                  
+            } 
+
+            /*
+            * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
+            * @param functionName {string}
+            * @return {boolean} ##付きのfunctionの場合true,それ以外はfalse
+            */
+            protected isRelearnedFunctionName(functionName: string): boolean {
+                let FUNCTION_NAME = TAG + "isRelearnedFunctionName ";
+                if (!this.isValidValue(functionName)) {
+                    return false;
+                }
+
+
+
+                //## を含んでいるとき、trueを返す。
+                if (functionName.indexOf(FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED) != -1) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } 
 
             /*
             * 設定したOrderのfunction用PullDownを消す。
@@ -694,11 +839,9 @@ module Garage {
                     return;
                 }
 
-                let functions = huisFiles.getMasterFunctions(remoteId);
+                let functions = huisFiles.getAllFunctions(remoteId);
 
-                if (functions) {
-                    return functions;
-                } else {
+                if (functions == null || functions.length <= 0) {
                     try {
                         // HuisFilesに存在しない場合はキャッシュから表示
                         return this.getDeviceInfoByRemoteId(remoteId).functions;
@@ -707,6 +850,8 @@ module Garage {
                         return;
                     }
                 }
+
+                return functions;
             }
           
           /*
@@ -1044,5 +1189,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

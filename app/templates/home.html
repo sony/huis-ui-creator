@@ -1,27 +1,30 @@
-﻿<article data-role="page" id="page-home" data-title="HUIS UI CREATOR" data-theme="b">
+﻿<!--
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+
+
+<article data-role="page" id="page-home" data-title="HUIS UI CREATOR" data-theme="b">
     <header data-role="header">
-        <h3>★HOME</h3>
+        <h3 data-i18n="home.STR_HOME_TITLE">HOME</h3>
         <div class="header-button-lline-alingn-right">
-            <button id="create-new-remote" title="★新規リモコン作成"></button>
             <!--<button id="sync-pc-to-huis"></button>-->
             <button id="option-pulldown-menu"></button>
         </div>
     </header>
     <section data-role="content">
         <section id="face-list-container">
-            <!-- リモコン数が0のときの使い方　-->
-            <section id="home-introductions">
-                <div class="center-contents">
-                    <p id="home-introduction-texts">
-                        <span id="home-introduction-text-1">★HUISを</span>
-                        <span id="home-introduction-text-2" class="accent">★あなた好み</span>
-                        <span id="home-introduction-text-3">★のデザインに<br>フルカスタムリモコンを作成しましょう。</span>
-                    </p>
-                    <div id="home-introduction-image-remotes"></div>
-                </div>
-                <div id="home-introduction-vector"></div>
-            </section>
-
             <!-- リモコンリスト　-->
             <ul id="face-list">
                 <ui id="face-list-footer"></ui>
@@ -29,25 +32,36 @@
         </section>
 
         <script type="text/template" id="face-list-template">
+                <li class="face">
+                    <div class="remote-title-container">
+                        <div class="remote-title">
+                            <p class="remote-title-text" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
+                        </div>
+                        <section class="face-container" id="create-new-remote"></section>
+                    </div>
+                </li>
                 {{#faceList}}
-                <li class="face" data-remoteid="{{remoteId}}">
-                    <p class="title">{{name}}</p>
-                    <section class="face-container" data-remoteid="{{remoteId}}"></section>
+                <li class="face {{category}}" data-remoteid="{{remoteId}}">
+                    <div class="remote-title-container">
+                        <div class="remote-title">
+                            <p class="remote-title-text">{{name}}</p>
+                            <div class="edit-lock-icon"></div>
+                        </div>
+                        <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                    </div>
                 </li>
                 {{/faceList}}
         </script>
         <section id="option-pulldown-menu-popup" data-role="popup" >
             <ul id="option-pulldown-menu-list">
                 <li id="command-import-remote" class="menu-item-text"
-                    data-i18n="option_menu.STR_OPTION_MENU_IMPORT_REMOTE">★リモコンをインポート</li>
+                    data-i18n="option_menu.STR_OPTION_MENU_IMPORT_REMOTE">リモコンをインポート</li>
                 <li class="menu-item-separator"></li>
                 <li id="command-visit-help" class="menu-item-text"
-                    data-i18n="option_menu.STR_OPTION_MENU_HELP">★ヘルプガイドを見る</li>
-                <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">★HUIS UI CREATOR のバージョン情報</li>
+                    data-i18n="option_menu.STR_OPTION_MENU_HELP">ヘルプガイドを見る</li>
+                <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">HUIS UI CREATOR のバージョン情報</li>
             </ul>
         </section>
-
-
 
     </section>
 </article>

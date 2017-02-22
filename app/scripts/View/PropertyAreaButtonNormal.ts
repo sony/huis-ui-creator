@@ -1,14 +1,31 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <reference path="../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaNormal] ";
+        var TAG = "[Garage.View.PropertyAreaNormal] ";
 
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
@@ -85,9 +102,9 @@ module Garage {
             private assignedInputActions: string[];
 
          
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.assignedInputActions = [];
@@ -167,6 +184,14 @@ module Garage {
                         let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
 
                         if (this.isValidValue(prevRemoteId)) {
+
+
+                            //前のpulldownがunknownだった場合、次のプルダウンはリモコンはみ選択状態に。
+                            if (this.isUnknownRemoteIdInPulldownOf(prevOrder)) {
+                                prevRemoteId = null;
+                            }
+                            
+
                             this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,prevRemoteId);
                             this.renderFunctionsOf(order);
                         }
@@ -214,6 +239,11 @@ module Garage {
                 //remoteIdがない場合、処理を終了する。
                 if (remoteId == "none" || remoteId == null) {
                     return;
+                }
+
+                if ($("#select-remote-input-0 option").val().match(/[0-9]+-[0-9]+-[0-9]+-[0-9]+-[0-9]+/)
+                    || $("#select-remote-input-0 option").val().match(UNKNOWN_REMOTE)) {
+                    $('#select-remote-input-0-menu li:first-child').remove();
                 }
 
                 // プルダウンに設定されている Actionの順番を取得
@@ -270,7 +300,7 @@ module Garage {
                 }
 
 
-                if (this.isIncludeSpecificDeviceType(this.model, DEVICE_TYPE_AC) ||
+                if (this.model.isAirconButton() ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_UP_VALUE) ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
                     this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_LEFT_VALUE) ||
@@ -332,7 +362,7 @@ module Garage {
 
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
-                    if (!this.isValidValue(tmpRemoteId)) {
+                    if (!this.isValidValue(tmpRemoteId) || tmpRemoteId.indexOf(UNKNOWN_REMOTE) == 0) {
                         tmpRemoteId = null;
                     }
 
@@ -342,16 +372,27 @@ module Garage {
                         tmpFunction = null;
                     }
 
-                    let deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                    if (!deviceInfo) {
+                    let tmpDeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                   
+                    if (!tmpDeviceInfo) {
                         try {
                             // HuisFilesに存在しない場合はキャッシュを使用
-                            deviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
+                            tmpDeviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
                         } catch (e) {
                             // キャッシュもなかった場合
                             console.warn(FUNCTION_NAME + "deviceInfo not found");
                         }
                     }
+
+                    //キャッシュでも、deviceInfoを取得できない。かつ remoteId用のpulldownがunknownのとき、this.modeから取得する。
+                    if (!tmpDeviceInfo && this.isUnknownRemoteIdInPulldownOf(order)) {
+                        tmpDeviceInfo = this.model.state[0].action[order].deviceInfo;
+                    }
+
+
+                    //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
+
 
                     let tmpAction: IAction = {
                         input: tmpInput,
@@ -367,6 +408,15 @@ module Garage {
 
                         if (deviceInfo.functionCodeHash) {
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
+                            if (!this.isValidValue(tmpCode) &&
+                                (this.isRelearnedFunctionName(tmpFunction) ||
+                                this.isRelearnedIDFunctionName(tmpFunction))) {
+                                //functionCodeHashではcodeがみつからず
+                                //functionNameに #IDがついていた場合、
+                                //functionNameに##がついていた場合、再学習なのでmodelからcodeを検索
+                                tmpCode = this.getCodeFromThisModel(tmpFunction);
+                            }
+                            
                         }
                         if (tmpCode != null) {
                             tmpAction.code = tmpCode;
@@ -448,6 +498,40 @@ module Garage {
             }
 
             /*
+            * 現在のモデルから、入力したファンクション名のcodeを検索。容易につかわないこと
+            * @param functionName {string} ファンクション名の後ろにIDがついているに限り、現在のmodelからコードを検索する。
+            * @return {string} モデルの中に同じファンクション名の信号があったら、codeを取得する。みつからない場合nullを返す。
+            */
+            private getCodeFromThisModel(functionNameWithID: string): string {
+                let FUNCTION_NAME: string = TAG + "getSgetCodeFromThisModeltateId : ";
+
+                if (!this.isValidValue(functionNameWithID)) {
+                    console.warn(FUNCTION_NAME + "functionNameWithID is invalid");
+                    return;
+                }
+
+                for (let targetState of this.model.state) {
+
+                    if (targetState.action != null) {
+                        for (let targetAction of targetState.action) {
+                            if (targetAction.code_db !== null &&
+                                targetAction.code_db.function != null &&
+                                targetAction.code_db.function == functionNameWithID &&
+                                targetAction.code != null
+                            ) {
+                                return targetAction.code;
+                            }
+                        }
+
+                    }
+                }
+
+                return null;
+
+            }
+
+
+            /*
             * 現在、表示されているStateIdを取得する
             */
             private getStateId(): number {
@@ -493,6 +577,48 @@ module Garage {
 
             }
 
+            private _getRemoteIdOfUnknownRemote(action: IAction) {
+                let deviceType = action.code_db.device_type;
+                let remoteId: string;
+                switch (deviceType) {
+                    case DEVICE_TYPE_TV:
+                        remoteId = UNKNOWN_REMOTE_TV;
+                        break;
+                    case DEVICE_TYPE_AC:
+                        remoteId = UNKNOWN_REMOTE_AC;
+                        break;
+                    case DEVICE_TYPE_LIGHT:
+                        remoteId = UNKNOWN_REMOTE_LIGHT;
+                        break;
+                    case DEVICE_TYPE_AUDIO:
+                        remoteId = UNKNOWN_REMOTE_AUDIO;
+                        break;
+                    case DEVICE_TYPE_PLAYER:
+                        remoteId = UNKNOWN_REMOTE_PLAYER;
+                        break;
+                    case DEVICE_TYPE_RECORDER:
+                        remoteId = UNKNOWN_REMOTE_RECORDER;
+                        break;
+                    case DEVICE_TYPE_PROJECTOR:
+                        remoteId = UNKNOWN_REMOTE_PROJECTOR;
+                        break;
+                    case DEVICE_TYPE_STB:
+                        remoteId = UNKNOWN_REMOTE_STB;
+                        break;
+                    case DEVICE_TYPE_FAN:
+                        remoteId = UNKNOWN_REMOTE_FAN;
+                        break;
+                    default:
+                        if (action.bluetooth_data != null) {
+                            remoteId = UNKNOWN_REMOTE_BT;
+                        } else {
+                            remoteId = UNKNOWN_REMOTE;
+                        }
+                        break;
+                }
+                return remoteId;
+            }
+
             /*
             * 信号プルダウンメニューたちをレンダリングする
             * @param stateId{number} ターゲットとなるstateId
@@ -523,13 +649,21 @@ module Garage {
                     }
 
                     let actionInput: string = targetAction.input;
-                    let remoteId = this.getRemoteIdByAction(targetAction);
+                    let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
-
-                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId);
+                    let unknownRcId: string = null;
+                    //remoteIDがみつからない場合、
+                    //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
+                    //UNKNOWNに
+                    if ((!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) ||
+                        (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
+                        unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
+                    }
+                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
 
                     //function設定用pulldownをレンダリング
-                    this.renderFunctionsOf(i, stateId, functionName);
+                    this.renderFunctionsOf(i, stateId, functionName, unknownRcId);
+
                 }
 
                 
@@ -570,7 +704,7 @@ module Garage {
             * @param inputAction{string}
             * @param remoteId?{string}
             */
-            private renderSignalContainerMin(order: number, stateId: number, inputAction? : string, remoteId?:string) {
+            private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string, unknownRcId?: string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
                 if (!this.isValidOrder(order)) {
@@ -595,7 +729,7 @@ module Garage {
                 //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, stateId, remoteId);
+                this.renderRemoteIdOf(order, stateId, remoteId, unknownRcId);
             }
 
             /*
@@ -804,7 +938,7 @@ module Garage {
                     let $remoteIdlPulllDown = $target.find("select.remote-input");
                     if ($remoteIdlPulllDown.length != 0) {
                         let value = $remoteIdlPulllDown.val();
-                        if (!this.isValidValue(value)) {
+                        if (!this.isValidValue(value) && !this.isUnknownRemoteIdInPulldownOf) {
                             return false;
                         }
                     }
@@ -898,5 +1032,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

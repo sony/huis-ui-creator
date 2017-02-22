@@ -20,7 +20,7 @@ HUIS UI CREATOR は、複数の機器のボタンからあなたがよく使う�
 HUIS UI CREATOR で作成したリモコンを反映するには HUIS のアップデートを実行する必要があります。
 [こちら (HUIS REMOTE CONTROLLERのアップデート方法)](firmware/readme.md) を参照してください。
 
-HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアをバージョン4.0.0以上にアップデートしてください。 
+HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアをバージョン4.1.0以上にアップデートしてください。 
 
 ====
 
@@ -57,7 +57,6 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
 
 #### 作成したリモコンを削除する
 1. Home 画面のリモコン一覧から削除したいリモコンに対して、右クリックメニューの「リモコンを削除」を選択します。
-2. この時点では、HUIS 上ではリモコンの削除は行われていません。Home 画面の右上にある [Sync] ボタンを押して同期を行ったときに、削除が反映されます。
 
 #### アプリケーションを終了する
 アプリケーションの閉じるボタンを押すと、アプリケーションを終了させることができます。このとき、編集中のリモコンは失われますので、必ず HUIS と同期させてから終了させてください。
@@ -108,7 +107,7 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
         $ cd node_modules
         $ cd usb_dev
         $ set HOME=~/.electron-gyp
-        $ node-gyp rebuild --target=1.4.1 --arch=ia32 --dist-url=https://atom.io/download/atom-shell
+        $ node-gyp rebuild --target=1.4.10 --arch=ia32 --dist-url=https://atom.io/download/atom-shell
 
   Electron のバージョン`--target`は、適宜変更してください。また、Windows 64bit 向けにビルドを行う場合は、`--arch=x64` に変更してください。
 
@@ -134,7 +133,7 @@ Mac 向けの場合は、　　以下のように"--platform=darwin"をつけて
 前述の grunt によるビルドのあとのファイルコピーが終わったら、以下のコマンドを実行すると、パッケージングができます。(Windows 32bit 向けの場合)
 
     $ cd <huis-ui-creator dir>\www
-    $ electron-packager . <アプリ名> --platform=win32 --arch=ia32 --version=1.4.1 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
+    $ electron-packager . <アプリ名> --platform=win32 --arch=ia32 --version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
 
 Electron のバージョン`--target`は、適宜変更してください。また、Windows 64bit 向けにビルドを行う場合は、`--arch=x64` に変更してください。ただし、前述のネイティブ モジュールのビルド時の `--target`, `--arch` オプションと同じものを指定してください。
 Mac 64bit 向けにビルドを行う場合は、`--platform=darwin`,　`--arch=x64`に変更してください。

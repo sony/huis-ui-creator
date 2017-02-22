@@ -1,4 +1,21 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
 
@@ -16,9 +33,9 @@ module Garage {
          * @brief Splash screen class
          */
         class Splash extends BasePage {          
-			/**
-			 * construnctor
-			 */
+            /**
+             * construnctor
+             */
             constructor() {
                 super("/templates/splash.html", "page-splash", { route: "splash" });
             }
@@ -42,7 +59,7 @@ module Garage {
                             type: "error",
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-							title: PRODUCT_NAME,
+                            title: PRODUCT_NAME,
                         });
                         isHUISConnected = false;
                         app.quit();
@@ -74,9 +91,9 @@ module Garage {
                 return this;
             }
 
-			/**
-			 * Splash 画面の初期化
-			 */
+            /**
+             * Splash 画面の初期化
+             */
             private _initializeSplashView() {
 
                 this._pageLayout();
@@ -86,10 +103,10 @@ module Garage {
                 $(window).on("beforeunload", this._closeWarning);
 
                 this.currentWindow_ = Remote.getCurrentWindow();
-				this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
+                this.currentWindow_.setMinimumSize(1280, 768); // 最小ウィンドウサイズを指定
                 this.currentWindow_.setMenuBarVisibility(false);
 
-				$("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
+                $("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
             }
 
 
@@ -101,15 +118,15 @@ module Garage {
                             type: "info",
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
-							title: PRODUCT_NAME,
-							cancelId: 1,
+                            title: PRODUCT_NAME,
+                            cancelId: 1,
                         }
-					);
+                    );
                     if (response !== 0) {
                         return null;
                     }
                 }
-				isHUISConnected = false;
+                isHUISConnected = false;
             }
 
             private _pageLayout() {
@@ -216,11 +233,11 @@ module Garage {
             private doSync(direction: Boolean, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 // 同期処理の開始
-				// 実際は一方向の上書きである
-				// direction === true -> HUIS->PC
-				// direction === false -> PC->HUIS
-				let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
-				let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
+                // 実際は一方向の上書きである
+                // direction === true -> HUIS->PC
+                // direction === false -> PC->HUIS
+                let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
+                let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
 
                 let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {

@@ -2,52 +2,52 @@
 /// <reference path="Module.ts" />
 
 module Garage {
-	export module Model {
-		var TAG = "[Garage.Model.ModulesCollection] ";
+    export module Model {
+        var TAG = "[Garage.Model.ModulesCollection] ";
 
-		/**
-		 * @class ModuleCollection
-		 * @brief ModuleItem のコレクションオブジェクト
-		 */
-		export class ModulesCollection extends Backbone.Collection<Module> {
-			// Backbone.Collection に対象の Model の型を与える
-			model = Module;
-			private facePageWidth: number = 0;
-			private facePageHeight: number = 0;
+        /**
+         * @class ModuleCollection
+         * @brief ModuleItem のコレクションオブジェクト
+         */
+        export class ModulesCollection extends Backbone.Collection<Module> {
+            // Backbone.Collection に対象の Model の型を与える
+            model = Module;
+            private facePageWidth: number = 0;
+            private facePageHeight: number = 0;
 
-			constructor(models?: Module[], options?: any) {
-				super(models, options);
-			}
+            constructor(models?: Module[], options?: any) {
+                super(models, options);
+            }
 
-			initialize(models?: Module[], options?: any) {
-				if (options && options.facePageHeight) {
-					this.facePageHeight = options.facePageHeight;
+            initialize(models?: Module[], options?: any) {
+                if (options && options.facePageHeight) {
+                    this.facePageHeight = options.facePageHeight;
                 }
 
                 this.modufyModules(models,this.facePageHeight);
-			}
-
-			/**
-			 * face のページ数を取得する
-			 * 
-			 * @return {number} ページ数
-			 */
-			getPageCount(): number {
-				var maxPageIndex = -1;
-				for (let i = 0, l = this.models.length; i < l; i++) {
-					if (maxPageIndex < this.models[i].pageIndex) {
-						maxPageIndex = this.models[i].pageIndex;
-					}
-				}
-				return maxPageIndex + 1;
             }
 
             /**
-			 * モジュールの値を1ページ分にfitするようにpageIndedとoffsetYを補正する。
-			 * @param modules{Module[]} 追加したmoduleの塊。
+             * face のページ数を取得する
+             * 
+             * @return {number} ページ数
+             */
+            getPageCount(): number {
+                var maxPageIndex = -1;
+                for (let i = 0, l = this.models.length; i < l; i++) {
+                    if (maxPageIndex < this.models[i].pageIndex) {
+                        maxPageIndex = this.models[i].pageIndex;
+                    }
+                }
+                return maxPageIndex + 1;
+            }
+
+            /**
+             * モジュールの値を1ページ分にfitするようにpageIndedとoffsetYを補正する。
+             * @param modules{Module[]} 追加したmoduleの塊。
              * @param facePageHeight{number} 1ページ分の高さ
              * @param inifialPageIndex?{number} 追加前のページインデックス
-			 */
+             */
             modufyModules(models: Module[], facePageHeight:number, inifialPageIndex? : number) {
 
                 let offsetY = 0
@@ -73,10 +73,10 @@ module Garage {
             }
 
             /**
-			 * モジュールを新規に追加する。
-			 * @param modules{Module[]} 追加したmoduleの塊。
+             * モジュールを新規に追加する。
+             * @param modules{Module[]} 追加したmoduleの塊。
              * @param facePageHeight{number} 1ページ分の高さ
-			 */
+             */
             addModules(models: Module[], facePageHeight: number) {
                 let pageCount= this.getPageCount();
                 this.modufyModules(models, facePageHeight, pageCount);
@@ -85,6 +85,6 @@ module Garage {
 
 
 
-		}
-	}
+        }
+    }
 }
