@@ -448,7 +448,8 @@ module Garage {
 
                     let syncFileFilter = (path: string) => {
                         if (path.match(/\.app($|\/)/) == null
-                            && path.match(/\.Trashes/) == null) {
+                            && path.match(/\.Trashes/) == null
+                            && path.match(/\.Spotlight/) == null) {
                             return true;
                         } else {
                             console.log("filtered from sync " + path);
