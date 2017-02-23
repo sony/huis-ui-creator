@@ -1,14 +1,31 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <reference path="../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
-	export module View {
-		import Tools = CDP.Tools;
+    export module View {
+        import Tools = CDP.Tools;
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-		var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
+        var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
 
         //プルダウンに入力できる情報
         interface ISignalInputs {
@@ -24,9 +41,9 @@ module Garage {
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
            
 
-			/**
-			 * constructor
-			 */
+            /**
+             * constructor
+             */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
             }
@@ -483,19 +500,22 @@ module Garage {
                         tmpFunction = null;
                     }
 
-                    let deviceInfo = null;
+                    let tmpdeviceInfo = null;
                     if (tmpRemoteId != null) {
-                        deviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                        if (!deviceInfo) {
+                        tmpdeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
+                        if (!tmpdeviceInfo) {
                             try {
                                 // HuisFilesに存在しない場合はキャッシュを使用
-                                deviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
+                                tmpdeviceInfo = this.getDeviceInfoByRemoteId(tmpRemoteId);
                             } catch (e) {
                                 // キャッシュもなかった場合
                                 console.warn(FUNCTION_NAME + "deviceInfo not found");
                             }
                         }
                     }
+
+                    //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
+                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
 
 
                     let tmpAction: IAction = {
@@ -765,7 +785,7 @@ module Garage {
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
                 
-                let remoteId: string = this.getRemoteIdByAction(action);
+                let remoteId: string = huisFiles.getRemoteIdByAction(action);
                 this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
 
                 //Functions用のプルダウンを描画できるときは描画
@@ -1213,5 +1233,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

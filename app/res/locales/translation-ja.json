@@ -33,15 +33,19 @@
                 "url": "http://huis.jp/support/update/"
             }
         }
+    },"information": {
+        "STR_INFORMATION_TITLE":  "お知らせ"
     },"dialog": {
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
             "STR_GARAGE_DIALOG_MESSAGE_IN_SYNCING": "リモコンと同期中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_SYNC_DONE": "同期しました。\nアプリを終了してリモコンを使うには\nUSBケーブルを抜いてください。",
+            "STR_GARAGE_DIALOG_MESSAGE_IN_COPYING": "コピー中です。\nUSBケーブルを抜かないでください。",
+            "STR_GARAGE_DIALOG_MESSAGE_COPY_DONE_ENTER_FULLCUSTOM": "コピーしました。",
             "STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
-            "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "同期に失敗しました。\nHUIS REMOTE CONTROLLERとパソコンが正常に接続されていません。\nHUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
-            "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていません。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "HUIS REMOTE CONTROLLER画面上の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "HUIS REMOTE CONTROLLERとUSBケーブルで接続し、その画面上の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC": "同期中にアプリを終了すると、データが破損する恐れがあります。\n本当に終了しますか？",
             "STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていない可能性があります。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_WARN_NONSAVE": "リモコンの変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。",
@@ -120,7 +124,8 @@
         "STR_HOME_TITLE": "HOME",
         "STR_HOME_INTRODUCTION_1": "HUIS REMOTE CONTROLLERを<br>",
         "STR_HOME_INTRODUCTION_2": "あなた好み",
-        "STR_HOME_INTRODUCTION_3": "のデザインに。"
+        "STR_HOME_INTRODUCTION_3": "のデザインに。",
+        "STR_HOME_CREATE_NEW_REMOTE":  "新規作成"
     },
     "splash": {
         "STR_SPLASH_MESSAGE": "HUIS REMOTE CONTROLLER と同期中です。<br>USBケーブルを抜かないでください。"
@@ -140,8 +145,12 @@
             "STR_CONTEXT_GRID_SIZE_32PX": "32px",
             "STR_CONTEXT_GRID_SIZE_64PX": "64px"
         },
-        "STR_CONTEXT_DELETE_REMOTE": "リモコンを削除",
-        "STR_CONTEXT_EXPORT_REMOTE": "リモコンをエクスポート",
+        "STR_CONTEXT_EDIT_REMOTE": "編集",
+        "STR_CONTEXT_DELETE_REMOTE": "削除",
+        "STR_CONTEXT_EXPORT_REMOTE": "エクスポート",
+        "STR_CONTEXT_COPY_AND_EDIT_REMOTE": "コピーして新規作成",
+        "STR_CONTEXT_COPY_ITEM": "コピー",
+        "STR_CONTEXT_PASTE_ITEM": "貼り付け",
         "STR_CONTEXT_DELETE_ITEM": "削除",
         "STR_CONTEXT_DELETE_PAGE": "ページを削除",
         "STR_CONTEXT_UNDO": "元に戻す",
@@ -161,10 +170,22 @@
     "toast": {
         "STR_TOAST_UNDO": "元に戻す",
         "STR_TOAST_REDO": "やり直し",
-        "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません"
+        "STR_TOAST_INPUT_INHIBITION_WORD": "は使えません",
+        "STR_TOAST_CANT_EDIT": "右クリックでオプションが表示されます"
     },
     "remote": {
-        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択"
+        "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
+        "STR_UNKNOWN_REMOTE_TV": "不明なテレビ",
+        "STR_UNKNOWN_REMOTE_AC": "不明なエアコン",
+        "STR_UNKNOWN_REMOTE_LIGHT": "不明な照明",
+        "STR_UNKNOWN_REMOTE_AUDIO": "不明なオーディオ",
+        "STR_UNKNOWN_REMOTE_PLAYER": "不明なプレーヤー",
+        "STR_UNKNOWN_REMOTE_RECORDER": "不明なレコーダー",
+        "STR_UNKNOWN_REMOTE_PROJECTOR": "不明なプロジェクター",
+        "STR_UNKNOWN_REMOTE_STB": "不明なセットトップボックス",
+        "STR_UNKNOWN_REMOTE_FAN": "不明な扇風機",
+        "STR_UNKNOWN_REMOTE_BT": "不明なBluetooth機器",
+        "STR_UNKNOWN_REMOTE": "不明なリモコン"
     },
     "button": {
         "text_button": {
@@ -446,13 +467,13 @@
             "STR_REMOTE_BTN_RADIO_TV_RADIO": "ラジオ",
             "STR_REMOTE_BTN_COUNTER_PROGRAM": "カウンタープログラム",
             "STR_REMOTE_BTN_CHAPTER_MARK": "チャプターマーク",
-            "STR_REMOTE_BTN_AIRCON_MODE": "Mode",
-            "STR_REMOTE_BTN_AIRCON_UP": "Up",
-            "STR_REMOTE_BTN_AIRCON_DOWN": "Down",
-            "STR_REMOTE_BTN_AIRCON_POWER": "Power",
-            "STR_REMOTE_BTN_AIRCON_SWING": "Swing",
-            "STR_REMOTE_BTN_AIRCON_SLEEP": "Sleep",
-            "STR_REMOTE_BTN_AIRCON_FANSPEED": "FanSpeed",
+            "STR_REMOTE_BTN_AIRCON_MODE": "運転切替",
+            "STR_REMOTE_BTN_AIRCON_UP": "温度 ＋",
+            "STR_REMOTE_BTN_AIRCON_DOWN": "温度 －",
+            "STR_REMOTE_BTN_AIRCON_POWER": "電源 ON/OFF",
+            "STR_REMOTE_BTN_AIRCON_SWING": "風向",
+            "STR_REMOTE_BTN_AIRCON_SLEEP": "オフタイマー",
+            "STR_REMOTE_BTN_AIRCON_FANSPEED": "風量",
             "STR_REMOTE_BTN_AIRCON_SPEED": "Speed",
             "STR_REMOTE_BTN_AIRCON_TEMPUP": "Tempup",
             "STR_REMOTE_BTN_AIRCON_TEMPDOWN": "Tempdown",
@@ -460,8 +481,8 @@
             "STR_REMOTE_BTN_AIRCON_FREEAIRCURRENT": "FreeAirCurrent",
             "STR_REMOTE_BTN_AIRCON_WRAP": "Wrap",
             "STR_REMOTE_BTN_AIRCON_DRYSWITCH": "DrySwitch",
-            "STR_REMOTE_BTN_AIRCON_VERTICALSWING": "VerticalSwing",
-            "STR_REMOTE_BTN_AIRCON_HORIZONTALSWING": "HorizontalSwing",
+            "STR_REMOTE_BTN_AIRCON_VERTICALSWING": "風向 縦",
+            "STR_REMOTE_BTN_AIRCON_HORIZONTALSWING": "風向 横",
             "STR_REMOTE_BTN_AIRCON_BIOCLEAN": "BioClean",
             "STR_REMOTE_BTN_AIRCON_SWINGUP_DOWN": "SwingUp/Down",
             "STR_REMOTE_BTN_AIRCON_SWINGLEFT_RIGHT": "SwingLeft/Right",
@@ -558,7 +579,7 @@
             "STR_REMOTE_BTN_AIRCON_VENTILATE": "Ventilate",
             "STR_REMOTE_BTN_AIRCON_SILENT": "Silent",
             "STR_REMOTE_BTN_AIRCON_PLEASANT": "Pleasant",
-            "STR_REMOTE_BTN_AIRCON_STOP": "Stop",
+            "STR_REMOTE_BTN_AIRCON_STOP": "OFF",
             "STR_REMOTE_BTN_AIRCON_ROOM": "Room",
             "STR_REMOTE_BTN_AIRCON_FANAREA": "FanArea",
             "STR_REMOTE_BTN_AIRCON_NEXTMORNINGHEAT": "NextMorningHeat",
@@ -646,7 +667,7 @@
             "STR_REMOTE_BTN_AIRCON_AUTOCOMFORT": "AutoComfort",
             "STR_REMOTE_BTN_AIRCON_ECO": "Eco",
             "STR_REMOTE_BTN_AIRCON_HIGHPOWER": "HighPower",
-            "STR_REMOTE_BTN_AIRCON_EASYONTIMER": "EasyOnTimer",
+            "STR_REMOTE_BTN_AIRCON_EASYONTIMER": "オンタイマー",
             "STR_REMOTE_BTN_AIRCON_DEODORIZING": "Deodorizing",
             "STR_REMOTE_BTN_AIRCON_OFFTIMER": "OffTimer",
             "STR_REMOTE_BTN_AIRCON_TEMP_HUMIDITY": "Temp/Humidity",
@@ -1046,8 +1067,8 @@
             "STR_REMOTE_BTN_KEYBOARD_RIGHT_CURLY_BRACE":"キーボード }",
             "STR_REMOTE_BTN_KEYBOARD_VERTICAL_BAR": "キーボード |",
             "STR_REMOTE_BTN_KEYBOARD_YEN": "キーボード ￥",
-            "STR_REMOTE_BTN_RECORDING_LIST": 	"録画リスト",
-            "STR_REMOTE_BTN_RESERVATION_LIST":	"予約一覧",
+            "STR_REMOTE_BTN_RECORDING_LIST":  "録画リスト",
+            "STR_REMOTE_BTN_RESERVATION_LIST": "予約一覧",
             "STR_REMOTE_BTN_FULL":"全灯",
             "STR_REMOTE_BTN_COLOR_COOL":"寒色",
             "STR_REMOTE_BTN_COLOR_WARM": "暖色",
@@ -1068,7 +1089,10 @@
             "STR_REMOTE_BTN_FAN_HOT_MINUS":"温度 -",
             "STR_REMOTE_BTN_FAN_HOT_PLUS": "温度 +",
             "STR_REMOTE_BTN_FOCUS":"フォーカスモード",
-            "STR_REMOTE_BTN_WIDE": "ワイドモード"
+            "STR_REMOTE_BTN_WIDE": "ワイドモード",
+
+            "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)",
+            "STR_REMOTE_BTN_ID":  "ID"
 
         }
     }

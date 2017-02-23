@@ -58,11 +58,11 @@ module Garage {
             }
 
 
-			/*
-			* 入力の ModelVersionより古いバージョンのとき、trueを返す。同じ場合はfalse
-			* @param counterPart : ModuleVersion 　比較対象のModelVersion
-			* @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse。同じバージョンのとき,false;
-			*/
+            /*
+            * 入力の ModelVersionより古いバージョンのとき、trueを返す。同じ場合はfalse
+            * @param counterPart : ModuleVersion 　比較対象のModelVersion
+            * @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse。同じバージョンのとき,false;
+            */
             public isOlderThan(counterPart: VersionString) {
 
                 let FUNCTION_NAME = TAG + ": isOlderThan() : ";
@@ -108,9 +108,9 @@ module Garage {
                 }
             }
 
-			/*
-			* X.Yの形で、ModuleVersionの値を返す　ex) 1.2
-			*/
+            /*
+            * X.Yの形で、ModuleVersionの値を返す　ex) 1.2
+            */
             public getVersionString(): string {
                 let FUNCTION_NAME = TAG + ": getVersionString : ";
 
@@ -146,5 +146,5 @@ module Garage {
 
 
         }
-	}
+    }
 }

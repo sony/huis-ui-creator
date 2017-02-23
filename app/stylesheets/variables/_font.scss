@@ -1,4 +1,21 @@
-﻿//font-family
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+//font-family
 $FONT_FAMILY_COMMON_SST_LIGHT : 'SST LIGHT';
 $FONT_FAMILY_COMMON_SST_REGULAR : 'SST REGULAR';
 $FONT_FAMILY_COMMON_SST_BOLD : 'SST BOLD';
@@ -124,6 +141,15 @@ $FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL : $FONT_FAMILY_COMMON_CONBINED_LIGHT;
 $FONT_SIZE_CANVAS_NAME_AREA : $FONT_SIZE_SS;
 $FONT_WEIGHT_BUTTON_ITEM : $FONT_FAMILY_BOLD;
 $FONT_WEIGHT_LABEL_ITEM : $FONT_FAMILY_NORMAL;
+
+//information
+$FONT_SIZE_INFORMATION_TITLE : $FONT_SIZE_LL;
+$FONT_FAMILY_INFORMATION_TITLE : $FONT_FAMILY_NORMAL;
+$FONT_SIZE_INFORMATION_DATE : $FONT_SIZE_SSS;
+$FONT_FAMILY_INFORMATION_DATE : $FONT_FAMILY_NORMAL;
+$FONT_SIZE_INFORMATION_TEXT : $FONT_SIZE_S;
+$FONT_FAMILY_INFORMATION_TEXT : $FONT_FAMILY_LIGHT;
+$TEXT_HEIGHT_INFORMATION_TEXT_TITLE : $TEXT_HEIGHT_DEFAULT; // 変更するとinformationダイアログのサイズが変わる可能性がある
 
 //フォントのパス
 $PATH_FONT_SST_NORMAL : url(../res/fonts/regular/SSTJpPro-Regular.otf) format('opentype');

@@ -1,4 +1,21 @@
-﻿@import "variables/variable";
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+@import "variables/variable";
 
 body{
 
@@ -68,85 +85,260 @@ body{
         background-size: contain;
     }
 
-	
+    
+}
+
+#about-dialog-back{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
+
+
+    #about-dialog-area{
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        
+        animation-name: popin;
+        animation-duration: 350ms;
+
+
+        .common-dialog {
+            height: 550px;
+        }
+
+        #dialog-about-message-container{
+            height: 350px;
+            overflow-y: scroll;
+            line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+            font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
+            color:$COLOR_ABOUT_DIALOG_TXET;
+        }
+
+        #dialog-about-button-container{
+            width: 154px;
+            margin-left: auto;
+        }
+
+        .ui-btn{
+                font-family:$FONT_FAMILY_TEXT_BUTTON;
+                text-shadow:none;
+                margin:0;
+                padding:0;
+                border:none;
+                height:$SIZE_BUTTON_HEIGHT;   
+                font-size:$FONT_SIZE_TEXT_BUTTON;
+                color:$COLOR_BUTTON_TEXT;
+                background-color:$COLOR_BUTTON_NORMAL;
+                box-shadow:none;   
+                border-radius:0;
+                width: 154px;
+                height: 32px;
+
+                &:hover{
+                    text-shadow:none;
+                    background-color:$COLOR_BUTTON_HOVER;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    border:none;
+                }
+
+                &:active{
+                    text-shadow:none;
+                    background-color:$COLOR_BUTTON_PRESED;
+                    font-family:$FONT_FAMILY_TEXT_BUTTON;
+                    color:$COLOR_BUTTON_TEXT;
+                    box-shadow:none;
+                    border:none;
+                }
+
+                &:focus{
+                    text-shadow:none;
+                    box-shadow:none;
+                    border:none;
+                }
+            }
+    }
 }
 
 #about-dialog-area{
 
-	.title{
-		font-family:$FONT_FAMILY_ABOUT_TITLE;
-		font-size:$FONT_SIZE_ABOUT_TITLE;
-		text-align:center;
-	}
+    .title{
+        font-family:$FONT_FAMILY_ABOUT_TITLE;
+        font-size:$FONT_SIZE_ABOUT_TITLE;
+        text-align:center;
+    }
 
-	#about-info-box{
-		display:flex;
-		margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
-		margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
+    #about-info-box{
+        display:flex;
+        margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
+        margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
 
-		#about-logo{
-			background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
-			background-position:center;
-			background-repeat: no-repeat;
-			background-size: contain;
-			width:$SIZE_ABOUT_LOGO_WIDTH;
-			height:$SIZE_ABOUT_LOGO_HEIGHT;
-			margin-right:$SIZE_ABOUT_LOGO_MARING_RIGHT;
-			margin-left:$SIZE_ABOUT_LOGO_MARING_LEFT;
-		}
-		.info-box{
-			font-size:$FONT_SIZE_ABOUT_INFO;
+        #about-logo{
+            background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width:$SIZE_ABOUT_LOGO_WIDTH;
+            height:$SIZE_ABOUT_LOGO_HEIGHT;
+            margin-right:$SIZE_ABOUT_LOGO_MARING_RIGHT;
+            margin-left:$SIZE_ABOUT_LOGO_MARING_LEFT;
+        }
+        .info-box{
+            font-size:$FONT_SIZE_ABOUT_INFO;
 
-			#about-app-name{
-				font-size:$FONT_SIZE_ABOUT_APP_NAME;
-				font-family:$FONT_FAMILY_ABOUT_APP_NAME;
-				color:$COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
-			}
-		}
-	}
+            #about-app-name{
+                font-size:$FONT_SIZE_ABOUT_APP_NAME;
+                font-family:$FONT_FAMILY_ABOUT_APP_NAME;
+                color:$COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
+            }
+        }
+    }
 
-	
+    
 
-	overflow-y:auto;
-	overflow-x:hidden;
-	text-shadow: none;
-	font-family:$FONT_WEIGHT_DIALOG_TEXT;
-	width:$SIZE_DIALOG_WIDTH;
-	box-shadow:none;
-	-webkit-box-shadow:none;
-	text-shadow: none;
-	border-radius:0;
-	background:$COLOR_ABOUT_DIALOG_BACKGROUND;
-	height:$SIZE_ABOUT_DIALOG_HEIGHT;
-	border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+    overflow-y:auto;
+    overflow-x:hidden;
+    text-shadow: none;
+    font-family:$FONT_WEIGHT_DIALOG_TEXT;
+    width:$SIZE_DIALOG_WIDTH;
+    box-shadow:none;
+    -webkit-box-shadow:none;
+    text-shadow: none;
+    border-radius:0;
+    background:$COLOR_ABOUT_DIALOG_BACKGROUND;
+    height:$SIZE_ABOUT_DIALOG_HEIGHT;
+    border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
 
-	padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
-	padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-	padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-	padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
-		
-	.common-dialog{
-		background:none;
-			
-		.about-dialog{
-			color:$COLOR_ABOUT_DIALOG_TXET;
-				
-			.separator{
-				margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
-				margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
-				border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
-			}
+    padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
+    padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
+    padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
+    padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+        
+    #dialog-about-button-container{
+        margin-top : $SIZE_ABOUT_BUTTON_CONTAINER_MARGIN_TOP;
+    }
 
-			.text-area{
-				p{
-					line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
-					font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
-					color:$COLOR_ABOUT_DIALOG_TXET;
-				}
-			}
-		}	
-	}
-	
+    //ライセンス表記を実際に表示するエリア
+    #dialog-about-message-container{
+        white-space: pre-wrap;
+    }
+
+    .common-dialog{
+        background:none;
+            
+        .about-dialog{
+            color:$COLOR_ABOUT_DIALOG_TXET;
+                
+            .separator{
+                margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
+                margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
+                border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
+            }
+
+            .text-area{
+                p{
+                    line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+                    font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
+                    color:$COLOR_ABOUT_DIALOG_TXET;
+                }
+            }
+        }    
+    }
+    
 }
+
+
+#information-dialog-area {
+         -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+         box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+         overflow-y: scroll;
+         overflow-x: hidden;
+         width: $SIZE_INFORMATION_DIALOG_WIDTH;
+         height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+         background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+ 
+         .common-dialog {
+             color: $COLOR_INFORMATION_DIALOG_TEXT;
+             width: $SIZE_INFORMATION_DIALOG_WIDTH;
+             height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+             text-shadow: none;
+             background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+ 
+             .information-dialog {
+                 padding-top: $SIZE_INFORMATION_DIALOG_PADDING_TOP;
+                 padding-bottom: $SIZE_INFORMATION_DIALOG_PADDING_BOTTOM;
+             }
+ 
+             .title {
+                 font-size: $FONT_SIZE_INFORMATION_TITLE;
+                 font-family: $FONT_FAMILY_INFORMATION_TITLE;
+                 line-height: $TEXT_HEIGHT_INFORMATION_TEXT_TITLE;
+                 margin: 0;
+                 padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
+             }
+ 
+             .bold-separator {
+                 border-top: $SIZE_INFORMATION_BOLD_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                 width: $SIZE_INFORMATION_BOLD_SEPARATOR_WIDTH;
+                 margin: 0 auto;
+             }
+ 
+             .white-space {
+                 height: $SIZE_INFORMATION_WHITE_SPACE_TOP;
+             }
+ 
+             .information-container {
+                 width: $SIZE_INFORMATION_CONTAINER_WIDTH;
+                 height: $SIZE_INFORMATION_CONTAINER_HEIGHT;
+                 margin: $SIZE_INFORMATION_CONTAINER_MARGIN_TOP_BOTTOM $SIZE_INFORMATION_CONTAINER_MARGIN_LEFT_RIGHT;
+             }
+ 
+             .information-img {
+                 box-sizing: border-box;
+                 border:$SIZE_INFORMATION_CONTAINER_HEIGHT_BORDER_THICKNESS solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                 width: $SIZE_INFORMATION_IMG_WIDTH;
+                 height: auto;
+                 float: left;
+             }
+ 
+             .information-box {
+                 width: $SIZE_INFORMATION_BOX_WIDTH;
+                 height: $SIZE_INFORMATION_BOX_HEIGHT;
+                 padding-left: $SIZE_INFORMATION_BOX_PADDING_LEFT;
+                 float: left;
+ 
+                 .information-date {
+                     font-size: $FONT_SIZE_INFORMATION_DATE;
+                     font-family: $FONT_FAMILY_INFORMATION_DATE;
+                     padding-bottom: $SIZE_INFORMATION_DATE_PADDING_BOTTOM;
+                 }
+ 
+                 .information-text {
+                     font-size: $FONT_SIZE_INFORMATION_TEXT;
+                     font-family: $FONT_FAMILY_INFORMATION_TEXT;
+                     white-space: pre-wrap;
+                 }
+             }
+ 
+             .separator {
+                 border-top: $SIZE_INFORMATION_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_SEPARATOR;
+                 width: $SIZE_INFORMATION_SEPARATOR_WIDTH;
+                 margin: 0 auto;
+             }
+ 
+             .information-body{
+                 div.separator:last-child{
+                     border: none;
+                 }
+             }
+         }
+}
+
 
 }
