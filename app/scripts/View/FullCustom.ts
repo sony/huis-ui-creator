@@ -2266,7 +2266,8 @@ module Garage {
                     x: 0,
                     y: 0,
                     tolerance: popupY + ",0,0," + popupX,
-                    corners: false
+                    corners: false,
+                    afterclose: (event, ui) => { this.$el.focus(); }
                 };
 
 
@@ -2342,7 +2343,8 @@ module Garage {
                         "path": null,
                         "resolved-path": null
                     });
-                this.setFocusAndMoveCursorToEnd($textField);
+                // TODO: Temporary comment out for workaround
+                //this.setFocusAndMoveCursorToEnd($textField);
             }
 
 
