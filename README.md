@@ -102,6 +102,11 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
 
         $ npm install
 
+    Mac 向けの場合は、以下のようにpackage.jsonをpackage_darwin.jsonで上書きした後に、npm installを実行してください。
+
+        $ cp package_darwin.json package.json
+        $ npm install
+
 4. 以下のコマンドでネイティブ モジュールのビルドを行います。(Windows 32bit 向けの場合, Mac向けの場合 不要)
 
         $ cd node_modules
@@ -117,7 +122,7 @@ HUIS UI CREATORを使用するには、HUISリモコンのソフトウェアを�
 
         $ grunt build
 
-Mac 向けの場合は、　　以下のように"--platform=darwin"をつけてください。
+    Mac 向けの場合は、以下のように"--platform=darwin"をつけてください。
 
         $ grunt build --platform=darwin
 
