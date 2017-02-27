@@ -220,10 +220,6 @@ module Garage {
                     if (this.remoteId_ === "common") {
                         // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
                         // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-                        //let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
-                        //if (resolvedOriginalPath.indexOf("file:///") === 0) {
-                        //    resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
-                        //}
                         let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/"+val), true);
                         garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
                     } else {
@@ -233,10 +229,6 @@ module Garage {
                     if (this.remoteId_ === "common") {
                         // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
                         // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-                        //let resolvedOriginalPath = CDP.Framework.toUrl(path.join("/res/faces/common/images", val).replace(/\\/g, "/"));
-                        //if (resolvedOriginalPath.indexOf("file:///") === 0) {
-                        //    resolvedOriginalPath = resolvedOriginalPath.split("file:///")[1];
-                        //}
                         let resolvedOriginalPath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
                         garageExtensions = {
                             original: val,

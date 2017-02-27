@@ -72,20 +72,6 @@ module Garage {
                 }
 
                 return this.encodeUriValidInWindowsAndCSS(inputUrl);
-                /*
-                //ダミーの変数、マック対応時に動的に入手
-                let isWindows = true;
-                let isMac = false;
-
-                if (isWindows) {
-                    return this.encodeUriValidInWindowsAndCSS(inputUrl);
-                }
-                
-                else if (isMac) {
-                    return this.encodeUriValidInMacAndCSS(inputUrl);
-                }
-                */
-
             }
 
             /*

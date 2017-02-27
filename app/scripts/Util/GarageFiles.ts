@@ -48,26 +48,6 @@ module Garage {
                     return null;
                 }
 
-                //var editHistoryListPath = path.join(GARAGE_FILES_ROOT, "edithistory.json");
-                //if (!fs.existsSync(editHistoryListPath)) {
-                //    return null;
-                //}
-
-                //var editHistoryListText = fs.readFileSync(editHistoryListPath, "utf8");
-                //if (!editHistoryListText) {
-                //    return null;
-                //}
-                //var editHistoryList: IRemoteHistory[];
-                //try {
-                //    editHistoryList = JSON.parse(editHistoryListText.replace(/^\uFEFF/, ""));
-                //} catch (e) {
-                //    return null;
-                //}
-
-                //if (!editHistoryList || !_.isArray(editHistoryList)) {
-                //    return null;
-                //}
-
                 // ヒストリーから指定した deviceId のものを取り出す
                 var targetHistory: IRemoteHistory[] = editHistoryList.filter((value) => {
                     return value.deviceId === deviceId;
@@ -108,9 +88,6 @@ module Garage {
                 targetHistory.history.unshift({ remote_id: remoteId });
 
                 // 重複を削除
-                //targetHistory.history = targetHistory.history.filter((value, index, array) => {
-                //    return array.indexOf(value) === index;
-                //});
                 targetHistory.history = targetHistory.history.filter((value, index, array) => {
                     let remoteId = value.remote_id;
                     let firstIndex = -1;

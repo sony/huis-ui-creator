@@ -109,15 +109,6 @@ module Garage {
                 this.collection.each((item: Model.ImageItem, index: number) => {
                     let image: Model.ImageItem = $.extend(true, {}, item);
                     if (this.remoteId_ === "common") {
-                        //let imagePath = image.path;
-                        //image.resolvedPath = path.join("app/res/faces/common/images", imagePath).replace(/\\/g, "/");
-
-                        //let garageExtensions = image.garageExtensions;
-                        //if (garageExtensions) {
-                        //    garageExtensions.resolvedOriginalPath = image.resolvedPath;
-                        //    image.garageExtensions = garageExtensions;
-                        //    image.resizeResolvedOriginalPath = image.resolvedPath;
-                        //}
                     } else {
                         if (!image.resolvedPath && this.materialsRootPath_) {
                             let imagePath = image.path;
@@ -137,33 +128,6 @@ module Garage {
                             }
                         }
                     }
-                    //if (!image.resolvedPath && this.materialsRootPath_) {
-                    //    let imagePath = image.path;
-                    //    // 画像パスを PC 内のパス (絶対パス) に変更する
-                    //    // ただし、"common" の画像は Garage 内のアセットを指定する
-                    //    if (this.remoteId_ === "common") {
-                    //        imagePath = path.join("app/res/faces/common/images", imagePath).replace(/\\/g, "/");
-                    //    } else {
-                    //        imagePath = path.resolve(path.join(this.materialsRootPath_, this.remoteId_, "images", imagePath)).replace(/\\/g, "/");
-                    //    }
-                    //    image.resolvedPath = imagePath;
-                    //}
-                    //if (!image.resizeResolvedOriginalPath) {
-                    //    let garageExtensions = image.garageExtensions;
-                    //    if (garageExtensions) {
-                    //        if (!garageExtensions.resolvedOriginalPath && this.materialsRootPath_) {
-                    //            let originalPath = garageExtensions.original;
-                    //            // 画像パスを PC 内のパス (絶対パス) に変更する
-                    //            // ただし、"common" の画像は Garage 内のアセットを指定する
-                    //            if (this.remoteId_ === "common") {
-                    //                garageExtensions.resolvedOriginalPath = path.join("app/res/faces/common/images", originalPath).replace(/\\/g, "/");
-                    //            } else {
-                    //                garageExtensions.resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
-                    //            }
-                    //        }
-                    //        image.garageExtensions = garageExtensions;
-                    //    }
-                    //}
                     let $image = $(this.imageItemTemplate_(image));
                     if (image.garageExtensions) {
                         switch (image.garageExtensions.resizeMode) {

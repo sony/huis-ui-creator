@@ -1797,8 +1797,7 @@ module Garage {
 
                 this.contextMenu_.append(menuItem_undo);
                 this.contextMenu_.append(menuItem_redo);
-                //this.contextMenu_.append(new MenuItem({ type: "separator" }));
-                //this.contextMenu_.append(menuItem_gridSize);
+
                 if (DEBUG_MODE) {
                     this.contextMenu_.append(new MenuItem({ type: "separator" }));
                     this.contextMenu_.append(menuItem_inspectElement);
@@ -2534,8 +2533,6 @@ module Garage {
                         "resolved-path": null
                     });
 
-                    //this._updateCurrentModelStateData(stateId, "path", null);
-                    //this._updateCurrentModelStateData(stateId, "resolved-path", null);
                     $(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
                     $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
                 } else if ($target.attr("id") === "delete-background-image") {
@@ -2553,13 +2550,6 @@ module Garage {
              */
             private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
                 let imageFileName = path.basename(imageFilePath);
-                //let $propImage = $("#property-image");
-                //if (pageBackground) {
-                //    $propImage.find("#propery-page-background-image-src>.property-value").val(imageFileName);
-                //} else {
-                //    $propImage.find("#propery-image-src>.property-value").val(imageFileName);
-                //}
-
 
                 /* model の更新 */
 
@@ -2649,10 +2639,6 @@ module Garage {
                         let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
                         this._updatePreviewInDetailArea(inputURL, $preview);
                         
-                        
-
-                        //this._updateCurrentModelStateData(stateId, "path", editedImagePath);
-                        //this._updateCurrentModelStateData(stateId, "resolved-path", editedImage.path.replace(/\\/g, "/"));
                     });
             }
 
@@ -2824,14 +2810,12 @@ module Garage {
                                         title: PRODUCT_NAME,
                                     });
                                 } else {
-                                    //CDP.this.showGarageToast"HUIS との同期が完了しました。"); 使われてない？
                                     Framework.Router.back();
                                 }
                                 $("#button-edit-done").prop("disabled", false); // 二度押し対策の解除
 
                             });
                         } else {
-                            //this.showGarageToast("リモコンを保存しました。");　使われてない
                             Framework.Router.back();
                             $("#button-edit-done").prop("disabled", false);
                     }
@@ -3005,7 +2989,6 @@ module Garage {
                 keys.forEach((key) => {
                     var value = targetModel[key];
                     if (!value) {
-                        //console.warn(TAG + "_updateItemElementOnCanvas() model." + key + "is not found.")
                         return;
                     }
 
@@ -3057,8 +3040,6 @@ module Garage {
                                         // ロード中にダミーが消される可能性を考慮
                                     }
                                 };
-                                
-
                             }
                             break;
 
@@ -3319,157 +3300,7 @@ module Garage {
                 }
                 // this.currentTargetButtonStatesUpdated_ を true にするルートが現状存在しないため
                 // 以下のコードが実行されることはないはず
-
                 console.error("unexpected path to _updateCurrentModelButtonStateData()");
-
-                /*
-                var button = this.currentTargetModel_.button;
-
-                // ボタンにひも付けられている機器の情報を取得
-                var deviceInfo = button.deviceInfo;
-                var brand: string,
-                    device_type: string,
-                    db_codeset: string,
-                    model_number: string,
-                    functions: string[],
-                    bluetooth_data: IBluetoothData,
-                    functionCodeHash: IStringStringHash,
-                    remoteName:string;
-                if (deviceInfo && deviceInfo.code_db) {
-                    brand = deviceInfo.code_db.brand;
-                    device_type = deviceInfo.code_db.device_type;
-                    db_codeset = deviceInfo.code_db.db_codeset;
-                    model_number = deviceInfo.code_db.model_number;
-                    if (deviceInfo.bluetooth_data) {
-                        bluetooth_data = deviceInfo.bluetooth_data;
-                    }
-                    if (deviceInfo.functionCodeHash){
-                        functionCodeHash = deviceInfo.functionCodeHash;
-                    }
-
-                    if (deviceInfo.remoteName) {
-                        remoteName = deviceInfo.remoteName;
-                    }
-                    
-                }
-
-                
-
-                var currentStates: IState[] = $.extend(true, [], button.state);
-                // 更新後の button states を作成する
-                var newStates: IState[] = [];
-                this.currentTargetButtonStates_.forEach((stateDetail: IStateDetail) => {
-                    // 対象となる id の states にフィルタリング
-                    let targetState = currentStates.filter((state) => {
-                        return state.id === stateDetail.id;
-                    });
-                    if (targetState.length < 1) {
-                        targetState = null;
-                    }
-                    var actionList = stateDetail.actionList;
-                    
-
-                    if (actionList) {
-                        var actions: IAction[] = [];
-                        for (let key in actionList) {
-                            if (!key) {
-                                continue;
-                            }
-                            let value: string = actionList[key];
-                            if (_.isUndefined(value) || value === "none") {
-                                continue;
-                            }
-                            let codeDb: ICodeDB = {
-                                function: value,
-                                brand: brand,
-                                device_type: device_type,
-                                db_codeset: db_codeset,
-                                model_number: model_number
-                            };
-
-
-                            let action: IAction = {
-                                input: key,
-                                code_db: codeDb,
-                                bluetooth_data: bluetooth_data,
-                            };
-                            
-                            
-                            //このFunctionに登録されているaction/code を取得する。
-                            if (functionCodeHash != undefined) {
-                                let code: string = functionCodeHash[value];
-                                //codeがある場合は actionに登録する。
-                                if (code != null) {
-                                    action.code = code;
-                                }
-                            }
-                        
-
-                            actions.push(action);
-                        }
-
-                        //アクションが一つもない場合、actionが空のボタンにする。
-                        if (actions != undefined && actions.length == 0) {
-                            let codeDb: ICodeDB = {
-                                function: "none",
-                                brand: brand,
-                                device_type: device_type,
-                                db_codeset: db_codeset,
-                                model_number: model_number
-                            };
-                            let action: IAction = {
-                                input: "none",
-                                code_db: codeDb,
-                                bluetooth_data: bluetooth_data,
-                            };
-                            actions.push(action);
-                        }
-
-                    }
-
-                    var translates: IStateTranslate[] = [];
-                    var actionListTranslate = stateDetail.actionListTranslate;
-                    if (actionListTranslate) {
-                        var actionsTranslate: IAction[] = [];
-                        for (let key in actionListTranslate) {
-                            if (!key) {
-                                continue;
-                            }
-                            let value: string = actionListTranslate[key];
-                            if (_.isUndefined(value) || value === "none") {
-                                continue;
-                            }
-                            if (value.indexOf("translate-state-") === 0) {
-                                let stateId: number = parseInt(value.replace("translate-state-",""));
-                                let translate: IStateTranslate = {
-                                    input: key,
-                                    next: stateId
-                                };
-                                translates.push(translate);
-                            } 
-                        }
-                    }
-
-                    let state: IState = {
-                        id: stateDetail.id,
-                        image: targetState ? targetState[0]["image"] : stateDetail.image,
-                        label: targetState ? targetState[0]["label"] : stateDetail.label,
-                        action: actions && 0 < actions.length ? actions : undefined,
-                        translate: translates && 0 < translates.length ? translates : undefined
-                    };
-                    newStates.push(state);
-                });
-
-                // 状態を更新する
-                var memento: IMemento = {
-                    target: button,
-                    previousData: { "state": currentStates },
-                    nextData: { "state": newStates }
-                };
-                var mementoCommand = new MementoCommand([memento]);
-                this.commandManager_.invoke(mementoCommand);
-
-                */
                 this.currentTargetButtonStatesUpdated_ = false;
             }
 
@@ -3609,7 +3440,6 @@ module Garage {
                             case "text":
                                 solveLabel(targetState);
                                 targetState.label[0].text = value;
-                                //$targetStateElem.find(".state-label").text(value);
                                 break;
 
                             case "size":
@@ -3620,7 +3450,6 @@ module Garage {
                                 }
 
                                 targetState.label[0].size = value;
-                                //$targetStateElem.find(".state-label").css("font-size", value + "pt");
                                 break;
 
                             case "path":
@@ -3743,7 +3572,6 @@ module Garage {
                             case "resizeResolvedOriginalPath":
                             case "resolved-path":
                                 {
-                                    //let image = targetState.image[0];
                                     let $imageElement = $targetStateElem.find(".state-image");
                                     $imageElement.css({
                                         left: "0",
@@ -3972,25 +3800,6 @@ module Garage {
 
                 this._updateItemElementOnCanvas(model);
                 return memento;
-
-                // DOM の削除
-                //this.$currentTarget_.remove();
-
-                //// model の削除
-                //var moduleId = this._getCurrentCanvasPageModuleId();
-                //switch (this.currentTargetModel_.type) {
-                //    case "button":
-                //        this.faceRenderer_canvas_.deleteButton(this.currentTargetModel_.button, moduleId);
-                //        break;
-                //    case "label":
-                //        this.faceRenderer_canvas_.deleteLabel(this.currentTargetModel_.label, moduleId);
-                //        break;
-                //    case "image":
-                //        this.faceRenderer_canvas_.deleteImage(this.currentTargetModel_.image, moduleId);
-                //        break;
-                //    default:
-                //        console.error(TAG + "[FullCutsom._deleteCurrentTargetItem] unknown model type.");
-                //}
             }
 
             
@@ -4025,9 +3834,7 @@ module Garage {
                     cancelId: 1,
                 });
                 if (response == 0) {//
-                    //let moduleId: string = $pageModule.data("cid");
-                    let pageIndex = parseInt(JQUtils.data($pageModule, "modulePageIndex"), 10); // $pageModule.data("module-page-index");
-                    //this.faceRenderer_canvas_.deletePage(moduleId);
+                    let pageIndex = parseInt(JQUtils.data($pageModule, "modulePageIndex"), 10);
                     this.faceRenderer_canvas_.deletePage(pageIndex);
                     let $pageContainer = $pageModule.parent();
                     $pageContainer.remove();
@@ -4330,8 +4137,6 @@ module Garage {
                             !this.isCompletelyOutOfCanvas(button1Area) && !this.isCompletelyOutOfCanvas(button2Area)) {
                             // 当たり判定
                             if (this.isOverlap(button1Area, button2Area)) {
-                                //console.log("1: " + button1Area.x + "-" + (button1Area.x + button1Area.w) + ":" + button1Area.y + "-" + (button1Area.y + button1Area.h));
-                                //console.log("2: " + button2Area.x + "-" + (button2Area.x + button2Area.w) + ":" + button2Area.y + "-" + (button2Area.y + button2Area.h));
                                 //例外対象でなかったら配列に追加
                                 overlapButtons.push(buttons[i]);
                                 overlapButtons.push(buttons[j]);
@@ -5055,7 +4860,6 @@ module Garage {
                 }
 
                 var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
-                //var $buttonDetail = $(templateButton(this._macroButtonModel));
                 var $buttonDetail = $(templateButton(button));
                 $detail.append($buttonDetail);
 
@@ -5329,8 +5133,6 @@ module Garage {
                 $("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
                 $("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
                 $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
-                //this._updatePreviewInDetailArea($preview.attr("src"), $preview);
-    
 
             }
 
@@ -5728,8 +5530,6 @@ module Garage {
             }
 
             private _onKeyDown(event: JQueryEventObject) {
-                //console.log("_onKeyDown : " + event.keyCode);
-                //console.log("_onKeyDown : " + this.$currentTarget_);
 
                 if (this.isDragging) {
                     event.preventDefault();
