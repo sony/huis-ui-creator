@@ -64,11 +64,10 @@ app.on('ready', function() {
   mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
   // garage.exe と同じディレクトリーに "debug" があれば devtools を開く
-  //var fs = require("fs");
-  //if (fs.existsSync("debug")) {
-  //    mainWindow.openDevTools();
-  //}
-  mainWindow.openDevTools();
+  var fs = require("fs");
+  if (fs.existsSync("debug")) {
+      mainWindow.openDevTools();
+  }
 
   // ウィンドウが閉じられたら実行
   mainWindow.on('closed', function() {
