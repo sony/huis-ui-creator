@@ -112,6 +112,278 @@ module Garage {
                 this.area.h += module.area.h;
             }
 
+            public getOutputModuleData(remoteId: string, outputDirPath: string): IModule {
+                var module: IModule = {
+                    area: this.area,
+                };
+
+                let versionString: string = this.getModuleVersion();
+                if (versionString != null) {
+                    module = {
+                        version: versionString,
+                        area: this.area,
+                    };
+                }
+
+                if (this.button) {
+                    module.button = this._normalizeButtons(this.button, remoteId, outputDirPath);
+                }
+                if (this.image) {
+                    module.image = this._normalizeImages(this.image, remoteId, outputDirPath);
+                }
+                if (this.label) {
+                    module.label = this._normalizeLabels(this.label);
+                }
+                return module;
+            }
+
+            /**
+             * Button データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             */
+            private _normalizeButtons(buttons: IGButton[], remoteId: string, outputDirPath?:string): IButton[] {
+                var normalizedButtons: IButton[] = [];
+
+                for (let i = 0, l = buttons.length; i < l; i++) {
+                    let button: IGButton = buttons[i];
+                    let normalizedButton: IButton = {
+                        area: button.area,
+                        state: this._normalizeButtonStates(button.state, remoteId, outputDirPath)
+                    };
+                    if (button.default != null) {
+                        normalizedButton.default = button.default;
+                    }
+                    if (button.name != null) {
+                        normalizedButton.name = button.name;
+                    }
+                    normalizedButtons.push(normalizedButton);
+                }
+
+                return normalizedButtons;
+            }
+
+            /**
+             * button.state データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             */
+            private _normalizeButtonStates(states: IGState[], remoteId: string, outputDirPath? :string): IState[] {
+                var normalizedStates: IState[] = [];
+
+                states.forEach((state: IGState) => {
+                    let normalizedState: IState = {
+                        id: state.id
+                    };
+
+                    if (state.image) {
+                        normalizedState.image = this._normalizeImages(state.image, remoteId, outputDirPath);
+                    }
+                    if (state.label) {
+                        normalizedState.label = this._normalizeLabels(state.label);
+                    }
+                    if (state.action) {
+                        normalizedState.action = this._normalizeButtonStateActions(state.action);
+                    }
+                    if (state.translate) {
+                        normalizedState.translate = this._normalizeButtonStateTranaslates(state.translate);
+                    }
+
+                    normalizedStates.push(normalizedState);
+                });
+
+                return normalizedStates;
+            }
+
+            /**
+             * button.state.action データから module 化に不要なものを間引く
+             */
+            private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
+                var normalizedActions: IAction[] = [];
+
+                actions.forEach((action: IAction) => {
+                    let normalizedAction: IAction = {
+                        input: (action.input) ? action.input : "none"
+                    };
+                    if (action.code) {
+                        normalizedAction.code = action.code;
+                    }
+                    if (action.code_db) {
+                        normalizedAction.code_db = {
+                            function: (action.code_db.function) ? Util.HuisFiles.getPlainFunctionKey(action.code_db.function) : "none",
+                            brand: action.code_db.brand,
+                            device_type: action.code_db.device_type,
+                            db_codeset: action.code_db.db_codeset
+                        };
+                        if (!_.isUndefined(action.code_db.db_device_id)) {
+                            normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
+                        }
+                        if (!_.isUndefined(action.code_db.model_number)) {
+                            normalizedAction.code_db.model_number = action.code_db.model_number;
+                        }
+                        if (!_.isUndefined(action.bluetooth_data)) {
+                            normalizedAction.bluetooth_data = action.bluetooth_data;
+                        }
+                    } else {
+                        normalizedAction.code_db = {
+                            function: "none",
+                            brand: " ",
+                            device_type: " ",
+                            db_codeset: " "
+                        }
+                    }
+                    if (!_.isUndefined(action.interval)) {
+                        normalizedAction.interval = action.interval;
+                    }
+
+                    normalizedActions.push(normalizedAction);
+                });
+
+                return normalizedActions;
+            }
+
+            /**
+             * button.state.translate データから module 化に不要なものを間引く
+             */
+            private _normalizeButtonStateTranaslates(translates: IStateTranslate[]): IStateTranslate[] {
+                var normalizedTranslates: IStateTranslate[] = [];
+
+                translates.forEach((translate: IStateTranslate) => {
+                    normalizedTranslates.push({
+                        input: translate.input,
+                        next: translate.next
+                    });
+                });
+
+                return normalizedTranslates;
+            }
+
+            /**
+             * Image データから module 化に不要な物を間引く
+             */
+            private _normalizeLabels(labels: ILabel[]): ILabel[] {
+                var normalizedLabels: ILabel[] = [];
+
+                for (let i = 0, l = labels.length; i < l; i++) {
+                    let label: ILabel = labels[i];
+                    let normalizedLabel: ILabel = {
+                        area: label.area,
+                        text: label.text
+                    };
+                    if (label.color !== undefined) {
+                        normalizedLabel.color = label.color;
+                    }
+                    if (label.font !== undefined) {
+                        normalizedLabel.font = label.font;
+                    }
+                    if (label.size !== undefined) {
+                        normalizedLabel.size = label.size;
+                    }
+                    if (label.font_weight !== undefined) {
+                        normalizedLabel.font_weight = label.font_weight;
+                    }
+
+                    //fontWeightをFontWeight >> stringに
+                    normalizedLabels.push(normalizedLabel);
+                }
+
+                return normalizedLabels;
+            }
+
+            /**
+             * Image データから module 化に不要な物を間引く。
+             * また、リモコン編集時に画像のリサイズが発生している場合は、
+             * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
+             * リサイズ処理自体はここでは行わない。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
+             */
+            private _normalizeImages(images: IGImage[], remoteId: string, outputDirPath? :string ): IImage[] {
+                var normalizedImages: IImage[] = [];
+
+                images.forEach((image) => {
+                    let garageExtensions = image.garageExtensions;
+                    if (garageExtensions) {
+                        if (!garageExtensions.original) {
+                            garageExtensions.original = image.path;
+                        }
+                    } else {
+                        garageExtensions = {
+                            resizeMode: "contain",
+                            original: image.path,
+                            resolvedOriginalPath: image.resolvedPath
+                        };
+                    }
+
+                    let normalizedImage: IImage;
+
+                    // 編集画面でサイズ変更が行われていたら、リサイズ用に path を変更しておく。
+                    // リサイズ処理はここでは行わない。
+                    // outputDirPathがある場合は必ずする。
+                    if (image.resized || outputDirPath != null) {
+
+                        // リサイズ後のファイル名を作る。
+                        // "image.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
+                        // 例) "image_w200_h150_stretch.png"
+                        let originalPath = garageExtensions.original;
+                        let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
+                        if (!resolvedOriginalPath) {
+                            resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                            garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
+                        }
+                        let parsedPath = path.parse(resolvedOriginalPath);
+                        let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + image.area.w + "_h" + image.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+                        // ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
+
+                        let newFileFullPath: string;
+
+                        let newDirPath = parsedPath.dir;
+                        if (outputDirPath != null) {
+                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");;
+                        }
+
+                        // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
+                        // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
+                        if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
+                            newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
+                        } else {
+                            newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
+                        }
+                        // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
+                        // 補正は拡張子の付け替え。
+                        newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
+
+                        normalizedImage = {
+                            area: image.area,
+                            path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
+                        };
+
+                        // リサイズ待機リストに追加
+                        huisFiles.addWaitingResizeImageList({
+                            src: garageExtensions.resolvedOriginalPath,
+                            dst: newFileFullPath,
+                            params: {
+                                width: image.area.w,
+                                height: image.area.h,
+                                mode: garageExtensions.resizeMode,
+                                force: true,
+                                padding: true
+                            }
+                        });
+                    } else {
+                        normalizedImage = {
+                            area: image.area,
+                            path: image.path
+                        };
+                    }
+
+                    normalizedImage.garage_extensions = {
+                        original: garageExtensions.original,
+                        resize_mode: garageExtensions.resizeMode
+                    };
+                    normalizedImages.push(normalizedImage);
+                });
+
+                return normalizedImages;
+            }
+
             /*
              * 各メンバ変数を設定する。offsetYとpageIndexは0で初期化される。
              * @param gmodule ? : IModule リモコンファイルから読み出して得られた情報をまとめたオブジェクト
