@@ -1,4 +1,20 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+/// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
     export module Util {
@@ -127,6 +143,24 @@ module Garage {
                 } 
             }
 
+            /**
+             * HUISと切断された際のメッセージダイアログを開く。
+             * このメソッドは通常のメッセージ表示の際には使わない事。
+             *
+             * @param options {ElectronMessageDialogOptions} ファイル保存ダイアログのオプション
+             * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+             */
+            showDisconnectedMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+                //debugger;
+                this._resetElectronDialog();
+                if (this._dialog) {
+                    if (callback) {
+                        return this._dialog.showMessageBox(Remote.getCurrentWindow(), options, callback);
+                    } else {
+                        return this._dialog.showMessageBox(Remote.getCurrentWindow(), options);
+                    }
+                }
+            }
             /**
              * Electron のダイアログを使用するための初期設定
              */

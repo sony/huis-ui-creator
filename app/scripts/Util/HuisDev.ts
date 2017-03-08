@@ -1,4 +1,21 @@
-﻿module Garage {
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+module Garage {
     export module Util {
 
         /**
@@ -13,7 +30,9 @@
             const SPINNER_ID_SELECTER = "#common-dialog-center-spinner";
             const SPINNER_DIALOG_CLASS_SELECTER = ".spinner-dialog";
 
-            var usb_dev = require("usb_dev");
+            if (process.platform == PLATFORM_WIN32) {
+                var usb_dev = require("usb_dev");
+            }
 
             interface IDiffInfo    {
                 diff: string[];
@@ -157,7 +176,7 @@
                 }
             }
 
-            function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+            function diffAsync(dir1: string, dir2: string, filter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
                 let FUNCTION_NAME = TAG + "diffAsync : ";
 
                 let df = $.Deferred<IDiffInfo>();
@@ -172,6 +191,11 @@
                     df.reject();
                 }).then((pathes) => {
                     dir2Files = pathes;
+
+                    if (filter != null) {
+                        dir1Files = dir1Files.filter(filter);
+                        dir2Files = dir2Files.filter(filter);
+                    }
 
                     let dir1ExtraFiles = [];  // dir1にだけ存在するファイル群
                     let dir2ExtraFiles = [];  // dir2にだけ存在するファイル群
@@ -393,8 +417,8 @@
                             this._removeFiles(destRootDir, removeTargetFiles)
                                 .then(() => {
                                     df.resolve();
-                                    fs.rmdir(emptyDirectory);
-                                    fs.rmdirSync(targetDirectoryPath);
+                                    fs.remove(emptyDirectory);
+                                    fs.removeSync(targetDirectoryPath);
 
                                     if (callback) {
                                         callback(null);
@@ -422,7 +446,18 @@
                 private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
-                    this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
+                    let syncFileFilter = (path: string) => {
+                        if (path.match(/\.app($|\/)/) == null
+                            && path.match(/\.Trashes/) == null
+                            && path.match(/\.Spotlight/) == null) {
+                            return true;
+                        } else {
+                            console.log("filtered from sync " + path);
+                            return false;
+                        }
+                    }
+
+                    this._compDirs(srcRootDir, destRootDir, syncFileFilter)  // Directory間の差分を取得
                     .then((diffInfo: IDiffInfo)    => {
                         // TODO: ディスクの容量チェック
 
@@ -551,8 +586,8 @@
                                     let fileStat = fs.lstatSync(filePath);
                                     if (fileStat) {
                                         if (fileStat.isDirectory()) {
-                                            console.log("rmdirSync: " + file);
-                                            fs.rmdirSync(filePath);
+                                            console.log("remove: " + file);
+                                            fs.removeSync(filePath);
                                         } else {
                                             console.log("unlinkSync: " + file);
                                             fs.unlinkSync(filePath);
@@ -581,13 +616,13 @@
                     }
                 }
 
-                private _compDirs(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+                private _compDirs(dir1: string, dir2: string, filter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
                     var df = $.Deferred();
                     var dir1Files, dir2Files;
                     try {
                         this._checkCancel();
                         setTimeout(() => {
-                            diffAsync(dir1, dir2).then((diffInfo) => {
+                            diffAsync(dir1, dir2, filter).then((diffInfo) => {
                                 df.resolve(diffInfo);
                             }, () => {
                                 df.reject();
@@ -751,10 +786,13 @@
              * 
              * @return {string} vendorId, productId となるデバイするのルートパスを返す。見つからない場合は null
              */
-            export function    getHuisRootPath(vendorId: number, productId: number): string {
-                var    rootPath = usb_dev.getPath(vendorId, productId);
-                if (rootPath === "") {
-                    return null;
+            export function getHuisRootPath(vendorId: number, productId: number): string {
+                let rootPath = null;
+                if (process.platform === PLATFORM_WIN32) {
+                    rootPath = usb_dev.getPath(vendorId, productId);
+                    if (rootPath === "") {
+                        return null;
+                    }
                 }
                 return rootPath;
             }

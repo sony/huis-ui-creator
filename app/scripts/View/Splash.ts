@@ -1,4 +1,20 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+/// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
 
@@ -38,16 +54,49 @@ module Garage {
                 (function loop() {
                     setTimeout(loop, 5000);
                     if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
-                        electronDialog.showMessageBox({
+                        let messageBoxOptions = {
                             type: "error",
                             message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
-                        });
-                        isHUISConnected = false;
-                        app.quit();
+                        }
+                        if (process.platform == PLATFORM_DARWIN) {
+                            electronDialog.showDisconnectedMessageBox(messageBoxOptions,
+                                (response) => {
+                                    console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
+                                    isHUISConnected = false;
+                                    app.quit();
+                                }
+                            );
+                        } else {
+                            electronDialog.showMessageBox(messageBoxOptions);
+                            isHUISConnected = false;
+                            app.quit();
+                        }
                     }
                 })();
+
+
+                //現状アプリのバージョン情報を代入。
+
+                let targetVersionFilePath = null;
+                // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+                if (process.platform == PLATFORM_WIN32) {
+                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
+                } else if (process.platform == PLATFORM_DARWIN) {
+                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
+                } else {
+                    console.error("Error: unsupported platform");
+                }
+
+                try {
+                    if (targetVersionFilePath != null) {
+                        APP_VERSION = fs.readFileSync(targetVersionFilePath, 'utf8');
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+
 
                 this.checkRcVersionFromDevice();
 

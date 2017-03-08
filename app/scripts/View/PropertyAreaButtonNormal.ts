@@ -1,4 +1,20 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+/// <reference path="../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
@@ -374,8 +390,10 @@ module Garage {
 
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
-                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
-
+                    let deviceInfo: IButtonDeviceInfo = null
+                    if (tmpDeviceInfo != null) {
+                        deviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
+                    }
 
                     let tmpAction: IAction = {
                         input: tmpInput,
@@ -389,7 +407,8 @@ module Garage {
 
                         tmpAction.deviceInfo = deviceInfo;
 
-                        if (deviceInfo.functionCodeHash) {
+                        if (deviceInfo.functionCodeHash && tmpFunction != null) {
+
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
                             if (!this.isValidValue(tmpCode) &&
                                 (this.isRelearnedFunctionName(tmpFunction) ||
@@ -635,11 +654,8 @@ module Garage {
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
                     let unknownRcId: string = null;
-                    //remoteIDがみつからない場合、
-                    //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
-                    //UNKNOWNに
-                    if ((!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) ||
-                        (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
+                    //remoteIDがみつからない かつ、 コードとファンクション名がある場合、UNKNOWNに。
+                    if (!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) {
                         unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);

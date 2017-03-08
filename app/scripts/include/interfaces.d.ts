@@ -1,4 +1,21 @@
-﻿/// <reference path="../../modules/include/frameworks.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+
+/// <reference path="../../modules/include/frameworks.d.ts" />
 /// <reference path="../../modules/include/node.d.ts" />
 /// <reference path="../../modules/include/fs-extra.d.ts" />
 /// <reference path="../../modules/include/pixi.d.ts" />
@@ -865,7 +882,15 @@ declare module Garage {
     var FUNC_NUM_DELIMITER: string ;
 
     /** 信号がフルカスタムで再学習されたことを示すコード */
-    var FUNC_CODE_RELEARNED: string ;
+    var FUNC_CODE_RELEARNED: string;
+
+    var PLATFORM_WIN32;
+    var PLATFORM_DARWIN;
+
+    /** MacとWindowsで参照するフォルダが変わる場合の、フォルダ名 */
+    var DIR_NAME_WINDOWS;
+    var DIR_NAME_MAC;
+
 
 }
 
