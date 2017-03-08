@@ -1788,6 +1788,4 @@ IN THE SOFTWARE.
 
 ==> Special thanks <==
 
-HUIS Team of Sony Corporation would like to take this opportunity to 
-especially thank “Kazuto Kusama(@jacopen)” for his contribution to 
-"HUIS UI CREATOR for Mac" development.
+HUIS Team of Sony Corporation would like to take this opportunity to especially thank “Kazuto Kusama(@jacopen)” for his contribution to "HUIS UI CREATOR for Mac" development.

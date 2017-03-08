@@ -515,7 +515,12 @@ module Garage {
                     }
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
-                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
+                    
+
+                    let deviceInfo: IButtonDeviceInfo = null;
+                    if (tmpdeviceInfo != null){
+                        deviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
+                    }
 
 
                     let tmpAction: IAction = {

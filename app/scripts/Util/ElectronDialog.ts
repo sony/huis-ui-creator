@@ -145,6 +145,24 @@ module Garage {
             }
 
             /**
+             * HUISと切断された際のメッセージダイアログを開く。
+             * このメソッドは通常のメッセージ表示の際には使わない事。
+             *
+             * @param options {ElectronMessageDialogOptions} ファイル保存ダイアログのオプション
+             * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+             */
+            showDisconnectedMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+                //debugger;
+                this._resetElectronDialog();
+                if (this._dialog) {
+                    if (callback) {
+                        return this._dialog.showMessageBox(Remote.getCurrentWindow(), options, callback);
+                    } else {
+                        return this._dialog.showMessageBox(Remote.getCurrentWindow(), options);
+                    }
+                }
+            }
+            /**
              * Electron のダイアログを使用するための初期設定
              */
             private _resetElectronDialog() {

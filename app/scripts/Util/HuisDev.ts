@@ -176,7 +176,7 @@ module Garage {
                 }
             }
 
-            function diffAsync(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+            function diffAsync(dir1: string, dir2: string, filter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
                 let FUNCTION_NAME = TAG + "diffAsync : ";
 
                 let df = $.Deferred<IDiffInfo>();
@@ -191,6 +191,11 @@ module Garage {
                     df.reject();
                 }).then((pathes) => {
                     dir2Files = pathes;
+
+                    if (filter != null) {
+                        dir1Files = dir1Files.filter(filter);
+                        dir2Files = dir2Files.filter(filter);
+                    }
 
                     let dir1ExtraFiles = [];  // dir1にだけ存在するファイル群
                     let dir2ExtraFiles = [];  // dir2にだけ存在するファイル群
@@ -441,7 +446,18 @@ module Garage {
                 private _syncHuisFiles(srcRootDir: string, destRootDir: string, callback?: (err: Error) => void): void {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
-                    this._compDirs(srcRootDir, destRootDir)  // Directory間の差分を取得
+                    let syncFileFilter = (path: string) => {
+                        if (path.match(/\.app($|\/)/) == null
+                            && path.match(/\.Trashes/) == null
+                            && path.match(/\.Spotlight/) == null) {
+                            return true;
+                        } else {
+                            console.log("filtered from sync " + path);
+                            return false;
+                        }
+                    }
+
+                    this._compDirs(srcRootDir, destRootDir, syncFileFilter)  // Directory間の差分を取得
                     .then((diffInfo: IDiffInfo)    => {
                         // TODO: ディスクの容量チェック
 
@@ -600,13 +616,13 @@ module Garage {
                     }
                 }
 
-                private _compDirs(dir1: string, dir2: string): CDP.IPromise<IDiffInfo> {
+                private _compDirs(dir1: string, dir2: string, filter?: (path: string) => boolean): CDP.IPromise<IDiffInfo> {
                     var df = $.Deferred();
                     var dir1Files, dir2Files;
                     try {
                         this._checkCancel();
                         setTimeout(() => {
-                            diffAsync(dir1, dir2).then((diffInfo) => {
+                            diffAsync(dir1, dir2, filter).then((diffInfo) => {
                                 df.resolve(diffInfo);
                             }, () => {
                                 df.reject();

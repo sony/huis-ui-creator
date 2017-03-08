@@ -391,8 +391,10 @@ module Garage {
 
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
-                    let deviceInfo: IButtonDeviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
-
+                    let deviceInfo: IButtonDeviceInfo = null
+                    if (tmpDeviceInfo != null) {
+                        deviceInfo = this.cloneDeviceInfo(tmpDeviceInfo);
+                    }
 
                     let tmpAction: IAction = {
                         input: tmpInput,
@@ -406,7 +408,8 @@ module Garage {
 
                         tmpAction.deviceInfo = deviceInfo;
 
-                        if (deviceInfo.functionCodeHash) {
+                        if (deviceInfo.functionCodeHash && tmpFunction != null) {
+
                             tmpCode = deviceInfo.functionCodeHash[tmpFunction];
                             if (!this.isValidValue(tmpCode) &&
                                 (this.isRelearnedFunctionName(tmpFunction) ||
@@ -652,11 +655,8 @@ module Garage {
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
                     let unknownRcId: string = null;
-                    //remoteIDがみつからない場合、
-                    //あるいは、remoteIdがキャッシュよりみつかるが、リモコン名がない場合
-                    //UNKNOWNに
-                    if ((!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) ||
-                        (targetAction.deviceInfo != null && targetAction.deviceInfo.remoteName == null) && (this.isValidValue(remoteId))) {
+                    //remoteIDがみつからない かつ、 コードとファンクション名がある場合、UNKNOWNに。
+                    if (!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) {
                         unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
