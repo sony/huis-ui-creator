@@ -85,6 +85,8 @@ module Garage {
             private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
             private clipboard: Util.ItemClipboard;
+            private delayedContextMenuEvent: Event;
+            private isMouseDown: Boolean;
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
@@ -180,6 +182,9 @@ module Garage {
 
                     this.isTextBoxFocused = false;
                     this.isDragging = false;
+
+                    this.isMouseDown = false;
+                    this.delayedContextMenuEvent = null;
 
                     // NEW(remoteId === undefined)の場合ドロップダウンメニューの項目から
                     // 「このリモコンを削除」とセパレータを削除する
@@ -789,6 +794,7 @@ module Garage {
              * #face-item-detail-areaがクリックされた時のイベントハンドラ。
              */
             private onItemDetailAreaMouseDown(event: Event) {
+                this.isMouseDown = true;
                 // call stopPropagation so sa not to call loseTarget in onMainMouseDown
                 event.stopPropagation();
             }
@@ -797,6 +803,7 @@ module Garage {
              * face-pages-area内のItem要素以外の部分がクリックされた時のイベントハンドラ。
              */
             private onFacePagesAreaMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this._loseTarget();
 
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
@@ -818,6 +825,8 @@ module Garage {
              * Canvas内のItem要素がクリックされた時のイベントハンドラ。
              */
             private onCanvasItemMouseDown(event: Event) {
+                this.isMouseDown = true;
+
                 this.selectedResizer_ = null;
 
                 var mousePosition = new Model.Position(event.pageX, event.pageY);
@@ -864,6 +873,7 @@ module Garage {
              * 対象アイテムをCanvasに追加しドラッグ状態にする
              */
             private onPalletItemMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this.countPalletItemClick(event);
 
                 this.selectedResizer_ = null;
@@ -1088,6 +1098,7 @@ module Garage {
              * フルカスタム編集画面での mousedown イベントのハンドリング
              */
             private onMainMouseDown(event: Event) {
+                this.isMouseDown = true;
                 this._loseTarget();
             }
 
@@ -1259,6 +1270,7 @@ module Garage {
                 if (event.pageX < 0 + MARGIN_MOUSEMOVABLE_LEFT || event.pageX > innerWidth - MARGIN_MOUSEMOVABLE_RIGHT
                     || event.pageY < 0 + MARGIN_MOUSEMOVALBE_TOP || event.pageY > innerHeight - MARGIN_MOUSEMOVALBE_BOTTOM) {
                     event.type = "mouseup";
+                    this.delayedContextMenuEvent = null;
                     this.onMainMouseUp(event);
                     return;
                 }
@@ -1305,8 +1317,13 @@ module Garage {
              * フルカスタム編集画面での mouseup イベントのハンドリング
              */
             private onMainMouseUp(event: Event) {
-
+                this.isMouseDown = false;
                 this.isDragging = false;
+
+                if (this.delayedContextMenuEvent != null) {
+                    this.onContextMenu(this.delayedContextMenuEvent);
+                    this.delayedContextMenuEvent = null;
+                }
 
                 if (this.$currentTargetDummy_) {
                     this.$currentTargetDummy_.remove();
@@ -1645,6 +1662,12 @@ module Garage {
              * コンテキストメニュー
              */
             private onContextMenu(event: Event) {
+                // darwin platform fire onContextMenu just after mousedown,
+                // so delay it until mouseup event occurs
+                if (process.platform == PLATFORM_DARWIN && this.isMouseDown) {
+                    this.delayedContextMenuEvent = event;
+                    return;
+                }
                 event.preventDefault();
                 this.rightClickPosition_.setPositionXY(event.pageX, event.pageY);
 
@@ -2244,7 +2267,8 @@ module Garage {
                     x: 0,
                     y: 0,
                     tolerance: popupY + ",0,0," + popupX,
-                    corners: false
+                    corners: false,
+                    afterclose: (event, ui) => { this.$el.focus(); }
                 };
 
 
@@ -2320,7 +2344,8 @@ module Garage {
                         "path": null,
                         "resolved-path": null
                     });
-                this.setFocusAndMoveCursorToEnd($textField);
+                // TODO: Temporary comment out for workaround
+                //this.setFocusAndMoveCursorToEnd($textField);
             }
 
 
@@ -5675,6 +5700,34 @@ module Garage {
                 this._resizeItem(newArea, true);
             }
 
+            /**
+             * Mac OS XのメタキーをWindows環境で対応付けたキーに変更する。
+             * @param: JQueryEventObject onKeyDownに渡されたイベントオブジェクト
+             * @return: JQueryEventObject 変更されたイベントオブジェクト
+             */
+            private _translateDarwinMetaKeyEvent(event: JQueryEventObject): JQueryEventObject {
+                //   <win>        <darwin>
+                //  control   <--  command
+                let winCtrlKey = event.metaKey;
+
+                //   <win>       <darwin>
+                //    alt    <--  option
+                let winAltKey = event.altKey;
+
+                //   <win>         <darwin>
+                //   shift     <--  shift
+                let winShiftKey = event.shiftKey;
+
+                //  ウィンドウズキーは win,darwin 両方で使わない
+                let winMetaKey = false;
+
+                event.ctrlKey = winCtrlKey;
+                event.metaKey = winMetaKey;
+                event.altKey = winAltKey;
+                event.shiftKey = winShiftKey;
+                return event;
+            }
+
             private _onKeyDown(event: JQueryEventObject) {
                 //console.log("_onKeyDown : " + event.keyCode);
                 //console.log("_onKeyDown : " + this.$currentTarget_);
@@ -5690,9 +5743,10 @@ module Garage {
                 }
 
                 if (!this.isTextBoxFocused) {
+                    if (process.platform === PLATFORM_DARWIN) {
+                        event = this._translateDarwinMetaKeyEvent(event);
+                    }
                     switch (event.keyCode) {
-                        case 8: // BackSpace
-                            break;
                         case 37: {// LeftKey
                             if (this.$currentTarget_ == null) {
                                 break;
@@ -5809,10 +5863,12 @@ module Garage {
                                 }
                             }
                             break;
-                        } case 46: // DEL
+                        }
+                        case 8: // BackSpace
+                        case 46: // DEL
                             this._deleteCurrentTargetItem();
                             break;
-                        case 67: // c Copy
+                        case 67: // c Copy Ctrl+C / Command+C
                             if (event.ctrlKey) {
                                 this.setClipboadToItem();
                             }

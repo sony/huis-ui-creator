@@ -22,12 +22,13 @@ module Garage {
 
         var TAG: string = "[Garage.Util.InformationDialog]";
 
-        var VERSION_TEXT_PATH: string = "./version.txt";
         var LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
         var FILE_NAME_DATE  = "date.txt";
         var FILE_NAME_IMAGE = "image.png";
         var FILE_NAME_NOTE  = "note.txt";
 
+
+  
         /**
          * @class Notifier
 		 * @brief ui-creatorアップデート後の初回起動時かどうかの判定を行い、お知らせダイアログを表示するクラス
@@ -66,17 +67,34 @@ module Garage {
                 let FUNCTION_NAME: string = TAG + " : Notify : ";
 
                 try {
-                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
 
                     var dialog: Dialog = null;
                     var props: DialogProps = null;
                     var informationList: { dirName: string, date: string, imagePath: string, text: string }[] = [];
+
+
+                    //お知らせダイアログにだすコンテンツがあるフォルダを指定
                     var pathToNotes: string = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
-                    var notePaths: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
-                    notePaths.reverse(); // 新しいnoteから表示させるために反転させる
+                    // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+                    if (process.platform == PLATFORM_WIN32) {
+                        pathToNotes = path.join(pathToNotes, DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
+                    } else if (process.platform == PLATFORM_DARWIN) {
+                        pathToNotes = path.join(pathToNotes, DIR_NAME_MAC + "/");
+                    } else {
+                        console.error("Error: unsupported platform");
+                    }
+
+                    var contentsDirs: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
+
+                    //もしコンテンツがない場合、なにも表示しない
+                    if (!this.isExistValidContents(contentsDirs)) {
+                        return;
+                    }
+
+                    contentsDirs.reverse(); // 新しいnoteから表示させるために反転させる
 
                     // ダイアログにnoteを追加させていく
-                    notePaths.forEach(function (dirName) {
+                    contentsDirs.forEach(function (dirName) {
                         let path = pathToNotes + dirName + "/";
                         informationList.push({
                             dirName   : dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
@@ -92,11 +110,44 @@ module Garage {
                         informationList: informationList,
                         dismissible: true,
                     });
+
                     dialog.show();
+
+                    //お知らせダイアログを出すか否か判定するファイルを書き出す。
+                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
+                    
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }
             }
+
+
+    
+            /*
+            * お知らせダイアログに表示するコンテンツが存在するか判定する。
+            * @param {string[]} お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
+            * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
+            */
+            private isExistValidContents(contentsDirs: string[]):boolean {
+                let FUNCTION_NAME: string = TAG + " : isExistValidContents : ";
+
+                //対象のパスにひとつもファイルもフォルダもない場合false;
+                if (contentsDirs.length == 0) {
+                    return false;
+                }
+
+                //一つでも、有効なコンテンツ名がある場合、true
+                for (let dirName of contentsDirs) {
+                    if (dirName.match(/^[0-9]{3}$/)) {
+                        return true;
+                    }
+                }
+
+                //ひとつも、有効なコンテンツ名がない場合、false;
+                return false;
+            }
+
+
         }
     }
 } 
