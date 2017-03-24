@@ -216,33 +216,7 @@ module Garage {
                     }
                 });
                 faceRenderer.render();
-
-                //// シングルクリックしたら「選択状態」になる
-                //$face.find(".face-container").on("click", (event) => {
-                //    let $clickedFace = $(event.currentTarget);
-                //    this.selectedRemoteId = $clickedFace.data("remoteid");
-                //    this._fringeFaceList();
-                //});
             }
-
-            /**
-            * this.selectedRemoteIdで選択されているRemoteに縁をつけ、選択中であることを示す
-            */
-            //private _fringeFaceList() {
-            //    var templateFile = Framework.toUrl("/templates/home.html");
-            //    var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
-            //    var $faceList = $("#face-list");
-
-            //    var elems: any = $faceList.children();
-            //    for (let i = 0, l = elems.length; i < l; i++) {
-            //        var remoteId = $(elems[i]).attr("data-remoteId");
-            //        if (remoteId === this.selectedRemoteId) {
-            //            $(elems[i]).find(".face-container").css("border", "10px solid rgb(10,10,10)"); // 縁をつける(仮)
-            //        } else {
-            //            $(elems[i]).find(".face-container").css("border", "1px solid rgb(221,221,221)");
-            //        }
-            //    }
-            //}
 
            /**
              * faceのcloneを作成する。型情報はコピーされない事に注意。
@@ -445,8 +419,6 @@ module Garage {
                                     cancelId:1,
                                 });
                                 if (response === 0) {
-                                    //this._removeFace(remoteId);
-                                    //this._renderFaceList();
                                     this._onSyncPcToHuisClick(true); // true で警告なし
                                }
                             }
@@ -492,13 +464,10 @@ module Garage {
                     this.closeAllPopups();
                 }
 
-                //var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
                 var scrollHeight = windowHeight - $(window).outerHeight(true);
                 var faceListContainerHeight = innerHeight - $("#face-list-container").offset().top - faceHistoryListContainerHeight - scrollHeight;
-                //if (faceListContainerHeight < 200) {s
-                //    faceListContainerHeight = 200;
-                //}
+
                 $("#face-list").css("height", faceListContainerHeight + "px");
                 $("#home-introductions").css("height", faceListContainerHeight + "px");
             }
@@ -516,28 +485,6 @@ module Garage {
                 $faceList.width(listWidth);
             }
 
-            //private _onKeyDown(event: JQueryEventObject) {
-            //    console.log("_onKeyDown : " + event.keyCode);
-
-            //    switch (event.keyCode) {
-            //        case 8: // BS
-            //        case 46: // DEL
-            //            if (this.selectedRemoteId) {
-            //                var response = electronDialog.showMessageBox({
-            //                    type: "info",
-            //                    message: "リモコンを削除すると元に戻せません。削除しますか？",
-            //                    buttons: ["yes", "no"]
-            //                });
-            //                if (response === 0) {
-            //                    this._removeFace(this.selectedRemoteId);
-            //                    this._renderFaceList();
-            //                }
-            //            }
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
         }
 
         var View = new Home();

@@ -231,15 +231,6 @@ module Garage {
 
                 this.$facePages_.splice(pageIndex, 1);
 
-                //this.collection.each((moduleModel) => {
-                //    if (moduleModel.pageIndex === pageIndex) {
-                //        // 指定した pageIndex の module を削除する
-                //        this.deleteModule(moduleModel.cid);
-                //    } else if (pageIndex < moduleModel.pageIndex) {
-                //        // 削除対象の pageIndex を超えている場合は、pageIndex をデクリメントする
-                //        moduleModel.pageIndex--;
-                //    }
-                //});
                 console.log(TAG + "deletePage() - after");
                 console.log(this.collection);
 
@@ -658,7 +649,6 @@ module Garage {
                     console.log(TAG + "module not found");
                     return null;
                 }
-                //var module = this.modules_[moduleIndex];
                 var moduleModel = this.collection.at(moduleIndex);
 
                 var labelView = this.labelViews_[moduleIndex];

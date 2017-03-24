@@ -19,8 +19,6 @@
 module Garage {
     export module Util {
         import IPromise = CDP.IPromise;
-        //import makePromise = CDP.makePromise;
-        //import OffscreenEditor = Model.OffscreenEditor;
 
         var TAGS = {
             HuisFiles: "[Garage.Util.HuisFiles] ",
@@ -761,7 +759,6 @@ module Garage {
                                 functionCodeHash[code_db.function] = "";
                             } else {
                                 //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
-                                //console.warn(FUNCTION_NAME + "invalid code / codedb. action : " + action);
                             }
                         } else {
                             console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
@@ -1395,9 +1392,7 @@ module Garage {
                 var remoteListIniFile = "[General]\n";
                 var remoteList = this.remoteList;
                 var remoteListLength = remoteList.length;
-                //for (let i = remoteListLength - 1; i >= 0; i--) {
-                //    remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";     // 逆順に ∵ HUISでの表示順序は上から新しい順なので
-                //}
+
                 for (let i = 0; i < remoteListLength; i++) {
                     remoteListIniFile += i + "=" + remoteList[i].remote_id + "\n";     // 逆順に ∵ HUISでの表示順序は上から新しい順なので
                 }
@@ -1683,7 +1678,6 @@ module Garage {
                 var normalizedImages: IImage[] = [];
 
                 images.forEach((image) => {
-                    //let image: IGImage = images[i];
                     let garageExtensions = image.garageExtensions;
                     if (garageExtensions) {
                         if (!garageExtensions.original) {
@@ -1951,7 +1945,6 @@ module Garage {
             _parseFace(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
                 // face ファイルを読み込む
                 if (!fs.existsSync(facePath)) {
-                    //console.warn(TAGS.HuisFiles + "_parseFace() " + facePath + " is not found.");
                     return undefined;
                 }
 
@@ -2685,7 +2678,6 @@ module Garage {
              * face が参照している module 内で使用されていない画像を削除する
              */
             private _removeUnnecessaryImages(remoteId: string, modules: IModule[]) {
-                //let remoteimagesDirectory = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
                 let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, remoteId)).replace(/\\/g, "/");
                 if (!fs.existsSync(remoteImageDirectory)) {
                     return;
