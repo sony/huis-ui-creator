@@ -392,7 +392,7 @@ module Garage {
 
                 let labelSize: number = null;
                 if (state.label != null && state.label.length != 0) {
-                    let label: IGLabel = state.label[0];
+                    let label: Model.LabelItem = state.label[0];
                     macroData.label = label;
                     labelSize = label.size;
                 }
@@ -570,7 +570,7 @@ module Garage {
 
                 //マクロボタンのstateは、デフォルト一つとする。
                 this.defaultState.action = actionsForUpdate;
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
 
                 states.push(this.defaultState);
 

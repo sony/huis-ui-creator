@@ -900,7 +900,7 @@ module Garage {
              * @param modules {IGModule[]}
              * @return {IStringSringHash}
              */
-            private static getFunctionCodeMapByModules(modules: IGModule[]): IStringStringHash {
+            private static getFunctionCodeMapByModules(modules: Model.Module[]): IStringStringHash {
                 let result: IStringStringHash = {};
 
                 for (let i = 0, ml = modules.length; i < ml; i++) {
@@ -1449,7 +1449,7 @@ module Garage {
                 this._resizeImages().always(() => {
                     // 不要な画像を削除
                     if (!isToImportExport) {
-                        this._removeUnnecessaryImages(remoteId, modules);
+                        this._removeUnnecessaryImages(remoteId, iModules);
                     }
     
                     /* remotelist.ini ファイルを更新 */
@@ -1640,7 +1640,7 @@ module Garage {
                 }
 
 
-                fs.outputJSONSync(moduleFilePath, module, { spaces: 2 });
+                fs.outputJSONSync(moduleFilePath, iModule, { spaces: 2 });
 
                 return {
                     name: gmodule.name,
@@ -1906,7 +1906,7 @@ module Garage {
              *
              * @param modules {IGModule[]} 検査対象モジュール
              */
-            private static numberFunctionNameInModules(modules: IGModule[]) {
+            private static numberFunctionNameInModules(modules: Model.Module[]) {
                 let functionCodeHash: IStringStringHash = {};
 
                 for (let mod of modules) {
@@ -1951,7 +1951,7 @@ module Garage {
              *
              * @param modules {IGModule[]}
              */
-            public applyNumberedFunctionName(modules: IGModule[]) {
+            public applyNumberedFunctionName(modules: Model.Module[]) {
 
                 for (let mod of modules) {
                     if (mod.button == null) continue;
@@ -1992,7 +1992,7 @@ module Garage {
              *
              * @param modules {IGModule[]} 更新対象のアイテムおよびキャッシュを含むモジュール
              */
-            public applyCachedFunctionName(modules: IGModule[]) {
+            public applyCachedFunctionName(modules: Model.Module[]) {
                 for (let mod of modules) {
                     if (mod.button == null) continue;
                     for (let button of mod.button) {
@@ -2090,7 +2090,7 @@ module Garage {
              * @param target {IGModule[]} 更新対象を含むモジュール
              * @param original {IGModule[]} 基にするモジュール
              */
-            private static applyNumberedFunctionNameByModule(target: IGModule[], original: IGModule[]) {
+            private static applyNumberedFunctionNameByModule(target: Model.Module[], original: Model.Module[]) {
                 let funcCodeHash = HuisFiles.getFunctionCodeMapByModules(original);
                 
                 for (let mod of target) {
@@ -2209,10 +2209,10 @@ module Garage {
             /*
             * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
             * @param module :IModule 参照元のモジュール
-            * @param gImages :IGImage[] 代入先のモジュール
+            * @param gImages :Model.ImageItem[] 代入先のモジュール
             */
-            private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGIMage : ";
+            private setVersionInfoToIGImage(iModule: IModule, gImages: Model.ImageItem[]) {
+                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToModel.ImageItem : ";
 
                 if (iModule == null) {
                     console.warn(FUNCTION_NAME + "iModule is null");
@@ -2239,7 +2239,7 @@ module Garage {
             * @param module :IModule 参照元のモジュール
             * @param gButtons :IGButton[] 代入先のモジュール
             */
-            private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
+            private setVersionInfoToIGButton(iModule: IModule, gButtons: Model.ButtonItem[]) {
                 let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGButton : ";
 
                 if (iModule == null) {
@@ -2265,10 +2265,10 @@ module Garage {
             /*
             * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
             * @param module :IModule 参照元のモジュール
-            * @param gLabel :IGLabel[] 代入先のモジュール
+            * @param gLabel :Model.LabelItem[] 代入先のモジュール
             */
-            private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToIGLabel : ";
+            private setVersionInfoToIGLabel(iModule: IModule, gLabel: Model.LabelItem[]) {
+                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToModel.LabelItem : ";
 
                 if (iModule == null) {
                     console.warn(FUNCTION_NAME + "iModule is null");
@@ -2290,13 +2290,13 @@ module Garage {
             }
 
             /**
-             * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
+             * IImage を Model.ImageItem に変換する。主に garage_extensions を garageExtensions に付け替え。
              * 
-             * @param images {IImage[]} [in] IGImage[] に変換する IImage[]
-             * @return {IGImage[]} 変換された IGImage[]
+             * @param images {IImage[]} [in] Model.ImageItem[] に変換する IImage[]
+             * @return {Model.ImageItem[]} 変換された Model.ImageItem[]
              */
-            private _images2gimages(images: IImage[]): IGImage[] {
-                let gimages: IGImage[] = $.extend(true, [], images);
+            private _images2gimages(images: IImage[]): Model.ImageItem[] {
+                let gimages: Model.ImageItem[] = $.extend(true, [], images);
                 gimages.forEach((image) => {
                     let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
                     if (garage_extensions) {
@@ -2318,15 +2318,15 @@ module Garage {
              * @param buttons {IButton[]} IGButton[] に変換する IButton[]
              * @return {IGButton[]} 変換された IGButton[]
              */
-            private _buttons2gbuttons(buttons: IButton[]): IGButton[] {
-                let gbuttons: IGButton[] = [];
+            private _buttons2gbuttons(buttons: IButton[]): Model.ButtonItem[] {
+                let gbuttons: Model.ButtonItem[] = [];
                 buttons.forEach((button) => {
-                    let gstates: IGState[] = this._states2gstates(button.state);
-                    let gbutton: IGButton = {
-                        area: $.extend(true, {}, button.area),
-                        state: gstates,
-                        currentStateId: undefined
-                    };
+                    let gstates: Model.ButtonState[] = this._states2gstates(button.state);
+                    let gbutton: Model.ButtonItem = new Model.ButtonItem();
+                    gbutton.area = $.extend(true, {}, button.area);
+                    gbutton.state = gstates;
+                    gbutton.currentStateId = undefined;
+
                     if (button.default) {
                         gbutton.default = button.default;
                     }
@@ -2340,15 +2340,15 @@ module Garage {
             }
 
             /**
-             * IState[] を IGState[] に変換する。
+             * IState[] を Model.ButtonState[] に変換する。
              * 
-             * @param buttons {IState[]} IGState[] に変換する IState[]
-             * @return {IGState[]} 変換された IGState[]
+             * @param buttons {IState[]} Model.ButtonState[] に変換する IState[]
+             * @return {Model.ButtonState[]} 変換された Model.ButtonState[]
              */
-            private _states2gstates(states: IState[]): IGState[] {
-                let gstates: IGState[] = [];
+            private _states2gstates(states: IState[]): Model.ButtonState[] {
+                let gstates: Model.ButtonState[] = [];
                 states.forEach((state) => {
-                    let gstate: IGState = {};
+                    let gstate = new Model.ButtonState();
                     if (!_.isUndefined(state.id)) {
                         gstate.id = state.id;
                     }

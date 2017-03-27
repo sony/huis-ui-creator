@@ -165,7 +165,7 @@ module Garage {
                 let newActions: IAction[] = [ newAction ];
                 this.defaultState.action = newActions;
 
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
                 states.push(this.defaultState);
 
                 this.model.state = states;
@@ -177,7 +177,7 @@ module Garage {
              *
              * @param state {IGState}
              */
-            private setActionPullDown(state: IGState) {
+            private setActionPullDown(state: Model.ButtonState) {
                 let FUNCTION_NAME = TAG + "changeActionPullDown : ";
 
                 let actions: IAction[] = state.action;

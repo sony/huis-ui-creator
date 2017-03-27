@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
-        export class ButtonState extends Backbone.Model implements IGState {
+        export class ButtonState extends Backbone.Model{
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
             private remoteId_: string;
@@ -72,42 +72,12 @@ module Garage {
                 });
             }
 
-            get image(): IGImage[]{
-                let images: IGImage[] = [];
+            get image(): Model.ImageItem[]{
+                let images: Model.ImageItem[] = [];
                 let imageModels = this.imageCollection_.models;
                 if (imageModels && 0 < imageModels.length) {
                     imageModels.forEach((imageModel) => {
-                        let image: IGImage = {
-                            area: $.extend(true, {}, imageModel.area),
-                            path: imageModel.path
-                        };
-                        if (imageModel.resolvedPath) {
-                            image.resolvedPath = imageModel.resolvedPath;
-                        }
-                        if (imageModel.resolvedPathCSS) {
-                            image.resolvedPathCSS = imageModel.resolvedPathCSS;
-                        }
-                        if (imageModel.garageExtensions) {
-                            image.garageExtensions = $.extend(true, {}, imageModel.garageExtensions);
-                        }
-                        if (imageModel.resizeMode) {
-                            image.resizeMode = imageModel.resizeMode;
-                        }
-                        if (imageModel.resizeOriginal) {
-                            image.resizeOriginal = imageModel.resizeOriginal;
-                        }
-                        if (imageModel.resizeResolvedOriginalPath) {
-                            image.resizeResolvedOriginalPath = imageModel.resizeResolvedOriginalPath;
-                        }
-                        if (imageModel.resizeResolvedOriginalPathCSS) {
-                            image.resizeResolvedOriginalPathCSS = imageModel.resizeResolvedOriginalPathCSS;
-                        }
-                        if (imageModel.areaRatio) {
-                            image.areaRatio = $.extend(true, {}, imageModel.areaRatio);
-                        }
-                        image.resized = imageModel.resized;
-
-                        images.push(image);
+                        images.push(imageModel.clone());
                     });
                     return images;
                 }
@@ -115,55 +85,16 @@ module Garage {
                 //return this.get("image");
             }
 
-            set image(val: IGImage[]) {
-                let imageModels: ImageItem[] = [];
-
-                val.forEach((image) => {
-                    let imageModel = new ImageItem({
-                        materialsRootPath: this.materialsRootPath_,
-                        remoteId: this.remoteId_
-                    });
-                    imageModel.area = $.extend(true, {}, image.area);
-                    // [TODO] 将来的に areaRatio から area を算出するつもりだが、暫定的に親要素と同じ大きさとする
-                    if (this.area) {
-                        imageModel.area = {
-                            x: 0,
-                            y: 0,
-                            w: this.area.w,
-                            h: this.area.h
-                        };
-                    }
-                    imageModel.path = image.path;
-                    if (image.garageExtensions) {
-                        imageModel.garageExtensions = $.extend(true, {}, image.garageExtensions);
-                    }
-                    // image.resizeOriginal が明示的に指定されている場合は、上書きする
-                    if (image.resizeOriginal) {
-                        imageModel.resizeOriginal = image.resizeOriginal;
-                    }
-                    // model に resizeOriginal が指定されていない場合は、path をオリジナルとして指定する
-                    if (!imageModel.resizeOriginal) {
-                        imageModel.resizeOriginal = image.path;
-                    }
-                    if (image.resizeMode) {
-                        imageModel.resizeMode = image.resizeMode;
-                    }
-                    imageModel.resized = true;
-                    if (image.areaRatio) {
-                        imageModel.areaRatio = $.extend(true, {}, image.areaRatio);
-                    }
-
-                    imageModels.push(imageModel);
-                });
-                this.imageCollection_.reset(imageModels);
+            set image(val: Model.ImageItem[]) {
+                this.imageCollection_.reset(val);
                 //this.set("image", val);
             }
 
-            get label(): IGLabel[]{
+            get label(): Model.LabelItem[]{
                 return this.get("label");
             }
 
-            set label(val: IGLabel[]) {
+            set label(val: Model.LabelItem[]) {
                 this.set("label", val);
             }
 

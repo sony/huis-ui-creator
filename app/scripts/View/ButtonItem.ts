@@ -45,7 +45,7 @@ module Garage {
 
                     let unknownTypeButtons = options.attributes["buttons"];
                     if (unknownTypeButtons) {
-                        let buttons: IGButton[] = [];
+                        let buttons: Model.ButtonItem[] = [];
                         if (_.isArray(unknownTypeButtons)) {
                             buttons = unknownTypeButtons;
                         } else {
@@ -53,7 +53,7 @@ module Garage {
                         }
                         let buttonModels: Model.ButtonItem[] = [];
                         for (let i = 0, l = buttons.length; i < l; i++) {
-                            let buttonData: IGButton = buttons[i];
+                            let buttonData: Model.ButtonItem = buttons[i];
                             var buttonModel: Model.ButtonItem = new Model.ButtonItem({
                                 remoteId: this.remoteId_,
                                 materialsRootPath: this.materialsRootPath_
@@ -107,7 +107,7 @@ module Garage {
                     let filtered_action = null;
                     if (_.isArray(model.state)) {
                         // 全actionが無効なstate
-                        filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+                        filtered_state = model.state.filter((s: Model.ButtonState, index: number, array: Model.ButtonState[]) => {
                             // 無効なaction
                             filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
                                 //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
@@ -141,12 +141,12 @@ module Garage {
              * 
              * @return {IGButton[]} ButtonItem View がもつ ButtonItem
              */
-            getButtons(): IGButton[] {
+            getButtons(): Model.ButtonItem[] {
                 // enabled でない model を間引く 
                 var buttonModels = this.collection.models.filter((model) => {
                     return model.enabled;
                 });
-                var buttons: IGButton[] = $.extend(true, [], buttonModels);
+                var buttons: Model.ButtonItem[] = $.extend(true, [], buttonModels);
 
                 return buttons;
             }
@@ -223,7 +223,7 @@ module Garage {
                                 /* jshint loopfunc: false */
                             } else {
                                 // 配列ではなく、一つのオブジェクトとして image が格納されていた場合の対応
-                                let img: IGImage = <any>state.image;
+                                let img: Model.ImageItem = <any>state.image;
                                 let imagePath = img.path;
                                 // 画像パスを Garage 内のパスに変更する。
                                 if (imagePath) {

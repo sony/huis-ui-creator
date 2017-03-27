@@ -577,8 +577,8 @@ module Garage {
              * ImageItemから、CSSを描画に必要なパスを取得する。
              * @param model{Model.ImageItem} CSSに表示したい画像モデル
              */
-            protected getValidPathOfIGImageForCSS(model: IGImage): string {
-                let FUNCTION_NAME = TAG_BASE + "getValidPathOfIGImageForCSS : ";
+            protected getValidPathOfIGImageForCSS(model: Model.ImageItem): string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfModel.ImageItemForCSS : ";
 
                 if (model == null) {
                     console.warn(FUNCTION_NAME + "model is null");

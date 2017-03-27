@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
-        export class ButtonItem extends Model.Item implements IGButton {
+        export class ButtonItem extends Model.Item{
 
             remoteId: string;
             private stateCollection_: ButtonStateCollection;
@@ -44,6 +44,9 @@ module Garage {
                         if (attributes.srcRemoteId) {
                             // 画像のコピー元のディレクトリー
                             this.resolvedCopySrcImagePathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                        }
+                        if (attributes.state) {
+                            this.state = attributes.state;
                         }
                     }
                 }
@@ -86,12 +89,12 @@ module Garage {
 
                 // button.state のコピー
                 var srcStates = this.state;
-                var newStates: IGState[] = [];
+                var newStates: Model.ButtonState[] = [];
 
                 srcStates.forEach((srcState) => {
-                    let newState: IGState = {
+                    let newState = new Model.ButtonState({
                         id: srcState.id
-                    };
+                    });
                     newState.active = srcState.active;
 
                     if (srcState.action) {
@@ -203,13 +206,13 @@ module Garage {
                 this.set("currentStateId", val);
             }
 
-            get state(): IGState[] {
+            get state(): Model.ButtonState[] {
                 if (this.stateCollection_ && 0 < this.stateCollection_.length) {
-                    let statesData: IGState[] = [];
+                    let statesData: Model.ButtonState[] = [];
                     this.stateCollection_.forEach((stateModel, index) => {
-                        let stateData: IGState = {
+                        let stateData = new Model.ButtonState({
                             id: stateModel.stateId
-                        };
+                        });
                         if (stateModel.active !== undefined) {
                             stateData.active = stateModel.active;
                         }
@@ -234,7 +237,7 @@ module Garage {
                 return null;
             }
 
-            set state(val: IGState[]) {
+            set state(val: Model.ButtonState[]) {
                 // stateCollection の初期化 / リセット
                 if (!this.stateCollection_) {
                     this.stateCollection_ = new ButtonStateCollection();
@@ -243,7 +246,7 @@ module Garage {
                 }
                 // stateData を model 化して stateCollection に追加する
                 if (_.isArray(val)) {
-                    val.forEach((stateData: IGState, index: number) => {
+                    val.forEach((stateData: Model.ButtonState, index: number) => {
                         //let stateModel: ButtonState = new ButtonState({
                         //    stateId: stateData.id,
                         //    active: stateData.active,
@@ -316,9 +319,9 @@ module Garage {
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
             defaults() {
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
 
-                let button: IGButton = {
+                let button = {
                     "enabled": true,
                     area: {
                         x: 0,
@@ -382,12 +385,12 @@ module Garage {
              * コピー元の画像ディレクトリーが存在していたら、
              * state.image に指定されている画像を module ディレクトリーにコピーする。
              */
-            private _copyImageFile(images: IGImage[]): void {
+            private _copyImageFile(images: Model.ImageItem[]): void {
                 if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
                     return;
                 }
 
-                images.forEach((image: IGImage) => {
+                images.forEach((image: Model.ImageItem) => {
                     let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
                     let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
                     if (!fs.existsSync(resolvedCopySrcImagePath)) {
@@ -409,7 +412,7 @@ module Garage {
                     return;
                 }
 
-                states.forEach((state: IGState) => {
+                states.forEach((state: Model.ButtonState) => {
                     if (state.image) {
                         this._setStateImageItemArea(state.image, buttonArea);
                     }
@@ -422,13 +425,13 @@ module Garage {
             /**
              * state 内の画像アイテムの area の設定
              */
-            private _setStateImageItemArea(images: IGImage[], buttonArea: IArea) {
+            private _setStateImageItemArea(images: Model.ImageItem[], buttonArea: IArea) {
                 if (!images || !this.initialArea_) {
                     return;
                 }
 
                 var initialArea = this.initialArea_;
-                images.forEach((image: IGImage) => {
+                images.forEach((image: Model.ImageItem) => {
                     if (!image.areaRatio) {
                         let imageArea = image.area;
                         image.areaRatio = {
@@ -451,13 +454,13 @@ module Garage {
             /**
              * state 内のラベルアイテムの area の設定
              */
-            private _setStateLabelItemArea(labels: IGLabel[], buttonArea: IArea) {
+            private _setStateLabelItemArea(labels: Model.LabelItem[], buttonArea: IArea) {
                 if (!labels || !this.initialArea_) {
                     return;
                 }
 
                 var initialArea = this.initialArea_;
-                labels.forEach((label: IGLabel) => {
+                labels.forEach((label: Model.LabelItem) => {
                     if (!label.areaRatio) {
                         let labelArea = label.area;
                         label.areaRatio = {
@@ -486,7 +489,7 @@ module Garage {
                     return;
                 }
 
-                states.forEach((state: IGState) => {
+                states.forEach((state: Model.ButtonState) => {
                     if (state.image) {
                         this._setAreaRatioToStateImageItems(state.image);
                     }
@@ -501,13 +504,13 @@ module Garage {
             /**
              * state 内の画像アイテムに areaRatio を付加する
              */
-            private _setAreaRatioToStateImageItems(images: IGImage[]) {
+            private _setAreaRatioToStateImageItems(images: Model.ImageItem[]) {
                 if (!this.initialArea_) {
                     return;
                 }
 
                 var buttonArea = this.initialArea_;
-                images.forEach((image: IGImage) => {
+                images.forEach((image: Model.ImageItem) => {
                     if (!image.areaRatio) {
                         let imageArea = image.area;
                         image.areaRatio = {
@@ -523,13 +526,13 @@ module Garage {
             /**
              * state 内のラベルアイテムに areaRatio を付加する
              */
-            private _setAreaRatioToStateLabelItems(labels: IGLabel[]) {
+            private _setAreaRatioToStateLabelItems(labels: Model.LabelItem[]) {
                 if (!this.initialArea_) {
                     return;
                 }
 
                 var buttonArea = this.initialArea_;
-                labels.forEach((label: IGLabel) => {
+                labels.forEach((label: Model.LabelItem) => {
                     if (!label.areaRatio) {
                         let labelArea = label.area;
                         label.areaRatio = {

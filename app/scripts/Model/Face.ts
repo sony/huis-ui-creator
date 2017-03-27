@@ -183,7 +183,7 @@ module Garage {
              * @param {IGImage[]} images 変更対象のImage。
              * @param {string} remoteId 変更先となる画像ディレクトリのremoteId。
              */
-            private _copyImage(images: IGImage[], remoteId: string) {
+            private _copyImage(images: Model.ImageItem[], remoteId: string) {
                 for (let image of images) {
                     // Copy resized image referenced from image.path
                     if (image.path != null) {
@@ -216,8 +216,8 @@ module Garage {
              *
              * @return {IGImage[]} 検索されたImage。
              */
-            private _searchImages(): IGImage[] {
-                let images: IGImage[] = [];
+            private _searchImages(): Model.ImageItem[] {
+                let images: Model.ImageItem[] = [];
                 for (let module of this.modules) {
                     if (module.image != null) {
                         images = images.concat(module.image);

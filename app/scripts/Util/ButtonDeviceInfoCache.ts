@@ -33,7 +33,7 @@ module Garage {
             /**
              * キャッシュファイルを読み込み、渡されたIGModuleに設定
              */
-            load(gmodules: IGModule[]) {
+            load(gmodules: Model.Module[]) {
 
                 if (!fs.existsSync(this.filePath)) {
                     console.log("buttondeviceinfo.cache not found: " + this.filePath);
@@ -75,7 +75,7 @@ module Garage {
              * 全てのモジュールに対してHuisFilesから検索したDeviceInfoを設定する
              * @param gmodules {IGModule[]} 対象とするモジュールオブジェクト
              */
-            static injectAllDeviceInfoFromHuisFiles(gmodules: IGModule[]) {
+            static injectAllDeviceInfoFromHuisFiles(gmodules: Model.Module[]) {
                 for (let gmodule of gmodules) {
                     if (!gmodule.button) continue;
 
@@ -192,7 +192,7 @@ module Garage {
             /**
              * 渡されたIGModule内のボタン情報をキャッシュファイルに出力
              */
-            save(gmodules: IGModule[]) {
+            save(gmodules: Model.Module[]) {
                 let newList: IButtonDeviceInfo[] = [];
 
                 for (let gmodule of gmodules) {

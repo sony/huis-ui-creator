@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        export class LabelItem extends Item implements IGLabel {
+        export class LabelItem extends Item implements Model.LabelItem {
 
             constructor(attributes?: any) {
                 super(attributes, null);
@@ -69,6 +69,24 @@ module Garage {
 
             set version(val: string) {
                 this.set("version", val);
+            }
+
+            get areaRatio(): IGAreaRatio {
+                let areaRatio: IGAreaRatio = this.get("areaRatio");
+                if (!areaRatio) {
+                    // 未指定の場合は、親要素の全体の領域として返す
+                    areaRatio = {
+                        x: 0,
+                        y: 0,
+                        w: 1,
+                        h: 1
+                    };
+                }
+                return areaRatio;
+            }
+
+            set areaRatio(val: IGAreaRatio) {
+                this.set("areaRatio", val);
             }
 
             get color(): number {
@@ -131,7 +149,7 @@ module Garage {
              */
             defaults() {
 
-                var label: IGLabel = {
+                var defaultAttr = {
                     "enabled": true,
                     "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
                     "text": "",
@@ -142,7 +160,7 @@ module Garage {
                     "font_weight" : FontWeight.FONT_BOLD,
                 };
 
-                return label;
+                return defaultAttr;
             }
 
             /**

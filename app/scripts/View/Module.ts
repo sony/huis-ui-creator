@@ -57,7 +57,7 @@ module Garage {
             }
 
             initialize(options?: Backbone.ViewOptions<Model.Module>) {
-                var modulesData: IGModule[] = [];
+                var modulesData: Model.Module[] = [];
                 if (options && options.attributes) {
                     if (options.attributes["modules"]) {
                         modulesData = options.attributes["modules"];
@@ -460,7 +460,7 @@ module Garage {
                 if (!imageView) {
                     imageView = new ImageItem({
                         attributes: {
-                            materialsRootPath: this.materialsRootPath_,
+                            materialsRootPath: HUIS_FILES_ROOT,
                             remoteId: module.remoteId
                         }
                     });
@@ -697,7 +697,7 @@ module Garage {
                 let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
 
                 var modules: Model.Module[] = $.extend(true, [], this.collection.models);
-                modules.forEach((module: IGModule, index: number) => {
+                modules.forEach((module: Model.Module, index: number) => {
                     let buttonView = this.buttonViews_[index],
                         imageView = this.imageViews_[index],
                         labelView = this.labelViews_[index];
@@ -728,7 +728,7 @@ module Garage {
              * @param moduleId {string} 取得したい module の ID
              * @return {IGModule} moduleId と合致する module。見つからない場合は、null
              */
-            getModule(moduleId: string): IGModule {
+            getModule(moduleId: string): Model.Module {
                 var moduleIndex = this._getModuleIndex(moduleId);
                 if (moduleIndex < 0) {
                     console.log(TAG + "module not found");
@@ -740,7 +740,7 @@ module Garage {
                     return null;
                 }
 
-                var gmodule: IGModule = $.extend(true, {}, moduleModel);
+                var gmodule: Model.Module = $.extend(true, {}, moduleModel);
                 return gmodule;
             }
 
@@ -785,7 +785,7 @@ module Garage {
                 }                                
             }
 
-            addModuleInNewFacePages(inputModules: IGModule[]) {
+            addModuleInNewFacePages(inputModules: Model.Module[]) {
                 let FUNCTION_NAME = TAG + "addModules : ";
 
                 if (inputModules == null) {
@@ -819,7 +819,7 @@ module Garage {
              * @param item {IGModule} 検査対象モジュール
              * @return {boolean} 有効なモジュールの場合はtrue、そうでない場合はfalse
              */
-            private isValidModule(item: IGModule): boolean {
+            private isValidModule(item: Model.Module): boolean {
                 if (item.button) {
                     // ボタンが有る場合はボタン全てを検査
                     return this.isValidButtons(item.button);
@@ -835,7 +835,7 @@ module Garage {
              * @param buttons {IGButton[]} 検査対象ボタンリスト
              * @return {boolean} ボタンリストが有効な場合はtrue、そうでない場合はfalse
              */
-            private isValidButtons(buttons: IGButton[]): boolean {
+            private isValidButtons(buttons: Model.ButtonItem[]): boolean {
                 for (let button of buttons) {
                     if (this.isValidButton(button)) {
                         return true;
@@ -852,7 +852,7 @@ module Garage {
              * @param button {IGButton} 検査対象ボタン
              * @return {boolean} ボタンが有効な場合はtrue、そうでない場合はfalse
              */
-            private isValidButton(button: IGButton): boolean {
+            private isValidButton(button: Model.ButtonItem): boolean {
                 if (!button.state) return false;
 
                 for (let state of button.state) {

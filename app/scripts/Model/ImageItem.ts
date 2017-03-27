@@ -24,7 +24,7 @@ module Garage {
         var TAG = "[Garage.Model.ImageItem] ";
         import JQUtils = Util.JQueryUtils;
 
-        export class ImageItem extends Model.Item implements IGImage {
+        export class ImageItem extends Model.Item {
 
             private resolvedPathDirectory_: string;
             private remoteId_: string;
@@ -34,11 +34,35 @@ module Garage {
             constructor(attributes?: any) {
                 super(attributes, null);
                 if (attributes) {
-                    if (attributes.materialsRootPath && attributes.remoteId) {
-                        this.resolvedPathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                    if (attributes.remoteId) {
+                        this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
                         this.remoteId_ = attributes.remoteId;
+                    } else {
+                        console.error("remoteId and rootpath is not set properly");
                     }
                 }
+            }
+
+            /**
+             * IImage を Model.ImageItem に変換する。主に garage_extensions を garageExtensions に付け替え。
+             *
+             * @param images {IImage[]} [in] Model.ImageItem[] に変換する IImage[]
+             * @return {Model.ImageItem[]} 変換された Model.ImageItem[]
+             */
+            setInfoFromIImage(image: IImage): Model.ImageItem {
+                this.area = $.extend(true, [], image.area);
+                this.path = image.path;
+
+                // Copy IImage.gatage_extensions to IGImage.garageExtensions
+                let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
+                if (garage_extensions) {
+                    this.garageExtensions = {
+                        original: garage_extensions.original,
+                        resolvedOriginalPath: "",
+                        resizeMode: garage_extensions.resize_mode
+                    };
+                }
+                return this;
             }
 
             /**
@@ -66,10 +90,23 @@ module Garage {
                 newImage.path = dstRemoteId + "/" + path.basename(this.path);
                 newImage.resizeOriginal = this.resizeOriginal;
 
-                //バージョン情報をもっている場合、引き継ぐ
                 if (this.version != null) {
                     newImage.version = this.version;
                 }
+                if (this.garageExtensions) {
+                    newImage.garageExtensions = $.extend(true, {}, this.garageExtensions);
+                }
+                if (this.resizeResolvedOriginalPath) {
+                    newImage.resizeResolvedOriginalPath = this.resizeResolvedOriginalPath;
+                }
+                if (this.resizeResolvedOriginalPathCSS) {
+                    newImage.resizeResolvedOriginalPathCSS = this.resizeResolvedOriginalPathCSS;
+                }
+                if (this.areaRatio) {
+                    newImage.areaRatio = $.extend(true, {}, this.areaRatio);
+                }
+                newImage.resized = this.resized;
+
 
                 return newImage;
             }
@@ -294,7 +331,7 @@ module Garage {
              */
             defaults() {
 
-                var image: IGImage = {
+                var image = {
                     "enabled": true,
                     "area": { "x": 0, "y": 0, "w": 100, "h": 100 },
                     "path": "",

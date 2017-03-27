@@ -235,19 +235,20 @@ interface IStateTranslate {
 
 
 /**
- * @interface IGState
+ * @interface Model.ButtonState
  * @brief IState に対して Garage で使用する情報を付加し、image や label を IGXxx に変換したもの
  */
-interface IGState {
+/*
+interface Model.ButtonState {
     id?: number;
-    image?: IGImage[];
-    label?: IGLabel[];
+    image?: Model.ImageItem[];
+    label?: Model.LabelItem[];
     action?: IAction[];
     translate?: IStateTranslate[];
-    active?: boolean; /* アクティブな状態かどうか */
+    active?: boolean;
     stateId?: number;
     [x: string]: any;
-}
+}*/
 
 /**
  * @interface IState
@@ -281,22 +282,20 @@ interface IState {
 }
 
 /**
- * @interface IGState
- * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
- */
+ * @interface Model.ButtonState
+ * @brief IButton に対して Garage で使用する情報を付加し、state を Model.ButtonState[] に変換したもの
+
 interface IGButton {
     version?: string;
     area: IArea;
     default?: number;
-    state: IGState[];
+    state: Model.ButtonState[];
     name?: string;
-    /**
-     * 現在の state.id
-     */
+
     currentStateId: number;
     [x: string]: any;
 }
-
+*/
 /**
  * @interface IButton
  * @brief HUIS の module ファイルにおける button にあたる
@@ -348,29 +347,6 @@ interface IStringStringHash {
 interface IStringKeyValue {
     key: string;
     value: string;
-}
-
-/**
- * @interface IGLabel
- * @brief ILabel に対して Garage で使用する情報を付加したもの
- */
-interface IGLabel {
-    version?: string;
-    area?: IArea;
-    text: string;
-    color?: number;
-    font?: string;
-    size?: number;
-    font_weight?: FontWeight;//normal | bold
-    /**
-     * 親要素の area に対してのこのアイテムの area の比率
-     */
-    areaRatio?: IGAreaRatio;
-    /**
-     * 16階調のグレイスケールを rgb() 表記したものが格納される
-     */
-    resolvedColor?: string;
-    [x: string]: any;
 }
 
 /**
@@ -431,27 +407,6 @@ interface IGarageImageExtensions {
 }
 
 /**
- * @interface IGImage
- * @brief IImage に Garage で使用する情報を付加したもの
- */
-interface IGImage {
-    version?: string;
-    area?: IArea;
-    path: string;
-    resolvedPath?: string; //<!image.path を絶対パスに変換したもの
-    resolvedPathCSS?: string;//CSSで表示できる状態のパス
-    garageExtensions?: IGGarageImageExtensions;
-    areaRatio?: IGAreaRatio;
-    pageBackground?: boolean;
-    resized?: boolean; //<!リサイズが行われたかどうか
-    resizeMode?: string;
-    resizeOriginal?: string;
-    resizeResolvedOriginalPath?: string;
-    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
-    [x: string]: any;
-}
-
-/**
  * @interface IImage
  * @brief HUIS の module ファイルにおける image にあたる
  */
@@ -468,20 +423,20 @@ interface IGOutput {
 /**
  * @interface IGModule
  * @brief IModule に対して Garage で使用する情報を付加したもの
- */
+
 interface IGModule {
     version?: string;
     area: IArea;
     button?: IGButton[];
-    label?: IGLabel[];
-    image?: IGImage[];
+    label?: Model.LabelItem[];
+    image?: Model.ImageItem[];
     offsetY: number; //!< ページ内のモジュールの y 座標
     pageIndex: number; //!< ページ番号 (最初のページが 0
     remoteId: string; //!< モジュールが属する face の ID
     name: string; //!< モジュールの名前
     group?: IGroup;
 }
-
+*/
 /**
  * @interface IModule
  * @brief HUIS の module ファイルの内容にあたる

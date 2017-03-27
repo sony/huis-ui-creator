@@ -522,7 +522,7 @@ module Garage {
                 }
 
                 //モジュールがひとつもないとき含んでいないとみなす。
-                let targetModules: IGModule[] = face.modules;
+                let targetModules: Model.Module[] = face.modules;
                 if (targetModules == null || targetModules.length == 0) {
                     return false;
                 }
@@ -530,7 +530,7 @@ module Garage {
                 for (let i = 0; i < targetModules.length; i++){
 
                     //ターゲットのボタンがないとき、次のmoduleをチェック。
-                    let targetButtons: IGButton[] = targetModules[i].button;
+                    let targetButtons: Model.ButtonItem[] = targetModules[i].button;
                     if (targetButtons == null || targetButtons.length == 0) {
                         continue;
                     }
@@ -544,7 +544,7 @@ module Garage {
                     for (let j = 0; j < targetButtons.length; j++){
 
                         //ターゲットのステートがないとき、次のボタンをチェック
-                        let targetStates:IGState[] = targetButtons[j].state;
+                        let targetStates:Model.ButtonState[] = targetButtons[j].state;
                         if (targetStates == null || targetStates.length == 0) {
                             continue;
                         }
@@ -633,12 +633,12 @@ module Garage {
 
 
             /*
-             * IGImage内のpathをを新しいremoteIdのものに変更する。
-             * @param gimages{IGImage[]} pathを変更する対象
+             * Model.ImageItem内のpathをを新しいremoteIdのものに変更する。
+             * @param gimages{Model.ImageItem[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
-             * @return {IGImages[]} pathを変更した後のIGImages
+             * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertImagesFilePath(gimages : IGImage[], newRemoteId : string):IGImage[]{
+            private convertImagesFilePath(gimages : Model.ImageItem[], newRemoteId : string): Model.ImageItem[]{
                 let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
 
                 if (gimages == null || gimages.length == 0) {
@@ -651,7 +651,7 @@ module Garage {
                     return;
                 }
 
-                let result: IGImage[] = $.extend(true, [], gimages);;
+                let result: Model.ImageItem[] = $.extend(true, [], gimages);;
 
                 for (let i = 0; i < result.length; i++){
                     result[i].path = this.converFilePath(result[i].path, newRemoteId);
@@ -669,12 +669,12 @@ module Garage {
 
 
             /*
-             * IGButton内のIGImageのpathを新しいremoteIdのものに変更する。
+             * IGButton内のModel.ImageItemのpathを新しいremoteIdのものに変更する。
              * @param gbuttons{IGButton[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
-             * @return {IGImages[]} pathを変更した後のIGImages
+             * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertButtonsFilePath(gbuttons: IGButton[], newRemoteId: string): IGButton[] {
+            private convertButtonsFilePath(gbuttons: Model.ButtonItem[], newRemoteId: string): Model.ButtonItem[] {
                 let FUNCTION_NAME: string = TAG + "convertButtonFilePath : ";
 
                 if (gbuttons == null || gbuttons.length == 0) {
@@ -688,7 +688,7 @@ module Garage {
                 }
 
 
-                let result: IGButton[] = $.extend(true, [], gbuttons);
+                let result: Model.ButtonItem[] = $.extend(true, [], gbuttons);
                 for (let i = 0; i < result.length; i++){
                     if (result[i].state != null && result[i].state.length >  0){
                         for (let j = 0; j < result[i].state.length; j++) {

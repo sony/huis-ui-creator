@@ -35,7 +35,7 @@ module Garage {
             protected templateItemDetailFile_: string;
             protected availableRemotelist: IRemoteInfo[];
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
-            protected defaultState: IGState; // Defaultのstate
+            protected defaultState: Model.ButtonState; // Defaultのstate
 
             /**
              * 編集中リモコンのremote_id
@@ -117,9 +117,9 @@ module Garage {
 
             /*
              * このクラス内のbuttonモデルのstateを、入力されたものに更新する
-             * @param inputStates{IGState[]}
+             * @param inputStates{Model.ButtonState[]}
              */
-            public setStates(inputStates: IGState[]) {
+            public setStates(inputStates: Model.ButtonState[]) {
                 let FUNCTION_NAME = "setState";
 
                 if (inputStates == null){
@@ -172,7 +172,7 @@ module Garage {
              * state情報からテンプレート生成に必要なstateDataを生成する
              * @param state {IGState}
              */
-            protected createStateData(state: IGState): any {
+            protected createStateData(state: Model.ButtonState): any {
                 let stateData: any = {};
 
                 stateData.id = state.id;

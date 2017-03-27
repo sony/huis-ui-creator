@@ -43,7 +43,7 @@ module Garage {
                 if (options.attributes) {
                     let unknownTypeLabel = options.attributes["labels"];
                     if (unknownTypeLabel) {
-                        let labels: IGLabel[] = [];
+                        let labels: Model.LabelItem[] = [];
                         if (_.isArray(unknownTypeLabel)) {
                             labels = unknownTypeLabel;
                         } else {
@@ -89,7 +89,7 @@ module Garage {
 
             render(): LabelItem {
                 this.collection.each((item: Model.LabelItem, index: number) => {
-                    let label: IGLabel = $.extend(true, {}, item);
+                    let label: Model.LabelItem = $.extend(true, {}, item);
                     //label.resolvedColor = this._getResolvedColor(label.color);
 
                     //HUISとGarageで大きさが異なるために表示用に補正する。
@@ -107,14 +107,14 @@ module Garage {
             /**
              * LabelItem View がもつすべての LabelItem を返す。
              * 
-             * @return {IGLabel[]} LabelItem View がもつ LabelItem
+             * @return {Model.LabelItem[]} LabelItem View がもつ LabelItem
              */
-            getLabels(): IGLabel[] {
+            getLabels(): Model.LabelItem[] {
                 // enabled でない model を間引く 
                 var labelModels = this.collection.models.filter((model) => {
                     return model.enabled;
                 });
-                var labels: IGLabel[] = $.extend(true, [], labelModels);
+                var labels: Model.LabelItem[] = $.extend(true, [], labelModels);
 
                 return labels;
             }
@@ -123,7 +123,7 @@ module Garage {
              * collection に LabelItem が追加されたら、追加分をレンダリングする
              */
             private _renderNewModel(model: Model.LabelItem) {
-                var label: IGLabel = $.extend(true, {}, model);
+                var label: Model.LabelItem = $.extend(true, {}, model);
                 label.resolvedColor = model.resolvedColor;
                 let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
                 //HUISとGarageで大きさが異なるために表示用に補正する。

@@ -43,7 +43,7 @@ module Garage {
             ring_left: string;
         }
 
-        interface IStateDetail extends IGState {
+        interface IStateDetail extends Model.ButtonState {
             actionList?: IActionList;
             actionListTranslate?: IActionList;
         }
@@ -2693,12 +2693,12 @@ module Garage {
                     targetState.image = [];
                 }
                 if (targetState.image.length < 1) {
-                    targetState.image.push({
+                    targetState.image.push(new Model.ImageItem({
                         areaRatio: {
                             x: 0, y: 0, w: 1, h: 1
                         },
                         path: ""
-                    });
+                    }));
                 }
                 // 画像は remoteimages/[remoteId]/ 以下に配置される。
                 // image.path には remoteimages 起点の画像パスを指定する。
@@ -2766,9 +2766,9 @@ module Garage {
                     if (!this.currentTargetButtonStates_) {
                         this.currentTargetButtonStates_ = [];
                     }
-                    this.currentTargetButtonStates_.push({
+                    this.currentTargetButtonStates_.push(new Model.ButtonState({
                         id: newStateId
-                    });
+                    }));
                     this.currentTargetButtonStatesUpdated_ = true;
 
                     this._updateCurrentModelButtonStatesData();
@@ -3214,15 +3214,18 @@ module Garage {
                         case "state": //ボタンの画像などを変更した際の、変更
                             {
                                 if (itemType === "button") {
-                                    let targetButton :IGButton = $.extend(true, {}, targetModel);
+                                    let targetButton: Model.ButtonItem;
+                                    if (targetModel instanceof Model.ButtonItem) {
+                                        targetButton = targetModel.clone();
+                                    }
                                     var states = value;
 
                                     //ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
                                     let stateId: number = targetButton.default;
 
-                                    var currentStates: IGState[] = $.extend(true, [], states);
+                                    var currentStates: Model.ButtonState[] = $.extend(true, [], states);
 
-                                    let targetStates: IGState[];
+                                    let targetStates: Model.ButtonState[];
                                     if (_.isUndefined(stateId)) {
                                         // stateId が指定されていない場合は、全 state を更新
                                         targetStates = states;
@@ -3260,7 +3263,7 @@ module Garage {
 
                                     
 
-                                    targetStates.forEach((targetState: IGState) => {
+                                    targetStates.forEach((targetState: Model.ButtonState) => {
 
                                         //"text", "size", "path", "resolved-path", "resizeMode"すべてが変化したとみなす。
                                         let props = {};
@@ -3426,7 +3429,7 @@ module Garage {
                 /**
                  * state 内に label が存在しない場合に、補完する
                  */
-                var solveLabel = function (state: IGState) {
+                var solveLabel = function (state: Model.ButtonState) {
                     var defaltTextSize = 30;
                     let localStateId = state.id;
 
@@ -3441,28 +3444,28 @@ module Garage {
                     }
 
                     if (!state.label || !state.label.length) {
-                        state.label = [{
+                        state.label = [new Model.LabelItem({
                             areaRatio: {
                                 x: 0, y: 0, w: 1, h: 1
                             },
                             text: "",
                             size: defaltTextSize,
                             font_weight: FontWeight.FONT_BOLD
-                        }];
+                        })];
                     }
-                };    
+                };
 
                 /**
                  * state 内に image が存在しない場合に、補完する
                  */
-                var solveImage = function (state: IGState) {
+                var solveImage = function (state: Model.ButtonState) {
                     if (!state.image || !state.image.length) {
-                        state.image = [{
+                        state.image = [new Model.ImageItem({
                             areaRatio: {
                                 x: 0, y: 0, w: 1, h: 1
                             },
                             path: ""
-                        }];
+                        })];
                     }
                 };
 
@@ -3483,9 +3486,9 @@ module Garage {
                     console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
                     return;
                 }
-                var currentStates: IGState[] = $.extend(true, [], states);
+                var currentStates: Model.ButtonState[] = $.extend(true, [], states);
 
-                let targetStates: IGState[];
+                let targetStates: Model.ButtonState[];
                 if (_.isUndefined(stateId) ) {
                     // stateId が指定されていない場合は、全 state を更新
                     targetStates = states;
@@ -3521,7 +3524,7 @@ module Garage {
                     return;
                 }
 
-                targetStates.forEach((targetState: IGState) => {
+                targetStates.forEach((targetState: Model.ButtonState) => {
 
                     let keys = Object.keys(props);
                     keys.forEach((key) => {
@@ -3629,7 +3632,7 @@ module Garage {
             *  @buttonAreaW{number} 変更対象のボタンのW
             *  @buttonAreaH{number} 変更対象のボタンのH
             */
-            private updateButtonOnCanvas(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
+            private updateButtonOnCanvas(stateId: number, key: string, value, targetState: Model.ButtonState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
                     // canvas 上のスタイルと詳細エリアの更新
                         switch (key) {
                             case "text":

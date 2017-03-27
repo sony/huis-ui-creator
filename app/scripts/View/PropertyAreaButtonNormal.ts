@@ -467,15 +467,15 @@ module Garage {
 
                 let tmpState = this.model.state[stateId];
 
-                let newState: IGState = {
-                    id: tmpState.id,
-                    image: (tmpState && tmpState.image) ? tmpState.image : undefined,
-                    label: (tmpState && tmpState.label) ? tmpState.label : undefined,
-                    action: actionsForUpdate && 0 < actionsForUpdate.length ? actionsForUpdate : undefined,
-                    translate: tmpState.translate && 0 < tmpState.translate.length ? tmpState.translate : undefined
-                };
+                // TODO
+                let newState = new Model.ButtonState({});
+                newState.id = tmpState.id;
+                newState.image = tmpState.image;
+                newState.label = tmpState.label;
+                newState.action = tmpState.action;
+                newState.translate = tmpState.translate;
 
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
                 //全stateを更新。
                 for (let i = 0; i < this.model.state.length; i++) {
                     if (i == stateId) {

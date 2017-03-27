@@ -323,7 +323,7 @@ module Garage {
              * @param moduleId {string} [in] 取得する module の ID
              * @return {IGModule} 指定された ID の module
              */
-            getModule(moduleId: string): IGModule {
+            getModule(moduleId: string): Model.Module {
                 return this.moduleView_.getModule(moduleId);
             }
 
