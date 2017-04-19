@@ -373,10 +373,13 @@ module Garage {
                     //module名を変更。
                     let newModuleName: string = null;
                     let moduleNameSeparate: string[] = face.modules[i].name.split("_");
-                    let oldRemoteId: string = moduleNameSeparate[0];
-                    let stringPage: string = moduleNameSeparate[1];
-                    let pageNum: string = moduleNameSeparate[2];
-                    newModuleName = newRemoteId + "_" + stringPage + "_" + pageNum;
+                    
+                    //remoteIdを更新する
+                    newModuleName = newRemoteId;
+                    for (let i = 1; i < moduleNameSeparate.length; i++){
+                        newModuleName += "_" + moduleNameSeparate[i];
+                    }
+
                     convertedFace.modules[i].name = newModuleName;
 
                     //module内のbuttonのimageのfilePathを変更。
