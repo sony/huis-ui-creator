@@ -424,13 +424,17 @@ module Garage {
                             }
                         }));
 
-                        //対象がフルカスタムリモコンのときのみ表示
+                        //エキスポート
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                                 click: () => {
-                                    let face: IGFace = huisFiles.getFace(remoteId);
+                                    let face: Model.Face = huisFiles.getFace(remoteId);
 
-                                    this.exportRemote(remoteId, face.name, face.category,face.modules); // true で警告なし
+                                    //masterFaceを取得。
+                                    let isMaster: boolean = true;
+                                    let masterFace: Model.Face = huisFiles.getFace(remoteId, isMaster);
+
+                                    this.exportRemote(face, masterFace); // true で警告なし
                             }
                         }));
                         

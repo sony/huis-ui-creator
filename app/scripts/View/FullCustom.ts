@@ -302,10 +302,8 @@ module Garage {
 
              */
             private _onCommandExportRemote(event: Event) {
-                let gmodules = this.faceRenderer_canvas_.getModules();
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
-                let faceName: string = $("#input-face-name").val();
-                let deviceType = DEVICE_TYPE_FULL_CUSTOM;
+                let face: Model.Face = huisFiles.getFace(remoteId);
 
                 //errorハンドリング
                 let errorOccur: boolean = this._isErrorOccurBeforeSave(true);
@@ -313,7 +311,7 @@ module Garage {
                     return;
                 }
 
-                this.exportRemote(remoteId, faceName, deviceType,gmodules);
+                this.exportRemote(face);
             }
 
 
