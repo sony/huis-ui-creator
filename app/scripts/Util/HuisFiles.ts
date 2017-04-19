@@ -1301,12 +1301,14 @@ module Garage {
              * face を新規作成した場合は、remotelist.json を更新する。
              * 
              * @param remoteId {string} 更新または新規作成する face の remote ID
-             * @param faceName {string} 更新または新規作成する face の名前 
+             * @param faceName {string} 更新または新規作成する face の名前
+             * @param deviceType {string} 更新または新規作成する faceの デバイスタイプ
              * @param gmodules {IGModule[]} face 内で参照する module のデータ
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            updateFace(remoteId: string, faceName: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, deviceType: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+
                 let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
 
                 let df = $.Deferred<void>();
@@ -1325,7 +1327,7 @@ module Garage {
                 // face ファイルの更新
                 var face: IPlainFace = {
                     name: faceName,
-                    category: "fullcustom",
+                    category: deviceType,
                     modules: moduleNames
                 };
 

@@ -410,7 +410,7 @@ module Garage {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 try{
                     syncTask.copyFilesSimply(src, dst, () => {
-                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true)
+                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name,convertedFace.category, convertedFace.modules, null, true)
                             .then(() => {
                                 df.resolve();
                             }).fail((err) => {

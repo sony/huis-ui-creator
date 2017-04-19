@@ -305,6 +305,7 @@ module Garage {
                 let gmodules = this.faceRenderer_canvas_.getModules();
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
+                let deviceType = DEVICE_TYPE_FULL_CUSTOM;
 
                 //errorハンドリング
                 let errorOccur: boolean = this._isErrorOccurBeforeSave(true);
@@ -312,7 +313,7 @@ module Garage {
                     return;
                 }
 
-                this.exportRemote(remoteId, faceName, gmodules);
+                this.exportRemote(remoteId, faceName, deviceType,gmodules);
             }
 
 
@@ -2795,7 +2796,7 @@ module Garage {
                 });
                 dialog.show().css("color", "white");
 
-                huisFiles.updateFace(remoteId, faceName, gmodules, this.buttonDeviceInfoCache)
+                huisFiles.updateFace(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, gmodules, this.buttonDeviceInfoCache)
                     .always(() => {
                         garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, remoteId);
                         if (HUIS_ROOT_PATH) {

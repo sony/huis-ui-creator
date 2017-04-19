@@ -25,6 +25,7 @@ module Garage {
             private filePathBeforeCompressionFile: string; //一時的な作業フォルダのパス
             private targetRemoteId: string;
             private targetFaceName: string;
+            private targetDeviceType: string;
             private targetModules: Model.Module[];
 
             /**
@@ -33,10 +34,11 @@ module Garage {
              * @param faceName エクスポート対象のリモコンのfaceファイル名
              * @param modules エクスポート対象のリモコンのモジュール
              */
-             constructor(remoteId :string, faceName: string, modules: Model.Module[]) {
+             constructor(remoteId :string, faceName: string, deviceType : string, modules: Model.Module[]) {
                  this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
                  this.targetRemoteId = remoteId;
                  this.targetFaceName = faceName;
+                 this.targetDeviceType = deviceType;
                  this.targetModules = modules;
             }
 
@@ -136,7 +138,7 @@ module Garage {
 
                  this.deleteTmpFolerAsync()
                      .then(() => {
-                         return this.outputTemporaryFolder(this.targetFaceName, this.targetModules);
+                         return this.outputTemporaryFolder(this.targetFaceName, this.targetDeviceType, this.targetModules);
                      }).then(() => {
                          return this.compress(dstFile);
                      }).then(() => {
@@ -153,9 +155,10 @@ module Garage {
             /*
              * エクスポートするファイルをzip化する前に一時フォルダに書き出しておく
              * @param faceName{string}:リモコン名
+             * @param deviceType{string} :デバイスタイプ
              * @param gmodules{IGModules} :書き出すリモコンにあるModule
              */
-             private outputTemporaryFolder(faceName: string, gmodules: Model.Module[]): CDP.IPromise<void> {
+             private outputTemporaryFolder(faceName: string, deviceType : string , gmodules: Model.Module[]): CDP.IPromise<void> {
                  let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
                  console.log("create temporary files: " + faceName);
 
@@ -195,7 +198,7 @@ module Garage {
                          // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
 
                          //現在のfaceを書き出す。
-                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, cache, true, this.filePathBeforeCompressionFile)
+                         huisFiles.updateFace(this.targetRemoteId, faceName, deviceType, gmodules, cache, true, this.filePathBeforeCompressionFile)
                              .done(() => {
 
                                  //キャッシュファイルをコピー
