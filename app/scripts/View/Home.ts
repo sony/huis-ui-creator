@@ -390,7 +390,8 @@ module Garage {
 
                         let remoteId = $face.data("remoteid");
 
-                        //対象がフルカスタムリモコンのときのみ表示
+                        // 対象がフルカスタムリモコンのときのみ表示
+                        // 編集画面へ移動機能をコンテキストメニューに表示
                         if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
                             this.contextMenu_.append(new MenuItem({
                                 label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
@@ -400,6 +401,7 @@ module Garage {
                             }));
                         }
 
+                        // コピー機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
                             click: () => {
@@ -408,6 +410,7 @@ module Garage {
                             }
                         }));
 
+                        //削除機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
@@ -424,7 +427,7 @@ module Garage {
                             }
                         }));
 
-                        //エキスポート
+                        //エキスポート機能をコンテキストメニューに表示。
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                                 click: () => {
