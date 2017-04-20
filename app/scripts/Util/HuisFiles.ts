@@ -1307,7 +1307,7 @@ module Garage {
              * @param cache {ButtonDeviceInfoCache} 一緒に書き出す キャッシュ用のファイル。
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
-             * @param isMasterFace{string} masterFaceファイルを書き出す際に
+             * @param isMasterFace{string} masterFaceファイルを書き出す際にはtrueを入力する。
              */
             updateFace(remoteId: string, faceName: string, deviceType: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string, isMasterFace:boolean = false): IPromise<void> {
 
