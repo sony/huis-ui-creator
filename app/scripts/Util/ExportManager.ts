@@ -191,14 +191,28 @@ module Garage {
                          // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
 
                          //現在のfaceを書き出す。
-                         huisFiles.updateFace(this.targetFace.remoteId, this.targetFace.name, this.targetFace.category, this.targetFace.modules, cache, true, this.filePathBeforeCompressionFile)
-                            .then(() => {
+                         huisFiles.updateFace(
+                             this.targetFace.remoteId,
+                             this.targetFace.name,
+                             this.targetFace.category,
+                             this.targetFace.modules,
+                             cache,
+                             true,
+                             this.filePathBeforeCompressionFile).then(() => {
                                 //キャッシュファイルをコピー
                                 this.copyCache(targetRemoteIdFolderPath);
 
                                 //masterFaceがある場合、内容をコピー
                                  if (this.targetMasterFace != null) {
-                                     return huisFiles.updateFace(this.targetMasterFace.remoteId, this.targetMasterFace.name, this.targetMasterFace.category, this.targetMasterFace.modules, cache, true, this.filePathBeforeCompressionFile,true);
+                                     return huisFiles.updateFace(
+                                         this.targetMasterFace.remoteId,
+                                         this.targetMasterFace.name,
+                                         this.targetMasterFace.category,
+                                         this.targetMasterFace.modules,
+                                         cache,
+                                         true,
+                                         this.filePathBeforeCompressionFile,
+                                         true);
                                  } else {                             
                                      console.log("succeeded to updateFace with face: " + this.targetFace.remoteId + ", " + this.targetFace.name);
                                      df.resolve();

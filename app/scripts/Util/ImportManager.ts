@@ -475,8 +475,15 @@ module Garage {
                 this.hasAirconditioner = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_AC);
 
                 try {
-                    huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.category, convertedFace.modules, null, true, null, isMaster)
-                        .then(() => {
+                    huisFiles.updateFace(
+                        convertedFace.remoteId,
+                        convertedFace.name,
+                        convertedFace.category,
+                        convertedFace.modules,
+                        null,
+                        true,
+                        null,
+                        isMaster).then(() => {
                             df.resolve();
                         }).fail((err) => {
                             df.reject(err);
