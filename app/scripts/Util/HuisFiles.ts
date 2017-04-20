@@ -1332,16 +1332,16 @@ module Garage {
                     modules: moduleNames
                 };
 
-                let fileName = remoteId + ".face"
+                let faceFileName = remoteId + ".face"
                 if (isMasterFace) {
-                    fileName = "master_" + fileName;
+                    faceFileName = "master_" + faceFileName;
                 }
 
-                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, fileName);
+                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, faceFileName);
 
                 //ファイルパスの指定がある場合、書き出し先を変更する。
                 if (outputDirPath != null) {
-                    faceFilePath = path.join(outputDirPath, remoteId, fileName);
+                    faceFilePath = path.join(outputDirPath, remoteId, faceFileName);
                 }
 
                 fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
