@@ -28,10 +28,8 @@ module Garage {
 
             /**
              * コンストラクター
-             * @param remoteId エクスポート対象のリモコンのremoteId
-             * @param faceName エクスポート対象のリモコンのfaceファイル名
-             * @param modules エクスポート対象のリモコンのモジュール
-             * @param masterModuells エクスポート対象のリモコンのマスターフェースのモジュール。
+             * @param face{Model} エクスポート対象のリモコンのFaceモデル
+             * @param masterFace{Model} エクスポート対象のリモコンのMasterFaceのfaceモデル。いっしょにエクスポートする場合に入力。
              */
              constructor(face:Model.Face, masterFace : Model.Face= null) {
                  this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
