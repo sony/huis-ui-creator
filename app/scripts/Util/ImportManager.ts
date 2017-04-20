@@ -451,15 +451,8 @@ module Garage {
                     convertedFace.modules[i].remoteId = newRemoteId;
 
                     //module名を変更。先頭のremoteIdのみ新しいremoteIdと入れ替える。
-                    let newModuleName: string = null;
-                    let moduleNameSeparate: string[] = oldFace.modules[i].name.split("_");
-                    //remoteIdを更新する
-                    newModuleName = newRemoteId;
-                    for (let j = 1; j < moduleNameSeparate.length; j++){
-                        //[0]はremoteIdであり、新しいremoteIDに更新する必要があるので [1]から追加する。 
-                        newModuleName += "_" + moduleNameSeparate[j];
-                    }
-
+                    let newModuleName: string = oldFace.modules[i].name;
+                    newModuleName = newRemoteId + "_" + newModuleName.substr(newModuleName.indexOf("_") + 1);
                     convertedFace.modules[i].name = newModuleName;
 
                     //module内のbuttonのimageのfilePathを変更。
