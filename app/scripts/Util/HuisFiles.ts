@@ -1304,6 +1304,7 @@ module Garage {
              * @param faceName {string} 更新または新規作成する face の名前
              * @param deviceType {string} 更新または新規作成する faceの デバイスタイプ
              * @param gmodules {IGModule[]} face 内で参照する module のデータ
+             * @param cache {ButtonDeviceInfoCache} 一緒に書き出す キャッシュ用のファイル。
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              * @param isMaster{string} masterFaceファイルを書き出す際に
