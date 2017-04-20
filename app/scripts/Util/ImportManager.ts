@@ -245,7 +245,7 @@ module Garage {
                 //読み込み対象のファイルの.faceファイルのパス
                 let facePath = path.join(dirPath, decompressedRemoteId, fileName).replace(/\\/g, "/");
 
-                //対象のデータをIGFaceとして読み込み
+                //対象のデータをModel.Faceとして読み込み
                 return huisFiles._parseFace(facePath, decompressedRemoteId, dirPath);
             }
 
