@@ -476,10 +476,7 @@ module Garage {
 
                 try {
                     huisFiles.updateFace(
-                        convertedFace.remoteId,
-                        convertedFace.name,
-                        convertedFace.category,
-                        convertedFace.modules,
+                        convertedFace,
                         null,
                         true,
                         null,

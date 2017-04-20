@@ -192,10 +192,7 @@ module Garage {
 
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(
-                             this.getTargetRemoteId(),
-                             this.targetFace.name,
-                             this.targetFace.category,
-                             this.targetFace.modules,
+                             this.targetFace,
                              cache,
                              true,
                              this.filePathBeforeCompressionFile).then(() => {
@@ -205,10 +202,7 @@ module Garage {
                                 //masterFaceがある場合、内容をコピー
                                  if (this.targetMasterFace != null) {
                                      return huisFiles.updateFace(
-                                         this.targetMasterFace.remoteId,
-                                         this.targetMasterFace.name,
-                                         this.targetMasterFace.category,
-                                         this.targetMasterFace.modules,
+                                         this.targetMasterFace,
                                          cache,
                                          true,
                                          this.filePathBeforeCompressionFile,

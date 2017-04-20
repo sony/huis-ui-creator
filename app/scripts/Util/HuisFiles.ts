@@ -1299,22 +1299,28 @@ module Garage {
              * face ファイルを更新する。
              * 指定した remoteId の face が存在しない場合は、新規作成する。
              * face を新規作成した場合は、remotelist.json を更新する。
-             * 
-             * @param remoteId {string} 更新または新規作成する face の remote ID
-             * @param faceName {string} 更新または新規作成する face の名前
-             * @param deviceType {string} 更新または新規作成する faceの デバイスタイプ
-             * @param gmodules {IGModule[]} face 内で参照する module のデータ
-             * @param cache {ButtonDeviceInfoCache} 一緒に書き出す キャッシュ用のファイル。
-             * @param isToImportExport {bollean} importExport用に使われる場合true
-             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
-             * @param isMasterFace{string} masterFaceファイルを書き出す際にはtrueを入力する。
+             *
+             * @param {Model.Face}  inputFace 更新後のface情報 
+             * @param {ButtonDeviceInfoCache} cache  一緒に書き出す キャッシュ用のファイル。
+             * @param {bollean} isToImportExport  importExport用に使われる場合true
+             * @param {string} outputDirPath?  faceファイルの出力先のディレクトリを指定したい場合入力する。
+             * @param {string} isMasterFace masterFaceファイルを書き出す際にはtrueを入力する。
              */
-            updateFace(remoteId: string, faceName: string, deviceType: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string, isMasterFace:boolean = false): IPromise<void> {
+            updateFace(inputFace:Model.Face, cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string, isMasterFace:boolean = false): IPromise<void> {
 
                 let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
 
+                if (inputFace == null) {
+                    console.warn(FUNCTION_NAME + "inputFace is invalid");
+                }
+
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
+
+                let remoteId = inputFace.remoteId;
+                let faceName = inputFace.name;
+                let deviceType = inputFace.category;
+                let gmodules = inputFace.modules;
 
                 var moduleCount = gmodules.length;
                 let modules: IModule[] = [];
