@@ -640,9 +640,8 @@ module Garage {
 
             /*
              * リモコンをエクスポートする
-             * @param remoteId{string} エクスポートするリモコンのID
-             * @param faceName{string}:リモコン名
-             * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
+             * @param face {Model.Face} エクスポートするリモコンのfaceモデル
+             * @param masterFace{Model.Face}: エクスポートするリモコンのmasterFace用のモデル。いっしょにエクスポートする場合に入力。
              */
             protected exportRemote(face:Model.Face, masterFace:Model.Face = null) {
                 let exportManager: Util.ExportManager = new Util.ExportManager(face, masterFace);
