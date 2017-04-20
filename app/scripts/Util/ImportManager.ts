@@ -220,10 +220,11 @@ module Garage {
             /*
              * 展開されたインポートファイルから、face情報を読み取る。
              * @param  dirPath{string} .faceファイルが格納されているフォルダのパス。
+             * @param  fileName {string} .faceファイルの名前
              * @param  decompressedRemoteId{string} 展開されたリモコンのremoteId
-             * @return {IGFace} インポートされたリモコンのface情報
+             * @return {Model.Face} インポートされたリモコンのface情報
              */
-            private readDecompressedFile(dirPath:string, decompressedRemoteId:string, isMaster : boolean = false): Model.Face {
+            private readDecompressedFile(dirPath: string, fileName:string , decompressedRemoteId:string): Model.Face {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 if (dirPath == null) {
@@ -231,17 +232,14 @@ module Garage {
                     return;
                 }
 
-                if (decompressedRemoteId == null) {
-                    console.warn(FUNCTION_NAME + "remoteId is invalid");
+                if (fileName == null) {
+                    console.warn(FUNCTION_NAME + "faceFileName is invalid");
                     return;
                 }
 
-                let fileName = decompressedRemoteId + ".face";
-
-                //masterFaceファイルの場合の対応。
-
-                if (isMaster) {
-                    fileName = "master_" + fileName;
+                if (decompressedRemoteId == null) {
+                    console.warn(FUNCTION_NAME + "remoteId is invalid");
+                    return;
                 }
 
                 //読み込み対象のファイルの.faceファイルのパス
@@ -377,8 +375,11 @@ module Garage {
                         //キャッシュファイルをコピー
                         this.copyCache(dirPath, newRemoteId, decompressRemoteId);
 
-                        let face: Model.Face = this.readDecompressedFile(dirPath, decompressRemoteId);
-                        let masterFace: Model.Face = this.readDecompressedFile(dirPath, decompressRemoteId, true);
+                        let faceFileName = decompressRemoteId + ".face";
+                        let face: Model.Face = this.readDecompressedFile(dirPath, faceFileName, decompressRemoteId);
+
+                        let masterFacefileName = "master_" + decompressRemoteId + ".face";
+                        let masterFace: Model.Face = this.readDecompressedFile(dirPath, masterFacefileName,decompressRemoteId);
 
                         //faceを変換してコピー
                         this.convertAndOutputFace(face, newRemoteId)
