@@ -386,10 +386,10 @@ module Garage {
                             .then(() => {
 
                                 //masterFaceがある場合、masterFaceもコピー
-                                if (masterFace == null) {
-                                    df.resolve();
+                                if (masterFace != null) {
+                                    return this.convertAndOutputFace(masterFace, newRemoteId, true);
                                 } else {
-                                    return this.convertAndOutputFace(masterFace, newRemoteId,true);
+                                    df.resolve();
                                 }
 
                             }).done(() => {

@@ -198,6 +198,7 @@ module Garage {
                                 //キャッシュファイルをコピー
                                 this.copyCache(targetRemoteIdFolderPath);
 
+                                //masterFaceがある場合、内容をコピー
                                  if (this.targetMasterFace != null) {
                                      return huisFiles.updateFace(this.targetMasterFace.remoteId, this.targetMasterFace.name, this.targetMasterFace.category, this.targetMasterFace.modules, cache, true, this.filePathBeforeCompressionFile,true);
                                  } else {                             
