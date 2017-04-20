@@ -1306,8 +1306,9 @@ module Garage {
              * @param gmodules {IGModule[]} face 内で参照する module のデータ
              * @param isToImportExport {bollean} importExport用に使われる場合true
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             * @param isMaster{string} masterFaceファイルを書き出す際に
              */
-            updateFace(remoteId: string, faceName: string, deviceType: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string): IPromise<void> {
+            updateFace(remoteId: string, faceName: string, deviceType: string, gmodules: Model.Module[], cache: ButtonDeviceInfoCache, isToImportExport: boolean = false, outputDirPath? : string, isMasterFace:boolean = false): IPromise<void> {
 
                 let FUNCTION_NAME = TAGS.HuisFiles + "updateFace : ";
 
@@ -1331,12 +1332,16 @@ module Garage {
                     modules: moduleNames
                 };
 
+                let fileName = remoteId + ".face"
+                if (isMasterFace) {
+                    fileName = "master_" + fileName;
+                }
 
-                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, remoteId + ".face");
+                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, fileName);
 
                 //ファイルパスの指定がある場合、書き出し先を変更する。
                 if (outputDirPath != null) {
-                    faceFilePath = path.join(outputDirPath, remoteId, remoteId + ".face");
+                    faceFilePath = path.join(outputDirPath, remoteId, fileName);
                 }
 
                 fs.outputJSONSync(faceFilePath, face, { spaces: 2 });

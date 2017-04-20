@@ -194,17 +194,24 @@ module Garage {
 
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(this.targetFace.remoteId, this.targetFace.name, this.targetFace.category, this.targetFace.modules, cache, true, this.filePathBeforeCompressionFile)
-                             .done(() => {
+                            .then(() => {
+                                //キャッシュファイルをコピー
+                                this.copyCache(targetRemoteIdFolderPath);
 
-                                 //キャッシュファイルをコピー
-                                 this.copyCache(targetRemoteIdFolderPath);
+                                 if (this.targetMasterFace != null) {
+                                     return huisFiles.updateFace(this.targetMasterFace.remoteId, this.targetMasterFace.name, this.targetMasterFace.category, this.targetMasterFace.modules, cache, true, this.filePathBeforeCompressionFile,true);
+                                 } else {                             
+                                     console.log("succeeded to updateFace with face: " + this.targetFace.remoteId + ", " + this.targetFace.name);
+                                     df.resolve();
+                                 }
 
-                                 console.log("succeeded to updateFace: " + this.targetFace.remoteId + ", " + this.targetFace.name);
-                                 df.resolve();
-                             }).fail(() => {
+                            }).done(() => {
+                                console.log("succeeded to updateFace with fullcustom: " + this.targetFace.remoteId + ", " + this.targetFace.name);
+                                df.resolve();
+                            }).fail(() => {
                                  console.log("failed to updateFace: " + this.targetFace.remoteId + ", " + this.targetFace.name);
                                  df.reject();
-                             });
+                            });
 
                      });
                  } catch (err) {
