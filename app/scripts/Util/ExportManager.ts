@@ -162,7 +162,7 @@ module Garage {
                      fs.mkdirSync(this.filePathBeforeCompressionFile);
                  }
 
-                 let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.targetFace.remoteId).replace(/\\/g, "/");
+                 let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId()).replace(/\\/g, "/");
                  if (!fs.existsSync(targetRemoteIdFolderPath)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(targetRemoteIdFolderPath);
                  }
@@ -173,9 +173,9 @@ module Garage {
                  }
 
                  //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                 let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.targetFace.remoteId).replace(/\\/g, "/");
+                 let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
                  //コピー先のファイルパス : HuisFiles以下のremoteImages
-                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.targetFace.remoteId, REMOTE_IMAGES_DIRRECOTORY_NAME, this.targetFace.remoteId).replace(/\\/g, "/");
+                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRRECOTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
 
                  if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(dst);
@@ -187,12 +187,12 @@ module Garage {
                      let syncTask = new Util.HuisDev.FileSyncTask();
                      syncTask.copyFilesSimply(src, dst, () => {
 
-                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.targetFace.remoteId );
+                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId() );
                          // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
 
                          //現在のfaceを書き出す。
                          huisFiles.updateFace(
-                             this.targetFace.remoteId,
+                             this.getTargetRemoteId(),
                              this.targetFace.name,
                              this.targetFace.category,
                              this.targetFace.modules,
@@ -214,15 +214,15 @@ module Garage {
                                          this.filePathBeforeCompressionFile,
                                          true);
                                  } else {                             
-                                     console.log("succeeded to updateFace with face: " + this.targetFace.remoteId + ", " + this.targetFace.name);
+                                     console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                      df.resolve();
                                  }
 
                             }).done(() => {
-                                console.log("succeeded to updateFace with fullcustom: " + this.targetFace.remoteId + ", " + this.targetFace.name);
+                                console.log("succeeded to updateFace with fullcustom: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                 df.resolve();
                             }).fail(() => {
-                                 console.log("failed to updateFace: " + this.targetFace.remoteId + ", " + this.targetFace.name);
+                                 console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                  df.reject();
                             });
 
@@ -344,7 +344,7 @@ module Garage {
 
                 try {
                     //エクスポート対象のキャッシュファイルを読み込み先
-                    let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.targetFace.remoteId, this.targetFace.remoteId + "_buttondeviceinfo.cache");
+                    let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.getTargetRemoteId(), this.getTargetRemoteId() + "_buttondeviceinfo.cache");
                     if (!fs.existsSync(cacheReadFilePath)) {
                         return null;
                     }
@@ -354,15 +354,28 @@ module Garage {
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(outputDirectoryPath);
                     }
-                    let outputFilePath: string = path.join(outputDirectoryPath, this.targetFace.remoteId + "_buttondeviceinfo.cache");
+                    let outputFilePath: string = path.join(outputDirectoryPath, this.getTargetRemoteId() + "_buttondeviceinfo.cache");
                     fs.copySync(cacheReadFilePath, outputFilePath);
                 } catch (err) {
                     console.error(FUNCITON_NAME + "error occur : " + err);
                     return null;
                 }
+             }
 
+
+            /*
+             * エクスポート対象のremoteIdを取得する
+             * @return remoteId{string}
+             */
+            private getTargetRemoteId() {
+                let FUNCTION_NAME =TAG +  " getRemoteId() : ";
+
+                if (this.targetFace == null) {
+                    console.error(FUNCTION_NAME + "this.targetFace is invalid");
+                }
+
+                return this.targetFace.remoteId;
             }
-
             
 
         }
