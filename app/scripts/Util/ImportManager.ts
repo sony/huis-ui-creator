@@ -439,7 +439,7 @@ module Garage {
                 convertedFace.remoteId = newRemoteId;
 
       
-                if (!convertedFace.modules) {
+                if (convertedFace.modules == null) {
                     console.error("modules not found. remoteId: " + oldFace.remoteId);
                     df.reject("modules not found. remoteId: " + oldFace.remoteId, ImportManager.createRemoteFileErrorMessage());
                     return promise;
