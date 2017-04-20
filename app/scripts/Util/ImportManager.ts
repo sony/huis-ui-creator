@@ -455,8 +455,8 @@ module Garage {
 
                     //remoteIdを更新する
                     newModuleName = newRemoteId;
-                    for (let i = 1; i < moduleNameSeparate.length; i++){
-                        newModuleName += "_" + moduleNameSeparate[i];
+                    for (let j = 1; j < moduleNameSeparate.length; j++){
+                        newModuleName += "_" + moduleNameSeparate[j];
                     }
 
                     convertedFace.modules[i].name = newModuleName;
