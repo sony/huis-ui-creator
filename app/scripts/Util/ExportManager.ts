@@ -23,21 +23,18 @@ module Garage {
         export class ExportManager {
 
             private filePathBeforeCompressionFile: string; //一時的な作業フォルダのパス
-            private targetRemoteId: string;
-            private targetFaceName: string;
-            private targetModules: Model.Module[];
+            private targetFace: Model.Face;
+            private targetMasterFace: Model.Face;
 
             /**
              * コンストラクター
-             * @param remoteId エクスポート対象のリモコンのremoteId
-             * @param faceName エクスポート対象のリモコンのfaceファイル名
-             * @param modules エクスポート対象のリモコンのモジュール
+             * @param face{Model} エクスポート対象のリモコンのFaceモデル
+             * @param masterFace{Model} エクスポート対象のリモコンのMasterFaceのfaceモデル。いっしょにエクスポートする場合に入力。
              */
-             constructor(remoteId :string, faceName: string, modules: Model.Module[]) {
+             constructor(face:Model.Face, masterFace : Model.Face= null) {
                  this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
-                 this.targetRemoteId = remoteId;
-                 this.targetFaceName = faceName;
-                 this.targetModules = modules;
+                 this.targetFace = face;
+                 this.targetMasterFace = masterFace;
             }
 
 
@@ -136,7 +133,7 @@ module Garage {
 
                  this.deleteTmpFolerAsync()
                      .then(() => {
-                         return this.outputTemporaryFolder(this.targetFaceName, this.targetModules);
+                         return this.outputTemporaryFolder();
                      }).then(() => {
                          return this.compress(dstFile);
                      }).then(() => {
@@ -152,12 +149,11 @@ module Garage {
 
             /*
              * エクスポートするファイルをzip化する前に一時フォルダに書き出しておく
-             * @param faceName{string}:リモコン名
-             * @param gmodules{IGModules} :書き出すリモコンにあるModule
              */
-             private outputTemporaryFolder(faceName: string, gmodules: Model.Module[]): CDP.IPromise<void> {
+             private outputTemporaryFolder(): CDP.IPromise<void> {
                  let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
-                 console.log("create temporary files: " + faceName);
+
+                 console.log("create temporary files: " + this.targetFace.name);
 
                  let df = $.Deferred<void>();
                  let promise = CDP.makePromise(df);
@@ -166,7 +162,7 @@ module Garage {
                      fs.mkdirSync(this.filePathBeforeCompressionFile);
                  }
 
-                 let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.targetRemoteId).replace(/\\/g, "/");
+                 let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId()).replace(/\\/g, "/");
                  if (!fs.existsSync(targetRemoteIdFolderPath)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(targetRemoteIdFolderPath);
                  }
@@ -177,9 +173,9 @@ module Garage {
                  }
 
                  //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                 let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.targetRemoteId).replace(/\\/g, "/");
+                 let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
                  //コピー先のファイルパス : HuisFiles以下のremoteImages
-                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.targetRemoteId, REMOTE_IMAGES_DIRRECOTORY_NAME, this.targetRemoteId).replace(/\\/g, "/");
+                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRRECOTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
 
                  if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(dst);
@@ -191,22 +187,38 @@ module Garage {
                      let syncTask = new Util.HuisDev.FileSyncTask();
                      syncTask.copyFilesSimply(src, dst, () => {
 
-                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.targetRemoteId );
+                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId() );
                          // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
 
                          //現在のfaceを書き出す。
-                         huisFiles.updateFace(this.targetRemoteId, faceName, gmodules, cache, true, this.filePathBeforeCompressionFile)
-                             .done(() => {
+                         huisFiles.updateFace(
+                             this.targetFace,
+                             cache,
+                             true,
+                             this.filePathBeforeCompressionFile).then(() => {
+                                //キャッシュファイルをコピー
+                                this.copyCache(targetRemoteIdFolderPath);
 
-                                 //キャッシュファイルをコピー
-                                 this.copyCache(targetRemoteIdFolderPath);
+                                //masterFaceがある場合、内容をコピー
+                                 if (this.targetMasterFace != null) {
+                                     return huisFiles.updateFace(
+                                         this.targetMasterFace,
+                                         cache,
+                                         true,
+                                         this.filePathBeforeCompressionFile,
+                                         true);
+                                 } else {                             
+                                     console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                                     df.resolve();
+                                 }
 
-                                 console.log("succeeded to updateFace: " + this.targetRemoteId + ", " + faceName);
-                                 df.resolve();
-                             }).fail(() => {
-                                 console.log("failed to updateFace: " + this.targetRemoteId + ", " + faceName);
+                            }).done(() => {
+                                console.log("succeeded to updateFace with fullcustom: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                                df.resolve();
+                            }).fail(() => {
+                                 console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                  df.reject();
-                             });
+                            });
 
                      });
                  } catch (err) {
@@ -326,7 +338,7 @@ module Garage {
 
                 try {
                     //エクスポート対象のキャッシュファイルを読み込み先
-                    let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.targetRemoteId, this.targetRemoteId + "_buttondeviceinfo.cache");
+                    let cacheReadFilePath = path.join(HUIS_FILES_ROOT, this.getTargetRemoteId(), this.getTargetRemoteId() + "_buttondeviceinfo.cache");
                     if (!fs.existsSync(cacheReadFilePath)) {
                         return null;
                     }
@@ -336,15 +348,28 @@ module Garage {
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(outputDirectoryPath);
                     }
-                    let outputFilePath: string = path.join(outputDirectoryPath, this.targetRemoteId + "_buttondeviceinfo.cache");
+                    let outputFilePath: string = path.join(outputDirectoryPath, this.getTargetRemoteId() + "_buttondeviceinfo.cache");
                     fs.copySync(cacheReadFilePath, outputFilePath);
                 } catch (err) {
                     console.error(FUNCITON_NAME + "error occur : " + err);
                     return null;
                 }
+             }
 
+
+            /*
+             * エクスポート対象のremoteIdを取得する
+             * @return remoteId{string}
+             */
+            private getTargetRemoteId() {
+                let FUNCTION_NAME =TAG +  " getRemoteId() : ";
+
+                if (this.targetFace == null) {
+                    console.error(FUNCTION_NAME + "this.targetFace is invalid");
+                }
+
+                return this.targetFace.remoteId;
             }
-
             
 
         }

@@ -258,7 +258,7 @@ module Garage {
                 }
 
                 let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
-                huisFiles.updateFace(face.remoteId, face.name, face.modules, buttonDeviceInfoCache)
+                huisFiles.updateFace(face, buttonDeviceInfoCache)
                     .always(() => {
                         garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
                         if (HUIS_ROOT_PATH) {
@@ -390,7 +390,8 @@ module Garage {
 
                         let remoteId = $face.data("remoteid");
 
-                        //対象がフルカスタムリモコンのときのみ表示
+                        // 対象がフルカスタムリモコンのときのみ表示
+                        // 編集画面へ移動機能をコンテキストメニューに表示
                         if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
                             this.contextMenu_.append(new MenuItem({
                                 label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
@@ -400,6 +401,7 @@ module Garage {
                             }));
                         }
 
+                        // コピー機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
                             click: () => {
@@ -408,6 +410,7 @@ module Garage {
                             }
                         }));
 
+                        //削除機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
@@ -424,17 +427,20 @@ module Garage {
                             }
                         }));
 
-                        //対象がフルカスタムリモコンのときのみ表示
-                        if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
-                            this.contextMenu_.append(new MenuItem({
-                                label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                        //エキスポート機能をコンテキストメニューに表示。
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
                                 click: () => {
-                                    let face: IGFace = huisFiles.getFace(remoteId);
+                                    let face: Model.Face = huisFiles.getFace(remoteId);
 
-                                    this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
-                                }
-                            }));
-                        }
+                                    //masterFaceを取得。
+                                    let isMaster: boolean = true;
+                                    let masterFace: Model.Face = huisFiles.getFace(remoteId, isMaster);
+
+                                    this.exportRemote(face, masterFace); // true で警告なし
+                            }
+                        }));
+                        
                         
                     }
 
