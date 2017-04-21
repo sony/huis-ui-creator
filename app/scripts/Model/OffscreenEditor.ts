@@ -239,6 +239,8 @@ module Garage {
                         if (pixiCache) {
                             pixiCache.destroy(true);
                         }
+                        PIXI.Texture.removeTextureFromCache(src);
+
 
                         let texture = PIXI.Texture.fromImage(src);
 
