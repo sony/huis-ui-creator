@@ -220,14 +220,20 @@ module Garage {
             /*
              * 展開されたインポートファイルから、face情報を読み取る。
              * @param  dirPath{string} .faceファイルが格納されているフォルダのパス。
+             * @param  fileName {string} .faceファイルの名前
              * @param  decompressedRemoteId{string} 展開されたリモコンのremoteId
-             * @return {IGFace} インポートされたリモコンのface情報
+             * @return {Model.Face} インポートされたリモコンのface情報
              */
-            private readDecompressedFile(dirPath:string, decompressedRemoteId:string): IGFace {
+            private readDecompressedFile(dirPath: string, fileName:string , decompressedRemoteId:string): Model.Face {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 if (dirPath == null) {
                     console.warn(FUNCTION_NAME + "dir is invalid");
+                    return;
+                }
+
+                if (fileName == null) {
+                    console.warn(FUNCTION_NAME + "faceFileName is invalid");
                     return;
                 }
 
@@ -237,9 +243,9 @@ module Garage {
                 }
 
                 //読み込み対象のファイルの.faceファイルのパス
-                let facePath = path.join(dirPath, decompressedRemoteId, decompressedRemoteId + ".face").replace(/\\/g, "/");
+                let facePath = path.join(dirPath, decompressedRemoteId, fileName).replace(/\\/g, "/");
 
-                //対象のデータをIGFaceとして読み込み
+                //対象のデータをModel.Faceとして読み込み
                 return huisFiles._parseFace(facePath, decompressedRemoteId, dirPath);
             }
 
@@ -352,45 +358,7 @@ module Garage {
                 //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
                 let newRemoteId = huisFiles.createNewRemoteId();
 
-
-                let face: IGFace = this.readDecompressedFile(dirPath, decompressRemoteId);
-                let convertedFace: IGFace = $.extend(true, {}, face);
-
-                //face名を変更
-                convertedFace.remoteId = newRemoteId;
-
-                if (!convertedFace.modules) {
-                    console.error("modules not found. remoteId: " + decompressRemoteId);
-                    df.reject("modules not found. remoteId: " + decompressRemoteId, ImportManager.createRemoteFileErrorMessage());
-                    return promise;
-                }
-                //module内の情報を更新
-                for (let i = 0; i < convertedFace.modules.length; i++) {
-
-                    //module内のremoteIdを更新
-                    convertedFace.modules[i].remoteId = newRemoteId;
-
-                    //module名を変更。
-                    let newModuleName: string = null;
-                    let moduleNameSeparate: string[] = face.modules[i].name.split("_");
-                    let oldRemoteId: string = moduleNameSeparate[0];
-                    let stringPage: string = moduleNameSeparate[1];
-                    let pageNum: string = moduleNameSeparate[2];
-                    newModuleName = newRemoteId + "_" + stringPage + "_" + pageNum;
-                    convertedFace.modules[i].name = newModuleName;
-
-                    //module内のbuttonのimageのfilePathを変更。
-                    convertedFace.modules[i].button = this.convertButtonsFilePath(convertedFace.modules[i].button, newRemoteId);
-
-                    //module内のimageのfilePathを変更。
-                    convertedFace.modules[i].image = this.convertImagesFilePath(convertedFace.modules[i].image, newRemoteId);
-
-                }
-
-                //インポートしたリモコンが注意が必要なカテゴリーを持っているかチェック
-                this.hasBluetooth = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_BT);
-                this.hasAirconditioner = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_AC);
-
+                //画像をコピー
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
                 let oldRemoteId: string = decompressRemoteId;
                 let src: string = path.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
@@ -399,16 +367,32 @@ module Garage {
                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(dst);
                 }
-
-                //キャッシュファイルをコピー
-                this.copyCache(dirPath, newRemoteId, decompressRemoteId);
-
-                //画像をコピー
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                try{
+                try {
+                    //画像のコピーの実行
                     syncTask.copyFilesSimply(src, dst, () => {
-                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true)
+
+                        //キャッシュファイルをコピー
+                        this.copyCache(dirPath, newRemoteId, decompressRemoteId);
+
+                        let faceFileName = decompressRemoteId + ".face";
+                        let face: Model.Face = this.readDecompressedFile(dirPath, faceFileName, decompressRemoteId);
+
+                        let masterFacefileName = "master_" + decompressRemoteId + ".face";
+                        let masterFace: Model.Face = this.readDecompressedFile(dirPath, masterFacefileName,decompressRemoteId);
+
+                        //faceを変換してコピー
+                        this.convertAndOutputFace(face, newRemoteId)
                             .then(() => {
+
+                                //masterFaceがある場合、masterFaceもコピー
+                                if (masterFace != null) {
+                                    return this.convertAndOutputFace(masterFace, newRemoteId, true);
+                                } else {
+                                    df.resolve();
+                                }
+
+                            }).done(() => {
                                 df.resolve();
                             }).fail((err) => {
                                 df.reject(err);
@@ -425,6 +409,83 @@ module Garage {
 
             }
 
+
+            /*
+             * 入力されたfaceモデルをインポート後に適した形に変換・書き出しする。
+             * @param face{Model.Face} インポートするリモコンのFace
+             * @param newRemoteId {string} インポート後のリモートID
+             * @param isMaster{boolean} マスターFaceか否か分別する。入力がない場合、false
+             */
+            private convertAndOutputFace(oldFace: Model.Face, newRemoteId: string, isMaster: boolean = false): IPromise<void> {
+
+                let FUNCTION_NAME = TAG + "convertAndOutputFace : ";
+
+                if (oldFace == null) {
+                    console.error(FUNCTION_NAME + "oldFace is null.");
+                    return;
+                }
+
+                if (newRemoteId == null) {
+                    console.error(FUNCTION_NAME + "newRemoteId is null.");
+                    return;
+                }
+
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                let convertedFace: Model.Face = $.extend(true, {}, oldFace);
+
+                //face名を変更
+                convertedFace.remoteId = newRemoteId;
+
+      
+                if (convertedFace.modules == null) {
+                    console.error("modules not found. remoteId: " + oldFace.remoteId);
+                    df.reject("modules not found. remoteId: " + oldFace.remoteId, ImportManager.createRemoteFileErrorMessage());
+                    return promise;
+                }
+                //module内の情報を更新
+                for (let i = 0; i < convertedFace.modules.length; i++) {
+
+                    //module内のremoteIdを更新
+                    convertedFace.modules[i].remoteId = newRemoteId;
+
+                    //module名を変更。先頭のremoteIdのみ新しいremoteIdと入れ替える。
+                    let newModuleName: string = oldFace.modules[i].name;
+                    newModuleName = newRemoteId + "_" + newModuleName.substr(newModuleName.indexOf("_") + 1);
+                    convertedFace.modules[i].name = newModuleName;
+
+                    //module内のbuttonのimageのfilePathを変更。
+                    convertedFace.modules[i].button = this.convertButtonsFilePath(convertedFace.modules[i].button, newRemoteId);
+
+                    //module内のimageのfilePathを変更。
+                    convertedFace.modules[i].image = this.convertImagesFilePath(convertedFace.modules[i].image, newRemoteId);
+
+                }
+
+                //インポートしたリモコンが注意が必要なカテゴリーを持っているかチェック
+                this.hasBluetooth = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_BT);
+                this.hasAirconditioner = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_AC);
+
+                try {
+                    huisFiles.updateFace(
+                        convertedFace,
+                        null,
+                        true,
+                        null,
+                        isMaster).then(() => {
+                            df.resolve();
+                        }).fail((err) => {
+                            df.reject(err);
+                        });
+
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
+                    df.reject(err, ImportManager.createRemoteFileErrorMessage());
+                }
+
+                return promise;
+            }
 
             /*
             * Face中にエアコンの入力したカテゴリーボタンがあるときかチェックする
