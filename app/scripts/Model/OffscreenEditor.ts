@@ -213,11 +213,11 @@ module Garage {
                 const hash = node_crypt.createHash('sha1');
 
                 // Dateオブジェクトを作成 (引数なし)
-                //let date = new Date();
                 // 現在のUNIX時間を取得する (ミリ秒単位)
-                //let unixTimestamp = date.getTime();
+                let date = new Date();
+                let unixTimestamp = date.getTime();
                 //同名でも、違う名前にするため、時間もハッシュ化の引数にいれる。
-                hash.update(basename);// + unixTimestamp);
+                hash.update(basename + unixTimestamp);
                 basename = hash.digest('hex');
                 console.log("SHA1 basename = " + basename);
                 dstPath = dirname + '/' + basename + extname;
