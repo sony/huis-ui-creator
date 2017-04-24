@@ -702,28 +702,28 @@ module Garage {
             }
 
             /*
-            * インターバルなしの一回文のシグナルのJQueryを取得する。
+            * インターバルなしの一回分のシグナルのJQueryをレンダリングする。
             * @param order{nuber} 表示する信号のorder
             * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
-            * @return {JQuery}appendして描画するためのJQuery
+            * @return {boolean} シグナルをレンダリングできたかどうか
             */
-            private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery) {
+            private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery): boolean {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;
+                    return false;
                 }
 
                 if (action == null) {
                     console.warn(FUNCTION_NAME + "action is null");
-                    return;
+                    return false;
                 }
 
                 if ($signalContainer == null) {
                     console.warn(FUNCTION_NAME + "$signalContainer is null");
-                    return;
+                    return false;
                 }
 
                 let zeroPaddingNum = ('0' + (order + 1)).slice(-2);
@@ -743,6 +743,7 @@ module Garage {
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
                 this.renderFunctionsOf(order, this.defaultState.id, functionName);
+                return true;
             }
 
             /*
@@ -755,24 +756,11 @@ module Garage {
             private renderSignalDetailWithInterval(order : number, action: IAction, $signalContainer: JQuery) {
                 let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
 
-                if (!this.isValidOrder(order)) {
-                    console.warn(FUNCTION_NAME + "order is invalid");
-                    return;
-                }
-
-                if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
-                    return;
-                }
-
-
-                if ($signalContainer == null) {
-                    console.warn(FUNCTION_NAME + "$signalContainer is null");
-                    return;
-                }
-
                 //interval以外を描写
-                this.renderSignalDetailWithoutInterval(order, action , $signalContainer);
+                if (!this.renderSignalDetailWithoutInterval(order, action, $signalContainer)) {
+                    console.warn(FUNCTION_NAME + " failed to render signal default without interval");
+                    return;
+                }
 
                 //intervalを描写
                 this.renderIntervalOf(order, action.interval);
