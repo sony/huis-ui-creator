@@ -302,7 +302,7 @@ module Garage {
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalDetailWithInterval(tmpOrder, empltyAction, $signalContainer);
+                    this.renderSignalDetail(tmpOrder, empltyAction, $signalContainer);
 
                     //一個と同じ remoteIdを入力
                     let prevOrder = tmpOrder - 1;
@@ -574,15 +574,10 @@ module Garage {
                 //一度、すべて消してから、すべての信号を描画しなおす。
                 $signalContainer.children().remove();
 
-                //一番最初の信号は、intervalは描画しない。
-                let firstOrder: number = 0;
-                let firstAction: IAction = actions[0];
-                this.renderSignalDetailWithoutInterval(firstOrder, firstAction, $signalContainer);
-
-                for (let i = 1; i < actions.length; i++) {
+                for (let i = 0; i < actions.length; i++) {
                     let order = i;
                     let action = actions[i];
-                    this.renderSignalDetailWithInterval(order, action, $signalContainer);
+                    this.renderSignalDetail(order, action, $signalContainer);
 
                     //最後のorderのとき、並び替えしたボタンを非表示にする。
                     if (i == actions.length - 1) {
@@ -702,14 +697,14 @@ module Garage {
             }
 
             /*
-            * インターバルなしの一回分のシグナルのJQueryをレンダリングする。
+            * 一回分のシグナルのJQueryをレンダリングする。
             * @param order{nuber} 表示する信号のorder
             * @param action{IAction} 表示する内容のアクション
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {boolean} シグナルをレンダリングできたかどうか
             */
-            private renderSignalDetailWithoutInterval(order : number, action : IAction, $signalContainer: JQuery): boolean {
-                let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
+            private renderSignalDetail(order : number, action : IAction, $signalContainer: JQuery): boolean {
+                let FUNCTION_NAME: string = TAG + "renderSignalDetail";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -736,44 +731,32 @@ module Garage {
                 let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
-                
                 let remoteId: string = huisFiles.getRemoteIdByAction(action);
                 this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, remoteId);
 
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
                 this.renderFunctionsOf(order, this.defaultState.id, functionName);
-                return true;
-            }
 
-            /*
-            * インターバルつきの一回分のシグナルを描画する。
-            * @param order{nuber} 表示する信号のorder
-            * @param action{IAction} 表示する内容のアクション
-            * @param $signalContainer{JQuery} 描画する先のJQuery
-            * @return {JQuery}appendして描画するためのJQuery
-            */
-            private renderSignalDetailWithInterval(order : number, action: IAction, $signalContainer: JQuery) {
-                let FUNCTION_NAME: string = TAG + "getSignalDetailWithoutInterval";
+                let intervalDetail = this.renderIntervalOf(order, action.interval);
 
-                //interval以外を描写
-                if (!this.renderSignalDetailWithoutInterval(order, action, $signalContainer)) {
-                    console.warn(FUNCTION_NAME + " failed to render signal default without interval");
-                    return;
+                // 最初のシグナルはインターバルを表示しない
+                if (order == 0) {
+                    intervalDetail.hide();
                 }
 
-                //intervalを描写
-                this.renderIntervalOf(order, action.interval);
+                return true;
             }
 
             /*
             * 指定したorderのIntervalをレンダリングする。
             * @param order{number} マクロ信号の順番
-            * @param inputInterval?{number} プルダウンに代入する値 
+            * @param inputInterval?{number} プルダウンに代入する値
+            * @return {JQuery} レンダリングしたIntervalのオブジェクト
             */
-            private renderIntervalOf(order: number, inputInterval ?: number) {
+            private renderIntervalOf(order: number, inputInterval?: number): JQuery {
                 let FUNCTION_NAME = TAG + "renderIntervalOf : ";
-                
+
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
@@ -807,6 +790,8 @@ module Garage {
                     inputInterval = 0;
                 }
                 this.setIntervalPullDownOf(order, inputInterval);
+
+                return $intervalDetail;
             }
 
             /*
