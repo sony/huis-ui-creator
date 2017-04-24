@@ -112,7 +112,7 @@ module Garage {
                         this.renderIntervalOf(0);
                         this.setIntervalPullDownOf(0, 0);
 
-                        this.removeIntervalPullDown(order);
+                        this.hideIntervalPullDown(order);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -175,7 +175,7 @@ module Garage {
                         
                         this.renderIntervalOf(0);
                         this.setIntervalPullDownOf(0, 0);
-                        this.removeIntervalPullDown(targetOrder);
+                        this.hideIntervalPullDown(targetOrder);
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
 
@@ -1090,8 +1090,8 @@ module Garage {
             * 設定したOrderのinverfal用PullDownを消す。
             * @param order {number}
             */
-            private removeIntervalPullDown(order: number) {
-                let FUNCTION_NAME = TAG + "removeIntervalPullDown";
+            private hideIntervalPullDown(order: number) {
+                let FUNCTION_NAME = TAG + "hideIntervalPullDown";
 
                 if (order == null) {
                     console.warn(FUNCTION_NAME + "order is null");
@@ -1101,7 +1101,7 @@ module Garage {
                 //対象orderのfunctionPullDown用コンテナの子供を削除する
                 let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
-                $targetFunctionPulllDownContainer.children().remove();
+                $targetFunctionPulllDownContainer.children().hide();
             }
 
             /*
@@ -1133,7 +1133,7 @@ module Garage {
                         this.setAnimationDuration($orderOneSignalContainer, duration / 1000);
 
                         //invervalを非表示
-                        this.removeIntervalPullDown(targetOrder);
+                        this.hideIntervalPullDown(targetOrder);
                     }
                 }
 
