@@ -38,7 +38,6 @@ module Garage {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
-           
 
             /**
              * constructor
@@ -46,11 +45,6 @@ module Garage {
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
             }
-
-
-
-
-
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// event method
@@ -72,10 +66,6 @@ module Garage {
                     "mouseleave .signal-container-element": "onHoverOutSignalContainer"
                 };
             }
-
-
-
-
 
             //並び替え上ボタンが押されたときに呼ばれる
             private onMoveUpOrderButtonClick(event: Event) {
@@ -102,7 +92,6 @@ module Garage {
                 }
 
                 let targetOrder = order - 1;
-
 
                 //sort先（一つ上の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
@@ -140,16 +129,14 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
-
                     }, duration);
                 }
-
             }
 
             //並び替え下ボタンが押されたときに呼ばれる
             private onMoveDownOrderButtonClick(event: Event) {
                 let FUNCTION_NAME = TAG + "onMoveDownOrderButtonClick : ";
-                
+
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
@@ -205,10 +192,7 @@ module Garage {
                         this.renderSignalContainers();
 
                     }, duration);
- 
                 }
-
-
             }
 
             //deleteボタンが押されたときに呼ばれる
@@ -331,7 +315,6 @@ module Garage {
                         }
                     }
 
-
                     this.updateModel();
                     this.controlPlusButtonEnable();
                     $signalContainer.i18n();
@@ -341,18 +324,10 @@ module Garage {
                     this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
                         this.renderSignalContainers();
                     });   
-                    
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
-
-                
-
             }
-
-
-
-
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// public method
@@ -366,14 +341,11 @@ module Garage {
                 return this.model;
             }
 
-
-
             /*
             * 保持しているモデルの内容でプルダウンを描画する
             */
             renderView(): JQuery {
                 let FUNCTION_NAME = TAG + ":renderView : ";
-
 
                 //マクロの基本情報を付与
                 // ボタンの state 情報を付加
@@ -384,7 +356,6 @@ module Garage {
                 let state = this.defaultState;
                 let id: number = this.defaultState.id;
                 macroData.id = id;
-
 
                 let resizeMode: string;
 
@@ -407,7 +378,6 @@ module Garage {
                 
                 let $macroDetail = $(templateMacro(macroData));
                 $macroContainer.append($macroDetail);
-
 
                 //テキストラベルのpullDownを変更する。
                 var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
@@ -433,17 +403,10 @@ module Garage {
                 $macroContainer.i18n();
                 $macroContainer.find('.custom-select').trigger('create');
                
-
                 this.renderSignalContainers();
-                
 
                 return $macroContainer;
-
             }
-
-
-
-
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// private method
@@ -521,11 +484,9 @@ module Garage {
                         deviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
                     }
 
-
                     let tmpAction: IAction = {
                         input: tmpInput,
                     };
-
 
                     if (deviceInfo != null) {
                         //deviceInfo.functionCodeHashがある場合、codeを取
@@ -599,7 +560,6 @@ module Garage {
                 this.trigger("updateModel");
             }
 
-
             /*
             * シグナル設定用のpulldownたちをすべてレンダリングする。
             */
@@ -632,8 +592,6 @@ module Garage {
                         }
                     }
                 }
-                
-               
 
                 this.controlPlusButtonEnable();
 
@@ -643,9 +601,7 @@ module Garage {
 
                 //レイアウト崩れ防止のため、trigger('create')の後に呼ぶ 
                 this.renderSpecialElementDependingSignalNum();
-
             }
-
 
             /*
             * 信号が1つしかない場合、signalの要素を削除する。2つ以上あるとき、どっとラインを描画する。
@@ -717,11 +673,7 @@ module Garage {
                         });
                     }
                 }
-
-
-
             }
-
 
             /*
             * 入力されたorderに設定されている信号を削除する
@@ -746,10 +698,7 @@ module Garage {
 
                     //アップデートされたモデルに合わせてプルダウン部をレンダリング
                     this.renderSignalContainers();
-
                 });
-
-                
             }
 
             /*
@@ -777,7 +726,6 @@ module Garage {
                     return;
                 }
 
-
                 let zeroPaddingNum = ('0' + (order + 1)).slice(-2);
                 let inputDataForRender: any = {
                     order: order,
@@ -795,11 +743,7 @@ module Garage {
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
                 this.renderFunctionsOf(order, this.defaultState.id, functionName);
-
-              
             }
-
-
 
             /*
             * インターバルつきの一回分のシグナルを描画する。
@@ -832,10 +776,7 @@ module Garage {
 
                 //intervalを描写
                 this.renderIntervalOf(order, action.interval);
-                
-
             }
-
 
             /*
             * 指定したorderのIntervalをレンダリングする。
@@ -854,11 +795,8 @@ module Garage {
                 if (inputInterval == null) {
                     inputInterval = 0;
                 }
-
                 
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
-
-               
 
                 //インターバル用のテンプレートを読み込み
                 let $intervalContainer = $targetSignalContainer.find("#signal-interval-container");
@@ -882,7 +820,6 @@ module Garage {
                 }
                 this.setIntervalPullDownOf(order, inputInterval);
             }
-
 
             /*
             * 入力したorderの信号に登録されているinvervalをpulldownから取得する。
@@ -918,7 +855,6 @@ module Garage {
                 return inverval;
             }
 
-
             /*
             * 入力したorderのInvervalプルダウンに、inputの値を代入する。
             * order{number} ： マクロ信号の順番
@@ -948,9 +884,7 @@ module Garage {
                 }
 
                 $invervalPullDown.val(inputInterval.toString());
-
             }
-
 
             /*
             * 表示されているすべての信号登録用pulldownに情報が埋まっているか否かを返す。
@@ -1003,9 +937,7 @@ module Garage {
 
                 //一回も無効な数値が判定されない ＝ すべて有効な値。としてtrue;
                 return true;
-
             }
-
 
             // +ボタンのenable disableを判定・コントロールする。
             private controlPlusButtonEnable() {
@@ -1045,7 +977,6 @@ module Garage {
                     return;
                 }
 
-
                 let signalInputs1 = this.getSignalInputs($signalContainer1);
                 let signalInputs2 = this.getSignalInputs($signalContainer2);
 
@@ -1055,7 +986,6 @@ module Garage {
                 //order2に、order1の情報を
                 this.setSignalInputsToPullDownOf(signalInputs2.order, signalInputs1);
             }
-
 
             /*
             *  $signalContainerを入力して、その中に格納されているプルダウンの値を取得する。
@@ -1186,8 +1116,6 @@ module Garage {
                 $targetFunctionPulllDownContainer.children().remove();
             }
 
-
-
             /*
              * deleteボタンを押した際のアニメーション
              * @param order{number} 削除するdom のorder
@@ -1218,11 +1146,8 @@ module Garage {
 
                         //invervalを非表示
                         this.removeIntervalPullDown(targetOrder);
-
-                  
                     }
                 }
-
 
                 //dotlineをsignalContainer 1個分、短くする
                 let $dotLine = this.$el.find(".dot-line");
@@ -1232,10 +1157,7 @@ module Garage {
                 $dotLine.outerHeight(dotLineHeight - $targetSignalContainer.outerHeight(true));
 
                 this.animateDeleteSignalContainer(order, duration, callback);
-
             }
-
-
         }
     }
 }
