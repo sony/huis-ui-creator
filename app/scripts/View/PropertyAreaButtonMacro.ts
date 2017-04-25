@@ -1077,7 +1077,7 @@ module Garage {
             }
 
             /*
-            * 設定したOrderのinverfal用PullDownを消す。
+            * 設定したOrderのinterval用PullDownを消す。
             * @param order {number}
             */
             private hideIntervalPullDown(order: number) {
@@ -1088,10 +1088,10 @@ module Garage {
                     return;
                 }
 
-                //対象orderのfunctionPullDown用コンテナの子供を削除する
+                //対象orderのintervalPullDown用コンテナの子供を削除する
                 let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                let $targetFunctionPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
-                $targetFunctionPulllDownContainer.children().hide();
+                let $targetIntervalPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
+                $targetIntervalPulllDownContainer.children().hide();
             }
 
             /*
