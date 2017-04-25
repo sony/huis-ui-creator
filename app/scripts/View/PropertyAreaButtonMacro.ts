@@ -109,10 +109,13 @@ module Garage {
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextAboveSignalContainer.find(".signals").outerHeight();
 
-                        this.renderIntervalOf(0);
-                        this.setIntervalPullDownOf(0, 0);
-
+                        // アニメーション表示のためのレンダリング
+                        let currentInterval = this.getInvervalFromPullDownOf(0);
+                        this.renderIntervalOf(0, currentInterval);
                         this.hideIntervalPullDown(order);
+
+                        // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
+                        this.setIntervalPullDownOf(1, 0);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -172,10 +175,15 @@ module Garage {
                         //レイアウト崩れを防ぐため、高さは維持する。
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextBelowSignalContainer.find(".signals").outerHeight();
-                        
-                        this.renderIntervalOf(0);
-                        this.setIntervalPullDownOf(0, 0);
+
+                        // アニメーション表示のためのレンダリング
+                        let currentInterval = this.getInvervalFromPullDownOf(0);
+                        this.renderIntervalOf(0, currentInterval);
                         this.hideIntervalPullDown(targetOrder);
+
+                        // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
+                        this.setIntervalPullDownOf(1, 0);
+
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
 
@@ -543,11 +551,6 @@ module Garage {
                             break;
                         }
                     }
-                }
-
-                //一番最初の信号のinvervalは必ず0に
-                if (actionsForUpdate.length > 0) {
-                    actionsForUpdate[0].interval = 0;
                 }
 
                 //マクロボタンのstateは、デフォルト一つとする。
