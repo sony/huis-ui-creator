@@ -34,6 +34,12 @@ module Garage {
             functionName : string;
         }
 
+        namespace macroConstValue {
+            export const FIRST_MACRO_ORDER: number = 0;
+            export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
+            export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
+        }
+
         export class PropertyAreaButtonMacro extends PropertyAreaButtonBase {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -104,19 +110,20 @@ module Garage {
 
                     //もし、$nextTopSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して、 自身のintervalを消してからアニメ
-                    if ((targetOrder) == 0) {
+                    if ((targetOrder) == macroConstValue.FIRST_MACRO_ORDER) {
                         //レイアウト崩れを防ぐため、高さは維持する。
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextAboveSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getIntervalFromPullDownOf(0);
-                        this.renderIntervalOf(0, currentInterval);
-                        this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
+                        let currentInterval = this.getIntervalFromPullDownOf(macroConstValue.FIRST_MACRO_ORDER);
+                        this.renderIntervalOf(macroConstValue.FIRST_MACRO_ORDER, currentInterval);
+                        this.setIntervalPullDownOf(macroConstValue.FIRST_MACRO_ORDER,
+                            macroConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(order);
 
                         // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
-                        this.setIntervalPullDownOf(1, 0);
+                        this.setIntervalPullDownOf(order, macroConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -172,19 +179,20 @@ module Garage {
 
                     //もし、$thisOrderSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して$nextTopSignalContainerのintervalを消してからアニメ。
-                    if (order == 0) {
+                    if (order == macroConstValue.FIRST_MACRO_ORDER) {
                         //レイアウト崩れを防ぐため、高さは維持する。
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextBelowSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getIntervalFromPullDownOf(0);
-                        this.renderIntervalOf(0, currentInterval);
-                        this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
+                        let currentInterval = this.getIntervalFromPullDownOf(macroConstValue.FIRST_MACRO_ORDER);
+                        this.renderIntervalOf(macroConstValue.FIRST_MACRO_ORDER, currentInterval);
+                        this.setIntervalPullDownOf(macroConstValue.FIRST_MACRO_ORDER,
+                            macroConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(targetOrder);
 
                         // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
-                        this.setIntervalPullDownOf(1, 0);
+                        this.setIntervalPullDownOf(targetOrder, macroConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -300,7 +308,7 @@ module Garage {
 
                 let initialAction: IAction = {
                     input: tmpInput,
-                    interval: DEFAULT_INTERVAL_MACRO,
+                    interval: macroConstValue.DEFAULT_MACRO_INTERVAL,
                 };
                 let tmpOrder = this.defaultState.action.length;
 
