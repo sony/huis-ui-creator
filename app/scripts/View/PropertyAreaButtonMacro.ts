@@ -112,6 +112,7 @@ module Garage {
                         // アニメーション表示のためのレンダリング
                         let currentInterval = this.getInvervalFromPullDownOf(0);
                         this.renderIntervalOf(0, currentInterval);
+                        this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
                         this.hideIntervalPullDown(order);
 
                         // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
@@ -179,6 +180,7 @@ module Garage {
                         // アニメーション表示のためのレンダリング
                         let currentInterval = this.getInvervalFromPullDownOf(0);
                         this.renderIntervalOf(0, currentInterval);
+                        this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
                         this.hideIntervalPullDown(targetOrder);
 
                         // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
