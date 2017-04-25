@@ -61,7 +61,7 @@ module Garage {
                             title: PRODUCT_NAME,
                         }
                         if (process.platform == PLATFORM_DARWIN) {
-                            electronDialog.showDisconnectedMessageBox(messageBoxOptions,
+                            electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
                                 (response) => {
                                     console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
                                     isHUISConnected = false;
