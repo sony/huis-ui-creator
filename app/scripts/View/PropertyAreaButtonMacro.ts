@@ -298,7 +298,7 @@ module Garage {
                 let $signalContainer = this.$el.find("#signals-container");
                 let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
 
-                let empltyAction: IAction = {
+                let initialAction: IAction = {
                     input: tmpInput,
                     interval: DEFAULT_INTERVAL_MACRO,
                 };
@@ -312,7 +312,7 @@ module Garage {
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.$el.find(".signal-container-element[data-signal-order=\"" + tmpOrder + "\"]");
                 if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalDetail(tmpOrder, empltyAction, $signalContainer);
+                    this.renderSignalDetail(tmpOrder, initialAction, $signalContainer);
 
                     //一個と同じ remoteIdを入力
                     let prevOrder = tmpOrder - 1;
