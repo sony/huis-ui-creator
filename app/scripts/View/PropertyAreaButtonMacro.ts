@@ -645,16 +645,16 @@ module Garage {
 
                 let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
 
-                //orderMaxのどったの位置を取得
+                //orderMaxのドットの位置を取得
                 let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
                 let lastOrderY = null;
                 if (this.isValidJQueryElement($dotLastOrder)) {
                     lastOrderY = $dotLastOrder.offset().top;
                 }
 
-                //その差分をdot線の長さとする
+                //その差分をドット線の長さとする
                 if (this.isValidValue(firstOrderY) && this.isValidValue(firstOrderBottom) && this.isValidValue(lastOrderY)) {
-                    
+
                     //templateからdomを読み込み,domを描写
                     let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.templateItemDetailFile_);
                     let $signalsContainer = this.$el.find("#signals-container");
