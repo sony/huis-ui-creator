@@ -764,7 +764,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;
+                    return undefined;
                 }
 
                 //inputIntervalがない場合、0として扱う
