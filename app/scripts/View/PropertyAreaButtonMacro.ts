@@ -743,11 +743,11 @@ module Garage {
                 let functionName = this.getFunctionNameFromAction(action);
                 this.renderFunctionsOf(order, this.defaultState.id, functionName);
 
-                let intervalDetail = this.renderIntervalOf(order, action.interval);
+                this.renderIntervalOf(order, action.interval);
 
                 // 最初のシグナルはインターバルを表示しない
                 if (order == 0) {
-                    intervalDetail.hide();
+                    this.hideIntervalPullDown(order);
                 }
 
                 return true;
