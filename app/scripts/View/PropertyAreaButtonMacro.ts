@@ -219,6 +219,11 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
+                if (order == macroConstValue.FIRST_MACRO_ORDER) {
+                    let newFirstOrder = 1;
+                    this.setIntervalPullDownOf(newFirstOrder, macroConstValue.FIRST_MACRO_INTERVAL);
+                }
+
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
