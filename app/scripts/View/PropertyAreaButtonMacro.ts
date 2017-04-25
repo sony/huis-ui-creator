@@ -54,7 +54,7 @@ module Garage {
                 // Please add events
                 return {
                     "click #add-signal-btn": "onPlusBtnClick",
-                    "change .interval-input": "onInvervalPullDownListChanged",
+                    "change .interval-input": "onIntervalPullDownListChanged",
                     "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
                     "change .function-input": "onFunctionPulllDownListChanged",
@@ -110,7 +110,7 @@ module Garage {
                         let tmpHeightNext = $nextAboveSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getInvervalFromPullDownOf(0);
+                        let currentInterval = this.getIntervalFromPullDownOf(0);
                         this.renderIntervalOf(0, currentInterval);
                         this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
                         this.hideIntervalPullDown(order);
@@ -178,7 +178,7 @@ module Garage {
                         let tmpHeightNext = $nextBelowSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getInvervalFromPullDownOf(0);
+                        let currentInterval = this.getIntervalFromPullDownOf(0);
                         this.renderIntervalOf(0, currentInterval);
                         this.setIntervalPullDownOf(0, DEFAULT_INTERVAL_MACRO);
                         this.hideIntervalPullDown(targetOrder);
@@ -226,9 +226,9 @@ module Garage {
                 this.controlPlusButtonEnable();
             }
 
-            //Invervalのプルダウンが変更されたら呼ばれる
-            private onInvervalPullDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onInvervalPullDownListChanged";
+            //Intervalのプルダウンが変更されたら呼ばれる
+            private onIntervalPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onIntervalPullDownListChanged";
                 this.updateModel();
 
             }
@@ -454,8 +454,8 @@ module Garage {
                         continue;
                     }
 
-                    //invervalを仮取得
-                    let tmpInterval: number = this.getInvervalFromPullDownOf(order);
+                    //intervalを仮取得
+                    let tmpInterval: number = this.getIntervalFromPullDownOf(order);
                     if (!this.isValidValue(tmpInterval)) {
                         tmpInterval = 0;
                     }
@@ -800,13 +800,13 @@ module Garage {
             }
 
             /*
-            * 入力したorderの信号に登録されているinvervalをpulldownから取得する。
+            * 入力したorderの信号に登録されているintervalをpulldownから取得する。
             * 見つからなかった場合、undefinedを返す。
             * @order{number} : numberを取得したい信号の順番
-            * @{number} inverval
+            * @{number} interval
             */
-            private getInvervalFromPullDownOf(order: number): number {
-                let FUNCTION_NAME = TAG + "getInvervalPullDownOf";
+            private getIntervalFromPullDownOf(order: number): number {
+                let FUNCTION_NAME = TAG + "getIntervalPullDownOf";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -819,22 +819,22 @@ module Garage {
                     return;
                 }
 
-                let inverval: number = null;
-                let $invervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
-                if ($invervalPullDown == null || $invervalPullDown.length == 0) {
+                let interval: number = null;
+                let $intervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
+                if ($intervalPullDown == null || $intervalPullDown.length == 0) {
                     return;
                 }
 
-                inverval = parseFloat($invervalPullDown.val());
-                if (!this.isValidValue(inverval)) {
+                interval = parseFloat($intervalPullDown.val());
+                if (!this.isValidValue(interval)) {
                     return undefined;
                 }
 
-                return inverval;
+                return interval;
             }
 
             /*
-            * 入力したorderのInvervalプルダウンに、inputの値を代入する。
+            * 入力したorderのIntervalプルダウンに、inputの値を代入する。
             * order{number} ： マクロ信号の順番
             * inputInterval{number} : プルダウンに設定する値。
             */
@@ -856,12 +856,12 @@ module Garage {
                     return;
                 }
 
-                let $invervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
-                if ($invervalPullDown == null || $invervalPullDown.length == 0) {
+                let $intervalPullDown = $signalContainerElement.find(".interval-input[data-signal-order=\"" + order + "\"]");
+                if ($intervalPullDown == null || $intervalPullDown.length == 0) {
                     return;
                 }
 
-                $invervalPullDown.val(inputInterval.toString());
+                $intervalPullDown.val(inputInterval.toString());
             }
 
             /*
@@ -885,7 +885,7 @@ module Garage {
 
                     //それぞれのプルダウンが存在し、利用不能な値が代入されている場合、false;
 
-                    //inverval
+                    //interval
                     let $intervalPulllDown = $target.find("select.interval-input");
                     if ($intervalPulllDown.length != 0) {
                         let value = $intervalPulllDown.val();
@@ -1003,8 +1003,8 @@ module Garage {
                     return;
                 }
 
-                // invervalは見つからない場合、0として扱う。
-                let interval = this.getInvervalFromPullDownOf(order);
+                // intervalは見つからない場合、0として扱う。
+                let interval = this.getIntervalFromPullDownOf(order);
                 if (!this.isValidValue(interval)) {
                     interval = 0;
                 }
@@ -1122,7 +1122,7 @@ module Garage {
                         let tmpDuration = $orderOneSignalContainer.css("transition-duration");
                         this.setAnimationDuration($orderOneSignalContainer, duration / 1000);
 
-                        //invervalを非表示
+                        //intervalを非表示
                         this.hideIntervalPullDown(targetOrder);
                     }
                 }
