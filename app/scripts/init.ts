@@ -183,29 +183,6 @@ module Garage {
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
-        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (Util.MiscUtil.isWindows()) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        } else if (Util.MiscUtil.isDarwin()) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
-        } else {
-            console.error("Error: unsupported platform");
-        }
-
-        DIR_NAME_WINDOWS = "Windows";
-        DIR_NAME_MAC = "Mac";
-
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-        if (!fs.existsSync(HUIS_FILES_ROOT)) {
-            fs.mkdirSync(HUIS_FILES_ROOT);
-        }
-        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
-            fs.mkdirSync(GARAGE_FILES_ROOT);
-        }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
-        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
         MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 
         REMOTE_BACKGROUND_WIDTH = 540;
@@ -273,9 +250,9 @@ module Garage {
             "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
-            "garage.util.informationdialog",
             "garage.util.itemclipboard"],
             () => {
+                initPath();
                 try {
                     electronDialog = new Util.ElectronDialog();
                     huisFiles = new Util.HuisFiles();
@@ -290,6 +267,7 @@ module Garage {
                 //load trouble, retry
                 requirejs(err.requireModules,
                     () => {
+                        initPath();
                         try {
                             electronDialog = new Util.ElectronDialog();
                             huisFiles = new Util.HuisFiles();
@@ -307,6 +285,32 @@ module Garage {
             }
         );
     };
+
+    var initPath = () => {
+        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+        if (Util.MiscUtil.isWindows()) {
+            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
+        } else if (Util.MiscUtil.isDarwin()) {
+            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
+        } else {
+            console.error("Error: unsupported platform");
+        }
+
+        DIR_NAME_WINDOWS = "Windows";
+        DIR_NAME_MAC = "Mac";
+
+        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
+        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        if (!fs.existsSync(HUIS_FILES_ROOT)) {
+            fs.mkdirSync(HUIS_FILES_ROOT);
+        }
+        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
+            fs.mkdirSync(GARAGE_FILES_ROOT);
+        }
+        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
+        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
+        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+    }
 
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
