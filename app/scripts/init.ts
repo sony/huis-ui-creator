@@ -53,10 +53,6 @@ module Garage {
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
         
         APP_VERSION = "";
-        
-
-        PLATFORM_WIN32 = "win32";
-        PLATFORM_DARWIN = "darwin";
 
         DURATION_DIALOG_CLOSE = 3000;
 
@@ -188,9 +184,9 @@ module Garage {
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (process.platform == PLATFORM_WIN32) {
+        if (miscUtil.isWindows()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        } else if (process.platform == PLATFORM_DARWIN) {
+        } else if (miscUtil.isDarwin()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
         } else {
             console.error("Error: unsupported platform");
@@ -272,8 +268,8 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
-            "garage.util.huisdev",
             "garage.util.miscutil",
+            "garage.util.huisdev",
             "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
@@ -318,9 +314,9 @@ module Garage {
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (process.platform == PLATFORM_WIN32) {
+            if (miscUtil.isWindows()) {
                 HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (process.platform == PLATFORM_DARWIN) {
+            } else if (miscUtil.isDarwin()) {
                 HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
             } else {
                 console.error("Error: unsupported platform");

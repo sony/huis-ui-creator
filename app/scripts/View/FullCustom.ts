@@ -1662,7 +1662,7 @@ module Garage {
             private onContextMenu(event: Event) {
                 // darwin platform fire onContextMenu just after mousedown,
                 // so delay it until mouseup event occurs
-                if (process.platform == PLATFORM_DARWIN && this.isMouseDown) {
+                if (miscUtil.isDarwin() && this.isMouseDown) {
                     this.delayedContextMenuEvent = event;
                     return;
                 }
@@ -5543,7 +5543,7 @@ module Garage {
                 }
 
                 if (!this.isTextBoxFocused) {
-                    if (process.platform === PLATFORM_DARWIN) {
+                    if (miscUtil.isDarwin()) {
                         event = this._translateDarwinMetaKeyEvent(event);
                     }
                     switch (event.keyCode) {

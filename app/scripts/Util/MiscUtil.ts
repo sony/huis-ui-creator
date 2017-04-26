@@ -23,6 +23,12 @@ module Garage {
             MiscUtil: "[Garage.Util.MiscUtil] ",
         };
 
+        namespace PlatformConsts {
+            export const WIN32: string = "win32";
+            export const DARWIN: string = "darwin";
+            export const DEFAULT: string = WIN32;
+        }
+
         /**
          * @class MiscUtil
          * @brief その他のユーティリティーを集めたクラス
@@ -59,7 +65,7 @@ module Garage {
                 path = decodeURIComponent(path);
                 let removePrefix: string;
                 // darwinでは絶対パス表現として/を先頭に残す
-                if (process.platform === PLATFORM_DARWIN) {
+                if (miscUtil.isDarwin()) {
                     removePrefix = 'file://';
                 } else {
                     removePrefix = 'file:///';
@@ -72,6 +78,34 @@ module Garage {
                 }
 
                 return (path);
+            }
+
+            /**
+             * 現在の動作プラットフォームを返す。
+             * @return {string} Garage.Util.PlatformConstsで定義されたPlatform名を返す。
+             */
+            private getPlatform(): string {
+                if (process != null && process.platform != null) {
+                    return process.platform;
+                }
+                // When can't get platform, return DEFAULT platform
+                return PlatformConsts.DEFAULT;
+            }
+
+            /**
+             * 動作プラットフォームがWindowsかどうかを判定する。
+             * @return {boolean} Windowsであればtrue、そうでなければfalseを返す。
+             */
+            isWindows(): boolean {
+                return miscUtil.getPlatform() === PlatformConsts.WIN32;
+            }
+
+            /**
+             * 動作プラットフォームがWindowsかどうかを判定する。
+             * @return {boolean} Darwinであればtrue、そうでなければfalseを返す。
+             */
+            isDarwin(): boolean {
+                return miscUtil.getPlatform() === PlatformConsts.DARWIN;
             }
 
             /**

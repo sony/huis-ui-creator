@@ -75,9 +75,9 @@ module Garage {
                     //お知らせダイアログにだすコンテンツがあるフォルダを指定
                     var pathToNotes: string = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
                     // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-                    if (process.platform == PLATFORM_WIN32) {
+                    if (miscUtil.isWindows()) {
                         pathToNotes = path.join(pathToNotes, DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
-                    } else if (process.platform == PLATFORM_DARWIN) {
+                    } else if (miscUtil.isDarwin()) {
                         pathToNotes = path.join(pathToNotes, DIR_NAME_MAC + "/");
                     } else {
                         console.error("Error: unsupported platform");

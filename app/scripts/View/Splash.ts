@@ -60,7 +60,7 @@ module Garage {
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
                         }
-                        if (process.platform == PLATFORM_DARWIN) {
+                        if (miscUtil.isDarwin()) {
                             electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
                                 (response) => {
                                     console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
@@ -81,9 +81,9 @@ module Garage {
 
                 let targetVersionFilePath = null;
                 // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-                if (process.platform == PLATFORM_WIN32) {
+                if (miscUtil.isWindows()) {
                     targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
-                } else if (process.platform == PLATFORM_DARWIN) {
+                } else if (miscUtil.isDarwin()) {
                     targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
                 } else {
                     console.error("Error: unsupported platform");
