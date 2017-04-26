@@ -122,7 +122,7 @@ module Garage {
                             macroConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(order);
 
-                        // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
+                        // 先頭のシグナルの Interval は 固定値のため、入れ替え後先頭になるシグナルの Interval を変更する
                         this.setIntervalPullDownOf(order, macroConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
@@ -191,7 +191,7 @@ module Garage {
                             macroConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(targetOrder);
 
-                        // 先頭のシグナルの Interval は 0 のため、入れ替え後先頭になるシグナルの Interval を変更する
+                        // 先頭のシグナルの Interval は固定値のため、入れ替え後先頭になるシグナルの Interval を変更する
                         this.setIntervalPullDownOf(targetOrder, macroConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
