@@ -22,6 +22,10 @@ module Garage {
 
         var TAG = "[Garage.View.FaceRenderer] ";
 
+        namespace faceConstValue {
+            export let PAGE_NUM_MAX = 5;
+        }
+
         export class FaceRenderer extends Backbone.View<any> {
 
 
@@ -119,11 +123,25 @@ module Garage {
             }
 
             /**
+             * ページ数が上限かどうか確認する
+             *
+             * @return {boolean} true: 上限に達している, false: 上限に達していない
+             */
+            isPageNumMax(): boolean {
+                let pageCount = this.getPageCount();
+                return faceConstValue.PAGE_NUM_MAX <= pageCount;
+            }
+
+            /**
              * モジュール (ページ) を追加する。
              * 
              * @return {boolean} true: 成功, false: 失敗
              */
             addPage(): boolean {
+                if (this.isPageNumMax()) {
+                    return false;
+                }
+
                 let result = this.moduleView_.addPage();
 
                 // ページ数を更新

@@ -178,16 +178,12 @@ module Garage {
 
             /**
              * モジュール (ページ) を追加する。
-             * 
+             * page 数の上限に達しているかどうかは呼び出しもとが判断しておく。
+             *
              * @return {boolean} true: 成功, false: 失敗
              */
-            addPage(options?: any): boolean {
+            addPage(): boolean {
                 var pageCount = this.collection.length;
-                // page 数の上限に達している場合は、追加できない
-                if (MAX_PAGE_CONT <= pageCount) {
-                    console.warn(TAG + "addPage()  Page count is max.");
-                    return false;
-                }
 
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
