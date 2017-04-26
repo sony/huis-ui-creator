@@ -3247,11 +3247,13 @@ module Garage {
                 }
             }
 
-
             /**
-            * 詳細設定エリアのプレビューの画像を更新する
-            * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
-            */
+             * 詳細設定エリアのプレビューの画像を更新する
+             * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
+             *
+             * @param resolvedImagePathForCSS {string} 画像パス
+             * @param isBackground {boolean} 設定する項目が背景かどうか
+             */
             private _updatePreviewInDetailArea(resolvedImagePathForCSS : string, $preview, isBackground? : boolean) {
                 if (resolvedImagePathForCSS == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
@@ -3279,16 +3281,16 @@ module Garage {
                         }
                     };
                     img.src = resolvedImagePathForCSS;
-
                 } else {
                     $preview.height(fullCustomConstValue.PROPERTY_AREA_IMAGE_PREVIEW_HEIGHT);
                 }
-
             }
 
             /**
              * パスが画像パスとして適切か確認する
+             *
              * @param resolvedImagePathForCSS {string} 画像パス
+             * @return {boolean} 画像パスが適切かどうか
              */
             private _isValidResolvedImagePathForCSS(resolvedImagePathForCSS: string): boolean {
                 return resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
