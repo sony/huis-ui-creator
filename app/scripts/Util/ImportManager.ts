@@ -38,9 +38,9 @@ module Garage {
             */
             constructor() {
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
-                this.hasAirconditioner = null;
-                this.hasBluetooth = null;
-                this.needDisplayCautionDialog = null;
+                this.hasAirconditioner = false;
+                this.hasBluetooth = false;
+                this.needDisplayCautionDialog = false;
             }
 
 
