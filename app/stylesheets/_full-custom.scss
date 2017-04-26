@@ -840,32 +840,6 @@
                 margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
             }
 
-            /*.property-value {
-                min-width: 20px;
-                &.middle {
-                    width: calc(100% - 100px);
-                    min-width: 130px;
-                }
-
-                &.small {
-                    width: 80px;
-                }
-            }*/
-
-            /*#property-image-preview,
-            .property-state-image-preview {
-                .property-value {
-                        position:relative;
-                        background-position:center;
-                        background-repeat: no-repeat;
-                        background-size: contain;
-                        width:160px;
-                        height: 160px;
-                        left: calc((100% - 160px) /2);
-                        box-shadow: 0 0 10px rgba(128, 255, 128, 0.8);
-                }
-            }*/
-
             #states-container {
                 > div {
                     margin-bottom: 10px;
