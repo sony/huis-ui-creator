@@ -488,7 +488,7 @@ module Garage {
             }
 
             /*
-            * Face中にエアコンの入力したカテゴリーボタンがあるときかチェックする
+            * Face中に入力したカテゴリーボタンがあるときかチェックする
             * @param inputModule {IGFace} チェック対象
             * @param category{string} チェックしたい対象カテゴリー
             * @return {boolean} カテゴリを含んでいるときtrue 含んでいないとき、false;
