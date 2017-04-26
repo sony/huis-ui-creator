@@ -22,21 +22,25 @@ module Garage {
         let TAG = "[ImportManager]";
         import IPromise = CDP.IPromise;
 
+        namespace importManagerConstValue {
+            export let ALL_DEVICE: string = "all";
+        }
+
         export class ImportManager {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
             private hasBluetooth: boolean; //bluetoothのボタンを持っているか否か
             private hasAirconditioner: boolean;//Air conditionerのボタンを持っているか否か
+            private needDisplayCautionDialog: boolean; // 注意ダイアログを表示するかどうか
 
             /*
             *コンストラクター
             */
             constructor() {
-
                 this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
                 this.hasAirconditioner = null;
                 this.hasBluetooth = null;
-
+                this.needDisplayCautionDialog = null;
             }
 
 
@@ -463,6 +467,9 @@ module Garage {
 
                 }
 
+                //諸注意ダイアログが必要かどうか
+                this.needDisplayCautionDialog = this.isIncludeSpecificCategoryButton(oldFace, importManagerConstValue.ALL_DEVICE);
+
                 //インポートしたリモコンが注意が必要なカテゴリーを持っているかチェック
                 this.hasBluetooth = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_BT);
                 this.hasAirconditioner = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_AC);
@@ -519,6 +526,13 @@ module Garage {
                     if (targetButtons == null || targetButtons.length == 0) {
                         continue;
                     }
+
+                    // 全カテゴリが対象で、ボタンがある場合は含んでいるとみなす
+                    if (category == importManagerConstValue.ALL_DEVICE
+                        && targetButtons.length != 0) {
+                        return true;
+                    }
+
                     for (let j = 0; j < targetButtons.length; j++){
 
                         //ターゲットのステートがないとき、次のボタンをチェック
@@ -568,6 +582,11 @@ module Garage {
             */
             private showCautionDialog() {
                 let FUNCTION_NAME = TAG + "showCautionDialog :";
+
+                // ダイアログを表示する必要がない場合は表示しない
+                if (!this.needDisplayCautionDialog) {
+                    return;
+                }
 
                 ///チェックすべき項目がない場合、エラーを表示
                 if (this.hasAirconditioner == null) {
