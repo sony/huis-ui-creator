@@ -184,9 +184,9 @@ module Garage {
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (miscUtil.isWindows()) {
+        if (Util.MiscUtil.isWindows()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        } else if (miscUtil.isDarwin()) {
+        } else if (Util.MiscUtil.isDarwin()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
         } else {
             console.error("Error: unsupported platform");
@@ -280,7 +280,6 @@ module Garage {
                     electronDialog = new Util.ElectronDialog();
                     huisFiles = new Util.HuisFiles();
                     garageFiles = new Util.GarageFiles();
-                    miscUtil = new Util.MiscUtil();
                 } catch (e) {
                     console.error("init.ts loadUtils failed. " + e);
                 }
@@ -295,7 +294,6 @@ module Garage {
                             electronDialog = new Util.ElectronDialog();
                             huisFiles = new Util.HuisFiles();
                             garageFiles = new Util.GarageFiles();
-                            miscUtil = new Util.MiscUtil();
                         } catch (e) {
                             console.error("init.ts loadUtils failed. " + e);
                         }
@@ -314,9 +312,9 @@ module Garage {
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (miscUtil.isWindows()) {
+            if (Util.MiscUtil.isWindows()) {
                 HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (miscUtil.isDarwin()) {
+            } else if (Util.MiscUtil.isDarwin()) {
                 HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
             } else {
                 console.error("Error: unsupported platform");

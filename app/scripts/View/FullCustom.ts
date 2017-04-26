@@ -1662,7 +1662,7 @@ module Garage {
             private onContextMenu(event: Event) {
                 // darwin platform fire onContextMenu just after mousedown,
                 // so delay it until mouseup event occurs
-                if (miscUtil.isDarwin() && this.isMouseDown) {
+                if (Util.MiscUtil.isDarwin() && this.isMouseDown) {
                     this.delayedContextMenuEvent = event;
                     return;
                 }
@@ -2450,7 +2450,7 @@ module Garage {
                             return;
                         }
 
-                        if (miscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
+                        if (Util.MiscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
                             let response = electronDialog.showMessageBox({
                                 type: "error",
                                 message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
@@ -2462,7 +2462,7 @@ module Garage {
                         }
 
                         if ((imageFileExt === ".jpg") || (imageFileExt === ".jpeg")) {
-                            let result = miscUtil.checkJPEG(imageFilePath);
+                            let result = Util.MiscUtil.checkJPEG(imageFilePath);
                             if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
                                 // JPEG2000及びJPEG Losslessはサポートしていない警告を出す
                                 let response = electronDialog.showMessageBox({
@@ -3667,7 +3667,7 @@ module Garage {
                 var path = pathArray[0];
 
                 //なぜか、background-imageにfull-custom.htmlが紛れることがある。
-                if (path != "null" && path != "full-custom.html" && path != "none" && miscUtil.existsFile(decodePath)) {
+                if (path != "null" && path != "full-custom.html" && path != "none" && Util.MiscUtil.existsFile(decodePath)) {
                     $textFieldInPreview.css("visibility", "hidden");
                 } else {//画像が存在しないとき、テキストEdit機能を表示する。
                     this._updatePreviewInDetailArea("none", $preview);
@@ -5543,7 +5543,7 @@ module Garage {
                 }
 
                 if (!this.isTextBoxFocused) {
-                    if (miscUtil.isDarwin()) {
+                    if (Util.MiscUtil.isDarwin()) {
                         event = this._translateDarwinMetaKeyEvent(event);
                     }
                     switch (event.keyCode) {

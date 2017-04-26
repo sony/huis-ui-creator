@@ -597,10 +597,6 @@ declare module Garage {
      * Util.GarageFiles のインスタンス
      */
     var garageFiles: Util.GarageFiles;
-    /**
-     * Util.MiscUtilのインスタンス
-     */
-    var miscUtil: Util.MiscUtil;
 
     /**
      * face のページの横サイズ

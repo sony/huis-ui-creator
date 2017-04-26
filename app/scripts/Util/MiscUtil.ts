@@ -41,16 +41,6 @@ module Garage {
             public static ERROR_TYPE_NOT_JPEG: number = -3;
             public static ERROR_SIZE_TOO_LARGE: number = -10;
 
-
-            constructor() {
-                if (!fs) {
-                    fs = require("fs-extra");
-                }
-                if (!path) {
-                    path = require("path");
-                }
-            }
-            
             /**
              * ファイルパスの file:/// スキームを除去、ファイルパス内のパーセントエンコーディングをデコード、\→/の変換を行う
              * プログラム内部でパスの解決にURLを使っている箇所で利用される
@@ -59,13 +49,12 @@ module Garage {
              * @param en {Boolean} [in] \記号の変換を行うかどうか(trueで行う)。
              * @return {string} 変換後のパス
              */
-
-            getAppropriatePath(path: string, en?: Boolean): string {
+            static getAppropriatePath(path: string, en?: Boolean): string {
                 console.log("MiscUtil::getAppropriatePath path=" + path);
                 path = decodeURIComponent(path);
                 let removePrefix: string;
                 // darwinでは絶対パス表現として/を先頭に残す
-                if (miscUtil.isDarwin()) {
+                if (MiscUtil.isDarwin()) {
                     removePrefix = 'file://';
                 } else {
                     removePrefix = 'file:///';
@@ -84,7 +73,7 @@ module Garage {
              * 現在の動作プラットフォームを返す。
              * @return {string} Garage.Util.PlatformConstsで定義されたPlatform名を返す。
              */
-            private getPlatform(): string {
+            private static getPlatform(): string {
                 if (process != null && process.platform != null) {
                     return process.platform;
                 }
@@ -96,16 +85,16 @@ module Garage {
              * 動作プラットフォームがWindowsかどうかを判定する。
              * @return {boolean} Windowsであればtrue、そうでなければfalseを返す。
              */
-            isWindows(): boolean {
-                return miscUtil.getPlatform() === PlatformConsts.WIN32;
+            static isWindows(): boolean {
+                return MiscUtil.getPlatform() === PlatformConsts.WIN32;
             }
 
             /**
              * 動作プラットフォームがWindowsかどうかを判定する。
              * @return {boolean} Darwinであればtrue、そうでなければfalseを返す。
              */
-            isDarwin(): boolean {
-                return miscUtil.getPlatform() === PlatformConsts.DARWIN;
+            static isDarwin(): boolean {
+                return MiscUtil.getPlatform() === PlatformConsts.DARWIN;
             }
 
             /**
@@ -113,7 +102,7 @@ module Garage {
              * サイズ上限はGarage.MAX_IMAGE_FILESIZEで定義されている。
              * @param path {string} [in] チェックしたいJPEG/PNGファイル
              */
-            checkFileSize(path: string): number {
+            static checkFileSize(path: string): number {
                 let s: Stats = null;
 
                 try {
@@ -135,7 +124,7 @@ module Garage {
              * @param path {string} [in] チェックしたいJPEGファイル
              */
 
-            checkJPEG(path: string): number {
+            static checkJPEG(path: string): number {
                 let b = new Buffer(8);
 
                 try {
@@ -173,7 +162,7 @@ module Garage {
              * @param path {string} 検査対象のファイルパス
              * @return ファイルが存在する場合はtrue、そうでない場合（対象がフォルダだった場合を含む）はfalse
              */
-            existsFile(path: string): boolean {
+            static existsFile(path: string): boolean {
                 try {
                     if (path &&
                         fs.existsSync(path) &&

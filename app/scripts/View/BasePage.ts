@@ -198,7 +198,7 @@ module Garage {
                 var props: DialogProps = null;
                 var text: string = "";
 
-                let licensesFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/licenses.txt"));
+                let licensesFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/licenses.txt"));
                 try {
                     text = fs.readFileSync(licensesFilePath, 'utf8');
                 } catch (err) {
@@ -216,7 +216,7 @@ module Garage {
 
 
                 //エレクトロンのラインセンス情報を記載したファイルパス
-                let pathElectronLicensesFile = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
+                let pathElectronLicensesFile = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
                 //licenses.txt上の リンクを有効なパスに更新する。
                 $("#link-electron-licenses-file").attr("href", pathElectronLicensesFile);
 
