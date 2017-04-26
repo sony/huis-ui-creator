@@ -3267,8 +3267,7 @@ module Garage {
                     isBackground = false;
                 }
 
-                if (resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
-                    && resolvedImagePathForCSS != "" && resolvedImagePathForCSS != "none") {
+                if (this._isValidResolvedImagePathForCSS(resolvedImagePathForCSS)) {
                     this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
                     let previewWidth = $preview.width();
                     let img = new Image();
@@ -3285,6 +3284,16 @@ module Garage {
                     $preview.height(fullCustomConstValue.PROPERTY_AREA_IMAGE_PREVIEW_HEIGHT);
                 }
 
+            }
+
+            /**
+             * パスが画像パスとして適切か確認する
+             * @param resolvedImagePathForCSS {string} 画像パス
+             */
+            private _isValidResolvedImagePathForCSS(resolvedImagePathForCSS: string): boolean {
+                return resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
+                    && resolvedImagePathForCSS != ""
+                    && resolvedImagePathForCSS != "none";
             }
 
             /**
