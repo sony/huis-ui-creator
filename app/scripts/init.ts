@@ -118,7 +118,6 @@ module Garage {
         DOUBLE_CLICK_TIME_MS = 500;
 
         MAX_NUM_MACRO_SIGNAL = 63;
-        DEFAULT_INTERVAL_MACRO = 400;
 
         FUNC_ID_LEN = 4;
         FUNC_NUM_DELIMITER  = '#';

@@ -803,10 +803,6 @@ declare module Garage {
      */
     var MAX_NUM_MACRO_SIGNAL: number;
     /*
-     * マクロを設定する際のデフォルトInverval秒数[ms]
-     */
-    var DEFAULT_INTERVAL_MACRO: number;
-    /*
      * 設定できるアクションリスト
      */
     var ACTION_INPUTS: IStringKeyValue[];

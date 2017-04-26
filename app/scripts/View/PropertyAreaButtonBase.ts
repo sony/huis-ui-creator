@@ -135,9 +135,8 @@ module Garage {
                     return false;
                 } else if (JQUtils.isNaN(value)) {
                     return false;
-                } else {
-                    return true;
                 }
+                return true;
             }
 
             /*
