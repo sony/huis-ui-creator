@@ -1889,7 +1889,7 @@ module Garage {
             /**
              * ページ追加ボタンのEnable/Disableを設定する
              *
-             * @param $enable {boolean}: true: enable, false: disable
+             * @param enabled {boolean}: trueはenable, falseはdisable
              */
             private setAddPageButtonEnabled(enabled: boolean) {
                 let $addPageButton = this.$el.find("#button-add-page");
