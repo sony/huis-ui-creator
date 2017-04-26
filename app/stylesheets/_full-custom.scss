@@ -755,7 +755,7 @@
                 background-repeat: no-repeat;
                 background-size: contain;
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
-                min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
+                height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT;
                 border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
             
                 //画像編集ボタン
