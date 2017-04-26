@@ -167,7 +167,7 @@ module Garage {
                 var pageCount = 0;
                 for (let i = 0; i < moduleCount; i++) {
                     let moduleModel = this.collection.at(i);
-                    // collection 内の model の pageIndex のうち、最大のものを page 数とする
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
                     if (pageCount < moduleModel.pageIndex + 1) {
                         pageCount = moduleModel.pageIndex + 1;
                     }
@@ -178,7 +178,7 @@ module Garage {
 
             /**
              * モジュール (ページ) を追加する。
-             * page 数の上限に達しているかどうかは呼び出しもとが判断しておく。
+             * ページ数の上限に達しているかどうかは呼び出しもとが判断しておく。
              *
              * @return {boolean} true: 成功, false: 失敗
              */
