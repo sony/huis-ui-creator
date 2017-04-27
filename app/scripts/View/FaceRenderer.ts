@@ -23,7 +23,7 @@ module Garage {
         var TAG = "[Garage.View.FaceRenderer] ";
 
         namespace faceConstValue {
-            export let PAGE_NUM_MAX = 5;
+            export const PAGE_NUM_MAX = 5;
         }
 
         export class FaceRenderer extends Backbone.View<any> {
