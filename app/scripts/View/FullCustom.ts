@@ -143,6 +143,11 @@ module Garage {
                     var remoteId = this._getUrlQueryParameter("remoteId");
                     this._renderCanvas(remoteId);
 
+                    // ページ数が最大の場合はページ追加ボタンを無効化する
+                    if (this.faceRenderer_canvas_.isPageNumMax()) {
+                        this.setAddPageButtonEnabled(false);
+                    }
+
                     var gmodules = this.faceRenderer_canvas_.getModules();
 
                     // ボタンに設定された信号名を基リモコンに合わせる
@@ -468,8 +473,6 @@ module Garage {
                 $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
                     this.onCanvasPageScrolled(event);
                 });
-
-              
             }
 
             /**
@@ -1884,13 +1887,31 @@ module Garage {
             }
 
             /**
+             * ページ追加ボタンのEnable/Disableを設定する
+             *
+             * @param enabled {boolean}: trueはenable, falseはdisable
+             */
+            private setAddPageButtonEnabled(enabled: boolean) {
+                let $addPageButton = this.$el.find("#button-add-page");
+                if (enabled) {
+                    $addPageButton.removeClass("disabled");
+                } else {
+                    $addPageButton.addClass("disabled");
+                }
+            }
+
+            /**
              * キャンバス内のページ追加ボタンのハンドリング
              */
             private onAddPageButtonClicked(event: Event) {
                 // ページを追加する
                 this.faceRenderer_canvas_.addPage();
-
                 this._setGridSize(this.gridSize_);
+
+                // ページ数が最大の場合はページ追加ボタンを無効化する
+                if (this.faceRenderer_canvas_.isPageNumMax()) {
+                    this.setAddPageButtonEnabled(false);
+                }
             }
 
             /**
@@ -3839,6 +3860,9 @@ module Garage {
                     this.faceRenderer_canvas_.deletePage(pageIndex);
                     let $pageContainer = $pageModule.parent();
                     $pageContainer.remove();
+
+                    // ページが削除された場合、ページ追加ボタンを操作可能にする。
+                    this.setAddPageButtonEnabled(true);
 
                     // 現在のターゲットを外す
                     this._loseTarget();

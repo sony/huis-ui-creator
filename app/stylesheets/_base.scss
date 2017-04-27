@@ -219,6 +219,19 @@ body {
                     box-shadow:none;
                     border:none;
                 }
+
+                &.disabled{
+                    opacity:0.2;
+                    cursor: default;
+
+                    &:hover{
+                        background-color:$COLOR_BUTTON_NORMAL;
+                    }
+
+                    &:active{
+                        background-color:$COLOR_BUTTON_NORMAL;
+                    }
+                }
             }
 
             .ui-bar-inherit,
