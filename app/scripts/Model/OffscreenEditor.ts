@@ -110,12 +110,8 @@ module Garage {
                     return promise;
                 }
 
-
-             
-
                 console.log(TAG + "before editImage src: " + imageSrc);
                 let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
-
                 
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
@@ -134,7 +130,6 @@ module Garage {
 
                         // 出力先のパスが指定されている場合は、ファイル出力を行う
                         if (dstPath) {
-
 
                             let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
                             //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
@@ -249,9 +244,7 @@ module Garage {
                         }
                         PIXI.Texture.removeTextureFromCache(src);
 
-
                         let texture = PIXI.Texture.fromImage(src);
-
                         if (texture.baseTexture && texture.baseTexture.hasLoaded) {
                             df.resolve(texture);
                         } else {
