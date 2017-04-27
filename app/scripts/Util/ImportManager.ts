@@ -23,7 +23,7 @@ module Garage {
         import IPromise = CDP.IPromise;
 
         namespace importManagerConstValue {
-            export let ALL_DEVICE: string = "all";
+            export const ALL_DEVICE: string = "all";
         }
 
         export class ImportManager {
