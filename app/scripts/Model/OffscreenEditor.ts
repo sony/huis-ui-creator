@@ -111,12 +111,7 @@ module Garage {
                 }
 
 
-                var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-                if (params.resize) {
-                    renderer = PIXI.autoDetectRenderer(params.resize.width, params.resize.height, { transparent: true });
-                } else {
-                    renderer = PIXI.autoDetectRenderer(800, 600, { transparent: true });
-                }
+             
 
                 console.log(TAG + "before editImage src: " + imageSrc);
                 let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
@@ -125,6 +120,14 @@ module Garage {
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
                     .done((texture: PIXI.Texture) => {
+
+                        var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
+                        if (params.resize) {
+                            renderer = PIXI.autoDetectRenderer(params.resize.width, params.resize.height, { transparent: true });
+                        } else {
+                            renderer = PIXI.autoDetectRenderer(800, 600, { transparent: true });
+                        }
+
                         let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
 
                         renderer.destroy(true);
@@ -165,7 +168,6 @@ module Garage {
                     })
                     .fail(() => {
                         console.error(FUNCTION_NAME + "error occur in loadTexture");
-                        renderer.destroy(true);
                         df.reject();
                     });
 
