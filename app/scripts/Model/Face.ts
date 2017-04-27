@@ -162,14 +162,96 @@ module Garage {
                 return false;
             }
 
-            /*
+            /**
+             * このFaceを複製した上で、引数で与えられたremoteIdを持つ新たなFaceを作成する。
+             *
+             * @param {string} dstRemoteId 新しいFaceのremoteId
+             * @return {Model.Face} 新しくコピーされたFace
+             */
+            copy(dstRemoteId: string): Model.Face {
+                let images = this._searchImages();
+                this._copyImage(images, dstRemoteId);
+                let newFace: Model.Face = this.clone();
+                newFace.setWholeRemoteId(dstRemoteId);
+                return newFace;
+            }
+
+            /**
+             * 引数で与えられたImageを、引数で与えられたremoteIdの画像ディレクトリ(例：HuisFiles/remoteimages/0000)にコピーする。
+             *
+             * @param {IGImage[]} images 変更対象のImage。
+             * @param {string} remoteId 変更先となる画像ディレクトリのremoteId。
+             */
+            private _copyImage(images: IGImage[], remoteId: string) {
+                for (let image of images) {
+                    // Copy resized image referenced from image.path
+                    if (image.path != null) {
+                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
+                        let imageFileName = image.path.substr(image.path.lastIndexOf("/") + 1);
+                        image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
+                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
+
+                        if (fs.existsSync(srcImagePath)) {
+                            fs.copySync(srcImagePath, dstImagePath);
+                        }
+                    }
+                    // Copy original image referenced from garageExtensions.original
+                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
+                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
+                        let imageFileName = image.garageExtensions.original.substr(image.garageExtensions.original.lastIndexOf("/") + 1);
+                        image.garageExtensions.original = path.join(remoteId, imageFileName).replace(/\\/g, "/");
+                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
+
+                        if (fs.existsSync(srcImagePath)) {
+                            fs.copySync(srcImagePath, dstImagePath);
+                        }
+                    }
+                }
+            }
+
+            /**
+             * このFaceに含まれるImageを全て検索する。
+             * 具体的には、Moduleに含まれるImage、Button.Stateに含まれるImageを全て検索する。
+             *
+             * @return {IGImage[]} 検索されたImage。
+             */
+            private _searchImages(): IGImage[] {
+                let images: IGImage[] = [];
+                for (let module of this.modules) {
+                    if (module.image != null) {
+                        images = images.concat(module.image);
+                    }
+                    for (let button of module.button) {
+                        for (let state of button.state) {
+                            if (state.image != null) {
+                                images = images.concat(state.image);
+                            }
+                        }
+                    }
+                }
+                return images;
+            }
+
+            /**
+             * faceのcloneを作成する。型情報はコピーされない事に注意。
+             *
+             * @return {Model.Face} コピーされたface。
+             */
+            clone(): Model.Face {
+                return $.extend(true, {}, this);
+            }
+
+            /**
              * このFace、及び含まれるModuleにremoteIdをセットする。
+             * その際に、Moduleのnameに含まれるremoteIdも更新する。
+             *
              * @param val: string 設定するremoteId
              */
-            public setWholeRemoteId(val: string) {
+            private setWholeRemoteId(val: string) {
                 this.remoteId = val;
                 for (let elem of this.modules) {
                     elem.remoteId = val;
+                    elem.name = elem.name.replace(/\d{4}/, val);
                 }
             }
 
