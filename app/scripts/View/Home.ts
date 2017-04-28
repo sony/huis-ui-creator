@@ -122,6 +122,10 @@ module Garage {
                     huisFiles.init(HUIS_FILES_ROOT);
                     this._calculateFaceListWidth();
                     this._renderFaceList();
+
+                    // インポート後は、インポートしたリモコンを表示するために一番左に移動する
+                    let $faceListContainer = $("#face-list-container");
+                    $faceListContainer.animate({ scrollLeft: 0 }, "normal");
                 });
             }
 
