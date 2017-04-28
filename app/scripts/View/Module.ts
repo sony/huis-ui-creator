@@ -893,7 +893,9 @@ module Garage {
             }
 
             private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {
-
+                if (moduleName == null || $targetModuleContainer == null) {
+                    return;
+                }
                 let moduleSeparator = new ModuleSeparator(moduleName);
                 moduleSeparator.setElement($targetModuleContainer);
                 moduleSeparator.render();
