@@ -267,6 +267,8 @@ module Garage {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();
+
+                                // 新規作成したリモコンを表示するために一番左に移動する
                                 this._moveWindowLeft();
                             }, (err) => {
                                 if (err) {
