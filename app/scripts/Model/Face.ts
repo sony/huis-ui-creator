@@ -169,9 +169,9 @@ module Garage {
              * @return {Model.Face} 新しくコピーされたFace
              */
             copy(dstRemoteId: string): Model.Face {
-                let images = this._searchImages();
-                this._copyImage(images, dstRemoteId);
                 let newFace: Model.Face = this.clone();
+                let images = newFace._searchImages();
+                newFace._copyImage(images, dstRemoteId);
                 newFace.setWholeRemoteId(dstRemoteId);
                 return newFace;
             }
