@@ -124,11 +124,9 @@ module Garage {
                     this._renderFaceList();
 
                     // インポート後は、インポートしたリモコンを表示するために一番左に移動する
-                    let $faceListContainer = $("#face-list-container");
-                    $faceListContainer.animate({ scrollLeft: 0 }, "normal");
+                    this._moveWindowLeft();
                 });
             }
-
 
             /**
              * Home 画面の初期化
@@ -158,6 +156,14 @@ module Garage {
                     informationDialog.notify();
                 }
                 
+            }
+
+            /**
+              * 画面を左端に移動させる
+              */
+            private _moveWindowLeft() {
+                let $faceListContainer = $("#face-list-container");
+                $faceListContainer.animate({ scrollLeft: 0 }, "normal");
             }
 
             /**
