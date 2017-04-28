@@ -267,6 +267,7 @@ module Garage {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();
+                                this._moveWindowLeft();
                             }, (err) => {
                                 if (err) {
                                     // [TODO] エラー値のハンドリング
