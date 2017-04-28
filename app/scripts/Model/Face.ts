@@ -122,6 +122,7 @@ module Garage {
                 convertedModules.push( this._finalizeModule(module) );
 
                 this.modules = convertedModules;
+                this.category = DEVICE_TYPE_FULL_CUSTOM;
                 return this;
             }
 
