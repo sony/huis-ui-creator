@@ -167,7 +167,7 @@ module Garage {
                 var pageCount = 0;
                 for (let i = 0; i < moduleCount; i++) {
                     let moduleModel = this.collection.at(i);
-                    // collection 内の model の pageIndex のうち、最大のものを page 数とする
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
                     if (pageCount < moduleModel.pageIndex + 1) {
                         pageCount = moduleModel.pageIndex + 1;
                     }
@@ -178,16 +178,12 @@ module Garage {
 
             /**
              * モジュール (ページ) を追加する。
-             * 
+             * ページ数の上限に達しているかどうかは呼び出しもとが判断しておく。
+             *
              * @return {boolean} true: 成功, false: 失敗
              */
-            addPage(options?: any): boolean {
+            addPage(): boolean {
                 var pageCount = this.collection.length;
-                // page 数の上限に達している場合は、追加できない
-                if (MAX_PAGE_CONT <= pageCount) {
-                    console.warn(TAG + "addPage()  Page count is max.");
-                    return false;
-                }
 
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
@@ -893,7 +889,9 @@ module Garage {
             }
 
             private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {
-
+                if (moduleName == null || $targetModuleContainer == null) {
+                    return;
+                }
                 let moduleSeparator = new ModuleSeparator(moduleName);
                 moduleSeparator.setElement($targetModuleContainer);
                 moduleSeparator.render();

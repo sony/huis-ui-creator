@@ -219,15 +219,6 @@ module Garage {
             }
 
            /**
-             * faceのcloneを作成する。型情報はコピーされない事に注意。
-             *
-             * @param face {IGFace} コピーしたいface。
-             */
-            private _cloneFace(face: IGFace) {
-                return $.extend(true, {}, face);
-            }
-
-           /**
              * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
              *
              * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
@@ -250,8 +241,7 @@ module Garage {
                 if (!this._checkCanCreateNewRemote()) {
                     return;
                 }
-                face = this._cloneFace(face);
-                face.setWholeRemoteId(huisFiles.createNewRemoteId());
+                face = face.copy(huisFiles.createNewRemoteId());
 
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();

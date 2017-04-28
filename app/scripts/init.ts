@@ -53,10 +53,6 @@ module Garage {
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
         
         APP_VERSION = "";
-        
-
-        PLATFORM_WIN32 = "win32";
-        PLATFORM_DARWIN = "darwin";
 
         DURATION_DIALOG_CLOSE = 3000;
 
@@ -187,30 +183,6 @@ module Garage {
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
-        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (process.platform == PLATFORM_WIN32) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        } else if (process.platform == PLATFORM_DARWIN) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
-        } else {
-            console.error("Error: unsupported platform");
-        }
-
-        DIR_NAME_WINDOWS = "Windows";
-        DIR_NAME_MAC = "Mac";
-
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-        if (!fs.existsSync(HUIS_FILES_ROOT)) {
-            fs.mkdirSync(HUIS_FILES_ROOT);
-        }
-        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
-            fs.mkdirSync(GARAGE_FILES_ROOT);
-        }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
-        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
-
         REMOTE_BACKGROUND_WIDTH = 540;
         REMOTE_BACKGROUND_HEIGHT = 870;
 
@@ -271,19 +243,18 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
-            "garage.util.huisdev",
             "garage.util.miscutil",
+            "garage.util.huisdev",
             "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
-            "garage.util.informationdialog",
             "garage.util.itemclipboard"],
             () => {
+                initPath();
                 try {
                     electronDialog = new Util.ElectronDialog();
                     huisFiles = new Util.HuisFiles();
                     garageFiles = new Util.GarageFiles();
-                    miscUtil = new Util.MiscUtil();
                 } catch (e) {
                     console.error("init.ts loadUtils failed. " + e);
                 }
@@ -294,11 +265,11 @@ module Garage {
                 //load trouble, retry
                 requirejs(err.requireModules,
                     () => {
+                        initPath();
                         try {
                             electronDialog = new Util.ElectronDialog();
                             huisFiles = new Util.HuisFiles();
                             garageFiles = new Util.GarageFiles();
-                            miscUtil = new Util.MiscUtil();
                         } catch (e) {
                             console.error("init.ts loadUtils failed. " + e);
                         }
@@ -313,13 +284,39 @@ module Garage {
         );
     };
 
+    var initPath = () => {
+        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+        if (Util.MiscUtil.isWindows()) {
+            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
+        } else if (Util.MiscUtil.isDarwin()) {
+            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
+        } else {
+            console.error("Error: unsupported platform");
+        }
+
+        DIR_NAME_WINDOWS = "Windows";
+        DIR_NAME_MAC = "Mac";
+
+        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
+        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        if (!fs.existsSync(HUIS_FILES_ROOT)) {
+            fs.mkdirSync(HUIS_FILES_ROOT);
+        }
+        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
+            fs.mkdirSync(GARAGE_FILES_ROOT);
+        }
+        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
+        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
+        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+    }
+
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (process.platform == PLATFORM_WIN32) {
+            if (Util.MiscUtil.isWindows()) {
                 HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (process.platform == PLATFORM_DARWIN) {
+            } else if (Util.MiscUtil.isDarwin()) {
                 HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
             } else {
                 console.error("Error: unsupported platform");
