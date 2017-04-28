@@ -30,7 +30,7 @@ module Garage {
             const SPINNER_ID_SELECTER = "#common-dialog-center-spinner";
             const SPINNER_DIALOG_CLASS_SELECTER = ".spinner-dialog";
 
-            if (process.platform == PLATFORM_WIN32) {
+            if (Util.MiscUtil.isWindows()) {
                 var usb_dev = require("usb_dev");
             }
 
@@ -788,7 +788,7 @@ module Garage {
              */
             export function getHuisRootPath(vendorId: number, productId: number): string {
                 let rootPath = null;
-                if (process.platform === PLATFORM_WIN32) {
+                if (Util.MiscUtil.isWindows()) {
                     rootPath = usb_dev.getPath(vendorId, productId);
                     if (rootPath === "") {
                         return null;

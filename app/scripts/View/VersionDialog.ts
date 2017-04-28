@@ -45,7 +45,7 @@ module Garage {
 
                 let text = "";
                 try {
-                    let licenseLinkFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/license-link.html"));
+                    let licenseLinkFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/license-link.html"));
                     text = fs.readFileSync(licenseLinkFilePath, 'utf8');
                 } catch (err) {
                     console.error(err);
@@ -73,7 +73,7 @@ module Garage {
 
             openLink(event: Event) {
                 let anchor = $(event.currentTarget);
-                let href = miscUtil.getAppropriatePath(anchor.prop('href'));
+                let href = Util.MiscUtil.getAppropriatePath(anchor.prop('href'));
                 console.log(TAG + ' open link: ' + href);
 
                 var shell = require('electron').shell;

@@ -60,8 +60,9 @@ module Garage {
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
                         }
-                        if (process.platform == PLATFORM_DARWIN) {
-                            electronDialog.showDisconnectedMessageBox(messageBoxOptions,
+
+                        if (Util.MiscUtil.isDarwin()) {
+                            electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
                                 (response) => {
                                     console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
                                     isHUISConnected = false;
@@ -81,10 +82,10 @@ module Garage {
 
                 let targetVersionFilePath = null;
                 // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-                if (process.platform == PLATFORM_WIN32) {
-                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
-                } else if (process.platform == PLATFORM_DARWIN) {
-                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
+                if (Util.MiscUtil.isWindows()) {
+                    targetVersionFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
+                } else if (Util.MiscUtil.isDarwin()) {
+                    targetVersionFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
                 } else {
                     console.error("Error: unsupported platform");
                 }
@@ -172,7 +173,7 @@ module Garage {
             private syncCommonImages(callback?: Function) {
                 let FUNCTION_NAME = TAG + "syncCommonImages : ";
 
-                let src = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
                 let dst = HUIS_REMOTEIMAGES_ROOT;//コピー先
 
                 //copyしてcallbackを実行
