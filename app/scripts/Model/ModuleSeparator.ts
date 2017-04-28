@@ -47,8 +47,7 @@ module Garage {
                 module.label.push(label);
 
                 let image = this.itemizeHorizontalLine(module.remoteId);
-                let miscUtil = new Garage.Util.MiscUtil();
-                this._copyImageFile(image, miscUtil.getAppropriatePath(CDP.Framework.toUrl(HORIZONTAL_LINE_IMAGE_PATH), true), image.resolvedPath);
+                this._copyImageFile(image, Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl(HORIZONTAL_LINE_IMAGE_PATH), true), image.resolvedPath);
                 image.path = module.remoteId + "/" + path.basename(Model.OffscreenEditor.getEncodedPath(path.basename(image.resolvedPath)));
 
                 if (module.image == null) {

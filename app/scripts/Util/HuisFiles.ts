@@ -114,11 +114,11 @@ module Garage {
                 if (!this.commonRemoteInfo_) {
                     console.log("setting commonRemoteInfo_");
                     let remoteId = "common";
-                    let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+                    let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
                     console.log("facePath=" + facePath);
 
                     //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-                    let rootDirectory = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
+                    let rootDirectory = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
                     console.log("rootDirectory=" + rootDirectory);
 
                     let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
