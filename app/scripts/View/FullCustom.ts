@@ -3035,7 +3035,7 @@ module Garage {
                                 img.onload = () => {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
                                     // 詳細編集エリアのプレビュー部分の更新
-                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
 
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
@@ -3112,7 +3112,7 @@ module Garage {
 
 
                                         // プレビュー部分の更新
-                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
                                     };
                                     
                                 }
@@ -3251,10 +3251,10 @@ module Garage {
              * 詳細設定エリアのプレビューの画像を更新する
              * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
              *
-             * @param resolvedImagePathForCSS {string} 画像パス
-             * @param isBackground {boolean} 設定する項目が背景かどうか
+             * @param {string} resolvedImagePathForCSS 画像パス
+             * @param {JQeury} $preview プレビュー
              */
-            private _updatePreviewInDetailArea(resolvedImagePathForCSS : string, $preview, isBackground? : boolean) {
+            private _updatePreviewInDetailArea(resolvedImagePathForCSS: string, $preview: JQuery) {
                 if (resolvedImagePathForCSS == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
                     return;
@@ -3263,10 +3263,6 @@ module Garage {
                 if ($preview == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
                     return;
-                }
-
-                if (isBackground == undefined) {
-                    isBackground = false;
                 }
 
                 if (this._isValidResolvedImagePathForCSS(resolvedImagePathForCSS)) {
@@ -4804,7 +4800,7 @@ module Garage {
                         $(".image-resize-mode").val(resizeMode);
                     }
                     let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
-                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"), true);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
                 } else {
                     let $pageBackgroundDetail = $(templatePageBackground({}));
                     $detail.append($pageBackgroundDetail);
