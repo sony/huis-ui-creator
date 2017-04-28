@@ -3278,10 +3278,10 @@ module Garage {
             }
 
             /**
-             * パスが画像パスとして適切か確認する
+             * パスが画像パスとして有効か確認する
              *
              * @param resolvedImagePathForCSS {string} 画像パス
-             * @return {boolean} 画像パスが適切かどうか
+             * @return {boolean} 画像パスが有効かどうか
              */
             private _isValidResolvedImagePathForCSS(resolvedImagePathForCSS: string): boolean {
                 return resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
