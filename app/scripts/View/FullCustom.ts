@@ -3273,16 +3273,7 @@ module Garage {
                     this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
                     let previewWidth = $preview.width();
                     let img = new Image();
-                    img.onload = () => {
-                        // 背景を設定するときは、プレビューエリアをリモコンサイズに変更する
-                        if (isBackground) {
-                            let previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
-                            $preview.height(previewHeight);
-                        }
-                    };
                     img.src = resolvedImagePathForCSS;
-                } else {
-                    $preview.height(fullCustomConstValue.PROPERTY_AREA_IMAGE_PREVIEW_HEIGHT);
                 }
             }
 

@@ -757,7 +757,7 @@
                 width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
                 height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT;
                 border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
-            
+
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
@@ -834,6 +834,10 @@
                         width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
                     }
                 }
+            }
+
+            #property-image-preview.background {
+                height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
             }
 
             .property-state-image{
