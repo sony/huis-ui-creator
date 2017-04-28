@@ -48,7 +48,6 @@ module Garage {
             actionListTranslate?: IActionList;
         }
 
-
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -3054,7 +3053,7 @@ module Garage {
                                 img.onload = () => {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
                                     // 詳細編集エリアのプレビュー部分の更新
-                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"), isBackground);
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
 
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
@@ -3131,7 +3130,7 @@ module Garage {
 
 
                                         // プレビュー部分の更新
-                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"), isBackground);
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
                                     };
                                     
                                 }
@@ -3266,12 +3265,14 @@ module Garage {
                 }
             }
 
-
             /**
-            * 詳細設定エリアのプレビューの画像を更新する
-            * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
-            */
-            private _updatePreviewInDetailArea(resolvedImagePathForCSS : string, $preview, isBackground? : boolean) {
+             * 詳細設定エリアのプレビューの画像を更新する
+             * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
+             *
+             * @param {string} resolvedImagePathForCSS 画像パス
+             * @param {JQeury} $preview プレビュー
+             */
+            private _updatePreviewInDetailArea(resolvedImagePathForCSS: string, $preview: JQuery) {
                 if (resolvedImagePathForCSS == undefined) {
                     console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
                     return;
@@ -3282,31 +3283,24 @@ module Garage {
                     return;
                 }
 
-                if (isBackground == undefined) {
-                    isBackground = false;
-                }
-
-                if (resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
-                    && resolvedImagePathForCSS != "" && resolvedImagePathForCSS != "none") {
+                if (this._isValidResolvedImagePathForCSS(resolvedImagePathForCSS)) {
                     this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
                     let previewWidth = $preview.width();
                     let img = new Image();
-                    img.onload = () => {
-                        let previewHeight: number = MIN_HEIGHT_PREVIEW;
-                        if (isBackground) {
-                            previewHeight = REMOTE_BACKGROUND_HEIGHT * (previewWidth / REMOTE_BACKGROUND_WIDTH);
-                        } else {
-                            //previewHeight = Nanのときもあるので MIN_HEIGHT_PREVIEW > previewHeightではない。
-                            previewHeight = Math.max(img.height * (previewWidth / img.width), MIN_HEIGHT_PREVIEW);
-                        }
-                        $preview.height(previewHeight);
-                    };
                     img.src = resolvedImagePathForCSS;
-
-                } else {
-                    $preview.height(MIN_HEIGHT_PREVIEW);
                 }
+            }
 
+            /**
+             * パスが画像パスとして有効か確認する
+             *
+             * @param resolvedImagePathForCSS {string} 画像パス
+             * @return {boolean} 画像パスが有効かどうか
+             */
+            private _isValidResolvedImagePathForCSS(resolvedImagePathForCSS: string): boolean {
+                return resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
+                    && resolvedImagePathForCSS != ""
+                    && resolvedImagePathForCSS != "none";
             }
 
             /**
@@ -4827,7 +4821,7 @@ module Garage {
                         $(".image-resize-mode").val(resizeMode);
                     }
                     let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
-                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"), true);
+                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
                 } else {
                     let $pageBackgroundDetail = $(templatePageBackground({}));
                     $detail.append($pageBackgroundDetail);
