@@ -48,9 +48,6 @@ module Garage {
             actionListTranslate?: IActionList;
         }
 
-        namespace fullCustomConstValue {
-            export const PROPERTY_AREA_IMAGE_PREVIEW_HEIGHT: number = 156; // プロパティエリアから境界線分を引いた値
-        }
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
