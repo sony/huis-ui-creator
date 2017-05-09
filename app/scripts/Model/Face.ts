@@ -243,6 +243,21 @@ module Garage {
             }
 
             /**
+             * このFaceの総ページ数を返す
+             */
+            getTotalPageNum() {
+                let FUNCTION_NAME = TAG + "TotalPageNum : ";
+
+                if (this.modules == null || this.modules.length == null) {
+                    console.warn(FUNCTION_NAME + "modules in this face (" + name + "is null");
+                    return undefined;
+                }
+
+                //ページが保持しているモジュール数を総ページ数とする。
+                return this.modules.length
+            }
+
+            /**
              * このFace、及び含まれるModuleにremoteIdをセットする。
              * その際に、Moduleのnameに含まれるremoteIdも更新する。
              *

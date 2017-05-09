@@ -1010,9 +1010,7 @@ module Garage {
                 } else {
                     let face = huisFiles.getFace(remoteId);
                     if (face) {
-                        // 総ページ数を取得するためにViewを生成
-                        let modulesView = new Module(face);
-                        total = modulesView.getPageCount();
+                        total = face.getTotalPageNum();
                     } else {
                         total = 0;
                     }

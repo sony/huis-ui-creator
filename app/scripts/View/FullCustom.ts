@@ -2253,7 +2253,7 @@ module Garage {
                     }
                     faceLabel = face.name;
 
-                    total = Module.countTotalPage(face);
+                    total = face.getTotalPageNum();
                 }
 
                 let pageLabel = (target.scene_no >= 0 && target.scene_no < total)

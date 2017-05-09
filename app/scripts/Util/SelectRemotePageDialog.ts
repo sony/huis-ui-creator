@@ -84,7 +84,7 @@ module Garage {
 
                 let newJump: IJump = $.extend(true, {}, jump);
 
-                let totalPage = View.Module.countTotalPage(face);
+                let totalPage = face.getTotalPageNum();
                 if (jump.scene_no < 0 ||
                     jump.scene_no >= totalPage) {
                     newJump.scene_no = 0;

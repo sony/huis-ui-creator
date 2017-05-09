@@ -976,17 +976,6 @@ module Garage {
                 JQUtils.data($targetPage, "pageIndex", pageIndex);
             }
 
-            /**
-             * faceの総ページ数を算出する
-             *
-             * @param face {IGFace} 対象のFace
-             * @return {number} 総ページ数
-             */
-            static countTotalPage(face: Model.Face): number {
-                let modulesView = new Module(face);
-
-                return modulesView.getPageCount();
-            }
         }
     }
 }
