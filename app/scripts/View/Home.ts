@@ -122,9 +122,11 @@ module Garage {
                     huisFiles.init(HUIS_FILES_ROOT);
                     this._calculateFaceListWidth();
                     this._renderFaceList();
+
+                    // インポート後は、インポートしたリモコンを表示するために一番左に移動する
+                    this._moveWindowLeft();
                 });
             }
-
 
             /**
              * Home 画面の初期化
@@ -154,6 +156,14 @@ module Garage {
                     informationDialog.notify();
                 }
                 
+            }
+
+            /**
+              * 画面を左端に移動させる
+              */
+            private _moveWindowLeft() {
+                let $faceListContainer = $("#face-list-container");
+                $faceListContainer.animate({ scrollLeft: 0 }, "normal");
             }
 
             /**
@@ -257,6 +267,9 @@ module Garage {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();
+
+                                // 新規作成したリモコンを表示するために一番左に移動する
+                                this._moveWindowLeft();
                             }, (err) => {
                                 if (err) {
                                     // [TODO] エラー値のハンドリング
