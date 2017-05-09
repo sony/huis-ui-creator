@@ -975,6 +975,25 @@ module Garage {
                 let $targetPage = $targetModule.parent();
                 JQUtils.data($targetPage, "pageIndex", pageIndex);
             }
+
+            /**
+             * faceの総ページ数を算出する
+             *
+             * @param face {IGFace} 対象のFace
+             * @return {number} 総ページ数
+             */
+            static countTotalPage(face: IGFace): number {
+                let modulesView = new Module({
+                    el: $(''),
+                    attributes: {
+                        remoteId: face.remoteId,
+                        modules: face.modules,
+                        materialsRootPath: HUIS_FILES_ROOT
+                    }
+                });
+
+                return modulesView.getPageCount();
+            }
         }
     }
 }

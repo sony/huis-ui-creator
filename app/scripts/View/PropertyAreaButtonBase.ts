@@ -38,6 +38,21 @@ module Garage {
             protected defaultState: IGState; // Defaultのstate
 
             /**
+             * 編集中リモコンのremote_id
+             */
+            protected remoteId: string;
+
+            /**
+             * 編集中リモコン名
+             */
+            protected faceName: string;
+
+            /**
+             * 編集中リモコンのgmodules
+             */
+            protected gmodules: IGModule[];
+
+            /**
              * constructor
              */
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
@@ -150,6 +165,34 @@ module Garage {
                 } else {
                     return true;
                 }
+            }
+
+
+            /**
+             * state情報からテンプレート生成に必要なstateDataを生成する
+             * @param state {IGState}
+             */
+            protected createStateData(state: IGState): any {
+                let stateData: any = {};
+
+                stateData.id = state.id;
+
+                if (state.image) {
+                    stateData.image = state.image[0];
+                }
+
+                if (state.label) {
+                    stateData.label = state.label[0];
+                }
+
+                if (state.action &&
+                    state.action[0] &&
+                    state.action[0].deviceInfo &&
+                    state.action[0].deviceInfo.functions) {
+                    stateData.functions = state.action[0].deviceInfo.functions;
+                }
+
+                return stateData;
             }
 
           
@@ -496,6 +539,20 @@ module Garage {
 
                 }
             }
+
+            /*
+            protected setCurrentRemoteNameInPullDown(order: number, remoteId: string, remoteName: string) {
+                let FUNCTION_NAME = TAG + "changeCurrentRemoteNameInPullDown : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $option: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"] #signal-remote-container option[value=" + remoteId + "]");
+                $option.text(remoteName);
+            }
+            */
 
             /*
              * アクションに設定されているFunctionNameを取得する
@@ -851,6 +908,247 @@ module Garage {
 
                 return functions;
             }
+
+
+            /**
+             * ページプルダウンをレンダリング
+             *
+             * @param order {number}
+             * @param stateId {number}
+             * @param page {number}
+             */
+            protected renderPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID, page: number = -1) {
+                let FUNCTION_NAME = TAG + "renderPagesOf : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $pulldown = this.appendPagesPullDown(order, stateId);
+
+                let maxPage = this.getPagesOf(order, stateId);
+                if (maxPage <= 0) {
+                    // リモコン未選択時/リモコンが存在しないはプルダウン自体を非表示
+                    $pulldown.hide();
+                } else {
+                    $pulldown.show();
+                    if (page >= maxPage) {
+                        // リモコンはあるがページが無い場合: 1ページ目を表示
+                        page = 0;
+                    }
+
+                    this.controlHiddennessOfPagesPullDown($pulldown, maxPage, page);
+
+                    this.setPagePullDownOf(order, page);
+                }
+            }
+
+
+            /**
+             * ページ選択用プルダウンのDOMを追加し、そのJQueryオブジェクトを返す。
+             * 既に存在する場合は追加せずに対象のJQueryオブジェクトを返す。
+             *
+             * @param order {number}
+             * @param stateId {number}
+             */
+            private appendPagesPullDown(order: number, stateId: number = this.DEFAULT_STATE_ID): JQuery {
+                //targetとなるJQueryを取得
+                let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
+                if ($target == null || $target.length == 0) {
+                    console.warn("$target is undefined");
+                    return null;
+                }
+
+                let $pages: JQuery = $target.find('.signal-page-container-element');
+                if ($pages.length > 0) {
+                    return $pages.eq(0);
+                }
+
+
+                let $container = $target.find("#signal-page-container");
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.templateItemDetailFile_);
+
+                let inputData = {
+                    order: order,
+                    id: stateId
+                }
+                let $pulldown = $(template(inputData));
+                $container.append($pulldown);
+
+                let $appendedElement = $container.children('.signal-page-container-element');
+                if ($appendedElement.length > 0) {
+                    return $appendedElement.eq(0);
+                } else {
+                    return null;
+                }
+            }
+
+            /**
+             * orderに設定されているリモコンのページ数を取得
+             */
+            private getPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID): number {
+                let FUNCTION_NAME = TAG + "getPagesOf : ";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return 0;
+                }
+
+
+                let remoteId: string = this.getRemoteIdFromPullDownOf(order);
+                if (remoteId == null) {
+                    // 未選択 or 存在しないリモコン
+                    return 0;
+                }
+
+                let total: number;
+                if (remoteId == this.remoteId) {
+                    // 編集中ページを跳び先としている場合
+                    total = this.gmodules.length;
+
+                } else {
+                    let face = huisFiles.getFace(remoteId);
+                    if (face) {
+                        // 総ページ数を取得するためにViewを生成
+                        let modulesView = new Module({
+                            el: $(''),
+                            attributes: {
+                                remoteId: face.remoteId,
+                                modules: face.modules,
+                                materialsRootPath: HUIS_FILES_ROOT
+                            }
+                        });
+                        total = modulesView.getPageCount();
+                    } else {
+                        total = 0;
+                    }
+                }
+                return total;
+            }
+
+
+            /**
+             * ページプルダウン各項目の表示/非表示を切り替える
+             *
+             * @param $pulldown {JQuery}
+             * @param maxPage {number} 対象リモコンのページ数
+             * @param defaultPageValue {number} 初期選択状態にするページのvalue（ページ番号ではない）
+             */
+            private controlHiddennessOfPagesPullDown($pulldown: JQuery, maxPage: number, defaultPageValue: number) {
+                let $pageOption = $pulldown.find('option');
+
+                $pageOption.each((index, elem) => {
+                    let self = $(elem);
+
+                    let val = Number(self.val());
+                    if (val < maxPage &&
+                        !(val < 0 && defaultPageValue >= 0)) {  //「ページを選択」は初期ページ設定がある場合には表示しない
+                        self.prop('disabled', false)
+                    } else {
+                        self.prop('disabled', true);
+                    }
+
+                });
+            }
+
+
+            /**
+             * ページプルダウンの選択項目を設定
+             *
+             * @param order {number}
+             * @param page {number} 設定する項目の値（ページ番号ではない）
+             */
+            protected setPagePullDownOf(order: number, page: number) {
+                let FUNCTION_NAME = TAG + "setPagePullDownOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $pagePullDown = $signalContainerElement.find(".page-input[data-signal-order=\"" + order + "\"]");
+                if ($pagePullDown == null || $pagePullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$pagePullDown is invalid");
+                    return;
+                }
+
+                let remoteVal = this.getRemoteIdFromPullDownOf(order);
+                if (remoteVal == null) {
+                    // リモコンが存在しない場合は強制的に「ページを選択」
+                    $pagePullDown.val('-1');
+                } else {
+                    $pagePullDown.val('' + page);
+                }
+            }
+
+            /**
+             * 入力したorderの信号に登録されているpageをpulldownから取得する。
+             * 見つからなかった場合、undefinedを返す。
+             * @order{number} : remoeIdを取得したい信号の順番
+             * @{string} remoteId
+             */
+            protected getPageFromPullDownOf(order: number): number {
+                let FUNCTION_NAME = TAG + "getPageFromPullDownOf";
+
+                if (!this.isValidOrder(order)) {
+                    console.warn(FUNCTION_NAME + "order is invalid");
+                    return;
+                }
+
+                let $signalContainerElement = this.getSignalContainerElementOf(order);
+                if ($signalContainerElement == null) {
+                    console.warn(FUNCTION_NAME + "$signalContainerElement is null");
+                    return;
+                }
+
+                let $pagePullDown = $signalContainerElement.find(".page-input[data-signal-order=\"" + order + "\"]");
+                if ($pagePullDown == null || $pagePullDown.length == 0) {
+                    console.warn(FUNCTION_NAME + "$pagePullDown is invalid");
+                    return;
+                }
+                return $pagePullDown.val();
+
+            }
+
+
+            /**
+             * 新規作成されたリモコン選択プルダウンにスタイルを適用する
+             *
+             * @param order {number}
+             */
+            protected triggerCreateRemoteSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-remote-container .custom-select').trigger('create');
+            }
+
+
+            /**
+             * リモコン選択プルダウンの変更を表示に反映する
+             *
+             * @param order {number}
+             */
+            protected refreshRemoteSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-remote-container .custom-select select').selectmenu('refresh');
+            }
+
+            /**
+             * ページ選択プルダウンの変更を表示に反映する
+             *
+             * @param order {number}
+             */
+            protected refreshPageSelect(order: number) {
+                let $container = this.getSignalContainerElementOf(order);
+                $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
+            }
+
           
           /*
            * ＋ボタンを押下する際のアニメーション. 

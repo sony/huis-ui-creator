@@ -56,7 +56,7 @@ module Garage {
                 //インポートするリモコンファイルを選択するダイアログを表示する。
                 let options: Util.ElectronOpenFileDialogOptions = {
                     title: PRODUCT_NAME,
-                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
                 };
                 electronDialog.showOpenFileDialog(
                     options,

@@ -77,9 +77,7 @@ module Garage {
                     }
                 })();
 
-
                 //現状アプリのバージョン情報を代入。
-
                 let targetVersionFilePath = null;
                 // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
                 if (Util.MiscUtil.isWindows()) {
@@ -98,12 +96,14 @@ module Garage {
                     console.error(err);
                 }
 
-
                 this.checkRcVersionFromDevice();
 
-                this.syncWithHUIS(() => {
-                    Framework.Router.navigate("#home");
-                }); // 同期が完了したらHomeに遷移する
+                this.checkStorageLock().then(() => {
+                    this.checkRcVersionFromDevice();
+                    this.syncWithHUIS(() => {
+                        Framework.Router.navigate("#home");
+                    }); // 同期が完了したらHomeに遷移する
+                });
             }
             
             //! page before hide event
@@ -188,6 +188,92 @@ module Garage {
             }
 
 
+            /**
+             * ストレージロックのチェック
+             */
+            private checkStorageLock(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                storageLock = new Util.StorageLock();
+
+                // ダイアログ表示中もスピナーを回転させるための setTimeout
+                setTimeout(() => {
+                    if (storageLock.isLocked()) {
+                        // ロックされていますメッセージダイアログ
+                        let res = this.showStorageUnlockDialog();
+                        if (res === 0) {
+                            // 「解除」選択時
+                            let result = storageLock.unlock();
+                            if (result) {
+                                // 解除しました再起動してくださいダイアログ
+                                this.showPleaseRestartDialog();
+
+                            } else {
+                                // 解除失敗ダイアログ
+                                this.showFailedToUnlockDialog();
+
+                            }
+                        }
+                        app.exit(0);
+
+                    } else {
+                        // ロックされていない場合はすぐ返す
+                        df.resolve();
+                    }
+                }, 100);
+
+                return promise;
+            }
+
+            /**
+             * ストレージロックを解除するかどうかのダイアログを表示
+             *
+             * @return {number} ダイアログの入力
+             */
+            private showStorageUnlockDialog(): number {
+                return electronDialog.showMessageBox(
+                    {
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_STORAGE_LOCKED"),
+                        buttons: [
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_STORAGE_UNLOCK"),
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")
+                        ],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
+            /**
+             * ロック解除後の再起動を促すダイアログを表示
+             */
+            private showPleaseRestartDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
+            /**
+             * ロック解除失敗のダイアログを表示
+             */
+            private showFailedToUnlockDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
             /*
             * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
             */
@@ -202,22 +288,49 @@ module Garage {
                 let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
 
                 //このバージョンのGarageに必要になるHUISのバージョン
-                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
+                let rcVersionAvailableThisGarage = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
+
 
                 //HUIS RCとバージョン不一致の判定
                 if (RC_VERSION != null) {
                     console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
 
                     //HUIS RCはimportを使えないバージョンのときダイアログを出す。
-                    if (rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
+                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)) {
                         this.showHuisRcVersionIsOldDialog();
                     }
+
+                    //TO_FIX BtoB版の場合
+                    if (!rcVersion.isSameMajorVersion(rcVersionAvailableThisGarage)) {
+                        this.showHuisRcVersonIsNotBtoB();
+                    }
+
+
                 } else {//RC_VERSIONがない場合もダイアログを表示。
                     this.showHuisRcVersionIsOldDialog();
+
+                    //TO_FIX BtoB版の場合
+                    this.showHuisRcVersonIsNotBtoB();
                 }
 
             }
 
+
+            /*
+            * HUISがBtoB向けのバージョンではない場合のダイアログを表示
+            */
+            private showHuisRcVersonIsNotBtoB() {
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
 
             /*
             * HUIS本体のバージョンが古い場合のダイアログを表示
