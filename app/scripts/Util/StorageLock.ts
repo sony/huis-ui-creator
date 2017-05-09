@@ -27,7 +27,7 @@ module Garage {
 
 
             constructor() {
-                let keysDir = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/keys"));
+                let keysDir = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/keys"));
                 this.lockFile = path.join(keysDir, StorageLock.LockFileName).replace(/\\/g, "/");
                 this.unlockFile = path.join(keysDir, StorageLock.UnlockFileName).replace(/\\/g, "/");
             }
