@@ -45,6 +45,48 @@
           ]
         }
       ]
+    },
+    {
+      "area": {
+        "x": 8,
+        "y": 0,
+        "w": 464,
+        "h": 116
+      },
+      "name": "STR_BUTTON_JUMP",
+      "default": 0,
+      "state": [
+        {
+          "id": 0,
+          "image": [
+            {
+              "area": {
+                "x": 0,
+                "y": 0,
+                "w": 464,
+                "h": 116
+              },
+              "path": "btn_image_jump.png"
+            }
+          ],
+          "action": [
+            {
+              "input": "touch",
+              "code_db": {
+                "brand": "Jump",
+                "device_type": "Common",
+                "function": "none",
+                "db_codeset": "none",
+                "db_device_id": "none"
+              },
+              "jump": {
+                "remote_id": "",
+                "scene_no": 0
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "label": [

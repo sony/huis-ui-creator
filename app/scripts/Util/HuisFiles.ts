@@ -120,7 +120,15 @@ module Garage {
                 if (!this.commonRemoteInfo_) {
                     console.log("setting commonRemoteInfo_");
                     let remoteId = "common";
+
                     let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+
+                    //ビジネス仕向けか否かで、表示するCommonアイテムを変える。
+                    if (Util.MiscUtil.isBz()) {
+                        facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common_bz.face"));
+                    } else {
+                        facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+                    }
                     console.log("facePath=" + facePath);
 
                     //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
