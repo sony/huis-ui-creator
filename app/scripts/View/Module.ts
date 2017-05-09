@@ -982,15 +982,8 @@ module Garage {
              * @param face {IGFace} 対象のFace
              * @return {number} 総ページ数
              */
-            static countTotalPage(face: IGFace): number {
-                let modulesView = new Module({
-                    el: $(''),
-                    attributes: {
-                        remoteId: face.remoteId,
-                        modules: face.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+            static countTotalPage(face: Model.Face): number {
+                let modulesView = new Module(face);
 
                 return modulesView.getPageCount();
             }

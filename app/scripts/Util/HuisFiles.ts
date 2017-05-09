@@ -179,14 +179,15 @@ module Garage {
                 return null;
             }
 
-            createTmpFace(remoteId: string, faceName: string, gmodules: IGModule[]): IGFace {
-                let tmpFace: IGFace = {
-                    remoteId: remoteId,
-                    name: faceName,
-                    category: DEVICE_TYPE_FULL_CUSTOM,
-                    modules: gmodules
-                };
-
+            /*
+            * 一時的に利用するFaceModelを返す。
+            * @param {string} remoteId 生成されるFaceのRemoteId
+            * @param {string} faceName 生成されるFaceの名前
+            * @param {Model.Module[]} gmodules 生成されるFaceに含まれているモジュール群
+            * @return {Model.Face} 一時的に生成したFaceModel
+            */
+            createTmpFace(remoteId: string, faceName: string, gmodules: Model.Module[]): Model.Face {
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, gmodules);
                 return tmpFace;
             }
 
@@ -1162,10 +1163,10 @@ module Garage {
              *
              * @param tmpRemoteId {string} 編集中リモコンのremote_id
              * @param faceName {string} 編集中リモコンの名称
-             * @param gmodules {IGModule[]} 編集中リモコンのモジュール
+             * @param gmodules {Model.Module[]} 編集中リモコンのモジュール
              * @return {IRemoteInfo[]}
              */
-            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: IGModule[]): IRemoteInfo[] {
+            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: Model.Module[]): IRemoteInfo[] {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
 
                 if (this.remoteInfos_.length == 0) {
@@ -1181,7 +1182,7 @@ module Garage {
                     if (target.face.remoteId == tmpRemoteId) {
                         // 編集中のリモコン
                         containsTmpRemote = true;
-                        result.push(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules, target.face.category, target.mastarFace));
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, gmodules, target.face.category, target.mastarFace));
 
                     } else {
                         result.push(target);
@@ -1191,7 +1192,7 @@ module Garage {
 
                 // 新規作成中の場合はリストの先頭に追加
                 if (!containsTmpRemote) {
-                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, faceName, gmodules));
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, gmodules));
                 }
 
                 return result;
@@ -1201,21 +1202,19 @@ module Garage {
              * 一時的なのリモコン情報を生成
              *
              * @param remoteId {string}
-             * @param faceName {string}
-             * @param modules {IGModule[]}
+             * @param modules {Model.Module}
              * @param catgory {string}
-             * @param masterFace {IGFace}
+             * @param masterFace {Model.Face}
              * @return {IRemoteInfo}
              */
-            private createTmpRemoteInfo(remoteId: string, faceName: string, modules: IGModule[], category: string = "", masterFace?: IGFace): IRemoteInfo {
-                let tmpInfo:IRemoteInfo = {
+            private createTmpRemoteInfo(remoteId: string, modules: Model.Module[], category: string = "", masterFace?: Model.Face): IRemoteInfo {
+
+                let faceName = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');//faceNameを使用せず固定
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, category, modules)
+
+                let tmpInfo: IRemoteInfo = {
                     remoteId: remoteId,
-                    face: {
-                        name: $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE'),//faceNameを使用せず固定
-                        remoteId: remoteId,
-                        category: category,
-                        modules: modules
-                    }
+                    face : tmpFace
                 };
 
                 if (masterFace != null) {

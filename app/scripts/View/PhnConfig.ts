@@ -201,14 +201,7 @@ module Garage {
                 }
 
                 // 総ページ数を取得するためにViewを生成
-                let modulesView = new Module({
-                    el: $(''),
-                    attributes: {
-                        remoteId: face.remoteId,
-                        modules: face.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+                let modulesView = new Module(face);
                 let total = modulesView.getPageCount();
                 let pageNum: number;
                 if (this.model.sceneNo >= 0 && this.model.sceneNo < total) {

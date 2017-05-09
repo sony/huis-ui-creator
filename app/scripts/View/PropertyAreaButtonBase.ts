@@ -50,7 +50,7 @@ module Garage {
             /**
              * 編集中リモコンのgmodules
              */
-            protected gmodules: IGModule[];
+            protected gmodules: Model.Module[];
 
             /**
              * constructor
@@ -1011,14 +1011,7 @@ module Garage {
                     let face = huisFiles.getFace(remoteId);
                     if (face) {
                         // 総ページ数を取得するためにViewを生成
-                        let modulesView = new Module({
-                            el: $(''),
-                            attributes: {
-                                remoteId: face.remoteId,
-                                modules: face.modules,
-                                materialsRootPath: HUIS_FILES_ROOT
-                            }
-                        });
+                        let modulesView = new Module(face);
                         total = modulesView.getPageCount();
                     } else {
                         total = 0;

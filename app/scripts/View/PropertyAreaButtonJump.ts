@@ -19,9 +19,9 @@ module Garage {
              * constructor
              * @param remoteId {string} 編集中のリモコンの remote_id
              * @param faceName {string} 編集中のリモコン名
-             * @param gmodules {IGModule[]} 編集中のリモコンのモジュール
+             * @param gmodules {Model.Module[]} 編集中のリモコンのモジュール
              */
-            constructor(remoteId: string, faceName: string, gmodules: IGModule[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(remoteId: string, faceName: string, gmodules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
 
                 this.remoteId = remoteId;

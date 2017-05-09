@@ -2246,7 +2246,7 @@ module Garage {
                     total = this.faceRenderer_canvas_.getPageCount();
 
                 } else {
-                    let face: IGFace = huisFiles.getFace(target.remote_id);
+                    let face: Model.Face = huisFiles.getFace(target.remote_id);
                     if (face == null) {
                         console.warn(FUNCTION_NAME + "face not found: " + target.remote_id);
                         return "none";

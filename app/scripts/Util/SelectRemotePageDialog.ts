@@ -27,7 +27,7 @@ module Garage {
             private selectedSettings: IJump;
 
             /** 編集中の Face 情報 */
-            private tmpFace: IGFace;
+            private tmpFace: Model.Face;
 
             /** face-container の scale */
             private faceContainerScale: number = 0.5;
@@ -43,13 +43,13 @@ module Garage {
              * @param defaultJumpSettings {IJump} 初期選択状態にするリモコンページ設定
              * @param tmpFace {IGFace} 編集中のリモコン設定（編集中のリモコンも一覧表示する場合に使用）
              */
-            constructor(title: string, defaultJumpSettings: IJump, tmpFace?: IGFace) {
+            constructor(title: string, defaultJumpSettings: IJump, tmpFace?: Model.Face) {
                 this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
                 this.selectedSettings = this.correctJumpSetting(this.defaultJumpSettings);
 
                 if (tmpFace) {
-                    this.tmpFace = this.correctTempFace(tmpFace);
+                    this.tmpFace = this.correctTmpFace(tmpFace);
                 }
 
                 let options: CDP.UI.DialogOptions = {
@@ -77,7 +77,7 @@ module Garage {
                     return null;
                 }
 
-                let face: IGFace = this.getFace(jump.remote_id);
+                let face: Model.Face = this.getFace(jump.remote_id);
                 if (face == null) {
                     return jump;
                 }
@@ -100,7 +100,7 @@ module Garage {
              * @param remoteId {string} キーとなるremote_id
              * @return {IGFace} remote_idに該当するFace。存在しない場合はnullを返す。
              */
-            private getFace(remoteId: string): IGFace {
+            private getFace(remoteId: string): Model.Face {
                 if (this.tmpFace != null &&
                     this.tmpFace.remoteId == remoteId) {
                     return this.tmpFace;
@@ -115,15 +115,15 @@ module Garage {
              * 編集中リモコンデータを補正する。
              * ただし元のデータがnullだった場合はnullを返す。
              *
-             * @param tmpFace {IGFace} 元のFace
-             * @return {IGFace} 補正済みFace
+             * @param tmpFace {Model.Face} 元のFace
+             * @return {Model.Face} 補正済みFace
              */
-            private correctTempFace(tmpFace: IGFace): IGFace {
+            private correctTmpFace(tmpFace: Model.Face): Model.Face {
                 if (tmpFace == null) {
                     return null;
                 }
 
-                let face: IGFace = $.extend(true, {}, tmpFace);
+                let face: Model.Face = $.extend(true, {}, tmpFace);
                 if (face.name != null &&
                     face.name.length === 0) {
                     // 空文字だと表示が崩れるため全角スペースを設定
