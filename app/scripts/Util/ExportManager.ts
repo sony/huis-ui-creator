@@ -44,10 +44,21 @@ module Garage {
              */
              exec() {
                  let FUNCTION_NAME = TAG + "exec : ";
-                 let options: Util.ElectronSaveFileDialogOptions = {
-                     title: PRODUCT_NAME,
-                     filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
-                 };
+
+                 //ビジネス仕向けの場合、専用 拡張子で書き出す。
+                 let options: Util.ElectronSaveFileDialogOptions = null;
+                 if (Util.MiscUtil.isBz()){
+                     options = {
+                         title: PRODUCT_NAME,
+                         filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
+                     };
+                 } else {
+                     options = {
+                         title: PRODUCT_NAME,
+                         filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                     };
+                 }
+
                  electronDialog.showSaveFileDialog(
                      options,
                      (file) => {
