@@ -275,11 +275,11 @@ module Garage {
             }
 
             /*
-             * プルダウンメニュー対応
+             * ヘッダー上のオプション用プルダウンメニューを、表示位置を修正して表示する。
+             * @param {JQuery} $popup 表示するプルダウンメニュー ポップアップのJQuery要素
              */
-
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
+            protected showOptionPullDownMenu($popup : JQuery) {
+                //var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
                 var $button1 = this.$page.find("#option-pulldown-menu");
                 var $header = this.$page.find("header");
 
@@ -292,14 +292,10 @@ module Garage {
 
                 console.log("options.x options.y : " + options.x + ", " + options.y);
 
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
+                $popup.popup(options).popup("open").on("vclick", () => {
+                    $popup.popup("close");
                 });
-
-                $overflow.i18n();
-
-
-                return;
+                $popup.i18n();
             }
 
 

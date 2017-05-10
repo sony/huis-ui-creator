@@ -298,6 +298,15 @@ module Garage {
                 });
             }
 
+            /*
+             * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
+             */
+            private _onOptionPullDownMenuClick(event: Event) {
+                 //表示するメニューのJQuery要素
+                let $popup = this.$page.find("#option-pulldown-menu-popup"); 
+                this.showOptionPullDownMenu($popup);
+            }
+
             render(): FullCustom {
                 // Please add your code
                 return this;

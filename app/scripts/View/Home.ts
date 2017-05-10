@@ -109,6 +109,24 @@ module Garage {
                 this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
             }
 
+            /*
+             * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
+             */
+            private _onOptionPullDownMenuClick(event: Event) {
+                //ビジネス仕向けの場合、表示するメニューを出しわける
+
+                //表示するメニューのJQuery要素
+                let $popup : JQuery= null;
+
+                if (Util.MiscUtil.isBz()) {
+                    $popup = this.$page.find("#option-pulldown-menu-popup-bz"); 
+                } else {
+                    $popup = this.$page.find("#option-pulldown-menu-popup"); 
+                }
+
+                this.showOptionPullDownMenu($popup);
+            }
+
             render(): Home {
                 this._renderFaceList();
                 $('body').trigger('create');
