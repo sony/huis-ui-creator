@@ -2141,10 +2141,6 @@ module Garage {
                                     }
                                 }
 
-                                if (!existFunc) {
-                                    // 基リモコン無し && キャッシュにも存在しなかった場合はIDを振る
-                                    action.code_db.function = HuisFiles.getPlainFunctionKey(action.code_db.function) + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
-                                }
                             }
                         }
                     }
@@ -2232,23 +2228,6 @@ module Garage {
                         }
                     }
                 }
-            }
-
-
-            /**
-             * 信号コードからIDとなるハッシュ値を生成
-             *
-             * @param code {string} 基にする信号
-             * @return {string} 生成したハッシュ値
-             */
-            private createHashBySignalCode(code: string): string {
-                const hash = node_crypt.createHash('sha1');
-                hash.update(code, 'utf8');
-
-                return parseInt(hash.digest('hex'), 16)
-                    .toString(36)
-                    .toUpperCase()
-                    .substring(0, FUNC_ID_LEN);
             }
 
 
