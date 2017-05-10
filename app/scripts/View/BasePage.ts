@@ -279,7 +279,6 @@ module Garage {
              * @param {JQuery} $popup 表示するプルダウンメニュー ポップアップのJQuery要素
              */
             protected showOptionPullDownMenu($popup : JQuery) {
-                //var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
                 var $button1 = this.$page.find("#option-pulldown-menu");
                 var $header = this.$page.find("header");
 
@@ -297,7 +296,6 @@ module Garage {
                 });
                 $popup.i18n();
             }
-
 
             /*
              * Garageのデザインで、Toastを標示する。

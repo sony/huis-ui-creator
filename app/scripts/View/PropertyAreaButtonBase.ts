@@ -540,19 +540,6 @@ module Garage {
                 }
             }
 
-            /*
-            protected setCurrentRemoteNameInPullDown(order: number, remoteId: string, remoteName: string) {
-                let FUNCTION_NAME = TAG + "changeCurrentRemoteNameInPullDown : ";
-
-                if (!this.isValidOrder(order)) {
-                    console.warn(FUNCTION_NAME + "order is invalid");
-                    return;
-                }
-
-                let $option: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"] #signal-remote-container option[value=" + remoteId + "]");
-                $option.text(remoteName);
-            }
-            */
 
             /*
              * アクションに設定されているFunctionNameを取得する
