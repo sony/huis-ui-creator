@@ -554,7 +554,8 @@ body {
                     -webkit-padding-start: 0;
                 }
 
-                #option-pulldown-menu-popup{
+                #option-pulldown-menu-popup,
+                #option-pulldown-menu-popup-bz{
                     margin-top:$SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
                     width:$SIZE_OPTION_MENU_POPUP_WIDTH;
                     background-color:$COLOR_OPTION_MENU_POPUP_BACKGROUND;
