@@ -253,8 +253,21 @@ module Garage {
                     return undefined;
                 }
 
-                //ページが保持しているモジュール数を総ページ数とする。
-                return this.modules.length
+                //フルカスタムリモコンの場合、ページが保持しているモジュール数を総ページ数とする。
+                if (this.category == DEVICE_TYPE_FULL_CUSTOM) {
+                    return this.modules.length
+                }
+
+                //それ以外の場合、moduleのpageIndexの最大値を返す。
+                var pageCount = 0;
+                for (let module of this.modules) {
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
+                    if (pageCount < module.pageIndex + 1) {
+                        pageCount = module.pageIndex + 1;
+                    }
+                }
+                return pageCount;
+
             }
 
             /**

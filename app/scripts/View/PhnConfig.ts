@@ -201,8 +201,7 @@ module Garage {
                 }
 
                 // 総ページ数を取得するためにViewを生成
-                let modulesView = new Module(face);
-                let total = modulesView.getPageCount();
+                let total = face.getTotalPageNum();
                 let pageNum: number;
                 if (this.model.sceneNo >= 0 && this.model.sceneNo < total) {
                     pageNum = this.model.sceneNo + 1;
