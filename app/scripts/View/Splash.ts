@@ -96,16 +96,31 @@ module Garage {
                     console.error(err);
                 }
 
+                //ビジネス仕向けの場合、ストレージロックの解除判定をする。
+                if (Util.MiscUtil.isBz()) {
+                    this.checkStorageLock().then(() => {
+                        this._MoveHomeBeforeSync();
+                    });
+                } else {
+                    this._MoveHomeBeforeSync();
+                }
+            }
+
+
+           /*
+            * 同期処理後、ホームへ移動する。
+            */
+            private _MoveHomeBeforeSync() {
+
+                //本体のバージョン確認。
                 this.checkRcVersionFromDevice();
 
-                this.checkStorageLock().then(() => {
-                    this.checkRcVersionFromDevice();
-                    this.syncWithHUIS(() => {
-                        Framework.Router.navigate("#home");
-                    }); // 同期が完了したらHomeに遷移する
-                });
+                this.syncWithHUIS(() => {
+                    Framework.Router.navigate("#home");
+                }); // 同期が完了したらHomeに遷移する
             }
-            
+
+
             //! page before hide event
             onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
                 $(window).off("resize", this._pageLayout);
@@ -290,36 +305,37 @@ module Garage {
                 //このバージョンのGarageに必要になるHUISのバージョン
                 let rcVersionAvailableThisGarage = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
 
+                console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
 
                 //HUIS RCとバージョン不一致の判定
-                if (RC_VERSION != null) {
-                    console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
-
-                    //HUIS RCはimportを使えないバージョンのときダイアログを出す。
-                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)) {
+                //RC_VERSIONがない場合、ダイアログを表示。
+                if (RC_VERSION == null) {
+                    if (Util.MiscUtil.isBz()) {
+                        this.showHuisRcVersonIsNotBtoB();
+                    } else {
                         this.showHuisRcVersionIsOldDialog();
                     }
+                }
 
-                    //TO_FIX BtoB版の場合
+                //BZ仕向けのとき、BZ版かどうか判定。
+                if (Util.MiscUtil.isBz()) {
                     if (!rcVersion.isSameMajorVersion(rcVersionAvailableThisGarage)) {
                         this.showHuisRcVersonIsNotBtoB();
                     }
-
-
-                } else {//RC_VERSIONがない場合もダイアログを表示。
-                    this.showHuisRcVersionIsOldDialog();
-
-                    //TO_FIX BtoB版の場合
-                    this.showHuisRcVersonIsNotBtoB();
+                } else {
+                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)){
+                        this.showHuisRcVersionIsOldDialog();
+                    }
                 }
 
             }
-
+            
 
             /*
             * HUISがBtoB向けのバージョンではない場合のダイアログを表示
             */
             private showHuisRcVersonIsNotBtoB() {
+
                 //ダイアログを表示
                 let response = electronDialog.showMessageBox(
                     {

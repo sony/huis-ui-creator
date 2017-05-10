@@ -187,14 +187,6 @@ module Garage {
         //初期値。splashスクリーンで値をいれる。
         RC_VERSION = null;
 
-        HUIS_RC_VERSION_REQUIRED = "4.0.3";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
-
-       
-        HUIS_RC_VERSION_REQUIRED = "8.0.0";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";//sqa用に実際にチェックする値とは別に値を用意。
-        
-
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
@@ -305,6 +297,17 @@ module Garage {
     };
 
     var initPath = () => {
+
+        //BZ版と通常版で、必要バージョンを分ける。
+        if (Util.MiscUtil.isBz()) {
+            HUIS_RC_VERSION_REQUIRED = "8.0.0";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";//sqa用に実際にチェックする値とは別に値を用意。
+        } else {
+            HUIS_RC_VERSION_REQUIRED = "4.0.3";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
+        }
+
+
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         if (Util.MiscUtil.isWindows()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -313,36 +316,27 @@ module Garage {
         } else {
             console.error("Error: unsupported platform");
         }
-
-        DIR_NAME_WINDOWS = "Windows";
-        DIR_NAME_MAC = "Mac";
-
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-        if (!fs.existsSync(HUIS_FILES_ROOT)) {
-            fs.mkdirSync(HUIS_FILES_ROOT);
-        }
         if (!fs.existsSync(GARAGE_FILES_ROOT)) {
             fs.mkdirSync(GARAGE_FILES_ROOT);
         }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
-        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
 
-
-        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
-
+        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
+        if (Util.MiscUtil.isBz()) {
+            HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
+        } else {
+            HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        }
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
             fs.mkdirSync(HUIS_FILES_ROOT);
         }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
+
+
         // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
+        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
         HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+        if (!fs.existsSync(HUIS_REMOTEIMAGES_ROOT)) {
+            fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
+        }
 
     }
 
@@ -382,8 +376,12 @@ module Garage {
                 isHUISConnected = true; // HUISが接続されている
 
                 //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
+                //BZ版の場合、読み込むファイルが異なる
+                if (Util.MiscUtil.isBz()) {
+                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
+                } else {
+                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+                }
 
                 callback(); // 次の処理へ
 
