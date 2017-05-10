@@ -67,7 +67,12 @@ module Garage {
                              return;
                          }
 
-                         let dstFile = this.fixExportFileExtensionB2B(file);
+                         let dstFile = null;
+                         if (Util.MiscUtil.isBz()){
+                             dstFile = this.fixExportFileExtensionB2B(file);
+                         } else {
+                             dstFile = this.fixExportFileExtension(file);
+                         }
 
                          let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                              src: CDP.Framework.toUrl("/templates/dialogs.html"),
