@@ -30,6 +30,7 @@ module Garage {
         }
 
         namespace ConfigFlags {
+            //通常仕向けか、ビジネス仕向けか を決めるフラグ。true:ビジネス仕向け。false:通常仕向け
             export const IS_BZ : boolean = false;
         }
 
