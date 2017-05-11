@@ -117,15 +117,17 @@ module Garage {
                 OffscreenEditor.loadTexture(loadPath)
                     .done((texture: PIXI.Texture) => {
 
-                        var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-                        if (params.resize) {
-                            renderer = PIXI.autoDetectRenderer(params.resize.width, params.resize.height, { transparent: true });
-                        } else {
-                            renderer = PIXI.autoDetectRenderer(800, 600, { transparent: true });
+                        //textureから、画像のデータを取得する。
+                        let imageWidth: number = 800; 
+                        let imageHeight: number = 600;
+                        if (params.resize != null) {
+                            imageWidth = params.resize.width;
+                            imageHeight = params.resize.height;
                         }
-
+                        var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer =
+                            PIXI.autoDetectRenderer(imageWidth, imageHeight, { transparent: true });
                         let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
-
+                        //画像データを取得したら、不要なrendererは削除する。
                         renderer.destroy(true);
 
                         // 出力先のパスが指定されている場合は、ファイル出力を行う
