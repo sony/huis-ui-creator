@@ -210,8 +210,6 @@ module Garage {
 
                 const hash = node_crypt.createHash('sha1');
 
-                // Dateオブジェクトを作成 (引数なし)
-                // 現在のUNIX時間を取得する (ミリ秒単位)
                 let date = new Date();
                 let unixTimestamp = date.getTime();
                 //同名でも、違う名前にするため、時間もハッシュ化の引数にいれる。
