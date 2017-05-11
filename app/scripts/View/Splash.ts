@@ -327,9 +327,7 @@ module Garage {
                         this.showHuisRcVersionIsOldDialog();
                     }
                 }
-
             }
-            
 
             /*
             * HUISがBtoB向けのバージョンではない場合のダイアログを表示
