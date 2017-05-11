@@ -298,15 +298,13 @@ module Garage {
 
     var initPath = () => {
 
+        HUIS_RC_VERSION_REQUIRED = "4.0.3";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
         //BZ版と通常版で、必要バージョンを分ける。
         if (Util.MiscUtil.isBz()) {
             HUIS_RC_VERSION_REQUIRED = "8.0.0";
             HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";//sqa用に実際にチェックする値とは別に値を用意。
-        } else {
-            HUIS_RC_VERSION_REQUIRED = "4.0.3";
-            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
         }
-
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         if (Util.MiscUtil.isWindows()) {
@@ -321,11 +319,11 @@ module Garage {
         }
 
         // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
+        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
         if (Util.MiscUtil.isBz()) {
             HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
-        } else {
-            HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
         }
+
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
             fs.mkdirSync(HUIS_FILES_ROOT);
         }
@@ -377,10 +375,9 @@ module Garage {
 
                 //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
                 //BZ版の場合、読み込むファイルが異なる
+                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
                 if (Util.MiscUtil.isBz()) {
                     RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
-                } else {
-                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
                 }
 
                 callback(); // 次の処理へ

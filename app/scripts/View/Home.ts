@@ -113,15 +113,12 @@ module Garage {
              * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
              */
             private _onOptionPullDownMenuClick(event: Event) {
-                //ビジネス仕向けの場合、表示するメニューを出しわける
-
+               
                 //表示するメニューのJQuery要素
-                let $popup : JQuery= null;
-
+                let $popup: JQuery = this.$page.find("#option-pulldown-menu-popup");
+                //ビジネス仕向けの場合、表示するメニューを出しわける
                 if (Util.MiscUtil.isBz()) {
                     $popup = this.$page.find("#option-pulldown-menu-popup-bz"); 
-                } else {
-                    $popup = this.$page.find("#option-pulldown-menu-popup"); 
                 }
 
                 this.showOptionPullDownMenu($popup);

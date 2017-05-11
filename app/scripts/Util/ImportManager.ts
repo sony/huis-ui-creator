@@ -53,17 +53,15 @@ module Garage {
             exec(callback?: Function) {
                 let FUNCTION_NAME = TAG + "exec : ";
 
+                let options: Util.ElectronOpenFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
+                };
                 // ビジネス仕向けの場合、通常用もビジネス用も両方の拡張を読み込める
-                let options: Util.ElectronOpenFileDialogOptions = null;
                 if (Util.MiscUtil.isBz()){
                     options = {
                         title: PRODUCT_NAME,
                         filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
-                    };
-                } else {
-                    options = {
-                        title: PRODUCT_NAME,
-                        filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
                     };
                 }
 
