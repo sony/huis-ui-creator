@@ -2258,12 +2258,6 @@ module Garage {
                                 key: func,
                                 label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
                             });
-                        } else if (numCode.length == FUNC_ID_LEN) {
-                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）
-                            translatedFuncs.push({
-                                key: func,
-                                label: $.i18n.t('button.function.' + plainName) + ' (' + $.i18n.t('button.function.STR_REMOTE_BTN_ID') +':' + numCode + ')'
-                            });
                         } else {
                             // 連番
                             let num = Number(numCode) + 2;
@@ -2315,8 +2309,7 @@ module Garage {
 
                 let numCode = funcKey.substring(delimiterIndex + 1);
 
-                if (numCode.length == FUNC_ID_LEN || numCode == FUNC_CODE_RELEARNED) {
-                    // IDは4桁全て数字の可能性もあるので先にチェック
+                if (numCode == FUNC_CODE_RELEARNED) {
                     return 0;
                 }
 
