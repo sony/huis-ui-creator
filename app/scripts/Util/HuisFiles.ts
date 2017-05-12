@@ -1519,7 +1519,7 @@ module Garage {
 
                     // 以下のディレクトリーは削除対象外
                     switch (file) {
-                        case REMOTE_IMAGES_DIRRECOTORY_NAME:
+                        case REMOTE_IMAGES_DIRECOTORY_NAME:
                         case "lost+found":
                         case "9999": // "9999" (special face) の扱いをどうするか要検討
                             return false;
@@ -1870,7 +1870,7 @@ module Garage {
 
                         let newDirPath = parsedPath.dir;
                         if (outputDirPath != null) {
-                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");;
+                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECOTORY_NAME).replace(/\\/g, "/");;
                         }
 
                         // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
