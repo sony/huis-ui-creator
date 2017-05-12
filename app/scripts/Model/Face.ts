@@ -254,7 +254,8 @@ module Garage {
                     return undefined;
                 }
 
-                //フルカスタムリモコンの場合、ページが保持しているモジュール数を総ページ数とする。
+                //フルカスタムリモコンの場合、Faceが保持しているモジュール数を総ページ数とする。
+                //フルカスタムリモコンにおいては、1ページ1モジュールというルールがあるため。
                 if (this.category == DEVICE_TYPE_FULL_CUSTOM) {
                     return this.modules.length
                 }
