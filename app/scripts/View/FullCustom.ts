@@ -91,6 +91,7 @@ module Garage {
             private macroProperty: PropertyAreaButtonMacro;
             //通常ボタンのプロパティView用
             private buttonProperty: PropertyAreaButtonNormal;
+            private jumpProperty: PropertyAreaButtonJump;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
 
@@ -127,6 +128,7 @@ module Garage {
                     super.onPageShow(event, data);
                     this.macroProperty = null;
                     this.buttonProperty = null;
+                    this.jumpProperty = null;
                     this.newRemote_ = false;
 
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -294,6 +296,15 @@ module Garage {
                     "focusin input[type='text']": "_onTextBoxFocusIn",
                     "focusout input[type='text']": "_onTextBoxFocusOut",
                 });
+            }
+
+            /*
+             * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
+             */
+            private _onOptionPullDownMenuClick(event: Event) {
+                 //表示するメニューのJQuery要素
+                let $popup = this.$page.find("#option-pulldown-menu-popup"); 
+                this.showOptionPullDownMenu($popup);
             }
 
             render(): FullCustom {
@@ -1213,9 +1224,11 @@ module Garage {
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
-                        if (this.macroProperty != null){
+                        if (this.macroProperty != null) {
                             //フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
                             this.macroProperty.focusFirstPulldown();
+                        } else if (this.jumpProperty != null) {
+                            this.jumpProperty.focusFirstPulldown();
                         }
                     }
                 }
@@ -2036,6 +2049,8 @@ module Garage {
                 //マクロボタンの場合、リモコン名を特殊表記
                 if (this.isMacroButton(buttonModel)) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
+                } else if (this.isJumpButton(buttonModel)) {
+                    remoteInfo = $.i18n.t("button.jump.STR_REMOTE_BTN_JUMP");
                 }
                 
 
@@ -2046,12 +2061,23 @@ module Garage {
                 let $functionName:JQuery= $tooltip.find(".function-name");
                 $functionName.text(outputFunctionName);
                 var localizedString = null;
+
                 if (outputFunctionName !== "none") {
                     localizedString = $.i18n.t("button.function." + outputFunctionName);
                 } else {
-                    localizedString = $.i18n.t("button.none.STR_REMOTE_BTN_NONE");
+                    // ジャンプボタンは跳び先を表示
+                    outputFunctionName = this.createJumpTooltip(buttonModel);
                 }
-                
+
+                var localizedString = null;
+                if (outputFunctionName === "none") {
+                    localizedString = $.i18n.t("button.none.STR_REMOTE_BTN_NONE");
+                } else if (this.isJumpButton(buttonModel)) {
+                    // ジャンプボタンは機能ではなく跳び先が格納されるのでローカライズしない
+                    localizedString = outputFunctionName;
+                } else {
+                    localizedString = $.i18n.t("button.function." + outputFunctionName);
+                }
                 
                 var outputString = localizedString;
                 if (functions.length > 1) {
@@ -2195,6 +2221,55 @@ module Garage {
                 } else {
                     return;
                 }
+            }
+
+
+            /**
+             * ジャンプボタンのツールチップに表示する文言を生成。
+             * 無効な設定がされている場合は"none"を返す。
+             *
+             * @param jumpButton {Model.ButtonItem} 対象のジャンプボタン
+             * @return {string} ツールチップ表示文言
+             */
+            private createJumpTooltip(jumpButton: Model.ButtonItem): string {
+                var FUNCTION_NAME = this.FILE_NAME + " createDestTooltip :";
+
+                if (jumpButton == null ||
+                    jumpButton.state == null ||
+                    jumpButton.state.length <= 0 ||
+                    jumpButton.state[0].action == null ||
+                    jumpButton.state[0].action.length <= 0 ||
+                    jumpButton.state[0].action[0].jump == null) {
+                    console.warn(FUNCTION_NAME + "invalid jump button.");
+                    return "none";
+                }
+                let target = jumpButton.state[0].action[0].jump;
+
+                let faceLabel: string;
+                let total: number;
+                if (target.remote_id === this.faceRenderer_canvas_.getRemoteId()) {
+                    // 編集中ページの場合
+                    faceLabel = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');
+
+                    // ページ数は現在の状態から取得
+                    total = this.faceRenderer_canvas_.getPageCount();
+
+                } else {
+                    let face: Model.Face = huisFiles.getFace(target.remote_id);
+                    if (face == null) {
+                        console.warn(FUNCTION_NAME + "face not found: " + target.remote_id);
+                        return "none";
+                    }
+                    faceLabel = face.name;
+
+                    total = face.getTotalPageNum();
+                }
+
+                let pageLabel = (target.scene_no >= 0 && target.scene_no < total)
+                                    ? target.scene_no + 1   // ページ番号
+                                    : 1;                    // 存在しないページの場合は 1ページ目
+
+                return faceLabel + $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + pageLabel;
             }
 
 
@@ -2576,7 +2651,7 @@ module Garage {
                 // image.path には remoteimages 起点の画像パスを指定する。
                 var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
                 // face ディレクトリ内に配置されるべき画像のパスを取得
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, imagePath)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, imagePath)).replace(/\\/g, "/");
                 // 画像を face ディレクトリ内にコピー
                 // 画像のリサイズとグレースケール化
                 Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
@@ -2629,7 +2704,7 @@ module Garage {
                 // image.path には remoteimages 起点の画像パスを指定する。
                 var image = targetState.image[0];
                 image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME, image.path)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, image.path)).replace(/\\/g, "/");
                 // 画像のリサイズとグレースケール化
                 Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
                     .done((editedImage) => {
@@ -3535,6 +3610,10 @@ module Garage {
 
                     if (this.macroProperty != null) {
                         this.macroProperty.setStates(states);
+                    }
+
+                    if (this.jumpProperty != null) {
+                        this.jumpProperty.setStates(states);
                     }
                 }
 
@@ -4662,6 +4741,13 @@ module Garage {
                     this.macroProperty.remove();
                     this.macroProperty = null
                 }
+
+                //ページジャンプ用のプロパティのインスタンスを削除
+                if (this.jumpProperty != null) {
+                    this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
+                    this.jumpProperty.remove();
+                    this.jumpProperty = null;
+                }
             }
 
             /**
@@ -4721,6 +4807,27 @@ module Garage {
             }
 
             /**
+             * ジャンプボタンか否か判定する。
+             * @param button {Model.ButtonItem} 判定対象のモデル
+             */
+            private isJumpButton(button: Model.ButtonItem): boolean {
+                let FUNCTION_NAME = TAG + "isJumpButton : ";
+
+                if (button == null) {
+                    console.warn(FUNCTION_NAME + "button is null");
+                    return false;
+                }
+
+                try {
+                    if (button.state[0].action[0].jump !== undefined) {
+                        return true;
+                    }
+                } catch (e) { }
+
+                return false;
+            }
+
+            /**
              * 詳細編集エリアを表示する。
              * 
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
@@ -4739,6 +4846,9 @@ module Garage {
                     if (this.isMacroButton(item)) {
                         // マクロボタンアイテムの詳細エリアを表示
                         this._renderMacroButtonItemDetailArea(item, $detail);
+                    } else if (this.isJumpButton(item)) {
+                        // ジャンプボタンアイテムの詳細エリアを表示
+                        this._renderJumpButtonItemDetailArea(item, $detail);
                     } else {
                         // ボタンアイテムの詳細エリアを表示
                         this._renderButtonItemDetailArea(item, $detail);
@@ -4928,6 +5038,13 @@ module Garage {
             //通常のボタンのモデルが変更された際に呼び出される
             private updateNormalButtonItemModel(event: JQueryEventObject) {
                 let button: Model.ButtonItem = this.buttonProperty.getModel();
+                if (button != null) {
+                    this.updateButtonItemModel(button);
+                }
+            }
+
+            private updateJumpButtonItemModel(event: JQueryEventObject) {
+                let button: Model.ButtonItem = this.jumpProperty.getModel();
                 if (button != null) {
                     this.updateButtonItemModel(button);
                 }
@@ -5154,6 +5271,62 @@ module Garage {
                 $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 
             }
+
+            /**
+             * ページジャンプボタンの詳細エリアをレンダリング
+             *
+             * @param button {Model.ButtonItem} ページジャンプボタンのモデル
+             * @param $detail {JQuery} 
+             */
+            private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
+                if (!button || !$detail) {
+                    return;
+                }
+
+                // ボタン情報の外枠部分をレンダリング
+                var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
+                var $buttonDetail = $(templateButton(button));
+                $buttonDetail.find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_JUMP"));
+                $detail.append($buttonDetail);
+
+                //信号用のViewの初期化・更新
+                if (this.jumpProperty == null) {
+                    this.jumpProperty = new PropertyAreaButtonJump(
+                        this.faceRenderer_canvas_.getRemoteId(),
+                        $("#input-face-name").val(),
+                        this.faceRenderer_canvas_.getModules(),
+                        {
+                            el: $buttonDetail,
+                            model: button,
+                        });
+                    //モデルが更新されたときfullcustom側のmodelも更新する
+                    this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
+                } else {
+                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
+                    this.jumpProperty.undelegateEvents();
+                    this.jumpProperty.$el = $buttonDetail;
+                    this.jumpProperty.delegateEvents();
+                }
+
+                $detail.append(this.jumpProperty.renderView());
+
+                //previewの情報を別途更新。
+                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
+                var inputURL = this._extractUrlFunction($preview.css("background-image"));
+                this._updatePreviewInDetailArea(inputURL, $preview);
+                //テキストボタン、あるいは画像のどちらかを表示する。
+                this.toggleImagePreview(button.default);
+
+                //ボタンステートを入力
+                this.currentTargetButtonStates_ = button.state;
+
+                this.jumpProperty.focusFirstPulldown();
+
+                $detail.i18n();
+            }
+
+
+            
 
 
             /*

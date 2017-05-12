@@ -56,6 +56,7 @@ module Config {
             // garage scripts
             "garage.util.huisfiles": "scripts/Util/HuisFiles",
             "garage.util.electrondialog": "scripts/Util/ElectronDialog",
+            "garage.util.selectremotepagedialog": "scripts/Util/SelectRemotePageDialog",
             "garage.util.huisdev": "scripts/Util/HuisDev",
             "garage.util.miscutil": "scripts/Util/MiscUtil",
             "garage.util.garagefiles": "scripts/Util/GarageFiles",
@@ -65,6 +66,7 @@ module Config {
             "garage.util.importmanager": "scripts/Util/ImportManager",
             "garage.util.informationdialog": "scripts/Util/InformationDialog",
             "garage.util.itemclipboard": "scripts/Util/ItemClipboard",
+            "garage.util.phnconfigfile": "scripts/Util/PhnConfigFile",
             "garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
             "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
             "garage.view.exportmanager": "scripts/View/ExportManager",

@@ -17,6 +17,7 @@
 /// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
+/// <reference path="PhnConfig.ts" />
 
 module Garage {
     export module View {
@@ -79,7 +80,7 @@ module Garage {
 
             //! events binding
             events(): any {
-                var events:any = {};
+                var events: any = {};
                 events = super.events();
                 events["click #create-new-remote"] = "_onCreateNewRemote";
                 events["click #sync-pc-to-huis"] = "_onSyncPcToHuisClick";
@@ -88,6 +89,7 @@ module Garage {
                 events["contextmenu"] = "_onContextMenu";
                 events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
                 events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
+                events["click #command-set-properties"] = "onOptionSetPropertiesClick";
                 return events;
             }
 
@@ -107,9 +109,38 @@ module Garage {
                 this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
             }
 
+            /*
+             * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
+             */
+            private _onOptionPullDownMenuClick(event: Event) {
+               
+                //表示するメニューのJQuery要素
+                let $popup: JQuery = this.$page.find("#option-pulldown-menu-popup");
+                //ビジネス仕向けの場合、表示するメニューを出しわける
+                if (Util.MiscUtil.isBz()) {
+                    $popup = this.$page.find("#option-pulldown-menu-popup-bz"); 
+                }
+
+                this.showOptionPullDownMenu($popup);
+            }
+
             render(): Home {
                 this._renderFaceList();
+                $('body').trigger('create');
                 return this;
+            }
+
+
+            /**
+             * オプションの「詳細設定」を押した際の処理
+             *
+             * @param event {Event} クリックイベント
+             */
+            private onOptionSetPropertiesClick(event: Event) {
+                let conf = new PhnConfig({el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock())});
+                conf.$el.i18n();
+                conf.updateHomeDestLabel();
+                return;
             }
 
             /*

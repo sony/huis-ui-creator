@@ -29,13 +29,17 @@
             "rc": {
                 "url": "http://huis.jp/support/update/"
             },
-            "app": { 
+            "app": {
                 "url": "http://huis.jp/support/update/"
             }
         }
     },"information": {
         "STR_INFORMATION_TITLE":  "お知らせ"
     },"dialog": {
+        "title": {
+            "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択",
+            "STR_DIALOG_TITLE_SET_PROPERTIES": "詳細設定"
+        },
         "message": {
             "STR_GARAGE_DIALOG_MESSAGE_IN_DELETEING": "削除中です。\nUSBケーブルを抜かないでください。",
             "STR_GARAGE_DIALOG_MESSAGE_DELETE_DONE": "削除しました。",
@@ -81,8 +85,14 @@
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE": "エクスポートしました。",
             "STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL": "エクスポートに失敗しました。",
             "STR_DIALOG_MESSAGE_IMPORT_AFTER_AC": "\nエアコンのボタンはそのままでは利用できません。ボタンを一度削除して、登録済みのエアコンのボタンを配置してください。",
-            "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。"
-
+            "STR_DIALOG_MESSAGE_IMPORT_AFTER_BT": "\nBluetoothのボタンはそのままでは利用できません。ボタンの設定を変更して、登録済みのBluetoothリモコンの信号設定を変更してください。",
+            "STR_DIALOG_MESSAGE_LOADING_REMOTE_LIST": "しばらくお待ちください。",
+            "STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB": "接続されているHUIS REMOTE CONTROLLERでは、本アプリを利用できません。\n本アプリに対応したファームウェアにアップデートしてください。",
+            "STR_DIALOG_MESSAGE_STORAGE_LOCKED": "HUIS-100RCへのストレージアクセスはブロックされています。解除しますか？",
+            "STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロックを解除します。\nUSBケーブルを一度抜いたあと、再度接続してアプリを起動してください。",
+            "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。もう一度お試しください。",
+            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY": "設定を適用中です。\nUSBケーブルを抜かないでください。",
+            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE": "設定を適用しました。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
@@ -91,7 +101,30 @@
             "STR_DIALOG_BUTTON_CLOSE_APP": "アプリを終了",
             "STR_DIALOG_BUTTON_SAVE": "保存",
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
-            "STR_DIALOG_BUTTON_DELETE": "削除"
+            "STR_DIALOG_BUTTON_DELETE": "削除",
+            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST": "変更する",
+            "STR_DIALOG_BUTTON_STORAGE_UNLOCK": "解除",
+            "STR_DIALOG_BUTTON_SET_DEFAULT": "デフォルトに戻す"
+        },
+        "label": {
+            "STR_DIALOG_LABEL_SELECTED_REMOTE": "選択中のリモコン：",
+            "STR_DIALOG_LABEL_SELECTED_PAGE": " ページ ",
+            "STR_DIALOG_PROPERTY_LABEL_TARGET_HOME_BUTTON": "ホームボタンの移動先",
+            "STR_DIALOG_PROPERTY_LABEL_HOME": "ホーム画面",
+            "STR_DIALOG_PROPERTY_LABEL_TRANSITION_IN_REMOTE": "リモコン画面の移動",
+            "STR_DIALOG_PROPERTY_LABEL_STORAGE_ACCESS" : "ストレージアクセス"
+        },
+        "input": {
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_HOME": "ホーム画面",
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM": "カスタム",
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_SEPARATOR": " : ",
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE": " ページ ",
+            "STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE_SEPARATOR": "/",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SETTING": "設定ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_ADD": "追加ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON": "ヘッダーの左右移動ボタンを非表示",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SWIPE": "スワイプによる移動を無効化",
+            "STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_STORAGE_ACCESS": "HUIS-100RC のストレージへのアクセスをブロック"
         }
     },
     "edit": {
@@ -101,7 +134,9 @@
             "STR_EDIT_PROPERTY_TITLE_IMAGE": "Image",
             "STR_EDIT_PROPERTY_TITLE_LABEL": "Label",
             "STR_EDIT_PROPERTY_TITLE_BUTTON": "Button",
+            "STR_EDIT_PROPERTY_TITLE_JUMP": "Page Link Button",
             "STR_EDIT_PROPERTY_LABEL_ACTION": "操作",
+            "STR_EDIT_PROPERTY_LABEL_DEST": "移動先",
             "STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON": "画像ボタン",
             "STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON": "テキストボタン",
             "STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL": "ラベルを編集",
@@ -111,7 +146,10 @@
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TITLE": "マクロとは？",
             "STR_EDIT_PROPERTY_ABOUT_MACRO_TEXT": "連続して複数種類の信号を発信できる機能です。",
             "STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL": "信号を追加",
-            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加"
+            "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
+            "STR_EDIT_PROPERTY_JUMP_NO_DEST": "設定なし",
+            "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST": "リモコンをみて選択",
+            "STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE": "このリモコン"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"
@@ -157,8 +195,9 @@
         "STR_CONTEXT_REDO": "やり直し"
     },
     "option_menu": {
+        "STR_OPTION_MENU_SET_PROPERTIES": "詳細設定",
         "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
-        "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート", 
+        "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート",
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
         "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
@@ -223,6 +262,11 @@
         "macro": {
             "STR_REMOTE_BTN_MACRO": "マクロボタン"
         },
+        "jump": {
+            "STR_REMOTE_BTN_JUMP": "ページジャンプボタン",
+            "STR_PLEASE_INPUT_REMOTE": "リモコンを選択",
+            "STR_PLEASE_INPUT_PAGE": "ページを選択"
+        },
         "input": {
             "STR_PLEASE_INPUT_ACTION": "操作を選択",
             "STR_ACTION_INPUT_TAP": "タップ",
@@ -232,6 +276,13 @@
             "STR_ACTION_INPUT_FLICK_RIGHT": "右フリック",
             "STR_ACTION_INPUT_FLICK_LEFT": "左フリック",
             "STR_ACTION_INPUT_FLICK_DOWN": "下フリック"
+        },
+        "page": { 
+            "STR_PAGE_0": "ページ 1",
+            "STR_PAGE_1": "ページ 2",
+            "STR_PAGE_2": "ページ 3",
+            "STR_PAGE_3": "ページ 4",
+            "STR_PAGE_4": "ページ 5"
         },
         "function": {
             "STR_PLEASE_INPUT_REMOTE": "信号を選択",

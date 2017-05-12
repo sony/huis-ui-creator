@@ -29,6 +29,11 @@ module Garage {
             export const DEFAULT: string = WIN32;
         }
 
+        namespace ConfigFlags {
+            //通常仕向けか、ビジネス仕向けか を決めるフラグ。true:ビジネス仕向け。false:通常仕向け
+            export const IS_BZ : boolean = false;
+        }
+
         /**
          * @class MiscUtil
          * @brief その他のユーティリティーを集めたクラス
@@ -95,6 +100,14 @@ module Garage {
              */
             static isDarwin(): boolean {
                 return MiscUtil.getPlatform() === PlatformConsts.DARWIN;
+            }
+
+            /**
+             * 仕向けが法事向けかどうかを判定する。
+             * @return {boolean} 法人向けであればtrue、そうでなければfalseを返す。
+             */
+            static isBz(): boolean {
+                return ConfigFlags.IS_BZ;
             }
 
             /**

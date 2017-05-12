@@ -44,10 +44,20 @@ module Garage {
              */
              exec() {
                  let FUNCTION_NAME = TAG + "exec : ";
+
+                 
                  let options: Util.ElectronSaveFileDialogOptions = {
                      title: PRODUCT_NAME,
                      filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
                  };
+                 //ビジネス仕向けの場合、専用 拡張子で書き出す。
+                 if (Util.MiscUtil.isBz()){
+                     options = {
+                         title: PRODUCT_NAME,
+                         filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
+                     };
+                 }
+
                  electronDialog.showSaveFileDialog(
                      options,
                      (file) => {
@@ -57,6 +67,9 @@ module Garage {
                          }
 
                          let dstFile = this.fixExportFileExtension(file);
+                         if (Util.MiscUtil.isBz()){
+                             dstFile = this.fixExportFileExtensionB2B(file);
+                         }
 
                          let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
                              src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -123,6 +136,26 @@ module Garage {
                  return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE;
              }
 
+
+            /**
+             * エクスポートファイル名の拡張子がHUISリモコンファイルのものでない場合、
+             * HUISリモコンファイルの拡張子を付与したファイル名を返す。（BtoB版）
+             * 元から正しい拡張子の場合はそのまま返す。
+             * @param fileName {string} エクスポートファイル名
+             * @return HUISリモコンファイルの拡張子付きファイル名
+             */
+             private fixExportFileExtensionB2B(filePath: string): string {
+                 let fileName = path.basename(filePath);
+
+                 if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length + 1 &&
+                     fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length) {
+                     return filePath;
+                 }
+
+                 return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B;
+             }
+
+
             /**
              * エクスポート処理
              * @param dstFile {string} エクスポートファイルの出力先（フルパス）
@@ -167,7 +200,7 @@ module Garage {
                      fs.mkdirSync(targetRemoteIdFolderPath);
                  }
 
-                 let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+                 let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
                  if (!fs.existsSync(targetRemoteIdRemoteimagesFolderPath)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(targetRemoteIdRemoteimagesFolderPath);
                  }
@@ -175,7 +208,7 @@ module Garage {
                  //コピー元のファイルパス ：展開されたリモコン のremoteImages
                  let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
                  //コピー先のファイルパス : HuisFiles以下のremoteImages
-                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRRECOTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
+                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRECTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
 
                  if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                      fs.mkdirSync(dst);

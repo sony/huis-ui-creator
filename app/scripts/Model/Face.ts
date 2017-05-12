@@ -243,6 +243,36 @@ module Garage {
             }
 
             /**
+             * このFaceの総ページ数を返す
+             * @return {number} Faceの総ページ数。
+             */
+            getTotalPageNum() :number{
+                let FUNCTION_NAME = TAG + "TotalPageNum : ";
+
+                if (this.modules == null || this.modules.length == null) {
+                    console.warn(FUNCTION_NAME + "modules in this face (" + name + "is null");
+                    return undefined;
+                }
+
+                //フルカスタムリモコンの場合、Faceが保持しているモジュール数を総ページ数とする。
+                //フルカスタムリモコンにおいては、1ページ1モジュールというルールがあるため。
+                if (this.category == DEVICE_TYPE_FULL_CUSTOM) {
+                    return this.modules.length
+                }
+
+                //それ以外の場合、moduleのpageIndexの最大値を返す。
+                var pageCount :number= 0;
+                for (let module of this.modules) {
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
+                    if (pageCount < module.pageIndex + 1) {
+                        pageCount = module.pageIndex + 1;
+                    }
+                }
+                return pageCount;
+
+            }
+
+            /**
              * このFace、及び含まれるModuleにremoteIdをセットする。
              * その際に、Moduleのnameに含まれるremoteIdも更新する。
              *

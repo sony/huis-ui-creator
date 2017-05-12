@@ -975,6 +975,7 @@ module Garage {
                 let $targetPage = $targetModule.parent();
                 JQUtils.data($targetPage, "pageIndex", pageIndex);
             }
+
         }
     }
 }

@@ -168,6 +168,16 @@ module Garage {
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
 
+        //ジャンプのときに選べるアクション
+        ACTION_INPUTS_JUMP = [];
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_LONG_PRESS_KEY_SINGLE, value: ACTION_INPUT_LONG_PRESS_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
+
+
         DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
         DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
@@ -177,10 +187,10 @@ module Garage {
         //初期値。splashスクリーンで値をいれる。
         RC_VERSION = null;
 
-        HUIS_RC_VERSION_REQUIRED = "4.0.3";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
+
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
 
         REMOTE_BACKGROUND_WIDTH = 540;
@@ -243,12 +253,14 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
+            "garage.util.selectremotepagedialog",
             "garage.util.miscutil",
             "garage.util.huisdev",
             "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
-            "garage.util.itemclipboard"],
+            "garage.util.itemclipboard",
+            "garage.util.phnconfigfile"],
             () => {
                 initPath();
                 try {
@@ -285,6 +297,15 @@ module Garage {
     };
 
     var initPath = () => {
+
+        HUIS_RC_VERSION_REQUIRED = "4.0.3";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
+        //BZ版と通常版で、必要バージョンを分ける。
+        if (Util.MiscUtil.isBz()) {
+            HUIS_RC_VERSION_REQUIRED = "8.0.0";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";
+        }
+
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         if (Util.MiscUtil.isWindows()) {
             GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
@@ -293,21 +314,28 @@ module Garage {
         } else {
             console.error("Error: unsupported platform");
         }
-
-        DIR_NAME_WINDOWS = "Windows";
-        DIR_NAME_MAC = "Mac";
-
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-        if (!fs.existsSync(HUIS_FILES_ROOT)) {
-            fs.mkdirSync(HUIS_FILES_ROOT);
-        }
         if (!fs.existsSync(GARAGE_FILES_ROOT)) {
             fs.mkdirSync(GARAGE_FILES_ROOT);
         }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
+
+        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
+        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        if (Util.MiscUtil.isBz()) {
+            HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
+        }
+
+        if (!fs.existsSync(HUIS_FILES_ROOT)) {
+            fs.mkdirSync(HUIS_FILES_ROOT);
+        }
+
+
         // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
+        REMOTE_IMAGES_DIRECTORY_NAME = "remoteimages";
+        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
+        if (!fs.existsSync(HUIS_REMOTEIMAGES_ROOT)) {
+            fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
+        }
+
     }
 
     // 起動時のチェック
@@ -327,7 +355,7 @@ module Garage {
                 while (dirs == null) {
                     try {
                         dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
-                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった
+                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
@@ -335,7 +363,7 @@ module Garage {
                                 message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
                                 buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                                 title: PRODUCT_NAME,
-                                cancelId:0,
+                                cancelId: 0,
                             });
 
                         if (response !== 0) {
@@ -346,7 +374,11 @@ module Garage {
                 isHUISConnected = true; // HUISが接続されている
 
                 //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
+                //BZ版の場合、読み込むファイルが異なる
                 RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
+                if (Util.MiscUtil.isBz()) {
+                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
+                }
 
                 callback(); // 次の処理へ
 

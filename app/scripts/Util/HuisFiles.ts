@@ -58,10 +58,15 @@ module Garage {
         export class HuisFiles {
 
             private huisFilesRoot_: string;
+            private phnConfig_: IPhnConfig;
             private remoteList_: IRemoteId[];
             private remoteInfos_: IRemoteInfo[];
             private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
             private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
+
+            get phnConfig(): IPhnConfig {
+                return this.phnConfig_;
+            }
 
             constructor() {
                 if (!fs) {
@@ -71,6 +76,7 @@ module Garage {
                     path = require("path");
                 }
                 this.huisFilesRoot_ = undefined;
+                this.phnConfig_ = undefined;
                 this.remoteList_ = [];
                 this.remoteInfos_ = [];
                 this.commonRemoteInfo_ = null;
@@ -114,7 +120,13 @@ module Garage {
                 if (!this.commonRemoteInfo_) {
                     console.log("setting commonRemoteInfo_");
                     let remoteId = "common";
+
                     let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+                    //ビジネス仕向けか否かで、表示するCommonアイテムを変える。
+                    if (Util.MiscUtil.isBz()) {
+                        facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common_bz.face"));
+                    }
+
                     console.log("facePath=" + facePath);
 
                     //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
@@ -127,6 +139,8 @@ module Garage {
                         face: commonFace,
                     };
                 }
+
+                this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
 
                 return true;
             }
@@ -169,6 +183,18 @@ module Garage {
                     }
                 }
                 return null;
+            }
+
+            /*
+            * 一時的に利用するFaceModelを返す。
+            * @param {string} remoteId 生成されるFaceのRemoteId
+            * @param {string} faceName 生成されるFaceの名前
+            * @param {Model.Module[]} gmodules 生成されるFaceに含まれているモジュール群
+            * @return {Model.Face} 一時的に生成したFaceModel
+            */
+            createTmpFace(remoteId: string, faceName: string, gmodules: Model.Module[]): Model.Face {
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, gmodules);
+                return tmpFace;
             }
 
             /**
@@ -1138,6 +1164,72 @@ module Garage {
                 return result;
             }
 
+            /**
+             * ページジャンプボタンで使用可能なリモコン情報を取得
+             *
+             * @param tmpRemoteId {string} 編集中リモコンのremote_id
+             * @param faceName {string} 編集中リモコンの名称
+             * @param gmodules {Model.Module[]} 編集中リモコンのモジュール
+             * @return {IRemoteInfo[]}
+             */
+            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: Model.Module[]): IRemoteInfo[] {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
+
+                if (this.remoteInfos_.length == 0) {
+                    console.warn(FUNCTION_NAME + "remoteInfos_.length is 0");
+                    return;
+                }
+
+                let result: IRemoteInfo[] = [];
+                let containsTmpRemote = false;
+                for (let i = 0; i < this.remoteInfos_.length; i++) {
+                    let target = this.remoteInfos_[i];
+
+                    if (target.face.remoteId == tmpRemoteId) {
+                        // 編集中のリモコン
+                        containsTmpRemote = true;
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, gmodules, target.face.category, target.mastarFace));
+
+                    } else {
+                        result.push(target);
+
+                    }
+                }
+
+                // 新規作成中の場合はリストの先頭に追加
+                if (!containsTmpRemote) {
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, gmodules));
+                }
+
+                return result;
+            }
+
+            /**
+             * 一時的なのリモコン情報を生成
+             *
+             * @param remoteId {string}
+             * @param modules {Model.Module}
+             * @param catgory {string}
+             * @param masterFace {Model.Face}
+             * @return {IRemoteInfo}
+             */
+            private createTmpRemoteInfo(remoteId: string, modules: Model.Module[], category: string = "", masterFace?: Model.Face): IRemoteInfo {
+
+                let faceName = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');//faceNameを使用せず固定
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, category, modules)
+
+                let tmpInfo: IRemoteInfo = {
+                    remoteId: remoteId,
+                    face : tmpFace
+                };
+
+                if (masterFace != null) {
+                    tmpInfo.mastarFace = masterFace;
+                }
+
+                return tmpInfo;
+            }
+
             /*
             * remoetIdをつかいIDeviceInfoを取得する。ただし、functionはnoneとする
             */
@@ -1427,7 +1519,7 @@ module Garage {
 
                     // 以下のディレクトリーは削除対象外
                     switch (file) {
-                        case REMOTE_IMAGES_DIRRECOTORY_NAME:
+                        case REMOTE_IMAGES_DIRECTORY_NAME:
                         case "lost+found":
                         case "9999": // "9999" (special face) の扱いをどうするか要検討
                             return false;
@@ -1480,6 +1572,52 @@ module Garage {
                 removingRemoteimagesDirectories.forEach((directory) => {
                     fs.removeSync(path.join(HUIS_REMOTEIMAGES_ROOT, directory));
                 });
+            }
+
+
+            /**
+             * phnconfig.iniファイルを更新
+             *
+             * @param settings {IPhnConfig} 保存するphnconfigデータ
+             * @return {CDP.IPromise<void>}
+             */
+            updatePhnConfigFile(settings: IPhnConfig): IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                PhnConfigFile.saveToFile(this.huisFilesRoot_, settings)
+                    .then(() => {
+                        let df = $.Deferred<void>();
+                        let promise = CDP.makePromise(df);
+
+                        let syncTask = new Util.HuisDev.FileSyncTask();
+
+                        syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, false, null,
+                            () => {
+                            },
+                            (err) => {
+                                if (!err) {
+                                    console.log('succeeded to sync after saving phnconfig.ini');
+                                    df.resolve();
+                                } else {
+                                    console.error('failed to sync after saving phnconfig.ini: ' + err);
+                                    df.reject();
+                                }
+                            });
+
+                        return promise;
+                    })
+                    .then(() => {
+                        console.log('reload phnconfig.ini');
+                        this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
+                        df.resolve();
+                    },
+                    () => {
+                        console.log('no reloading phnconfig.ini');
+                        df.reject();
+                    });
+
+                return promise;
             }
 
             /**
@@ -1615,6 +1753,9 @@ module Garage {
                         if (!_.isUndefined(action.bluetooth_data)) {
                             normalizedAction.bluetooth_data = action.bluetooth_data;
                         }
+                        if (!_.isUndefined(action.jump)) {
+                            normalizedAction.jump = this._normalizeJump(action.jump);
+                        }
                     } else {
                         normalizedAction.code_db = {
                             function: "none",
@@ -1729,7 +1870,7 @@ module Garage {
 
                         let newDirPath = parsedPath.dir;
                         if (outputDirPath != null) {
-                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");;
+                            newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");;
                         }
 
                         // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
@@ -1779,7 +1920,24 @@ module Garage {
                 return normalizedImages;
             }
 
-            private _getFace(remoteId: string, isMaster: boolean): Model.Face {
+
+            /**
+             * ページジャンプ設定の不正なデータを修正する
+             *
+             * @param jump {IJump} ページジャンプ設定
+             * @return {IJump}
+             */
+            private _normalizeJump(jump: IJump): IJump {
+                let remoteId: string = (jump.remote_id != null) ? jump.remote_id : "";
+                let sceneNo: number = (jump.scene_no != null && jump.scene_no >= 0 && jump.scene_no <= 4) ? jump.scene_no : 0;
+
+                return {
+                    remote_id: remoteId,
+                    scene_no: sceneNo
+                }
+            }
+
+             private _getFace(remoteId: string, isMaster: boolean): Model.Face {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
                 }
@@ -2718,6 +2876,29 @@ module Garage {
                         fs.removeSync(file);
                     }
                 });
+            }
+
+            isValidJumpSettings(jump: IJump): boolean {
+                if (jump == null ||
+                    jump.remote_id == null) {
+                    return false;
+                }
+
+                // remote_id の検査
+                let face = this.getFace(jump.remote_id);
+                if (face == null ||
+                    face.modules == null) {
+                    return false;
+                }
+
+                // scene_no の検査
+                if (jump.scene_no != null &&
+                    jump.scene_no >= 0 &&
+                    jump.scene_no < face.modules.length) {
+                    return true;
+                }
+
+                return false;
             }
         }
     }

@@ -202,7 +202,7 @@ body{
 
     overflow-y:auto;
     overflow-x:hidden;
-    text-shadow: none;
+   
     font-family:$FONT_WEIGHT_DIALOG_TEXT;
     width:$SIZE_DIALOG_WIDTH;
     box-shadow:none;
@@ -250,6 +250,7 @@ body{
     }
     
 }
+
 
 
 #information-dialog-area {
@@ -338,5 +339,386 @@ body{
          }
 }
 
+
+
+#remotelist-dialog-area{
+    text-shadow: none;
+    font-weight:normal;
+
+    .remotelist-dialog{
+        background-color: $COLOR_COMMON_BACKGROUND;
+
+        h3.title{
+            padding-top:$SIZE_DIALOG_TITLE_PADDING_TOP;
+            margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
+            margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+            margin-left:$SIZE_DIALOG_TITLE_MARGIN_LEFT;
+            color: $COLOR_TEXT_MAIN;
+            font-size:$SIZE_DIALOG_TITLE_FONT;
+            font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
+            line-height: $TEXT_HEIGHT_DEFAULT;
+            font-weight:normal;
+            text-shadow: none;
+        }
+
+        header+.separator{
+            border-top-style: solid;
+            border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
+            border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
+            margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
+        }
+
+        #spinner-dialog-spinner-gif{
+            width: $SIZE_DIALOG_SPINNER_WIDTH;
+            height: $SIZE_DIALOG_SPINNER_HEIGHT;
+            margin:0 auto;
+            margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
+            background-image: $PATH_IMG_SPLASH_SPINNER;
+            background-position:center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+        
+        #remotelist-load-message {
+            text-shadow:none;
+            font-size:$FONT_SIZE_SPLASH_MESSAGE;
+            font-family:$FONT_FAMILY_SPLASH_MESSAGE;
+            line-height:$TEXT_HEIGHT_DEFAULT;
+            color:$COLOR_DIALOG_LOADING_TEXT;
+            text-align:center;
+            margin:0 auto;
+            margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
+        }
+
+
+        #face-list-container {
+            overflow-x: overlay;
+            overflow-y: hidden;
+            height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
+            width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
+            margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
+            box-sizing: border-box;
+
+            #face-list {
+                position:relative;
+                overflow-y: hidden;
+                transform: scale(0.668);
+                transform-origin : left top;
+           
+                //box-shadow: 0 0 20px #222;
+                z-index: 1;
+                padding: 0;
+                margin: 0;
+
+                ::-webkit-scrollbar{
+                    &:vertical{
+                        width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2.5;
+                    }
+                }
+                ::-webkit-scrollbar-thumb {
+                    &:vertical{
+                        border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2.5 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
+                    }
+                }
+
+                #face-list-footer {
+                    position: absolute;
+                    bottom: 0;
+                    width:100%;
+                    height:$SIZE_HOME_FOOTOR_HEIGHT;
+                    background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                    z-index: 1;
+                }
+
+                .face:nth-child(2){
+                    margin-left: $SIZE_DIALOG_REMOTE_FIRST_MARGIN_LEFT;
+                }
+                .face:last-child{
+                    margin-right: $SIZE_DIALOG_REMOTE_LAST_MARGIN_RIGHT
+                }
+
+                .face {
+                    list-style-type: none;
+                    float: left;
+                    margin-left: $SIZE_DIALOG_REMOTE_MARGIN_LEFT;
+                    margin-right: $SIZE_DIALOG_REMOTE_MARGIN_RIGHT;
+                    overflow: hidden;
+                    width: $SIZE_HOME_REMOTE_WIDTH;
+
+                    .title {
+                        margin-top:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_TOP;
+                        margin-bottom:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_BOTTOM;
+                        text-align: center;
+                        color: $COLOR_TEXT_MAIN;
+                        font-weight:normal;
+                        font-size:$FONT_DIALOG_REMOTE_TITLE;
+                        font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                        line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                    }
+
+                    .face-container{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                        
+                        overflow-x: hidden;
+                        overflow-y: overlay;
+                    }
+
+                    .face-container.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
+                    }
+
+                    .face-selector{
+                        pointer-events: none;
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                        position: absolute;
+                        z-index: 1;
+                        
+                        overflow-x: hidden;
+                        overflow-y: scroll;
+
+                        &::-webkit-scrollbar{
+                            display: none;
+                        }
+
+                        .face-page-selector{
+                            width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT / 2 - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                            position: relative;
+                            
+                        }
+
+                        .face-page-selector.selected{
+                            z-index: 1;
+                            border-style: solid;
+                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                            border-color: #00C588; 
+                            margin: 0px;
+
+                        }
+                    }
+
+                    .face-selector.multi-page{
+                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT / 2;
+                    }
+                    
+                    .gradation-area{
+                        pointer-events: none;
+                        position:absolute;
+                            
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+                        height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+                    }
+
+                    .gradation-top{
+                        visibility:hidden;
+                        top: $SIZE_DIALOG_GRADATION_TOP_TOP;
+                        background:$COLOR_PALLET_GRADATION_TOP;
+                    }
+
+                    .gradation-bottom{
+                        visibility:visible;
+                        top: $SIZE_DIALOG_GRADATION_BOTTOM_TOP;
+                        background:$COLOR_PALLET_GRADATION_BOTTOM;
+                    }
+
+
+                    #face-pages-area {
+                        width:inherit;
+                        font-family: $FONT_FAMILY_NORMAL;
+                        overflow-y : hidden;
+                        
+                    }
+
+                    .face-page{
+                        margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                        margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                        margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                        padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                        .button-item{
+                            border:none;
+                        }
+
+                    }
+
+                    .module-container {
+                        overflow: visible;
+                    }
+                }
+            }
+
+            .face-container {
+                width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+                transform : scale(0.5);
+                transform-origin : left top;
+                box-sizing: border-box;
+                background-color:$COLOR_HOME_REMOTE_BACKGROUND;
+                border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+                cursor: pointer;
+            }
+        }
+
+        .submit-area{
+            height: $SIZE_BUTTON_HEIGHT;
+            padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
+            padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+            padding-right:$SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
+            display : flex;
+            justify-content:flex-end;
+
+            #remotelist-label-selected-conainer{
+                color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
+                font-size: $FONT_SIZE_DIALOG_SELECTED;
+                line-height:$SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
+                text-align: right;
+                margin-right:$SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
+            }
+
+           .ui-btn{
+               width: $SIZE_DIALOG_BUTTON_WIDTH;
+               font-weight:normal;
+               text-shadow: none;
+           }
+          
+            #remotelist-button-ok{
+                margin-right:$SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
+            }
+          
+        }
+    }
+}
+
+
+// 詳細設定ダイアログ
+#dialog-config-screen{
+    text-shadow: none;
+    font-weight:normal;
+
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
+    position: absolute;
+    display:flex;
+
+    .ui-btn{
+        font-weight:normal;
+        text-shadow: none;
+    }
+
+    #dialog-config-area{
+
+        #dialog-config-header{
+            padding-top: $SIZE_DETAIL_PROPERTY_HEADER_PADDING_TOP;
+            margin-left:$SIZE_DETAIL_PROPERTY_HEADER_MARGIN_LEFT;
+            
+            .title{
+                line-height:$LINE_HEIGHT_DETAIL_PROPERTY_TITLE;
+                font-size: $FONT_SIZE_DETAIL_PROPERTY_TITLE;
+                font-family:$FONT_FAMILY_DETAIL_PROPERTY_TITLE;
+                font-weight:normal;
+                text-shadow: none;
+            }
+
+        }
+
+        .separator{
+            margin:0 auto; //中央揃え
+            width : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_WIDTH;
+            border-bottom : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
+        }
+
+        width: $SIZE_DETAIL_PROPERTY_WIDTH;
+        background-color: $COLOR_COMMON_BACKGROUND;
+        color: black;
+        margin: auto;
+        z-index: 4;
+
+        animation-name: popin;
+        animation-duration: 350ms;
+
+        .one-line{
+                display:flex;
+        }
+
+        .inputs-container{
+                margin-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_LEFT;
+                margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_RIGHT;
+        }
+      
+        #dialog-config-details{
+            margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_TOP;
+            padding-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_LEFT;
+            padding-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_RIGHT;
+            overflow-y: scroll;
+
+            .ui-controlgroup{
+                margin:0;
+
+                .input-element{
+                    margin-top:$SIZE_DETAIL_PROPERTY_INPUT_ELEMENT_MARGIN_TOP;
+                }
+            }
+
+            .category{
+                margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_MARGIN_TOP;
+                .category-title{
+
+                    font-weight:normal;
+                    text-shadow: none;
+
+                    //縦中央揃え
+                    display: flex;
+                    align-items: center;
+
+                    height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_HEIGHT;
+                    line-height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_LINE_HEIGHT;
+                
+                    .category-divider{
+                        flex-grow:1;
+                        border-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_DIVIDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_CATEGORY_DIVIDER_BORDER;
+                    }
+
+                    span{
+                        margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_MARGIN_RIGHT;
+                    }
+                }
+
+                #dialog-config-button-change-home-dest{
+                    width:$SIZE_DETAIL_PROPERTY_CHANGE_BUTTON_WIDTH;
+                    margin-left:auto;        
+                }
+
+            }
+
+            #dialog-config-details-storage-access{
+                margin-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_BOTTOM;
+            }
+        }
+
+        #dialog-config-submit-area{
+            margin-top:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_MARGIN_TOP;
+            margin-right:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_MARGIN_RIGHT;
+            padding-bottom:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_PADDING_BOTTOM;
+
+            .ok-cancel-btns{
+                margin-top:$SIZE_DETAIL_PROPERTY_OK_CANCEL_BUTTON_MARGIN_TOP;
+            }
+
+            .ui-btn{
+                margin-left:auto;
+                width:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_BUTTON_WIDTH;
+            }
+
+            #dialog-config-button-cancel{
+                margin-left:$SIZE_DETAIL_PROPERTY_CANCEL_BUTTON_MARGIN_LEFT;
+            }
+        }
+
+    }
+}
 
 }

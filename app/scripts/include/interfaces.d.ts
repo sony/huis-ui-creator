@@ -26,9 +26,11 @@
 /// <reference path="../Util/MiscUtil.ts" />
 /// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
+/// <reference path="../Util/SelectRemotePageDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Util/ZipManager.ts" />
+/// <reference path="../Util/StorageLock.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
@@ -36,6 +38,21 @@
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
 /// <reference path="../Util/ItemClipboard.ts" />
+/// <reference path="../Util/PhnConfigFile.ts" />
+
+/**
+ * @interface IPhnConfig
+ * @brief 
+ */
+interface IPhnConfig {
+    home_id: string;
+    scene_no: number;
+    enable_vertical_remote_page_swipe: boolean;
+    enable_horizontal_remote_page_swipe: boolean;
+    display_remote_arrow: boolean;
+    display_setting_button: boolean;
+    display_add_button: boolean;
+}
 
 /**
  * @interface IArea
@@ -106,6 +123,10 @@ interface IAction {
      * Bluetooth通信用の情報
      */
     bluetooth_data?: IBluetoothData;
+    /**
+     * 任意リモコンページへの遷移機能情報
+     */
+    jump?: IJump;
     /**
      * ボタンがひも付けられている機器の情報
      */
@@ -181,6 +202,20 @@ interface IBluetoothDevice {
      * Bluetoothデバイスの名前
      */
     bluetooth_device_name: string;
+}
+
+/**
+ * @interface IJump
+ */
+interface IJump {
+    /**
+     * 遷移先リモコンのremote_id
+     */
+    remote_id: string;
+    /**
+     * 遷移先のシーンNo.
+     */
+    scene_no: number;
 }
 
 /**
@@ -590,6 +625,10 @@ declare module Garage {
      */
     var electronDialog: Util.ElectronDialog;
     /**
+     * Util.StorageLock のインスタンス
+     */
+    var storageLock: Util.StorageLock;
+    /**
      * Util.HuisFiles のインスタンス
      */
     var huisFiles: Util.HuisFiles;
@@ -625,7 +664,7 @@ declare module Garage {
     /**
      * ローカル上の HUIS ファイルディレクトリー内にある画像用ディレクトリ名
      */
-    var REMOTE_IMAGES_DIRRECOTORY_NAME: string;
+    var REMOTE_IMAGES_DIRECTORY_NAME: string;
     /**
      * HUIS の VID
      */
@@ -799,6 +838,7 @@ declare module Garage {
      */
     var ACTION_INPUTS: IStringKeyValue[];
     var ACTION_INPUTS_MACRO: IStringKeyValue[]; //macro用
+    var ACTION_INPUTS_JUMP: IStringKeyValue[]; //jump用
     var ACTION_INPUT_TAP_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY_SINGLE: string;
@@ -845,6 +885,10 @@ declare module Garage {
      * インポート・エクスポート する際に仕様する拡張子
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
+    /*
+     * インポート・エクスポート する際に仕様する拡張子（BtoB版）
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B
     /*
      * インポート・エクスポート用拡張子の日本語の説明
      */

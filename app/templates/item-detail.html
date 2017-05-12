@@ -417,6 +417,22 @@
             <option value="none" class="default-value" data-i18n="button.function.STR_PLEASE_INPUT_REMOTE">信号を選択</option>
         </script>
 
+        <!--ページ選択用プルダウンのテンプレート-->
+        <script type="text/template" id="template-property-button-signal-pages">
+            <div class="signal-page-container-element">
+                <div class="custom-select">
+                    <select class="page-input" id="select-signal-page-input-{{order}}" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                        <option value="-1" class="default-value" data-i18n="button.jump.STR_PLEASE_INPUT_PAGE">ページを選択</option>
+                        <option value="0" data-i18n="button.page.STR_PAGE_0">ページ１</option>
+                        <option value="1" data-i18n="button.page.STR_PAGE_1">ページ２</option>
+                        <option value="2" data-i18n="button.page.STR_PAGE_2">ページ３</option>
+                        <option value="3" data-i18n="button.page.STR_PAGE_3">ページ４</option>
+                        <option value="4" data-i18n="button.page.STR_PAGE_4">ページ５</option>
+                    </select>
+                </div>
+            </div>
+        </script>
+
 
 
 
@@ -455,6 +471,66 @@
                 </div>
             </div>
         </script>
+
+    <!--ジャンプボタンのステート用のテンプレート-->
+    <script type="text/template" id="template-property-jump-button-state">
+        <div class="jump-container">
+            <!-- プレビュー -->
+            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{id}}">
+                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{id}}"></div>
+                <div class="text-field-in-preview">
+                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
+                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{id}}" />
+                    <div class="custom-select text-size-pulldown">
+                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{id}}" data-native-menu="false">
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="23">23px</option>
+                            <option value="28">28px</option>
+                            <option value="30" selected>30px</option>
+                            <option value="32">32px</option>
+                            <option value="36">36px</option>
+                            <option value="40">40px</option>
+                            <option value="44">44px</option>
+                            <option value="48">48px</option>
+                            <option value="54">54px</option>
+                            <option value="60">60px</option>
+                            <option value="72">72px</option>
+                            <option value="80">80px</option>
+                            <option value="88">88px</option>
+                            <option value="96">96px</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="button-jump-action-container-element">
+                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
+            </div>
+            <div class="custom-select">
+                <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{id}}" data-signal-order="{{order}}" data-native-menu="false">
+                    {{#actionList}}
+                    <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                    {{/actionList}}
+                </select>
+            </div>
+
+            <div class="button-jump-action-container-element button-jump-label-dest-container">
+                <h4 id="button-state-label-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_DEST">移動先</h4>
+                <div id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">リモコンをみて選択</div>
+            </div>
+            <div class="signal-container-element property-state-action-jump" data-signal-order="0">
+                <div id="signal-remote-container">
+                    {{! リモコンプルダウン }}
+                </div>
+                <div id="signal-page-container">
+                </div>
+            </div>
+
+        </div>
+    </script>
 
 
 
