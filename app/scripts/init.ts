@@ -115,7 +115,6 @@ module Garage {
 
         MAX_NUM_MACRO_SIGNAL = 63;
 
-        FUNC_ID_LEN = 4;
         FUNC_NUM_DELIMITER  = '#';
         FUNC_CODE_RELEARNED = '#';
 

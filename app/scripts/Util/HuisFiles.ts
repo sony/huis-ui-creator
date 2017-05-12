@@ -2299,10 +2299,6 @@ module Garage {
                                     }
                                 }
 
-                                if (!existFunc) {
-                                    // 基リモコン無し && キャッシュにも存在しなかった場合はIDを振る
-                                    action.code_db.function = HuisFiles.getPlainFunctionKey(action.code_db.function) + FUNC_NUM_DELIMITER + this.createHashBySignalCode(action.code);
-                                }
                             }
                         }
                     }
@@ -2393,23 +2389,6 @@ module Garage {
             }
 
 
-            /**
-             * 信号コードからIDとなるハッシュ値を生成
-             *
-             * @param code {string} 基にする信号
-             * @return {string} 生成したハッシュ値
-             */
-            private createHashBySignalCode(code: string): string {
-                const hash = node_crypt.createHash('sha1');
-                hash.update(code, 'utf8');
-
-                return parseInt(hash.digest('hex'), 16)
-                    .toString(36)
-                    .toUpperCase()
-                    .substring(0, FUNC_ID_LEN);
-            }
-
-
 
             /**
              * 連番付き信号名リストを表示用データに変換
@@ -2429,19 +2408,12 @@ module Garage {
                     }
                     let plainName = Util.HuisFiles.getPlainFunctionKey(func);
                     if (plainName != func) {
-                        // 連番付き
                         let numCode = func.substring(func.indexOf(FUNC_NUM_DELIMITER) + 1);
                         if (numCode == FUNC_CODE_RELEARNED) {
                             // フルカスタム再学習ボタン（基リモコン有り）
                             translatedFuncs.push({
                                 key: func,
                                 label: $.i18n.t('button.function.' + plainName) + $.i18n.t('button.function.STR_REMOTE_BTN_LEARNED')
-                            });
-                        } else if (numCode.length == FUNC_ID_LEN) {
-                            // 基リモコンなし＋フルカスタム再学習＋信号名重複（ID:XXXX）
-                            translatedFuncs.push({
-                                key: func,
-                                label: $.i18n.t('button.function.' + plainName) + ' (' + $.i18n.t('button.function.STR_REMOTE_BTN_ID') +':' + numCode + ')'
                             });
                         } else {
                             // 連番
@@ -2494,8 +2466,7 @@ module Garage {
 
                 let numCode = funcKey.substring(delimiterIndex + 1);
 
-                if (numCode.length == FUNC_ID_LEN || numCode == FUNC_CODE_RELEARNED) {
-                    // IDは4桁全て数字の可能性もあるので先にチェック
+                if (numCode == FUNC_CODE_RELEARNED) {
                     return 0;
                 }
 

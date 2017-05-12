@@ -907,8 +907,6 @@ declare module Garage {
     var UNKNOWN_REMOTE_STB: string;
     var UNKNOWN_REMOTE_FAN: string;
     var UNKNOWN_REMOTE_BT: string;
-    /** 信号名に付与されるIDの文字長 */
-    var FUNC_ID_LEN: number;
 
     /** 信号名と連番を分ける区切り文字 */
     var FUNC_NUM_DELIMITER: string ;

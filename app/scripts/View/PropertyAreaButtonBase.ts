@@ -791,33 +791,7 @@ module Garage {
                 }
 
                 return result;
-
             }
-
-
-            /*
-            * 入力した信号名が #ID (例STR_REMOTE_BTN_TOGGLE#fads)なのか判定する。 危険多様しないこと。
-            * @param functionName {string}
-            * @return {boolean} #ID付きのfunctionの場合true,それ以外はfalse;
-            */
-            protected isRelearnedIDFunctionName(functionName: string): boolean {
-                let FUNCTION_NAME = TAG + "isRelearnedIDFunctionName "; 
-                if (!this.isValidValue(functionName)) {
-                    return false;
-                }
-
-                let tmpFunctionNameParts = functionName.split(FUNC_CODE_RELEARNED);
-
-
-                //#で区切った先がID文字数と同じな場合、trueを返す。
-                if (tmpFunctionNameParts.length >= 2 &&
-                    tmpFunctionNameParts[1].length == FUNC_ID_LEN) {
-                    return true;
-                } else {
-                    return false;
-                }
-                  
-            } 
 
             /*
             * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
