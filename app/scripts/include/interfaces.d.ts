@@ -664,7 +664,7 @@ declare module Garage {
     /**
      * ローカル上の HUIS ファイルディレクトリー内にある画像用ディレクトリ名
      */
-    var REMOTE_IMAGES_DIRECOTORY_NAME: string;
+    var REMOTE_IMAGES_DIRECTORY_NAME: string;
     /**
      * HUIS の VID
      */

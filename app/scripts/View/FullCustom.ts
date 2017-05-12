@@ -2651,7 +2651,7 @@ module Garage {
                 // image.path には remoteimages 起点の画像パスを指定する。
                 var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
                 // face ディレクトリ内に配置されるべき画像のパスを取得
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECOTORY_NAME, imagePath)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, imagePath)).replace(/\\/g, "/");
                 // 画像を face ディレクトリ内にコピー
                 // 画像のリサイズとグレースケール化
                 Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
@@ -2704,7 +2704,7 @@ module Garage {
                 // image.path には remoteimages 起点の画像パスを指定する。
                 var image = targetState.image[0];
                 image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECOTORY_NAME, image.path)).replace(/\\/g, "/");
+                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, image.path)).replace(/\\/g, "/");
                 // 画像のリサイズとグレースケール化
                 Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
                     .done((editedImage) => {
