@@ -244,8 +244,9 @@ module Garage {
 
             /**
              * このFaceの総ページ数を返す
+             * @return {number} Faceの総ページ数。
              */
-            getTotalPageNum() {
+            getTotalPageNum() :number{
                 let FUNCTION_NAME = TAG + "TotalPageNum : ";
 
                 if (this.modules == null || this.modules.length == null) {
@@ -259,7 +260,7 @@ module Garage {
                 }
 
                 //それ以外の場合、moduleのpageIndexの最大値を返す。
-                var pageCount = 0;
+                var pageCount :number= 0;
                 for (let module of this.modules) {
                     // collection 内の model の pageIndex のうち、最大のものをページ数とする
                     if (pageCount < module.pageIndex + 1) {
