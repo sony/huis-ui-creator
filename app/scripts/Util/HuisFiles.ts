@@ -2250,7 +2250,6 @@ module Garage {
                     }
                     let plainName = Util.HuisFiles.getPlainFunctionKey(func);
                     if (plainName != func) {
-                        // 連番付き
                         let numCode = func.substring(func.indexOf(FUNC_NUM_DELIMITER) + 1);
                         if (numCode == FUNC_CODE_RELEARNED) {
                             // フルカスタム再学習ボタン（基リモコン有り）
