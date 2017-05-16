@@ -110,30 +110,31 @@ module Garage {
                     return promise;
                 }
 
-
-                var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-                if (params.resize) {
-                    renderer = PIXI.autoDetectRenderer(params.resize.width, params.resize.height, { transparent: true });
-                } else {
-                    renderer = PIXI.autoDetectRenderer(800, 600, { transparent: true });
-                }
-
                 console.log(TAG + "before editImage src: " + imageSrc);
                 let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
-
                 
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
                     .done((texture: PIXI.Texture) => {
-                        let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
 
+                        //textureから、画像のデータを取得する。
+                        let imageWidth: number = 800; 
+                        let imageHeight: number = 600;
+                        if (params.resize != null) {
+                            imageWidth = params.resize.width;
+                            imageHeight = params.resize.height;
+                        }
+                        var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer =
+                            PIXI.autoDetectRenderer(imageWidth, imageHeight, { transparent: true });
+                        let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
+                        //画像データを取得したら、不要なrendererは削除する。
                         renderer.destroy(true);
 
                         // 出力先のパスが指定されている場合は、ファイル出力を行う
                         if (dstPath) {
 
-
                             let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
+
                             //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
                             //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
                             if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
@@ -165,7 +166,6 @@ module Garage {
                     })
                     .fail(() => {
                         console.error(FUNCTION_NAME + "error occur in loadTexture");
-                        renderer.destroy(true);
                         df.reject();
                     });
 
@@ -212,12 +212,10 @@ module Garage {
 
                 const hash = node_crypt.createHash('sha1');
 
-                // Dateオブジェクトを作成 (引数なし)
-                //let date = new Date();
-                // 現在のUNIX時間を取得する (ミリ秒単位)
-                //let unixTimestamp = date.getTime();
+                let date = new Date();
+                let unixTimestamp = date.getTime();
                 //同名でも、違う名前にするため、時間もハッシュ化の引数にいれる。
-                hash.update(basename);// + unixTimestamp);
+                hash.update(basename + unixTimestamp);
                 basename = hash.digest('hex');
                 console.log("SHA1 basename = " + basename);
                 dstPath = dirname + '/' + basename + extname;
@@ -245,9 +243,9 @@ module Garage {
                         if (pixiCache) {
                             pixiCache.destroy(true);
                         }
+                        PIXI.Texture.removeTextureFromCache(src);
 
                         let texture = PIXI.Texture.fromImage(src);
-
                         if (texture.baseTexture && texture.baseTexture.hasLoaded) {
                             df.resolve(texture);
                         } else {
