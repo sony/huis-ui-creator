@@ -2350,7 +2350,7 @@ module Garage {
                 states.forEach((state) => {
                     let gstate = new Model.ButtonState();
                     if (!_.isUndefined(state.id)) {
-                        gstate.id = state.id;
+                        gstate.stateId = state.id;
                     }
                     if (state.image) {
                         gstate.image = this._images2gimages(state.image);

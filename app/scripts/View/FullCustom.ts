@@ -2751,10 +2751,10 @@ module Garage {
                     if (states) {
                         // 未使用の stateId を探す
                         let sortedStates = states.sort((state1, state2) => {
-                            return state1.id - state2.id;
+                            return state1.stateId - state2.stateId;
                         });
                         sortedStates.forEach((state) => {
-                            if (newStateId === state.id) {
+                            if (newStateId === state.stateId) {
                                 newStateId++;
                             }
                         });
@@ -2767,7 +2767,7 @@ module Garage {
                         this.currentTargetButtonStates_ = [];
                     }
                     this.currentTargetButtonStates_.push(new Model.ButtonState({
-                        id: newStateId
+                        stateId: newStateId
                     }));
                     this.currentTargetButtonStatesUpdated_ = true;
 
@@ -2794,7 +2794,7 @@ module Garage {
                 var targetStateIndex = -1;
                 for (let i = 0, l = this.currentTargetButtonStates_.length; i < l && targetStateIndex < 0; i++) {
                     let state = this.currentTargetButtonStates_[i];
-                    if (state.id === stateId) {
+                    if (state.stateId === stateId) {
                         targetStateIndex = i;
                     }
                 }
@@ -3231,7 +3231,7 @@ module Garage {
                                         targetStates = states;
                                     } else {
                                         targetStates = states.filter((state) => {
-                                            return state.id === stateId;
+                                            return state.stateId === stateId;
                                         });
                                     }
 
@@ -3431,7 +3431,7 @@ module Garage {
                  */
                 var solveLabel = function (state: Model.ButtonState) {
                     var defaltTextSize = 30;
-                    let localStateId = state.id;
+                    let localStateId = state.stateId;
 
                     var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
 
@@ -3497,7 +3497,7 @@ module Garage {
                     targetStates = states;
                 } else {
                     targetStates = states.filter((state) => {
-                        return state.id === stateId;
+                        return state.stateId === stateId;
                     });
                 }
 
@@ -3588,7 +3588,7 @@ module Garage {
                             default:
 
                         }
-                        let currentStateId = targetState.id;
+                        let currentStateId = targetState.stateId;
                         this.updateButtonOnCanvas(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
                     
@@ -3784,7 +3784,7 @@ module Garage {
                     return undefined;
                 }
                 var targetStates = this.currentTargetButtonStates_.filter((state) => {
-                    return state.id === stateId;
+                    return state.stateId === stateId;
                 });
                 if (!targetStates || !targetStates.length) {
                     return undefined;
@@ -5195,14 +5195,14 @@ module Garage {
 
                     checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
                         return (
-                            (button.default == state.id) &&
+                            (button.default == state.stateId) &&
                             (((state.image != null) && (state.image[0] != null)) ||
                                 ((state.label != null) && (state.label[0] != null)))
                         );
                     });
                    
                     if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
+                        button.default = this.currentTargetButtonStates_[0].stateId; // 先頭のをdefault値として設定
                     }
 
 
@@ -5210,7 +5210,7 @@ module Garage {
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
 
-                        stateData.id = state.id;
+                        stateData.stateId = state.stateId;
                         let resizeMode: string;
                         if (state.image) {
                             stateData.image = state.image[0];
@@ -5233,7 +5233,7 @@ module Garage {
                         this._setActionListToState(state);
 
                         if (this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
-                            if (state.id != button.default) return;
+                            if (state.stateId != button.default) return;
                         }
 
                         let $stateDetail = $(templateState(stateData));
@@ -5241,14 +5241,14 @@ module Garage {
 
 
                         //テキストラベルの大きさの設定値を反映する。
-                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.stateId + "\"]");
                         if (!_.isUndefined(stateData.label)) {
                             var textSizeString: string = stateData.label.size;
                             $textSize.val(textSizeString);
                         }
 
                         //信号コンテナを描画
-                        $statesContainer.append(this.buttonProperty.renderViewState(state.id));
+                        $statesContainer.append(this.buttonProperty.renderViewState(state.stateId));
 
                         // 文言あて・ローカライズ
                         $statesContainer.i18n();

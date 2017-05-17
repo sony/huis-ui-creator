@@ -180,7 +180,7 @@ module Garage {
 
                 states.forEach((state: Model.ButtonState) => {
                     let normalizedState: IState = {
-                        id: state.id
+                        id: state.stateId
                     };
 
                     if (state.image) {
@@ -680,7 +680,7 @@ module Garage {
                 for (let state of states) {
                     let gstate = new Model.ButtonState();
                     if (!_.isUndefined(state.id)) {
-                        gstate.id = state.id;
+                        gstate.stateId = state.id;
                     }
                     if (state.image) {
                         gstate.image = this._images2gimages(state.image, remoteId);

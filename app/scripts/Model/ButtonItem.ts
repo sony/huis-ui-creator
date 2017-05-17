@@ -93,7 +93,7 @@ module Garage {
 
                 srcStates.forEach((srcState) => {
                     let newState = new Model.ButtonState({
-                        id: srcState.id
+                        stateId: srcState.stateId
                     });
                     newState.active = srcState.active;
 
@@ -211,7 +211,7 @@ module Garage {
                     let statesData: Model.ButtonState[] = [];
                     this.stateCollection_.forEach((stateModel, index) => {
                         let stateData = new Model.ButtonState({
-                            id: stateModel.stateId
+                            stateId: stateModel.stateId
                         });
                         if (stateModel.active !== undefined) {
                             stateData.active = stateModel.active;
@@ -258,7 +258,7 @@ module Garage {
                         let stateModel: ButtonState = new ButtonState({
                             materialsRootPath: this.materialsRootPath_, remoteId: this.remoteId
                         });
-                        stateModel.stateId = stateData.id;
+                        stateModel.stateId = stateData.stateId;
                         stateModel.active = stateData.active;
                         stateModel.action = $.extend(true, [], stateData.action);
                         stateModel.translate = $.extend(true, [], stateData.translate);

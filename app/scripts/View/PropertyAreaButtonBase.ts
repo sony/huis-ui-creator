@@ -175,7 +175,7 @@ module Garage {
             protected createStateData(state: Model.ButtonState): any {
                 let stateData: any = {};
 
-                stateData.id = state.id;
+                stateData.stateId = state.stateId;
 
                 if (state.image) {
                     stateData.image = state.image[0];

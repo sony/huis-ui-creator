@@ -189,7 +189,7 @@ module Garage {
                         // 該当する state が見つからなかったら、先頭の state を active にする。
                         for (let i = statesCount - 1; 0 <= i; i--) {
                             let state = states[i];
-                            if (state.id === currentStateId) {
+                            if (state.stateId === currentStateId) {
                                 state["active"] = true;
                                 foundCurrentStateId = true;
                             } else if (i === 0 && !foundCurrentStateId) {

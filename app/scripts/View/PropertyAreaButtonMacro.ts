@@ -272,7 +272,7 @@ module Garage {
                 }
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order, this.defaultState.id);
+                this.renderFunctionsOf(order, this.defaultState.stateId);
                 this.updateModel();
 
                 //jQueryのスタイルをあてる。
@@ -377,7 +377,7 @@ module Garage {
                 let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
 
                 let state = this.defaultState;
-                let id: number = this.defaultState.id;
+                let id: number = this.defaultState.stateId;
                 macroData.id = id;
 
                 let resizeMode: string;
@@ -403,7 +403,7 @@ module Garage {
                 $macroContainer.append($macroDetail);
 
                 //テキストラベルのpullDownを変更する。
-                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.id + "\"]");
+                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.stateId + "\"]");
                 if (labelSize != null) {
                     $textSizePullDown.val(labelSize.toString());
                 }
@@ -418,7 +418,7 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.id + "\"]");
+                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
@@ -754,7 +754,7 @@ module Garage {
 
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
-                this.renderFunctionsOf(order, this.defaultState.id, functionName);
+                this.renderFunctionsOf(order, this.defaultState.stateId, functionName);
 
                 this.renderIntervalOf(order, action.interval);
 
@@ -796,7 +796,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id : this.defaultState.id
+                    id : this.defaultState.stateId
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.templateItemDetailFile_);
@@ -1065,7 +1065,7 @@ module Garage {
                 this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,signalInputs.remoteId);
 
                 //Function選択用のPullダウンを更新。
-                this.renderFunctionsOf(order,this.defaultState.id, signalInputs.functionName);
+                this.renderFunctionsOf(order,this.defaultState.stateId, signalInputs.functionName);
 
             }
 
