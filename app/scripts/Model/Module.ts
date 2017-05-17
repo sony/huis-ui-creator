@@ -412,7 +412,7 @@ module Garage {
 
                 if (imodule.button) {
                     // [TODO] button.state.image.garage_extensions 対応
-                    gmodule.button = this._buttons2gbuttons(imodule.button, remoteId);
+                    gmodule.button = this._iButtons2ButtomItems(imodule.button, remoteId);
                     this.setVersionInfoToIGButton(imodule, gmodule.button);
                 }
                 if (imodule.image) {
@@ -709,7 +709,7 @@ module Garage {
               * @param buttons {IButton[]} IGButton[] に変換する IButton[]
               * @return {IGButton[]} 変換された IGButton[]
               */
-            private _buttons2gbuttons(buttons: IButton[], remoteId: string): Model.ButtonItem[] {
+            private _iButtons2ButtomItems(buttons: IButton[], remoteId: string): Model.ButtonItem[] {
                 let gbuttons: Model.ButtonItem[] = [];
                 buttons.forEach((button) => {
                     let gstates: Model.ButtonState[] = this._states2gstates(button.state, remoteId);
