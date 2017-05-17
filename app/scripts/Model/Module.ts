@@ -417,7 +417,7 @@ module Garage {
                 }
                 if (imodule.image) {
                     gmodule.image = this._iImages2ImageItems(imodule.image, remoteId);
-                    this.setVersionInfoToIGImage(imodule, gmodule.image);
+                    this.setVersionInfoToImageItems(imodule, gmodule.image);
                 }
                 if (imodule.label) {
                     gmodule.label = $.extend(true, [], imodule.label);
@@ -566,9 +566,9 @@ module Garage {
             /*
              * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
              * @param module :IModule 参照元のモジュール
-             * @param gImages :Model.ImageItem[] 代入先のモジュール
+             * @param images :Model.ImageItem[] 代入先のモジュール
              */
-            private setVersionInfoToIGImage(iModule: IModule, gImages: Model.ImageItem[]) {
+            private setVersionInfoToImageItems(iModule: IModule, images: Model.ImageItem[]) {
                 let FUNCTION_NAME = TAG + " : setVersionInfoToModel.ImageItem : ";
 
                 if (iModule == null) {
@@ -576,7 +576,7 @@ module Garage {
                     return;
                 }
 
-                if (gImages == null) {
+                if (images == null) {
                     console.warn(FUNCTION_NAME + "gImages is null");
                     return;
                 }
@@ -585,8 +585,8 @@ module Garage {
                     return;//バージョン情報が存在しない場合、なにもしない。
                 }
 
-                for (let i = 0; i < gImages.length; i++) {
-                    gImages[i].version = iModule.version;
+                for (let i = 0; i < images.length; i++) {
+                    images[i].version = iModule.version;
                 }
             }
 
