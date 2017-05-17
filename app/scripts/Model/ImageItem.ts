@@ -86,8 +86,12 @@ module Garage {
                 var newArea: IArea = $.extend(true, {}, this.area);
                 newArea.y += offsetY;
                 newImage.area = newArea;
-                // 画像の path を出力先の remoteId のディレクトリーになるように指定
-                newImage.path = dstRemoteId + "/" + path.basename(this.path);
+                // 画像pathがremoteId（数字4桁）で始まっている場合は、remoteIdを変更
+                if (this.path.match(/\d{4}\//)) {
+                    newImage.path = dstRemoteId + "/" + path.basename(this.path);
+                } else {
+                    newImage.path = this.path;
+                }
                 newImage.resizeOriginal = this.resizeOriginal;
 
                 if (this.version != null) {
