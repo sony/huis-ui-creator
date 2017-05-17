@@ -675,7 +675,7 @@ module Garage {
              * @param buttons {IState[]} Model.ButtonState[] に変換する IState[]
              * @return {Model.ButtonState[]} 変換された Model.ButtonState[]
              */
-            private _states2gstates(states: IState[], remoteId: string): Model.ButtonState[] {
+            private _iState2ButtonStates(states: IState[], remoteId: string): Model.ButtonState[] {
                 let gstates: Model.ButtonState[] = [];
                 for (let state of states) {
                     let gstate = new Model.ButtonState();
@@ -712,7 +712,7 @@ module Garage {
             private _iButtons2ButtomItems(buttons: IButton[], remoteId: string): Model.ButtonItem[] {
                 let gbuttons: Model.ButtonItem[] = [];
                 buttons.forEach((button) => {
-                    let gstates: Model.ButtonState[] = this._states2gstates(button.state, remoteId);
+                    let gstates: Model.ButtonState[] = this._iState2ButtonStates(button.state, remoteId);
                     let gbutton = new Model.ButtonItem({
                         materialsRootPath: HUIS_FILES_ROOT,
                         remoteId: remoteId,
