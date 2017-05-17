@@ -416,7 +416,7 @@ module Garage {
                     this.setVersionInfoToIGButton(imodule, gmodule.button);
                 }
                 if (imodule.image) {
-                    gmodule.image = this._images2gimages(imodule.image, remoteId);
+                    gmodule.image = this._iImages2ImageItems(imodule.image, remoteId);
                     this.setVersionInfoToIGImage(imodule, gmodule.image);
                 }
                 if (imodule.label) {
@@ -651,7 +651,7 @@ module Garage {
              * @param images {IImage[]} [in] Model.ImageItem[] に変換する IImage[]
              * @return {Model.ImageItem[]} 変換された Model.ImageItem[]
              */
-            private _images2gimages(images: IImage[], remoteId: string): Model.ImageItem[] {
+            private _iImages2ImageItems(images: IImage[], remoteId: string): Model.ImageItem[] {
 
                 let gimages: Model.ImageItem[] = [];
 
@@ -683,7 +683,7 @@ module Garage {
                         gstate.stateId = state.id;
                     }
                     if (state.image) {
-                        gstate.image = this._images2gimages(state.image, remoteId);
+                        gstate.image = this._iImages2ImageItems(state.image, remoteId);
                     }
                     if (state.label) {
                         gstate.label = $.extend(true, [], state.label);
