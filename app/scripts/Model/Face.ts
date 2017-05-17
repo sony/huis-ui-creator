@@ -180,7 +180,7 @@ module Garage {
             /**
              * 引数で与えられたImageを、引数で与えられたremoteIdの画像ディレクトリ(例：HuisFiles/remoteimages/0000)にコピーする。
              *
-             * @param {IGImage[]} images 変更対象のImage。
+             * @param {Model.ImageItem[]} images 変更対象のImage。
              * @param {string} remoteId 変更先となる画像ディレクトリのremoteId。
              */
             private _copyImage(images: Model.ImageItem[], remoteId: string) {
@@ -214,7 +214,7 @@ module Garage {
              * このFaceに含まれるImageを全て検索する。
              * 具体的には、Moduleに含まれるImage、Button.Stateに含まれるImageを全て検索する。
              *
-             * @return {IGImage[]} 検索されたImage。
+             * @return {Model.ImageItem[]} 検索されたImage。
              */
             private _searchImages(): Model.ImageItem[] {
                 let images: Model.ImageItem[] = [];
