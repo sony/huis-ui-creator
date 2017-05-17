@@ -53,7 +53,7 @@ module Garage {
                 this.area = $.extend(true, [], image.area);
                 this.path = image.path;
 
-                // Copy IImage.gatage_extensions to IGImage.garageExtensions
+                // Copy IImage.gatage_extensions to ImageItem.garageExtensions
                 let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
                 if (garage_extensions) {
                     this.garageExtensions = {
