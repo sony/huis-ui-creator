@@ -282,21 +282,6 @@ interface IState {
 }
 
 /**
- * @interface Model.ButtonState
- * @brief IButton に対して Garage で使用する情報を付加し、state を Model.ButtonState[] に変換したもの
-
-interface IGButton {
-    version?: string;
-    area: IArea;
-    default?: number;
-    state: Model.ButtonState[];
-    name?: string;
-
-    currentStateId: number;
-    [x: string]: any;
-}
-*/
-/**
  * @interface IButton
  * @brief HUIS の module ファイルにおける button にあたる
  */
@@ -420,23 +405,6 @@ interface IGOutput {
     Module: IModule[];
 }
 
-/**
- * @interface IGModule
- * @brief IModule に対して Garage で使用する情報を付加したもの
-
-interface IGModule {
-    version?: string;
-    area: IArea;
-    button?: IGButton[];
-    label?: Model.LabelItem[];
-    image?: Model.ImageItem[];
-    offsetY: number; //!< ページ内のモジュールの y 座標
-    pageIndex: number; //!< ページ番号 (最初のページが 0
-    remoteId: string; //!< モジュールが属する face の ID
-    name: string; //!< モジュールの名前
-    group?: IGroup;
-}
-*/
 /**
  * @interface IModule
  * @brief HUIS の module ファイルの内容にあたる
