@@ -19,16 +19,16 @@ module Garage {
              * constructor
              * @param remoteId {string} 編集中のリモコンの remote_id
              * @param faceName {string} 編集中のリモコン名
-             * @param gmodules {Model.Module[]} 編集中のリモコンのモジュール
+             * @param modules {Model.Module[]} 編集中のリモコンのモジュール
              */
-            constructor(remoteId: string, faceName: string, gmodules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(remoteId: string, faceName: string, modules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;
-                this.gmodules = gmodules;
+                this.modules = modules;
 
-                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, gmodules);
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, modules);
             }
 
 
@@ -175,7 +175,7 @@ module Garage {
             /**
              * ActionのPullDownを変更する
              *
-             * @param state {IGState}
+             * @param state {Model.ButtonState}
              */
             private setActionPullDown(state: Model.ButtonState) {
                 let FUNCTION_NAME = TAG + "changeActionPullDown : ";
@@ -204,7 +204,7 @@ module Garage {
                 let dialog = new Util.SelectRemotePageDialog(
                     $.i18n.t("dialog.title.STR_DIALOG_TITLE_SELECT_JUMP"),
                     this.getJumpSettings(),
-                    huisFiles.createTmpFace(this.remoteId, this.faceName, this.gmodules));
+                    huisFiles.createTmpFace(this.remoteId, this.faceName, this.modules));
 
                 dialog.show((result) => {
                     this.updateJumpSettings(result);

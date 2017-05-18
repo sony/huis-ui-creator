@@ -25,7 +25,6 @@ module Garage {
 
         export class Module extends Backbone.View<Model.Module> {
 
-            // private modules_: IGModule[];
             private remoteId_: string;
             private materialsRootPath_: string;
 
@@ -78,7 +77,7 @@ module Garage {
                 for (var i = 0, l = modulesData.length; i < l; i++) {
                     
                     let moduleModel: Model.Module = new Model.Module();
-                    moduleModel.setInfoFromGModule(modulesData[i]);
+                    moduleModel.setInfoFromModule(modulesData[i]);
                     this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
 
@@ -691,7 +690,7 @@ module Garage {
              * Module View がもつすべての module を取得する。
              *
              * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
-             * @return {IGModule[]} Module View がもつ module の配列
+             * @return {Model.Module[]} Module View がもつ module の配列
              */
             getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
@@ -726,7 +725,7 @@ module Garage {
              * 指定した id の module を取得する。
              * 
              * @param moduleId {string} 取得したい module の ID
-             * @return {IGModule} moduleId と合致する module。見つからない場合は、null
+             * @return {Model.Module} moduleId と合致する module。見つからない場合は、null
              */
             getModule(moduleId: string): Model.Module {
                 var moduleIndex = this._getModuleIndex(moduleId);
@@ -740,19 +739,19 @@ module Garage {
                     return null;
                 }
 
-                var gmodule: Model.Module = $.extend(true, {}, moduleModel);
-                return gmodule;
+                var module: Model.Module = $.extend(true, {}, moduleModel);
+                return module;
             }
 
 
-            private generateViews(gmodule: Model.Module) {
+            private generateViews(module: Model.Module) {
                 // モジュール内に button があったら、ButtonItem View を生成
-                if (gmodule.button) {
+                if (module.button) {
                     this.buttonViews_.push(new ButtonItem({
                         attributes: {
-                            buttons: gmodule.button,
+                            buttons: module.button,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: gmodule.remoteId
+                            remoteId: module.remoteId
                         }
                     }));
                 } else {
@@ -760,10 +759,10 @@ module Garage {
                 }
 
                 // モジュール内に label があったら、LabelItem View を生成
-                if (gmodule.label) {
+                if (module.label) {
                     this.labelViews_.push(new LabelItem({
                         attributes: {
-                            labels: gmodule.label,
+                            labels: module.label,
                             materialsRootPath: this.materialsRootPath_
                         }
                     }));
@@ -772,12 +771,12 @@ module Garage {
                 }
 
                 // モジュール内に image があったら、ImageItem View を生成
-                if (gmodule.image) {
+                if (module.image) {
                     this.imageViews_.push(new ImageItem({
                         attributes: {
-                            images: gmodule.image,
+                            images: module.image,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: gmodule.remoteId
+                            remoteId: module.remoteId
                         }
                     }));
                 } else {
@@ -802,7 +801,7 @@ module Garage {
 
                     //ページカウントは、すでに記述されているページに追加する
                     let moduleModel: Model.Module = new Model.Module();
-                    moduleModel.setInfoFromGModule(inputModules[i]);
+                    moduleModel.setInfoFromModule(inputModules[i]);
                     this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
                     modulesModels.push(moduleModel);
@@ -816,7 +815,7 @@ module Garage {
 
             /**
              * モジュールが有効かどうか検査する
-             * @param item {IGModule} 検査対象モジュール
+             * @param item {Model.Module} 検査対象モジュール
              * @return {boolean} 有効なモジュールの場合はtrue、そうでない場合はfalse
              */
             private isValidModule(item: Model.Module): boolean {
@@ -832,7 +831,7 @@ module Garage {
 
             /**
              * ボタンリストが有効かどうか検査する
-             * @param buttons {IGButton[]} 検査対象ボタンリスト
+             * @param buttons {Model.ButtonItem[]} 検査対象ボタンリスト
              * @return {boolean} ボタンリストが有効な場合はtrue、そうでない場合はfalse
              */
             private isValidButtons(buttons: Model.ButtonItem[]): boolean {
@@ -849,7 +848,7 @@ module Garage {
 
             /**
              * ボタンが有効かどうか検査する
-             * @param button {IGButton} 検査対象ボタン
+             * @param button {Model.ButtonItem} 検査対象ボタン
              * @return {boolean} ボタンが有効な場合はtrue、そうでない場合はfalse
              */
             private isValidButton(button: Model.ButtonItem): boolean {

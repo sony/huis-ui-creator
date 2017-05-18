@@ -189,11 +189,11 @@ module Garage {
             * 一時的に利用するFaceModelを返す。
             * @param {string} remoteId 生成されるFaceのRemoteId
             * @param {string} faceName 生成されるFaceの名前
-            * @param {Model.Module[]} gmodules 生成されるFaceに含まれているモジュール群
+            * @param {Model.Module[]} modules 生成されるFaceに含まれているモジュール群
             * @return {Model.Face} 一時的に生成したFaceModel
             */
-            createTmpFace(remoteId: string, faceName: string, gmodules: Model.Module[]): Model.Face {
-                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, gmodules);
+            createTmpFace(remoteId: string, faceName: string, modules: Model.Module[]): Model.Face {
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, modules);
                 return tmpFace;
             }
 
@@ -897,7 +897,7 @@ module Garage {
             /**
              * 渡されたモジュールから 信号名：信号 の連想配列を取得
              *
-             * @param modules {IGModule[]}
+             * @param modules {Model.Module[]}
              * @return {IStringSringHash}
              */
             private static getFunctionCodeMapByModules(modules: Model.Module[]): IStringStringHash {
@@ -1169,10 +1169,10 @@ module Garage {
              *
              * @param tmpRemoteId {string} 編集中リモコンのremote_id
              * @param faceName {string} 編集中リモコンの名称
-             * @param gmodules {Model.Module[]} 編集中リモコンのモジュール
+             * @param modules {Model.Module[]} 編集中リモコンのモジュール
              * @return {IRemoteInfo[]}
              */
-            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, gmodules: Model.Module[]): IRemoteInfo[] {
+            getSupportedRemoteInfoInJump(tmpRemoteId: string, faceName: string, modules: Model.Module[]): IRemoteInfo[] {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getSupportedRemoteInfoInMacro :";
 
                 if (this.remoteInfos_.length == 0) {
@@ -1188,7 +1188,7 @@ module Garage {
                     if (target.face.remoteId == tmpRemoteId) {
                         // 編集中のリモコン
                         containsTmpRemote = true;
-                        result.push(this.createTmpRemoteInfo(tmpRemoteId, gmodules, target.face.category, target.mastarFace));
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, modules, target.face.category, target.mastarFace));
 
                     } else {
                         result.push(target);
@@ -1198,7 +1198,7 @@ module Garage {
 
                 // 新規作成中の場合はリストの先頭に追加
                 if (!containsTmpRemote) {
-                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, gmodules));
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, modules));
                 }
 
                 return result;
@@ -1412,15 +1412,15 @@ module Garage {
                 let remoteId = inputFace.remoteId;
                 let faceName = inputFace.name;
                 let deviceType = inputFace.category;
-                let gmodules = inputFace.modules;
+                let modules = inputFace.modules;
 
-                var moduleCount = gmodules.length;
-                let modules: IModule[] = [];
+                var moduleCount = modules.length;
+                let iModules: IModule[] = [];
                 var moduleNames: string[] = [];
                 // module ファイルの更新
                 for (let i = 0; i < moduleCount; i++) {
-                    let moduleInfo = this._updateModule(remoteId, gmodules[i], outputDirPath);
-                    modules.push(moduleInfo.module);
+                    let moduleInfo = this._updateModule(remoteId, modules[i], outputDirPath);
+                    iModules.push(moduleInfo.module);
                     moduleNames.push(moduleInfo.name);
                 }
 
@@ -1478,8 +1478,8 @@ module Garage {
                     });
 
                 if (cache != null) {
-                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(gmodules);
-                    cache.save(gmodules);
+                    ButtonDeviceInfoCache.injectAllDeviceInfoFromHuisFiles(modules);
+                    cache.save(modules);
                 }
                 
 
@@ -1626,25 +1626,25 @@ module Garage {
              * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            private _updateModule(remoteId: string, gmodule: Model.Module, outputDirPath ? :string): {module: IModule, name: string} {
-                // IGModule に格納されているデータから、.module ファイルに必要なものを抽出する
+            private _updateModule(remoteId: string, module: Model.Module, outputDirPath ? :string): {module: IModule, name: string} {
+                // Model.Module に格納されているデータから、.module ファイルに必要なものを抽出する
 
                 
-                let module = gmodule.getOutputModuleData(remoteId, outputDirPath);
+                let iModule = module.getOutputModuleData(remoteId, outputDirPath);
 
-                var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", gmodule.name + ".module");
+                var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", module.name + ".module");
 
                 //ファイルパスの指定がある場合、書き出し先を変更する。
                 if (outputDirPath != null) {
-                    moduleFilePath = path.join(outputDirPath, remoteId, "modules", gmodule.name + ".module");
+                    moduleFilePath = path.join(outputDirPath, remoteId, "modules", module.name + ".module");
                 }
 
 
                 fs.outputJSONSync(moduleFilePath, iModule, { spaces: 2 });
 
                 return {
-                    name: gmodule.name,
-                    module: module
+                    name: module.name,
+                    module: iModule
                 };
             }
 
@@ -1877,15 +1877,14 @@ module Garage {
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
                     var moduleName: string = plainFace.modules[i];
-                    var module: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
-                    if (module) {
-                        heightSum += module.area.h;
+                    var iModule: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
+                    if (iModule) {
+                        heightSum += iModule.area.h;
                         let pageIndex = Math.floor((heightSum-1) / HUIS_FACE_PAGE_HEIGHT);
 
-                        //let gmodule: IGModule = $.extend(true, { offsetY: 0, remoteId: remoteId, name: moduleName }, module);
-                        let gmodule = new Model.Module();
-                        gmodule.setInfoFromIModule(module, remoteId, pageIndex, moduleName);
-                        face.modules.push(gmodule);
+                        let module = new Model.Module();
+                        module.setInfoFromIModule(iModule, remoteId, pageIndex, moduleName);
+                        face.modules.push(module);
                     }
                 }
 
@@ -1893,9 +1892,9 @@ module Garage {
                 if (plainFace.category == DEVICE_TYPE_FULL_CUSTOM &&
                     face.modules.length == 0) {
 
-                    let gmodule = new Model.Module();
-                    gmodule.setInfo(remoteId, 0);
-                    face.modules.push(gmodule);
+                    let module = new Model.Module();
+                    module.setInfo(remoteId, 0);
+                    face.modules.push(module);
                 }
 
                 return face;
@@ -1904,7 +1903,7 @@ module Garage {
             /**
              * モジュール内において同一信号名にもかかわらず異なる信号が設定されているものに連番を付与する
              *
-             * @param modules {IGModule[]} 検査対象モジュール
+             * @param modules {Model.Module[]} 検査対象モジュール
              */
             private static numberFunctionNameInModules(modules: Model.Module[]) {
                 let functionCodeHash: IStringStringHash = {};
@@ -1949,7 +1948,7 @@ module Garage {
             /**
              * HuisFiles内の信号名を対象モジュールに反映する
              *
-             * @param modules {IGModule[]}
+             * @param modules {Model.Module[]}
              */
             public applyNumberedFunctionName(modules: Model.Module[]) {
 
@@ -1990,7 +1989,7 @@ module Garage {
             /**
              * 信号名をキャッシュから取得し設定
              *
-             * @param modules {IGModule[]} 更新対象のアイテムおよびキャッシュを含むモジュール
+             * @param modules {Model.Module[]} 更新対象のアイテムおよびキャッシュを含むモジュール
              */
             public applyCachedFunctionName(modules: Model.Module[]) {
                 for (let mod of modules) {
@@ -2087,8 +2086,8 @@ module Garage {
              * 対象モジュール内の信号名を基モジュール内にある信号名に合わせる。
              * 基モジュールに同信号名別信号が存在する場合は連番を付与した新しい信号名に変更する。
              *
-             * @param target {IGModule[]} 更新対象を含むモジュール
-             * @param original {IGModule[]} 基にするモジュール
+             * @param target {Model.Module[]} 更新対象を含むモジュール
+             * @param original {Model.Module[]} 基にするモジュール
              */
             private static applyNumberedFunctionNameByModule(target: Model.Module[], original: Model.Module[]) {
                 let funcCodeHash = HuisFiles.getFunctionCodeMapByModules(original);
@@ -2209,9 +2208,9 @@ module Garage {
             /*
             * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
             * @param module :IModule 参照元のモジュール
-            * @param gImages :Model.ImageItem[] 代入先のモジュール
+            * @param images :Model.ImageItem[] 代入先のモジュール
             */
-            private setVersionInfoToIGImage(iModule: IModule, gImages: Model.ImageItem[]) {
+            private setVersionInfoToImage(iModule: IModule, images: Model.ImageItem[]) {
                 let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToModel.ImageItem : ";
 
                 if (iModule == null) {
@@ -2219,8 +2218,8 @@ module Garage {
                     return;
                 }
 
-                if (gImages == null) {
-                    console.warn(FUNCTION_NAME + "gImages is null");
+                if (images == null) {
+                    console.warn(FUNCTION_NAME + "images is null");
                     return;
                 }
 
@@ -2228,8 +2227,8 @@ module Garage {
                     return;//バージョン情報が存在しない場合、なにもしない。
                 }
             
-                for (let i = 0; i < gImages.length; i++){
-                    gImages[i].version = iModule.version;
+                for (let i = 0; i < images.length; i++){
+                    images[i].version = iModule.version;
                 }
             }
 

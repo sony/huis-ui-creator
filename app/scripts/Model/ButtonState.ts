@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
-        export class ButtonState extends Backbone.Model{
+        export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
             private remoteId_: string;

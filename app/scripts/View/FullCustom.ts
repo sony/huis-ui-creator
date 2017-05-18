@@ -149,15 +149,15 @@ module Garage {
                         this.setAddPageButtonEnabled(false);
                     }
 
-                    var gmodules = this.faceRenderer_canvas_.getModules();
+                    var modules = this.faceRenderer_canvas_.getModules();
 
                     // ボタンに設定された信号名を基リモコンに合わせる
-                    huisFiles.applyNumberedFunctionName(gmodules);
+                    huisFiles.applyNumberedFunctionName(modules);
 
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
-                    this.buttonDeviceInfoCache.load(gmodules);
+                    this.buttonDeviceInfoCache.load(modules);
                     // ボタンに設定された信号名をキャッシュに合わせる
-                    huisFiles.applyCachedFunctionName(gmodules);
+                    huisFiles.applyCachedFunctionName(modules);
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -2877,7 +2877,7 @@ module Garage {
                     return;
                 }
 
-                let gmodules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
+                let modules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
 
@@ -2889,7 +2889,7 @@ module Garage {
                 });
                 dialog.show().css("color", "white");
 
-                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM,gmodules);
+                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM,modules);
 
                 huisFiles.updateFace(inputFace, this.buttonDeviceInfoCache)
                     .always(() => {

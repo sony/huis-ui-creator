@@ -139,7 +139,7 @@ module Garage {
             /**
              * ButtonItem View がもつすべての ButtonItem を返す。
              * 
-             * @return {IGButton[]} ButtonItem View がもつ ButtonItem
+             * @return {Model.ButtonItem[]} ButtonItem View がもつ ButtonItem
              */
             getButtons(): Model.ButtonItem[] {
                 // enabled でない model を間引く 

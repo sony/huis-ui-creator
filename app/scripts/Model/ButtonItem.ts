@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
-        export class ButtonItem extends Model.Item{
+        export class ButtonItem extends Model.Item {
 
             remoteId: string;
             private stateCollection_: ButtonStateCollection;

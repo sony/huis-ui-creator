@@ -48,9 +48,9 @@ module Garage {
             protected faceName: string;
 
             /**
-             * 編集中リモコンのgmodules
+             * 編集中リモコンのmodules
              */
-            protected gmodules: Model.Module[];
+            protected modules: Model.Module[];
 
             /**
              * constructor
@@ -170,7 +170,7 @@ module Garage {
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
-             * @param state {IGState}
+             * @param state {Model.ButtonState}
              */
             protected createStateData(state: Model.ButtonState): any {
                 let stateData: any = {};
@@ -966,7 +966,7 @@ module Garage {
                 let total: number;
                 if (remoteId == this.remoteId) {
                     // 編集中ページを跳び先としている場合
-                    total = this.gmodules.length;
+                    total = this.modules.length;
 
                 } else {
                     let face = huisFiles.getFace(remoteId);

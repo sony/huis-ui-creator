@@ -634,15 +634,15 @@ module Garage {
 
             /*
              * Model.ImageItem内のpathをを新しいremoteIdのものに変更する。
-             * @param gimages{Model.ImageItem[]} pathを変更する対象
+             * @param images{Model.ImageItem[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
              * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertImagesFilePath(gimages : Model.ImageItem[], newRemoteId : string): Model.ImageItem[]{
+            private convertImagesFilePath(images : Model.ImageItem[], newRemoteId : string): Model.ImageItem[]{
                 let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
 
-                if (gimages == null || gimages.length == 0) {
-                    console.warn(FUNCTION_NAME + "gimages is invalid");
+                if (images == null || images.length == 0) {
+                    console.warn(FUNCTION_NAME + "images is invalid");
                     return;
                 }
 
@@ -651,7 +651,7 @@ module Garage {
                     return;
                 }
 
-                let result: Model.ImageItem[] = $.extend(true, [], gimages);;
+                let result: Model.ImageItem[] = $.extend(true, [], images);;
 
                 for (let i = 0; i < result.length; i++){
                     result[i].path = this.converFilePath(result[i].path, newRemoteId);
@@ -669,16 +669,16 @@ module Garage {
 
 
             /*
-             * IGButton内のModel.ImageItemのpathを新しいremoteIdのものに変更する。
-             * @param gbuttons{IGButton[]} pathを変更する対象
+             * Model.ButtonItem内のModel.ImageItemのpathを新しいremoteIdのものに変更する。
+             * @param buttons{Model.ButtonItem[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
              * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertButtonsFilePath(gbuttons: Model.ButtonItem[], newRemoteId: string): Model.ButtonItem[] {
+            private convertButtonsFilePath(buttons: Model.ButtonItem[], newRemoteId: string): Model.ButtonItem[] {
                 let FUNCTION_NAME: string = TAG + "convertButtonFilePath : ";
 
-                if (gbuttons == null || gbuttons.length == 0) {
-                    console.warn(FUNCTION_NAME + "gbuttons is invalid");
+                if (buttons == null || buttons.length == 0) {
+                    console.warn(FUNCTION_NAME + "buttons is invalid");
                     return;
                 }
 
@@ -688,7 +688,7 @@ module Garage {
                 }
 
 
-                let result: Model.ButtonItem[] = $.extend(true, [], gbuttons);
+                let result: Model.ButtonItem[] = $.extend(true, [], buttons);
                 for (let i = 0; i < result.length; i++){
                     if (result[i].state != null && result[i].state.length >  0){
                         for (let j = 0; j < result[i].state.length; j++) {
