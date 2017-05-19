@@ -24,8 +24,6 @@ module Garage {
         export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
-            private remoteId_: string;
-            private materialsRootPath_: string;
 
             defaults() {
                 // Please write default parameters' value
@@ -38,12 +36,6 @@ module Garage {
                 this.imageCollection_ = new ImageItemsCollection();
                 this.labelCollection_ = new LabelItemsCollection();
                 super(attributes, null);
-                if (attributes) {
-                    if (attributes.materialsRootPath && attributes.remoteId) {
-                        this.materialsRootPath_ = attributes.materialsRootPath;
-                        this.remoteId_ = attributes.remoteId;
-                    }
-                }
             }
 
             get stateId(): number {
