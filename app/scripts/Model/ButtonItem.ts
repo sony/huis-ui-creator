@@ -87,52 +87,11 @@ module Garage {
                     newButton.currentStateId = this.currentStateId;
                 }
 
+                newButton.state = [];
                 // button.state のコピー
-                var srcStates = this.state;
-                var newStates: Model.ButtonState[] = [];
-
-                srcStates.forEach((srcState) => {
-                    let newState = new Model.ButtonState({
-                        stateId: srcState.stateId
-                    });
-                    newState.active = srcState.active;
-
-                    if (srcState.action) {
-                        if (_.isArray(srcState.action)) {
-                            newState.action = $.extend(true, [], srcState.action);
-                        } else {
-                            newState.action = [$.extend(true, {}, srcState.action)];
-                        }
-                    }
-
-                    if (srcState.translate) {
-                        if (_.isArray(srcState.translate)) {
-                            newState.translate = $.extend(true, [], srcState.translate);
-                        } else {
-                            newState.translate = [$.extend(true, {}, srcState.translate)];
-                        }
-                    }
-
-                    if (srcState.image) {
-                        if (_.isArray(srcState.image)) {
-                            newState.image = $.extend(true, [], srcState.image);
-                        } else {
-                            newState.image = [$.extend(true, {}, srcState.image)];
-                        }
-                    }
-
-                    if (srcState.label) {
-                        if (_.isArray(srcState.label)) {
-                            newState.label = $.extend(true, [], srcState.label);
-                        } else {
-                            newState.label = [$.extend(true, {}, srcState.label)];
-                        }
-                    }
-
-                    newStates.push(newState);
-                });
-
-                newButton.state = newStates;
+                for (let state of this.state) {
+                    newButton.state.push(state.clone());
+                }
 
                 return newButton;
             }

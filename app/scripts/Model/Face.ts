@@ -239,7 +239,14 @@ module Garage {
              * @return {Model.Face} コピーされたface。
              */
             clone(): Model.Face {
-                return $.extend(true, {}, this);
+                let cloneFace: Model.Face = $.extend(true, {}, this);
+
+                cloneFace.modules = [];
+                for (let module of this.modules) {
+                    cloneFace.modules.push(module.clone());
+                }
+
+                return cloneFace;
             }
 
             /**

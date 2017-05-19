@@ -38,6 +38,47 @@ module Garage {
                 super(attributes, null);
             }
 
+            clone() {
+                let cloneState = new Model.ButtonState({
+                    stateId: this.stateId
+                });
+                cloneState.active = this.active;
+
+                if (this.action) {
+                    if (_.isArray(this.action)) {
+                        cloneState.action = $.extend(true, [], this.action);
+                    } else {
+                        cloneState.action = [$.extend(true, {}, this.action)];
+                    }
+                }
+
+                if (this.translate) {
+                    if (_.isArray(this.translate)) {
+                        cloneState.translate = $.extend(true, [], this.translate);
+                    } else {
+                        cloneState.translate = [$.extend(true, {}, this.translate)];
+                    }
+                }
+
+                if (this.image) {
+                    if (_.isArray(this.image)) {
+                        cloneState.image = $.extend(true, [], this.image);
+                    } else {
+                        cloneState.image = [$.extend(true, {}, this.image)];
+                    }
+                }
+
+                if (this.label) {
+                    if (_.isArray(this.label)) {
+                        cloneState.label = $.extend(true, [], this.label);
+                    } else {
+                        cloneState.label = [$.extend(true, {}, this.label)];
+                    }
+                }
+
+                return cloneState;
+            }
+
             get stateId(): number {
                 return this.get("stateId");
             }

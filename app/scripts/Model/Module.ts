@@ -86,6 +86,27 @@ module Garage {
                 return true;
             }
 
+            clone() {
+                let cloneModule: Model.Module = $.extend(true, {}, this);
+
+                cloneModule.button = [];
+                for (let button of this.button) {
+                    cloneModule.button.push(button.clone());
+                }
+
+                cloneModule.image = [];
+                for (let image of this.image) {
+                    cloneModule.image.push(image.clone());
+                }
+
+                cloneModule.label = [];
+                for (let label of this.label) {
+                    cloneModule.label.push(label.clone());
+                }
+
+                return cloneModule;
+            }
+
             /*
              * 引数で与えられたModuleをこのオブジェクトにmergeする。
              * 基本的には、moduleに含まれるItemを全て追加して、高さを足す。

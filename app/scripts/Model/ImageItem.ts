@@ -73,25 +73,16 @@ module Garage {
              * @param offsetY {number}
              * @return {ImageItem}
              */
-            public clone(materialsRootPath: string = null, dstRemoteId: string = this.remoteId_, offsetY: number = 0): ImageItem {
+            public clone(): ImageItem {
                 var newImage = new Model.ImageItem({
-                    materialsRootPath: materialsRootPath,
-                    remoteId: dstRemoteId
+                    remoteId: this.remoteId_
                 });
 
-                if (materialsRootPath == null) {
-                    newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
-                }
+                newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
 
                 var newArea: IArea = $.extend(true, {}, this.area);
-                newArea.y += offsetY;
                 newImage.area = newArea;
-                // 画像pathがremoteId（数字4桁）で始まっている場合は、remoteIdを変更
-                if (this.path.match(/\d{4}\//)) {
-                    newImage.path = dstRemoteId + "/" + path.basename(this.path);
-                } else {
-                    newImage.path = this.path;
-                }
+                newImage.path = this.path;
                 newImage.resizeOriginal = this.resizeOriginal;
 
                 if (this.version != null) {
