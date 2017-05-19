@@ -166,34 +166,9 @@ module Garage {
             }
 
             get state(): Model.ButtonState[] {
-                if (this.stateCollection_ && 0 < this.stateCollection_.length) {
-                    let statesData: Model.ButtonState[] = [];
-                    this.stateCollection_.forEach((stateModel, index) => {
-                        let stateData = new Model.ButtonState({
-                            stateId: stateModel.stateId
-                        });
-                        if (stateModel.active !== undefined) {
-                            stateData.active = stateModel.active;
-                        }
-                        if (stateModel.image) {
-                            stateData.image = stateModel.image;
-                        }
-                        if (stateModel.label) {
-                            stateData.label = stateModel.label;
-                        }
-                        if (stateModel.action) {
-                            stateData.action = stateModel.action;
-                        }
-                        if (stateModel.translate) {
-                            stateData.translate = stateModel.translate;
-                        }
-
-                        statesData.push(stateData);
-                    });
-
-                    return statesData;
+                if (this.stateCollection_ != null && this.stateCollection_.models != null) {
+                    return this.stateCollection_.models;
                 }
-                return null;
             }
 
             set state(val: Model.ButtonState[]) {

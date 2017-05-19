@@ -106,16 +106,7 @@ module Garage {
             }
 
             get image(): Model.ImageItem[]{
-                let images: Model.ImageItem[] = [];
-                let imageModels = this.imageCollection_.models;
-                if (imageModels && 0 < imageModels.length) {
-                    imageModels.forEach((imageModel) => {
-                        images.push(imageModel.clone());
-                    });
-                    return images;
-                }
-                return null;
-                //return this.get("image");
+                return this.imageCollection_.models;
             }
 
             set image(val: Model.ImageItem[]) {
