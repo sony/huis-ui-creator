@@ -60,12 +60,9 @@ module Garage {
                     }
                 }
 
-                if (this.image) {
-                    if (_.isArray(this.image)) {
-                        cloneState.image = $.extend(true, [], this.image);
-                    } else {
-                        cloneState.image = [$.extend(true, {}, this.image)];
-                    }
+                cloneState.image = [];
+                for (let image of this.image) {
+                    cloneState.image.push(image.clone());
                 }
 
                 if (this.label) {
