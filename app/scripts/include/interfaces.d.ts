@@ -485,22 +485,6 @@ interface IRemoteInfo {
     mastarFace?: Garage.Model.Face;
 }
 
-//declare const enum EFaceCategory {
-//    TV,
-//    AirConditioner,
-//    Light,
-//    BDDVDRecoder,
-//    BDDBDPlayer,
-//    Audio,
-//    Projector,
-//    SetTopBox,
-//    Fan,
-//    AirCleaner,
-//    PickUp,
-//    FullCustom,
-//    Unknown
-//}
-
 declare module Garage {
     /*
     * HUIS UI CREATOR のバージョン
