@@ -5212,7 +5212,7 @@ module Garage {
 
                         stateData.stateId = state.stateId;
                         let resizeMode: string;
-                        if (state.image) {
+                        if (state.image != null && state.image.length > 0) {
                             stateData.image = state.image[0];
                             let garageImageExtensions = state.image[0].garageExtensions;
                             if (garageImageExtensions) {
