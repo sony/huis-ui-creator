@@ -3456,20 +3456,6 @@ module Garage {
                     }
                 };
 
-                /**
-                 * state 内に image が存在しない場合に、補完する
-                 */
-                var solveImage = function (state: Model.ButtonState) {
-                    if (!state.image || !state.image.length) {
-                        state.image = [new Model.ImageItem({
-                            areaRatio: {
-                                x: 0, y: 0, w: 1, h: 1
-                            },
-                            path: ""
-                        })];
-                    }
-                };
-
                 let props: Object;
                 if (_.isString(param1)) {
                     props = {};
@@ -3549,7 +3535,6 @@ module Garage {
 
                             case "path":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].path = value;
                                 } else {// 未指定の場合は削除
                                     targetState.image = null;
@@ -3558,7 +3543,6 @@ module Garage {
 
                             case "resolved-path":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resolvedPath = value;
                                 } else {
                                     targetState.image = null;
@@ -3567,21 +3551,18 @@ module Garage {
 
                             case "resizeOriginal":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resizeOriginal = value;
                                 }
                                 break;
 
                             case "resizeMode":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resizeMode = value;
                                 }
                                 break;
 
                             case "resized":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resized = true;
                                 }
                                 break;
