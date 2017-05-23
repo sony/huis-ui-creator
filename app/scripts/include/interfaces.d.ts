@@ -401,10 +401,6 @@ interface IImage {
     garage_extensions?: IGarageImageExtensions;
 }
 
-interface IGOutput {
-    Module: IModule[];
-}
-
 /**
  * @interface IModule
  * @brief HUIS の module ファイルの内容にあたる
