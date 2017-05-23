@@ -2694,6 +2694,7 @@ module Garage {
                 }
                 if (targetState.image.length < 1) {
                     targetState.image.push(new Model.ImageItem({
+                        remoteId: remoteId,
                         areaRatio: {
                             x: 0, y: 0, w: 1, h: 1
                         },
