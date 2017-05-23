@@ -79,7 +79,7 @@ module Garage {
             /*
             * すでに描画されているFaceに追加で描画する
             */
-            addFace(inputFace: IGFace) {
+            addFace(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFace : ";
                 switch (this.type_) {
                     case "canvas":
@@ -96,7 +96,7 @@ module Garage {
             /*
             * すでに描画されているFaceに追加で描画する。Canvas以外用。
             */
-            private addFaceAsPlain(inputFace: IGFace) {
+            private addFaceAsPlain(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
                
                 if (this.$facePlane_ == null) {

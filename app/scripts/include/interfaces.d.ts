@@ -428,14 +428,6 @@ interface IGroup {
 }
 
 /**
- * @interface IGFace
- * @brief IFace に対して Garage で使用する情報を付加したもの
- */
-interface IGFace extends IFace {
-    remoteId: string;
-}
-
-/**
  * @interface IFace
  * @breif HUIS の face ファイルの内容にあたる
  */

@@ -688,7 +688,7 @@ module Garage {
                 var $facePallet = $("#face-pallet");
                 $facePallet.find("#face-pages-area").remove();
 
-                var face: IGFace;
+                var face: Model.Face;
                 if (remoteId === "common") {
                     face = huisFiles.getCommonFace();
                     $facePallet.addClass("common-parts");
@@ -708,7 +708,7 @@ module Garage {
 
                 //マスターフェースを表示する。Commonの場合は、無視
                 let isMasterFace: boolean = true;
-                let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
+                let masterFace: Model.Face = huisFiles.getFace(remoteId, isMasterFace);
                 if (masterFace != null && remoteId != "common") {
 
                     //マスターフェースとの境界線にセパレーターを描画

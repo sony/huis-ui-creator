@@ -504,11 +504,11 @@ module Garage {
 
             /*
             * Face中に入力したカテゴリーボタンがあるかチェックする
-            * @param face {IGFace} チェック対象
+            * @param face {Model.Face} チェック対象
             * @param category {string} チェックしたい対象カテゴリー
             * @return {boolean} カテゴリを含んでいるときtrue, 含んでいないときfalse
             */
-            private isIncludeSpecificCategoryButton(face: IGFace, category : string): boolean{
+            private isIncludeSpecificCategoryButton(face: Model.Face, category : string): boolean{
                 let FUNCTION_NAME = TAG + "isIncludeAircondition : ";
 
                 if (face == null) {

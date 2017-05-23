@@ -41,7 +41,7 @@ module Garage {
              *
              * @param title {string} ダイアログに表示するタイトル
              * @param defaultJumpSettings {IJump} 初期選択状態にするリモコンページ設定
-             * @param tmpFace {IGFace} 編集中のリモコン設定（編集中のリモコンも一覧表示する場合に使用）
+             * @param tmpFace {Model.Face} 編集中のリモコン設定（編集中のリモコンも一覧表示する場合に使用）
              */
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: Model.Face) {
                 this.title = title;
@@ -98,7 +98,7 @@ module Garage {
              * HuisFilesと異なり編集中のリモコンも含めた検索を行う。
              *
              * @param remoteId {string} キーとなるremote_id
-             * @return {IGFace} remote_idに該当するFace。存在しない場合はnullを返す。
+             * @return {Model.Face} remote_idに該当するFace。存在しない場合はnullを返す。
              */
             private getFace(remoteId: string): Model.Face {
                 if (this.tmpFace != null &&
@@ -210,7 +210,7 @@ module Garage {
                     }
                 }
 
-                faces.forEach((face: IGFace) => {
+                faces.forEach((face: Model.Face) => {
                     let tmpFaceName: string;
                     if (this.tmpFace &&
                         this.tmpFace.remoteId == face.remoteId) {
@@ -270,7 +270,7 @@ module Garage {
                     return;
                 }
 
-                let face: IGFace = dialog.getFace(remoteId);
+                let face: Model.Face = dialog.getFace(remoteId);
 
                 var faceRenderer: View.FaceRenderer = new View.FaceRenderer({
                     el: $face.find(".face-container"),
@@ -513,7 +513,7 @@ module Garage {
                     return;
                 }
 
-                let face: IGFace = this.getFace(this.selectedSettings.remote_id);
+                let face: Model.Face = this.getFace(this.selectedSettings.remote_id);
                 if (face == null) {
                     console.warn(FUNCTION_NAME + "face not found: " + this.selectedSettings.remote_id);
                     return;

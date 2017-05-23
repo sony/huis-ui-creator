@@ -22,7 +22,7 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
-        export class Face extends Backbone.Model implements IGFace {
+        export class Face extends Backbone.Model {
 
             constructor(remoteId: string, name: string, category: string, modules?: Model.Module[], attributes?: any, options?: any) {
                 super(attributes, options);

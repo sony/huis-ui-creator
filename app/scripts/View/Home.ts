@@ -209,7 +209,7 @@ module Garage {
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
                 var faces = huisFiles.getFilteredFacesByCategories({});
                 var faceList: { remoteId: string, name: string, category: string }[] = [];
-                faces.forEach((face: IGFace) => {
+                faces.forEach((face: Model.Face) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
                     let tmpFaceName: string =face.name;
@@ -248,7 +248,7 @@ module Garage {
                 if (!remoteId) {
                     return;
                 }
-                var face: IGFace = huisFiles.getFace(remoteId);
+                var face: Model.Face = huisFiles.getFace(remoteId);
                 var faceRenderer: FaceRenderer = new FaceRenderer({
                     el: $face.find(".face-container"),
                     attributes: {
@@ -275,7 +275,7 @@ module Garage {
            /**
              * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
              *
-             * @param face {IGFace} コピーを作成するリモコンのface。
+             * @param face {Model.Face} コピーを作成するリモコンのface。
              */
             private _copyAndEditRemote(face: Model.Face) {
 

@@ -160,7 +160,7 @@ module Garage {
              * 
              * @param remoteId {string} [in] 取得したい face の remoteId
              * @paran master {boolean} [in] masterface を取得したい場合は true を指定する。省略した場合は通常の face を返す。
-             * @return {IGFace} face
+             * @return {Model.Face} face
              */
             getFace(remoteId: string, master?: boolean): Model.Face {
                 var remoteInfos: IRemoteInfo[] = this.remoteInfos_;
@@ -202,9 +202,9 @@ module Garage {
              * このメソッドを呼ぶ前に、init() を呼び出す必要がある。
              * 
              * @param condition {Object} [in] 取得したい face 群の category 条件
-             * @return {IGFace[]} 指定した category 条件を満たした face 群
+             * @return {Model.Face[]} 指定した category 条件を満たした face 群
              */
-            getFilteredFacesByCategories(condition: { matchingCategories?: string[], unmatchingCategories?: string[] }, master?: boolean) {
+            getFilteredFacesByCategories(condition: { matchingCategories?: string[], unmatchingCategories?: string[] }, master?: boolean): Model.Face[] {
                 if (!this.faces) {
                     return [];
                 }
@@ -721,7 +721,7 @@ module Garage {
             /**
              * face内に存在する信号名を取得
              */
-            private static getFunctions(face: IGFace): string[] {
+            private static getFunctions(face: Model.Face): string[] {
                 if (!face) {
                     //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
                     return null;
@@ -869,7 +869,7 @@ module Garage {
                     return null;
                 }
 
-                let face: IGFace = this._getFace(remoteId, isMaster);
+                let face: Model.Face = this._getFace(remoteId, isMaster);
                 if (!face) {
                     return null;
                 }
@@ -1054,7 +1054,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
              */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
-                let masterFace: IGFace = this._getFace(remoteId, true);
+                let masterFace: Model.Face = this._getFace(remoteId, true);
                 if (!masterFace) {
                     return null;
                 }
@@ -1826,7 +1826,7 @@ module Garage {
              * @param facePath {string}
              * @param remoteId {string}
              * @param rootDirectory {string}
-             * @return {IGFace}
+             * @return {Model.Face}
              */
             parseFaceWithNumberingFuncName(facePath: string, remoteId: string, rootDirectory?: string): Model.Face {
                 let face: Model.Face = this._parseFace(facePath, remoteId, rootDirectory);
