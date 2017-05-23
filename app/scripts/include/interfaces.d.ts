@@ -233,23 +233,6 @@ interface IStateTranslate {
     next: number;
 }
 
-
-/**
- * @interface Model.ButtonState
- * @brief IState に対して Garage で使用する情報を付加し、image や label を IGXxx に変換したもの
- */
-/*
-interface Model.ButtonState {
-    id?: number;
-    image?: Model.ImageItem[];
-    label?: Model.LabelItem[];
-    action?: IAction[];
-    translate?: IStateTranslate[];
-    active?: boolean;
-    stateId?: number;
-    [x: string]: any;
-}*/
-
 /**
  * @interface IState
  * @brief HUIS の module ファイルにおける button.state にあたる
