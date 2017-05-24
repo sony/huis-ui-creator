@@ -92,17 +92,18 @@ module Garage {
             }
 
             private itemizeLabel(): Model.LabelItem {
-                let newLabel = new Model.LabelItem();
-                let $moduleSeparator = $(".module-separator");
-                newLabel.size = MODULE_SEPARATOR_LABEL_FONT_SIZE;
-                newLabel.font_weight = MODULE_SEPARATOR_LABEL_FONT_WEIGHT;
-
-                newLabel.area.x = BIAS_X_DEFAULT_GRID_LEFT;
-                newLabel.area.y = 0;
-                newLabel.area.w = GRID_AREA_WIDTH;
-                newLabel.area.h = DEFAULT_GRID;
-
-                newLabel.text = this.text;
+                let iLabel = {
+                    size: MODULE_SEPARATOR_LABEL_FONT_SIZE,
+                    area: {
+                        x: BIAS_X_DEFAULT_GRID_LEFT,
+                        y: 0,
+                        w: GRID_AREA_WIDTH,
+                        h: DEFAULT_GRID
+                    },
+                    font_weight: MODULE_SEPARATOR_LABEL_FONT_WEIGHT,
+                    text: this.text
+                }
+                let newLabel = new Model.LabelItem(iLabel);
 
                 return newLabel;
             }

@@ -441,10 +441,12 @@ module Garage {
                     this.setVersionInfoToImageItems(imodule, module.image);
                 }
                 if (imodule.label) {
-                    module.label = $.extend(true, [], imodule.label);
+                    module.label = [];
+                    for (let label of imodule.label) {
+                        module.label.push(new Model.LabelItem(label));
+                    }
                     this.setVersionInfoToLabel(imodule, module.label);
                 }
-
                 this.setInfoFromModule(module);
             }
 

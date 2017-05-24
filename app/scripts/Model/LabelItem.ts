@@ -23,8 +23,11 @@ module Garage {
 
         export class LabelItem extends Item {
 
-            constructor(attributes?: any) {
-                super(attributes, null);
+            constructor(iLabel: ILabel) {
+                // attributes contained in iLabel is set in super constructor
+                super(iLabel, null);
+                // clone customized objects
+                this.area = $.extend(true, {}, iLabel.area);
             }
 
             /**
@@ -34,15 +37,8 @@ module Garage {
              * @return {LabelItem}
              */
             public clone(offsetY: number = 0): LabelItem {
-                let newLabel = new Model.LabelItem();
-                let newArea: IArea = $.extend(true, {}, this.area);
-                newArea.y += offsetY;
-                newLabel.area = newArea;
-                newLabel.text = this.text;
-                newLabel.color = this.color;
-                newLabel.font = this.font;
-                newLabel.size = this.size;
-                newLabel.font_weight = this.font_weight;
+                let newLabel = new Model.LabelItem(this);
+                newLabel.area.y += offsetY;
 
                 //バージョン情報がある場合、コピーする
                 if (this.version) {

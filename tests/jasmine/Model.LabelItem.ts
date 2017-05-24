@@ -8,7 +8,7 @@ module Garage {
 
 			// Called before each test case
 			beforeEach(() => {
-				labelItem = new Model.LabelItem();
+				labelItem = new Model.LabelItem({text: "test"});
 			});
 
 			// Called after each test case

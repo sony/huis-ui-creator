@@ -52,24 +52,7 @@ module Garage {
 
                         let labelModels: Model.LabelItem[] = [];
                         for (let i = 0, l = labels.length; i < l; i++) {
-                            let labelModel: Model.LabelItem = new Model.LabelItem();
-                            labelModel.area = $.extend(true, {}, labels[i].area);
-                            labelModel.text = labels[i].text;
-                            if (_.isNumber(labels[i].color)) {
-                                labelModel.color = labels[i].color;
-                            }
-                            if (_.isString(labels[i].font)) {
-                                labelModel.font = labels[i].font;
-                            }
-                            if (_.isString(labels[i].version)) {
-                                labelModel.version = labels[i].version;
-                            }
-                            if (_.isString(labels[i].font_weight)) {
-                                labelModel.font_weight = FontWeight.exchangeStringToFontWeight(labels[i].font_weight);
-                            }
-                            if (_.isNumber(labels[i].size)) {
-                                labelModel.size = labels[i].size;
-                            }
+                            let labelModel: Model.LabelItem = new Model.LabelItem(labels[i]);
                             labelModels.push(labelModel);
                         }
 

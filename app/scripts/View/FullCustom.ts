@@ -3446,9 +3446,6 @@ module Garage {
 
                     if (!state.label || !state.label.length) {
                         state.label = [new Model.LabelItem({
-                            areaRatio: {
-                                x: 0, y: 0, w: 1, h: 1
-                            },
                             text: "",
                             size: defaltTextSize,
                             font_weight: FontWeight.FONT_BOLD
