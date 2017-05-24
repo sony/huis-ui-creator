@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        export class LabelItem extends Item implements Model.LabelItem {
+        export class LabelItem extends Item {
 
             constructor(attributes?: any) {
                 super(attributes, null);
