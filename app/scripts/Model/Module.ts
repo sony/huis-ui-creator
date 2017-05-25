@@ -24,6 +24,7 @@ module Garage {
 
         export class Module extends Backbone.Model {
 
+            // TODO: change constructor
             constructor(attributes?: any) {
                 super(attributes, null);
                 if (this.button == null) {
@@ -75,6 +76,7 @@ module Garage {
             /**
              * 有効なactionを1つも持っていない場合にtrueを返す。
              */
+            // TODO: move this method to Model.ButtonItem
             public isButtonInvalid(button: Model.ButtonItem): boolean {
                 for (let state of button.state) {
                     for (let action of state.action) {
@@ -142,6 +144,7 @@ module Garage {
                 this.area.h += module.area.h;
             }
 
+            // TODO: Move this method to Model.Module
             public getOutputModuleData(remoteId: string, outputDirPath: string): IModule {
                 var module: IModule = {
                     area: this.area,
@@ -171,6 +174,7 @@ module Garage {
              * Button データから module 化に不要なものを間引く
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
+            // TODO: Move this method to Model.ButtonItem
             private _normalizeButtons(buttons: Model.ButtonItem[], remoteId: string, outputDirPath?:string): IButton[] {
                 var normalizedButtons: IButton[] = [];
 
@@ -196,6 +200,7 @@ module Garage {
              * button.state データから module 化に不要なものを間引く
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
+            // TODO: Move this method to Model.ButtonState
             private _normalizeButtonStates(states: Model.ButtonState[], remoteId: string, outputDirPath? :string): IState[] {
                 var normalizedStates: IState[] = [];
 
@@ -226,6 +231,7 @@ module Garage {
             /**
              * button.state.action データから module 化に不要なものを間引く
              */
+            // TODO: Move this method to Model.ButtonState
             private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
                 var normalizedActions: IAction[] = [];
 
@@ -273,6 +279,7 @@ module Garage {
             /**
              * button.state.translate データから module 化に不要なものを間引く
              */
+            // TODO: Move this method to Model.ButtonState
             private _normalizeButtonStateTranaslates(translates: IStateTranslate[]): IStateTranslate[] {
                 var normalizedTranslates: IStateTranslate[] = [];
 
@@ -289,6 +296,7 @@ module Garage {
             /**
              * Image データから module 化に不要な物を間引く
              */
+            // TODO: Move this method to Model.LabelItem
             private _normalizeLabels(labels: ILabel[]): ILabel[] {
                 var normalizedLabels: ILabel[] = [];
 
@@ -325,6 +333,7 @@ module Garage {
              * リサイズ処理自体はここでは行わない。
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
              */
+            // TODO: Move this method to Model.ImageItem
             private _normalizeImages(images: Model.ImageItem[], remoteId: string, outputDirPath? :string ): IImage[] {
                 var normalizedImages: IImage[] = [];
 
@@ -422,6 +431,7 @@ module Garage {
              */
             public setInfoFromIModule(imodule: IModule, remoteId: string, pageIndex: number, moduleName: string) {
 
+                // TODO: change constructor
                 let module = new Model.Module({
                     offsetY: this.offsetY,
                     remoteId: remoteId,
@@ -450,6 +460,7 @@ module Garage {
                 this.setInfoFromModule(module);
             }
 
+            // TODO: Replace this method with creating new object
             /*
              * 各メンバ変数を設定する。
              * @param {Model.Module} module 必要なパラメータをまとめたオブジェクト。
@@ -758,10 +769,13 @@ module Garage {
              */
             get area(): IArea { return this.get("area"); }
             set area(val: IArea) { this.set("area", val); }
+            // TODO: change name, button to buttons
             get button(): Model.ButtonItem[] { return this.get("button"); }
             set button(val: Model.ButtonItem[]) { this.set("button", val); }
+            // TODO: change name, label to labels
             get label(): Model.LabelItem[] { return this.get("label"); }
             set label(val: Model.LabelItem[]) { this.set("label", val); }
+            // TODO: change name, image to images
             get image(): Model.ImageItem[] { return this.get("image"); }
             set image(val: Model.ImageItem[]) { this.set("image", val); }
             get offsetY(): number { return this.get("offsetY"); }

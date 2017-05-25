@@ -31,6 +31,7 @@ module Garage {
             private initialArea_: IArea;
             private initialResizeMode_: string;
 
+            // TODO: change constructor
             constructor(attributes?: any) {
                 super(attributes, null);
                 if (attributes) {

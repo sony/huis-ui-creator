@@ -252,6 +252,7 @@ module Garage {
                 });
             }
 
+            // TODO: refactor
             /**
              * 機器の master face に記述されている「機能 (function)」 をすべて取得する
              * 

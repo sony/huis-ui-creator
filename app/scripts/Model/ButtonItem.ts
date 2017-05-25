@@ -165,6 +165,7 @@ module Garage {
                 this.set("currentStateId", val);
             }
 
+            // TODO: change name, state to states
             get state(): Model.ButtonState[] {
                 if (this.stateCollection_ != null && this.stateCollection_.models != null) {
                     return this.stateCollection_.models;

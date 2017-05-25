@@ -30,9 +30,11 @@ module Garage {
             private remoteId_: string;
             private buttonItemTemplate_: Tools.JST;
 
+            // TODO: change comment
             /**
              * constructor
              */
+            // TODO: change arguments of constructor
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super();
                 if (options.attributes) {

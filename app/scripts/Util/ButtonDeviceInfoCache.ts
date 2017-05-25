@@ -188,7 +188,7 @@ module Garage {
                 };
             }
 
-
+            // TODO: JSDoc comment
             /**
              * 渡されたModel.Module内のボタン情報をキャッシュファイルに出力
              */

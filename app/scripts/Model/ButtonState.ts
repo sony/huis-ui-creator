@@ -31,6 +31,8 @@ module Garage {
                 };
             }
 
+            // TODO: JSDoc comment
+            // TODO: Change attribute of constructor
             constructor(attributes?: any) {
                 super();
                 this.imageCollection_ = new ImageItemsCollection();
@@ -39,6 +41,7 @@ module Garage {
             }
 
             clone() {
+                // TODO: change constructor
                 let cloneState = new Model.ButtonState({
                     stateId: this.stateId
                 });
@@ -102,6 +105,7 @@ module Garage {
                 });
             }
 
+            // TODO: change name, image to images
             get image(): Model.ImageItem[]{
                 return this.imageCollection_.models;
             }
@@ -111,6 +115,7 @@ module Garage {
                 //this.set("image", val);
             }
 
+            // TODO: change name, label to labels
             get label(): Model.LabelItem[]{
                 return this.get("label");
             }
@@ -119,6 +124,7 @@ module Garage {
                 this.set("label", val);
             }
 
+            // TODO: change name, action to actions
             get action(): IAction[]{
                 return this.get("action");
             }
