@@ -248,7 +248,7 @@ module Garage {
             defaults() {
                 let states: Model.ButtonState[] = [];
 
-                let button = {
+                let button: any = {
                     "enabled": true,
                     area: {
                         x: 0,
