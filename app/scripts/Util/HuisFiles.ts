@@ -409,7 +409,7 @@ module Garage {
 
             /**
             * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
-            * ただし、ご検出の懸念から、Bluetoothは対象外とする
+            * ただし、誤検出の懸念から、Bluetoothは対象外とする
             * @param brand{string} 機器のブランド
             * @param deviceType{string} 機器のタイプ
             * @param codeset{string} 機器のコードセット
