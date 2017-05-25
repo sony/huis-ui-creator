@@ -112,7 +112,6 @@ module Garage {
 
             set image(val: Model.ImageItem[]) {
                 this.imageCollection_.reset(val);
-                //this.set("image", val);
             }
 
             // TODO: change name, label to labels
