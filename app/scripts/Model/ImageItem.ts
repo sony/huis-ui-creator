@@ -69,9 +69,6 @@ module Garage {
             /**
              * ImageItemの複製を生成
              *
-             * @param materialsRootPath {string}
-             * @param dstRemoteId {string}
-             * @param offsetY {number}
              * @return {ImageItem}
              */
             public clone(): ImageItem {
