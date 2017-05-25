@@ -68,11 +68,9 @@ module Garage {
                             if (buttonData.version) {
                                 buttonModel.version = buttonData.version;
                             }
-                            
-                            //buttonModel.set("area", buttonData.area);
+
                             buttonModel.area = buttonData.area;
                             var states = buttonData.state;
-                            //buttonModel.set("state", states);
                             buttonModel.state = states;
                             if (buttonData.default) {
                                 buttonModel.set("default", buttonData.default);

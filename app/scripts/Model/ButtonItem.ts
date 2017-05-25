@@ -182,14 +182,6 @@ module Garage {
                 // stateData を model 化して stateCollection に追加する
                 if (_.isArray(val)) {
                     val.forEach((stateData: Model.ButtonState, index: number) => {
-                        //let stateModel: ButtonState = new ButtonState({
-                        //    stateId: stateData.id,
-                        //    active: stateData.active,
-                        //    action: $.extend(true, [], stateData.action),
-                        //    translate: $.extend(true, [], stateData.translate),
-                        //    image: $.extend(true, [],  stateData.image),
-                        //    label: $.extend(true, [], stateData.label)
-                        //});
                         let stateModel: ButtonState = new ButtonState({
                             materialsRootPath: this.materialsRootPath_, remoteId: this.remoteId
                         });
