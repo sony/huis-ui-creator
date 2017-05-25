@@ -686,7 +686,7 @@ module Garage {
             private _iImages2ImageItems(iImages: IImage[], remoteId: string): Model.ImageItem[] {
 
                 let images: Model.ImageItem[] = [];
-
+                // TODO: Replace this method with creating new object
                 for (let iImage of iImages) {
                     let imageItem = new Model.ImageItem({
                         materialsRootPath: HUIS_FILES_ROOT,
@@ -710,6 +710,7 @@ module Garage {
             private _iState2ButtonStates(iStates: IState[], remoteId: string): Model.ButtonState[] {
                 let states: Model.ButtonState[] = [];
                 for (let iState of iStates) {
+                    // TODO: Replace this method with creating new object
                     let state = new Model.ButtonState();
                     if (!_.isUndefined(iState.id)) {
                         state.stateId = iState.id;
@@ -744,6 +745,7 @@ module Garage {
             private _iButtons2ButtomItems(iButtons: IButton[], remoteId: string): Model.ButtonItem[] {
                 let buttons: Model.ButtonItem[] = [];
                 iButtons.forEach((iButton) => {
+                    // TODO: Replace this method with creating new object
                     let states: Model.ButtonState[] = this._iState2ButtonStates(iButton.state, remoteId);
                     let button = new Model.ButtonItem({
                         materialsRootPath: HUIS_FILES_ROOT,
