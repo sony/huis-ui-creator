@@ -239,8 +239,10 @@ module Garage {
              * @return {Model.Face} コピーされたface。
              */
             clone(): Model.Face {
+                // copy properties
                 let cloneFace: Model.Face = $.extend(true, {}, this);
 
+                // clone customized objects (not deep copied by extend)
                 cloneFace.modules = [];
                 for (let module of this.modules) {
                     cloneFace.modules.push(module.clone());
