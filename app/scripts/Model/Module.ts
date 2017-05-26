@@ -452,6 +452,13 @@ module Garage {
                     imageItem.area = $.extend(true, {}, iImage.area);
                     imageItem.path = iImage.path;
                     imageItem.resizeOriginal = iImage.path;
+                    if (iImage.garage_extensions != null) {
+                        imageItem.garageExtensions = {
+                            original: iImage.garage_extensions.original,
+                            resizeMode: iImage.garage_extensions.resize_mode,
+                            resolvedOriginalPath: ""
+                        }
+                    }
                     images.push(imageItem);
                 }
 
