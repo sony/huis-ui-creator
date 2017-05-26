@@ -105,6 +105,98 @@ module Garage {
             }
 
             /**
+             * Image データから module 化に不要な物を間引く。
+             * また、リモコン編集時に画像のリサイズが発生している場合は、
+             * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
+             * リサイズ処理自体はここでは行わない。
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
+             */
+            convertToHuisData(remoteId: string, outputDirPath?: string): IImage {
+
+                let garageExtensions = this.garageExtensions;
+                if (garageExtensions) {
+                    if (!garageExtensions.original) {
+                        garageExtensions.original = this.path;
+                    }
+                } else {
+                    garageExtensions = {
+                        resizeMode: "contain",
+                        original: this.path,
+                        resolvedOriginalPath: this.resolvedPath
+                    };
+                }
+
+                let convertedImage: IImage;
+
+                // 編集画面でサイズ変更が行われていたら、リサイズ用に path を変更しておく。
+                // リサイズ処理はここでは行わない。
+                // outputDirPathがある場合は必ずする。
+                if (this.resized || outputDirPath != null) {
+
+                    // リサイズ後のファイル名を作る。
+                    // "this.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
+                    // 例) "image_w200_h150_stretch.png"
+                    let originalPath = garageExtensions.original;
+                    let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
+                    if (!resolvedOriginalPath) {
+                        resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                        garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
+                    }
+                    let parsedPath = path.parse(resolvedOriginalPath);
+                    let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + this.area.w + "_h" + this.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+                    // ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
+
+                    let newFileFullPath: string;
+
+                    let newDirPath = parsedPath.dir;
+                    if (outputDirPath != null) {
+                        newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");;
+                    }
+
+                    // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
+                    // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
+                    if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
+                        newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
+                    } else {
+                        newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
+                    }
+                    // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
+                    // 補正は拡張子の付け替え。
+                    newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
+
+                    convertedImage = {
+                        area: this.area,
+                        path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
+                    };
+
+                    // リサイズ待機リストに追加
+                    huisFiles.addWaitingResizeImageList({
+                        src: garageExtensions.resolvedOriginalPath,
+                        dst: newFileFullPath,
+                        params: {
+                            width: this.area.w,
+                            height: this.area.h,
+                            mode: garageExtensions.resizeMode,
+                            force: true,
+                            padding: true
+                        }
+                    });
+                } else {
+                    convertedImage = {
+                        area: this.area,
+                        path: this.path
+                    };
+                }
+
+                convertedImage.garage_extensions = {
+                    original: garageExtensions.original,
+                    resize_mode: garageExtensions.resizeMode
+                };
+
+                return convertedImage;
+            }
+
+            /**
              * getters and setters
              */
             get area(): IArea {

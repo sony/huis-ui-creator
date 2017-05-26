@@ -125,6 +125,31 @@ module Garage {
                 }
             }
 
+            /**
+             * Button データから module 化に不要なものを間引く
+             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             */
+            convertToHuisData(remoteId: string, outputDirPath?: string): IButton {
+
+                let convertedStates = [];
+                for (let state of this.state) {
+                    convertedStates.push(state.convertToHuisData(remoteId, outputDirPath));
+                }
+
+                let convertedButton: IButton = {
+                    area: this.area,
+                    state: convertedStates
+                };
+                if (this.default != null) {
+                    convertedButton.default = this.default;
+                }
+                if (this.name != null) {
+                    convertedButton.name = this.name;
+                }
+
+                return convertedButton;
+            }
+
             get default(): number {
                 return this.get("default");
             }

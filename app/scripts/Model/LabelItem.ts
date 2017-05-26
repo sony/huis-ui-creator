@@ -49,6 +49,31 @@ module Garage {
             }
 
             /**
+             * Image データから module 化に不要な物を間引く
+             */
+            convertToHuisData(): ILabel {
+
+                let convertedLabel: ILabel = {
+                    area: this.area,
+                    text: this.text
+                };
+                if (this.color !== undefined) {
+                    convertedLabel.color = this.color;
+                }
+                if (this.font !== undefined) {
+                    convertedLabel.font = this.font;
+                }
+                if (this.size !== undefined) {
+                    convertedLabel.size = this.size;
+                }
+                if (this.font_weight !== undefined) {
+                    convertedLabel.font_weight = this.font_weight;
+                }
+
+                return convertedLabel;
+            }
+
+            /**
              * getters and setters
              */
             get text(): string {
