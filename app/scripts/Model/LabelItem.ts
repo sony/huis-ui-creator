@@ -77,6 +77,10 @@ module Garage {
                 return convertedLabel;
             }
 
+            private _isBold(): boolean {
+                return this.font_weight === FontWeight.FONT_BOLD;
+            }
+
             /**
              * getters and setters
              */
