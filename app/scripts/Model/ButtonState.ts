@@ -68,12 +68,9 @@ module Garage {
                     cloneState.image.push(image.clone());
                 }
 
-                if (this.label) {
-                    if (_.isArray(this.label)) {
-                        cloneState.label = $.extend(true, [], this.label);
-                    } else {
-                        cloneState.label = [$.extend(true, {}, this.label)];
-                    }
+                cloneState.label = [];
+                for (let label of this.label) {
+                    cloneState.label.push(label.clone());
                 }
 
                 return cloneState;
