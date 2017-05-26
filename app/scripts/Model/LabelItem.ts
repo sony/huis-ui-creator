@@ -143,6 +143,7 @@ module Garage {
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
+            // TODO: review default attrs
             defaults() {
 
                 var defaultAttr = {

@@ -179,6 +179,7 @@ module Garage {
                 } else {
                     this.stateCollection_.reset();
                 }
+                // TODO: delete following
                 // stateData を model 化して stateCollection に追加する
                 if (_.isArray(val)) {
                     val.forEach((stateData: Model.ButtonState, index: number) => {
@@ -234,6 +235,7 @@ module Garage {
                 return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
             }
 
+            // TODO: delete
             /**
              * アイテムの種類
              */
@@ -241,6 +243,7 @@ module Garage {
                 return "button";
             }
 
+            // TODO: review default attrs
             /**
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
@@ -266,6 +269,8 @@ module Garage {
             }
 
 
+            // TODO: destroy and validate methods are copy-and-pasted, need review
+            // http://tnakamura.hatenablog.com/entry/2013/02/07/135119
 
             /**
              * destroy をオーバーライド。
