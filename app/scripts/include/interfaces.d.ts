@@ -233,22 +233,6 @@ interface IStateTranslate {
     next: number;
 }
 
-
-/**
- * @interface IGState
- * @brief IState に対して Garage で使用する情報を付加し、image や label を IGXxx に変換したもの
- */
-interface IGState {
-    id?: number;
-    image?: IGImage[];
-    label?: IGLabel[];
-    action?: IAction[];
-    translate?: IStateTranslate[];
-    active?: boolean; /* アクティブな状態かどうか */
-    stateId?: number;
-    [x: string]: any;
-}
-
 /**
  * @interface IState
  * @brief HUIS の module ファイルにおける button.state にあたる
@@ -278,23 +262,6 @@ interface IState {
      * state が有効であるか
      */
     active?: boolean;
-}
-
-/**
- * @interface IGState
- * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
- */
-interface IGButton {
-    version?: string;
-    area: IArea;
-    default?: number;
-    state: IGState[];
-    name?: string;
-    /**
-     * 現在の state.id
-     */
-    currentStateId: number;
-    [x: string]: any;
 }
 
 /**
@@ -348,29 +315,6 @@ interface IStringStringHash {
 interface IStringKeyValue {
     key: string;
     value: string;
-}
-
-/**
- * @interface IGLabel
- * @brief ILabel に対して Garage で使用する情報を付加したもの
- */
-interface IGLabel {
-    version?: string;
-    area?: IArea;
-    text: string;
-    color?: number;
-    font?: string;
-    size?: number;
-    font_weight?: FontWeight;//normal | bold
-    /**
-     * 親要素の area に対してのこのアイテムの area の比率
-     */
-    areaRatio?: IGAreaRatio;
-    /**
-     * 16階調のグレイスケールを rgb() 表記したものが格納される
-     */
-    resolvedColor?: string;
-    [x: string]: any;
 }
 
 /**
@@ -431,27 +375,6 @@ interface IGarageImageExtensions {
 }
 
 /**
- * @interface IGImage
- * @brief IImage に Garage で使用する情報を付加したもの
- */
-interface IGImage {
-    version?: string;
-    area?: IArea;
-    path: string;
-    resolvedPath?: string; //<!image.path を絶対パスに変換したもの
-    resolvedPathCSS?: string;//CSSで表示できる状態のパス
-    garageExtensions?: IGGarageImageExtensions;
-    areaRatio?: IGAreaRatio;
-    pageBackground?: boolean;
-    resized?: boolean; //<!リサイズが行われたかどうか
-    resizeMode?: string;
-    resizeOriginal?: string;
-    resizeResolvedOriginalPath?: string;
-    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
-    [x: string]: any;
-}
-
-/**
  * @interface IImage
  * @brief HUIS の module ファイルにおける image にあたる
  */
@@ -459,27 +382,6 @@ interface IImage {
     area?: IArea;
     path?: string;
     garage_extensions?: IGarageImageExtensions;
-}
-
-interface IGOutput {
-    Module: IModule[];
-}
-
-/**
- * @interface IGModule
- * @brief IModule に対して Garage で使用する情報を付加したもの
- */
-interface IGModule {
-    version?: string;
-    area: IArea;
-    button?: IGButton[];
-    label?: IGLabel[];
-    image?: IGImage[];
-    offsetY: number; //!< ページ内のモジュールの y 座標
-    pageIndex: number; //!< ページ番号 (最初のページが 0
-    remoteId: string; //!< モジュールが属する face の ID
-    name: string; //!< モジュールの名前
-    group?: IGroup;
 }
 
 /**
@@ -502,14 +404,6 @@ interface IModule {
 interface IGroup {
     name: string;
     original_remote_id: number;
-}
-
-/**
- * @interface IGFace
- * @brief IFace に対して Garage で使用する情報を付加したもの
- */
-interface IGFace extends IFace {
-    remoteId: string;
 }
 
 /**
@@ -590,22 +484,6 @@ interface IRemoteInfo {
     face: Garage.Model.Face;
     mastarFace?: Garage.Model.Face;
 }
-
-//declare const enum EFaceCategory {
-//    TV,
-//    AirConditioner,
-//    Light,
-//    BDDVDRecoder,
-//    BDDBDPlayer,
-//    Audio,
-//    Projector,
-//    SetTopBox,
-//    Fan,
-//    AirCleaner,
-//    PickUp,
-//    FullCustom,
-//    Unknown
-//}
 
 declare module Garage {
     /*

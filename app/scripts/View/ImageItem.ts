@@ -51,7 +51,7 @@ module Garage {
                     // images が非配列で格納されていたら、、配列として格納する
                     let unknownTypeImage = options.attributes["images"];
                     if (unknownTypeImage) {
-                        let images: IGImage[] = [];
+                        let images: Model.ImageItem[] = [];
                         if (_.isArray(unknownTypeImage)) {
                             images = unknownTypeImage;
                         } else {
@@ -149,14 +149,14 @@ module Garage {
             /**
              * ImageItem View がもつすべての ImageItem を返す。
              * 
-             * @return {IGImage[]} ImageItem View がもつ ImageItem
+             * @return {Model.ImageItem[]} ImageItem View がもつ ImageItem
              */
-            getImages(): IGImage[] {
+            getImages(): Model.ImageItem[] {
                 // enabled でない model を間引く 
                 var imageModels = this.collection.models.filter((model) => {
                     return model.enabled;
                 });
-                var images: IGImage[] = $.extend(true, [], imageModels);
+                var images: Model.ImageItem[] = $.extend(true, [], imageModels);
 
                 return images;
             }
@@ -165,7 +165,7 @@ module Garage {
              * collection に ImageItem が追加されたら、追加されたものをレンダリングする
              */
             private _renderNewModel(model: Model.ImageItem) {
-                var image: IGImage = $.extend(true, {}, model);
+                var image: Model.ImageItem = $.extend(true, {}, model);
                 if (!image.resolvedPath && this.materialsRootPath_) {
                     let imagePath = image.path;
                     if (imagePath) {

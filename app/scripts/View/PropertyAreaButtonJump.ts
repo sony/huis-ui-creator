@@ -19,16 +19,16 @@ module Garage {
              * constructor
              * @param remoteId {string} 編集中のリモコンの remote_id
              * @param faceName {string} 編集中のリモコン名
-             * @param gmodules {Model.Module[]} 編集中のリモコンのモジュール
+             * @param modules {Model.Module[]} 編集中のリモコンのモジュール
              */
-            constructor(remoteId: string, faceName: string, gmodules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(remoteId: string, faceName: string, modules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;
-                this.gmodules = gmodules;
+                this.modules = modules;
 
-                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, gmodules);
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, modules);
             }
 
 
@@ -121,7 +121,7 @@ module Garage {
                 let $stateDetail = $(templateState(stateData));
 
                 //テキストラベルの大きさの設定値を反映する。
-                var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.stateId + "\"]");
                 if (!_.isUndefined(stateData.label)) {
                     var textSizeString: string = stateData.label.size;
                     $textSize.val(textSizeString);
@@ -165,7 +165,7 @@ module Garage {
                 let newActions: IAction[] = [ newAction ];
                 this.defaultState.action = newActions;
 
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
                 states.push(this.defaultState);
 
                 this.model.state = states;
@@ -175,9 +175,9 @@ module Garage {
             /**
              * ActionのPullDownを変更する
              *
-             * @param state {IGState}
+             * @param state {Model.ButtonState}
              */
-            private setActionPullDown(state: IGState) {
+            private setActionPullDown(state: Model.ButtonState) {
                 let FUNCTION_NAME = TAG + "changeActionPullDown : ";
 
                 let actions: IAction[] = state.action;
@@ -190,7 +190,7 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.id + "\"]");
+                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
@@ -204,7 +204,7 @@ module Garage {
                 let dialog = new Util.SelectRemotePageDialog(
                     $.i18n.t("dialog.title.STR_DIALOG_TITLE_SELECT_JUMP"),
                     this.getJumpSettings(),
-                    huisFiles.createTmpFace(this.remoteId, this.faceName, this.gmodules));
+                    huisFiles.createTmpFace(this.remoteId, this.faceName, this.modules));
 
                 dialog.show((result) => {
                     this.updateJumpSettings(result);

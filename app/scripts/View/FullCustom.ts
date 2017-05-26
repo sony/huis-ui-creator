@@ -43,7 +43,7 @@ module Garage {
             ring_left: string;
         }
 
-        interface IStateDetail extends IGState {
+        interface IStateDetail extends Model.ButtonState {
             actionList?: IActionList;
             actionListTranslate?: IActionList;
         }
@@ -149,15 +149,15 @@ module Garage {
                         this.setAddPageButtonEnabled(false);
                     }
 
-                    var gmodules = this.faceRenderer_canvas_.getModules();
+                    var modules = this.faceRenderer_canvas_.getModules();
 
                     // ボタンに設定された信号名を基リモコンに合わせる
-                    huisFiles.applyNumberedFunctionName(gmodules);
+                    huisFiles.applyNumberedFunctionName(modules);
 
                     this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
-                    this.buttonDeviceInfoCache.load(gmodules);
+                    this.buttonDeviceInfoCache.load(modules);
                     // ボタンに設定された信号名をキャッシュに合わせる
-                    huisFiles.applyCachedFunctionName(gmodules);
+                    huisFiles.applyCachedFunctionName(modules);
 
                     this.itemResizerTemplate_ = Tools.Template.getJST("#template-item-resizer", this.templateFullCustomFile_);
 
@@ -688,7 +688,7 @@ module Garage {
                 var $facePallet = $("#face-pallet");
                 $facePallet.find("#face-pages-area").remove();
 
-                var face: IGFace;
+                var face: Model.Face;
                 if (remoteId === "common") {
                     face = huisFiles.getCommonFace();
                     $facePallet.addClass("common-parts");
@@ -708,7 +708,7 @@ module Garage {
 
                 //マスターフェースを表示する。Commonの場合は、無視
                 let isMasterFace: boolean = true;
-                let masterFace: IGFace = huisFiles.getFace(remoteId, isMasterFace);
+                let masterFace: Model.Face = huisFiles.getFace(remoteId, isMasterFace);
                 if (masterFace != null && remoteId != "common") {
 
                     //マスターフェースとの境界線にセパレーターを描画
@@ -2693,12 +2693,13 @@ module Garage {
                     targetState.image = [];
                 }
                 if (targetState.image.length < 1) {
-                    targetState.image.push({
+                    targetState.image.push(new Model.ImageItem({
+                        remoteId: remoteId,
                         areaRatio: {
                             x: 0, y: 0, w: 1, h: 1
                         },
                         path: ""
-                    });
+                    }));
                 }
                 // 画像は remoteimages/[remoteId]/ 以下に配置される。
                 // image.path には remoteimages 起点の画像パスを指定する。
@@ -2751,10 +2752,10 @@ module Garage {
                     if (states) {
                         // 未使用の stateId を探す
                         let sortedStates = states.sort((state1, state2) => {
-                            return state1.id - state2.id;
+                            return state1.stateId - state2.stateId;
                         });
                         sortedStates.forEach((state) => {
-                            if (newStateId === state.id) {
+                            if (newStateId === state.stateId) {
                                 newStateId++;
                             }
                         });
@@ -2766,9 +2767,9 @@ module Garage {
                     if (!this.currentTargetButtonStates_) {
                         this.currentTargetButtonStates_ = [];
                     }
-                    this.currentTargetButtonStates_.push({
-                        id: newStateId
-                    });
+                    this.currentTargetButtonStates_.push(new Model.ButtonState({
+                        stateId: newStateId
+                    }));
                     this.currentTargetButtonStatesUpdated_ = true;
 
                     this._updateCurrentModelButtonStatesData();
@@ -2794,7 +2795,7 @@ module Garage {
                 var targetStateIndex = -1;
                 for (let i = 0, l = this.currentTargetButtonStates_.length; i < l && targetStateIndex < 0; i++) {
                     let state = this.currentTargetButtonStates_[i];
-                    if (state.id === stateId) {
+                    if (state.stateId === stateId) {
                         targetStateIndex = i;
                     }
                 }
@@ -2877,7 +2878,7 @@ module Garage {
                     return;
                 }
 
-                let gmodules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
+                let modules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
                 let remoteId = this.faceRenderer_canvas_.getRemoteId();
                 let faceName: string = $("#input-face-name").val();
 
@@ -2889,7 +2890,7 @@ module Garage {
                 });
                 dialog.show().css("color", "white");
 
-                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM,gmodules);
+                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM,modules);
 
                 huisFiles.updateFace(inputFace, this.buttonDeviceInfoCache)
                     .always(() => {
@@ -3214,21 +3215,24 @@ module Garage {
                         case "state": //ボタンの画像などを変更した際の、変更
                             {
                                 if (itemType === "button") {
-                                    let targetButton :IGButton = $.extend(true, {}, targetModel);
+                                    let targetButton: Model.ButtonItem;
+                                    if (targetModel instanceof Model.ButtonItem) {
+                                        targetButton = targetModel.clone();
+                                    }
                                     var states = value;
 
                                     //ターゲットのstateIdはモデルに記載されているdefault値、もし値がない場合0に。
                                     let stateId: number = targetButton.default;
 
-                                    var currentStates: IGState[] = $.extend(true, [], states);
+                                    var currentStates: Model.ButtonState[] = $.extend(true, [], states);
 
-                                    let targetStates: IGState[];
+                                    let targetStates: Model.ButtonState[];
                                     if (_.isUndefined(stateId)) {
                                         // stateId が指定されていない場合は、全 state を更新
                                         targetStates = states;
                                     } else {
                                         targetStates = states.filter((state) => {
-                                            return state.id === stateId;
+                                            return state.stateId === stateId;
                                         });
                                     }
 
@@ -3260,7 +3264,7 @@ module Garage {
 
                                     
 
-                                    targetStates.forEach((targetState: IGState) => {
+                                    targetStates.forEach((targetState: Model.ButtonState) => {
 
                                         //"text", "size", "path", "resolved-path", "resizeMode"すべてが変化したとみなす。
                                         let props = {};
@@ -3426,9 +3430,9 @@ module Garage {
                 /**
                  * state 内に label が存在しない場合に、補完する
                  */
-                var solveLabel = function (state: IGState) {
+                var solveLabel = function (state: Model.ButtonState) {
                     var defaltTextSize = 30;
-                    let localStateId = state.id;
+                    let localStateId = state.stateId;
 
                     var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
 
@@ -3441,28 +3445,11 @@ module Garage {
                     }
 
                     if (!state.label || !state.label.length) {
-                        state.label = [{
-                            areaRatio: {
-                                x: 0, y: 0, w: 1, h: 1
-                            },
+                        state.label = [new Model.LabelItem({
                             text: "",
                             size: defaltTextSize,
                             font_weight: FontWeight.FONT_BOLD
-                        }];
-                    }
-                };    
-
-                /**
-                 * state 内に image が存在しない場合に、補完する
-                 */
-                var solveImage = function (state: IGState) {
-                    if (!state.image || !state.image.length) {
-                        state.image = [{
-                            areaRatio: {
-                                x: 0, y: 0, w: 1, h: 1
-                            },
-                            path: ""
-                        }];
+                        })];
                     }
                 };
 
@@ -3483,9 +3470,9 @@ module Garage {
                     console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
                     return;
                 }
-                var currentStates: IGState[] = $.extend(true, [], states);
+                var currentStates: Model.ButtonState[] = $.extend(true, [], states);
 
-                let targetStates: IGState[];
+                let targetStates: Model.ButtonState[];
                 if (_.isUndefined(stateId) ) {
                     // stateId が指定されていない場合は、全 state を更新
                     targetStates = states;
@@ -3494,7 +3481,7 @@ module Garage {
                     targetStates = states;
                 } else {
                     targetStates = states.filter((state) => {
-                        return state.id === stateId;
+                        return state.stateId === stateId;
                     });
                 }
 
@@ -3521,7 +3508,7 @@ module Garage {
                     return;
                 }
 
-                targetStates.forEach((targetState: IGState) => {
+                targetStates.forEach((targetState: Model.ButtonState) => {
 
                     let keys = Object.keys(props);
                     keys.forEach((key) => {
@@ -3545,7 +3532,6 @@ module Garage {
 
                             case "path":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].path = value;
                                 } else {// 未指定の場合は削除
                                     targetState.image = null;
@@ -3554,7 +3540,6 @@ module Garage {
 
                             case "resolved-path":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resolvedPath = value;
                                 } else {
                                     targetState.image = null;
@@ -3563,21 +3548,18 @@ module Garage {
 
                             case "resizeOriginal":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resizeOriginal = value;
                                 }
                                 break;
 
                             case "resizeMode":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resizeMode = value;
                                 }
                                 break;
 
                             case "resized":
                                 if (value) {
-                                    solveImage(targetState);
                                     targetState.image[0].resized = true;
                                 }
                                 break;
@@ -3585,7 +3567,7 @@ module Garage {
                             default:
 
                         }
-                        let currentStateId = targetState.id;
+                        let currentStateId = targetState.stateId;
                         this.updateButtonOnCanvas(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
 
                     
@@ -3629,7 +3611,7 @@ module Garage {
             *  @buttonAreaW{number} 変更対象のボタンのW
             *  @buttonAreaH{number} 変更対象のボタンのH
             */
-            private updateButtonOnCanvas(stateId: number, key: string, value, targetState: IGState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
+            private updateButtonOnCanvas(stateId: number, key: string, value, targetState: Model.ButtonState, $targetStateElem:JQuery, buttonAreaW : number, buttonAreaH :number) {
                     // canvas 上のスタイルと詳細エリアの更新
                         switch (key) {
                             case "text":
@@ -3781,7 +3763,7 @@ module Garage {
                     return undefined;
                 }
                 var targetStates = this.currentTargetButtonStates_.filter((state) => {
-                    return state.id === stateId;
+                    return state.stateId === stateId;
                 });
                 if (!targetStates || !targetStates.length) {
                     return undefined;
@@ -5192,14 +5174,14 @@ module Garage {
 
                     checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
                         return (
-                            (button.default == state.id) &&
+                            (button.default == state.stateId) &&
                             (((state.image != null) && (state.image[0] != null)) ||
                                 ((state.label != null) && (state.label[0] != null)))
                         );
                     });
                    
                     if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                        button.default = this.currentTargetButtonStates_[0].id; // 先頭のをdefault値として設定
+                        button.default = this.currentTargetButtonStates_[0].stateId; // 先頭のをdefault値として設定
                     }
 
 
@@ -5207,9 +5189,9 @@ module Garage {
                     this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
                         let stateData: any = {};
 
-                        stateData.id = state.id;
+                        stateData.stateId = state.stateId;
                         let resizeMode: string;
-                        if (state.image) {
+                        if (state.image != null && state.image.length > 0) {
                             stateData.image = state.image[0];
                             let garageImageExtensions = state.image[0].garageExtensions;
                             if (garageImageExtensions) {
@@ -5230,7 +5212,7 @@ module Garage {
                         this._setActionListToState(state);
 
                         if (this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
-                            if (state.id != button.default) return;
+                            if (state.stateId != button.default) return;
                         }
 
                         let $stateDetail = $(templateState(stateData));
@@ -5238,14 +5220,14 @@ module Garage {
 
 
                         //テキストラベルの大きさの設定値を反映する。
-                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.id + "\"]");
+                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.stateId + "\"]");
                         if (!_.isUndefined(stateData.label)) {
                             var textSizeString: string = stateData.label.size;
                             $textSize.val(textSizeString);
                         }
 
                         //信号コンテナを描画
-                        $statesContainer.append(this.buttonProperty.renderViewState(state.id));
+                        $statesContainer.append(this.buttonProperty.renderViewState(state.stateId));
 
                         // 文言あて・ローカライズ
                         $statesContainer.i18n();

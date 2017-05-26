@@ -43,7 +43,7 @@ module Garage {
                 if (options.attributes) {
                     let unknownTypeLabel = options.attributes["labels"];
                     if (unknownTypeLabel) {
-                        let labels: IGLabel[] = [];
+                        let labels: Model.LabelItem[] = [];
                         if (_.isArray(unknownTypeLabel)) {
                             labels = unknownTypeLabel;
                         } else {
@@ -52,24 +52,7 @@ module Garage {
 
                         let labelModels: Model.LabelItem[] = [];
                         for (let i = 0, l = labels.length; i < l; i++) {
-                            let labelModel: Model.LabelItem = new Model.LabelItem();
-                            labelModel.area = $.extend(true, {}, labels[i].area);
-                            labelModel.text = labels[i].text;
-                            if (_.isNumber(labels[i].color)) {
-                                labelModel.color = labels[i].color;
-                            }
-                            if (_.isString(labels[i].font)) {
-                                labelModel.font = labels[i].font;
-                            }
-                            if (_.isString(labels[i].version)) {
-                                labelModel.version = labels[i].version;
-                            }
-                            if (_.isString(labels[i].font_weight)) {
-                                labelModel.font_weight = FontWeight.exchangeStringToFontWeight(labels[i].font_weight);
-                            }
-                            if (_.isNumber(labels[i].size)) {
-                                labelModel.size = labels[i].size;
-                            }
+                            let labelModel: Model.LabelItem = new Model.LabelItem(labels[i]);
                             labelModels.push(labelModel);
                         }
 
@@ -89,7 +72,7 @@ module Garage {
 
             render(): LabelItem {
                 this.collection.each((item: Model.LabelItem, index: number) => {
-                    let label: IGLabel = $.extend(true, {}, item);
+                    let label: Model.LabelItem = $.extend(true, {}, item);
                     //label.resolvedColor = this._getResolvedColor(label.color);
 
                     //HUISとGarageで大きさが異なるために表示用に補正する。
@@ -107,14 +90,14 @@ module Garage {
             /**
              * LabelItem View がもつすべての LabelItem を返す。
              * 
-             * @return {IGLabel[]} LabelItem View がもつ LabelItem
+             * @return {Model.LabelItem[]} LabelItem View がもつ LabelItem
              */
-            getLabels(): IGLabel[] {
+            getLabels(): Model.LabelItem[] {
                 // enabled でない model を間引く 
                 var labelModels = this.collection.models.filter((model) => {
                     return model.enabled;
                 });
-                var labels: IGLabel[] = $.extend(true, [], labelModels);
+                var labels: Model.LabelItem[] = $.extend(true, [], labelModels);
 
                 return labels;
             }
@@ -123,7 +106,7 @@ module Garage {
              * collection に LabelItem が追加されたら、追加分をレンダリングする
              */
             private _renderNewModel(model: Model.LabelItem) {
-                var label: IGLabel = $.extend(true, {}, model);
+                var label: Model.LabelItem = $.extend(true, {}, model);
                 label.resolvedColor = model.resolvedColor;
                 let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
                 //HUISとGarageで大きさが異なるために表示用に補正する。

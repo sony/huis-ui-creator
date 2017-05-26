@@ -22,7 +22,7 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
-        export class Face extends Backbone.Model implements IGFace {
+        export class Face extends Backbone.Model {
 
             constructor(remoteId: string, name: string, category: string, modules?: Model.Module[], attributes?: any, options?: any) {
                 super(attributes, options);
@@ -180,10 +180,10 @@ module Garage {
             /**
              * 引数で与えられたImageを、引数で与えられたremoteIdの画像ディレクトリ(例：HuisFiles/remoteimages/0000)にコピーする。
              *
-             * @param {IGImage[]} images 変更対象のImage。
+             * @param {Model.ImageItem[]} images 変更対象のImage。
              * @param {string} remoteId 変更先となる画像ディレクトリのremoteId。
              */
-            private _copyImage(images: IGImage[], remoteId: string) {
+            private _copyImage(images: Model.ImageItem[], remoteId: string) {
                 for (let image of images) {
                     // Copy resized image referenced from image.path
                     if (image.path != null) {
@@ -214,10 +214,10 @@ module Garage {
              * このFaceに含まれるImageを全て検索する。
              * 具体的には、Moduleに含まれるImage、Button.Stateに含まれるImageを全て検索する。
              *
-             * @return {IGImage[]} 検索されたImage。
+             * @return {Model.ImageItem[]} 検索されたImage。
              */
-            private _searchImages(): IGImage[] {
-                let images: IGImage[] = [];
+            private _searchImages(): Model.ImageItem[] {
+                let images: Model.ImageItem[] = [];
                 for (let module of this.modules) {
                     if (module.image != null) {
                         images = images.concat(module.image);
@@ -239,7 +239,16 @@ module Garage {
              * @return {Model.Face} コピーされたface。
              */
             clone(): Model.Face {
-                return $.extend(true, {}, this);
+                // copy properties
+                let cloneFace: Model.Face = $.extend(true, {}, this);
+
+                // clone customized objects (not deep copied by extend)
+                cloneFace.modules = [];
+                for (let module of this.modules) {
+                    cloneFace.modules.push(module.clone());
+                }
+
+                return cloneFace;
             }
 
             /**

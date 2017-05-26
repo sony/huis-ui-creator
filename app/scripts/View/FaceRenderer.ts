@@ -53,9 +53,9 @@ module Garage {
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
                     let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
-                    let gmodule = new Model.Module();
-                    gmodule.setInfo(remoteId, 0);
-                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [gmodule]);
+                    let module = new Model.Module();
+                    module.setInfo(remoteId, 0);
+                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [module]);
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
@@ -79,7 +79,7 @@ module Garage {
             /*
             * すでに描画されているFaceに追加で描画する
             */
-            addFace(inputFace: IGFace) {
+            addFace(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFace : ";
                 switch (this.type_) {
                     case "canvas":
@@ -96,7 +96,7 @@ module Garage {
             /*
             * すでに描画されているFaceに追加で描画する。Canvas以外用。
             */
-            private addFaceAsPlain(inputFace: IGFace) {
+            private addFaceAsPlain(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
                
                 if (this.$facePlane_ == null) {
@@ -311,7 +311,7 @@ module Garage {
              * Module View がもつすべての module を取得する。
              * 
              * @param areaFilter module の area によるフィルタ
-             * @return {IGModule[]} Module View がもつ module の配列
+             * @return {Model.Module[]} Module View がもつ module の配列
              */
             getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 return this.moduleView_.getModules(areaFilter);
@@ -321,9 +321,9 @@ module Garage {
              * 指定された ID の module を取得する。
              * 
              * @param moduleId {string} [in] 取得する module の ID
-             * @return {IGModule} 指定された ID の module
+             * @return {Model.Module} 指定された ID の module
              */
-            getModule(moduleId: string): IGModule {
+            getModule(moduleId: string): Model.Module {
                 return this.moduleView_.getModule(moduleId);
             }
 

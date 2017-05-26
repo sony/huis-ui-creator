@@ -21,10 +21,13 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        export class LabelItem extends Item implements IGLabel {
+        export class LabelItem extends Item {
 
-            constructor(attributes?: any) {
-                super(attributes, null);
+            constructor(iLabel: ILabel) {
+                // attributes contained in iLabel is set in super constructor
+                super(iLabel, null);
+                // clone customized objects
+                this.area = $.extend(true, {}, iLabel.area);
             }
 
             /**
@@ -34,15 +37,8 @@ module Garage {
              * @return {LabelItem}
              */
             public clone(offsetY: number = 0): LabelItem {
-                let newLabel = new Model.LabelItem();
-                let newArea: IArea = $.extend(true, {}, this.area);
-                newArea.y += offsetY;
-                newLabel.area = newArea;
-                newLabel.text = this.text;
-                newLabel.color = this.color;
-                newLabel.font = this.font;
-                newLabel.size = this.size;
-                newLabel.font_weight = this.font_weight;
+                let newLabel = new Model.LabelItem(this);
+                newLabel.area.y += offsetY;
 
                 //バージョン情報がある場合、コピーする
                 if (this.version) {
@@ -69,6 +65,24 @@ module Garage {
 
             set version(val: string) {
                 this.set("version", val);
+            }
+
+            get areaRatio(): IGAreaRatio {
+                let areaRatio: IGAreaRatio = this.get("areaRatio");
+                if (!areaRatio) {
+                    // 未指定の場合は、親要素の全体の領域として返す
+                    areaRatio = {
+                        x: 0,
+                        y: 0,
+                        w: 1,
+                        h: 1
+                    };
+                }
+                return areaRatio;
+            }
+
+            set areaRatio(val: IGAreaRatio) {
+                this.set("areaRatio", val);
             }
 
             get color(): number {
@@ -131,7 +145,7 @@ module Garage {
              */
             defaults() {
 
-                var label: IGLabel = {
+                var defaultAttr = {
                     "enabled": true,
                     "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
                     "text": "",
@@ -142,7 +156,7 @@ module Garage {
                     "font_weight" : FontWeight.FONT_BOLD,
                 };
 
-                return label;
+                return defaultAttr;
             }
 
             /**
