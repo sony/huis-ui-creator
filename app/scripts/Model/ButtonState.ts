@@ -77,8 +77,11 @@ module Garage {
             }
 
             /**
-             * button.state データから module 化に不要なものを間引く
-             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             * Model.ButtonStateをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonStateが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IState} 変換されたデータ
              */
             convertToHuisData(remoteId: string, outputDirPath?: string): IState {
 

@@ -49,7 +49,11 @@ module Garage {
             }
 
             /**
-             * Image データから module 化に不要な物を間引く
+             * Model.LabelItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このLabelItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {ILabel} 変換されたデータ
              */
             convertToHuisData(): ILabel {
 

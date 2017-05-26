@@ -144,6 +144,14 @@ module Garage {
                 this.area.h += module.area.h;
             }
 
+            /**
+             * Model.ModuleをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このmoduleが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IModule} 変換されたデータ
+             */
+            // TODO: remove remoteId from arguments
             convertToHuisData(remoteId: string, outputDirPath: string): IModule {
                 var module: IModule = {
                     area: this.area,

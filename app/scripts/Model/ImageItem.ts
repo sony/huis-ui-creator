@@ -105,11 +105,15 @@ module Garage {
             }
 
             /**
-             * Image データから module 化に不要な物を間引く。
+             * Image データから module 化に不要な物を間引いて、
+             * HUIS出力用のデータ形式に変換する。
              * また、リモコン編集時に画像のリサイズが発生している場合は、
              * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
              * リサイズ処理自体はここでは行わない。
-             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する
+             *
+             * @param {string} remoteId このButtonStateが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IImage} 変換されたデータ
              */
             convertToHuisData(remoteId: string, outputDirPath?: string): IImage {
 

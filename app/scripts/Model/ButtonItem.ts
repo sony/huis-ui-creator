@@ -126,8 +126,11 @@ module Garage {
             }
 
             /**
-             * Button データから module 化に不要なものを間引く
-             * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
+             * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {IButton} 変換されたデータ
              */
             convertToHuisData(remoteId: string, outputDirPath?: string): IButton {
 
