@@ -422,7 +422,7 @@ interface IFace {
     /**
      * face が参照する module (module ファイルを展開したもの)
      */
-    modules: Garage.Model.Module[];
+    modules: IModule[];
 }
 
 /**
