@@ -54,7 +54,7 @@
                 <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
                 {{/image}}
                 {{#label}}
-                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
+                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
                 {{/label}}
                 {{^label}}
                 <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>

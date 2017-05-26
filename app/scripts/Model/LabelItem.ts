@@ -49,6 +49,35 @@ module Garage {
             }
 
             /**
+             * Model.LabelItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このLabelItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {ILabel} 変換されたデータ
+             */
+            convertToHuisData(): ILabel {
+
+                let convertedLabel: ILabel = {
+                    area: this.area,
+                    text: this.text
+                };
+                if (this.color !== undefined) {
+                    convertedLabel.color = this.color;
+                }
+                if (this.font !== undefined) {
+                    convertedLabel.font = this.font;
+                }
+                if (this.size !== undefined) {
+                    convertedLabel.size = this.size;
+                }
+                if (this.font_weight !== undefined) {
+                    convertedLabel.font_weight = this.font_weight;
+                }
+
+                return convertedLabel;
+            }
+
+            /**
              * getters and setters
              */
             get text(): string {
@@ -125,6 +154,12 @@ module Garage {
                 }
             }
 
+            // font-size for render is smaller than actual font-size to get close to appearance on HUIS
+            // This property is referenced in templates/face-items.html
+            get sizeForRender(): number {
+                return Util.JQueryUtils.getOffsetTextButtonSize(this.size);
+            }
+
             /**
              * 変更可能なプロパティーの一覧
              */
@@ -143,6 +178,7 @@ module Garage {
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
+            // TODO: review default attrs
             defaults() {
 
                 var defaultAttr = {

@@ -68,15 +68,102 @@ module Garage {
                     cloneState.image.push(image.clone());
                 }
 
-                if (this.label) {
-                    if (_.isArray(this.label)) {
-                        cloneState.label = $.extend(true, [], this.label);
-                    } else {
-                        cloneState.label = [$.extend(true, {}, this.label)];
-                    }
+                cloneState.label = [];
+                for (let label of this.label) {
+                    cloneState.label.push(label.clone());
                 }
 
                 return cloneState;
+            }
+
+            /**
+             * Model.ButtonStateをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonStateが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IState} 変換されたデータ
+             */
+            convertToHuisData(remoteId: string, outputDirPath?: string): IState {
+
+                let convertedState: IState = {
+                    id: this.stateId
+                };
+
+                if (this.image) {
+                    convertedState.image = [];
+                    for (let image of this.image) {
+                        convertedState.image.push(image.convertToHuisData(remoteId, outputDirPath));
+                    }
+                }
+                if (this.label) {
+                    convertedState.label = [];
+                    for (let label of this.label) {
+                        convertedState.label.push(label.convertToHuisData());
+                    }
+                }
+                if (this.action) {
+                    convertedState.action = this._normalizeButtonStateActions(this.action);
+                }
+
+                if (this.translate) {
+                    convertedState.translate = [];
+                    this.translate.forEach((translate: IStateTranslate) => {
+                        convertedState.translate.push({
+                            input: translate.input,
+                            next: translate.next
+                        });
+                    });
+                }
+
+                return convertedState;
+            }
+
+            // TODO: Move this method to action class
+            /**
+             * button.state.action データから module 化に不要なものを間引く
+             */
+            private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
+                var normalizedActions: IAction[] = [];
+
+                actions.forEach((action: IAction) => {
+                    let normalizedAction: IAction = {
+                        input: (action.input) ? action.input : "none"
+                    };
+                    if (action.code) {
+                        normalizedAction.code = action.code;
+                    }
+                    if (action.code_db) {
+                        normalizedAction.code_db = {
+                            function: (action.code_db.function) ? Util.HuisFiles.getPlainFunctionKey(action.code_db.function) : "none",
+                            brand: action.code_db.brand,
+                            device_type: action.code_db.device_type,
+                            db_codeset: action.code_db.db_codeset
+                        };
+                        if (!_.isUndefined(action.code_db.db_device_id)) {
+                            normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
+                        }
+                        if (!_.isUndefined(action.code_db.model_number)) {
+                            normalizedAction.code_db.model_number = action.code_db.model_number;
+                        }
+                        if (!_.isUndefined(action.bluetooth_data)) {
+                            normalizedAction.bluetooth_data = action.bluetooth_data;
+                        }
+                    } else {
+                        normalizedAction.code_db = {
+                            function: "none",
+                            brand: " ",
+                            device_type: " ",
+                            db_codeset: " "
+                        }
+                    }
+                    if (!_.isUndefined(action.interval)) {
+                        normalizedAction.interval = action.interval;
+                    }
+
+                    normalizedActions.push(normalizedAction);
+                });
+
+                return normalizedActions;
             }
 
             get stateId(): number {

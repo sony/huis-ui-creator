@@ -1631,7 +1631,7 @@ module Garage {
                 // Model.Module に格納されているデータから、.module ファイルに必要なものを抽出する
 
                 
-                let iModule = module.getOutputModuleData(remoteId, outputDirPath);
+                let iModule = module.convertToHuisData(remoteId, outputDirPath);
 
                 var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", module.name + ".module");
 

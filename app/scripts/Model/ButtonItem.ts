@@ -125,6 +125,34 @@ module Garage {
                 }
             }
 
+            /**
+             * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {IButton} 変換されたデータ
+             */
+            convertToHuisData(remoteId: string, outputDirPath?: string): IButton {
+
+                let convertedStates = [];
+                for (let state of this.state) {
+                    convertedStates.push(state.convertToHuisData(remoteId, outputDirPath));
+                }
+
+                let convertedButton: IButton = {
+                    area: this.area,
+                    state: convertedStates
+                };
+                if (this.default != null) {
+                    convertedButton.default = this.default;
+                }
+                if (this.name != null) {
+                    convertedButton.name = this.name;
+                }
+
+                return convertedButton;
+            }
+
             get default(): number {
                 return this.get("default");
             }
@@ -179,6 +207,7 @@ module Garage {
                 } else {
                     this.stateCollection_.reset();
                 }
+                // TODO: delete following
                 // stateData を model 化して stateCollection に追加する
                 if (_.isArray(val)) {
                     val.forEach((stateData: Model.ButtonState, index: number) => {
@@ -234,6 +263,7 @@ module Garage {
                 return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
             }
 
+            // TODO: delete
             /**
              * アイテムの種類
              */
@@ -241,6 +271,7 @@ module Garage {
                 return "button";
             }
 
+            // TODO: review default attrs
             /**
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
@@ -266,6 +297,8 @@ module Garage {
             }
 
 
+            // TODO: destroy and validate methods are copy-and-pasted, need review
+            // http://tnakamura.hatenablog.com/entry/2013/02/07/135119
 
             /**
              * destroy をオーバーライド。
