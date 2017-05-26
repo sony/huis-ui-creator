@@ -3095,12 +3095,9 @@ module Garage {
                             break;
 
                         case "size":
-                            //HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
-                            if (itemType == "button") {
-                                // TODO: replace getOffsetTextButtonSize with Model.LabelItem.sizeForRender
-                                value = JQUtils.getOffsetTextButtonSize(value);
-                            } else if (itemType == "label") {
-                                value = JQUtils.getOffsetTextLabelSize(value);
+                            let model = targetModel;
+                            if (model instanceof Model.LabelItem) {
+                                value = model.sizeForRender;
                             }
 
                             $target.css("font-size", value + "pt");
@@ -3616,7 +3613,7 @@ module Garage {
                             let $labelElement = $targetStateElem.find(".state-label");
                             let label = targetState.label[0];
                             let text = (label && label.text) ? label.text : "";
-                            let size = (label && label.size) ? label.size : 0;
+                            let size = (label && label.sizeForRender) ? label.sizeForRender : 0;
                             $labelElement.text(text);
                             $labelElement.css({
                                 left: "0",
@@ -3625,8 +3622,7 @@ module Garage {
                                 height: buttonAreaH + "px",
                                 lineHeight: buttonAreaH + "px",
                                 color: "rgb(0,0,0)",
-                                // TODO: replace getOffsetTextButtonSize with Model.LabelItem.sizeForRender
-                                fontSize: JQUtils.getOffsetTextButtonSize(size) + "pt"
+                                fontSize: size + "pt"
                             });
 
                             //画像が存在するとき、テキストEdit機能を非表示にする

@@ -81,11 +81,13 @@ module Garage {
                 return this.font_weight === FontWeight.FONT_BOLD;
             }
 
-            /*
-            * テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
-            * @param textsize{number} 表示するテキストサイズ
-            * @return Garage上で表示する補正後のテキストサイズ
-            */
+            /**
+             * HUISで表示される時の表示に近づけるために、
+             * UI-Creator表示用の補正されたフォントサイズを取得する。
+             *
+             * @param {number} textsize 表示するテキストサイズ
+             * @return {number} Garage上で表示する補正後のテキストサイズ
+             */
             private _getResizedTextSize(): number {
 
                 let FUNCTION_NAME = "[Model.LabelItem]" + " : _getResizedTextSize :";
