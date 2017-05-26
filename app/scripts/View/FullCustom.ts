@@ -3097,6 +3097,7 @@ module Garage {
                         case "size":
                             //HUISに表示したとき、Garageでみるより小さく表示されるため、Garageでの表示に補正を加える。
                             if (itemType == "button") {
+                                // TODO: replace getOffsetTextButtonSize with Model.LabelItem.sizeForRender
                                 value = JQUtils.getOffsetTextButtonSize(value);
                             } else if (itemType == "label") {
                                 value = JQUtils.getOffsetTextLabelSize(value);
@@ -3630,6 +3631,7 @@ module Garage {
                                         height: buttonAreaH + "px",
                                         lineHeight: buttonAreaH + "px",
                                         color: "rgb(0,0,0)",
+                                        // TODO: replace getOffsetTextButtonSize with Model.LabelItem.sizeForRender
                                         fontSize: JQUtils.getOffsetTextButtonSize(size) + "pt"
                                     });
 

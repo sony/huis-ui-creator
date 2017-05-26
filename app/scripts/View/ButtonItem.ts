@@ -124,14 +124,7 @@ module Garage {
                         }
                     }
 
-                    //表示用のmodelはラベルの大きさを実際より小さくする。
-                    let modelForDisplay: Model.ButtonItem= jQuery.extend(true, {}, model);
-                    for (let i = 0; i < modelForDisplay.state.length; i++){
-                        for (let j = 0; j < modelForDisplay.state[i].label.length; j++){
-                            modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size);
-                        }
-                    }
-                    this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
+                    this.$el.append($(this.buttonItemTemplate_(model)));
                 });
                 return this;
             }
@@ -156,14 +149,7 @@ module Garage {
              */
             private _renderNewModel(model: Model.ButtonItem) {
                 this._modifyModel(model);
-                //表示用のmodelはラベルの大きさを実際より小さくする。
-                let modelForDisplay: Model.ButtonItem = jQuery.extend(true, {}, model);
-                for (let i = 0; i < modelForDisplay.state.length; i++) {
-                    for (let j = 0; j < modelForDisplay.state[i].label.length; j++) {
-                        modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size); 
-                    }
-                }
-                this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
+                this.$el.append($(this.buttonItemTemplate_(model)));
             }
 
             /**

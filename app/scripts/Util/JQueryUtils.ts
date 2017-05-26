@@ -170,6 +170,7 @@ module Garage {
                 return tmpUrl;
             }
 
+            // TODO: move this logic to Model.LabelItem
             /*
             * テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
             * @param textsize{number} 表示するテキストサイズ

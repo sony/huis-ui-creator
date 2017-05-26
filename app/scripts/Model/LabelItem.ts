@@ -150,6 +150,12 @@ module Garage {
                 }
             }
 
+            // font-size for render is smaller than actual font-size to get close to appearance on HUIS
+            // This property is referenced in templates/face-items.html
+            get sizeForRender(): number {
+                return Util.JQueryUtils.getOffsetTextButtonSize(this.size);
+            }
+
             /**
              * 変更可能なプロパティーの一覧
              */
