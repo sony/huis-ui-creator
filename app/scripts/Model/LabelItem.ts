@@ -81,6 +81,31 @@ module Garage {
                 return this.font_weight === FontWeight.FONT_BOLD;
             }
 
+            /*
+            * テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
+            * @param textsize{number} 表示するテキストサイズ
+            * @return Garage上で表示する補正後のテキストサイズ
+            */
+            private _getResizedTextSize(): number {
+
+                let FUNCTION_NAME = "[Model.LabelItem]" + " : _getResizedTextSize :";
+
+                const BOLD_TEXT_RESIZE_RATIO: number = 0.758;
+                const REGULAR_TEXT_RESIZE_RATIO: number = 0.758;
+                const MIN_TEXT_SIZE: number = 12;
+                const GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC: number = 0.001;
+                const GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC: number = 0.001;
+
+                if (this.size == null) {
+                    console.error(FUNCTION_NAME + "size is null");
+                    this.size = this.defaults().size;
+                }
+
+                let ratio = this._isBold() ? BOLD_TEXT_RESIZE_RATIO : REGULAR_TEXT_RESIZE_RATIO;
+
+                return this.size * (ratio - (this.size - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
+            }
+
             /**
              * getters and setters
              */
@@ -161,7 +186,7 @@ module Garage {
             // font-size for render is smaller than actual font-size to get close to appearance on HUIS
             // This property is referenced in templates/face-items.html
             get sizeForRender(): number {
-                return Util.JQueryUtils.getOffsetTextButtonSize(this.size);
+                return this._getResizedTextSize();
             }
 
             /**
