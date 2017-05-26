@@ -475,8 +475,11 @@ module Garage {
                     if (iState.image) {
                         state.image = this._iImages2ImageItems(iState.image, remoteId);
                     }
+                    state.label = [];
                     if (iState.label) {
-                        state.label = $.extend(true, [], iState.label);
+                        for (let label of iState.label) {
+                            state.label.push(new Model.LabelItem(label));
+                        }
                     }
                     if (iState.action) {
                         state.action = $.extend(true, [], iState.action);
