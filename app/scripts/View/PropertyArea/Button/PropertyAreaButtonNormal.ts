@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-/// <reference path="../include/interfaces.d.ts" />
+/// <reference path="../../../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
