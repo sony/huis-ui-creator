@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-/// <reference path="../include/interfaces.d.ts" />
+/// <reference path="../../../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
@@ -24,7 +24,7 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-        var TAG = "[Garage.View.PropertyAreaNormal] ";
+        var TAG = "[Garage.View.PropertyArea.Button.NormalButtonPropertyArea] ";
 
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
@@ -96,7 +96,7 @@ module Garage {
         }
 
 
-        export class PropertyAreaButtonNormal extends PropertyAreaButtonBase {
+        export class NormalButtonPropertyArea extends ButtonPropertyArea {
 
             private assignedInputActions: string[];
 

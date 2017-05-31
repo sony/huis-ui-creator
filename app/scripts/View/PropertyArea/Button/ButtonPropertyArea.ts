@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-/// <reference path="../include/interfaces.d.ts" />
+/// <reference path="../../../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
@@ -24,10 +24,10 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-        var TAG = "[Garage.View.PropertyAreaButtonBase] ";
+        var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
        
-        export class PropertyAreaButtonBase extends Backbone.View<Model.ButtonItem> {
+        export class ButtonPropertyArea extends Backbone.View<Model.ButtonItem> {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。

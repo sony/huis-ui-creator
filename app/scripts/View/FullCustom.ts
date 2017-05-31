@@ -88,10 +88,10 @@ module Garage {
 
             private bindedLayoutPage = null;
             //マクロのプロパティView用
-            private macroProperty: PropertyAreaButtonMacro;
+            private macroProperty: MacroButtonPropertyArea;
             //通常ボタンのプロパティView用
-            private buttonProperty: PropertyAreaButtonNormal;
-            private jumpProperty: PropertyAreaButtonJump;
+            private buttonProperty: NormalButtonPropertyArea;
+            private jumpProperty: JumpButtonPropertyArea;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
 
@@ -4978,7 +4978,7 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    this.macroProperty = new PropertyAreaButtonMacro({
+                    this.macroProperty = new MacroButtonPropertyArea({
                         el: $buttonDetail,
                         model: button,
                     });
@@ -5140,7 +5140,7 @@ module Garage {
 
                 //信号用のViewの初期化・更新
                 if (this.buttonProperty == null) {
-                    this.buttonProperty = new PropertyAreaButtonNormal({
+                    this.buttonProperty = new NormalButtonPropertyArea({
                         el: $buttonDetail,
                         model: button,
                     });
@@ -5275,7 +5275,7 @@ module Garage {
 
                 //信号用のViewの初期化・更新
                 if (this.jumpProperty == null) {
-                    this.jumpProperty = new PropertyAreaButtonJump(
+                    this.jumpProperty = new JumpButtonPropertyArea(
                         this.faceRenderer_canvas_.getRemoteId(),
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules(),
