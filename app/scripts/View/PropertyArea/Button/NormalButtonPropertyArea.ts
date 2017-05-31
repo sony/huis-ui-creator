@@ -162,7 +162,7 @@ module Garage {
                     return;
                 }
               
-                let order = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
+                let order = this.getState().action.length;
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -191,20 +191,20 @@ module Garage {
                             }
                             
 
-                            this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,prevRemoteId);
+                            this.renderRemoteIdOf(order, this.getDefaultStateIndex(),prevRemoteId);
                             this.renderFunctionsOf(order);
                         }
                     }
 
                   
-                    this.updateModel(this.DEFAULT_STATE_ID);
+                    this.updateModel(this.getDefaultStateIndex());
                     this.controlPlusButtonEnable();
                     this.$el.i18n();
                     $('.custom-select').trigger('create');
 
                     //削除をちら見する。
                     this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
-                        this.renderSignals(this.DEFAULT_STATE_ID);
+                        this.renderSignals(this.getDefaultStateIndex());
                     });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
@@ -224,8 +224,8 @@ module Garage {
                     return;
                 }
 
-                this.updateModel(this.DEFAULT_STATE_ID);
-                this.renderSignals(this.DEFAULT_STATE_ID);
+                this.updateModel(this.getDefaultStateIndex());
+                this.renderSignals(this.getDefaultStateIndex());
 
             }
 
@@ -254,8 +254,8 @@ module Garage {
                 }
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order, this.DEFAULT_STATE_ID);
-                this.updateModel(this.DEFAULT_STATE_ID);
+                this.renderFunctionsOf(order, this.getDefaultStateIndex());
+                this.updateModel(this.getDefaultStateIndex());
 
                 //jQueryのスタイルをあてる。
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
@@ -264,19 +264,19 @@ module Garage {
 
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
                 if ($target.find(".default-value").length != 0) {
-                    this.renderSignals(this.DEFAULT_STATE_ID);
+                    this.renderSignals(this.getDefaultStateIndex());
                 }
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
-                this.updateModel(this.DEFAULT_STATE_ID);
+                this.updateModel(this.getDefaultStateIndex());
 
                 let $target = $(event.currentTarget);
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
                 if ($target.find(".default-value").length != 0) {
-                    this.renderSignals(this.DEFAULT_STATE_ID);
+                    this.renderSignals(this.getDefaultStateIndex());
                 }
             }
 
@@ -296,7 +296,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "renderViewState";
 
                 if (stateId == null) {
-                    stateId = this.DEFAULT_STATE_ID;
+                    stateId = this.getDefaultStateIndex();
                 }
 
                 if (this.getModel().isAirconButton() ||
@@ -684,7 +684,7 @@ module Garage {
             private renderSomeElementIfOneSignalOnlyExist() {
                 let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
 
-                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getState().action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -1015,7 +1015,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getState().action.length;
 
                 //actionが1つしかない場合、削除ボタンtを削除。
                 if (signalLength <= 1) {

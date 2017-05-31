@@ -67,8 +67,8 @@ module Garage {
                     return;
                 }
 
-                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order, this.DEFAULT_STATE_ID);
+                this.renderRemoteIdOf(order, this.getDefaultStateIndex(), this.getRemoteIdFromPullDownOf(order));
+                this.renderPagesOf(order, this.getDefaultStateIndex());
 
                 this.updateModel();
 
@@ -90,7 +90,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order, this.DEFAULT_STATE_ID, this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order, this.getDefaultStateIndex(), this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
@@ -115,9 +115,9 @@ module Garage {
 
                 let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.getTemplateFilePath());
                 let $jumpContainer = this.$el.nextAll("#states-container");
-                let stateData = this.createStateData(this.defaultState);
+                let stateData = this.createStateData(this.getState());
                 stateData.actionList = ACTION_INPUTS_JUMP;
-                stateData.jump = this.defaultState.action[0].jump;
+                stateData.jump = this.getState().action[0].jump;
                 let $stateDetail = $(templateState(stateData));
 
                 //テキストラベルの大きさの設定値を反映する。
@@ -129,16 +129,16 @@ module Garage {
 
                 $jumpContainer.append($stateDetail);
 
-                this.setActionPullDown(this.defaultState);
+                this.setActionPullDown(this.getState());
 
                 let targetRemoteId = stateData.jump.remote_id;
                 if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
-                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.remote_id);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex(), stateData.jump.remote_id);
                 } else {
-                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex());
                 }
 
-                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.scene_no);
+                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex(), stateData.jump.scene_no);
 
                 $jumpContainer.i18n();
 
@@ -159,14 +159,14 @@ module Garage {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
-                let newAction = $.extend(true, {}, this.defaultState.action[0]);
+                let newAction = $.extend(true, {}, this.getState().action[0]);
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [ newAction ];
-                this.defaultState.action = newActions;
+                this.getState().action = newActions;
 
                 let states: Model.ButtonState[] = [];
-                states.push(this.defaultState);
+                states.push(this.getState());
 
                 this.getModel().state = states;
                 this.trigger("updateModel");
@@ -257,7 +257,7 @@ module Garage {
 
                 //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
                 //remoteId設定用プルダウンをフォーカスする。
-                let ActionNum = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
+                let ActionNum = this.getState().action.length;
 
                 let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 

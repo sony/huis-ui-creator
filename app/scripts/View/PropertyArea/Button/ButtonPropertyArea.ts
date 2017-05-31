@@ -26,14 +26,16 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
+        namespace constValue {
+            export const DEFAULT_STATE_INDEX : number = 0;//指定がない場合、プロパティエリアに表示するステート
+        }
+
         export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
             protected availableRemotelist: IRemoteInfo[];
-            protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
-            protected defaultState: Model.ButtonState; // Defaultのstate
 
             /**
              * 編集中リモコンのremote_id
@@ -56,9 +58,6 @@ module Garage {
             constructor(options: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.DEFAULT_STATE_ID = 0;
-                //stateIdはデフォルト値とする。
-                this.defaultState = this.getModel().state[this.DEFAULT_STATE_ID];
             }
 
 
@@ -125,13 +124,32 @@ module Garage {
                 }
 
                 this.getModel().state = inputStates;
-                this.defaultState = this.getModel().state[this.DEFAULT_STATE_ID];
             }
 
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            /*
+             * ボタンが持つStateを取得する。
+             * @param {number} stateIndex ? 取得するStateのId.指定しない場合デフォルト値となる。
+             * @return {Model.ButtonState}
+             */
+            protected getState(stateIndex? : number):Model.ButtonState {
+                if (stateIndex == null) {
+                    stateIndex = constValue.DEFAULT_STATE_INDEX;
+                }
+                return this.getModel().state[stateIndex];
+            }
+
+
+            /*
+             *@return {number} デフォルトのステートのIndex
+            */
+            protected getDefaultStateIndex():number{
+                return constValue.DEFAULT_STATE_INDEX;
+            }
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
@@ -480,7 +498,7 @@ module Garage {
                     let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
 
                     if (stateId == null) {
-                        stateId = this.DEFAULT_STATE_ID;
+                        stateId = constValue.DEFAULT_STATE_INDEX;
                     }
 
                     let inputSignalData = {
@@ -701,10 +719,8 @@ module Garage {
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
 
                     if (stateId == null) {
-                        stateId = this.DEFAULT_STATE_ID;
+                        stateId = constValue.DEFAULT_STATE_INDEX;
                     }
-
-
 
                     //functionsが0個の場合のエラーケース対応
                     let inputFunctions = [];
@@ -843,7 +859,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID, page: number = -1) {
+            protected renderPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX, page: number = -1) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -878,7 +894,7 @@ module Garage {
              * @param order {number}
              * @param stateId {number}
              */
-            private appendPagesPullDown(order: number, stateId: number = this.DEFAULT_STATE_ID): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
@@ -913,7 +929,7 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID): number {
+            private getPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX): number {
                 let FUNCTION_NAME = TAG + "getPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -1312,7 +1328,7 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.getModel().state[this.DEFAULT_STATE_ID].action) {
+                for (let action of this.getState().action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
