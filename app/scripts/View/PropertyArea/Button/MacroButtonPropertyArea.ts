@@ -309,7 +309,7 @@ module Garage {
                 }
 
                 let $signalContainer = this.$el.find("#signals-container");
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
 
                 let initialAction: IAction = {
                     input: tmpInput,
@@ -357,24 +357,16 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
-            getModel(): Model.ButtonItem {
-                return this.model;
-            }
-
-            /*
             * 保持しているモデルの内容でプルダウンを描画する
             */
-            renderView(): JQuery {
+            render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
                 //マクロの基本情報を付与
                 // ボタンの state 情報を付加
                 var $macroContainer = this.$el.nextAll("#macro-container");
                 let macroData: any = {};
-                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.templateItemDetailFile_);
+                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.getTemplateFilePath());
 
                 let state = this.defaultState;
                 let id: number = this.defaultState.stateId;
@@ -428,7 +420,7 @@ module Garage {
                
                 this.renderSignalContainers();
 
-                return $macroContainer;
+                return this;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -453,7 +445,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -574,7 +566,7 @@ module Garage {
 
                 states.push(this.defaultState);
 
-                this.model.state = states;
+                this.getModel().state = states;
                 this.trigger("updateModel");
             }
 
@@ -622,7 +614,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -656,7 +648,7 @@ module Garage {
                     firstOrderBottom = firstOrderY + $dotFirstOrder.outerHeight(true);
                 }
 
-                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 //orderMaxのドットの位置を取得
                 let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
@@ -669,7 +661,7 @@ module Garage {
                 if (this.isValidValue(firstOrderY) && this.isValidValue(firstOrderBottom) && this.isValidValue(lastOrderY)) {
 
                     //templateからdomを読み込み,domを描写
-                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.templateItemDetailFile_);
+                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.getTemplateFilePath());
                     let $signalsContainer = this.$el.find("#signals-container");
                     $signalsContainer.append($(templateDotLine()));
 
@@ -746,7 +738,7 @@ module Garage {
                 }
 
                 //ベースとなるDOM描写する
-                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.templateItemDetailFile_);
+                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.getTemplateFilePath());
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
                 let remoteId: string = huisFiles.getRemoteIdByAction(action);
@@ -799,7 +791,7 @@ module Garage {
                     id : this.defaultState.stateId
                 }
 
-                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.templateItemDetailFile_);
+                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.getTemplateFilePath());
                 let $intervalDetail = $(templateInterval(signalData));
                 $intervalContainer.append($intervalDetail);
 
@@ -1077,7 +1069,7 @@ module Garage {
 
                 //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
                 //remoteId設定用プルダウンをフォーカスする。
-                let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let ActionNum = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 let remoteIdOrder0 = this.getRemoteIdFromPullDownOf(0);
 

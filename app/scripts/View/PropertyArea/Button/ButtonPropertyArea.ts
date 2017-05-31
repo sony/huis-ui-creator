@@ -26,13 +26,11 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-       
-        export class ButtonPropertyArea extends Backbone.View<Model.ButtonItem> {
+        export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
-            protected templateItemDetailFile_: string;
             protected availableRemotelist: IRemoteInfo[];
             protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
             protected defaultState: Model.ButtonState; // Defaultのstate
@@ -55,17 +53,16 @@ module Garage {
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(options: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
-                this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
                 this.DEFAULT_STATE_ID = 0;
                 //stateIdはデフォルト値とする。
-                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
+                this.defaultState = this.getModel().state[this.DEFAULT_STATE_ID];
             }
 
 
-
+           
 
 
 
@@ -111,7 +108,7 @@ module Garage {
             * @return {Model.BUttonItem}
             */
             public getModel(): Model.ButtonItem {
-                return this.model;
+                return <Model.ButtonItem>this.model;
             }
 
 
@@ -127,46 +124,14 @@ module Garage {
                     return;
                 }
 
-                this.model.state = inputStates;
-                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
+                this.getModel().state = inputStates;
+                this.defaultState = this.getModel().state[this.DEFAULT_STATE_ID];
             }
 
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
-
-         
-            // 不正な値の場合、falseを返す。
-            // 有効な場合、trueを返す。
-            protected isValidValue(value): boolean {
-                let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
-
-                if (value == null) {
-                    return false;
-                } else if (value == "none") {
-                    return false;
-                } else if (value === "") {
-                    return false;
-                } else if (JQUtils.isNaN(value)) {
-                    return false;
-                }
-                return true;
-            }
-
-            /*
-           * JQuery要素が有効か判定する
-           * @param $target{JQuery}判定対象
-           * @return {boolean} 有効な場合、true
-           */
-            protected isValidJQueryElement($target: JQuery): boolean {
-                if ($target == null || $target.length == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
@@ -395,7 +360,7 @@ module Garage {
                 }
 
                 if (remoteName != null) {
-                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.templateItemDetailFile_);
+                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.getTemplateFilePath());
                     let inputSignalData = {
                         remoteId: inputRemoteId,
                         name: remoteName
@@ -512,7 +477,7 @@ module Garage {
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
-                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.templateItemDetailFile_);
+                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
 
                     if (stateId == null) {
                         stateId = this.DEFAULT_STATE_ID;
@@ -532,7 +497,7 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
@@ -733,7 +698,7 @@ module Garage {
                     }
 
                     let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
 
                     if (stateId == null) {
                         stateId = this.DEFAULT_STATE_ID;
@@ -760,7 +725,7 @@ module Garage {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.getTemplateFilePath());
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
@@ -928,7 +893,7 @@ module Garage {
 
 
                 let $container = $target.find("#signal-page-container");
-                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.templateItemDetailFile_);
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.getTemplateFilePath());
 
                 let inputData = {
                     order: order,
@@ -1347,7 +1312,7 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.model.state[this.DEFAULT_STATE_ID].action) {
+                for (let action of this.getModel().state[this.DEFAULT_STATE_ID].action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;

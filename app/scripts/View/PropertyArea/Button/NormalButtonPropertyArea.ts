@@ -162,7 +162,7 @@ module Garage {
                     return;
                 }
               
-                let order = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let order = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -288,35 +288,34 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-            * 保持しているモデルうち、指定したRemoteIdの内容でプルダウンを描画する
-            */
-            renderViewState(stateId : number): JQuery {
+             * モデルをレンダリングする。stateIdを指定した場合、そのstateIdの内容を描画する。
+             * @param {number} stateId? 指定した場合、特定のステートを描画する。
+             * @return {Backbone.View<Model.Item>}
+             */
+            render(stateId? : number): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "renderViewState";
 
                 if (stateId == null) {
-                    console.warn(FUNCTION_NAME + "stateId is null");
-                    return;
+                    stateId = this.DEFAULT_STATE_ID;
                 }
 
-
-                if (this.model.isAirconButton() ||
-                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_UP_VALUE) ||
-                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
-                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_LEFT_VALUE) ||
-                    this.isIncludeSpecificActionType(this.model, ACTION_INPUT_SWIPE_DOWN_VALUE)
+                if (this.getModel().isAirconButton() ||
+                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
+                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
+                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_LEFT_VALUE) ||
+                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_DOWN_VALUE)
                 ) {
                     //スワイプ系のアクションを含むモジュールの場合、プルダウンを描画しない。
                     //エアコンの場合、プルダウンを描画しない
 
                     //＋ボタンも表示しない
                     this.$el.find(".add-btn-container").remove();
-
-                    return this.$el;
                 } else {
                     this.updateAssiendInputActionsFromModel(stateId);
-                    return this.renderSignals(stateId);
+                    this.renderSignals(stateId);
                 }
-                
+
+                return this;
             }
 
             
@@ -385,7 +384,7 @@ module Garage {
 
                     //キャッシュでも、deviceInfoを取得できない。かつ remoteId用のpulldownがunknownのとき、this.modeから取得する。
                     if (!tmpDeviceInfo && this.isUnknownRemoteIdInPulldownOf(order)) {
-                        tmpDeviceInfo = this.model.state[0].action[order].deviceInfo;
+                        tmpDeviceInfo = this.getModel().state[0].action[order].deviceInfo;
                     }
 
 
@@ -465,7 +464,7 @@ module Garage {
                     }
                 }
 
-                let tmpState = this.model.state[stateId];
+                let tmpState = this.getModel().state[stateId];
 
                 let newState = new Model.ButtonState({});
                 if (tmpState != null) {
@@ -478,17 +477,17 @@ module Garage {
 
                 let states: Model.ButtonState[] = [];
                 //全stateを更新。
-                for (let i = 0; i < this.model.state.length; i++) {
+                for (let i = 0; i < this.getModel().state.length; i++) {
                     if (i == stateId) {
                         states.push(newState);
                     } else {
-                        states.push(this.model.state[i]);
+                        states.push(this.getModel().state[i]);
                     }
                 }
 
 
 
-                this.model.state = states;
+                this.getModel().state = states;
 
                 //更新後の値で、+ボタンの有効・無効判定を行う。
                 this.controlPlusButtonEnable();
@@ -511,7 +510,7 @@ module Garage {
                     return;
                 }
 
-                for (let targetState of this.model.state) {
+                for (let targetState of this.getModel().state) {
 
                     if (targetState.action != null) {
                         for (let targetAction of targetState.action) {
@@ -633,7 +632,7 @@ module Garage {
                     return;
                 }
 
-                let actions: IAction[] = this.model.state[stateId].action;
+                let actions: IAction[] = this.getModel().state[stateId].action;
 
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "actions is invalid");
@@ -685,7 +684,7 @@ module Garage {
             private renderSomeElementIfOneSignalOnlyExist() {
                 let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
 
-                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -755,7 +754,7 @@ module Garage {
                 }
 
                 //SignalContainerのベースをレンダリング
-                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this.templateItemDetailFile_);
+                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this.getTemplateFilePath());
 
                 let inputData = {
                     order: order,
@@ -797,7 +796,7 @@ module Garage {
 
                 //ActionプルダウンのDOMを表示。
                 let $actionContainer = $target.find("#signal-action-container");
-                let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.templateItemDetailFile_);
+                let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.getTemplateFilePath());
 
                 //すでに入力されているinputは、表示しない。
                 let actionSelector: ActionSelecctor = new ActionSelecctor(this.assignedInputActions);
@@ -819,7 +818,7 @@ module Garage {
                     this.setInputAction(order, stateId, inputAction);
                 } else {
                     //値が入力されていない場合、初期状態を描画
-                    let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.templateItemDetailFile_);
+                    let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.getTemplateFilePath());
                     $actionContainer.find("select").prepend(noneOption);
                     this.setInputAction(order, stateId, "none");
                 }
@@ -997,7 +996,7 @@ module Garage {
                 this.assignedInputActions = [];
 
                 //現状表示されている 各信号のJquery値を取得
-                let targetActions = this.model.state[stateId].action;
+                let targetActions = this.getModel().state[stateId].action;
 
                 if (targetActions == null || targetActions.length ==0) {
                     return;
@@ -1016,7 +1015,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let signalLength: number = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 //actionが1つしかない場合、削除ボタンtを削除。
                 if (signalLength <= 1) {

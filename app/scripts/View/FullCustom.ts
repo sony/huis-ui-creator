@@ -4991,7 +4991,7 @@ module Garage {
                     this.macroProperty.delegateEvents();
                 }
 
-                $detail.append(this.macroProperty.renderView())
+                $detail.append(this.macroProperty.render().$el);
 
                 //previewの情報を別途更新。
                 let $preview = this.$el.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
@@ -5229,7 +5229,7 @@ module Garage {
                         }
 
                         //信号コンテナを描画
-                        $statesContainer.append(this.buttonProperty.renderViewState(state.stateId));
+                        $statesContainer.append(this.buttonProperty.render(state.stateId).$el);
 
                         // 文言あて・ローカライズ
                         $statesContainer.i18n();
@@ -5292,7 +5292,7 @@ module Garage {
                     this.jumpProperty.delegateEvents();
                 }
 
-                $detail.append(this.jumpProperty.renderView());
+                $detail.append(this.jumpProperty.render().$el);
 
                 //previewの情報を別途更新。
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");

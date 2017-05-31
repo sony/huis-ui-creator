@@ -110,10 +110,10 @@ module Garage {
             /**
              * 保持しているモデルの内容で詳細エリアを描画する
              */
-            renderView(): JQuery {
+            render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
-                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.templateItemDetailFile_);
+                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.getTemplateFilePath());
                 let $jumpContainer = this.$el.nextAll("#states-container");
                 let stateData = this.createStateData(this.defaultState);
                 stateData.actionList = ACTION_INPUTS_JUMP;
@@ -142,7 +142,7 @@ module Garage {
 
                 $jumpContainer.i18n();
 
-                return $jumpContainer;
+                return this;
             }
 
 
@@ -158,7 +158,7 @@ module Garage {
             private updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.model.default + "\"]").val();
+                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
                 let newAction = $.extend(true, {}, this.defaultState.action[0]);
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
@@ -168,7 +168,7 @@ module Garage {
                 let states: Model.ButtonState[] = [];
                 states.push(this.defaultState);
 
-                this.model.state = states;
+                this.getModel().state = states;
                 this.trigger("updateModel");
             }
 
@@ -257,7 +257,7 @@ module Garage {
 
                 //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
                 //remoteId設定用プルダウンをフォーカスする。
-                let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
+                let ActionNum = this.getModel().state[this.DEFAULT_STATE_ID].action.length;
 
                 let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
