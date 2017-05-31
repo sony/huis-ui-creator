@@ -203,7 +203,6 @@
     <Content Include="app\templates\dialogs.html" />
     <Content Include="app\templates\face-items.html" />
     <Content Include="app\templates\item-detail.html" />
-    <Content Include="app\templates\main.html" />
     <Content Include="app\stylesheets\app.scss" />
     <Content Include="app\stylesheets\app.css">
       <DependentUpon>app.scss</DependentUpon>
@@ -238,7 +237,6 @@
   <ItemGroup>
     <Content Include="Gruntfile.js" />
     <Content Include="README.md" />
-    <Content Include="config.xml" />
     <Content Include="package.json" />
     <Content Include="test-runner.bat" />
     <Content Include="test-runner.js" />
@@ -250,7 +248,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="boot_electron.bat" />
     <Content Include="app\stylesheets\app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
@@ -269,28 +266,10 @@
     <TypeScriptCompile Include="app\scripts\Model\Face.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Item.ts" />
     <TypeScriptCompile Include="app\scripts\app.ts" />
-    <Content Include="app\scripts\app.js">
-      <DependentUpon>app.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\app.js.map">
-      <DependentUpon>app.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\config.ts" />
-    <Content Include="app\scripts\config.js">
-      <DependentUpon>config.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\config.js.map">
-      <DependentUpon>config.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\include\interfaces.d.ts" />
     <TypeScriptCompile Include="app\scripts\include\StringEnum.ts" />
     <TypeScriptCompile Include="app\scripts\init.ts" />
-    <Content Include="app\scripts\init.js">
-      <DependentUpon>init.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\init.js.map">
-      <DependentUpon>init.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
     <TypeScriptCompile Include="app\scripts\Model\VersionDialog.ts" />
@@ -316,38 +295,14 @@
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
-    <Content Include="app\scripts\View\Home.js">
-      <DependentUpon>Home.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\Home.js.map">
-      <DependentUpon>Home.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\View\FullCustom.ts" />
-    <Content Include="app\scripts\View\FullCustom.js">
-      <DependentUpon>FullCustom.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\FullCustom.js.map">
-      <DependentUpon>FullCustom.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonItem.ts" />
-    <Content Include="app\scripts\Model\ButtonItem.js">
-      <DependentUpon>ButtonItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ButtonItem.js.map">
-      <DependentUpon>ButtonItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonItemsCollection.ts" />
-    <Content Include="app\scripts\Model\ButtonItemsCollection.js">
-      <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ButtonItemsCollection.js.map">
-      <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\View\PhnConfig.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonBase.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonJump.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonMacro.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyAreaButtonNormal.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\ButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\JumpButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\MacroButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\NormalButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
     <TypeScriptCompile Include="app\scripts\View\VersionDialog.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
@@ -358,19 +313,7 @@
       <DependentUpon>Model.ButtonItem.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\LabelItem.ts" />
-    <Content Include="app\scripts\Model\LabelItem.js">
-      <DependentUpon>LabelItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\LabelItem.js.map">
-      <DependentUpon>LabelItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\LabelItemsCollection.ts" />
-    <Content Include="app\scripts\Model\LabelItemsCollection.js">
-      <DependentUpon>LabelItemsCollection.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\LabelItemsCollection.js.map">
-      <DependentUpon>LabelItemsCollection.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\Model.LabelItem.ts" />
     <Content Include="tests\jasmine\Model.LabelItem.js">
       <DependentUpon>Model.LabelItem.ts</DependentUpon>
@@ -379,19 +322,7 @@
       <DependentUpon>Model.LabelItem.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\ImageItem.ts" />
-    <Content Include="app\scripts\Model\ImageItem.js">
-      <DependentUpon>ImageItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ImageItem.js.map">
-      <DependentUpon>ImageItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ImageItemsCollection.ts" />
-    <Content Include="app\scripts\Model\ImageItemsCollection.js">
-      <DependentUpon>ImageItemsCollection.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ImageItemsCollection.js.map">
-      <DependentUpon>ImageItemsCollection.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\Model.ImageItem.ts" />
     <Content Include="tests\jasmine\Model.ImageItem.js">
       <DependentUpon>Model.ImageItem.ts</DependentUpon>
@@ -400,12 +331,6 @@
       <DependentUpon>Model.ImageItem.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\ButtonItem.ts" />
-    <Content Include="app\scripts\View\ButtonItem.js">
-      <DependentUpon>ButtonItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\ButtonItem.js.map">
-      <DependentUpon>ButtonItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\View.ButtonItemView.ts" />
     <Content Include="tests\jasmine\View.ButtonItemView.js">
       <DependentUpon>View.ButtonItemView.ts</DependentUpon>
@@ -414,12 +339,6 @@
       <DependentUpon>View.ButtonItemView.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\LabelItem.ts" />
-    <Content Include="app\scripts\View\LabelItem.js">
-      <DependentUpon>LabelItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\LabelItem.js.map">
-      <DependentUpon>LabelItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\View.LabelItemView.ts" />
     <Content Include="tests\jasmine\View.LabelItemView.js">
       <DependentUpon>View.LabelItemView.ts</DependentUpon>
@@ -428,12 +347,6 @@
       <DependentUpon>View.LabelItemView.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\ImageItem.ts" />
-    <Content Include="app\scripts\View\ImageItem.js">
-      <DependentUpon>ImageItem.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\ImageItem.js.map">
-      <DependentUpon>ImageItem.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\View.ImageItemView.ts" />
     <Content Include="tests\jasmine\View.ImageItemView.js">
       <DependentUpon>View.ImageItemView.ts</DependentUpon>
@@ -442,19 +355,7 @@
       <DependentUpon>View.ImageItemView.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\Module.ts" />
-    <Content Include="app\scripts\Model\Module.js">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\Module.js.map">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ModulesCollection.ts" />
-    <Content Include="app\scripts\Model\ModulesCollection.js">
-      <DependentUpon>ModulesCollection.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ModulesCollection.js.map">
-      <DependentUpon>ModulesCollection.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\Model.Module.ts" />
     <Content Include="tests\jasmine\Model.Module.js">
       <DependentUpon>Model.Module.ts</DependentUpon>
@@ -463,12 +364,6 @@
       <DependentUpon>Model.Module.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\Module.ts" />
-    <Content Include="app\scripts\View\Module.js">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\Module.js.map">
-      <DependentUpon>Module.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\View.Module.ts" />
     <Content Include="tests\jasmine\View.Module.js">
       <DependentUpon>View.Module.ts</DependentUpon>
@@ -477,12 +372,6 @@
       <DependentUpon>View.Module.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\FaceRenderer.ts" />
-    <Content Include="app\scripts\View\FaceRenderer.js">
-      <DependentUpon>FaceRenderer.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\View\FaceRenderer.js.map">
-      <DependentUpon>FaceRenderer.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\View.FaceRenderer.ts" />
     <Content Include="tests\jasmine\View.FaceRenderer.js">
       <DependentUpon>View.FaceRenderer.ts</DependentUpon>
@@ -491,19 +380,7 @@
       <DependentUpon>View.FaceRenderer.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonState.ts" />
-    <Content Include="app\scripts\Model\ButtonState.js">
-      <DependentUpon>ButtonState.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ButtonState.js.map">
-      <DependentUpon>ButtonState.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="app\scripts\Model\ButtonStateCollection.ts" />
-    <Content Include="app\scripts\Model\ButtonStateCollection.js">
-      <DependentUpon>ButtonStateCollection.ts</DependentUpon>
-    </Content>
-    <Content Include="app\scripts\Model\ButtonStateCollection.js.map">
-      <DependentUpon>ButtonStateCollection.ts</DependentUpon>
-    </Content>
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonState.ts" />
     <Content Include="tests\jasmine\Model.ButtonState.js">
       <DependentUpon>Model.ButtonState.ts</DependentUpon>
