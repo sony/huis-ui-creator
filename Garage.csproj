@@ -344,10 +344,10 @@
       <DependentUpon>ButtonItemsCollection.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="app\scripts\View\PhnConfig.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\PropertyAreaButtonBase.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\PropertyAreaButtonJump.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\PropertyAreaButtonMacro.ts" />
-    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\PropertyAreaButtonNormal.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\ButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\JumpButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\MacroButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\NormalButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
     <TypeScriptCompile Include="app\scripts\View\VersionDialog.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />

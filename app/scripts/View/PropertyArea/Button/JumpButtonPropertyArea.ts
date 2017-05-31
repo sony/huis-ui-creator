@@ -6,9 +6,9 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-        var TAG = "[Garage.View.PropertyAreaButtonJump] ";
+        var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
-        export class PropertyAreaButtonJump extends PropertyAreaButtonBase {
+        export class JumpButtonPropertyArea extends ButtonPropertyArea {
 
             /** 
              * ページジャンプ設定として使用する信号番号
@@ -133,12 +133,12 @@ module Garage {
 
                 let targetRemoteId = stateData.jump.remote_id;
                 if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
-                    this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.remote_id);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.remote_id);
                 } else {
-                    this.renderRemoteIdOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID);
                 }
 
-                this.renderPagesOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.scene_no);
+                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.DEFAULT_STATE_ID, stateData.jump.scene_no);
 
                 $jumpContainer.i18n();
 
@@ -223,10 +223,10 @@ module Garage {
                 
                 this.renderPagesOf(0, undefined, newSettings.scene_no);
 
-                let $targetSignalContainer = this.getSignalContainerElementOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                let $targetSignalContainer = this.getSignalContainerElementOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
                 $targetSignalContainer.i18n();
-                this.refreshRemoteSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
-                this.refreshPageSelect(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                this.refreshRemoteSelect(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
+                this.refreshPageSelect(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
                 this.updateModel();
             }
@@ -238,8 +238,8 @@ module Garage {
              * @return {IJump} 現在のページジャンプ設定
              */
             private getJumpSettings(): IJump {
-                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
-                let sceneNoText = this.getPageFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
+                let sceneNoText = this.getPageFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
                 let sceneNo: number = sceneNoText ? Number(sceneNoText) : 0;
 
                 return {
@@ -259,10 +259,10 @@ module Garage {
                 //remoteId設定用プルダウンをフォーカスする。
                 let ActionNum = this.model.state[this.DEFAULT_STATE_ID].action.length;
 
-                let remoteId = this.getRemoteIdFromPullDownOf(PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
                 if (!this.isValidValue(remoteId)) {
-                    let input = this.$el.find("#select-remote-input-" + PropertyAreaButtonJump.DEFAULT_SIGNAL_ORDER);
+                    let input = this.$el.find("#select-remote-input-" + JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
                     setTimeout(() => {
                         input.focus();
                     });

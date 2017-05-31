@@ -24,7 +24,7 @@ module Garage {
         import Framework = CDP.Framework;
         import JQUtils = Util.JQueryUtils;
 
-        var TAG = "[Garage.View.PropertyAreaButtonMacro] ";
+        var TAG = "[Garage.View.PropertyArea.Button.MacroButtonPropertyArea] ";
 
         //プルダウンに入力できる情報
         interface ISignalInputs {
@@ -40,7 +40,7 @@ module Garage {
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
         }
 
-        export class PropertyAreaButtonMacro extends PropertyAreaButtonBase {
+        export class MacroButtonPropertyArea extends ButtonPropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
