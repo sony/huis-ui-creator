@@ -27,7 +27,7 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
         namespace constValue {
-            export const DEFAULT_STATE_INDEX : number = 0;//指定がない場合、プロパティエリアに表示するステート
+            export const DEFAULT_STATE_ID : number = 0;//指定がない場合、プロパティエリアに表示するステート
         }
 
         export abstract class ButtonPropertyArea extends PropertyArea {
@@ -138,7 +138,7 @@ module Garage {
              */
             protected getState(stateIndex? : number):Model.ButtonState {
                 if (stateIndex == null) {
-                    stateIndex = constValue.DEFAULT_STATE_INDEX;
+                    stateIndex = constValue.DEFAULT_STATE_ID;
                 }
                 return this.getModel().state[stateIndex];
             }
@@ -147,8 +147,8 @@ module Garage {
             /*
              *@return {number} デフォルトのステートのIndex
             */
-            protected getDefaultStateIndex():number{
-                return constValue.DEFAULT_STATE_INDEX;
+            protected getDefaultStateId():number{
+                return constValue.DEFAULT_STATE_ID;
             }
 
             /**
@@ -470,10 +470,12 @@ module Garage {
 
             /*
             * 入力したorderRemoteId用のプルダウンを描画する。
-            * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
-            * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
+            * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか
+            * @param {string} inputRemoteId 表示するリモコンのID
+            * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
+            * @param {string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string, unknownRcId?: string) {
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -496,10 +498,6 @@ module Garage {
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
                     let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
-
-                    if (stateId == null) {
-                        stateId = constValue.DEFAULT_STATE_INDEX;
-                    }
 
                     let inputSignalData = {
                         id: stateId,
@@ -670,11 +668,13 @@ module Garage {
 
 
             /*
-         * 入力したorderのFunctionsを描画する。
-         * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
-         * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
-         */
-            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string, unknownRcId?: string) {
+             * 入力したorderのFunctionsを描画する。
+             * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか.
+             * @param {string} functionName 描写するfunctionsプルダウンに設定する値。nullでも
+             * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
+             * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
+             */
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -717,10 +717,6 @@ module Garage {
 
                     let $functionlContainer = $target.find("#signal-function-container");
                     let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
-
-                    if (stateId == null) {
-                        stateId = constValue.DEFAULT_STATE_INDEX;
-                    }
 
                     //functionsが0個の場合のエラーケース対応
                     let inputFunctions = [];
@@ -859,7 +855,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX, page: number = -1) {
+            protected renderPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_ID, page: number = -1) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -894,7 +890,7 @@ module Garage {
              * @param order {number}
              * @param stateId {number}
              */
-            private appendPagesPullDown(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = constValue.DEFAULT_STATE_ID): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
@@ -929,7 +925,7 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_INDEX): number {
+            private getPagesOf(order: number, stateId: number = this.getDefaultStateId()): number {
                 let FUNCTION_NAME = TAG + "getPagesOf : ";
 
                 if (!this.isValidOrder(order)) {

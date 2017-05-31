@@ -272,7 +272,7 @@ module Garage {
                 }
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order, this.getDefaultStateIndex());
+                this.renderFunctionsOf(order);
                 this.updateModel();
 
                 //jQueryのスタイルをあてる。
@@ -333,7 +333,7 @@ module Garage {
                         let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
 
                         if (this.isValidValue(prevRemoteId)) {
-                            this.renderRemoteIdOf(tmpOrder, this.getDefaultStateIndex(),prevRemoteId);
+                            this.renderRemoteIdOf(tmpOrder, prevRemoteId);
                             this.renderFunctionsOf(tmpOrder);
                         }
                     }
@@ -742,11 +742,11 @@ module Garage {
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
                 let remoteId: string = huisFiles.getRemoteIdByAction(action);
-                this.renderRemoteIdOf(order, this.getDefaultStateIndex(), remoteId);
+                this.renderRemoteIdOf(order, remoteId);
 
                 //Functions用のプルダウンを描画できるときは描画
                 let functionName = this.getFunctionNameFromAction(action);
-                this.renderFunctionsOf(order, this.getDefaultStateIndex(), functionName);
+                this.renderFunctionsOf(order, functionName);
 
                 this.renderIntervalOf(order, action.interval);
 
@@ -788,7 +788,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id: this.getDefaultStateIndex()
+                    id: this.getDefaultStateId()
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.getTemplateFilePath());
@@ -1054,10 +1054,10 @@ module Garage {
 
                 this.renderIntervalOf(order, signalInputs.interval);
 
-                this.renderRemoteIdOf(order, this.getDefaultStateIndex(),signalInputs.remoteId);
+                this.renderRemoteIdOf(order, signalInputs.remoteId);
 
                 //Function選択用のPullダウンを更新。
-                this.renderFunctionsOf(order, this.getDefaultStateIndex(), signalInputs.functionName);
+                this.renderFunctionsOf(order, signalInputs.functionName);
 
             }
 

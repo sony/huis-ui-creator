@@ -183,28 +183,23 @@ module Garage {
                         let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
 
                         if (this.isValidValue(prevRemoteId)) {
-
-
                             //前のpulldownがunknownだった場合、次のプルダウンはリモコンはみ選択状態に。
                             if (this.isUnknownRemoteIdInPulldownOf(prevOrder)) {
                                 prevRemoteId = null;
                             }
-                            
-
-                            this.renderRemoteIdOf(order, this.getDefaultStateIndex(),prevRemoteId);
+                            this.renderRemoteIdOf(order, prevRemoteId);
                             this.renderFunctionsOf(order);
                         }
                     }
 
-                  
-                    this.updateModel(this.getDefaultStateIndex());
+                    this.updateModel();
                     this.controlPlusButtonEnable();
                     this.$el.i18n();
                     $('.custom-select').trigger('create');
 
                     //削除をちら見する。
                     this.animateAddButton(order, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
-                        this.renderSignals(this.getDefaultStateIndex());
+                        this.renderSignals();
                     });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
@@ -224,8 +219,8 @@ module Garage {
                     return;
                 }
 
-                this.updateModel(this.getDefaultStateIndex());
-                this.renderSignals(this.getDefaultStateIndex());
+                this.updateModel();
+                this.renderSignals();
 
             }
 
@@ -254,8 +249,8 @@ module Garage {
                 }
 
                 //Function選択用のPullダウンにFunctionを設定する。
-                this.renderFunctionsOf(order, this.getDefaultStateIndex());
-                this.updateModel(this.getDefaultStateIndex());
+                this.renderFunctionsOf(order);
+                this.updateModel();
 
                 //jQueryのスタイルをあてる。
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
@@ -264,19 +259,19 @@ module Garage {
 
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
                 if ($target.find(".default-value").length != 0) {
-                    this.renderSignals(this.getDefaultStateIndex());
+                    this.renderSignals();
                 }
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
-                this.updateModel(this.getDefaultStateIndex());
+                this.updateModel();
 
                 let $target = $(event.currentTarget);
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
                 if ($target.find(".default-value").length != 0) {
-                    this.renderSignals(this.getDefaultStateIndex());
+                    this.renderSignals();
                 }
             }
 
@@ -292,12 +287,8 @@ module Garage {
              * @param {number} stateId? 指定した場合、特定のステートを描画する。
              * @return {Backbone.View<Model.Item>}
              */
-            render(stateId? : number): Backbone.View<Model.Item> {
+            render(stateId: number = this.getDefaultStateId()): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "renderViewState";
-
-                if (stateId == null) {
-                    stateId = this.getDefaultStateIndex();
-                }
 
                 if (this.getModel().isAirconButton() ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
@@ -326,9 +317,12 @@ module Garage {
             ///// private method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            private updateModel(stateId: number) {
+            /*
+             * モデルを更新する。
+             * @param {number} stateIndex? 更新するステート。指定しない場合、デフォルト値になる。
+             */
+            private updateModel(stateId: number = this.getDefaultStateId()) {
                 let FUNCTION_NAME = TAG + "updateModel : ";
-
 
                 //orderをkeyとしたActionのハッシュを作成。
                 let tmpActionsWithOrder = {};
@@ -464,7 +458,7 @@ module Garage {
                     }
                 }
 
-                let tmpState = this.getModel().state[stateId];
+                let tmpState = this.getState(stateId);
 
                 let newState = new Model.ButtonState({});
                 if (tmpState != null) {
@@ -621,18 +615,13 @@ module Garage {
 
             /*
             * 信号プルダウンメニューたちをレンダリングする
-            * @param stateId{number} ターゲットとなるstateId
+            * @param stateId{number} ターゲットとなるstateId.指定しない場合、default値になる。
             * @param $signalsContainer{JQuery} ベースとなるJQuery要素
             */
-            private renderSignals(stateId: number){
+            private renderSignals(stateId: number = this.getDefaultStateId()){
                 let FUNCTION_NAME: string = TAG + "renderSignals : ";
 
-                if (stateId == null) {
-                    console.warn(FUNCTION_NAME + "stateId is null");
-                    return;
-                }
-
-                let actions: IAction[] = this.getModel().state[stateId].action;
+                let actions: IAction[] = this.getState(stateId).action;
 
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "actions is invalid");
@@ -659,7 +648,7 @@ module Garage {
                     this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
 
                     //function設定用pulldownをレンダリング
-                    this.renderFunctionsOf(i, stateId, functionName, unknownRcId);
+                    this.renderFunctionsOf(i, functionName, stateId, unknownRcId);
 
                 }
 
@@ -726,7 +715,7 @@ module Garage {
                 //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, stateId, remoteId, unknownRcId);
+                this.renderRemoteIdOf(order, remoteId, stateId,  unknownRcId);
             }
 
             /*

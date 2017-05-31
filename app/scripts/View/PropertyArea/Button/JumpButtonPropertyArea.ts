@@ -67,8 +67,8 @@ module Garage {
                     return;
                 }
 
-                this.renderRemoteIdOf(order, this.getDefaultStateIndex(), this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order, this.getDefaultStateIndex());
+                this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
+                this.renderPagesOf(order);
 
                 this.updateModel();
 
@@ -90,7 +90,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order, this.getDefaultStateIndex(), this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order, this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
@@ -133,12 +133,12 @@ module Garage {
 
                 let targetRemoteId = stateData.jump.remote_id;
                 if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
-                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex(), stateData.jump.remote_id);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, stateData.jump.remote_id);
                 } else {
-                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex());
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, null);
                 }
 
-                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateIndex(), stateData.jump.scene_no);
+                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, stateData.jump.scene_no);
 
                 $jumpContainer.i18n();
 
