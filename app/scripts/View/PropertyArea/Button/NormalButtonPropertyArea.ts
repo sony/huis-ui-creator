@@ -192,7 +192,7 @@ module Garage {
                         }
                     }
 
-                    this.updateModel();
+                    this.updateModel(this.getDefaultStateId());
                     this.controlPlusButtonEnable();
                     this.$el.i18n();
                     $('.custom-select').trigger('create');
@@ -203,11 +203,9 @@ module Garage {
                     });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
-                }
-
-                
-                
+                }    
             }
+
 
             //Actionを変更させたときに呼ばれる
             private onActionPullDownListChanged(event: Event) {
@@ -219,10 +217,10 @@ module Garage {
                     return;
                 }
 
-                this.updateModel();
+                this.updateModel(this.getDefaultStateId());
                 this.renderSignals();
-
             }
+
 
             //リモコン選択用のプルダウンが変更されたときに呼ばれる
             private onRemotePullDownListChanged(event: Event) {
@@ -250,7 +248,7 @@ module Garage {
 
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order);
-                this.updateModel();
+                this.updateModel(this.getDefaultStateId());
 
                 //jQueryのスタイルをあてる。
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
@@ -263,10 +261,11 @@ module Garage {
                 }
             }
 
+
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
-                this.updateModel();
+                this.updateModel(this.getDefaultStateId());
 
                 let $target = $(event.currentTarget);
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
@@ -319,9 +318,9 @@ module Garage {
 
             /*
              * モデルを更新する。
-             * @param {number} stateIndex? 更新するステート。指定しない場合、デフォルト値になる。
+             * @param {number} stateId 更新するステート。
              */
-            private updateModel(stateId: number = this.getDefaultStateId()) {
+            private updateModel(stateId: number) {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 //orderをkeyとしたActionのハッシュを作成。
