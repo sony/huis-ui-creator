@@ -867,7 +867,7 @@ module Garage {
 
                 let $pulldown = this.appendPagesPullDown(order, stateId);
 
-                let maxPage = this.getPagesOf(order, stateId);
+                let maxPage = this.getPageNumOf(order, stateId);
                 if (maxPage <= 0) {
                     // リモコン未選択時/リモコンが存在しないはプルダウン自体を非表示
                     $pulldown.hide();
@@ -927,14 +927,13 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPagesOf(order: number, stateId: number = this.getDefaultStateId()): number {
-                let FUNCTION_NAME = TAG + "getPagesOf : ";
+            private getPageNumOf(order: number, stateId: number = this.getDefaultStateId()): number {
+                let FUNCTION_NAME = TAG + "getPageNumOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return 0;
                 }
-
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
