@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
 
         namespace constValue {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
