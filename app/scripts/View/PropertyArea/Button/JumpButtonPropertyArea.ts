@@ -261,7 +261,7 @@ module Garage {
 
                 let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     let input = this.$el.find("#select-remote-input-" + JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
                     setTimeout(() => {
                         input.focus();

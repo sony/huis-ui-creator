@@ -103,7 +103,7 @@ module Garage {
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextAboveSignalContainer: JQuery = this.getSignalContainerElementOf(order - 1);
 
-                if (this.isValidJQueryElement($nextAboveSignalContainer)) {
+                if (Util.JQueryUtils.isValidJQueryElement($nextAboveSignalContainer)) {
 
                     //二重発火を防止用。
                     $target.addClass("acting");
@@ -172,7 +172,7 @@ module Garage {
                 //sort先（一つ下の順番）のJqueryを取得.値を入れ替える。
                 let $thisOrderSignalContainer: JQuery = this.getSignalContainerElementOf(order);
                 let $nextBelowSignalContainer: JQuery = this.getSignalContainerElementOf(targetOrder);
-                if (this.isValidJQueryElement($nextBelowSignalContainer)) {
+                if (Util.JQueryUtils.isValidJQueryElement($nextBelowSignalContainer)) {
 
                     //二重発火を防止用。
                     $target.addClass("acting");
@@ -332,7 +332,7 @@ module Garage {
                     if (this.isValidOrder(prevOrder)) {
                         let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
 
-                        if (this.isValidValue(prevRemoteId)) {
+                        if (Util.JQueryUtils.isValidValue(prevRemoteId)) {
                             this.renderRemoteIdOf(tmpOrder, prevRemoteId);
                             this.renderFunctionsOf(tmpOrder);
                         }
@@ -461,19 +461,19 @@ module Garage {
 
                     //intervalを仮取得
                     let tmpInterval: number = this.getIntervalFromPullDownOf(order);
-                    if (!this.isValidValue(tmpInterval)) {
+                    if (!Util.JQueryUtils.isValidValue(tmpInterval)) {
                         tmpInterval = 0;
                     }
 
                     //remoteIdを仮取得
                     let tmpRemoteId: string = this.getRemoteIdFromPullDownOf(order);
-                    if (!this.isValidValue(tmpRemoteId)) {
+                    if (!Util.JQueryUtils.isValidValue(tmpRemoteId)) {
                         tmpRemoteId = null;
                     }
 
                     //functionを仮取得
                     let tmpFunction: string = this.getFunctionFromlPullDownOf(order);
-                    if (!this.isValidValue(tmpFunction)) {
+                    if (!Util.JQueryUtils.isValidValue(tmpFunction)) {
                         tmpFunction = null;
                     }
 
@@ -592,7 +592,7 @@ module Garage {
                     //最後のorderのとき、並び替えしたボタンを非表示にする。
                     if (i == actions.length - 1) {
                         let sortAreaLastOrder : JQuery = this.$el.find("#sort-button-area-" + i);
-                        if (this.isValidJQueryElement(sortAreaLastOrder)) {
+                        if (Util.JQueryUtils.isValidJQueryElement(sortAreaLastOrder)) {
                             sortAreaLastOrder.addClass("last-order");
                         }
                     }
@@ -643,7 +643,7 @@ module Garage {
                 let $dotFirstOrder = this.$el.find("#order-indicator-dot-0");
                 let firstOrderY: number = null;
                 let firstOrderBottom: number = null;
-                if (this.isValidJQueryElement($dotFirstOrder)) {
+                if (Util.JQueryUtils.isValidJQueryElement($dotFirstOrder)) {
                     firstOrderY = $dotFirstOrder.offset().top;
                     firstOrderBottom = firstOrderY + $dotFirstOrder.outerHeight(true);
                 }
@@ -653,12 +653,12 @@ module Garage {
                 //orderMaxのドットの位置を取得
                 let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
                 let lastOrderY = null;
-                if (this.isValidJQueryElement($dotLastOrder)) {
+                if (Util.JQueryUtils.isValidJQueryElement($dotLastOrder)) {
                     lastOrderY = $dotLastOrder.offset().top;
                 }
 
                 //その差分をドット線の長さとする
-                if (this.isValidValue(firstOrderY) && this.isValidValue(firstOrderBottom) && this.isValidValue(lastOrderY)) {
+                if (Util.JQueryUtils.isValidValue(firstOrderY) && Util.JQueryUtils.isValidValue(firstOrderBottom) && Util.JQueryUtils.isValidValue(lastOrderY)) {
 
                     //templateからdomを読み込み,domを描写
                     let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.getTemplateFilePath());
@@ -667,7 +667,7 @@ module Garage {
 
                     let dotLineLength = lastOrderY - firstOrderY;
                     let $dotLine = this.$el.find(".dot-line");
-                    if (this.isValidJQueryElement($dotLine)) {
+                    if (Util.JQueryUtils.isValidJQueryElement($dotLine)) {
                         $dotLine.height(dotLineLength);
 
                         //order0のドットの開始点に合わせる。
@@ -796,7 +796,7 @@ module Garage {
                 $intervalContainer.append($intervalDetail);
 
                 //inverfalの表示を変更 値がundefinedのとき0を代入する
-                if (!this.isValidValue(inputInterval)) {
+                if (!Util.JQueryUtils.isValidValue(inputInterval)) {
                     inputInterval = 0;
                 }
                 this.setIntervalPullDownOf(order, inputInterval);
@@ -831,7 +831,7 @@ module Garage {
                 }
 
                 interval = parseFloat($intervalPullDown.val());
-                if (!this.isValidValue(interval)) {
+                if (!Util.JQueryUtils.isValidValue(interval)) {
                     return undefined;
                 }
 
@@ -894,7 +894,7 @@ module Garage {
                     let $intervalPulllDown = $target.find("select.interval-input");
                     if ($intervalPulllDown.length != 0) {
                         let value = $intervalPulllDown.val();
-                        if (!this.isValidValue(value)) {
+                        if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -903,7 +903,7 @@ module Garage {
                     let $remoteIdlPulllDown = $target.find("select.remote-input");
                     if ($remoteIdlPulllDown.length != 0) {
                         let value = $remoteIdlPulllDown.val();
-                        if (!this.isValidValue(value)) {
+                        if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -912,7 +912,7 @@ module Garage {
                     let $functionlPulllDown = $target.find("select.function-input");
                     if ($functionlPulllDown.length != 0) {
                         let value = $functionlPulllDown.val();
-                        if (!this.isValidValue(value)) {
+                        if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
@@ -937,7 +937,7 @@ module Garage {
                 let $signalContainers: JQuery = this.$el.find(".signal-container-element");
 
                 //設定できるマクロ最大数だった場合、表示すらしない。
-                if (this.isValidJQueryElement($signalContainers) && $signalContainers.length >= MAX_NUM_MACRO_SIGNAL) {
+                if (Util.JQueryUtils.isValidJQueryElement($signalContainers) && $signalContainers.length >= MAX_NUM_MACRO_SIGNAL) {
                     $target.addClass("gone");
                 } else {
                     $target.removeClass("gone");
@@ -1010,17 +1010,17 @@ module Garage {
 
                 // intervalは見つからない場合、0として扱う。
                 let interval = this.getIntervalFromPullDownOf(order);
-                if (!this.isValidValue(interval)) {
+                if (!Util.JQueryUtils.isValidValue(interval)) {
                     interval = 0;
                 }
 
                 let remoteId = this.getRemoteIdFromPullDownOf(order);
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     remoteId = undefined;
                 }
 
                 let functionName = this.getFunctionFromlPullDownOf(order);
-                if (!this.isValidValue(functionName)) {
+                if (!Util.JQueryUtils.isValidValue(functionName)) {
                     functionName = undefined;
                 }
 
@@ -1076,7 +1076,7 @@ module Garage {
                 let functionOrder0 = this.getFunctionFromlPullDownOf(0);
 
                
-                if (ActionNum <= 1 && !this.isValidValue(remoteIdOrder0) && !this.isValidValue(functionOrder0)) {
+                if (ActionNum <= 1 && !Util.JQueryUtils.isValidValue(remoteIdOrder0) && !Util.JQueryUtils.isValidValue(functionOrder0)) {
                     this.$el.find("#select-remote-input-0").focus();
                 }  
             }
@@ -1114,7 +1114,7 @@ module Garage {
                 }
 
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
-                if (!this.isValidJQueryElement($targetSignalContainer)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($targetSignalContainer)) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }

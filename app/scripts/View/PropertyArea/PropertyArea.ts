@@ -69,40 +69,6 @@ module Garage {
             getTemplateFilePath() {
                 return constValue.TEMPLATE_FILE_PATH;
             }
-
-            /*
-             * 値が有効か判定する。
-             * @return {boolen} nullでも、"none"でも、""でも、NaNでもない場合、trueを返す。
-             */ 
-            protected isValidValue(value): boolean {
-                let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
-                if (value == null) {
-                    return false;
-                } else if (value == "none") {
-                    return false;
-                } else if (value === "") {
-                    return false;
-                } else if (Util.JQueryUtils.isNaN(value)) {
-                    return false;
-                }
-                return true;
-            }
-
-
-            /*
-             * JQuery要素が有効か判定する
-             * @param $target{JQuery}判定対象
-             * @return {boolean} 有効な場合、true
-             */
-            protected isValidJQueryElement($target: JQuery): boolean {
-                if ($target == null || $target.length == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-
         }
     }
 }

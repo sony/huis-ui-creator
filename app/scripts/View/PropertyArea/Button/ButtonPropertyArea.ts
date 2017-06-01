@@ -83,7 +83,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onHoverInSignalContainer";
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
-                if (this.isValidJQueryElement($target)) {
+                if (Util.JQueryUtils.isValidJQueryElement($target)) {
                     $target.css("opacity","1");
                 }
             }
@@ -93,7 +93,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onHoverOutSignalContainer";
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
-                if (this.isValidJQueryElement($target)) {
+                if (Util.JQueryUtils.isValidJQueryElement($target)) {
                     $target.css("opacity", "0");
                 }
             }
@@ -278,7 +278,7 @@ module Garage {
                 remoteId = $remotePullDown.val();
 
                 //"none"も見つからない扱いとする。
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     return undefined;
                 }
 
@@ -306,7 +306,7 @@ module Garage {
                 }
 
                 let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if (!this.isValidJQueryElement($remoteIdPullDown)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($remoteIdPullDown)) {
                     console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
                     return;
                 }
@@ -382,7 +382,7 @@ module Garage {
                 }
 
                 let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if (!this.isValidJQueryElement($remoteIdPullDown)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($remoteIdPullDown)) {
                     console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
                     return;
                 }
@@ -392,7 +392,7 @@ module Garage {
                     remoteName = this._getRemoteNameOfUnknownRemote(unknownRcId);
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
-                    if (this.isValidValue(cachedDeviceInfo)) {
+                    if (Util.JQueryUtils.isValidValue(cachedDeviceInfo)) {
                         remoteName = cachedDeviceInfo.remoteName;
                     }
                 }
@@ -526,7 +526,7 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (this.isValidValue(inputRemoteId) ) {
+                    if (Util.JQueryUtils.isValidValue(inputRemoteId) ) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
@@ -676,7 +676,7 @@ module Garage {
 
                 functionName = $functionPullDown.val();
 
-                if (!this.isValidValue(functionName)) {
+                if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return undefined;
                 }
 
@@ -728,7 +728,7 @@ module Garage {
 
                 if (functions != null && functions.length != 0) {
                     // functionsに自分のキーが存在しない場合は追加
-                    if (this.isValidValue(functionName) &&
+                    if (Util.JQueryUtils.isValidValue(functionName) &&
                         functions.indexOf(functionName) < 0) {
                         functions.unshift(functionName);
                     }
@@ -751,7 +751,7 @@ module Garage {
                     $functionlContainer.append($functionsDetail);
 
                     //inputにmodelがある場合、値を表示
-                    if (this.isValidValue(functionName)) {
+                    if (Util.JQueryUtils.isValidValue(functionName)) {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
@@ -770,7 +770,7 @@ module Garage {
             protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo{
                 let FUNCTION_NAME = TAG + "cloneDeviceInfo"; 
 
-                if (!this.isValidValue(src)) {
+                if (!Util.JQueryUtils.isValidValue(src)) {
                     console.warn(FUNCTION_NAME + "src is invalid");
                     return;
                 }
@@ -795,7 +795,7 @@ module Garage {
             */
             protected isRelearnedFunctionName(functionName: string): boolean {
                 let FUNCTION_NAME = TAG + "isRelearnedFunctionName ";
-                if (!this.isValidValue(functionName)) {
+                if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return false;
                 }
 
@@ -1105,7 +1105,7 @@ module Garage {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
 
 
-                if (!this.isValidValue(order)) {
+                if (!Util.JQueryUtils.isValidValue(order)) {
                     console.warn(FUNCTINO_NAME + "order is invalid");
                     return;
                 }
@@ -1164,7 +1164,7 @@ module Garage {
                 }
 
                 let $target = this.getSignalContainerElementOf(order);
-                if (!this.isValidJQueryElement($target)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target)) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
@@ -1212,12 +1212,12 @@ module Garage {
             protected setAnimationDuration($target: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "setAnimationDuration : ";
 
-                if (!this.isValidJQueryElement($target)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target)) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(duration)) {
+                if (!Util.JQueryUtils.isValidValue(duration)) {
                     console.warn(FUNCTION_NAME + "duration is invalid");
                     return;
                 }
@@ -1234,7 +1234,7 @@ module Garage {
             protected getPosition($target: JQuery): IPosition{
                 let FUNCTION_NAME = TAG + "getPosition : ";
 
-                if (!this.isValidJQueryElement($target) || $target.offset() == null) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target) || $target.offset() == null) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
@@ -1259,12 +1259,12 @@ module Garage {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
                 
 
-                if (!this.isValidJQueryElement($target1)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target1)) {
                     console.warn(FUNCTION_NAME + "$target1 is invalid");
                     return;
                 }
 
-                if (!this.isValidJQueryElement($target2)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target2)) {
                     console.warn(FUNCTION_NAME + "$target2 is invalid");
                     return;
                 }
@@ -1304,7 +1304,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
 
                 //値として利用できるかチェック
-                if (!this.isValidValue(order)) {
+                if (!Util.JQueryUtils.isValidValue(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return false;
                 }
@@ -1334,7 +1334,7 @@ module Garage {
             protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo{
                 let FUNCTION_NAME = TAG + "isCachedMenberRemoteId : ";
 
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     console.warn(FUNCTION_NAME + "remoteId is invalid");
                     return null;
                 }
@@ -1363,12 +1363,12 @@ module Garage {
             protected isIncludeSpecificDeviceType(button: Model.ButtonItem, category: string): boolean {
                 let FUNCTION_NAME = TAG + "isIncludeSpecificDeviceType : ";
 
-                if (!this.isValidValue(button)) {
+                if (!Util.JQueryUtils.isValidValue(button)) {
                     console.warn(FUNCTION_NAME + "button is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(category)) {
+                if (!Util.JQueryUtils.isValidValue(category)) {
                     console.warn(FUNCTION_NAME + "category is invalid");
                     return;
                 }
@@ -1402,12 +1402,12 @@ module Garage {
                 : string): boolean {
                 let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
 
-                if (!this.isValidValue(button)) {
+                if (!Util.JQueryUtils.isValidValue(button)) {
                     console.warn(FUNCTION_NAME + "button is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(actionType)) {
+                if (!Util.JQueryUtils.isValidValue(actionType)) {
                     console.warn(FUNCTION_NAME + "actionType is invalid");
                     return;
                 }
