@@ -14,49 +14,55 @@
     limitations under the License.
 */
 
-/// <reference path="../../../include/interfaces.d.ts" />
+/// <reference path="../../../../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Button.LabelPropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.TextPreview] ";
 
-        export class LabelPropertyArea extends PropertyArea {
+        namespace constValue {
+            export const SIZE_PULLDOWM_CSS_CLASS : string = ".property-text-size";
+        }
 
-            private _labelPreviewWindow: LabelPreviewWindow;
+        export class TextPreview extends Preview {
 
             /**
              * constructor
              */
-            constructor(label:Model.LabelItem, $el:JQuery, commandManager:CommandManager) {
-                super(label, $el, commandManager);
-                this._labelPreviewWindow = new LabelPreviewWindow(label, $el);
+            constructor(item: Model.LabelItem, $el: JQuery) {
+                super(item, $el);
             }
 
 
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
 
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this._labelPreviewWindow.render();
+            render(option?: any): Backbone.View<Model.Item> {
+
+                let templateLabel = CDP.Tools.Template.getJST("#template-label-detail", this.getTemplateFilePath());
+                let $labelDetail = $(templateLabel(this.getModel()));
+                this.$el.append($labelDetail);
+                var $labelTextSize = $labelDetail.find(constValue.SIZE_PULLDOWM_CSS_CLASS);
+                $labelTextSize.val(this.getModel().size.toString());
+                this.$el.i18n();
+
                 return this;
-            }
-        
+            };
+
+
             /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
+            *保持しているモデルを取得する
             * @return {Model.LabelItem}
             */
             getModel(): Model.LabelItem {
-                //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.LabelItem型に限らない。
-                //このクラスとその子供のクラスはthis.modelをModel.LabelItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.LabelItem>this.model;
             }
 
