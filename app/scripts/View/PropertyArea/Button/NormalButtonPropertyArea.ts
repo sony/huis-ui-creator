@@ -184,7 +184,7 @@ module Garage {
 
                         if (this.isValidValue(prevRemoteId)) {
                             //前のpulldownがunknownだった場合、次のプルダウンはリモコンはみ選択状態に。
-                            if (this.isUnknownRemoteIdInPulldownOf(prevOrder)) {
+                            if (this.isUnknownRemoteTypeInPulldownOf(prevOrder)) {
                                 prevRemoteId = null;
                             }
                             this.renderRemoteIdOf(order, prevRemoteId);
@@ -377,7 +377,7 @@ module Garage {
                     }
 
                     //キャッシュでも、deviceInfoを取得できない。かつ remoteId用のpulldownがunknownのとき、this.modeから取得する。
-                    if (!tmpDeviceInfo && this.isUnknownRemoteIdInPulldownOf(order)) {
+                    if (!tmpDeviceInfo && this.isUnknownRemoteTypeInPulldownOf(order)) {
                         tmpDeviceInfo = this.getModel().state[0].action[order].deviceInfo;
                     }
 
@@ -640,15 +640,15 @@ module Garage {
                     let actionInput: string = targetAction.input;
                     let remoteId = huisFiles.getRemoteIdByAction(targetAction);
                     let functionName = this.getFunctionNameFromAction(targetAction);
-                    let unknownRcId: string = null;
+                    let unknownRcType: string = null;
                     //remoteIDがみつからない かつ、 コードとファンクション名がある場合、UNKNOWNに。
                     if (!this.isValidValue(remoteId) && (targetAction.code_db != null && this.isValidValue(targetAction.code_db.function))) {
-                        unknownRcId = this._getRemoteIdOfUnknownRemote(targetAction);
+                        unknownRcType = this._getRemoteIdOfUnknownRemote(targetAction);
                     }
-                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcId);
+                    this.renderSignalContainerMin(i, stateId, actionInput, remoteId, unknownRcType);
 
                     //function設定用pulldownをレンダリング
-                    this.renderFunctionsOf(i, functionName, stateId, unknownRcId);
+                    this.renderFunctionsOf(i, functionName, stateId, unknownRcType);
 
                 }
 
@@ -690,7 +690,7 @@ module Garage {
             * @param inputAction{string}
             * @param remoteId?{string}
             */
-            private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string, unknownRcId?: string) {
+            private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string, unknownRcType?: string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
                 if (!this.isValidOrder(order)) {
@@ -715,7 +715,7 @@ module Garage {
                 //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, remoteId, stateId,  unknownRcId);
+                this.renderRemoteIdOf(order, remoteId, stateId,  unknownRcType);
             }
 
             /*
@@ -924,7 +924,7 @@ module Garage {
                     let $remoteIdlPulllDown = $target.find("select.remote-input");
                     if ($remoteIdlPulllDown.length != 0) {
                         let value = $remoteIdlPulllDown.val();
-                        if (!this.isValidValue(value) && !this.isUnknownRemoteIdInPulldownOf) {
+                        if (!this.isValidValue(value) && !this.isUnknownRemoteTypeInPulldownOf) {
                             return false;
                         }
                     }

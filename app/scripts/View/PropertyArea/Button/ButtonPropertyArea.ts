@@ -295,9 +295,9 @@ module Garage {
             }
 
 
-            private _getRemoteNameOfUnknownRemote(unknownRemoteId: string) {
+            private _getRemoteNameOfUnknownRemote(unknownRcType: string) {
                 let remoteId: string;
-                switch (unknownRemoteId) {
+                switch (unknownRcType) {
                     case UNKNOWN_REMOTE_TV:
                         remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV");
                         break;
@@ -438,7 +438,7 @@ module Garage {
             * @param order{number}
             * @return {boolean}
             */
-            protected isUnknownRemoteIdInPulldownOf(order: number): boolean {
+            protected isUnknownRemoteTypeInPulldownOf(order: number): boolean {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
                 if (!this.isValidOrder(order)) {
