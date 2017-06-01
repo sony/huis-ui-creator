@@ -25,7 +25,6 @@ module Garage {
 
         namespace constValue {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
-            export const $BASE: JQuery = $("#face-item-detail"); 
         }
 
         export abstract class PropertyArea extends Backbone.View<Model.Item> {
@@ -60,14 +59,6 @@ module Garage {
             */
             getModel(): Model.Item {
                 return this.model;
-            }
-
-
-            /*
-             * @return {JQuery} プロパティエリアの土台のJQuery要素。
-             */
-            protected getPropertyAreaBaseJQuery(): JQuery {
-                return this.$el.find(constValue.$BASE);
             }
 
 
