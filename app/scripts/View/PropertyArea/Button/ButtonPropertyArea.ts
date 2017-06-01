@@ -107,7 +107,7 @@ module Garage {
             * @return {Model.BUttonItem}
             */
             public getModel(): Model.ButtonItem {
-                //親クラスは、ボタンアイテムに限らない全アイテムをthis.modelとして所有している。
+                //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。
                 //このクラスとその子供のクラスはthis.modelをModel.ButtonItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.ButtonItem>this.model;
             }
