@@ -134,15 +134,10 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-             * ボタンが持つStateを取得する。
-             * @param {number} stateIndex ? 取得するStateのId.指定しない場合デフォルト値となる。
-             * @return {Model.ButtonState}
+             * デフォルトで表示するStateを取得する。
              */
-            protected getState(stateIndex? : number):Model.ButtonState {
-                if (stateIndex == null) {
-                    stateIndex = constValue.DEFAULT_STATE_ID;
-                }
-                return this.getModel().state[stateIndex];
+            protected getDefaultState():Model.ButtonState {
+                return this.getModel().state[constValue.DEFAULT_STATE_ID];
             }
 
 
@@ -391,11 +386,9 @@ module Garage {
                    
                 }
 
-             
-
                 $remoteIdPullDown.val(inputRemoteId);
-
             }
+
 
             /*
             * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
@@ -1325,7 +1318,7 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.getState().action) {
+                for (let action of this.getDefaultState().action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;

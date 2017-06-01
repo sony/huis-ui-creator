@@ -115,9 +115,9 @@ module Garage {
 
                 let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.getTemplateFilePath());
                 let $jumpContainer = this.$el.nextAll("#states-container");
-                let stateData = this.createStateData(this.getState());
+                let stateData = this.createStateData(this.getDefaultState());
                 stateData.actionList = ACTION_INPUTS_JUMP;
-                stateData.jump = this.getState().action[0].jump;
+                stateData.jump = this.getDefaultState().action[0].jump;
                 let $stateDetail = $(templateState(stateData));
 
                 //テキストラベルの大きさの設定値を反映する。
@@ -129,7 +129,7 @@ module Garage {
 
                 $jumpContainer.append($stateDetail);
 
-                this.setActionPullDown(this.getState());
+                this.setActionPullDown(this.getDefaultState());
 
                 let targetRemoteId = stateData.jump.remote_id;
                 if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
@@ -159,14 +159,14 @@ module Garage {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
                 let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
-                let newAction = $.extend(true, {}, this.getState().action[0]);
+                let newAction = $.extend(true, {}, this.getDefaultState().action[0]);
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [ newAction ];
-                this.getState().action = newActions;
+                this.getDefaultState().action = newActions;
 
                 let states: Model.ButtonState[] = [];
-                states.push(this.getState());
+                states.push(this.getDefaultState());
 
                 this.getModel().state = states;
                 this.trigger("updateModel");
@@ -257,7 +257,7 @@ module Garage {
 
                 //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
                 //remoteId設定用プルダウンをフォーカスする。
-                let ActionNum = this.getState().action.length;
+                let ActionNum = this.getDefaultState().action.length;
 
                 let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
