@@ -57,8 +57,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(commandManager : CommandManager, options : Backbone.ViewOptions<Model.ButtonItem>) {
-                super(commandManager, options);
+            constructor(button:Model.ButtonItem, $el:JQuery, commandManager : CommandManager) {
+                super(button, $el, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
             }
 

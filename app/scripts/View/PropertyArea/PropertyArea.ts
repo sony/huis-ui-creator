@@ -35,8 +35,10 @@ module Garage {
             /**
              * constructor
              */
-            constructor(commandManager:CommandManager, options: Backbone.ViewOptions<Model.Item>) {
+            constructor(item : Model.Item, $el:JQuery, commandManager:CommandManager, options? : Backbone.ViewOptions<Model.Item>) {
                 super(options);
+                this.model = item;
+                this.$el = $el;
                 this.commandManager_ = commandManager;
             }
 

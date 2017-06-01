@@ -28,8 +28,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(commandManager:CommandManager, options: Backbone.ViewOptions<Model.LabelItem>) {
-                super(commandManager,options);
+            constructor(label:Model.LabelItem, $el:JQuery, commandManager:CommandManager) {
+                super(label, $el, commandManager);
             }
 
 

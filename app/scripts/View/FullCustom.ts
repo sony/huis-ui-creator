@@ -4862,11 +4862,9 @@ module Garage {
 
                 } else if (item instanceof Model.LabelItem) {
                     let labelPropertyArea: LabelPropertyArea = new LabelPropertyArea(
-                        this.commandManager_ ,
-                        {
-                            el: $detail,
-                            model: item,
-                        }
+                        item,
+                        $detail,
+                        this.commandManager_ 
                     )
                     labelPropertyArea.render();
                 } else {
@@ -4977,11 +4975,10 @@ module Garage {
                 if (this.macroProperty == null) {
                     
                     this.macroProperty = new MacroButtonPropertyArea(
-                        this.commandManager_,
-                        {
-                            el: $buttonDetail,
-                            model: button,
-                        });
+                        button,
+                        $buttonDetail,
+                        this.commandManager_
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel,this);
                 } else {
@@ -5141,11 +5138,9 @@ module Garage {
                 //信号用のViewの初期化・更新
                 if (this.buttonProperty == null) {
                     this.buttonProperty = new NormalButtonPropertyArea(
-                    this.commandManager_,
-                        {
-                            el: $buttonDetail,
-                            model: button,
-                        }
+                        button,
+                        $buttonDetail,
+                        this.commandManager_
                     );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
@@ -5279,14 +5274,13 @@ module Garage {
                 //信号用のViewの初期化・更新
                 if (this.jumpProperty == null) {
                     this.jumpProperty = new JumpButtonPropertyArea(
+                        button,
+                        $buttonDetail,
+                        this.commandManager_,
                         this.faceRenderer_canvas_.getRemoteId(),
                         $("#input-face-name").val(),
-                        this.faceRenderer_canvas_.getModules(),
-                        this.commandManager_,
-                        {
-                            el: $buttonDetail,
-                            model: button,
-                        });
+                        this.faceRenderer_canvas_.getModules()
+                        );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
                 } else {
