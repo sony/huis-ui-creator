@@ -27,7 +27,9 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
         namespace constValue {
-            export const DEFAULT_STATE_ID : number = 0;//指定がない場合、プロパティエリアに表示するステート
+            //デフォルトとして利用されるステートのbutton.state[]の配列インデックス
+            //this.model.defaultがない場合に利用される。
+            export const DEFAULT_STATE_INDEX : number = 0;
         }
 
         export abstract class ButtonPropertyArea extends PropertyArea {
@@ -134,19 +136,40 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-             * デフォルトで表示するStateを取得する。
+             * デフォルトで表示するStateを取得する。存在場合nullを返す。
              */
-            protected getDefaultState():Model.ButtonState {
-                return this.getModel().state[constValue.DEFAULT_STATE_ID];
+            protected getDefaultState(): Model.ButtonState {
+                let FUNCTION_NAME = TAG + " getDefaultState() : ";
+
+                let states: Model.ButtonState[] = this.getModel().state;
+
+                if (states == null || states.length == 0){
+                    console.warn(FUNCTION_NAME + "states is invalid");
+                    return null
+                }
+
+                for (let targetState of states) {
+                    if (targetState.stateId == this.getDefaultStateId()) {
+                        return targetState;
+                    }
+                }
+
+                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                return this.getModel().state[constValue.DEFAULT_STATE_INDEX];
             }
 
 
             /*
-             *@return {number} デフォルトのステートのIndex
+             *@return {number} ボタンに設定されているデフォルトのstateIdを取得
             */
-            protected getDefaultStateId():number{
-                return constValue.DEFAULT_STATE_ID;
+            protected getDefaultStateId(): number{
+                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                if (this.getModel().default == null) {
+                    return this.getModel().state[constValue.DEFAULT_STATE_INDEX].stateId;
+                }
+                return this.getModel().default;
             }
+
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
@@ -850,7 +873,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId: number = constValue.DEFAULT_STATE_ID, page: number = -1) {
+            protected renderPagesOf(order: number, stateId: number = this.getDefaultStateId(), page: number = -1) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -885,7 +908,7 @@ module Garage {
              * @param order {number}
              * @param stateId {number}
              */
-            private appendPagesPullDown(order: number, stateId: number = constValue.DEFAULT_STATE_ID): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = this.getDefaultStateId()): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
