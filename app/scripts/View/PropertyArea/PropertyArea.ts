@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-        namespace macroConstValue {
+        namespace constValue {
             export const TEMPLATE_FILE_PATH : string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
@@ -62,7 +62,7 @@ module Garage {
              * @return {string}
              */
             getTemplateFilePath() {
-                return macroConstValue.TEMPLATE_FILE_PATH;
+                return constValue.TEMPLATE_FILE_PATH;
             }
 
             /*
