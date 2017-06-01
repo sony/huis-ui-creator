@@ -24,16 +24,20 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
         namespace constValue {
-            export const TEMPLATE_FILE_PATH : string = CDP.Framework.toUrl("/templates/item-detail.html");
+            export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
+            export const $BASE: JQuery = $("#face-item-detail"); 
         }
 
         export abstract class PropertyArea extends Backbone.View<Model.Item> {
 
+            private commandManager_ : CommandManager;
+
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.Item>) {
+            constructor(commandManager:CommandManager, options: Backbone.ViewOptions<Model.Item>) {
                 super(options);
+                this.commandManager_ = commandManager;
             }
 
 
@@ -54,6 +58,14 @@ module Garage {
             */
             getModel(): Model.Item {
                 return this.model;
+            }
+
+
+            /*
+             * @return {JQuery} プロパティエリアの土台のJQuery要素。
+             */
+            protected getPropertyAreaBaseJQuery(): JQuery {
+                return this.$el.find(constValue.$BASE);
             }
 
 

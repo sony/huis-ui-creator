@@ -87,9 +87,8 @@ module Garage {
             private isMouseDown: Boolean;
 
             private bindedLayoutPage = null;
-            //マクロのプロパティView用
+
             private macroProperty: MacroButtonPropertyArea;
-            //通常ボタンのプロパティView用
             private buttonProperty: NormalButtonPropertyArea;
             private jumpProperty: JumpButtonPropertyArea;
 
@@ -4817,6 +4816,7 @@ module Garage {
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
             private _showDetailItemArea(item: Model.Item) {
+                //TODOE:delete this. after all propertyare class developed
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
@@ -4824,6 +4824,7 @@ module Garage {
                     return;
                 }
 
+                //TODOE:delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
                 if (item instanceof Model.ButtonItem) {
@@ -4860,18 +4861,14 @@ module Garage {
                     $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 
                 } else if (item instanceof Model.LabelItem) {
-                    // ラベルアイテムの詳細エリアを表示
-                    let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
-                    let $labelDetail = $(templateLabel(item));
-                    let $areaContainer = $labelDetail.nextAll("#area-container");
-                    $areaContainer.append($(templateArea(item)));
-                    $detail.append($labelDetail);
-                    var $labelTextSize = $labelDetail.find(".property-text-size");
-                    $labelTextSize.val(item.size.toString());
-
-                    //テキストをローカライズ
-                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
-                    $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+                    let labelPropertyArea: LabelPropertyArea = new LabelPropertyArea(
+                        this.commandManager_ ,
+                        {
+                            el: $detail,
+                            model: item,
+                        }
+                    )
+                    labelPropertyArea.render();
                 } else {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
@@ -4978,10 +4975,13 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    this.macroProperty = new MacroButtonPropertyArea({
-                        el: $buttonDetail,
-                        model: button,
-                    });
+                    
+                    this.macroProperty = new MacroButtonPropertyArea(
+                        this.commandManager_,
+                        {
+                            el: $buttonDetail,
+                            model: button,
+                        });
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel,this);
                 } else {
@@ -5140,10 +5140,13 @@ module Garage {
 
                 //信号用のViewの初期化・更新
                 if (this.buttonProperty == null) {
-                    this.buttonProperty = new NormalButtonPropertyArea({
-                        el: $buttonDetail,
-                        model: button,
-                    });
+                    this.buttonProperty = new NormalButtonPropertyArea(
+                    this.commandManager_,
+                        {
+                            el: $buttonDetail,
+                            model: button,
+                        }
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
                 } else {
@@ -5279,6 +5282,7 @@ module Garage {
                         this.faceRenderer_canvas_.getRemoteId(),
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules(),
+                        this.commandManager_,
                         {
                             el: $buttonDetail,
                             model: button,

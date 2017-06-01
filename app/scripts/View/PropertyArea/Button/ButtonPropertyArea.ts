@@ -57,8 +57,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(options: Backbone.ViewOptions<Model.ButtonItem>) {
-                super(options);
+            constructor(commandManager : CommandManager, options : Backbone.ViewOptions<Model.ButtonItem>) {
+                super(commandManager, options);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
             }
 
@@ -106,7 +106,7 @@ module Garage {
 
             /*
             *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.BUttonItem}
+            * @return {Model.ButtonItem}
             */
             public getModel(): Model.ButtonItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。

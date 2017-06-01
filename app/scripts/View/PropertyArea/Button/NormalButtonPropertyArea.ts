@@ -104,8 +104,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
-                super(options);
+            constructor(commandManager:CommandManager, options: Backbone.ViewOptions<Model.ButtonItem>) {
+                super(commandManager, options);
                 this.assignedInputActions = [];
                 
             }
