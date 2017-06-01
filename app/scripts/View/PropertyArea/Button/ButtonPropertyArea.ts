@@ -821,7 +821,7 @@ module Garage {
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
             protected getFunctionsOf(order: number, stateId? : number) {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf : ";
+                let FUNCTION_NAME = TAG + "getFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
