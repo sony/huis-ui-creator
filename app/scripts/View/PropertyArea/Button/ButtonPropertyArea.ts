@@ -26,12 +26,6 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-        namespace constValue {
-            //デフォルトとして利用されるステートのbutton.state[]の配列インデックス
-            //this.model.defaultがない場合に利用される。
-            export const DEFAULT_STATE_INDEX : number = 0;
-        }
-
         export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -136,36 +130,12 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-             * デフォルトで表示するStateを取得する。存在場合nullを返す。
-             */
-            protected getDefaultState(): Model.ButtonState {
-                let FUNCTION_NAME = TAG + " getDefaultState() : ";
-
-                let states: Model.ButtonState[] = this.getModel().state;
-
-                if (states == null || states.length == 0){
-                    console.warn(FUNCTION_NAME + "states is invalid");
-                    return null
-                }
-
-                for (let targetState of states) {
-                    if (targetState.stateId == this.getDefaultStateId()) {
-                        return targetState;
-                    }
-                }
-
-                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
-                return this.getModel().state[constValue.DEFAULT_STATE_INDEX];
-            }
-
-
-            /*
              *@return {number} ボタンに設定されているデフォルトのstateIdを取得
             */
             protected getDefaultStateId(): number{
-                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
                 if (this.getModel().default == null) {
-                    return this.getModel().state[constValue.DEFAULT_STATE_INDEX].stateId;
+                    return this.getModel().getDefaultState().stateId;
                 }
                 return this.getModel().default;
             }
@@ -1341,7 +1311,7 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.getDefaultState().action) {
+                for (let action of this.getModel().getDefaultState().action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;

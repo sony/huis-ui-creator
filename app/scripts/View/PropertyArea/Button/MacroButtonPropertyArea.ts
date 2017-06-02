@@ -162,7 +162,7 @@ module Garage {
                     return;
                 }
                 //一番下のボタンの場合、無視する
-                if (order >= this.getDefaultState().action.length - 1) {
+                if (order >= this.getModel().getDefaultState().action.length - 1) {
                     console.warn(FUNCTION_NAME + "down buttonn of last order signal is ignored");
                     return;
                 }
@@ -315,7 +315,7 @@ module Garage {
                     input: tmpInput,
                     interval: macroConstValue.DEFAULT_MACRO_INTERVAL,
                 };
-                let tmpOrder = this.getDefaultState().action.length;
+                let tmpOrder = this.getModel().getDefaultState().action.length;
 
                 if (!this.isValidOrder(tmpOrder)) {
                     console.warn(FUNCTION_NAME + "tmpOrder is invalid");
@@ -368,7 +368,7 @@ module Garage {
                 let macroData: any = {};
                 let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.getTemplateFilePath());
 
-                let state = this.getDefaultState();
+                let state = this.getModel().getDefaultState();
                 let id: number = state.stateId;
                 macroData.id = id;
 
@@ -561,10 +561,10 @@ module Garage {
                 }
 
                 //マクロボタンのstateは、デフォルト一つとする。
-                this.getDefaultState().action = actionsForUpdate;
+                this.getModel().getDefaultState().action = actionsForUpdate;
                 let states: Model.ButtonState[] = [];
 
-                states.push(this.getDefaultState());
+                states.push(this.getModel().getDefaultState());
 
                 this.getModel().state = states;
                 this.trigger("updateModel");
@@ -576,7 +576,7 @@ module Garage {
             private renderSignalContainers() {
                 let FUNCTION_NAME = TAG + "renderSignalContainers";
 
-                let actions: IAction[] = this.getDefaultState().action;
+                let actions: IAction[] = this.getModel().getDefaultState().action;
 
                 //最初の１シグナル分は特例で、追加する。
                 let $signalContainer = this.$el.find("#signals-container");
@@ -614,7 +614,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -648,7 +648,7 @@ module Garage {
                     firstOrderBottom = firstOrderY + $dotFirstOrder.outerHeight(true);
                 }
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //orderMaxのドットの位置を取得
                 let $dotLastOrder = this.$el.find("#order-indicator-dot-" + (signalLength - 1));
@@ -1069,7 +1069,7 @@ module Garage {
 
                 //Actionが1つしかない、かつ remoteIdもfunctionも初期値の場合、
                 //remoteId設定用プルダウンをフォーカスする。
-                let ActionNum = this.getDefaultState().action.length;
+                let ActionNum = this.getModel().getDefaultState().action.length;
 
                 let remoteIdOrder0 = this.getRemoteIdFromPullDownOf(0);
 

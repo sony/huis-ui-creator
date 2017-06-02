@@ -162,7 +162,7 @@ module Garage {
                     return;
                 }
               
-                let order = this.getDefaultState().action.length;
+                let order = this.getModel().getDefaultState().action.length;
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -457,7 +457,7 @@ module Garage {
                     }
                 }
 
-                let tmpState = this.getModel().state[stateId];
+                let tmpState = this.getModel().getStateByStateId(stateId);
 
                 let newState = new Model.ButtonState({});
                 if (tmpState != null) {
@@ -620,7 +620,7 @@ module Garage {
             private renderSignals(stateId: number = this.getDefaultStateId()){
                 let FUNCTION_NAME: string = TAG + "renderSignals : ";
 
-                let actions: IAction[] = this.getModel().state[stateId].action;
+                let actions: IAction[] = this.getModel().getStateByStateId(stateId).action;
 
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "actions is invalid");
@@ -672,7 +672,7 @@ module Garage {
             private renderSomeElementIfOneSignalOnlyExist() {
                 let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -984,7 +984,7 @@ module Garage {
                 this.assignedInputActions = [];
 
                 //現状表示されている 各信号のJquery値を取得
-                let targetActions = this.getModel().state[stateId].action;
+                let targetActions = this.getModel().getStateByStateId(stateId).action;
 
                 if (targetActions == null || targetActions.length ==0) {
                     return;
@@ -1003,7 +1003,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //actionが1つしかない場合、削除ボタンtを削除。
                 if (signalLength <= 1) {
