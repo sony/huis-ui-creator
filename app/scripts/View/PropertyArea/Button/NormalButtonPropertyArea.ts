@@ -742,7 +742,7 @@ module Garage {
                 }
 
                 //SignalContainerのベースをレンダリング
-                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this.getTemplateFilePath());
+                let templateSignal = Tools.Template.getJST("#template-property-button-signal-normal", this._getTemplateFilePath());
 
                 let inputData = {
                     order: order,
@@ -784,7 +784,7 @@ module Garage {
 
                 //ActionプルダウンのDOMを表示。
                 let $actionContainer = $target.find("#signal-action-container");
-                let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this.getTemplateFilePath());
+                let templateAction: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action", this._getTemplateFilePath());
 
                 //すでに入力されているinputは、表示しない。
                 let actionSelector: ActionSelecctor = new ActionSelecctor(this.assignedInputActions);
@@ -806,7 +806,7 @@ module Garage {
                     this.setInputAction(order, stateId, inputAction);
                 } else {
                     //値が入力されていない場合、初期状態を描画
-                    let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this.getTemplateFilePath());
+                    let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-action-none-option", this._getTemplateFilePath());
                     $actionContainer.find("select").prepend(noneOption);
                     this.setInputAction(order, stateId, "none");
                 }

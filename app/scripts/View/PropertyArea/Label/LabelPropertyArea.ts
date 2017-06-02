@@ -36,7 +36,7 @@ module Garage {
              */
             constructor(label:Model.LabelItem, $el:JQuery, commandManager:CommandManager) {
                 super(label, $el, commandManager);
-                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this.getTemplateFilePath());                
+                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this._getTemplateFilePath());                
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
             }
 

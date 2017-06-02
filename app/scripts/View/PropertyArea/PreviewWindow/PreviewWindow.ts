@@ -65,7 +65,7 @@ module Garage {
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
-            protected getTemplateFilePath() {
+            protected _getTemplateFilePath() {
                 return constValue.TEMPLATE_FILE_PATH;
             }
 

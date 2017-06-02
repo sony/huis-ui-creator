@@ -113,7 +113,7 @@ module Garage {
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
-                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.getTemplateFilePath());
+                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this._getTemplateFilePath());
                 let $jumpContainer = this.$el.nextAll("#states-container");
                 let stateData = this.createStateData(this.getDefaultState());
                 stateData.actionList = ACTION_INPUTS_JUMP;

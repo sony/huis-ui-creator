@@ -398,7 +398,7 @@ module Garage {
                 }
 
                 if (remoteName != null) {
-                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.getTemplateFilePath());
+                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this._getTemplateFilePath());
                     let inputSignalData = {
                         remoteId: inputRemoteId,
                         name: remoteName
@@ -515,7 +515,7 @@ module Garage {
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
-                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
+                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this._getTemplateFilePath());
 
                     let inputSignalData = {
                         id: stateId,
@@ -531,7 +531,7 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.getTemplateFilePath());
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this._getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
@@ -734,7 +734,7 @@ module Garage {
                     }
 
                     let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this._getTemplateFilePath());
 
                     //functionsが0個の場合のエラーケース対応
                     let inputFunctions = [];
@@ -755,7 +755,7 @@ module Garage {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.getTemplateFilePath());
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this._getTemplateFilePath());
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
@@ -923,7 +923,7 @@ module Garage {
 
 
                 let $container = $target.find("#signal-page-container");
-                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.getTemplateFilePath());
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this._getTemplateFilePath());
 
                 let inputData = {
                     order: order,

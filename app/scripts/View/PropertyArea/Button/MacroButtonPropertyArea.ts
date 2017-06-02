@@ -366,7 +366,7 @@ module Garage {
                 // ボタンの state 情報を付加
                 var $macroContainer = this.$el.nextAll("#macro-container");
                 let macroData: any = {};
-                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this.getTemplateFilePath());
+                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this._getTemplateFilePath());
 
                 let state = this.getDefaultState();
                 let id: number = state.stateId;
@@ -661,7 +661,7 @@ module Garage {
                 if (Util.JQueryUtils.isValidValue(firstOrderY) && Util.JQueryUtils.isValidValue(firstOrderBottom) && Util.JQueryUtils.isValidValue(lastOrderY)) {
 
                     //templateからdomを読み込み,domを描写
-                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this.getTemplateFilePath());
+                    let templateDotLine: Tools.JST = Tools.Template.getJST("#template-macro-signal-dot-line", this._getTemplateFilePath());
                     let $signalsContainer = this.$el.find("#signals-container");
                     $signalsContainer.append($(templateDotLine()));
 
@@ -738,7 +738,7 @@ module Garage {
                 }
 
                 //ベースとなるDOM描写する
-                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this.getTemplateFilePath());
+                let templateSignal: Tools.JST = Tools.Template.getJST("#template-property-button-signal-macro", this._getTemplateFilePath());
                 $signalContainer.append($(templateSignal(inputDataForRender)));
 
                 let remoteId: string = huisFiles.getRemoteIdByAction(action);
@@ -791,7 +791,7 @@ module Garage {
                     id: this.getDefaultStateId()
                 }
 
-                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.getTemplateFilePath());
+                let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this._getTemplateFilePath());
                 let $intervalDetail = $(templateInterval(signalData));
                 $intervalContainer.append($intervalDetail);
 

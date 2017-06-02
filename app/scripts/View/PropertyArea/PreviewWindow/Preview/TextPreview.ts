@@ -36,7 +36,7 @@ module Garage {
              */
             constructor(item: Model.LabelItem) {
                 super(item);
-                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this.getTemplateFilePath());
+                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this._getTemplateFilePath());
                 this.domId_ = constValue.DOM_ID;
             }
 
