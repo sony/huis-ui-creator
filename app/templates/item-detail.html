@@ -65,32 +65,19 @@
 
     <!--TextPreview-->
     <script type="text/template" id="template-text-preview">
-        <div id="text-preview">
-            <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
-            <input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
-            <div class="custom-select text-size-pulldown">
-                <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
-                    <option value="12">12px</option>
-                    <option value="14">14px</option>
-                    <option value="16">16px</option>
-                    <option value="18">18px</option>
-                    <option value="20">20px</option>
-                    <option value="23" selected>23px</option>
-                    <option value="28">28px</option>
-                    <option value="30">30px</option>
-                    <option value="32">32px</option>
-                    <option value="36">36px</option>
-                    <option value="40">40px</option>
-                    <option value="44">44px</option>
-                    <option value="48">48px</option>
-                    <option value="54">54px</option>
-                    <option value="60">60px</option>
-                    <option value="72">72px</option>
-                    <option value="80">80px</option>
-                    <option value="88">88px</option>
-                    <option value="96">96px</option>
-                </select>
-            </div>
+        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
+        <input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
+        <div id="text-size-pulldown"></div>
+    </script>
+
+    <!--textsize pullldown-->
+    <script type="text/template" id="template-text-size-pullldown">
+        <div class="custom-select text-size-pulldown">
+            <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" data-native-menu="false">
+                {{#sizeValues}}
+                    <option value="{{.}}">{{.}}px</option>
+                {{/sizeValues}}
+            </select>
         </div>
     </script>
 

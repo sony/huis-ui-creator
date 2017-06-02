@@ -24,9 +24,18 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.TextPreview] ";
 
         namespace constValue {
-            export const SIZE_PULLDOWM_CLASS: string = ".property-text-size";
+            
             export const TEMPLATE_DOM_ID: string = "#template-text-preview";
-            export const DOM_ID : string = "#text-preview";
+            export const DOM_ID: string = "#text-preview";
+
+            //text size pulldown
+            export const SIZE_PULLDOWM_CLASS: string = ".property-text-size";
+            export const SIZE_PULLDOWM_DOM_ID : string = "#text-size-pulldown";
+            export const TEMPLATE_SIZE_PULLDOWN_DOM_ID: string = "#template-text-size-pullldown";
+            export const SIZE_PULLLDOWN_VALUES: number[] = [
+                12, 14, 16, 18, 20, 23, 28, 30, 32, 36, 
+                40, 44, 48, 54, 60, 72, 80, 88, 96
+            ];
         }
 
         export class TextPreview extends Preview {
@@ -52,9 +61,21 @@ module Garage {
             render(option?: any): Backbone.View<Model.Item> {
 
                 this.$el.append(this.template_(this.getModel()));
-                var $labelTextSize = this.$el.find(constValue.SIZE_PULLDOWM_CLASS);
-                $labelTextSize.val(this.getModel().size.toString());
-                this.$el.i18n();//テキストをローカライズ
+
+                //render size pulldown
+                let templateTextSizePulldown = CDP.Tools.Template.getJST(constValue.TEMPLATE_SIZE_PULLDOWN_DOM_ID, this._getTemplateFilePath());
+                let dataSizePulldownRender = {
+                    sizeValues: constValue.SIZE_PULLLDOWN_VALUES
+                }
+                this.$el.find(constValue.SIZE_PULLDOWM_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
+
+                //input initial value of size pulldown
+                let size = this.getModel().size;
+                if (Util.JQueryUtils.isValidValue(size)) {
+                    this.$el.find(constValue.SIZE_PULLDOWM_CLASS).val(size.toString());
+                }
+
+                this.$el.i18n();//localize text
 
                 return this;
             };
