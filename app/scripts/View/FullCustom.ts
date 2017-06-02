@@ -3559,12 +3559,6 @@ module Garage {
                                 }
                                 break;
 
-                            case "resized":
-                                if (value) {
-                                    targetState.image[0].resized = true;
-                                }
-                                break;
-
                             default:
 
                         }
