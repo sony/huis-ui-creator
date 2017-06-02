@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Button.LabelPropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.Label.LabelPropertyArea] ";
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-label-property-area";

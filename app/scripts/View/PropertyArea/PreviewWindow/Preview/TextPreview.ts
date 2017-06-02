@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.PreviewWindow.TextPreview] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.TextPreview] ";
 
         namespace constValue {
             export const SIZE_PULLDOWM_CLASS: string = ".property-text-size";

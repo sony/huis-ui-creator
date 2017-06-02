@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.Preview] ";
 
         namespace constValue {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
