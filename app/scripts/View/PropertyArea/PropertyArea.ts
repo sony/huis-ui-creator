@@ -36,9 +36,10 @@ module Garage {
              * constructor
              */
             constructor(item : Model.Item, templateDomId:string, $el:JQuery, commandManager:CommandManager, options? : Backbone.ViewOptions<Model.Item>) {
-                super(options);
-                this.model = item;
-                this.$el = $el;
+                super({
+                    el: $el, // el: $el.get(0) だとバグがでてしまう。 そもそも、$elをPropertyAreaに渡さない構造に直す予定なので現状放置させてください。
+                    model : item
+                });
                 this.commandManager_ = commandManager;
                 this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());  
             }
