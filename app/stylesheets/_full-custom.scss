@@ -792,6 +792,7 @@
             }*/
 
             #property-image-preview,
+            #label-preview-window,
             .property-state-image-preview {
                 box-sizing:border-box;
                 position:relative;
@@ -841,6 +842,7 @@
                 }
 
                 //テキストエリア
+                #text-preview,
                 .text-field-in-preview{
                     margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 

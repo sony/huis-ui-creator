@@ -29,13 +29,16 @@ module Garage {
 
         export abstract class PreviewWindow extends Backbone.View<Model.Item> {
 
+            //子供はconstructorで以下のメンバーを初期化すること。
+            protected template_: CDP.Tools.JST;
+            protected domId_: string;
+
             /**
              * constructor
              */
-            constructor(item : Model.Item, $el:JQuery, options? : Backbone.ViewOptions<Model.Item>) {
+            constructor(item : Model.Item, options? : Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;
-                this.$el = $el;
             }
 
 
@@ -51,10 +54,18 @@ module Garage {
 
 
             /*
+             * @return {string} DOM全体を示すIDを返す。
+             */
+            getDomId(): string {
+                return this.domId_;
+            }
+
+
+            /*
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
-            getTemplateFilePath() {
+            protected getTemplateFilePath() {
                 return constValue.TEMPLATE_FILE_PATH;
             }
 

@@ -23,16 +23,21 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.LabelPropertyArea] ";
 
+        namespace constValue {
+            export const TEMPLATE_DOM_ID = "#template-label-property-area";
+        } 
+
         export class LabelPropertyArea extends PropertyArea {
 
-            private _labelPreviewWindow: LabelPreviewWindow;
+            private labelPreviewWindow_ : LabelPreviewWindow;
 
             /**
              * constructor
              */
             constructor(label:Model.LabelItem, $el:JQuery, commandManager:CommandManager) {
                 super(label, $el, commandManager);
-                this._labelPreviewWindow = new LabelPreviewWindow(label, $el);
+                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this.getTemplateFilePath());                
+                this.labelPreviewWindow_ = new LabelPreviewWindow(label);
             }
 
 
@@ -45,11 +50,12 @@ module Garage {
 
 
             render(): Backbone.View<Model.Item> {
-                super.render();
-                this._labelPreviewWindow.render();
+                this.$el.append(this.template_(this.getModel()));
+                this.$el.find(this.labelPreviewWindow_.getDomId()).append(this.labelPreviewWindow_.render().$el);
                 return this;
             }
-        
+
+
             /*
             *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
             * @return {Model.LabelItem}

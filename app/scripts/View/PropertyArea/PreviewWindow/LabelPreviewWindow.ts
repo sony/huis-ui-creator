@@ -24,18 +24,22 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.LabelPreviewWindow] ";
 
         namespace constValue {
+            export const TEMPLATE_DOM_ID = "#template-label-preview-window";
+            export const DOM_ID = "#label-preview-window";
         }
 
         export class LabelPreviewWindow extends PreviewWindow {
 
-            private _textPreview: TextPreview;
+            private textPreview_ : TextPreview;
 
             /**
              * constructor
              */
-            constructor(label : Model.LabelItem, $el:JQuery) {
-                super(label, $el);
-                this._textPreview = new TextPreview(label, $el);
+            constructor(label : Model.LabelItem) {
+                super(label);
+                this.textPreview_ = new TextPreview(label);
+                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this.getTemplateFilePath());
+                this.domId_ = constValue.DOM_ID;
             }
 
 
@@ -48,7 +52,8 @@ module Garage {
 
 
             render(): Backbone.View<Model.Item> {
-                this._textPreview.render();
+                this.$el.append(this.template_());
+                this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
                 return this;
             };
 

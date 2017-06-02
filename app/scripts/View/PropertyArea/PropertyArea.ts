@@ -29,7 +29,8 @@ module Garage {
 
         export abstract class PropertyArea extends Backbone.View<Model.Item> {
 
-            private commandManager_ : CommandManager;
+            private commandManager_: CommandManager;
+            protected template_ : CDP.Tools.JST;
 
             /**
              * constructor
@@ -66,9 +67,11 @@ module Garage {
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
-            getTemplateFilePath() {
+            protected getTemplateFilePath() {
                 return constValue.TEMPLATE_FILE_PATH;
             }
+
+
         }
     }
 }

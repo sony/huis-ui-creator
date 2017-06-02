@@ -42,186 +42,191 @@
         <!-- プレビュー -->
         <div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
             <div id="edit-image-non-button-image"></div>
-        </div>
+        </div>text-field-in-preview
 
     </script>
 
 
-
-
-
-    <!-- ラベルアイテムの詳細情報エリア-->
-    <script type="text/template" id="template-label-detail">
-        <h3 id="face-item-detail-title" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_LABEL">Lalel<span class="property-cid"></span></h3>
-        <!-- プレビュー -->
-        <div id="property-image-preview">
-            <div class="text-field-in-preview">
-                <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
-                <input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
-                <div class="custom-select text-size-pulldown">
-                    <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
-                        <option value="12">12px</option>
-                        <option value="14">14px</option>
-                        <option value="16">16px</option>
-                        <option value="18">18px</option>
-                        <option value="20">20px</option>
-                        <option value="23" selected>23px</option>
-                        <option value="28">28px</option>
-                        <option value="30">30px</option>
-                        <option value="32">32px</option>
-                        <option value="36">36px</option>
-                        <option value="40">40px</option>
-                        <option value="44">44px</option>
-                        <option value="48">48px</option>
-                        <option value="54">54px</option>
-                        <option value="60">60px</option>
-                        <option value="72">72px</option>
-                        <option value="80">80px</option>
-                        <option value="88">88px</option>
-                        <option value="96">96px</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-    </script>
-
-
-
-
-
-    <!--背景画像の詳細編集エリア-->
-    <script type="text/template" id="template-page-background-detail">
-
-        <h3 id="face-item-detail-title">Background<span class="property-cid"></span></h3>
-
-        <!-- プレビュー -->
-        <div id="property-image-preview" class="background" {{#enabled}}style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
-            <div id="edit-image-background"></div>
-            <div id="delete-background-image"></div>
-        </div>
-
-    </script>
-
-
-
-
-    <!--CID表示用のテンプレート-->
-    <script type="text/template" id="template-property-cid">
-        <div id="property-cid">
-            <p class="inline property-title">CID</p>
-            <p class="inline property-value small">{{cid}}</p>
-        </div>
-    </script>
-
-
-
-
-
-    <!--通常ボタンのステート用のテンプレート-->
-    <script type="text/template" id="template-property-button-state">
-        <div class="state-container">
-
-            <!-- プレビュー -->
-            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
-                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
-                <div class="text-field-in-preview">
-                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">ラベルを編集</div></div>
-                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{stateId}}" />
-
-                    <div class="custom-select text-size-pulldown">
-                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{stateId}}" data-native-menu="false">
-                            <option value="12">12px</option>
-                            <option value="14">14px</option>
-                            <option value="16">16px</option>
-                            <option value="18">18px</option>
-                            <option value="20">20px</option>
-                            <option value="23">23px</option>
-                            <option value="28">28px</option>
-                            <option value="30" selected>30px</option>
-                            <option value="32">32px</option>
-                            <option value="36">36px</option>
-                            <option value="40">40px</option>
-                            <option value="44">44px</option>
-                            <option value="48">48px</option>
-                            <option value="54">54px</option>
-                            <option value="60">60px</option>
-                            <option value="72">72px</option>
-                            <option value="80">80px</option>
-                            <option value="88">88px</option>
-                            <option value="96">96px</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- アクション -->
-            <div class="property-state-action">
-                <div id="signals-container" ></div>
-            </div>
-
-
-            <div class="add-btn-container">
-                <div id="add-signal-btn" data-state-id="{{stateId}}">
-                    <div class="btn-image"></div>
-                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">操作を追加</span>
-                </div>
-            </div>
-
-        </div>
-    </script>
-
-
-
-
-
-    <!-- 通常のボタンの１信号分のテンプレート -->
-    <script type="text/template" id="template-property-button-signal-normal">
-
-        <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
-
-            <div class="separate-line" ></div>
-
-            <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</span><span>{{order_plus_one}}</span></h4>
-            <div class="signals">
-                <!--アクション選択用のテンプレート-->
-                <div id="signal-action-container"></div>
-
-                <!--リモコン選択プルダウン-->
-                <div id="signal-remote-container"></div>
-
-                <!--Function選択用のテンプレート-->
-                <div id="signal-function-container"></div>
-
-                <!--削除ボタン-->
-                <div class="delete-signal-area" id="delete-signal-area-{{order}}">
-                    <div class="delete-signal signal-control-button" data-signal-order="{{order}}"></div>
-                </div>
-            </div>
-        </div>
-
-    </script>
     
 
 
+    <!-- ラベルアイテムの詳細情報エリア-->
+    <script type="text/template" id="template-label-property-area">
+        <h3 id="face-item-detail-title" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_LABEL">Lalel<span class="property-cid"></span></h3>
+        <div id="label-preview-window"></div>
+    </script>
 
 
-    <!--アクション設定用 プルダウンのテンプレート-->
-    <script type="text/template" id="template-property-button-signal-action">
-        <div class="signal-action-container-element">
-            <div class="custom-select">
-                <select class="action-input" id="select-state-action-input-{{id}}-{{order}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
-                    {{#actionList}}
-                    <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                    {{/actionList}}
+    <!--LabelPreviewWindow-->
+    <script type="text/template" id="template-label-preview-window">
+        <div id="text-preview"></div>
+    </script>
+
+
+    <!--TextPreview-->
+    <script type="text/template" id="template-text-preview">
+        <div id="text-preview">
+            <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
+            <input class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
+            <div class="custom-select text-size-pulldown">
+                <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" value="{{#size}}{{size}}{{/size}}{{^size}}20{{/size}}" data-native-menu="false">
+                    <option value="12">12px</option>
+                    <option value="14">14px</option>
+                    <option value="16">16px</option>
+                    <option value="18">18px</option>
+                    <option value="20">20px</option>
+                    <option value="23" selected>23px</option>
+                    <option value="28">28px</option>
+                    <option value="30">30px</option>
+                    <option value="32">32px</option>
+                    <option value="36">36px</option>
+                    <option value="40">40px</option>
+                    <option value="44">44px</option>
+                    <option value="48">48px</option>
+                    <option value="54">54px</option>
+                    <option value="60">60px</option>
+                    <option value="72">72px</option>
+                    <option value="80">80px</option>
+                    <option value="88">88px</option>
+                    <option value="96">96px</option>
                 </select>
             </div>
         </div>
     </script>
-    <!--アクションのnone用-->
-    <script type="text/template" id="template-property-button-signal-action-none-option">
-        <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">操作を選択</option>
-    </script>
+
+
+        <!--背景画像の詳細編集エリア-->
+        <script type="text/template" id="template-page-background-detail">
+
+            <h3 id="face-item-detail-title">Background<span class="property-cid"></span></h3>
+
+            <!-- プレビュー -->
+            <div id="property-image-preview" class="background" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
+                <div id="edit-image-background"></div>
+                <div id="delete-background-image"></div>
+            </div>
+
+        </script>
+
+
+
+
+        <!--CID表示用のテンプレート-->
+        <script type="text/template" id="template-property-cid">
+            <div id="property-cid">
+                <p class="inline property-title">CID</p>
+                <p class="inline property-value small">{{cid}}</p>
+            </div>
+        </script>
+
+
+
+
+
+        <!--通常ボタンのステート用のテンプレート-->
+        <script type="text/template" id="template-property-button-state">
+            <div class="state-container">
+
+                <!-- プレビュー -->
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
+                    <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
+                    <div class="text-field-in-preview">
+                        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline">ラベルを編集</div></div>
+                        <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{stateId}}" />
+
+                        <div class="custom-select text-size-pulldown">
+                            <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{stateId}}" data-native-menu="false">
+                                <option value="12">12px</option>
+                                <option value="14">14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                                <option value="23">23px</option>
+                                <option value="28">28px</option>
+                                <option value="30" selected>30px</option>
+                                <option value="32">32px</option>
+                                <option value="36">36px</option>
+                                <option value="40">40px</option>
+                                <option value="44">44px</option>
+                                <option value="48">48px</option>
+                                <option value="54">54px</option>
+                                <option value="60">60px</option>
+                                <option value="72">72px</option>
+                                <option value="80">80px</option>
+                                <option value="88">88px</option>
+                                <option value="96">96px</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- アクション -->
+                <div class="property-state-action">
+                    <div id="signals-container"></div>
+                </div>
+
+
+                <div class="add-btn-container">
+                    <div id="add-signal-btn" data-state-id="{{stateId}}">
+                        <div class="btn-image"></div>
+                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_ACTION">操作を追加</span>
+                    </div>
+                </div>
+
+            </div>
+        </script>
+
+
+
+
+
+        <!-- 通常のボタンの１信号分のテンプレート -->
+        <script type="text/template" id="template-property-button-signal-normal">
+
+            <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
+
+                <div class="separate-line"></div>
+
+                <h4><span data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</span><span>{{order_plus_one}}</span></h4>
+                <div class="signals">
+                    <!--アクション選択用のテンプレート-->
+                    <div id="signal-action-container"></div>
+
+                    <!--リモコン選択プルダウン-->
+                    <div id="signal-remote-container"></div>
+
+                    <!--Function選択用のテンプレート-->
+                    <div id="signal-function-container"></div>
+
+                    <!--削除ボタン-->
+                    <div class="delete-signal-area" id="delete-signal-area-{{order}}">
+                        <div class="delete-signal signal-control-button" data-signal-order="{{order}}"></div>
+                    </div>
+                </div>
+            </div>
+
+        </script>
+
+
+
+
+
+        <!--アクション設定用 プルダウンのテンプレート-->
+        <script type="text/template" id="template-property-button-signal-action">
+            <div class="signal-action-container-element">
+                <div class="custom-select">
+                    <select class="action-input" id="select-state-action-input-{{id}}-{{order}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
+                        {{#actionList}}
+                        <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                        {{/actionList}}
+                    </select>
+                </div>
+            </div>
+        </script>
+        <!--アクションのnone用-->
+        <script type="text/template" id="template-property-button-signal-action-none-option">
+            <option class="default-value" value="none" data-i18n="button.input.STR_PLEASE_INPUT_ACTION">操作を選択</option>
+        </script>
 
 
 
@@ -293,7 +298,7 @@
                 </div>
 
                 <div class="button-macro-action-container-element">
-                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
+                    <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
                 </div>
 
                 <div class="custom-select">
@@ -303,7 +308,7 @@
                         {{/actionList}}
                     </select>
                 </div>
-                    
+
                 <!--信号用プルダウンたちが入るスペース-->
                 <div id="signals-container">
                 </div>
@@ -314,24 +319,24 @@
                         <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">操作を追加</span>
                     </div>
                 </div>
-                </div>
+            </div>
         </script>
 
 
 
 
 
-    <!--プルダウンの左側に出現するdot線-->
-    <script type="text/template" id="template-macro-signal-dot-line">
-        <div class="dot-line"></div>
-    </script>
+        <!--プルダウンの左側に出現するdot線-->
+        <script type="text/template" id="template-macro-signal-dot-line">
+            <div class="dot-line"></div>
+        </script>
 
 
 
 
 
-    <!--マクロのリモコン1信号分のテンプレート-->
-    <script type="text/template" id="template-property-button-signal-macro">
+        <!--マクロのリモコン1信号分のテンプレート-->
+        <script type="text/template" id="template-property-button-signal-macro">
             <div class="signal-container-element" id="signal-container-element-{{order}}" data-signal-order="{{order}}">
 
 
@@ -393,7 +398,7 @@
         </script>
         <!--後からプルダウンにリモコンを追加する用-->
         <script type="text/template" id="template-property-button-signal-remote-additional-option">
-            <option value="{{remoteId}}" >{{name}}</option>
+            <option value="{{remoteId}}">{{name}}</option>
         </script>
 
 
@@ -405,7 +410,7 @@
                 <div class="custom-select">
                     <select class="function-input" id="select-signal-function-input-{{order}}" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
                         {{#functions}}
-                        <option value="{{key}}" >{{label}}</option>
+                        <option value="{{key}}">{{label}}</option>
                         {{/functions}}
                     </select>
                 </div>
@@ -470,65 +475,65 @@
             </div>
         </script>
 
-    <!--ジャンプボタンのステート用のテンプレート-->
-    <script type="text/template" id="template-property-jump-button-state">
-        <div class="jump-container">
-            <!-- プレビュー -->
-            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
-                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
-                <div class="text-field-in-preview">
-                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
-                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{stateId}}" />
-                    <div class="custom-select text-size-pulldown">
-                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{stateId}}" data-native-menu="false">
-                            <option value="12">12px</option>
-                            <option value="14">14px</option>
-                            <option value="16">16px</option>
-                            <option value="18">18px</option>
-                            <option value="20">20px</option>
-                            <option value="23">23px</option>
-                            <option value="28">28px</option>
-                            <option value="30" selected>30px</option>
-                            <option value="32">32px</option>
-                            <option value="36">36px</option>
-                            <option value="40">40px</option>
-                            <option value="44">44px</option>
-                            <option value="48">48px</option>
-                            <option value="54">54px</option>
-                            <option value="60">60px</option>
-                            <option value="72">72px</option>
-                            <option value="80">80px</option>
-                            <option value="88">88px</option>
-                            <option value="96">96px</option>
-                        </select>
+        <!--ジャンプボタンのステート用のテンプレート-->
+        <script type="text/template" id="template-property-jump-button-state">
+            <div class="jump-container">
+                <!-- プレビュー -->
+                <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
+                    <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
+                    <div class="text-field-in-preview">
+                        <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
+                        <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{stateId}}" />
+                        <div class="custom-select text-size-pulldown">
+                            <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{stateId}}" data-native-menu="false">
+                                <option value="12">12px</option>
+                                <option value="14">14px</option>
+                                <option value="16">16px</option>
+                                <option value="18">18px</option>
+                                <option value="20">20px</option>
+                                <option value="23">23px</option>
+                                <option value="28">28px</option>
+                                <option value="30" selected>30px</option>
+                                <option value="32">32px</option>
+                                <option value="36">36px</option>
+                                <option value="40">40px</option>
+                                <option value="44">44px</option>
+                                <option value="48">48px</option>
+                                <option value="54">54px</option>
+                                <option value="60">60px</option>
+                                <option value="72">72px</option>
+                                <option value="80">80px</option>
+                                <option value="88">88px</option>
+                                <option value="96">96px</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="button-jump-action-container-element">
-                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
-            </div>
-            <div class="custom-select">
-                <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
-                    {{#actionList}}
-                    <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                    {{/actionList}}
-                </select>
-            </div>
-
-            <div class="button-jump-action-container-element button-jump-label-dest-container">
-                <h4 id="button-state-label-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_DEST">移動先</h4>
-                <div id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">リモコンをみて選択</div>
-            </div>
-            <div class="signal-container-element property-state-action-jump" data-signal-order="0">
-                <div id="signal-remote-container">
-                    {{! リモコンプルダウン }}
+                <div class="button-jump-action-container-element">
+                    <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
                 </div>
-                <div id="signal-page-container">
+                <div class="custom-select">
+                    <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
+                        {{#actionList}}
+                        <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                        {{/actionList}}
+                    </select>
                 </div>
-            </div>
 
-        </div>
-    </script>
+                <div class="button-jump-action-container-element button-jump-label-dest-container">
+                    <h4 id="button-state-label-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_DEST">移動先</h4>
+                    <div id="button-change-jump-dest" data-i18n="edit.property.STR_EDIT_PROPERTY_CHANGE_JUMP_DEST">リモコンをみて選択</div>
+                </div>
+                <div class="signal-container-element property-state-action-jump" data-signal-order="0">
+                    <div id="signal-remote-container">
+                        {{! リモコンプルダウン }}
+                    </div>
+                    <div id="signal-page-container">
+                    </div>
+                </div>
+
+            </div>
+        </script>
 
 
 

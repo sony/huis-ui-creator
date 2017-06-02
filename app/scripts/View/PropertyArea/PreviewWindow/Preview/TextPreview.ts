@@ -24,7 +24,9 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.TextPreview] ";
 
         namespace constValue {
-            export const SIZE_PULLDOWM_CSS_CLASS : string = ".property-text-size";
+            export const SIZE_PULLDOWM_CLASS: string = ".property-text-size";
+            export const TEMPLATE_DOM_ID: string = "#template-text-preview";
+            export const DOM_ID : string = "#text-preview";
         }
 
         export class TextPreview extends Preview {
@@ -32,8 +34,10 @@ module Garage {
             /**
              * constructor
              */
-            constructor(item: Model.LabelItem, $el: JQuery) {
-                super(item, $el);
+            constructor(item: Model.LabelItem) {
+                super(item);
+                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this.getTemplateFilePath());
+                this.domId_ = constValue.DOM_ID;
             }
 
 
@@ -47,12 +51,10 @@ module Garage {
 
             render(option?: any): Backbone.View<Model.Item> {
 
-                let templateLabel = CDP.Tools.Template.getJST("#template-label-detail", this.getTemplateFilePath());
-                let $labelDetail = $(templateLabel(this.getModel()));
-                this.$el.append($labelDetail);
-                var $labelTextSize = $labelDetail.find(constValue.SIZE_PULLDOWM_CSS_CLASS);
+                this.$el.append(this.template_(this.getModel()));
+                var $labelTextSize = this.$el.find(constValue.SIZE_PULLDOWM_CLASS);
                 $labelTextSize.val(this.getModel().size.toString());
-                this.$el.i18n();
+                this.$el.i18n();//テキストをローカライズ
 
                 return this;
             };
