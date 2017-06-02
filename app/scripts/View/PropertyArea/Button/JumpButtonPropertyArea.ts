@@ -8,6 +8,10 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
+        namespace constValue {
+            export const NO_PAGE_SELECT_NUM: number = -1; //ページ指定用プルダウンで、なにも選択されていない状態での値。
+        }
+
         export class JumpButtonPropertyArea extends ButtonPropertyArea {
 
             /** 
@@ -68,7 +72,7 @@ module Garage {
                 }
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order);
+                this.renderPagesOf(order, this.getDefaultStateId, constValue.NO_PAGE_SELECT_NUM);
 
                 this.updateModel();
 
@@ -90,7 +94,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order, this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order,this.getDefaultStateId, this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
@@ -138,7 +142,7 @@ module Garage {
                     this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, null);
                 }
 
-                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, stateData.jump.scene_no);
+                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateId(), stateData.jump.scene_no);
 
                 $jumpContainer.i18n();
 
