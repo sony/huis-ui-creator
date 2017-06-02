@@ -26,6 +26,9 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.NormalButtonPropertyArea] ";
 
+        namespace constValue {
+            export const TEMPLATE_DOM_ID = "#template-property-button-state";
+        } 
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
         //すでに登録されているアクションは、pulldownに表示できないようにするため
@@ -105,9 +108,8 @@ module Garage {
              * constructor
              */
             constructor(button:Model.ButtonItem,$el:JQuery, commandManager :CommandManager) {
-                super(button, $el, commandManager);
+                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
                 this.assignedInputActions = [];
-                
             }
 
 

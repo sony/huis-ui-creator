@@ -57,8 +57,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(button:Model.ButtonItem, $el:JQuery, commandManager : CommandManager) {
-                super(button, $el, commandManager);
+            constructor(button:Model.ButtonItem, templateDomId:string, $el:JQuery, commandManager : CommandManager) {
+                super(button, templateDomId,  $el, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
             }
 

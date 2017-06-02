@@ -38,6 +38,7 @@ module Garage {
             export const FIRST_MACRO_ORDER: number = 0;
             export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
+            export const TEMPLATE_DOM_ID = "#template-macro-button-detail";
         }
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
@@ -49,7 +50,7 @@ module Garage {
              * constructor
              */
             constructor(button:Model.ButtonItem, $el:JQuery, commandManager:CommandManager) {
-                super(button, $el, commandManager);
+                super(button, macroConstValue.TEMPLATE_DOM_ID, $el, commandManager);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////

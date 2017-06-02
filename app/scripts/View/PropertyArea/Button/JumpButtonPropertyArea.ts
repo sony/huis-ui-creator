@@ -8,6 +8,10 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
+        namespace constValue {
+            export const TEMPLATE_DOM_ID = "#template-property-jump-button-state";
+        } 
+
         export class JumpButtonPropertyArea extends ButtonPropertyArea {
 
             /** 
@@ -22,7 +26,7 @@ module Garage {
              * @param modules {Model.Module[]} 編集中のリモコンのモジュール
              */
             constructor(button: Model.ButtonItem, $el, commandManager:CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
-                super(button, $el, commandManager);
+                super(button, constValue.TEMPLATE_DOM_ID ,$el, commandManager);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;

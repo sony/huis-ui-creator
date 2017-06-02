@@ -36,10 +36,8 @@ module Garage {
              * constructor
              */
             constructor(label : Model.LabelItem) {
-                super(label);
+                super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
-                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this._getTemplateFilePath());
-                this.domId_ = constValue.DOM_ID;
             }
 
 

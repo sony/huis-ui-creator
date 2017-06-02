@@ -29,7 +29,6 @@ module Garage {
 
         export abstract class Preview extends Backbone.View<Model.Item> {
 
-            //子供はconstructorで以下のメンバーを初期化すること。
             protected template_: CDP.Tools.JST; 
             protected domId_: string;
 
@@ -37,9 +36,11 @@ module Garage {
             /**
              * constructor
              */
-            constructor(item : Model.Item, options? : Backbone.ViewOptions<Model.Item>) {
+            constructor(item : Model.Item, domId:string, templateDomId:string, options? : Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;
+                this.domId_ = domId;
+                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
 
 

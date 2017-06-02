@@ -35,11 +35,12 @@ module Garage {
             /**
              * constructor
              */
-            constructor(item : Model.Item, $el:JQuery, commandManager:CommandManager, options? : Backbone.ViewOptions<Model.Item>) {
+            constructor(item : Model.Item, templateDomId:string, $el:JQuery, commandManager:CommandManager, options? : Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;
                 this.$el = $el;
                 this.commandManager_ = commandManager;
+                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());  
             }
 
 

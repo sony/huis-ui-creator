@@ -44,9 +44,7 @@ module Garage {
              * constructor
              */
             constructor(item: Model.LabelItem) {
-                super(item);
-                this.template_ = CDP.Tools.Template.getJST(constValue.TEMPLATE_DOM_ID, this._getTemplateFilePath());
-                this.domId_ = constValue.DOM_ID;
+                super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
             }
 
 
@@ -69,7 +67,7 @@ module Garage {
                 }
                 this.$el.find(constValue.SIZE_PULLDOWM_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
 
-                //input initial value of size pulldown
+                //set initial value of size pulldown
                 let size = this.getModel().size;
                 if (Util.JQueryUtils.isValidValue(size)) {
                     this.$el.find(constValue.SIZE_PULLDOWM_CLASS).val(size.toString());
