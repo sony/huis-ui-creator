@@ -378,7 +378,7 @@ module Garage {
 
                 let state = this.defaultState;
                 let id: number = this.defaultState.stateId;
-                macroData.id = id;
+                macroData.stateId = id;
 
                 let resizeMode: string;
 
