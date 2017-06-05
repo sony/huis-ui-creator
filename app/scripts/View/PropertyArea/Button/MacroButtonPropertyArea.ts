@@ -554,7 +554,7 @@ module Garage {
                 //order順に並び変えて配列にいれる。
                 let actionsForUpdate: IAction[] = [];
                 let keys = Object.keys(tmpActionsWithOrder);
-                let keysNumCount: number = 0;;
+                let keysNumCount: number = 0;
                 for (let i = 0; i < MAX_NUM_MACRO_SIGNAL; i++) {
 
                     //keyに i がある場合、push

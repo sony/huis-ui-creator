@@ -88,7 +88,7 @@ module Garage {
 
                             }).then(() => {
                                 //展開されたフォルダのファイルパス
-                                let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");;
+                                let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");
 
                                 //展開されたリモコンのremoteIdを取得
                                 let decompressedRemoteId = this.getDecompressedRemoteId(dirPath);
@@ -651,13 +651,13 @@ module Garage {
                     return;
                 }
 
-                let result: Model.ImageItem[] = $.extend(true, [], images);;
+                let result: Model.ImageItem[] = $.extend(true, [], images);
 
                 for (let i = 0; i < result.length; i++){
                     result[i].path = this.converFilePath(result[i].path, newRemoteId);
                     let extensions = result[i].garageExtensions;
                     if (extensions != null) {
-                        extensions.original = this.converFilePath(extensions.original, newRemoteId);;
+                        extensions.original = this.converFilePath(extensions.original, newRemoteId);
                         extensions.resolvedOriginalPath = this.converFilePath(extensions.resolvedOriginalPath, newRemoteId);
                         result[i].garageExtensions = extensions;
                     }

@@ -572,9 +572,6 @@ module Garage {
                     newImage.version = image.version;
                 }
 
-                //最後に書き出されるようにするため、resizedはtrueにする。
-                newImage.resized = true;
-
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
