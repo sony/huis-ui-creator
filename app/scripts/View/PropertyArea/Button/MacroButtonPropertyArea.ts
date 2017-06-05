@@ -378,11 +378,11 @@ module Garage {
 
                 let state = this.defaultState;
                 let id: number = this.defaultState.stateId;
-                macroData.id = id;
+                macroData.stateId = id;
 
                 let resizeMode: string;
 
-                if (state.image) {
+                if (state.image != null && state.image.length != 0) {
                     macroData.image = state.image[0];
                     let garageImageExtensions = state.image[0].garageExtensions;
                     if (garageImageExtensions) {
