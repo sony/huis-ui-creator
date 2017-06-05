@@ -19,7 +19,7 @@
 module Garage {
     export module View {
 
-        
+
         var TAG: string = "[Garage.View.VersionDialog] ";
 
         export class VersionDialog extends Backbone.View<Model.VersionDialog> {

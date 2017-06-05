@@ -787,7 +787,7 @@ declare module Garage {
     var UNKNOWN_REMOTE_BT: string;
 
     /** 信号名と連番を分ける区切り文字 */
-    var FUNC_NUM_DELIMITER: string ;
+    var FUNC_NUM_DELIMITER: string;
 
     /** 信号がフルカスタムで再学習されたことを示すコード */
     var FUNC_CODE_RELEARNED: string;

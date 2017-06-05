@@ -61,7 +61,7 @@ module Garage {
                                 materialsRootPath: this.materialsRootPath_
                             });
 
-                            if (buttonData.name){
+                            if (buttonData.name) {
                                 buttonModel.name = buttonData.name;
                             }
 

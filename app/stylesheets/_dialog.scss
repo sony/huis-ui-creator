@@ -15,710 +15,683 @@
 */
 @import "variables/variable";
 
-body{
+body {
+    //共通ダイアログ
+    .ui-popup-screen.in {
+        opacity: $OPACITY_DIALOG_MASK;
+    }
 
+    .ui-overlay-b {
+        background-color: $COLOR_DIALOG_MASK;
+    }
 
-//共通ダイアログ
-.ui-popup-screen.in{
-    opacity: $OPACITY_DIALOG_MASK;
-}
+    .common-dialog {
+        text-shadow: none;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        height: $SIZE_DIALOG_HEIGHT;
+        width: $SIZE_DIALOG_WIDTH;
+        color: $COLOR_DIALOG_TEXT;
+        background: $COLOR_DIALOG_BACKGROUND;
+        border-radius: 0;
+        border: none;
+        max-width: none;
+        box-shadow: none;
+        -webkit-box-shadow: none;
 
-.ui-overlay-b{
-    background-color:$COLOR_DIALOG_MASK;   
-}
+        .spinner-dialog {
+            height: $SIZE_DIALOG_HEIGHT;
+            padding: 0;
+            -webkit-box-pack: inherit;
 
-.common-dialog{
-    text-shadow: none;
-    font-family:$FONT_WEIGHT_DIALOG_TEXT;
-    height:$SIZE_DIALOG_HEIGHT;
-    width:$SIZE_DIALOG_WIDTH;
-    color:$COLOR_DIALOG_TEXT;
-    background:$COLOR_DIALOG_BACKGROUND;
-    border-radius:0;
-    border:none;
-    max-width:none;
-    box-shadow:none;
-    -webkit-box-shadow:none;
+            p {
+                word-wrap: break-word;
+                font-size: $FONT_SIZE_DIALOG_TEXT;
+                font-family: $FONT_WEIGHT_DIALOG_TEXT;
+                width: $SIZE_DIALOG_TEXT_WIDTH;
+                margin-right: $SIZE_DIALOG_TEXT_MARGIN_RIGHT;
+                margin-left: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+            }
+        }
 
-    .spinner-dialog{
-        height:$SIZE_DIALOG_HEIGHT;
-        padding:0;
-        -webkit-box-pack:inherit;
+        #common-dialog-center-spinner {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_SPINNER;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
 
-        p{
-            word-wrap:break-word;
-            font-size:$FONT_SIZE_DIALOG_TEXT;
-            font-family:$FONT_WEIGHT_DIALOG_TEXT;
-            width:$SIZE_DIALOG_TEXT_WIDTH;
-            margin-right:$SIZE_DIALOG_TEXT_MARGIN_RIGHT;
-            margin-left:0px;
-            margin-top:0px;
-            margin-bottom:0px;
+        #simple-dialog-image {
+            position: relative;
+            height: $SIZE_DIALOG_ICON_HEIHGT;
+            width: $SIZE_DIALOG_ICON_WIDTH;
+            margin-left: $SIZE_DIALOG_ICON_MARGIN_LEFT;
+            margin-right: $SIZE_DIALOG_ICON_MARGIN_RIGHT;
+            -webkit-box-align: center;
+            background-image: $PATH_IMG_DIALOG_DONE_ICON;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
         }
     }
 
-    #common-dialog-center-spinner{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_SPINNER;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-
-    #simple-dialog-image{
-        position:relative;
-        height:$SIZE_DIALOG_ICON_HEIHGT;
-        width:$SIZE_DIALOG_ICON_WIDTH;
-        margin-left:$SIZE_DIALOG_ICON_MARGIN_LEFT;
-        margin-right:$SIZE_DIALOG_ICON_MARGIN_RIGHT;
-        -webkit-box-align: center;
-        background-image:$PATH_IMG_DIALOG_DONE_ICON;
-        background-position:center;
-        background-repeat: no-repeat;
-        background-size: contain;
-    }
-
-    
-}
-
-#about-dialog-back{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
-
-
-    #about-dialog-area{
+    #about-dialog-back {
         position: absolute;
-        margin: auto;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        
-        animation-name: popin;
-        animation-duration: 350ms;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
 
-        .common-dialog {
-            height: 550px;
-        }
+        #about-dialog-area {
+            position: absolute;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            animation-name: popin;
+            animation-duration: 350ms;
 
-        #dialog-about-message-container{
-            height: 350px;
-            overflow-y: scroll;
-            line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
-            font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
-            color:$COLOR_ABOUT_DIALOG_TXET;
-        }
 
-        #dialog-about-button-container{
-            width: 154px;
-            margin-left: auto;
-        }
+            .common-dialog {
+                height: 550px;
+            }
 
-        .ui-btn{
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
-                text-shadow:none;
-                margin:0;
-                padding:0;
-                border:none;
-                height:$SIZE_BUTTON_HEIGHT;   
-                font-size:$FONT_SIZE_TEXT_BUTTON;
-                color:$COLOR_BUTTON_TEXT;
-                background-color:$COLOR_BUTTON_NORMAL;
-                box-shadow:none;   
-                border-radius:0;
+            #dialog-about-message-container {
+                height: 350px;
+                overflow-y: scroll;
+                line-height: $TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+                font-size: $FONT_SIZE_ABOUT_TEXT_LISENCE;
+                color: $COLOR_ABOUT_DIALOG_TXET;
+            }
+
+            #dialog-about-button-container {
+                width: 154px;
+                margin-left: auto;
+            }
+
+            .ui-btn {
+                font-family: $FONT_FAMILY_TEXT_BUTTON;
+                text-shadow: none;
+                margin: 0;
+                padding: 0;
+                border: none;
+                height: $SIZE_BUTTON_HEIGHT;
+                font-size: $FONT_SIZE_TEXT_BUTTON;
+                color: $COLOR_BUTTON_TEXT;
+                background-color: $COLOR_BUTTON_NORMAL;
+                box-shadow: none;
+                border-radius: 0;
                 width: 154px;
                 height: 32px;
 
-                &:hover{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_HOVER;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    border:none;
+                &:hover {
+                    text-shadow: none;
+                    background-color: $COLOR_BUTTON_HOVER;
+                    font-family: $FONT_FAMILY_TEXT_BUTTON;
+                    color: $COLOR_BUTTON_TEXT;
+                    border: none;
                 }
 
-                &:active{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_PRESED;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    box-shadow:none;
-                    border:none;
+                &:active {
+                    text-shadow: none;
+                    background-color: $COLOR_BUTTON_PRESED;
+                    font-family: $FONT_FAMILY_TEXT_BUTTON;
+                    color: $COLOR_BUTTON_TEXT;
+                    box-shadow: none;
+                    border: none;
                 }
 
-                &:focus{
-                    text-shadow:none;
-                    box-shadow:none;
-                    border:none;
+                &:focus {
+                    text-shadow: none;
+                    box-shadow: none;
+                    border: none;
                 }
-            }
-    }
-}
-
-#about-dialog-area{
-
-    .title{
-        font-family:$FONT_FAMILY_ABOUT_TITLE;
-        font-size:$FONT_SIZE_ABOUT_TITLE;
-        text-align:center;
-    }
-
-    #about-info-box{
-        display:flex;
-        margin-top:$SIZE_ABOUT_INFO_BOX_MARING_TOP;
-        margin-bottom:$SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
-
-        #about-logo{
-            background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
-            background-position:center;
-            background-repeat: no-repeat;
-            background-size: contain;
-            width:$SIZE_ABOUT_LOGO_WIDTH;
-            height:$SIZE_ABOUT_LOGO_HEIGHT;
-            margin-right:$SIZE_ABOUT_LOGO_MARING_RIGHT;
-            margin-left:$SIZE_ABOUT_LOGO_MARING_LEFT;
-        }
-        .info-box{
-            font-size:$FONT_SIZE_ABOUT_INFO;
-
-            #about-app-name{
-                font-size:$FONT_SIZE_ABOUT_APP_NAME;
-                font-family:$FONT_FAMILY_ABOUT_APP_NAME;
-                color:$COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
             }
         }
     }
 
-    
+    #about-dialog-area {
 
-    overflow-y:auto;
-    overflow-x:hidden;
-   
-    font-family:$FONT_WEIGHT_DIALOG_TEXT;
-    width:$SIZE_DIALOG_WIDTH;
-    box-shadow:none;
-    -webkit-box-shadow:none;
-    text-shadow: none;
-    border-radius:0;
-    background:$COLOR_ABOUT_DIALOG_BACKGROUND;
-    height:$SIZE_ABOUT_DIALOG_HEIGHT;
-    border:$SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+        .title {
+            font-family: $FONT_FAMILY_ABOUT_TITLE;
+            font-size: $FONT_SIZE_ABOUT_TITLE;
+            text-align: center;
+        }
 
-    padding-top:$SIZE_ABOUT_DIALOG_MARGIN_TOP;
-    padding-bottom:$SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-    padding-right:$SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-    padding-left:$SIZE_ABOUT_DIALOG_MARGIN_LEFT;
-        
-    #dialog-about-button-container{
-        margin-top : $SIZE_ABOUT_BUTTON_CONTAINER_MARGIN_TOP;
-    }
+        #about-info-box {
+            display: flex;
+            margin-top: $SIZE_ABOUT_INFO_BOX_MARING_TOP;
+            margin-bottom: $SIZE_ABOUT_INFO_BOX_MARING_BOTTOM;
 
-    //ライセンス表記を実際に表示するエリア
-    #dialog-about-message-container{
-        white-space: pre-wrap;
-    }
-
-    .common-dialog{
-        background:none;
-            
-        .about-dialog{
-            color:$COLOR_ABOUT_DIALOG_TXET;
-                
-            .separator{
-                margin-top:$SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
-                margin-bottom:$SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
-                border-bottom:$SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
+            #about-logo {
+                background-image: $PATH_IMG_SPLASH_HUIS_LOGO;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: $SIZE_ABOUT_LOGO_WIDTH;
+                height: $SIZE_ABOUT_LOGO_HEIGHT;
+                margin-right: $SIZE_ABOUT_LOGO_MARING_RIGHT;
+                margin-left: $SIZE_ABOUT_LOGO_MARING_LEFT;
             }
 
-            .text-area{
-                p{
-                    line-height:$TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
-                    font-size:$FONT_SIZE_ABOUT_TEXT_LISENCE;
-                    color:$COLOR_ABOUT_DIALOG_TXET;
+            .info-box {
+                font-size: $FONT_SIZE_ABOUT_INFO;
+
+                #about-app-name {
+                    font-size: $FONT_SIZE_ABOUT_APP_NAME;
+                    font-family: $FONT_FAMILY_ABOUT_APP_NAME;
+                    color: $COLOR_ABOUT_DIALOG_TEXT_APP_NAME;
                 }
-            }
-        }    
-    }
-    
-}
-
-
-
-#information-dialog-area {
-         -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
-         box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
-         overflow-y: scroll;
-         overflow-x: hidden;
-         width: $SIZE_INFORMATION_DIALOG_WIDTH;
-         height: $SIZE_INFORMATION_DIALOG_HEIGHT;
-         background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
- 
-         .common-dialog {
-             color: $COLOR_INFORMATION_DIALOG_TEXT;
-             width: $SIZE_INFORMATION_DIALOG_WIDTH;
-             height: $SIZE_INFORMATION_DIALOG_HEIGHT;
-             text-shadow: none;
-             background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
- 
-             .information-dialog {
-                 padding-top: $SIZE_INFORMATION_DIALOG_PADDING_TOP;
-                 padding-bottom: $SIZE_INFORMATION_DIALOG_PADDING_BOTTOM;
-             }
- 
-             .title {
-                 font-size: $FONT_SIZE_INFORMATION_TITLE;
-                 font-family: $FONT_FAMILY_INFORMATION_TITLE;
-                 line-height: $TEXT_HEIGHT_INFORMATION_TEXT_TITLE;
-                 margin: 0;
-                 padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
-             }
- 
-             .bold-separator {
-                 border-top: $SIZE_INFORMATION_BOLD_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_BOLD_SEPARATOR;
-                 width: $SIZE_INFORMATION_BOLD_SEPARATOR_WIDTH;
-                 margin: 0 auto;
-             }
- 
-             .white-space {
-                 height: $SIZE_INFORMATION_WHITE_SPACE_TOP;
-             }
- 
-             .information-container {
-                 width: $SIZE_INFORMATION_CONTAINER_WIDTH;
-                 height: $SIZE_INFORMATION_CONTAINER_HEIGHT;
-                 margin: $SIZE_INFORMATION_CONTAINER_MARGIN_TOP_BOTTOM $SIZE_INFORMATION_CONTAINER_MARGIN_LEFT_RIGHT;
-             }
- 
-             .information-img {
-                 box-sizing: border-box;
-                 border:$SIZE_INFORMATION_CONTAINER_HEIGHT_BORDER_THICKNESS solid $COLOR_INFORMATION_BOLD_SEPARATOR;
-                 width: $SIZE_INFORMATION_IMG_WIDTH;
-                 height: auto;
-                 float: left;
-             }
- 
-             .information-box {
-                 width: $SIZE_INFORMATION_BOX_WIDTH;
-                 height: $SIZE_INFORMATION_BOX_HEIGHT;
-                 padding-left: $SIZE_INFORMATION_BOX_PADDING_LEFT;
-                 float: left;
- 
-                 .information-date {
-                     font-size: $FONT_SIZE_INFORMATION_DATE;
-                     font-family: $FONT_FAMILY_INFORMATION_DATE;
-                     padding-bottom: $SIZE_INFORMATION_DATE_PADDING_BOTTOM;
-                 }
- 
-                 .information-text {
-                     font-size: $FONT_SIZE_INFORMATION_TEXT;
-                     font-family: $FONT_FAMILY_INFORMATION_TEXT;
-                     white-space: pre-wrap;
-                 }
-             }
- 
-             .separator {
-                 border-top: $SIZE_INFORMATION_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_SEPARATOR;
-                 width: $SIZE_INFORMATION_SEPARATOR_WIDTH;
-                 margin: 0 auto;
-             }
- 
-             .information-body{
-                 div.separator:last-child{
-                     border: none;
-                 }
-             }
-         }
-}
-
-
-
-#remotelist-dialog-area{
-    text-shadow: none;
-    font-weight:normal;
-
-    .remotelist-dialog{
-        background-color: $COLOR_COMMON_BACKGROUND;
-
-        h3.title{
-            padding-top:$SIZE_DIALOG_TITLE_PADDING_TOP;
-            margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
-            margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
-            margin-left:$SIZE_DIALOG_TITLE_MARGIN_LEFT;
-            color: $COLOR_TEXT_MAIN;
-            font-size:$SIZE_DIALOG_TITLE_FONT;
-            font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
-            line-height: $TEXT_HEIGHT_DEFAULT;
-            font-weight:normal;
-            text-shadow: none;
-        }
-
-        header+.separator{
-            border-top-style: solid;
-            border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
-            border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
-            margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
-            margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
-        }
-
-        #spinner-dialog-spinner-gif{
-            width: $SIZE_DIALOG_SPINNER_WIDTH;
-            height: $SIZE_DIALOG_SPINNER_HEIGHT;
-            margin:0 auto;
-            margin-top:$SIZE_DIALOG_SPINNER_MARGIN_TOP;
-            background-image: $PATH_IMG_SPLASH_SPINNER;
-            background-position:center;
-            background-repeat: no-repeat;
-            background-size: contain;
-        }
-        
-        #remotelist-load-message {
-            text-shadow:none;
-            font-size:$FONT_SIZE_SPLASH_MESSAGE;
-            font-family:$FONT_FAMILY_SPLASH_MESSAGE;
-            line-height:$TEXT_HEIGHT_DEFAULT;
-            color:$COLOR_DIALOG_LOADING_TEXT;
-            text-align:center;
-            margin:0 auto;
-            margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
-        }
-
-
-        #face-list-container {
-            overflow-x: overlay;
-            overflow-y: hidden;
-            height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
-            width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
-            margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
-            margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
-            box-sizing: border-box;
-
-            #face-list {
-                position:relative;
-                overflow-y: hidden;
-                transform: scale(0.668);
-                transform-origin : left top;
-           
-                //box-shadow: 0 0 20px #222;
-                z-index: 1;
-                padding: 0;
-                margin: 0;
-
-                ::-webkit-scrollbar{
-                    &:vertical{
-                        width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2.5;
-                    }
-                }
-                ::-webkit-scrollbar-thumb {
-                    &:vertical{
-                        border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2.5 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
-                    }
-                }
-
-                #face-list-footer {
-                    position: absolute;
-                    bottom: 0;
-                    width:100%;
-                    height:$SIZE_HOME_FOOTOR_HEIGHT;
-                    background: $COLOR_HOME_FOOTOR_BACKGROUND;
-                    z-index: 1;
-                }
-
-                .face:nth-child(2){
-                    margin-left: $SIZE_DIALOG_REMOTE_FIRST_MARGIN_LEFT;
-                }
-                .face:last-child{
-                    margin-right: $SIZE_DIALOG_REMOTE_LAST_MARGIN_RIGHT
-                }
-
-                .face {
-                    list-style-type: none;
-                    float: left;
-                    margin-left: $SIZE_DIALOG_REMOTE_MARGIN_LEFT;
-                    margin-right: $SIZE_DIALOG_REMOTE_MARGIN_RIGHT;
-                    overflow: hidden;
-                    width: $SIZE_HOME_REMOTE_WIDTH;
-
-                    .title {
-                        margin-top:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_TOP;
-                        margin-bottom:$SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_BOTTOM;
-                        text-align: center;
-                        color: $COLOR_TEXT_MAIN;
-                        font-weight:normal;
-                        font-size:$FONT_DIALOG_REMOTE_TITLE;
-                        font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
-                        line-height:$FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
-                    }
-
-                    .face-container{
-                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
-                        
-                        overflow-x: hidden;
-                        overflow-y: overlay;
-                    }
-
-                    .face-container.multi-page{
-                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
-                    }
-
-                    .face-selector{
-                        pointer-events: none;
-                        width: $SIZE_HOME_REMOTE_WIDTH;
-                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
-                        position: absolute;
-                        z-index: 1;
-                        
-                        overflow-x: hidden;
-                        overflow-y: scroll;
-
-                        &::-webkit-scrollbar{
-                            display: none;
-                        }
-
-                        .face-page-selector{
-                            width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
-                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT / 2 - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
-                            position: relative;
-                            
-                        }
-
-                        .face-page-selector.selected{
-                            z-index: 1;
-                            border-style: solid;
-                            border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
-                            border-color: #00C588; 
-                            margin: 0px;
-
-                        }
-                    }
-
-                    .face-selector.multi-page{
-                        height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT / 2;
-                    }
-                    
-                    .gradation-area{
-                        pointer-events: none;
-                        position:absolute;
-                            
-                        width: $SIZE_HOME_REMOTE_WIDTH;
-                        height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
-                    }
-
-                    .gradation-top{
-                        visibility:hidden;
-                        top: $SIZE_DIALOG_GRADATION_TOP_TOP;
-                        background:$COLOR_PALLET_GRADATION_TOP;
-                    }
-
-                    .gradation-bottom{
-                        visibility:visible;
-                        top: $SIZE_DIALOG_GRADATION_BOTTOM_TOP;
-                        background:$COLOR_PALLET_GRADATION_BOTTOM;
-                    }
-
-
-                    #face-pages-area {
-                        width:inherit;
-                        font-family: $FONT_FAMILY_NORMAL;
-                        overflow-y : hidden;
-                        
-                    }
-
-                    .face-page{
-                        margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
-                        margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
-                        margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
-                        padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
-
-                        .button-item{
-                            border:none;
-                        }
-
-                    }
-
-                    .module-container {
-                        overflow: visible;
-                    }
-                }
-            }
-
-            .face-container {
-                width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
-                transform : scale(0.5);
-                transform-origin : left top;
-                box-sizing: border-box;
-                background-color:$COLOR_HOME_REMOTE_BACKGROUND;
-                border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
-                cursor: pointer;
             }
         }
 
-        .submit-area{
-            height: $SIZE_BUTTON_HEIGHT;
-            padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
-            padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
-            padding-right:$SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
-            display : flex;
-            justify-content:flex-end;
-
-            #remotelist-label-selected-conainer{
-                color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
-                font-size: $FONT_SIZE_DIALOG_SELECTED;
-                line-height:$SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
-                text-align: right;
-                margin-right:$SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
-            }
-
-           .ui-btn{
-               width: $SIZE_DIALOG_BUTTON_WIDTH;
-               font-weight:normal;
-               text-shadow: none;
-           }
-          
-            #remotelist-button-ok{
-                margin-right:$SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
-            }
-          
-        }
-    }
-}
-
-
-// 詳細設定ダイアログ
-#dialog-config-screen{
-    text-shadow: none;
-    font-weight:normal;
-
-    height: 100%;
-    width: 100%;
-    z-index: 3;
-    background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
-    position: absolute;
-    display:flex;
-
-    .ui-btn{
-        font-weight:normal;
+        overflow-y: auto;
+        overflow-x: hidden;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        width: $SIZE_DIALOG_WIDTH;
+        box-shadow: none;
+        -webkit-box-shadow: none;
         text-shadow: none;
+        border-radius: 0;
+        background: $COLOR_ABOUT_DIALOG_BACKGROUND;
+        height: $SIZE_ABOUT_DIALOG_HEIGHT;
+        border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+        padding-top: $SIZE_ABOUT_DIALOG_MARGIN_TOP;
+        padding-bottom: $SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
+        padding-right: $SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
+        padding-left: $SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+
+        #dialog-about-button-container {
+            margin-top: $SIZE_ABOUT_BUTTON_CONTAINER_MARGIN_TOP;
+        }
+        //ライセンス表記を実際に表示するエリア
+        #dialog-about-message-container {
+            white-space: pre-wrap;
+        }
+
+        .common-dialog {
+            background: none;
+
+            .about-dialog {
+                color: $COLOR_ABOUT_DIALOG_TXET;
+
+                .separator {
+                    margin-top: $SIZE_ABOUT_SEPARATOR_MARGIN_TOP;
+                    margin-bottom: $SIZE_ABOUT_SEPARATOR_MARGIN_BOTTOM;
+                    border-bottom: $SIZE_ABOUT_SEPARATOR_THICKNESS solid $COLOR_ABOUT_SEPARATOR;
+                }
+
+                .text-area {
+                    p {
+                        line-height: $TEXT_HEIGHT_ABOUT_TEXT_LISENCE;
+                        font-size: $FONT_SIZE_ABOUT_TEXT_LISENCE;
+                        color: $COLOR_ABOUT_DIALOG_TXET;
+                    }
+                }
+            }
+        }
     }
 
-    #dialog-config-area{
 
-        #dialog-config-header{
-            padding-top: $SIZE_DETAIL_PROPERTY_HEADER_PADDING_TOP;
-            margin-left:$SIZE_DETAIL_PROPERTY_HEADER_MARGIN_LEFT;
-            
-            .title{
-                line-height:$LINE_HEIGHT_DETAIL_PROPERTY_TITLE;
-                font-size: $FONT_SIZE_DETAIL_PROPERTY_TITLE;
-                font-family:$FONT_FAMILY_DETAIL_PROPERTY_TITLE;
-                font-weight:normal;
+
+    #information-dialog-area {
+        -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+        box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        width: $SIZE_INFORMATION_DIALOG_WIDTH;
+        height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+        background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+
+        .common-dialog {
+            color: $COLOR_INFORMATION_DIALOG_TEXT;
+            width: $SIZE_INFORMATION_DIALOG_WIDTH;
+            height: $SIZE_INFORMATION_DIALOG_HEIGHT;
+            text-shadow: none;
+            background: $COLOR_INFORMATION_DIALOG_BACKGROUND;
+
+            .information-dialog {
+                padding-top: $SIZE_INFORMATION_DIALOG_PADDING_TOP;
+                padding-bottom: $SIZE_INFORMATION_DIALOG_PADDING_BOTTOM;
+            }
+
+            .title {
+                font-size: $FONT_SIZE_INFORMATION_TITLE;
+                font-family: $FONT_FAMILY_INFORMATION_TITLE;
+                line-height: $TEXT_HEIGHT_INFORMATION_TEXT_TITLE;
+                margin: 0;
+                padding-left: $SIZE_INFORMATION_TITLE_PADDING_LEFT;
+            }
+
+            .bold-separator {
+                border-top: $SIZE_INFORMATION_BOLD_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                width: $SIZE_INFORMATION_BOLD_SEPARATOR_WIDTH;
+                margin: 0 auto;
+            }
+
+            .white-space {
+                height: $SIZE_INFORMATION_WHITE_SPACE_TOP;
+            }
+
+            .information-container {
+                width: $SIZE_INFORMATION_CONTAINER_WIDTH;
+                height: $SIZE_INFORMATION_CONTAINER_HEIGHT;
+                margin: $SIZE_INFORMATION_CONTAINER_MARGIN_TOP_BOTTOM $SIZE_INFORMATION_CONTAINER_MARGIN_LEFT_RIGHT;
+            }
+
+            .information-img {
+                box-sizing: border-box;
+                border: $SIZE_INFORMATION_CONTAINER_HEIGHT_BORDER_THICKNESS solid $COLOR_INFORMATION_BOLD_SEPARATOR;
+                width: $SIZE_INFORMATION_IMG_WIDTH;
+                height: auto;
+                float: left;
+            }
+
+            .information-box {
+                width: $SIZE_INFORMATION_BOX_WIDTH;
+                height: $SIZE_INFORMATION_BOX_HEIGHT;
+                padding-left: $SIZE_INFORMATION_BOX_PADDING_LEFT;
+                float: left;
+
+                .information-date {
+                    font-size: $FONT_SIZE_INFORMATION_DATE;
+                    font-family: $FONT_FAMILY_INFORMATION_DATE;
+                    padding-bottom: $SIZE_INFORMATION_DATE_PADDING_BOTTOM;
+                }
+
+                .information-text {
+                    font-size: $FONT_SIZE_INFORMATION_TEXT;
+                    font-family: $FONT_FAMILY_INFORMATION_TEXT;
+                    white-space: pre-wrap;
+                }
+            }
+
+            .separator {
+                border-top: $SIZE_INFORMATION_SEPARATOR_BORDER_TOP solid $COLOR_INFORMATION_SEPARATOR;
+                width: $SIZE_INFORMATION_SEPARATOR_WIDTH;
+                margin: 0 auto;
+            }
+
+            .information-body {
+                div.separator:last-child {
+                    border: none;
+                }
+            }
+        }
+    }
+
+
+
+    #remotelist-dialog-area {
+        text-shadow: none;
+        font-weight: normal;
+
+        .remotelist-dialog {
+            background-color: $COLOR_COMMON_BACKGROUND;
+
+            h3.title {
+                padding-top: $SIZE_DIALOG_TITLE_PADDING_TOP;
+                margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
+                margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+                margin-left: $SIZE_DIALOG_TITLE_MARGIN_LEFT;
+                color: $COLOR_TEXT_MAIN;
+                font-size: $SIZE_DIALOG_TITLE_FONT;
+                font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
+                line-height: $TEXT_HEIGHT_DEFAULT;
+                font-weight: normal;
                 text-shadow: none;
             }
 
-        }
+            header + .separator {
+                border-top-style: solid;
+                border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
+                border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
+                margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+                margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
+            }
 
-        .separator{
-            margin:0 auto; //中央揃え
-            width : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_WIDTH;
-            border-bottom : $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
-        }
+            #spinner-dialog-spinner-gif {
+                width: $SIZE_DIALOG_SPINNER_WIDTH;
+                height: $SIZE_DIALOG_SPINNER_HEIGHT;
+                margin: 0 auto;
+                margin-top: $SIZE_DIALOG_SPINNER_MARGIN_TOP;
+                background-image: $PATH_IMG_SPLASH_SPINNER;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
 
-        width: $SIZE_DETAIL_PROPERTY_WIDTH;
-        background-color: $COLOR_COMMON_BACKGROUND;
-        color: black;
-        margin: auto;
-        z-index: 4;
+            #remotelist-load-message {
+                text-shadow: none;
+                font-size: $FONT_SIZE_SPLASH_MESSAGE;
+                font-family: $FONT_FAMILY_SPLASH_MESSAGE;
+                line-height: $TEXT_HEIGHT_DEFAULT;
+                color: $COLOR_DIALOG_LOADING_TEXT;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: $SIZE_SPLASH_MESSAGE_MARGIN_TOP;
+            }
 
-        animation-name: popin;
-        animation-duration: 350ms;
 
-        .one-line{
-                display:flex;
-        }
+            #face-list-container {
+                overflow-x: overlay;
+                overflow-y: hidden;
+                height: $SIZE_DIALOG_REMOTE_FACE_LIST_HEIGHT;
+                width: $SIZE_DIALOG_REMOTE_FACE_LIST_WIDTH;
+                margin-left: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_LEFT;
+                margin-right: $SIZE_DIALOG_REMOTE_FACE_LIST_MARGIN_RIGHT;
+                box-sizing: border-box;
 
-        .inputs-container{
-                margin-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_LEFT;
-                margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_RIGHT;
-        }
-      
-        #dialog-config-details{
-            margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_TOP;
-            padding-left:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_LEFT;
-            padding-right:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_RIGHT;
-            overflow-y: scroll;
+                #face-list {
+                    position: relative;
+                    overflow-y: hidden;
+                    transform: scale(0.668);
+                    transform-origin: left top;
+                    //box-shadow: 0 0 20px #222;
+                    z-index: 1;
+                    padding: 0;
+                    margin: 0;
 
-            .ui-controlgroup{
-                margin:0;
+                    ::-webkit-scrollbar {
+                        &:vertical {
+                            width: $SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2.5;
+                        }
+                    }
 
-                .input-element{
-                    margin-top:$SIZE_DETAIL_PROPERTY_INPUT_ELEMENT_MARGIN_TOP;
+                    ::-webkit-scrollbar-thumb {
+                        &:vertical {
+                            border-left: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2.5 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+                        }
+                    }
+
+                    #face-list-footer {
+                        position: absolute;
+                        bottom: 0;
+                        width: 100%;
+                        height: $SIZE_HOME_FOOTOR_HEIGHT;
+                        background: $COLOR_HOME_FOOTOR_BACKGROUND;
+                        z-index: 1;
+                    }
+
+                    .face:nth-child(2) {
+                        margin-left: $SIZE_DIALOG_REMOTE_FIRST_MARGIN_LEFT;
+                    }
+
+                    .face:last-child {
+                        margin-right: $SIZE_DIALOG_REMOTE_LAST_MARGIN_RIGHT;
+                    }
+
+                    .face {
+                        list-style-type: none;
+                        float: left;
+                        margin-left: $SIZE_DIALOG_REMOTE_MARGIN_LEFT;
+                        margin-right: $SIZE_DIALOG_REMOTE_MARGIN_RIGHT;
+                        overflow: hidden;
+                        width: $SIZE_HOME_REMOTE_WIDTH;
+
+                        .title {
+                            margin-top: $SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_TOP;
+                            margin-bottom: $SIZE_DIALOG_REMOTE_FACE_TITLE_MARGIN_BOTTOM;
+                            text-align: center;
+                            color: $COLOR_TEXT_MAIN;
+                            font-weight: normal;
+                            font-size: $FONT_DIALOG_REMOTE_TITLE;
+                            font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
+                            line-height: $FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
+                        }
+
+                        .face-container {
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                            overflow-x: hidden;
+                            overflow-y: overlay;
+                        }
+
+                        .face-container.multi-page {
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT;
+                        }
+
+                        .face-selector {
+                            pointer-events: none;
+                            width: $SIZE_HOME_REMOTE_WIDTH;
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT;
+                            position: absolute;
+                            z-index: 1;
+                            overflow-x: hidden;
+                            overflow-y: scroll;
+
+                            &::-webkit-scrollbar {
+                                display: none;
+                            }
+
+                            .face-page-selector {
+                                width: $SIZE_HOME_REMOTE_WIDTH - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                                height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_HEIGHT / 2 - $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER * 2;
+                                position: relative;
+                            }
+
+                            .face-page-selector.selected {
+                                z-index: 1;
+                                border-style: solid;
+                                border-width: $SIZE_DIALOG_REMOTE_FACE_PAGE_SELECTED_BORDER;
+                                border-color: #00C588;
+                                margin: 0px;
+                            }
+                        }
+
+                        .face-selector.multi-page {
+                            height: $SIZE_DIALOG_REMOTE_FACE_CONTAINER_MULTI_HEIGHT / 2;
+                        }
+
+                        .gradation-area {
+                            pointer-events: none;
+                            position: absolute;
+                            width: $SIZE_HOME_REMOTE_WIDTH;
+                            height: $SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+                        }
+
+                        .gradation-top {
+                            visibility: hidden;
+                            top: $SIZE_DIALOG_GRADATION_TOP_TOP;
+                            background: $COLOR_PALLET_GRADATION_TOP;
+                        }
+
+                        .gradation-bottom {
+                            visibility: visible;
+                            top: $SIZE_DIALOG_GRADATION_BOTTOM_TOP;
+                            background: $COLOR_PALLET_GRADATION_BOTTOM;
+                        }
+
+
+                        #face-pages-area {
+                            width: inherit;
+                            font-family: $FONT_FAMILY_NORMAL;
+                            overflow-y: hidden;
+                        }
+
+                        .face-page {
+                            margin-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                            margin-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                            margin-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                            padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+
+                            .button-item {
+                                border: none;
+                            }
+                        }
+
+                        .module-container {
+                            overflow: visible;
+                        }
+                    }
+                }
+
+                .face-container {
+                    width: $SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+                    transform: scale(0.5);
+                    transform-origin: left top;
+                    box-sizing: border-box;
+                    background-color: $COLOR_HOME_REMOTE_BACKGROUND;
+                    border: $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+                    cursor: pointer;
                 }
             }
 
-            .category{
-                margin-top:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_MARGIN_TOP;
-                .category-title{
+            .submit-area {
+                height: $SIZE_BUTTON_HEIGHT;
+                padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
+                padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+                padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
+                display: flex;
+                justify-content: flex-end;
 
-                    font-weight:normal;
+                #remotelist-label-selected-conainer {
+                    color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
+                    font-size: $FONT_SIZE_DIALOG_SELECTED;
+                    line-height: $SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
+                    text-align: right;
+                    margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
+                }
+
+                .ui-btn {
+                    width: $SIZE_DIALOG_BUTTON_WIDTH;
+                    font-weight: normal;
                     text-shadow: none;
-
-                    //縦中央揃え
-                    display: flex;
-                    align-items: center;
-
-                    height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_HEIGHT;
-                    line-height:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_LINE_HEIGHT;
-                
-                    .category-divider{
-                        flex-grow:1;
-                        border-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_DIVIDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_CATEGORY_DIVIDER_BORDER;
-                    }
-
-                    span{
-                        margin-right:$SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_MARGIN_RIGHT;
-                    }
                 }
 
-                #dialog-config-button-change-home-dest{
-                    width:$SIZE_DETAIL_PROPERTY_CHANGE_BUTTON_WIDTH;
-                    margin-left:auto;        
+                #remotelist-button-ok {
+                    margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
                 }
-
-            }
-
-            #dialog-config-details-storage-access{
-                margin-bottom:$SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_BOTTOM;
             }
         }
-
-        #dialog-config-submit-area{
-            margin-top:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_MARGIN_TOP;
-            margin-right:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_MARGIN_RIGHT;
-            padding-bottom:$SIZE_DETAIL_PROPERTY_SUBMI_AREA_PADDING_BOTTOM;
-
-            .ok-cancel-btns{
-                margin-top:$SIZE_DETAIL_PROPERTY_OK_CANCEL_BUTTON_MARGIN_TOP;
-            }
-
-            .ui-btn{
-                margin-left:auto;
-                width:$SIZE_DETAIL_PROPERTY_SUBMIT_AREA_BUTTON_WIDTH;
-            }
-
-            #dialog-config-button-cancel{
-                margin-left:$SIZE_DETAIL_PROPERTY_CANCEL_BUTTON_MARGIN_LEFT;
-            }
-        }
-
     }
-}
+    // 詳細設定ダイアログ
+    #dialog-config-screen {
+        text-shadow: none;
+        font-weight: normal;
+        height: 100%;
+        width: 100%;
+        z-index: 3;
+        background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
+        position: absolute;
+        display: flex;
 
+        .ui-btn {
+            font-weight: normal;
+            text-shadow: none;
+        }
+
+        #dialog-config-area {
+
+            #dialog-config-header {
+                padding-top: $SIZE_DETAIL_PROPERTY_HEADER_PADDING_TOP;
+                margin-left: $SIZE_DETAIL_PROPERTY_HEADER_MARGIN_LEFT;
+
+                .title {
+                    line-height: $LINE_HEIGHT_DETAIL_PROPERTY_TITLE;
+                    font-size: $FONT_SIZE_DETAIL_PROPERTY_TITLE;
+                    font-family: $FONT_FAMILY_DETAIL_PROPERTY_TITLE;
+                    font-weight: normal;
+                    text-shadow: none;
+                }
+            }
+
+            .separator {
+                margin: 0 auto; //中央揃え
+                width: $SIZE_DETAIL_PROPERTY_HEADER_BORDER_WIDTH;
+                border-bottom: $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
+            }
+
+            width: $SIZE_DETAIL_PROPERTY_WIDTH;
+            background-color: $COLOR_COMMON_BACKGROUND;
+            color: black;
+            margin: auto;
+            z-index: 4;
+            animation-name: popin;
+            animation-duration: 350ms;
+
+            .one-line {
+                display: flex;
+            }
+
+            .inputs-container {
+                margin-left: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_LEFT;
+                margin-right: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_INPUT_CONTAINER_MARGIN_RIGHT;
+            }
+
+            #dialog-config-details {
+                margin-top: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_TOP;
+                padding-left: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_LEFT;
+                padding-right: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_PADDING_RIGHT;
+                overflow-y: scroll;
+
+                .ui-controlgroup {
+                    margin: 0;
+
+                    .input-element {
+                        margin-top: $SIZE_DETAIL_PROPERTY_INPUT_ELEMENT_MARGIN_TOP;
+                    }
+                }
+
+                .category {
+                    margin-top: $SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_MARGIN_TOP;
+
+                    .category-title {
+                        font-weight: normal;
+                        text-shadow: none;
+                        //縦中央揃え
+                        display: flex;
+                        align-items: center;
+                        height: $SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_HEIGHT;
+                        line-height: $SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_LINE_HEIGHT;
+
+                        .category-divider {
+                            flex-grow: 1;
+                            border-bottom: $SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_DIVIDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_CATEGORY_DIVIDER_BORDER;
+                        }
+
+                        span {
+                            margin-right: $SIZE_DETAIL_PROPERTY_CONFIG_CATEGORY_TITLE_MARGIN_RIGHT;
+                        }
+                    }
+
+                    #dialog-config-button-change-home-dest {
+                        width: $SIZE_DETAIL_PROPERTY_CHANGE_BUTTON_WIDTH;
+                        margin-left: auto;
+                    }
+                }
+
+                #dialog-config-details-storage-access {
+                    margin-bottom: $SIZE_DETAIL_PROPERTY_CONFIG_DETAIL_MARGIN_BOTTOM;
+                }
+            }
+
+            #dialog-config-submit-area {
+                margin-top: $SIZE_DETAIL_PROPERTY_SUBMI_AREA_MARGIN_TOP;
+                margin-right: $SIZE_DETAIL_PROPERTY_SUBMIT_AREA_MARGIN_RIGHT;
+                padding-bottom: $SIZE_DETAIL_PROPERTY_SUBMI_AREA_PADDING_BOTTOM;
+
+                .ok-cancel-btns {
+                    margin-top: $SIZE_DETAIL_PROPERTY_OK_CANCEL_BUTTON_MARGIN_TOP;
+                }
+
+                .ui-btn {
+                    margin-left: auto;
+                    width: $SIZE_DETAIL_PROPERTY_SUBMIT_AREA_BUTTON_WIDTH;
+                }
+
+                #dialog-config-button-cancel {
+                    margin-left: $SIZE_DETAIL_PROPERTY_CANCEL_BUTTON_MARGIN_LEFT;
+                }
+            }
+        }
+    }
 }

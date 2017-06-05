@@ -193,7 +193,7 @@ module Garage {
             }
 
             // TODO: change name, image to images
-            get image(): Model.ImageItem[]{
+            get image(): Model.ImageItem[] {
                 return this.imageCollection_.models;
             }
 
@@ -202,7 +202,7 @@ module Garage {
             }
 
             // TODO: change name, label to labels
-            get label(): Model.LabelItem[]{
+            get label(): Model.LabelItem[] {
                 return this.get("label");
             }
 
@@ -211,7 +211,7 @@ module Garage {
             }
 
             // TODO: change name, action to actions
-            get action(): IAction[]{
+            get action(): IAction[] {
                 return this.get("action");
             }
 

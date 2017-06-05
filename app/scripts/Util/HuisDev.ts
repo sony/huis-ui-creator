@@ -34,7 +34,7 @@ module Garage {
                 var usb_dev = require("usb_dev");
             }
 
-            interface IDiffInfo    {
+            interface IDiffInfo {
                 diff: string[];
                 dir1Extra: string[];
                 dir2Extra: string[];
@@ -159,7 +159,7 @@ module Garage {
 
                         var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
                         var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
-                      
+
                         if (!dir1Stat && !dir2Stat) {
                             continue; // TODO エラー処理が必要
                         }
@@ -316,7 +316,7 @@ module Garage {
                 exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
                     var dialog: Dialog = null;
                     this._isCanceled = false;
-                    var errorValue: Error= null; 
+                    var errorValue: Error = null;
                     if (useDialog) {
                         if (dialogProps) {
                             let options = dialogProps.options;
@@ -437,7 +437,7 @@ module Garage {
                             callback(err);
                         });
 
-              
+
                 }
 
 
@@ -458,37 +458,37 @@ module Garage {
                     }
 
                     this._compDirs(srcRootDir, destRootDir, syncFileFilter)  // Directory間の差分を取得
-                    .then((diffInfo: IDiffInfo)    => {
-                        // TODO: ディスクの容量チェック
+                        .then((diffInfo: IDiffInfo) => {
+                            // TODO: ディスクの容量チェック
 
-                        var df = $.Deferred();
-                        // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
-                        var copyTargetFiles = diffInfo.diff;
-                        copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
-                        this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
-                            .then(() => {
-                                df.resolve(diffInfo.dir2Extra);
-                            })
-                            .fail((err) => {
-                                df.reject(err);
-                            });
-                        return CDP.makePromise(df);
-                    }).then((removeTargetFiles: string[]) => {
-                        var    df = $.Deferred();
-                        // destRootDirの余分なファイルやディレクトリを削除
-                        this._removeFiles(destRootDir, removeTargetFiles)
-                            .done(() => {
-                                callback(null);    // 成功
-                                df.resolve();
-                            })
-                            .fail((err) => {
-                                df.reject(err);
-                            });
+                            var df = $.Deferred();
+                            // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                            var copyTargetFiles = diffInfo.diff;
+                            copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                            this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
+                                .then(() => {
+                                    df.resolve(diffInfo.dir2Extra);
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+                            return CDP.makePromise(df);
+                        }).then((removeTargetFiles: string[]) => {
+                            var df = $.Deferred();
+                            // destRootDirの余分なファイルやディレクトリを削除
+                            this._removeFiles(destRootDir, removeTargetFiles)
+                                .done(() => {
+                                    callback(null);    // 成功
+                                    df.resolve();
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
                             df.resolve();
-                        return CDP.makePromise(df);
-                    }).fail((err) => {
-                        callback(err);
-                    });
+                            return CDP.makePromise(df);
+                        }).fail((err) => {
+                            callback(err);
+                        });
                 }
 
                 /*
@@ -497,7 +497,7 @@ module Garage {
                 */
                 copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
                     this._isCanceled = false;
-                    var errorValue: Error = null; 
+                    var errorValue: Error = null;
 
                     setTimeout(() => {
                         this._compDirs(srcRootDir, dstRootDir)  // Directory間の差分を取得

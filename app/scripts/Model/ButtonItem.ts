@@ -177,7 +177,7 @@ module Garage {
                 this.set("version", val);
             }
 
-            get interval(): number{
+            get interval(): number {
                 return this.get("interval");
             }
 
@@ -238,7 +238,7 @@ module Garage {
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);
                     if (stateModel && stateModel.action && stateModel.action.length) {
-                        for (let targetAction of stateModel.action){
+                        for (let targetAction of stateModel.action) {
                             if (targetAction && targetAction.code_db && !targetAction.deviceInfo) {
                                 // 機器情報が設定されていない場合はactionに設定されている情報をコピー
                                 targetAction.deviceInfo = {
@@ -249,7 +249,7 @@ module Garage {
                                 };
                             }
                         }
-                        
+
                     }
                 }
                 this._setStateItemsArea(this.area);
@@ -259,8 +259,8 @@ module Garage {
             /**
              * 変更可能なプロパティーの一覧
              */
-            get properties(): string[]{
-                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
+            get properties(): string[] {
+                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name", "version", "interval"];
             }
 
             // TODO: delete
@@ -290,7 +290,7 @@ module Garage {
                     default: 0,
                     currentStateId: 0,
                     state: states,
-                    name:"button",
+                    name: "button",
                 };
 
                 return button;
@@ -331,12 +331,12 @@ module Garage {
                     return;
                 }
                 var stateModel: ButtonState = new ButtonState({
-                        stateId: state.id,
-                        active: state.active,
-                        action: state.action,
-                        translate: state.translate,
-                        image: state.image,
-                        label: state.label
+                    stateId: state.id,
+                    active: state.active,
+                    action: state.action,
+                    translate: state.translate,
+                    image: state.image,
+                    label: state.label
                 });
                 this.stateCollection_.add(stateModel);
             }

@@ -31,7 +31,7 @@ module Garage {
             order: number;
             interval: number;
             remoteId: string;
-            functionName : string;
+            functionName: string;
         }
 
         namespace macroConstValue {
@@ -333,7 +333,7 @@ module Garage {
                         let prevRemoteId = this.getRemoteIdFromPullDownOf(prevOrder);
 
                         if (this.isValidValue(prevRemoteId)) {
-                            this.renderRemoteIdOf(tmpOrder, this.DEFAULT_STATE_ID,prevRemoteId);
+                            this.renderRemoteIdOf(tmpOrder, this.DEFAULT_STATE_ID, prevRemoteId);
                             this.renderFunctionsOf(tmpOrder);
                         }
                     }
@@ -346,7 +346,7 @@ module Garage {
                     //削除とソートボタンをちら見する。
                     this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
                         this.renderSignalContainers();
-                    });   
+                    });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + tmpOrder + "is already exist. ");
                 }
@@ -398,7 +398,7 @@ module Garage {
                 }
 
                 macroData.actionList = ACTION_INPUTS_MACRO;
-                
+
                 let $macroDetail = $(templateMacro(macroData));
                 $macroContainer.append($macroDetail);
 
@@ -425,7 +425,7 @@ module Garage {
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
                 $macroContainer.i18n();
                 $macroContainer.find('.custom-select').trigger('create');
-               
+
                 this.renderSignalContainers();
 
                 return $macroContainer;
@@ -500,10 +500,10 @@ module Garage {
                     }
 
                     //deviceInfoを値渡しにすると、前後のorderに値が参照されてしまう。
-                    
+
 
                     let deviceInfo: IButtonDeviceInfo = null;
-                    if (tmpdeviceInfo != null){
+                    if (tmpdeviceInfo != null) {
                         deviceInfo = this.cloneDeviceInfo(tmpdeviceInfo);
                     }
 
@@ -599,7 +599,7 @@ module Garage {
 
                     //最後のorderのとき、並び替えしたボタンを非表示にする。
                     if (i == actions.length - 1) {
-                        let sortAreaLastOrder : JQuery = this.$el.find("#sort-button-area-" + i);
+                        let sortAreaLastOrder: JQuery = this.$el.find("#sort-button-area-" + i);
                         if (this.isValidJQueryElement(sortAreaLastOrder)) {
                             sortAreaLastOrder.addClass("last-order");
                         }
@@ -633,8 +633,8 @@ module Garage {
                     this.$el.find("#delete-signal-area-0").remove();
 
                     //並び替えボタンエリアを削除
-                    this.$el.find("#sort-button-area-0").remove();                    
-                    
+                    this.$el.find("#sort-button-area-0").remove();
+
                 } else {//２つ以上ある場合、dot線を描画。
                     this.renderDotLine();
                 }
@@ -721,7 +721,7 @@ module Garage {
             * @param $signalContainer{JQuery} 描画する先のJQuery
             * @return {boolean} シグナルをレンダリングできたかどうか
             */
-            private renderSignalDetail(order : number, action : IAction, $signalContainer: JQuery): boolean {
+            private renderSignalDetail(order: number, action: IAction, $signalContainer: JQuery): boolean {
                 let FUNCTION_NAME: string = TAG + "renderSignalDetail";
 
                 if (!this.isValidOrder(order)) {
@@ -784,7 +784,7 @@ module Garage {
                 if (inputInterval == null) {
                     inputInterval = 0;
                 }
-                
+
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
 
                 //インターバル用のテンプレートを読み込み
@@ -796,7 +796,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id : this.defaultState.stateId
+                    id: this.defaultState.stateId
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this.templateItemDetailFile_);
@@ -851,7 +851,7 @@ module Garage {
             * order{number} ： マクロ信号の順番
             * inputInterval{number} : プルダウンに設定する値。
             */
-            private setIntervalPullDownOf(order : number, inputInterval : number) {
+            private setIntervalPullDownOf(order: number, inputInterval: number) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
 
                 if (!this.isValidOrder(order)) {
@@ -953,7 +953,7 @@ module Garage {
 
             }
 
-           
+
 
             /*
             * 指定された二つのsignalContainerのinterval, remoteId, functionを入れ替える。
@@ -1008,7 +1008,7 @@ module Garage {
             * @param order{number} 入力されている情報を取得した信号の順番
             * @return {ISignalInput} 入力されている情報、有効な値でない場合各値にundefinedがはいる
             */
-            private getSignalnput(order: number): ISignalInputs{
+            private getSignalnput(order: number): ISignalInputs {
                 let FUNCTION_NAME = TAG + "getSignalnput";
 
                 if (!this.isValidOrder(order)) {
@@ -1033,13 +1033,13 @@ module Garage {
                 }
 
                 let result: ISignalInputs = {
-                    order : order,
-                    interval : interval,
+                    order: order,
+                    interval: interval,
                     remoteId: remoteId,
                     functionName: functionName,
                 }
 
-                return result; 
+                return result;
             }
 
             /*
@@ -1062,10 +1062,10 @@ module Garage {
 
                 this.renderIntervalOf(order, signalInputs.interval);
 
-                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID,signalInputs.remoteId);
+                this.renderRemoteIdOf(order, this.DEFAULT_STATE_ID, signalInputs.remoteId);
 
                 //Function選択用のPullダウンを更新。
-                this.renderFunctionsOf(order,this.defaultState.stateId, signalInputs.functionName);
+                this.renderFunctionsOf(order, this.defaultState.stateId, signalInputs.functionName);
 
             }
 
@@ -1083,10 +1083,10 @@ module Garage {
 
                 let functionOrder0 = this.getFunctionFromlPullDownOf(0);
 
-               
+
                 if (ActionNum <= 1 && !this.isValidValue(remoteIdOrder0) && !this.isValidValue(functionOrder0)) {
                     this.$el.find("#select-remote-input-0").focus();
-                }  
+                }
             }
 
             /*
@@ -1113,7 +1113,7 @@ module Garage {
              * duration{number} アニメーションにかかる時間[ms]
              * callback{Function} アニメーション後に実行する処理
              */
-            private animateDeleteSignalContainerAndDotLine(order : number, duration : number, callback? :Function) {
+            private animateDeleteSignalContainerAndDotLine(order: number, duration: number, callback?: Function) {
                 let FUNCTION_NAME = TAG + "animateDeleteSignalContainer : ";
 
                 if (!this.isValidOrder(order)) {
@@ -1143,7 +1143,7 @@ module Garage {
                 //dotlineをsignalContainer 1個分、短くする
                 let $dotLine = this.$el.find(".dot-line");
                 let dotLineHeight = $dotLine.outerHeight(true);
-                this.setAnimationDuration($dotLine, duration/1000);
+                this.setAnimationDuration($dotLine, duration / 1000);
 
                 $dotLine.outerHeight(dotLineHeight - $targetSignalContainer.outerHeight(true));
 

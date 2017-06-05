@@ -16,22 +16,22 @@
 @import "variables/variable";
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST_LIGHT;
-  src: $PATH_FONT_SST_LIGHT_IE; // For IE
-  src: $PATH_FONT_SST_LIGHT;
+    font-family: $FONT_FAMILY_COMMON_SST_LIGHT;
+    src: $PATH_FONT_SST_LIGHT_IE; // For IE
+    src: $PATH_FONT_SST_LIGHT;
 }
 
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST_REGULAR;
-  src: $PATH_FONT_SST_NORMAL_IE; // For IE
-  src: $PATH_FONT_SST_NORMAL;
+    font-family: $FONT_FAMILY_COMMON_SST_REGULAR;
+    src: $PATH_FONT_SST_NORMAL_IE; // For IE
+    src: $PATH_FONT_SST_NORMAL;
 }
 
 @font-face {
-  font-family: $FONT_FAMILY_COMMON_SST_BOLD;
-  src: $PATH_FONT_SST_BOLD_IE; // For IE
-  src: $PATH_FONT_SST_BOLD;
+    font-family: $FONT_FAMILY_COMMON_SST_BOLD;
+    src: $PATH_FONT_SST_BOLD_IE; // For IE
+    src: $PATH_FONT_SST_BOLD;
 }
 
 /*
@@ -55,167 +55,161 @@
 
 body {
     height: 100%;
-    font-family:$FONT_FAMILY_LIGHT;
-    line-height:$FONT_HEIGHT_COMMON;
-    color:$COLOR_TEXT_COMMON;
+    font-family: $FONT_FAMILY_LIGHT;
+    line-height: $FONT_HEIGHT_COMMON;
+    color: $COLOR_TEXT_COMMON;
     text-shadow: none;
     overflow: hidden;
     -webkit-text-size-adjust: 100%;
-       -moz-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-            text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
- 
-    .tooltip-text{
-            display: none;
-    }
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
+    .tooltip-text {
+        display: none;
+    }
     //ラベル、ボタン、画像などのz-index
-    .label-item{
-        z-index:3;
+    .label-item {
+        z-index: 3;
     }
 
-    .button-item{
-        z-index:2;
+    .button-item {
+        z-index: 2;
     }
 
-    .image-item{
-        z-index:1;
+    .image-item {
+        z-index: 1;
     }
-
-
     //スクロールバー
     ::-webkit-scrollbar {
-        &:horizontal{
+        &:horizontal {
             height: $SIZE_SCROLL_BAR_WHOLE_HEIGHT;
         }
 
-        &:vertical{
-            width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH;
+        &:vertical {
+            width: $SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH;
         }
-        background:$COLOR_TRANSPARENT;
+
+        background: $COLOR_TRANSPARENT;
     }
 
-    #face-canvas, #face-pallet, #face-list{     
-        ::-webkit-scrollbar{
-            &:vertical{
+    #face-canvas, #face-pallet, #face-list {
+        ::-webkit-scrollbar {
+            &:vertical {
                 //スケールが1/2なので, 2倍に
-                width:$SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
+                width: $SIZE_SCROLL_BAR_VERTICL_WHOLE_WIDTH*2;
             }
         }
+
         ::-webkit-scrollbar-thumb {
-            &:vertical{
-                border-left : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;  
+            &:vertical {
+                border-left: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
             }
         }
         //overflow :overlay;
     }
-
     //矢印ボタンを非表示に。
-    ::-webkit-scrollbar-button:no-button{
+    ::-webkit-scrollbar-button:no-button {
     }
-
     //スクロールバーのクリック可能エリア
     ::-webkit-scrollbar-thumb {
-        &:hover{
+        &:hover {
             background-color: $COLOR_SCROLL_BAR_HOVER;
         }
 
-        &:active{
+        &:active {
             background-color: $COLOR_SCROLL_BAR_PRESSED;
         }
     }
-    
+
     ::-webkit-scrollbar-thumb {
         background-color: $COLOR_SCROLL_BAR_NORMAL;
         background-clip: padding-box;
 
-        &:horizontal{
-            border-right:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-            border-left:$SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-            border-bottom : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_TOP solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-            border-top : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_BOTTOM solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+        &:horizontal {
+            border-right: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-left: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_LEFT solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-bottom: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_TOP solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-top: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_BOTTOM solid $COLOR_SCROLL_BAR_THUMB_PADDING;
         }
 
-        &:vertical{
+        &:vertical {
             //スケールが1/2なので2倍に
-            border-left : $SIZE_SCROLL_BAR_BORDER_VERTICAL_LEFT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
-            border-right : $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING ;
-            border-bottom : $SIZE_SCROLL_BAR_BORDER_VERTICAL_BOTTOM *2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-            border-top : $SIZE_SCROLL_BAR_BORDER_VERTICAL_TOP*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
-
+            border-left: $SIZE_SCROLL_BAR_BORDER_VERTICAL_LEFT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-right: $SIZE_SCROLL_BAR_BORDER_HORIZONTAL_RIGHT* 2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-bottom: $SIZE_SCROLL_BAR_BORDER_VERTICAL_BOTTOM *2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
+            border-top: $SIZE_SCROLL_BAR_BORDER_VERTICAL_TOP*2 solid $COLOR_SCROLL_BAR_THUMB_PADDING;
         }
     }
 
 
-    .ui-loader{
-            position:absolute;
-            text-align:center;
-            font-size:$FONT_SIZE_TOAST;
-            font-family : $FONT_FAMILY_TOAST;
-            padding-left:$SIZE_TOAST_PADDING_LEFT;
-            padding-right:$SIZE_TOAST_PADDING_RIGHT;
-            height:$SIZE_TOAST_HEIGHT;
-            line-height:$SIZE_TOAST_HEIGHT;
-            border-radius:0;
-            box-shadow:none;
-            text-shadow:none;
-            color:$COLOR_TOAST_TEXT;
-            background-color:$COLOR_TOAST_BACKGROUND;
+    .ui-loader {
+        position: absolute;
+        text-align: center;
+        font-size: $FONT_SIZE_TOAST;
+        font-family: $FONT_FAMILY_TOAST;
+        padding-left: $SIZE_TOAST_PADDING_LEFT;
+        padding-right: $SIZE_TOAST_PADDING_RIGHT;
+        height: $SIZE_TOAST_HEIGHT;
+        line-height: $SIZE_TOAST_HEIGHT;
+        border-radius: 0;
+        box-shadow: none;
+        text-shadow: none;
+        color: $COLOR_TOAST_TEXT;
+        background-color: $COLOR_TOAST_BACKGROUND;
     }
 
-    
 
-    .ui-page-theme-b{
-    
+
+    .ui-page-theme-b {
         //共通のラジオボタン
-        .ui-radio{
-            margin:0;
-            height:$SIZE_RADIO_MARK_HEIGHT;
-
+        .ui-radio {
+            margin: 0;
+            height: $SIZE_RADIO_MARK_HEIGHT;
             display: flex;
             align-items: center;
 
-            .ui-btn{
-                background:none;
-                font-weight:normal;
-                height:$SIZE_RADIO_MARK_HEIGHT;
-                line-height:$SIZE_RADIO_MARK_LINE_HEIGHT;
-                border:none;
-                padding-top:0;
-                padding-bottom:0;
-                padding-left:$SIZE_RADIO_TEXT_PADDING_LEFT;
+            .ui-btn {
+                background: none;
+                font-weight: normal;
+                height: $SIZE_RADIO_MARK_HEIGHT;
+                line-height: $SIZE_RADIO_MARK_LINE_HEIGHT;
+                border: none;
+                padding-top: 0;
+                padding-bottom: 0;
+                padding-left: $SIZE_RADIO_TEXT_PADDING_LEFT;
                 font-size: $FONT_SIZE_RADIO_BOX;
-                font-family:$FONT_FAMILY_RADIO_BOX;
+                font-family: $FONT_FAMILY_RADIO_BOX;
 
-                & + input[type=radio]{
+                & + input[type=radio] {
                     display: none;
                 }
 
-                &:hover{
-                    background:none;
+                &:hover {
+                    background: none;
                 }
 
-                &:active{
-                    background:none;
+                &:active {
+                    background: none;
                 }
 
-                &:focus{
-                    background:none;
+                &:focus {
+                    background: none;
                 }
 
-                
-                input[type="radio"]{
-                    left:0;
-                    width:20px;
-                    height:20px;
+
+                input[type="radio"] {
+                    left: 0;
+                    width: 20px;
+                    height: 20px;
                 }
-                
-                &:after{
+
+                &:after {
                     top: 33%;
                     left: 0;
                     width: $SIZE_RADIO_MARK_WIDTH;
@@ -226,66 +220,63 @@ body {
                     opacity: 1;
                 }
 
-                &:hover:after{
+                &:hover:after {
                     background-image: $PATH_IMG_RADIO_BOX_HOVER;
                 }
 
-                &:active:after{
+                &:active:after {
                     background-image: $PATH_IMG_RADIO_BOX_ACTIVE;
                 }
 
-                &.ui-radio-on:after{
+                &.ui-radio-on:after {
                     background-image: $PATH_IMG_RADIO_BOX_CHECKED_NORMAL;
                 }
 
-                &.ui-radio-on:hover:after{
+                &.ui-radio-on:hover:after {
                     background-image: $PATH_IMG_RADIO_BOX_CHECKED_HOVER;
                 }
 
-                &.ui-radio-on:active:after{
+                &.ui-radio-on:active:after {
                     background-image: $PATH_IMG_RADIO_BOX_CHECKED_PRESSED;
                 }
-
             }
         }
-
         //共通のチェックボックス
-        .ui-checkbox{
-            margin:0;
+        .ui-checkbox {
+            margin: 0;
             display: flex;
             align-items: center;
+            height: $SIZE_CHECK_BOX_MARK_HEIGHT;
 
-            height:$SIZE_CHECK_BOX_MARK_HEIGHT;
-
-            .ui-btn{
-                background:none;
-                font-weight:normal;
-                height:$SIZE_CHECK_BOX_MARK_HEIGHT;
-                line-height:$SIZE_CHECK_BOX_MARK_LINE_HEIGHT;
-                padding-left:$SIZE_CHECK_BOX_TEXT_MARGIN_PADDING;
-                padding-top : 0;
-                padding-bottom:0;
-                border:none;
+            .ui-btn {
+                background: none;
+                font-weight: normal;
+                height: $SIZE_CHECK_BOX_MARK_HEIGHT;
+                line-height: $SIZE_CHECK_BOX_MARK_LINE_HEIGHT;
+                padding-left: $SIZE_CHECK_BOX_TEXT_MARGIN_PADDING;
+                padding-top: 0;
+                padding-bottom: 0;
+                border: none;
                 font-size: $FONT_SIZE_CHECK_BOX;
-                font-family:$FONT_FAMILY_CHECK_BOX;
+                font-family: $FONT_FAMILY_CHECK_BOX;
 
-                & + input[type=checkbox]{
+                & + input[type=checkbox] {
                     display: none;
                 }
 
-                &:hover{
-                    background:none;
+                &:hover {
+                    background: none;
                 }
 
-                &:active{
-                    background:none;
+                &:active {
+                    background: none;
                 }
 
-                &:focus{
-                    background:none;
+                &:focus {
+                    background: none;
                 }
 
-                &:after{
+                &:after {
                     top: 33%;
                     left: 0px;
                     width: $SIZE_CHECK_BOX_MARK_WIDTH;
@@ -295,322 +286,307 @@ body {
                     opacity: 1;
                 }
 
-                &:hover:after{
+                &:hover:after {
                     background-image: $PATH_IMG_CHECK_BOX_HOVER;
                 }
 
-                &:active:after{
+                &:active:after {
                     background-image: $PATH_IMG_CHECK_BOX_ACTIVE;
                 }
 
-                &.ui-checkbox-on:after{
+                &.ui-checkbox-on:after {
                     background-image: $PATH_IMG_CHECK_BOX_CHECKED_NORMAL;
                 }
 
-                &.ui-checkbox-on:hover:after{
+                &.ui-checkbox-on:hover:after {
                     background-image: $PATH_IMG_CHECK_BOX_CHECKED_HOVER;
                 }
 
-                &.ui-checkbox-on:active:after{
+                &.ui-checkbox-on:active:after {
                     background-image: $PATH_IMG_CHECK_BOX_CHECKED_PRESSED;
                 }
-
             }
         }
-
         //共通の吹き出し
-        #popup-arrow{
-            background-position:center;
+        #popup-arrow {
+            background-position: center;
             background-repeat: no-repeat;
             background-size: contain;
-            background-image:$PATH_IMG_POPUP_ARROW;
-            width:$SIZE_POPUP_ARROW_WIDTH;
-            height:$SIZE_POPUP_ARROW_HEIGHT;
-            margin-top:$SIZE_POPUP_ARROW_MINUS_MARGIN;
-            margin-bottom:$SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
+            background-image: $PATH_IMG_POPUP_ARROW;
+            width: $SIZE_POPUP_ARROW_WIDTH;
+            height: $SIZE_POPUP_ARROW_HEIGHT;
+            margin-top: $SIZE_POPUP_ARROW_MINUS_MARGIN;
+            margin-bottom: $SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
+        }
+        //共通のテキストボタン
+        .ui-btn {
+            font-family: $FONT_FAMILY_TEXT_BUTTON;
+            text-shadow: none;
+            margin: 0;
+            padding: 0;
+            border: none;
+            height: $SIZE_BUTTON_HEIGHT;
+            font-size: $FONT_SIZE_TEXT_BUTTON;
+            color: $COLOR_BUTTON_TEXT;
+            background-color: $COLOR_BUTTON_NORMAL;
+            box-shadow: none;
+            border-radius: 0;
+
+            &:hover {
+                text-shadow: none;
+                background-color: $COLOR_BUTTON_HOVER;
+                font-family: $FONT_FAMILY_TEXT_BUTTON;
+                color: $COLOR_BUTTON_TEXT;
+                border: none;
+            }
+
+            &:active {
+                text-shadow: none;
+                background-color: $COLOR_BUTTON_PRESED;
+                font-family: $FONT_FAMILY_TEXT_BUTTON;
+                color: $COLOR_BUTTON_TEXT;
+                box-shadow: none;
+                border: none;
+            }
+
+            &:focus {
+                text-shadow: none;
+                box-shadow: none;
+                border: none;
+            }
+
+            &.disabled {
+                opacity: 0.2;
+                cursor: default;
+
+                &:hover {
+                    background-color: $COLOR_BUTTON_NORMAL;
+                }
+
+                &:active {
+                    background-color: $COLOR_BUTTON_NORMAL;
+                }
+            }
         }
 
-        //共通のテキストボタン
-          .ui-btn{
-                font-family:$FONT_FAMILY_TEXT_BUTTON;
-                text-shadow:none;
-                margin:0;
-                padding:0;
-                border:none;
-                height:$SIZE_BUTTON_HEIGHT;   
-                font-size:$FONT_SIZE_TEXT_BUTTON;
-                color:$COLOR_BUTTON_TEXT;
-                background-color:$COLOR_BUTTON_NORMAL;
-                box-shadow:none;   
-                border-radius:0;
+        .ui-bar-inherit,
+        .ui-header {
+            background-color: $COLOR_HEADER_BACKGROUND;
+            border: 0;
+            border-bottom: $SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
+            box-sizing: border-box;
+            height: $SIZE_HEADER_HEIGHT;
+            color: $COLOR_HEADER_TEXT;
+            text-shadow: none;
 
-                &:hover{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_HOVER;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    border:none;
-                }
-
-                &:active{
-                    text-shadow:none;
-                    background-color:$COLOR_BUTTON_PRESED;
-                    font-family:$FONT_FAMILY_TEXT_BUTTON;
-                    color:$COLOR_BUTTON_TEXT;
-                    box-shadow:none;
-                    border:none;
-                }
-
-                &:focus{
-                    text-shadow:none;
-                    box-shadow:none;
-                    border:none;
-                }
-
-                &.disabled{
-                    opacity:0.2;
-                    cursor: default;
-
-                    &:hover{
-                        background-color:$COLOR_BUTTON_NORMAL;
-                    }
-
-                    &:active{
-                        background-color:$COLOR_BUTTON_NORMAL;
-                    }
-                }
+            .header-button-lline-alingn-right {
+                position: absolute;
+                display: flex;
+                top: 0;
+                right: 0;
+                margin-right: $SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
             }
 
-            .ui-bar-inherit,
-            .ui-header{
-                background-color : $COLOR_HEADER_BACKGROUND;
-                border : 0;
-                border-bottom:$SIZE_HEADER_BOARDER_THICKNESS solid $COLOR_HEADER_BORDER;
-                box-sizing:border-box;
-                height:$SIZE_HEADER_HEIGHT;
-                color :$COLOR_HEADER_TEXT;
-                text-shadow:none;
-               
-                .header-button-lline-alingn-right{
-                    position: absolute;
-                    display: flex;
-                    top:0;
-                    right:0;
-                    margin-right:$SIZE_HEADER_BUTTONS_AT_RIGHT_MARGIN_RIGHT;
-                }
-
-                .ui-title{
-                    padding-top:$SIZE_HEADER_TITLE_PADDING_TOP;
-                    font-size:$FONT_SIZE_TITLE;
-                    font-family:$FONT_FAMILY_TITLE;
-                    font-weight:initial;
-                }
+            .ui-title {
+                padding-top: $SIZE_HEADER_TITLE_PADDING_TOP;
+                font-size: $FONT_SIZE_TITLE;
+                font-family: $FONT_FAMILY_TITLE;
+                font-weight: initial;
             }
-
+        }
         //共通のプルダウンメニュー
         .ui-select {
             -webkit-appearance: none;
-            margin-top:$SIZE_PULL_DOWM_MARGIN_TOP;
-            margin-bottom:0;
-            height:$SIZE_PULL_DOWM_HEIGHT_MAIN;
+            margin-top: $SIZE_PULL_DOWM_MARGIN_TOP;
+            margin-bottom: 0;
+            height: $SIZE_PULL_DOWM_HEIGHT_MAIN;
 
-           .ui-btn-icon-right::after, .ui-btn-icon-left::after{
-               visibility:hidden;
-           }
+            .ui-btn-icon-right::after, .ui-btn-icon-left::after {
+                visibility: hidden;
+            }
 
-           .ui-btn{
-                text-shadow:none;
+            .ui-btn {
+                text-shadow: none;
                 display: flex;
                 align-items: center;
-                padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
-                padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
-                font-family:$FONT_FAMILY_PULL_DOWM_MENU;
-                font-size:$FONT_SIZE_PULL_DOWM_MENU;
-                span{
+                padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
+                padding-left: $SIZE_PULL_DOWM_PADDING_LFFT;
+                font-family: $FONT_FAMILY_PULL_DOWM_MENU;
+                font-size: $FONT_SIZE_PULL_DOWM_MENU;
+
+                span {
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     overflow: hidden;
-                    text-align:left;
-                }
-               
-                .default-value{
-                    color:$COLOR_PROPATY_ARAE_EDIT_PULL_DOWN_DEFAULT_TEXT;
+                    text-align: left;
                 }
 
-                background:$COLOR_PULL_DOWM_BACKGROUMD;
-                
+                .default-value {
+                    color: $COLOR_PROPATY_ARAE_EDIT_PULL_DOWN_DEFAULT_TEXT;
+                }
+
+                background: $COLOR_PULL_DOWM_BACKGROUMD;
                 background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
                 background-repeat: no-repeat;
-                background-position:right top;
-                box-sizing:border-box;
-                border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+                background-position: right top;
+                box-sizing: border-box;
+                border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
 
-                &:hover{
-                    box-sizing:border-box;
-                    border : $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
-                }
-           }
-
-           .ui-btn.focus-visual,
-           .ui-btn:focus{
-                -webkit-appearance: none;
-                    padding-left : $SIZE_PULL_DOWN_FOCUS_PADDING_LEFT;
-                    padding-right : $SIZE_PULL_DOWM_PADDING_RIGHT;
-                    background-position: right $SIZE_PULL_DOWN_IMG_POSITION_X_FOCUS top $SIZE_PULL_DOWN_IMG_POSITION_Y_FOCUS;
-                    box-sizing : border-box;
-                    //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
-                    outline:none;
-                    border : $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
-           }
-        }
-
-            //pull down menuの選択肢
-            .ui-selectmenu{
-                margin-top:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
-                margin-bottom:$SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
-                min-width:50px;
-                max-height:$SIZE_PULL_DOWM_MAX_HEIGHT;
-                width : $SIZE_PULL_DOWM_DEFAULT_WIDTH;
-                overflow-y:overlay;
-                box-shadow:none;
-                -webkit-box-shadow: none;
-                -moz-box-shadow: none;
-                box-shadow: none; 
-                border:$SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
-                background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
-                border-radius:0;
-
-                .ui-selectmenu-list{
-                    
-                    padding-top:$SIZE_PULL_DOWM_SUB_TOP_PADDING;
-                    padding-bottom:$SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
-                    //border:1px solid $COLOR_PULL_DOWN_BORDER;
-                    outline:none;
-                    
-
-                    li{
-                        height:$SIZE_PULL_DOWM_HEIGHT_SUB;
-
-                        .ui-btn, ui-btn-active{
-                            //縦中央揃え
-                            display: flex;
-                            align-items: center;
-
-                            font-size:$FONT_SIZE_PULL_DOWM_MENU;
-                            font-family:$FONT_FAMILY_PULL_DOWM_MENU;
-                            color:$COLOR_PULL_DOWM_TEXT;
-                            text-shadow:none;
-                            background-color:$COLOR_PULL_DOWN_BACKGROUND_NORMAL;
-                            border:none;
-                            padding-right:$SIZE_PULL_DOWM_PADDING_RIGHT;
-                            padding-left:$SIZE_PULL_DOWM_PADDING_LFFT;
-                            &:hover, &:active{
-                                background-color:$COLOR_PULL_DOWN_BACKGROUND_HOVER;
-                                color : $COLOR_PULL_DOWN_TEXT_HOVER;
-                            }
-
-                        }
-
-                        .ui-btn-active{
-                            color : $COLOR_PULL_DOWN_TEXT_SELECTED;
-                        }
-                    }
-                }
-           }
-
-
-            //オプションメニューのポップアップ
-            #option-pulldown-menu{
-                background-image:$PATH_IMG_OPTION_MENU_BTN_NORMAL;
-                margin-top:$SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
-                margin-left:$SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
-                height:$SIZE_HEADER_OPTION_BTN_HEIGHT;
-                width:$SIZE_HEADER_OPTION_BTN_WIDTH;
-                top:0;
-                padding:0;
-                box-shadow:none;
-                border:none;
-                background-color:transparent;
-
-                &:hover{
-                    background-image:$PATH_IMG_OPTION_MENU_BTN_HOVER;
-                }
-
-                &:active{
-                    background-image:$PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+                &:hover {
+                    box-sizing: border-box;
+                    border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
                 }
             }
-                 
-            //オプションメニューのポップアップ
-            .ui-popup-container{
 
-                ul{
-                    -webkit-appearance: none;
-                    list-style-type: none;
-                    -webkit-margin-before: 0;
-                    -webkit-margin-after: 0;
-                    -webkit-margin-start: 0;
-                    -webkit-margin-end: 0;
-                    -webkit-padding-start: 0;
-                }
+            .ui-btn.focus-visual,
+            .ui-btn:focus {
+                -webkit-appearance: none;
+                padding-left: $SIZE_PULL_DOWN_FOCUS_PADDING_LEFT;
+                padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
+                background-position: right $SIZE_PULL_DOWN_IMG_POSITION_X_FOCUS top $SIZE_PULL_DOWN_IMG_POSITION_Y_FOCUS;
+                box-sizing: border-box;
+                //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                outline: none;
+                border: $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
+            }
+        }
+        //pull down menuの選択肢
+        .ui-selectmenu {
+            margin-top: $SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+            margin-bottom: $SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+            min-width: 50px;
+            max-height: $SIZE_PULL_DOWM_MAX_HEIGHT;
+            width: $SIZE_PULL_DOWM_DEFAULT_WIDTH;
+            overflow-y: overlay;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+            background-color: $COLOR_PULL_DOWN_BACKGROUND_NORMAL;
+            border-radius: 0;
 
-                #option-pulldown-menu-popup,
-                #option-pulldown-menu-popup-bz{
-                    margin-top:$SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
-                    width:$SIZE_OPTION_MENU_POPUP_WIDTH;
-                    background-color:$COLOR_OPTION_MENU_POPUP_BACKGROUND;
-                    border:$SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
-                    color:$COLOR_OPTION_MENU_POPUP_TEXT;
-                    font-size:$FONT_SIZE_OPTION_MENU_POPUP_ITEM;
-                    font-family:$FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
-                    padding-top:$SIZE_OPTION_MENU_POPUP_PADDING_TOP;
-                    padding-bottom:$SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM;
-                    text-shadow:none;
-                    box-shadow:none;
+            .ui-selectmenu-list {
+                padding-top: $SIZE_PULL_DOWM_SUB_TOP_PADDING;
+                padding-bottom: $SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
+                //border:1px solid $COLOR_PULL_DOWN_BORDER;
+                outline: none;
 
 
-                    .menu-item-text{
-                        padding-left:$SIZE_OPTIOM_MENU_POPUP_ITEM_PADDING_LEFT;
-                        padding-right:$SIZE_OPTIOM_MENU_POPUP_ITEM_PADDING_RIGHT;
-                        height:$SIZE_OPTION_MENU_POPUP_ITEM_HEIGHT;
+                li {
+                    height: $SIZE_PULL_DOWM_HEIGHT_SUB;
+
+                    .ui-btn, ui-btn-active {
+                        //縦中央揃え
                         display: flex;
                         align-items: center;
+                        font-size: $FONT_SIZE_PULL_DOWM_MENU;
+                        font-family: $FONT_FAMILY_PULL_DOWM_MENU;
+                        color: $COLOR_PULL_DOWM_TEXT;
+                        text-shadow: none;
+                        background-color: $COLOR_PULL_DOWN_BACKGROUND_NORMAL;
+                        border: none;
+                        padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
+                        padding-left: $SIZE_PULL_DOWM_PADDING_LFFT;
 
-                        &:hover{
-                            background-color:$COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
-                            color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
-                        }
-
-                        &:active{
-                            background-color:$COLOR_LIGHT_GREEN;
-                            color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
-                        }
-
-                        &:disabled{
-                            opacity:$COLOR_OPTION_MENU_POPUP_TEXT_DISABLED_OPACITY;
+                        &:hover, &:active {
+                            background-color: $COLOR_PULL_DOWN_BACKGROUND_HOVER;
+                            color: $COLOR_PULL_DOWN_TEXT_HOVER;
                         }
                     }
 
-                       
-                     #command-delete-remote{
-                             color:$COLOR_OPTIOM_MENU_POPUP_ITEM_DELETE_TEXT;
- 
-                             &:hover, &:active{
-                                 color:$COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
-                             }
- 
-                         }
- 
-                    .menu-item-separator{
-                        border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid  $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
-                        margin: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM 0;
-                    }  
-
+                    .ui-btn-active {
+                        color: $COLOR_PULL_DOWN_TEXT_SELECTED;
+                    }
                 }
             }
-           
+        }
+        //オプションメニューのポップアップ
+        #option-pulldown-menu {
+            background-image: $PATH_IMG_OPTION_MENU_BTN_NORMAL;
+            margin-top: $SIZE_HEADER_OPTION_BTN_MARGIN_TOP;
+            margin-left: $SIZE_HEADER_OPTION_BTN_MARGIN_LEFT;
+            height: $SIZE_HEADER_OPTION_BTN_HEIGHT;
+            width: $SIZE_HEADER_OPTION_BTN_WIDTH;
+            top: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            background-color: transparent;
 
-          
+            &:hover {
+                background-image: $PATH_IMG_OPTION_MENU_BTN_HOVER;
+            }
+
+            &:active {
+                background-image: $PATH_IMG_OPTION_MENU_BTN_ACTIVE;
+            }
+        }
+        //オプションメニューのポップアップ
+        .ui-popup-container {
+
+            ul {
+                -webkit-appearance: none;
+                list-style-type: none;
+                -webkit-margin-before: 0;
+                -webkit-margin-after: 0;
+                -webkit-margin-start: 0;
+                -webkit-margin-end: 0;
+                -webkit-padding-start: 0;
+            }
+
+            #option-pulldown-menu-popup,
+            #option-pulldown-menu-popup-bz {
+                margin-top: $SIZE_OPTION_MENU_POPUP_ITEM_MARGIN_TOP;
+                width: $SIZE_OPTION_MENU_POPUP_WIDTH;
+                background-color: $COLOR_OPTION_MENU_POPUP_BACKGROUND;
+                border: $SIZE_OPTION_MENU_POPUP_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_BORDER;
+                color: $COLOR_OPTION_MENU_POPUP_TEXT;
+                font-size: $FONT_SIZE_OPTION_MENU_POPUP_ITEM;
+                font-family: $FONT_WEIGHT_OPTION_MENU_POPUP_ITEM;
+                padding-top: $SIZE_OPTION_MENU_POPUP_PADDING_TOP;
+                padding-bottom: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM;
+                text-shadow: none;
+                box-shadow: none;
+
+
+                .menu-item-text {
+                    padding-left: $SIZE_OPTIOM_MENU_POPUP_ITEM_PADDING_LEFT;
+                    padding-right: $SIZE_OPTIOM_MENU_POPUP_ITEM_PADDING_RIGHT;
+                    height: $SIZE_OPTION_MENU_POPUP_ITEM_HEIGHT;
+                    display: flex;
+                    align-items: center;
+
+                    &:hover {
+                        background-color: $COLOR_OPTION_MENU_POPUP_ITEM_BACKGROUND_HOVER;
+                        color: $COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+                    }
+
+                    &:active {
+                        background-color: $COLOR_LIGHT_GREEN;
+                        color: $COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+                    }
+
+                    &:disabled {
+                        opacity: $COLOR_OPTION_MENU_POPUP_TEXT_DISABLED_OPACITY;
+                    }
+                }
+
+
+                #command-delete-remote {
+                    color: $COLOR_OPTIOM_MENU_POPUP_ITEM_DELETE_TEXT;
+
+                    &:hover, &:active {
+                        color: $COLOR_OPTION_MENU_POPUP_TEXT_HOVER;
+                    }
+                }
+
+                .menu-item-separator {
+                    border-bottom: $SIZE_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER_THICKNESS solid $COLOR_OPTION_MENU_POPUP_ITEM_SEPARATOR_BORDER;
+                    margin: $SIZE_OPTION_MENU_POPUP_PADDING_BOTTOM 0;
+                }
+            }
+        }
     }
 
     article {
@@ -618,53 +594,52 @@ body {
         .ui-btn, .ui-slider {
             z-index: 2;
         }
-
         //共通テキストフィールド
-        input[type="text"]{
-            font-family:$FONT_FAMILY_TEXT_BUTTON;
-            height:$SIZE_FORM_HEIGHT;
-            background-color:$COLOR_FORM_BACKGROUND;
-            box-sizing:border-box;
-            border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
-            border-radius:0;
-            padding-left:$SIZE_FORM_PADDING_LEFT;
-            padding-right:$SIZE_FORM_PADDING_RIGHT;
+        input[type="text"] {
+            font-family: $FONT_FAMILY_TEXT_BUTTON;
+            height: $SIZE_FORM_HEIGHT;
+            background-color: $COLOR_FORM_BACKGROUND;
+            box-sizing: border-box;
+            border: $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_NORMAL;
+            border-radius: 0;
+            padding-left: $SIZE_FORM_PADDING_LEFT;
+            padding-right: $SIZE_FORM_PADDING_RIGHT;
 
-            &:hover{
-                 border : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
+            &:hover {
+                border: $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER;
             }
 
-            &:focus{
-                padding-left:$SIZE_FORM_PADDING_LEFT_FOCUS;
-                padding-right:$SIZE_FORM_PADDING_RIGHT_FOCUS;
-                outline:none;
-                border : $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
-            }            
-
+            &:focus {
+                padding-left: $SIZE_FORM_PADDING_LEFT_FOCUS;
+                padding-right: $SIZE_FORM_PADDING_RIGHT_FOCUS;
+                outline: none;
+                border: $SIZE_FORM_BORDER_THICKNESS_FOCUS solid $COLOR_FORM_BORDER_FOUCS;
+            }
         }
 
-        input[type="text"].text-field-type2{
-            background-color:$COLOR_FORM_BACKGROUND_TYPE2;
-            border-top:none;
-            border-left:none;
-            border-right:none;
-            text-align:center;
-            border-color:$COLOR_FORM_BORDER_NORMAL_TYPE2;
-            border-width:$SIZE_FORM_BORDER_THICKNESS;
+        input[type="text"].text-field-type2 {
+            background-color: $COLOR_FORM_BACKGROUND_TYPE2;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+            border-color: $COLOR_FORM_BORDER_NORMAL_TYPE2;
+            border-width: $SIZE_FORM_BORDER_THICKNESS;
 
-            &:hover{
-                 border-color : $COLOR_FORM_BORDER_HOVER_TYPE2;
+            &:hover {
+                border-color: $COLOR_FORM_BORDER_HOVER_TYPE2;
             }
 
-            &:focus{
-                border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
-            }       
+            &:focus {
+                border-bottom: $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
+            }
         }
 
         section {
             &.normal-screen {
                 padding: 0;
             }
+
             &.fullscreen {
                 position: absolute;
                 padding: 0;
@@ -674,6 +649,7 @@ body {
                 bottom: 0;
                 left: 0;
             }
+
             &.fixed-screen {
                 position: absolute;
                 padding: 0;
@@ -694,7 +670,5 @@ body {
             border: 0;
             margin: 0;
         }
-        
     }
-
 }

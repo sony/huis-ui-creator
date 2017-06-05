@@ -22,12 +22,12 @@ module Garage {
         var TAG: string = "[Garage.Util.InformationDialog]";
 
         var LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
-        var FILE_NAME_DATE  = "date.txt";
+        var FILE_NAME_DATE = "date.txt";
         var FILE_NAME_IMAGE = "image.png";
-        var FILE_NAME_NOTE  = "note.txt";
+        var FILE_NAME_NOTE = "note.txt";
 
 
-  
+
         /**
          * @class Notifier
 		 * @brief ui-creatorアップデート後の初回起動時かどうかの判定を行い、お知らせダイアログを表示するクラス
@@ -96,10 +96,10 @@ module Garage {
                     contentsDirs.forEach(function (dirName) {
                         let path = pathToNotes + dirName + "/";
                         informationList.push({
-                            dirName   : dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
-                            imagePath : (path + FILE_NAME_IMAGE),
-                            date      : fs.readFileSync(path + FILE_NAME_DATE, "utf8"),
-                            text      : fs.readFileSync(path + FILE_NAME_NOTE, "utf8")
+                            dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
+                            imagePath: (path + FILE_NAME_IMAGE),
+                            date: fs.readFileSync(path + FILE_NAME_DATE, "utf8"),
+                            text: fs.readFileSync(path + FILE_NAME_NOTE, "utf8")
                         });
                     });
 
@@ -114,20 +114,20 @@ module Garage {
 
                     //お知らせダイアログを出すか否か判定するファイルを書き出す。
                     fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
-                    
+
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }
             }
 
 
-    
+
             /*
             * お知らせダイアログに表示するコンテンツが存在するか判定する。
             * @param {string[]} お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
             * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
             */
-            private isExistValidContents(contentsDirs: string[]):boolean {
+            private isExistValidContents(contentsDirs: string[]): boolean {
                 let FUNCTION_NAME: string = TAG + " : isExistValidContents : ";
 
                 //対象のパスにひとつもファイルもフォルダもない場合false;
@@ -149,4 +149,4 @@ module Garage {
 
         }
     }
-} 
+}

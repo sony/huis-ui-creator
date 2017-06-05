@@ -75,7 +75,7 @@ module Garage {
                 this.$facePages_ = [];
                 var modules: Model.Module[] = [];
                 for (var i = 0, l = modulesData.length; i < l; i++) {
-                    
+
                     let moduleModel: Model.Module = new Model.Module();
                     moduleModel.setInfoFromModule(modulesData[i]);
                     this.generateViews(moduleModel);
@@ -778,7 +778,7 @@ module Garage {
                     }));
                 } else {
                     this.imageViews_.push(null);
-                }                                
+                }
             }
 
             addModuleInNewFacePages(inputModules: Model.Module[]) {
@@ -805,8 +805,8 @@ module Garage {
                 }
 
                 (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
-                
-                
+
+
             }
 
 
