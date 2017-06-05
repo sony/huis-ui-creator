@@ -74,6 +74,26 @@ module Garage {
             }
 
 
+            /*
+             * CommandManagerにModelの変更を登録する。
+             * PropertyArea上の変更はこの関数での変更のみとする。
+             * @param {Model.Item} target 変更対象のモデル。
+             * @param {Object} prevValue 変更前の値。undo時に利用。
+             * @param {Object} nextValue 変更後の愛。redo時に利用。
+             */
+            protected _setMementCommand(target: Model.Item, previousData: Object, nextData: Object) {
+                let FUNCTION_NAME = TAG + "_setMementCommand ";
+
+                //TODO: previousDataとnextDataをクラス化
+                var memento: IMemento = {
+                    target: target,
+                    previousData: previousData,
+                    nextData: nextData
+                };
+
+                var mementoCommand = new MementoCommand([memento]);
+                this.commandManager_.invoke(mementoCommand);
+            }
 
 
             /*

@@ -41,6 +41,8 @@ module Garage {
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
                 this.listenTo(this.labelPreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
                 this.listenTo(this.labelPreviewWindow_, "uiChange:text", this._onTextFieldChanged);
+
+                this.listenTo(this.getModel(), "change:size change:text", this.render);
             }
 
             }
@@ -51,6 +53,18 @@ module Garage {
                 return {
                     
                 };
+            }
+
+
+            private _onTextSizePulldownChanged(event: Event) {
+                let changedSize = this.labelPreviewWindow_.getTextSize();
+                this._setMementCommand(this.getModel(), { "size" : this.getModel().size }, { "size" : changedSize })
+            }
+
+
+            private _onTextFieldChanged(event: Event) {
+                let changedText = this.labelPreviewWindow_.getText();
+                this._setMementCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText})
             }
 
 
