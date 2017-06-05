@@ -34,8 +34,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(label:Model.LabelItem, $el:JQuery, commandManager:CommandManager) {
-                super(label, constValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(label:Model.LabelItem, commandManager:CommandManager) {
+                super(label, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
             }
 

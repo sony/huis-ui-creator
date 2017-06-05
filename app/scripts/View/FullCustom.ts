@@ -4863,10 +4863,9 @@ module Garage {
                 } else if (item instanceof Model.LabelItem) {
                     let labelPropertyArea: LabelPropertyArea = new LabelPropertyArea(
                         item,
-                        $detail,
                         this.commandManager_ 
                     )
-                    labelPropertyArea.render();
+                    $detail.append(labelPropertyArea.render().$el);
                 } else {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
