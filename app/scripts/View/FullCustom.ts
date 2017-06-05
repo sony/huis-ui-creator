@@ -2286,10 +2286,13 @@ module Garage {
                 }
             }
 
+            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
             /**
              * 詳細編集エリア内のフォームで値の変更があったときに呼び出される。
              */
             private onItemPropertyChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onItemPropertyChanged : ";
+
                 var $target = $(event.currentTarget);
                 var $parent = $target.parent();
 
@@ -2316,10 +2319,14 @@ module Garage {
                 }
             }
 
+
+            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
             /**
              * 詳細編集エリア内の select メニューに値の変更があったときに呼び出される。
              */
             private onItemPropertySelectChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onItemPropertySelectChanged : ";
+
                 var $target = $(event.currentTarget);
                 if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
                     this._setImageResizeModeBySelect($target);

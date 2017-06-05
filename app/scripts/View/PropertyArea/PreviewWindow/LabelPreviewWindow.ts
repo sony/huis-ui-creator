@@ -38,6 +38,8 @@ module Garage {
             constructor(label : Model.LabelItem) {
                 super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
+                this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.textPreview_, "uiChange:text", this._onTextFieldChanged);
             }
 
 
@@ -49,13 +51,41 @@ module Garage {
             }
 
 
+            private _onTextSizePulldownChanged(event: Event) {
+                this.trigger("uiChange:size");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+            }
+
+
+            private _onTextFieldChanged(event: Event) {
+                this.trigger("uiChange:text");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+            }
+
+
             render(): Backbone.View<Model.Item> {
+                let FUNCTION_NAME = TAG + "render : ";
+                console.log(FUNCTION_NAME + "called");
+
+                this.$el.children().remove();
                 this.$el.append(this.template_());
                 this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
                 return this;
             };
 
 
+            /*
+             * @return {number} テキストサイズ用のプルダウンの値を取得
+             */
+            getTextSize(): number {
+                return this.textPreview_.getTextSize();
+            }
+
+
+            /*
+             * @return {string} テキストフィールドの値を取得
+             */
+            getText(): string {
+                return this.textPreview_.getText();
+            }
         }
     }
 }

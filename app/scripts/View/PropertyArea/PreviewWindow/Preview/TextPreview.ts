@@ -36,6 +36,9 @@ module Garage {
                 12, 14, 16, 18, 20, 23, 28, 30, 32, 36, 
                 40, 44, 48, 54, 60, 72, 80, 88, 96
             ];
+
+            //text field
+            export const TEXT_FIELD_DOM_ID: string = "#text-field";
         }
 
         export class TextPreview extends Preview {
@@ -51,13 +54,34 @@ module Garage {
             events() {
                 // Please add events
                 return {
-
+                    //TODO : constValueを流用したい。しかし、stringのように + でつなぐだけではうまくいかなかった。
+                    "change #select-text-size" : "_onTextSizePulldownChanged", 
+                    "change #text-field" : "_onTextFieldChanged"
                 };
             }
 
 
-            render(option?: any): Backbone.View<Model.Item> {
+            private _onTextSizePulldownChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "_onTextSizePulldownChanged : ";
+                console.log(FUNCTION_NAME + "called");
+                this.trigger("uiChange:size");//PropertyAreaでUIの変更イベント発火を探知される。
+                event.stopPropagation();//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
+            }
 
+
+            private _onTextFieldChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "_onTextFieldChanged : ";
+                console.log(FUNCTION_NAME + "called");
+                this.trigger("uiChange:text");//PropertyAreaでUIの変更イベント発火を探知される。
+                event.stopPropagation;//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
+            }
+
+
+            render(option?: any): Backbone.View<Model.Item> {
+                let FUNCTIN_NAME = TAG + "render ";
+                console.log(FUNCTIN_NAME + "called");
+
+                this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
 
                 //render size pulldown
@@ -78,6 +102,21 @@ module Garage {
                 return this;
             };
 
+
+            /*
+             * @return {number} テキストサイズ変更用プルダウンの値を取得する。
+             */
+            getTextSize(): number{
+                return this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val();
+            }
+
+
+            /*
+             * @return {string} テキストフィールドの値を取得する。
+             */
+            getText(): string {
+                return this.$el.find(constValue.TEXT_FIELD_DOM_ID).val();
+            }
 
             /*
             *保持しているモデルを取得する

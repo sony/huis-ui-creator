@@ -37,6 +37,12 @@ module Garage {
             constructor(label:Model.LabelItem, commandManager:CommandManager) {
                 super(label, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
+
+                //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
+                this.listenTo(this.labelPreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.labelPreviewWindow_, "uiChange:text", this._onTextFieldChanged);
+            }
+
             }
 
 
@@ -49,6 +55,10 @@ module Garage {
 
 
             render(): Backbone.View<Model.Item> {
+                let FUNCTION_NAME = TAG + "render : "; 
+                console.log(FUNCTION_NAME + "called");
+
+                this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
                 this.$el.find(this.labelPreviewWindow_.getDomId()).append(this.labelPreviewWindow_.render().$el);
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
