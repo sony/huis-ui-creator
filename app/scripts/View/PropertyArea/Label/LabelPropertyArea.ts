@@ -70,7 +70,6 @@ module Garage {
 
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "render : "; 
-                console.log(FUNCTION_NAME + "called");
 
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));

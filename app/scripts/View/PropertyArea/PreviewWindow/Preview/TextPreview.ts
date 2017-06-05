@@ -79,7 +79,6 @@ module Garage {
 
             render(option?: any): Backbone.View<Model.Item> {
                 let FUNCTIN_NAME = TAG + "render ";
-                console.log(FUNCTIN_NAME + "called");
 
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
