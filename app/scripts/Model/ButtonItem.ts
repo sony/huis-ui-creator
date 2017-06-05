@@ -153,7 +153,7 @@ module Garage {
 
                 for(let targetState of this.stateCollection_.models) {
                         if (targetState.stateId == stateId) {
-                        return targetState;
+                            return targetState;
                         }
                 }
 
