@@ -29,7 +29,8 @@ module Garage {
             export const DOM_ID: string = "#text-preview";
 
             //text size pulldown
-            export const SIZE_PULLDOWM_DOM_ID : string = "#text-size-pulldown";
+            export const SIZE_PULLDOWM_CONTAINER_DOM_ID: string = "#text-size-pulldown";
+            export const SIZE_PULLDOWM_SELECT_DOM_ID: string = "#select-text-size";
             export const TEMPLATE_SIZE_PULLDOWN_DOM_ID: string = "#template-text-size-pullldown";
             export const SIZE_PULLLDOWN_VALUES: number[] = [
                 12, 14, 16, 18, 20, 23, 28, 30, 32, 36, 
@@ -64,12 +65,12 @@ module Garage {
                 let dataSizePulldownRender = {
                     sizeValues: constValue.SIZE_PULLLDOWN_VALUES
                 }
-                this.$el.find(constValue.SIZE_PULLDOWM_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
+                this.$el.find(constValue.SIZE_PULLDOWM_CONTAINER_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
 
                 //set initial value of size pulldown
                 let size = this.getModel().size;
                 if (Util.JQueryUtils.isValidValue(size)) {
-                    this.$el.find(constValue.SIZE_PULLDOWM_DOM_ID).val(size.toString());
+                    this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val(size.toString());
                 }
 
                 this.$el.i18n();//localize text
