@@ -21,6 +21,12 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
+        namespace constValue {
+            //デフォルトとして利用されるステートのstateCollection_.models[]の配列インデックス
+            //defaultがない場合に利用される。
+            export const DEFAULT_STATE_INDEX: number = 0;
+        }
+
         export class ButtonItem extends Model.Item {
 
             remoteId: string;
@@ -123,6 +129,35 @@ module Garage {
                         stateModel.area = val;
                     });
                 }
+            }
+
+            /*
+             * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
+             */
+            getDefaultState(): Model.ButtonState {
+                let FUNCTION_NAME = TAG + " getDefaultState() : ";
+
+                if (this.default !== null) {
+                    return this.getStateByStateId(this.default);
+                }
+
+                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                return this.stateCollection_.models[constValue.DEFAULT_STATE_INDEX];
+            }
+
+            /*
+             * @param {number} stateId 取得したいModel.ButtonStateのStateId
+             * @return {Model.ButtonState} 発見できない場合、nullを返す。
+             */
+            getStateByStateId(stateId: number): Model.ButtonState {
+
+                for(let targetState of this.stateCollection_.models) {
+                        if (targetState.stateId == stateId) {
+                            return targetState;
+                        }
+                }
+
+                return null;
             }
 
             /**

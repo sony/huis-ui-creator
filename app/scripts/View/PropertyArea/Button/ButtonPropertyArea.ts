@@ -26,16 +26,12 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-       
-        export class ButtonPropertyArea extends Backbone.View<Model.ButtonItem> {
+        export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
-            protected templateItemDetailFile_: string;
             protected availableRemotelist: IRemoteInfo[];
-            protected DEFAULT_STATE_ID: number; // staeIdが入力されたなかったとき、代入される値
-            protected defaultState: Model.ButtonState; // Defaultのstate
 
             /**
              * 編集中リモコンのremote_id
@@ -55,17 +51,13 @@ module Garage {
             /**
              * constructor
              */
-            constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
+            constructor(options: Backbone.ViewOptions<Model.ButtonItem>) {
                 super(options);
-                this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.DEFAULT_STATE_ID = 0;
-                //stateIdはデフォルト値とする。
-                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
             }
 
 
-
+           
 
 
 
@@ -107,11 +99,13 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-            *保持しているモデルを取得する
+            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
             * @return {Model.BUttonItem}
             */
             public getModel(): Model.ButtonItem {
-                return this.model;
+                //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。
+                //このクラスとその子供のクラスはthis.modelをModel.ButtonItemとして扱ってほしいのでダウンキャストしている。
+                return <Model.ButtonItem>this.model;
             }
 
 
@@ -127,8 +121,7 @@ module Garage {
                     return;
                 }
 
-                this.model.state = inputStates;
-                this.defaultState = this.model.state[this.DEFAULT_STATE_ID];
+                this.getModel().state = inputStates;
             }
 
 
@@ -136,35 +129,15 @@ module Garage {
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-         
-            // 不正な値の場合、falseを返す。
-            // 有効な場合、trueを返す。
-            protected isValidValue(value): boolean {
-                let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
-
-                if (value == null) {
-                    return false;
-                } else if (value == "none") {
-                    return false;
-                } else if (value === "") {
-                    return false;
-                } else if (JQUtils.isNaN(value)) {
-                    return false;
-                }
-                return true;
-            }
-
             /*
-           * JQuery要素が有効か判定する
-           * @param $target{JQuery}判定対象
-           * @return {boolean} 有効な場合、true
-           */
-            protected isValidJQueryElement($target: JQuery): boolean {
-                if ($target == null || $target.length == 0) {
-                    return false;
-                } else {
-                    return true;
+             *@return {number} ボタンに設定されているデフォルトのstateIdを取得
+            */
+            protected getDefaultStateId(): number{
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
+                if (this.getModel().default == null) {
+                    return this.getModel().getDefaultState().stateId;
                 }
+                return this.getModel().default;
             }
 
 
@@ -312,9 +285,9 @@ module Garage {
             }
 
 
-            private _getRemoteNameOfUnknownRemote(unknownRemoteId: string) {
+            private _getRemoteNameOfUnknownRemote(unknownRcType: string) {
                 let remoteId: string;
-                switch (unknownRemoteId) {
+                switch (unknownRcType) {
                     case UNKNOWN_REMOTE_TV:
                         remoteId = $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV");
                         break;
@@ -395,7 +368,7 @@ module Garage {
                 }
 
                 if (remoteName != null) {
-                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.templateItemDetailFile_);
+                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.getTemplateFilePath());
                     let inputSignalData = {
                         remoteId: inputRemoteId,
                         name: remoteName
@@ -406,11 +379,9 @@ module Garage {
                    
                 }
 
-             
-
                 $remoteIdPullDown.val(inputRemoteId);
-
             }
+
 
             /*
             * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
@@ -455,7 +426,7 @@ module Garage {
             * @param order{number}
             * @return {boolean}
             */
-            protected isUnknownRemoteIdInPulldownOf(order: number): boolean {
+            protected isUnknownRemoteTypeInPulldownOf(order: number): boolean {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
                 if (!this.isValidOrder(order)) {
@@ -487,10 +458,12 @@ module Garage {
 
             /*
             * 入力したorderRemoteId用のプルダウンを描画する。
-            * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
-            * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
+            * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか
+            * @param {string} inputRemoteId 表示するリモコンのID
+            * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
+            * @param {string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, stateId?: number, inputRemoteId?: string, unknownRcId?: string) {
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -512,11 +485,7 @@ module Garage {
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
-                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.templateItemDetailFile_);
-
-                    if (stateId == null) {
-                        stateId = this.DEFAULT_STATE_ID;
-                    }
+                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
 
                     let inputSignalData = {
                         id: stateId,
@@ -532,7 +501,7 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     }else{
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.templateItemDetailFile_);
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
@@ -687,11 +656,13 @@ module Garage {
 
 
             /*
-         * 入力したorderのFunctionsを描画する。
-         * @param order{number} 描写するfunctionsプルダウンがどの順番の信号に属しているか
-         * @param functionName{string} 描写するfunctionsプルダウンに設定する値。
-         */
-            protected renderFunctionsOf(order: number, stateId? : number, functionName?: string, unknownRcId?: string) {
+             * 入力したorderのFunctionsを描画する。
+             * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか.
+             * @param {string} functionName 描写するfunctionsプルダウンに設定する値。nullでも
+             * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
+             * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
+             */
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -733,13 +704,7 @@ module Garage {
                     }
 
                     let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.templateItemDetailFile_);
-
-                    if (stateId == null) {
-                        stateId = this.DEFAULT_STATE_ID;
-                    }
-
-
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
 
                     //functionsが0個の場合のエラーケース対応
                     let inputFunctions = [];
@@ -760,7 +725,7 @@ module Garage {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.templateItemDetailFile_);
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.getTemplateFilePath());
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
@@ -842,7 +807,7 @@ module Garage {
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
             protected getFunctionsOf(order: number, stateId? : number) {
-                let FUNCTION_NAME = TAG + "getRemoteIdOf : ";
+                let FUNCTION_NAME = TAG + "getFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -878,7 +843,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID, page: number = -1) {
+            protected renderPagesOf(order: number, stateId:number, page:number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -888,7 +853,7 @@ module Garage {
 
                 let $pulldown = this.appendPagesPullDown(order, stateId);
 
-                let maxPage = this.getPagesOf(order, stateId);
+                let maxPage = this.getPageNumOf(order, stateId);
                 if (maxPage <= 0) {
                     // リモコン未選択時/リモコンが存在しないはプルダウン自体を非表示
                     $pulldown.hide();
@@ -913,7 +878,7 @@ module Garage {
              * @param order {number}
              * @param stateId {number}
              */
-            private appendPagesPullDown(order: number, stateId: number = this.DEFAULT_STATE_ID): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = this.getDefaultStateId()): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
@@ -928,7 +893,7 @@ module Garage {
 
 
                 let $container = $target.find("#signal-page-container");
-                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.templateItemDetailFile_);
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.getTemplateFilePath());
 
                 let inputData = {
                     order: order,
@@ -948,14 +913,13 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPagesOf(order: number, stateId: number = this.DEFAULT_STATE_ID): number {
-                let FUNCTION_NAME = TAG + "getPagesOf : ";
+            private getPageNumOf(order: number, stateId: number = this.getDefaultStateId()): number {
+                let FUNCTION_NAME = TAG + "getPageNumOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return 0;
                 }
-
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
@@ -1347,7 +1311,7 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.model.state[this.DEFAULT_STATE_ID].action) {
+                for (let action of this.getModel().getDefaultState().action) {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
