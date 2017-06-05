@@ -45,8 +45,6 @@ module Garage {
                 this.listenTo(this.getModel(), "change:size change:text", this.render);
             }
 
-            }
-
 
             events() {
                 // Please add events
