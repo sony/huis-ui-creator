@@ -3095,12 +3095,9 @@ module Garage {
                             break;
 
                         case "size":
-                            let model = targetModel;
-                            if (model instanceof Model.LabelItem) {
-                                value = model.sizeForRender;
+                            if (targetModel instanceof Model.LabelItem) {
+                                $target.css("font-size", targetModel.sizeForRender + "pt");
                             }
-
-                            $target.css("font-size", value + "pt");
                             break;
 
                         case "color":
