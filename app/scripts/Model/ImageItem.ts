@@ -141,7 +141,7 @@ module Garage {
                 }
                 let parsedPath = path.parse(resolvedOriginalPath);
                 let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + this.area.w + "_h" + this.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
-                // ファイル名のをSHA1エンコードして文字コードの非互換性を解消する
+                // ファイル名をSHA1エンコードして文字コードの非互換性を解消する
 
                 let newFileFullPath: string;
 
