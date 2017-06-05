@@ -32,7 +32,7 @@ module Garage {
             private face_: Model.Face;
             private moduleView_: Module;
             private type_: string;
-            private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
+            private $facePlane_: JQuery; //描画のベースとなるfacePagesArea
 
             //private template_: Tools.JST;
             /**
@@ -98,7 +98,7 @@ module Garage {
             */
             private addFaceAsPlain(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
-               
+
                 if (this.$facePlane_ == null) {
                     var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
                     var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
@@ -107,7 +107,7 @@ module Garage {
 
                 this.moduleView_.addModuleInNewFacePages(inputFace.modules);
 
-           
+
                 this.$el.append(this.$facePlane_);
 
             }
@@ -341,13 +341,13 @@ module Garage {
 
                 this.moduleView_ = new Module(
                     this.face_, {
-                    el: $facePagesArea,
-                    attributes: {
-                        remoteId: this.face_.remoteId,
-                        modules: this.face_.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+                        el: $facePagesArea,
+                        attributes: {
+                            remoteId: this.face_.remoteId,
+                            modules: this.face_.modules,
+                            materialsRootPath: HUIS_FILES_ROOT
+                        }
+                    });
                 this.moduleView_.render();
 
                 let pageCount = this.getPageCount();
@@ -369,13 +369,13 @@ module Garage {
 
                 this.moduleView_ = new Module(
                     this.face_, {
-                    el: this.$facePlane_,
-                    attributes: {
-                        remoteId: this.face_.remoteId,
-                        modules: this.face_.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+                        el: this.$facePlane_,
+                        attributes: {
+                            remoteId: this.face_.remoteId,
+                            modules: this.face_.modules,
+                            materialsRootPath: HUIS_FILES_ROOT
+                        }
+                    });
                 this.moduleView_.render();
 
                 this.$el.append(this.$facePlane_);

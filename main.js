@@ -43,7 +43,7 @@ if (shouldQuit) {
 
 // すべてのウィンドウが閉じられたら終了
 app.on('window-all-closed', function() {
-  // OSXでもwindowを閉じる際にUI Creatorを終了する
+    // OSXでもwindowを閉じる際にUI Creatorを終了する
     app.quit();
 });
 
@@ -60,17 +60,17 @@ app.on('ready', function() {
         title: 'HUIS UI CREATOR'
     });
 
-  // アプリの index.html をロードする
-  mainWindow.loadURL('file://' + __dirname + '/app/index.html');
+    // アプリの index.html をロードする
+    mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
-  // garage.exe と同じディレクトリーに "debug" があれば devtools を開く
-  var fs = require("fs");
-  if (fs.existsSync("debug")) {
-      mainWindow.openDevTools();
-  }
+    // garage.exe と同じディレクトリーに "debug" があれば devtools を開く
+    var fs = require("fs");
+    if (fs.existsSync("debug")) {
+        mainWindow.openDevTools();
+    }
 
-  // ウィンドウが閉じられたら実行
-  mainWindow.on('closed', function() {
-    mainWindow = null;
-  });
+    // ウィンドウが閉じられたら実行
+    mainWindow.on('closed', function() {
+        mainWindow = null;
+    });
 });

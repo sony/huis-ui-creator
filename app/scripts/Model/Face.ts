@@ -108,7 +108,7 @@ module Garage {
                 for (let elem of this.modules) {
                     let isCrossPage = module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT;
                     if (isCrossPage) {
-                        convertedModules.push( this._finalizeModule(module) );
+                        convertedModules.push(this._finalizeModule(module));
                         pageIndex++;
                         module = this._createEmptyModule(this.remoteId, pageIndex);
                     }
@@ -119,7 +119,7 @@ module Garage {
                     module.merge(elem);
                     prevElem = elem;
                 }
-                convertedModules.push( this._finalizeModule(module) );
+                convertedModules.push(this._finalizeModule(module));
 
                 this.modules = convertedModules;
                 this.category = DEVICE_TYPE_FULL_CUSTOM;
@@ -255,7 +255,7 @@ module Garage {
              * このFaceの総ページ数を返す
              * @return {number} Faceの総ページ数。
              */
-            getTotalPageNum() :number{
+            getTotalPageNum(): number {
                 let FUNCTION_NAME = TAG + "TotalPageNum : ";
 
                 if (this.modules == null || this.modules.length == null) {
@@ -270,7 +270,7 @@ module Garage {
                 }
 
                 //それ以外の場合、moduleのpageIndexの最大値を返す。
-                var pageCount :number= 0;
+                var pageCount: number = 0;
                 for (let module of this.modules) {
                     // collection 内の model の pageIndex のうち、最大のものをページ数とする
                     if (pageCount < module.pageIndex + 1) {

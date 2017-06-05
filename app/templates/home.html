@@ -14,7 +14,6 @@
     limitations under the License.
 -->
 
-
 <article data-role="page" id="page-home" data-title="HUIS UI CREATOR" data-theme="b">
     <header data-role="header">
         <h3 data-i18n="home.STR_HOME_TITLE">HOME</h3>
@@ -30,29 +29,27 @@
                 <ui id="face-list-footer"></ui>
             </ul>
         </section>
-
         <script type="text/template" id="face-list-template">
-                <li class="face">
-                    <div class="remote-title-container">
-                        <div class="remote-title">
-                            <p class="remote-title-text" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
-                        </div>
-                        <section class="face-container" id="create-new-remote"></section>
+            <li class="face">
+                <div class="remote-title-container">
+                    <div class="remote-title">
+                        <p class="remote-title-text" data-i18n="home.STR_HOME_CREATE_NEW_REMOTE">新規作成</p>
                     </div>
-                </li>
-                {{#faceList}}
-                <li class="face {{category}}" data-remoteid="{{remoteId}}">
-                    <div class="remote-title-container">
-                        <div class="remote-title">
-                            <p class="remote-title-text">{{name}}</p>
-                            <div class="edit-lock-icon"></div>
-                        </div>
-                        <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                    <section class="face-container" id="create-new-remote"></section>
+                </div>
+            </li>
+            {{#faceList}}
+            <li class="face {{category}}" data-remoteid="{{remoteId}}">
+                <div class="remote-title-container">
+                    <div class="remote-title">
+                        <p class="remote-title-text">{{name}}</p>
+                        <div class="edit-lock-icon"></div>
                     </div>
-                </li>
-                {{/faceList}}
+                    <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                </div>
+            </li>
+            {{/faceList}}
         </script>
-
         {{!選択ダイアログ用}}
         <script type="text/template" id="face-list-selector-template">
             {{#faceList}}
@@ -65,8 +62,7 @@
             </li>
             {{/faceList}}
         </script>
-
-        <section id="option-pulldown-menu-popup" data-role="popup" >
+        <section id="option-pulldown-menu-popup" data-role="popup">
             <ul id="option-pulldown-menu-list">
                 <li id="command-import-remote" class="menu-item-text"
                     data-i18n="option_menu.STR_OPTION_MENU_IMPORT_REMOTE">リモコンをインポート</li>
@@ -76,7 +72,6 @@
                 <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">HUIS UI CREATOR のバージョン情報</li>
             </ul>
         </section>
-
         <section id="option-pulldown-menu-popup-bz" data-role="popup">
             <ul id="option-pulldown-menu-list">
                 <li id="command-set-properties" class="menu-item-text"
@@ -89,6 +84,5 @@
                 <li id="command-about-this" class="menu-item-text" data-i18n="option_menu.STR_OPTION_MENU_ABOUT">HUIS UI CREATOR のバージョン情報</li>
             </ul>
         </section>
-
     </section>
 </article>

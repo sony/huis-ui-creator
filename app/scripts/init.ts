@@ -51,7 +51,7 @@ module Garage {
         node_crypt = Remote.require('crypto');
 
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
-        
+
         APP_VERSION = "";
 
         DURATION_DIALOG_CLOSE = 3000;
@@ -115,7 +115,7 @@ module Garage {
 
         MAX_NUM_MACRO_SIGNAL = 63;
 
-        FUNC_NUM_DELIMITER  = '#';
+        FUNC_NUM_DELIMITER = '#';
         FUNC_CODE_RELEARNED = '#';
 
         UNKNOWN_REMOTE = "unknown";
@@ -141,7 +141,7 @@ module Garage {
 
         ACTION_INPUT_TAP_VALUE = "touch";
         ACTION_INPUT_LONG_PRESS_VALUE = "long_press";
-        ACTION_INPUT_FLICK_UP_VALUE =  "flick_up";
+        ACTION_INPUT_FLICK_UP_VALUE = "flick_up";
         ACTION_INPUT_FLICK_RIGHT_VALUE = "flick_right";
         ACTION_INPUT_FLICK_LEFT_VALUE = "flick_left";
         ACTION_INPUT_FLICK_DOWN_VALUE = "flick_down";
@@ -151,7 +151,7 @@ module Garage {
         ACTION_INPUT_SWIPE_DOWN_VALUE = "swipe_down";
 
         ACTION_INPUTS = [];
-        ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value : ACTION_INPUT_TAP_VALUE});
+        ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_LONG_PRESS_KEY, value: ACTION_INPUT_LONG_PRESS_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
@@ -290,7 +290,7 @@ module Garage {
                         console.error("retry failed..." + err);
                     }
 
-                ); 
+                );
             }
         );
     };
@@ -389,7 +389,7 @@ module Garage {
                         message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
-                        cancelId:0,
+                        cancelId: 0,
                     });
 
                 if (response !== 0) {

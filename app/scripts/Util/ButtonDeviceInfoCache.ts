@@ -164,12 +164,12 @@ module Garage {
                     return null;
                 }
 
-                let id               = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
-                let face             = huisFiles.getFace(remoteId);
-                let functions        = huisFiles.getMasterFunctions(remoteId);
-                let codeDb           = huisFiles.getMasterCodeDb(remoteId);
+                let id = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
+                let face = huisFiles.getFace(remoteId);
+                let functions = huisFiles.getMasterFunctions(remoteId);
+                let codeDb = huisFiles.getMasterCodeDb(remoteId);
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
-                let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
+                let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
 
                 if (face == null ||
                     functions == null ||
@@ -177,14 +177,14 @@ module Garage {
                     // functionCodeHash, bluetoothDataは必須ではない
                     return null;
                 }
-                    
+
                 return {
-                    id              : id,
-                    remoteName      : face.name,
-                    functions       : functions,
-                    code_db         : codeDb,
+                    id: id,
+                    remoteName: face.name,
+                    functions: functions,
+                    code_db: codeDb,
                     functionCodeHash: functionCodeHash,
-                    bluetooth_data  : bluetoothData
+                    bluetooth_data: bluetoothData
                 };
             }
 

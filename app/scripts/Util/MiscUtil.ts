@@ -31,7 +31,7 @@ module Garage {
 
         namespace ConfigFlags {
             //通常仕向けか、ビジネス仕向けか を決めるフラグ。true:ビジネス仕向け。false:通常仕向け
-            export const IS_BZ : boolean = false;
+            export const IS_BZ: boolean = false;
         }
 
         /**
@@ -159,11 +159,11 @@ module Garage {
                 if ((b[0] !== 255) || (b[1] !== 216)) { // JPEGは0xFFD8から始まる。それ以外はJPEGではないのでエラー。
                     //console.log(b);
                     return (MiscUtil.ERROR_TYPE_NOT_JPEG);
-                }  
+                }
                 // JPEG losslessか
                 if (b[3] === 238) {     // JPEGは4バイトめが0xE0(JFIF)か0xE1(Exif)
                     //console.log(b);
-                    return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS); 
+                    return (MiscUtil.ERROR_TYPE_JPEGLOSSLESS);
                 }
 
                 return (MiscUtil.ERROR_TYPE_NOERROR);

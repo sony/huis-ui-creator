@@ -71,7 +71,7 @@ module Garage {
                         model.has(prop)) {
 
                         let val = PhnConfigFile.parseProperty(prop, conf[prop]);
-                        console.log(PhnConfigFile.TAG + prop + ": " + val + " (" + typeof(val) + ")");
+                        console.log(PhnConfigFile.TAG + prop + ": " + val + " (" + typeof (val) + ")");
 
                         model.set(prop, val);
                     }
@@ -147,7 +147,7 @@ module Garage {
              * @param data {IPhnConfig} 出力するデータ
              * @param df {JQueryDeferred<void>} 
              */
-            private static writeToFile(path: string, data: IPhnConfig, df: JQueryDeferred<void>){
+            private static writeToFile(path: string, data: IPhnConfig, df: JQueryDeferred<void>) {
                 let text = "[phnconfig]\n";
 
                 for (let i = 0; i < PhnConfigFile.KEYS.length; i++) {

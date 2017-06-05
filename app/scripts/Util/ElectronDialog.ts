@@ -145,14 +145,14 @@ module Garage {
                         }
                     }
                 } else { // Focusがこのアプリにある場合→第1引数つきで呼び出し
-                    if (this._dialog) { 
+                    if (this._dialog) {
                         if (callback) {
                             return this._dialog.showMessageBox(this._dialogOwner, options, callback);
                         } else {
                             return this._dialog.showMessageBox(this._dialogOwner, options);
                         }
                     }
-                } 
+                }
             }
 
             /**
@@ -195,7 +195,7 @@ module Garage {
                 }
             }
 
-            private _disableDialog () {
+            private _disableDialog() {
                 this._enabled = false;
             }
         }

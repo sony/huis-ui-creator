@@ -1,4 +1,4 @@
-﻿ /// <reference path="../include/interfaces.d.ts" />
+﻿/// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
     export module Util {

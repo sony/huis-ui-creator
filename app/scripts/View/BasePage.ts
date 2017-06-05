@@ -95,7 +95,7 @@ module Garage {
 
                 //完了時のダイアログのアイコンのパス
                 var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
-                let dialogMessageStr :string= "dialog.message.";
+                let dialogMessageStr: string = "dialog.message.";
 
                 // 同期 (HUIS -> PC) ダイアログのパラメーター 完了
                 DIALOG_PROPS_CREATE_NEW_REMOTE = {
@@ -278,7 +278,7 @@ module Garage {
              * ヘッダー上のオプション用プルダウンメニューを、表示位置を修正して表示する。
              * @param {JQuery} $popup 表示するプルダウンメニュー ポップアップのJQuery要素
              */
-            protected showOptionPullDownMenu($popup : JQuery) {
+            protected showOptionPullDownMenu($popup: JQuery) {
                 var $button1 = this.$page.find("#option-pulldown-menu");
                 var $header = this.$page.find("header");
 
@@ -301,37 +301,37 @@ module Garage {
              * Garageのデザインで、Toastを標示する。
              */
             protected showGarageToast(message: string) {
-                var FUNCTION_NAME ="BasePage.ts : showGarageToast : ";
+                var FUNCTION_NAME = "BasePage.ts : showGarageToast : ";
                 if (_.isUndefined(message)) {
                     console.log(FUNCTION_NAME + "message is undefined");
                 }
 
-                var style : UI.Toast.StyleBuilderDefault = new StyleBuilderDefault();
+                var style: UI.Toast.StyleBuilderDefault = new StyleBuilderDefault();
                 UI.Toast.show(message, 1500, style);
             }
 
             /*
             * 禁則文字が入力された場合、含まれた禁則文字の文字列を返す。
             */
-            protected getInhibitionWords(inputKey: string):string[] {
+            protected getInhibitionWords(inputKey: string): string[] {
                 let FUNCTION_NAME = "BasePage.ts : isInhibitionWord : "
 
                 let result: string[] = [];
                 let BLACK_LIST_INPUT_KEY: string[] =
-                    [    '/' ,
-                        ":" ,
-                        ";" ,
-                        "*" ,
-                        "?" ,
-                        "<" ,
+                    ['/',
+                        ":",
+                        ";",
+                        "*",
+                        "?",
+                        "<",
                         ">",
                         '"',
                         "|",
-                        '\\' ];
+                        '\\'];
 
-                for (let i = 0; i < BLACK_LIST_INPUT_KEY.length; i++){
+                for (let i = 0; i < BLACK_LIST_INPUT_KEY.length; i++) {
                     if (inputKey.indexOf(BLACK_LIST_INPUT_KEY[i]) != -1) {
-                         result.push(BLACK_LIST_INPUT_KEY[i]);
+                        result.push(BLACK_LIST_INPUT_KEY[i]);
                     }
                 }
 
@@ -347,7 +347,7 @@ module Garage {
             /*
             * 禁則文字が入力された場合、トーストを出力し、禁則文字をぬいた文字列を返す。。
             */
-            protected getRemovedInhibitionWords(inputValue: string): string{
+            protected getRemovedInhibitionWords(inputValue: string): string {
                 //入力した文字に禁則文字が含まれていた場合、トーストで表示。文字内容も削除。
                 let inhibitWords: string[] = this.getInhibitionWords(inputValue);
                 let resultString: string = inputValue;
@@ -361,14 +361,14 @@ module Garage {
 
                         //GegExp(正規表現)を利用するために、頭に\\をつける。
                         inhibitWords[i] = "\\" + inhibitWords[i];
-                         
+
                         var regExp = new RegExp(inhibitWords[i], "g");
                         resultString = resultString.replace(regExp, "");
                     }
                     outputString += $.i18n.t("toast.STR_TOAST_INPUT_INHIBITION_WORD");
                     this.showGarageToast(outputString);
                 }
-                
+
                 return resultString;
             }
 
@@ -380,7 +380,7 @@ module Garage {
             * @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
             * @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
             */
-            protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
+            protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale?: number, baseScale?: number) {
                 let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnCenterOfBase: ";
 
                 if ($target == undefined) {
@@ -432,7 +432,7 @@ module Garage {
                 }
 
                 let targetLeft = $target.offset().left;
-                
+
                 let baseTop = $base.offset().top;
                 let baseHeight = $base.outerHeight(true);
                 if (baseScale) {
@@ -453,7 +453,7 @@ module Garage {
 
                 let $popups = $("section[data-role='popup']");
                 //$popups.popup("close");
-                
+
                 if ($popups) {
                     $popups.each((index: number, elem: Element) => {
                         $(elem).popup("close");
@@ -472,7 +472,7 @@ module Garage {
             /*
             * 
             */
-            protected isMousePositionOn($target : JQuery, mousePosition : IPosition):boolean {
+            protected isMousePositionOn($target: JQuery, mousePosition: IPosition): boolean {
                 let FUNCTION_NAME = TAG_BASE + " : isMousePositionOn : ";
 
                 if ($target == undefined) {
@@ -494,7 +494,7 @@ module Garage {
                 let mouseY = mousePosition.y;
 
                 if (mouseX >= targetX && mouseX <= targetX + targetW) {
-                    if (mouseY >= targetY && mouseY <= targetY+targetH){
+                    if (mouseY >= targetY && mouseY <= targetY + targetH) {
                         return true;
                     }
                 }
@@ -561,7 +561,7 @@ module Garage {
              * ImageItemから、CSSを描画に必要なパスを取得する。
              * @param model{Model.ImageItem} CSSに表示したい画像モデル
              */
-            protected getValidPathOfImageItemForCSS(model:ItemModel) :string {
+            protected getValidPathOfImageItemForCSS(model: ItemModel): string {
                 let FUNCTION_NAME = TAG_BASE + "getValidPathOfImageItemForCSS : ";
 
                 if (model == null) {
@@ -637,7 +637,7 @@ module Garage {
              * @param face {Model.Face} エクスポートするリモコンのfaceモデル
              * @param masterFace{Model.Face}: エクスポートするリモコンのmasterFace用のモデル。いっしょにエクスポートする場合に入力。
              */
-            protected exportRemote(face:Model.Face, masterFace:Model.Face = null) {
+            protected exportRemote(face: Model.Face, masterFace: Model.Face = null) {
                 let exportManager: Util.ExportManager = new Util.ExportManager(face, masterFace);
                 exportManager.exec();
             }
@@ -659,7 +659,7 @@ module Garage {
                             callback();
                         }
                     });
-                    
+
                 }
 
             }
@@ -676,7 +676,7 @@ module Garage {
                 });
 
             }
-           
+
 
         }
     }

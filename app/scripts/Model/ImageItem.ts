@@ -224,7 +224,7 @@ module Garage {
                 return this.get("version");
             }
 
-            set version(val : string){
+            set version(val: string) {
                 this.set("version", val);
             }
 
@@ -263,7 +263,7 @@ module Garage {
                 this.set("resolvedPathCSS", val);
             }
 
-            get properties(): string[]{
+            get properties(): string[] {
                 return ["enabled", "area", "path", "resizeMode"];
             }
 
@@ -346,7 +346,7 @@ module Garage {
                     if (this.remoteId_ === "common") {
                         // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
                         // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-                        let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/"+val), true);
+                        let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
                         garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
                     } else {
                         garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
