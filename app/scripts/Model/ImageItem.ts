@@ -130,9 +130,10 @@ module Garage {
 
                 let convertedImage: IImage;
 
-                // リサイズ後のファイル名を作る。
-                // "this.png" の場合、"image_w<width>_h<height>_<resizeMode>.png" となる。
-                // 例) "image_w200_h150_stretch.png"
+                // garageExtensionsにoriginal画像のパスを設定した上で、
+                // 要素に合うサイズへのリサイズ処理を予約する。
+                // この時のリサイズ処理後のファイル名は、
+                // originalのファイル名に時間を追加してハッシュ化したものになる。
                 let originalPath = garageExtensions.original;
                 let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
                 if (!resolvedOriginalPath) {
