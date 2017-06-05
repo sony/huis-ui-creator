@@ -132,7 +132,7 @@ module Garage {
             }
 
             /*
-             * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在場合nullを返す。
+             * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
              */
             getDefaultState(): Model.ButtonState {
                 let FUNCTION_NAME = TAG + " getDefaultState() : ";
