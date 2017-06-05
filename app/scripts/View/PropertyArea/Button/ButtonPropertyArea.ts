@@ -843,7 +843,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId, page) {
+            protected renderPagesOf(order: number, stateId:number, page:number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {

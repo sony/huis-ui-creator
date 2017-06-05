@@ -72,7 +72,7 @@ module Garage {
                 }
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order, this.getDefaultStateId, constValue.NO_PAGE_SELECT_NUM);
+                this.renderPagesOf(order, this.getDefaultStateId(), constValue.NO_PAGE_SELECT_NUM);
 
                 this.updateModel();
 
@@ -94,7 +94,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order,this.getDefaultStateId, this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order,this.getDefaultStateId(), this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
