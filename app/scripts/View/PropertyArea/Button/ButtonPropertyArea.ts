@@ -1075,7 +1075,8 @@ module Garage {
              */
             protected triggerCreateRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
-                $container.find('#signal-remote-container .custom-select').trigger('create');
+                let $target = $container.find("#signal-remote-container");
+                this._adaptJqueryMobileStyleToPulldown($target);
             }
 
 

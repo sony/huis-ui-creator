@@ -51,6 +51,7 @@ module Garage {
             render(): Backbone.View<Model.Item> {
                 this.$el.append(this.template_(this.getModel()));
                 this.$el.find(this.labelPreviewWindow_.getDomId()).append(this.labelPreviewWindow_.render().$el);
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
                 return this;
             }
 

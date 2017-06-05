@@ -74,6 +74,20 @@ module Garage {
             }
 
 
+
+
+            /*
+             * プルダウンにJQueryMobileのスタイルを適応する。
+             * JQueryMobileのスタイルは、新たに生成したDOM要素には自動的には適応されないため、
+             * プルダウンをレンダリングした後に、この関数を利用する。
+             * ただし、重たい処理なので、全てプルダウンをレンダリングした後に1度だけ呼ぶこと。
+             * @param {JQuery} $target プルダウンを内包しているDOMのJQuery
+             */
+            protected _adaptJqueryMobileStyleToPulldown($target : JQuery) {
+                let pulldownContainerDomClass = ".custom-select";
+                $target.find(pulldownContainerDomClass).trigger('create');
+            }
+
         }
     }
 }

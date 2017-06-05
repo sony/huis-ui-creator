@@ -130,7 +130,7 @@ module Garage {
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
 
                         $nextAboveSignalContainer.i18n();
-                        $nextAboveSignalContainer.find('.custom-select').trigger('create');
+                        this._adaptJqueryMobileStyleToPulldown($nextAboveSignalContainer);
                     }
 
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
@@ -199,7 +199,7 @@ module Garage {
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
 
                         $thisOrderSignalContainer.i18n();
-                        $thisOrderSignalContainer.find('.custom-select').trigger('create');
+                        this._adaptJqueryMobileStyleToPulldown($thisOrderSignalContainer);
                     }
 
                     let duration: number = DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER;
@@ -279,8 +279,7 @@ module Garage {
                 //jQueryのスタイルをあてる。
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
                 $targetSignalContainer.i18n();
-                $targetSignalContainer.find('.custom-select').trigger('create');
-
+                this._adaptJqueryMobileStyleToPulldown($targetSignalContainer);
 
                 //noneのoptionをもっていたとき,noneの選択肢を消すため表示を更新する。
                 if ($target.find(".default-value").length != 0) {
@@ -342,7 +341,7 @@ module Garage {
                     this.updateModel();
                     this.controlPlusButtonEnable();
                     $signalContainer.i18n();
-                    $signalContainer.find('.custom-select').trigger('create');
+                    this._adaptJqueryMobileStyleToPulldown($signalContainer);
 
                     //削除とソートボタンをちら見する。
                     this.animateAddButton(tmpOrder, DURATION_ANIMATION_ADD_SIGNAL_CONTAINER, () => {
@@ -417,7 +416,7 @@ module Garage {
                 }
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
                 $macroContainer.i18n();
-                $macroContainer.find('.custom-select').trigger('create');
+                this._adaptJqueryMobileStyleToPulldown($macroContainer);
                
                 this.renderSignalContainers();
 
@@ -603,7 +602,7 @@ module Garage {
 
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
                 $signalContainer.i18n();
-                $signalContainer.find('.custom-select').trigger('create');
+                this._adaptJqueryMobileStyleToPulldown($signalContainer);
 
                 //レイアウト崩れ防止のため、trigger('create')の後に呼ぶ 
                 this.renderSpecialElementDependingSignalNum();

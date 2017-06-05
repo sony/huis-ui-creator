@@ -4870,6 +4870,7 @@ module Garage {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
 
+                //TODO:PropertyAreaに動作を移管して削除する。
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
                 
