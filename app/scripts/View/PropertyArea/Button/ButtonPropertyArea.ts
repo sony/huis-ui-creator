@@ -1134,7 +1134,7 @@ module Garage {
                 
                 setTimeout(
                     () => {
-                        $target.find(".delete-signal-area").removeClass("show");;
+                        $target.find(".delete-signal-area").removeClass("show");
                         $target.find(".sort-button-area").removeClass("show");
                     }
                     , DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS

@@ -82,7 +82,7 @@ module Garage {
 
                 if (!counterPart) {
                     console.warn(FUNCTION_NAME + "counterPart is undefined");
-                    return false;;
+                    return false;
                 }
 
                 if (this.major === counterPart.getMajor()) {

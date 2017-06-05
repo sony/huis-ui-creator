@@ -451,7 +451,7 @@ module Garage {
                 //order順に並び変えて配列にいれる。
                 let actionsForUpdate: IAction[] = [];
                 let keys = Object.keys(tmpActionsWithOrder);
-                let keysNumCount: number = 0;;
+                let keysNumCount: number = 0;
                 for (let i = 0; i < MAX_NUM_MACRO_SIGNAL; i++) {
 
                     //keyに i がある場合、push
@@ -707,7 +707,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (stateId == null) {
@@ -746,7 +746,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (!this.isValidJQueryElement($signalsContainer)) {
@@ -780,7 +780,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (stateId == null) {
@@ -841,7 +841,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
@@ -877,7 +877,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                
