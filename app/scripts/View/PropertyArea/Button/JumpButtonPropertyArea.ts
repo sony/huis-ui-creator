@@ -21,12 +21,15 @@ module Garage {
 
             /**
              * constructor
-             * @param remoteId {string} 編集中のリモコンの remote_id
-             * @param faceName {string} 編集中のリモコン名
-             * @param modules {Model.Module[]} 編集中のリモコンのモジュール
+             * @param {Model.ButtonItem} button 表示するページジャンプボタン
+             * @param {JQuery} $el PropertyArea全体のJQuery
+             * @param {CommandManager} commandManager モデルの更新を実際におこなうCommandManager
+             * @param {string} remoteId 編集中のリモコンの remote_id
+             * @param {string} faceName  編集中のリモコン名
+             * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
-            constructor(button: Model.ButtonItem, $el, commandManager:CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
-                super(button, constValue.TEMPLATE_DOM_ID ,$el, commandManager);
+            constructor(button: Model.ButtonItem, $el, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
+                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;
