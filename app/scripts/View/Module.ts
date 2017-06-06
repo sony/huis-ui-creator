@@ -75,7 +75,7 @@ module Garage {
                 this.$facePages_ = [];
                 var modules: Model.Module[] = [];
                 for (var i = 0, l = modulesData.length; i < l; i++) {
-                    
+
                     let moduleModel: Model.Module = new Model.Module();
                     moduleModel.setInfoFromModule(modulesData[i]);
                     this.generateViews(moduleModel);
@@ -572,9 +572,6 @@ module Garage {
                     newImage.version = image.version;
                 }
 
-                //最後に書き出されるようにするため、resizedはtrueにする。
-                newImage.resized = true;
-
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
@@ -781,7 +778,7 @@ module Garage {
                     }));
                 } else {
                     this.imageViews_.push(null);
-                }                                
+                }
             }
 
             addModuleInNewFacePages(inputModules: Model.Module[]) {
@@ -808,8 +805,8 @@ module Garage {
                 }
 
                 (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
-                
-                
+
+
             }
 
 

@@ -14,7 +14,6 @@
     limitations under the License.
 -->
 
-
 <article>
     <script type="text/template" id="template-face-canvas">
         <section id="face-canvas">
@@ -29,19 +28,15 @@
             </section>
         </section>
     </script>
-
     <script type="text/template" id="template-face-plain">
         <section id="face-pages-area"></section>
     </script>
-
     <script type="text/template" id="template-face-page">
         <section class="face-page" data-page-index="{{index}}" style="width:{{width}}px; height:{{height}}px;"></section>
     </script>
-
     <script type="text/template" id="template-module-container">
         <section class="module-container" data-module-index="{{index}}" data-module-page-index="{{pageIndex}}" data-module-offset-y="{{offsetY}}" data-cid="{{cid}}" style="width:{{width}}px; height:{{height}}px;"></section>
     </script>
-
     <script type="text/template" id="template-button-item">
         <div class="button-item item  tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
             {{#state}}
@@ -63,32 +58,26 @@
             {{/state}}
         </div>
     </script>
-
     <script type="text/template" id="template-label-item">
         <div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
             <div class="label-value">{{text}}</div>
         </div>
     </script>
-
     <script type="text/template" id="template-module-separator">
         <div class="module-separator" data-cid="{{cid}}">
             <div class="separator-name">{{text}}</div>
         </div>
     </script>
-
     <script type="text-template" id="template-image-item">
         <div class="image-item item{{#pageBackground}} background{{/pageBackground}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}">
         </div>
     </script>
-
     <script type="text-template" id="template-separator-face-and-master">
         <div class="face-master-separator">
-            <div class ="separate-text">
+            <div class="separate-text">
                 <div class="border-line"></div>
                 <span data-i18n="edit.pallet.STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS">ALL BUTTONS</span>
             </div>
         </div>
     </script>
-
-
 </article>

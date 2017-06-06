@@ -13,7 +13,6 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-
 <article>
     <!-- message dialog -->
     <script type="text/template" id="common-dialog-message">
@@ -80,7 +79,7 @@
 
     <!-- spinner dialog-->
     <script type="text/template" id="common-dialog-spinner">
-        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b"> 
+        <section class="common-dialog" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
             <div class="spinner-dialog">
                 <div class="spinner large show" id="common-dialog-center-spinner">&nbsp;</div>
                 <p>{{title}}</p>
@@ -154,7 +153,6 @@
     </script>
 
     <!-- information dialog -->
-   
     <script type="text/template" id="common-dialog-information">
         <div id="information-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b">
             <section class="common-dialog">
@@ -166,25 +164,23 @@
                     <div class="information-body">
                         <div class="white-space"></div>
                         {{#informationList}}
-                            <div class="information-container">
-                                <img class="information-img" src="{{imagePath}}">
-                                <div class="information-box">
-                                    <div class="information-date">{{date}}</div>
-                                    <div class="information-text">{{text}}</div>       
-                                </div>
+                        <div class="information-container">
+                            <img class="information-img" src="{{imagePath}}">
+                            <div class="information-box">
+                                <div class="information-date">{{date}}</div>
+                                <div class="information-text">{{text}}</div>
                             </div>
-                            <div class="separator"></div>
-                        {{/informationList}}                    
+                        </div>
+                        <div class="separator"></div>
+                        {{/informationList}}
                     </div>
                 </div>
             </section>
-           
         </div>
-       
     </script>
 
     <!-- destination dialog -->
-    <script type="text/template" id="common-dialog-remotelist" >
+    <script type="text/template" id="common-dialog-remotelist">
         <div id="remotelist-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b" class="ui-page-theme-b">
             <section class="select-remote-dialog">
                 <div class="remotelist-dialog">
@@ -193,16 +189,14 @@
                     </header>
                     <div class="separator"></div>
                     <div id="face-list-container">
-
                         {{!読み込み中のスピナー表示}}
                         <article id="spinner-container">
                             <div class="spinner large show" id="spinner-dialog-spinner-gif">&nbsp;</div>
-
                             <div id="remotelist-load-message-container">
                                 <p id="remotelist-load-message" data-i18n="dialog.message.STR_DIALOG_MESSAGE_LOADING_REMOTE_LIST">しばらくお待ちください。</p>
                             </div>
                         </article>
-                        
+
                         {{!リモコンリスト}}
                         <ul id="face-list">
                             <ui id="face-list-footer"></ui>
@@ -266,7 +260,7 @@
                         </div>
                         <div class="inputs-container">
                             <label>
-                                <input class="input-element"  type="checkbox" id="dialog-config-checkbox-show-button-move" {{^display_remote_arrow}} checked="checked" {{/display_remote_arrow}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON">ヘッダーの左右移動ボタンを非表示</span>
+                                <input class="input-element" type="checkbox" id="dialog-config-checkbox-show-button-move" {{^display_remote_arrow}} checked="checked" {{/display_remote_arrow}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_HEADER_BUTTON">ヘッダーの左右移動ボタンを非表示</span>
                             </label>
                             <label>
                                 <input class="input-element" type="checkbox" id="dialog-config-checkbox-disable-swipe" {{^enable_vertical_remote_page_swipe}} checked="checked" {{/enable_vertical_remote_page_swipe}} /><span data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_CHECK_DISABLE_SWIPE">スワイプによる移動を無効化</span>
@@ -295,5 +289,4 @@
             </div>
         </section>
     </script>
-
 </article>

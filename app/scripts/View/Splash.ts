@@ -31,7 +31,7 @@ module Garage {
          * @class Splash
          * @brief Splash screen class
          */
-        class Splash extends BasePage {          
+        class Splash extends BasePage {
             /**
              * construnctor
              */
@@ -44,7 +44,7 @@ module Garage {
 
             //! page initialization event
             onInitialize(event: JQueryEventObject): void {
-               super.onInitialize(event);
+                super.onInitialize(event);
             }
 
             //! page show event
@@ -107,9 +107,9 @@ module Garage {
             }
 
 
-           /*
-            * 同期処理後、ホームへ移動する。
-            */
+            /*
+             * 同期処理後、ホームへ移動する。
+             */
             private _MoveHomeBeforeSync() {
 
                 //本体のバージョン確認。
@@ -323,7 +323,7 @@ module Garage {
                         this.showHuisRcVersonIsNotBtoB();
                     }
                 } else {
-                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)){
+                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)) {
                         this.showHuisRcVersionIsOldDialog();
                     }
                 }
@@ -406,7 +406,7 @@ module Garage {
                         // 同期後に改めて、HUIS ファイルの parse を行う
                         huisFiles.init(HUIS_FILES_ROOT);
                         console.log("Complete!!!");
-                       
+
                         this.syncCommonImages(callback);
                     }
                 });
@@ -433,4 +433,4 @@ module Garage {
         var View = new Splash();
 
     }
-} 
+}

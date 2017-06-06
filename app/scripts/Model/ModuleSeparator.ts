@@ -62,7 +62,7 @@ module Garage {
              * コピー後、imageItemにコピー先のpathを設定する。
              */
             private _copyImageFile(imageItem: Model.ImageItem, srcPath: string, dstPath: string) {
-                if(path && fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
+                if (path && fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
                     Model.OffscreenEditor.editImage(srcPath, IMAGE_EDIT_PARAMS, dstPath).done((editedImage) => {
                         imageItem.path = editedImage.path;
                     });

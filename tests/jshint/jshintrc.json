@@ -1,11 +1,11 @@
 {
-  /* Enforcing Options */
-  "eqeqeq": true,   /* ==ではなく===や!==など型も含めた厳密な比較を行う */
-  "curly": false,   /* [TypeScript] ループや条件分岐の{}を省略しない */
-  "newcap": false,  /* [TypeScript] コンストラクタ関数は必ず先頭を大文字に。通常の関数は先頭を小文字に */
+    /* Enforcing Options */
+    "eqeqeq": true, /* ==ではなく===や!==など型も含めた厳密な比較を行う */
+    "curly": false, /* [TypeScript] ループや条件分岐の{}を省略しない */
+    "newcap": false, /* [TypeScript] コンストラクタ関数は必ず先頭を大文字に。通常の関数は先頭を小文字に */
 
-  /* Relaxing Options - 危険性を認識した上で設定すること */
-  "eqnull": true,   /* == null を許可 */
-  "shadow": true,   /* [TypeScript] スコープ外に定義済みの変数を再定義することを許可 */
-  "sub": true       /* [TypeScript] obj['hoge']の表記で参照することを許可する */
+    /* Relaxing Options - 危険性を認識した上で設定すること */
+    "eqnull": true, /* == null を許可 */
+    "shadow": true, /* [TypeScript] スコープ外に定義済みの変数を再定義することを許可 */
+    "sub": true /* [TypeScript] obj['hoge']の表記で参照することを許可する */
 }

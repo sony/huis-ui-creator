@@ -113,12 +113,12 @@ module Garage {
              * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
              */
             private _onOptionPullDownMenuClick(event: Event) {
-               
+
                 //表示するメニューのJQuery要素
                 let $popup: JQuery = this.$page.find("#option-pulldown-menu-popup");
                 //ビジネス仕向けの場合、表示するメニューを出しわける
                 if (Util.MiscUtil.isBz()) {
-                    $popup = this.$page.find("#option-pulldown-menu-popup-bz"); 
+                    $popup = this.$page.find("#option-pulldown-menu-popup-bz");
                 }
 
                 this.showOptionPullDownMenu($popup);
@@ -137,7 +137,7 @@ module Garage {
              * @param event {Event} クリックイベント
              */
             private onOptionSetPropertiesClick(event: Event) {
-                let conf = new PhnConfig({el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock())});
+                let conf = new PhnConfig({ el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock()) });
                 conf.$el.i18n();
                 conf.updateHomeDestLabel();
                 return;
@@ -186,7 +186,7 @@ module Garage {
                 if (informationDialog.shouldNotify()) {
                     informationDialog.notify();
                 }
-                
+
             }
 
             /**
@@ -212,7 +212,7 @@ module Garage {
                 faces.forEach((face: Model.Face) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
-                    let tmpFaceName: string =face.name;
+                    let tmpFaceName: string = face.name;
                     var regExp = new RegExp(" ", "g");
                     tmpFaceName = tmpFaceName.replace(regExp, "");
 
@@ -235,7 +235,7 @@ module Garage {
                     this._renderFace($(elems[i]));
                 }
                 this._calculateFaceListWidth();
-              
+
 
                 //テキストのローカライズ
                 $("#page-home").i18n();
@@ -259,11 +259,11 @@ module Garage {
                 faceRenderer.render();
             }
 
-           /**
-             * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
-             *
-             * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
-             */
+            /**
+              * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
+              *
+              * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
+              */
             private _enterFullCustom(remoteId?: string) {
                 let urlQueryParameter: string = "";
                 if (remoteId != null) {
@@ -272,11 +272,11 @@ module Garage {
                 Framework.Router.navigate("#full-custom" + urlQueryParameter);
             }
 
-           /**
-             * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
-             *
-             * @param face {Model.Face} コピーを作成するリモコンのface。
-             */
+            /**
+              * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
+              *
+              * @param face {Model.Face} コピーを作成するリモコンのface。
+              */
             private _copyAndEditRemote(face: Model.Face) {
 
                 if (!this._checkCanCreateNewRemote()) {
@@ -322,11 +322,11 @@ module Garage {
                     });
             }
 
-           /**
-             * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
-             *
-             * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
-             */
+            /**
+              * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
+              *
+              * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
+              */
             private _checkCanCreateNewRemote(): boolean {
                 let canCreateResult = huisFiles.canCreateNewRemote();
                 if (canCreateResult == 0) {
@@ -362,10 +362,10 @@ module Garage {
             }
 
 
-            
+
 
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
-                
+
                 if (!noWarn) {
                     //もう使われてない？
                     let response = electronDialog.showMessageBox({
@@ -375,7 +375,7 @@ module Garage {
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
                         buttons: ["yes", "no"],
                         title: PRODUCT_NAME,
-                        cancelId:1,
+                        cancelId: 1,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
@@ -386,14 +386,14 @@ module Garage {
                 huisFiles.removeFace(this.remoteIdToDelete);
                 huisFiles.updateRemoteList();
                 huisFiles.init(HUIS_FILES_ROOT);
-                
+
                 if (HUIS_ROOT_PATH) {
                     let syncTask = new Util.HuisDev.FileSyncTask();
                     syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, () => {
                         $(".face[data-remoteid=" + this.remoteIdToDelete + "]").remove();
                         this._calculateFaceListWidth();
                         this._renderFaceList();
-                  }, (err) => {
+                    }, (err) => {
                         if (err) {
                             // [TODO] エラー値のハンドリング
                             electronDialog.showMessageBox({
@@ -453,33 +453,33 @@ module Garage {
                                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
                                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
                                     title: PRODUCT_NAME,
-                                    cancelId:1,
+                                    cancelId: 1,
                                 });
                                 if (response === 0) {
                                     this._onSyncPcToHuisClick(true); // true で警告なし
-                               }
+                                }
                             }
                         }));
 
                         //エキスポート機能をコンテキストメニューに表示。
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
-                                click: () => {
-                                    let face: Model.Face = huisFiles.getFace(remoteId);
+                            click: () => {
+                                let face: Model.Face = huisFiles.getFace(remoteId);
 
-                                    //masterFaceを取得。
-                                    let isMaster: boolean = true;
-                                    let masterFace: Model.Face = huisFiles.getFace(remoteId, isMaster);
+                                //masterFaceを取得。
+                                let isMaster: boolean = true;
+                                let masterFace: Model.Face = huisFiles.getFace(remoteId, isMaster);
 
-                                    this.exportRemote(face, masterFace); // true で警告なし
+                                this.exportRemote(face, masterFace); // true で警告なし
                             }
                         }));
-                        
-                        
+
+
                     }
 
                 }
-                
+
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
                     this.contextMenu_.append(new MenuItem({
                         label: $.i18n.t("context_menu.STR_CONTEXT_VALIDATE_ELEMENTS"),
@@ -492,7 +492,7 @@ module Garage {
                 if (this.contextMenu_.items.length != 0) {
                     this.contextMenu_.popup(this.currentWindow_);
                 }
-                
+
             }
 
             private _pageLayout() {

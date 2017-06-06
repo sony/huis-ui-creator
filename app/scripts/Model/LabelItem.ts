@@ -163,8 +163,8 @@ module Garage {
             /**
              * 変更可能なプロパティーの一覧
              */
-            get properties(): string[]{
-                return ["enabled", "area", "text", "color", "font", "size","font_weight"];
+            get properties(): string[] {
+                return ["enabled", "area", "text", "color", "font", "size", "font_weight"];
             }
 
             /**
@@ -189,7 +189,7 @@ module Garage {
                     "resolvedColor": "rgb(0,0,0)",
                     "font": "",
                     "size": 30,
-                    "font_weight" : FontWeight.FONT_BOLD,
+                    "font_weight": FontWeight.FONT_BOLD,
                 };
 
                 return defaultAttr;

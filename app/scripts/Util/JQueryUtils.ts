@@ -82,7 +82,7 @@ module Garage {
             static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
-                    console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
+                    console.warn("[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
                     return;
                 }
 

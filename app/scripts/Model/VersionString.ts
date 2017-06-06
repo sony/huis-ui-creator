@@ -56,7 +56,7 @@ module Garage {
                 }
                 this.minor = minor;
 
-              
+
                 //build を代入
                 if (build != null && !JQUtils.isNaN(build)) {
                     this.build = build;
@@ -82,7 +82,7 @@ module Garage {
 
                 if (!counterPart) {
                     console.warn(FUNCTION_NAME + "counterPart is undefined");
-                    return false;;
+                    return false;
                 }
 
                 if (this.major === counterPart.getMajor()) {
@@ -125,13 +125,13 @@ module Garage {
                             return false;//同じバージョンのときはfalse 
                         }
 
-                    }else if (this.minor < counterPart.getMinor()) {//minorVersion値が少ない　＝＝　古い
+                    } else if (this.minor < counterPart.getMinor()) {//minorVersion値が少ない　＝＝　古い
                         return true;
                     } else {
                         return false;
                     }
 
-                } else {   
+                } else {
                     //majorバージョンで比べる。
                     if (this.major < counterPart.getMajor()) {//majorVersion値が少ない　＝＝　古い
                         return true;
@@ -160,7 +160,7 @@ module Garage {
 
                 if (this.build != null) {
                     return this.major + "." + this.minor + "." + this.build;
-                }else{
+                } else {
                     return this.major + "." + this.minor;
                 }
 

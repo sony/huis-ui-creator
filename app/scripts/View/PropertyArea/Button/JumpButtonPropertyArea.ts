@@ -1,4 +1,4 @@
-﻿ /// <reference path="../../../include/interfaces.d.ts" />
+﻿/// <reference path="../../../include/interfaces.d.ts" />
 
 module Garage {
     export module View {
@@ -94,7 +94,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order,this.getDefaultStateId(), this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order, this.getDefaultStateId(), this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
@@ -150,7 +150,7 @@ module Garage {
             }
 
 
-            
+
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// private method
@@ -166,7 +166,7 @@ module Garage {
                 let newAction = $.extend(true, {}, this.getModel().getDefaultState().action[0]);
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
-                let newActions: IAction[] = [ newAction ];
+                let newActions: IAction[] = [newAction];
                 this.getModel().getDefaultState().action = newActions;
 
                 let states: Model.ButtonState[] = [];
@@ -224,7 +224,7 @@ module Garage {
              */
             private updateJumpSettings(newSettings: IJump) {
                 this.setRemoteIdPullDownOf(0, newSettings.remote_id);
-                
+
                 this.renderPagesOf(0, undefined, newSettings.scene_no);
 
                 let $targetSignalContainer = this.getSignalContainerElementOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);

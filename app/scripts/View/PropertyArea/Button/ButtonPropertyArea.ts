@@ -68,7 +68,7 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
@@ -78,7 +78,7 @@ module Garage {
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
                 if (this.isValidJQueryElement($target)) {
-                    $target.css("opacity","1");
+                    $target.css("opacity", "1");
                 }
             }
 
@@ -116,7 +116,7 @@ module Garage {
             public setStates(inputStates: Model.ButtonState[]) {
                 let FUNCTION_NAME = "setState";
 
-                if (inputStates == null){
+                if (inputStates == null) {
                     console.warn(FUNCTION_NAME + "inputStates is null");
                     return;
                 }
@@ -128,6 +128,7 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
+
 
             /*
              *@return {number} ボタンに設定されているデフォルトのstateIdを取得
@@ -168,7 +169,7 @@ module Garage {
                 return stateData;
             }
 
-          
+
             /*
            * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
            * @param $target{JQuery} 対象となるJQuery
@@ -184,7 +185,7 @@ module Garage {
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
 
-                if (! this.isValidOrder(result)) {
+                if (!this.isValidOrder(result)) {
                     console.warn(FUNCTION_NAME + "result is invalid");
                     return undefined;
                 }
@@ -261,7 +262,7 @@ module Garage {
             * @param order{number}
             * @return {JQuery}
             */
-            protected getRemoteIdPullDownJQueryElement(order : number):JQuery{
+            protected getRemoteIdPullDownJQueryElement(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
                 if (!this.isValidOrder(order)) {
@@ -327,11 +328,11 @@ module Garage {
 
 
 
-         /**
-          * 入力したorderのremoteプルダウンに、inputの値を代入する。
-          * order{number} ： マクロ信号の順番
-          * inputRemoteId{string} : プルダウンに設定する値。
-          */
+            /**
+             * 入力したorderのremoteプルダウンに、inputの値を代入する。
+             * order{number} ： マクロ信号の順番
+             * inputRemoteId{string} : プルダウンに設定する値。
+             */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
 
@@ -376,8 +377,9 @@ module Garage {
 
                     let $additionalRemote = $(additionalRemoteTemplrate(inputSignalData));
                     $remoteIdPullDown.prepend($additionalRemote);
-                   
+
                 }
+
 
                 $remoteIdPullDown.val(inputRemoteId);
             }
@@ -407,7 +409,7 @@ module Garage {
             * @param order{number}
             * @return {string} プルダウンに表示されている文字列
             */
-            protected getTextInRemoteIdOf(order: number) :string{
+            protected getTextInRemoteIdOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
                 if (!this.isValidOrder(order)) {
@@ -479,7 +481,7 @@ module Garage {
                 if ($target == null || $target.length == 0) {
                     console.warn("$target is undefined");
                     return;
-                }               
+                }
 
                 //RemoteIdプルダウンのDOMを表示。
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
@@ -496,10 +498,10 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (this.isValidValue(inputRemoteId) ) {
+                    if (this.isValidValue(inputRemoteId)) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
-                    }else{
+                    } else {
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
@@ -690,10 +692,10 @@ module Garage {
                         functions = $.extend(true, [], [functionName]);
                     }
                 } else {
-                  
+
                     //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
                     functions = $.extend(true, [], this.getFunctionsOf(order));
-                    
+
                 }
 
                 if (functions != null && functions.length != 0) {
@@ -737,8 +739,8 @@ module Garage {
             * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
             * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
             */
-            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo{
-                let FUNCTION_NAME = TAG + "cloneDeviceInfo"; 
+            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo {
+                let FUNCTION_NAME = TAG + "cloneDeviceInfo";
 
                 if (!this.isValidValue(src)) {
                     console.warn(FUNCTION_NAME + "src is invalid");
@@ -778,7 +780,7 @@ module Garage {
                     return false;
                 }
 
-            } 
+            }
 
             /*
             * 設定したOrderのfunction用PullDownを消す。
@@ -1065,13 +1067,13 @@ module Garage {
                 $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
             }
 
-          
-          /*
-           * ＋ボタンを押下する際のアニメーション. 
-           * @param order{number} 出現するdom のorder
-           * @param duration{number} アニメーションのduration
-           */
-            protected animateAddButton(order: number, duration:number, callback? : Function) {
+
+            /*
+             * ＋ボタンを押下する際のアニメーション. 
+             * @param order{number} 出現するdom のorder
+             * @param duration{number} アニメーションのduration
+             */
+            protected animateAddButton(order: number, duration: number, callback?: Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
 
 
@@ -1094,11 +1096,11 @@ module Garage {
                 let tmpSignalContainerDuration = $target.css("transition-duration");
                 this.setAnimationDuration($target, duration / 1000);
                 $target.removeClass("before-add-animation");
-                
-                
+
+
                 setTimeout(
                     () => {
-                        $target.find(".delete-signal-area").removeClass("show");;
+                        $target.find(".delete-signal-area").removeClass("show");
                         $target.find(".sort-button-area").removeClass("show");
                     }
                     , DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS
@@ -1156,7 +1158,7 @@ module Garage {
 
                 //durationを設定,対象を透明に
                 let tmpTargetDuration = $target.css("transition-duration");
-                let tmpTargetMarginBottom = parseInt ($target.css("transition-duration").replace("px",""),10);
+                let tmpTargetMarginBottom = parseInt($target.css("transition-duration").replace("px", ""), 10);
                 this.setAnimationDuration($target, duration / 1000);
                 $target.css("opacity", "0");
                 $target.css("margin-bottom", tmpTargetMarginBottom - $target.outerHeight(true) + "px");
@@ -1201,7 +1203,7 @@ module Garage {
              * 対象のJQueryのoffset座標系でのpositionを取得する
              * 
              */
-            protected getPosition($target: JQuery): IPosition{
+            protected getPosition($target: JQuery): IPosition {
                 let FUNCTION_NAME = TAG + "getPosition : ";
 
                 if (!this.isValidJQueryElement($target) || $target.offset() == null) {
@@ -1225,9 +1227,9 @@ module Garage {
              * @param $target2 {JQuery}
              * @param duration {number} アニメーションの期間 [ms]
              */
-            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration : number) {
+            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
-                
+
 
                 if (!this.isValidJQueryElement($target1)) {
                     console.warn(FUNCTION_NAME + "$target1 is invalid");
@@ -1249,18 +1251,18 @@ module Garage {
                 this.setAnimationDuration($target1, duration / 1000);
                 this.setAnimationDuration($target2, duration / 1000);
 
-                
+
                 //移動
                 $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");
                 $target2.css("transform", "translateX(" + (target1Position.x - target2Position.x) + "px)");
                 $target1.css("transform", "translateY(" + (target2Position.y - target1Position.y) + "px)");
                 $target2.css("transform", "translateY(" + (target1Position.y - target2Position.y) + "px)");
 
-                setTimeout(()=>{
+                setTimeout(() => {
                     //durationをセット。
                     $target1.css("transition-duration", tmpTarget1Duration);
                     $target2.css("transition-duration", tmpTarget2Duration);
-                },duration);
+                }, duration);
             }
 
 
@@ -1270,7 +1272,7 @@ module Garage {
              * order {number} チェックするorder情報
              * @return true:orderとして有効、false:orderとして利用不可。
              */
-            protected isValidOrder(order: number):boolean {
+            protected isValidOrder(order: number): boolean {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
 
                 //値として利用できるかチェック
@@ -1301,7 +1303,7 @@ module Garage {
             * @param remoteId{string} deviceInfoを取得したいremoteId
             * @return {IButtonDeviceInfo} 見つからなかった場合nullを返す。
             */
-            protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo{
+            protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "isCachedMenberRemoteId : ";
 
                 if (!this.isValidValue(remoteId)) {
@@ -1315,7 +1317,7 @@ module Garage {
                     let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
-                        
+
                     }
 
                 }

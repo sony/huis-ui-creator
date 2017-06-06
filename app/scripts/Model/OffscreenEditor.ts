@@ -111,14 +111,14 @@ module Garage {
                 }
 
                 console.log(TAG + "before editImage src: " + imageSrc);
-                let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
-                
+                let loadPath = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
+
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
                     .done((texture: PIXI.Texture) => {
 
                         //textureから、画像のデータを取得する。
-                        let imageWidth: number = 800; 
+                        let imageWidth: number = 800;
                         let imageHeight: number = 600;
                         if (params.resize != null) {
                             imageWidth = params.resize.width;
@@ -137,7 +137,7 @@ module Garage {
 
                             //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
                             //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
-                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
+                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1) {
                                 dstPath = this.getEncodedPath(dstPath);
                             }
 
