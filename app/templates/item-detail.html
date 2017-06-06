@@ -35,14 +35,13 @@
 
 
     <!--画像アイテムの詳細情報エリア-->
-    <script type="text/template" id="template-image-detail">
-
+    <script type="text/template" id="template-image-property-area">
         <h3 id="face-item-detail-title">Image<span class="property-cid"></span></h3>
 
         <!-- プレビュー -->
         <div id="property-image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
             <div id="edit-image-non-button-image"></div>
-        </div>text-field-in-preview
+        </div>
 
     </script>
 

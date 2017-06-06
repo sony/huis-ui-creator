@@ -4847,6 +4847,15 @@ module Garage {
                         this._renderButtonItemDetailArea(item, $detail);
                     }
                 } else if (item instanceof Model.ImageItem) {
+                    if (this.propertyArea_ == null) {
+                        this.propertyArea_ = new ImagePropertyArea(
+                            item,
+                            this.commandManager_
+                        )
+                        //this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                    }
+                    $detail.append(this.propertyArea_.render().$el);
+                    /*
                     // 画像アイテムの詳細エリアを表示
                     let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
                     let $imageDetail = $(templateImage(item));
@@ -4867,6 +4876,7 @@ module Garage {
 
                     //テキストをローカライズ
                     $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
+                    */
 
                 } else if (item instanceof Model.LabelItem) {
 
