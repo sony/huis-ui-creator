@@ -2641,6 +2641,7 @@ module Garage {
                     // 背景画像の削除
                     $(".property-value.page-background-src").val("");
                     $("#property-image-preview").css("background-image", "none");
+                    $("#image-preview").css("background-image", "none"); // TODO: ボタンのプロパティエリア作成後削除
                     this._updateCurrentModelData("path", "");
                     this._updateCurrentModelData("enabled", false);
                 }
@@ -3139,7 +3140,7 @@ module Garage {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
                                     // 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
-
+                                    this._updatePreviewInDetailArea(resolvedPath, $("#image-preview"));//TODO:画像プレビュー作成後、削除
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
                                     } catch (e) {
@@ -3210,12 +3211,16 @@ module Garage {
                                     if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                         img.src = resolvedOriginalPath;
                                     }
+                                    if ($("#image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
+                                        img.src = resolvedOriginalPath;
+                                    }
                                     img.onload = () => {
                                         this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
 
                                         // プレビュー部分の更新
                                         this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
+                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#image-preview")); //TODO:画像プレビュー作成後削除。
                                     };
 
                                 }

@@ -21,24 +21,25 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Label.ImagePropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.ImagePreviewWindow] ";
 
         namespace constValue {
-            export const TEMPLATE_DOM_ID = "#template-image-property-area";
+            export const TEMPLATE_DOM_ID = "#template-image-preview-window";
+            export const DOM_ID = "#image-preview-window";
         }
 
-        export class ImagePropertyArea extends PropertyArea {
+        export class ImagePreviewWindow extends PreviewWindow {
 
-            private imagePreviewWindow_: ImagePreviewWindow;
+            //private textPreview_: TextPreview;
 
             /**
              * constructor
              */
-            constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
-                super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);
-
-                //this.listenTo(this.getModel(), "change:size change:text", this.render); TODO
+            constructor(image: Model.ImageItem) {
+                super(image, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                //this.textPreview_ = new TextPreview(label);
+                //this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
+                //this.listenTo(this.textPreview_, "uiChange:text", this._onTextFieldChanged);
             }
 
 
@@ -54,23 +55,11 @@ module Garage {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
-                this.$el.find(this.imagePreviewWindow_.getDomId()).append(this.imagePreviewWindow_.render().$el);
+                this.$el.append(this.template_(this.model));
+                //this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
-            }
-
-
-            /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.LabelItem}
-            */
-            getModel(): Model.ImageItem {
-                //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.LabelItem型に限らない。
-                //このクラスとその子供のクラスはthis.modelをModel.ImageItemとして扱ってほしいのでダウンキャストしている。
-                return <Model.ImageItem>this.model;
-            }
-
+            };
 
         }
     }
