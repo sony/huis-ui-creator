@@ -18,41 +18,38 @@
 #page-splash {
     position: relative;
     background-color: $COLOR_SPLASH_BACKGROUND;
-    
-    #huis-logo-image{
-        width:$SIZE_SPLASH_LOGO_WIDHT;
-        height:$SIZE_SPLASH_LOGO_HEIHGT;
-        margin:0 auto;
-        margin-top:$SIZE_SPLASH_LOGO_MARGIN_TOP;
+
+    #huis-logo-image {
+        width: $SIZE_SPLASH_LOGO_WIDHT;
+        height: $SIZE_SPLASH_LOGO_HEIHGT;
+        margin: 0 auto;
+        margin-top: $SIZE_SPLASH_LOGO_MARGIN_TOP;
         //margin-top:215px;
-        background-image:$PATH_IMG_SPLASH_HUIS_LOGO;
-        background-position:center;
+        background-image: $PATH_IMG_SPLASH_HUIS_LOGO;
+        background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
     }
 
-    #spinner-splash-spinner-gif{
-        width:$SIZE_SPLASH_SPINNER_WIDHT;
-        height:$SIZE_SPLASH_SPINNER_HEIHGT;
-        margin:0 auto;
-        margin-top:$SIZE_SPLASH_SPINNER_MARGIN_TOP;
-        background-image:$PATH_IMG_SPLASH_SPINNER;
-        background-position:center;
+    #spinner-splash-spinner-gif {
+        width: $SIZE_SPLASH_SPINNER_WIDHT;
+        height: $SIZE_SPLASH_SPINNER_HEIHGT;
+        margin: 0 auto;
+        margin-top: $SIZE_SPLASH_SPINNER_MARGIN_TOP;
+        background-image: $PATH_IMG_SPLASH_SPINNER;
+        background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
     }
 
     #splash-message {
-        text-shadow:none;
-        font-size:$FONT_SIZE_SPLASH_MESSAGE;
-        font-family:$FONT_FAMILY_SPLASH_MESSAGE;
-        line-height:$TEXT_HEIGHT_DEFAULT;
-        color:$COLOR_SPLASH_TEXT;
-        text-align:center;
-        margin:0 auto;
-        margin-top:$SIZE_SPLASH_MESSAGE_MARGIN_TOP;
+        text-shadow: none;
+        font-size: $FONT_SIZE_SPLASH_MESSAGE;
+        font-family: $FONT_FAMILY_SPLASH_MESSAGE;
+        line-height: $TEXT_HEIGHT_DEFAULT;
+        color: $COLOR_SPLASH_TEXT;
+        text-align: center;
+        margin: 0 auto;
+        margin-top: $SIZE_SPLASH_MESSAGE_MARGIN_TOP;
     }
 }
-
-
-

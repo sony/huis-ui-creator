@@ -28,7 +28,7 @@ module Garage {
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-property-button-state";
-        } 
+        }
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
         //すでに登録されているアクションは、pulldownに表示できないようにするため
@@ -40,9 +40,9 @@ module Garage {
 
             constructor(inputActionKeys: string[]) {
                 this.array = [];
-                this.all = $.extend(true,[],ACTION_INPUTS);
-                for (let i = 0; i < inputActionKeys.length; i++){
-                    for (let j = 0; j < this.all.length; j++){
+                this.all = $.extend(true, [], ACTION_INPUTS);
+                for (let i = 0; i < inputActionKeys.length; i++) {
+                    for (let j = 0; j < this.all.length; j++) {
                         if (this.all[j].value == inputActionKeys[i]) {
                             this.array.push({ key: this.all[j].key, value: this.all[j].value });
                         }
@@ -50,7 +50,7 @@ module Garage {
                 }
             }
 
-            get(): IStringKeyValue[]{
+            get(): IStringKeyValue[] {
                 return this.array;
             }
 
@@ -72,7 +72,7 @@ module Garage {
                     console.warn(FUNCTION_NAME + "inputKey is null");
                     return;
                 }
-                let result = this.array.filter((value , index: number) => {
+                let result = this.array.filter((value, index: number) => {
                     return value.key != inputKey;
                 });
                 this.array = result;
@@ -103,11 +103,11 @@ module Garage {
 
             private assignedInputActions: string[];
 
-         
+
             /**
              * constructor
              */
-            constructor(button:Model.ButtonItem,$el:JQuery, commandManager :CommandManager) {
+            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager) {
                 super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
                 this.assignedInputActions = [];
             }
@@ -163,8 +163,8 @@ module Garage {
                 if ($target.hasClass("disabled")) {
                     return;
                 }
-              
-                let order = this.getDefaultState().action.length;
+
+                let order = this.getModel().getDefaultState().action.length;
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -172,7 +172,7 @@ module Garage {
                 }
 
                 let stateId = this.getStateIdFrom($target);
-              
+
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
@@ -205,7 +205,8 @@ module Garage {
                     });
                 } else {
                     console.warn(FUNCTION_NAME + "order : " + order + "is already exist. ");
-                }    
+                }
+
             }
 
 
@@ -289,6 +290,7 @@ module Garage {
              * @return {Backbone.View<Model.Item>}
              */
             render(stateId: number = this.getDefaultStateId()): Backbone.View<Model.Item> {
+
                 let FUNCTION_NAME = TAG + "renderViewState";
 
                 if (this.getModel().isAirconButton() ||
@@ -310,7 +312,7 @@ module Garage {
                 return this;
             }
 
-            
+
 
 
 
@@ -366,7 +368,7 @@ module Garage {
                     }
 
                     let tmpDeviceInfo = huisFiles.getDeviceInfo(tmpRemoteId);
-                   
+
                     if (!tmpDeviceInfo) {
                         try {
                             // HuisFilesに存在しない場合はキャッシュを使用
@@ -410,7 +412,7 @@ module Garage {
                                 //functionNameに##がついていた場合、再学習なのでmodelからcodeを検索
                                 tmpCode = this.getCodeFromThisModel(tmpFunction);
                             }
-                            
+
                         }
                         if (tmpCode != null) {
                             tmpAction.code = tmpCode;
@@ -445,7 +447,7 @@ module Garage {
                 //order順に並び変えて配列にいれる。
                 let actionsForUpdate: IAction[] = [];
                 let keys = Object.keys(tmpActionsWithOrder);
-                let keysNumCount: number = 0;;
+                let keysNumCount: number = 0;
                 for (let i = 0; i < MAX_NUM_MACRO_SIGNAL; i++) {
 
                     //keyに i がある場合、push
@@ -459,7 +461,7 @@ module Garage {
                     }
                 }
 
-                let tmpState = this.getModel().state[stateId];
+                let tmpState = this.getModel().getStateByStateId(stateId);
 
                 let newState = new Model.ButtonState({});
                 if (tmpState != null) {
@@ -619,10 +621,10 @@ module Garage {
             * @param stateId{number} ターゲットとなるstateId.指定しない場合、default値になる。
             * @param $signalsContainer{JQuery} ベースとなるJQuery要素
             */
-            private renderSignals(stateId: number = this.getDefaultStateId()){
+            private renderSignals(stateId: number = this.getDefaultStateId()) {
                 let FUNCTION_NAME: string = TAG + "renderSignals : ";
 
-                let actions: IAction[] = this.getModel().state[stateId].action;
+                let actions: IAction[] = this.getModel().getStateByStateId(stateId).action;
 
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "actions is invalid");
@@ -653,10 +655,10 @@ module Garage {
 
                 }
 
-                
+
                 this.controlPlusButtonEnable();
 
-                
+
 
                 this.$el.i18n();
                 this.$el.find('.custom-select').trigger('create');
@@ -674,7 +676,7 @@ module Garage {
             private renderSomeElementIfOneSignalOnlyExist() {
                 let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //actionが1つしかない場合、削除ボタンと、並び替えボタンと、番号の前のdotを削除。
                 if (signalLength <= 1) {
@@ -696,7 +698,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (stateId == null) {
@@ -716,7 +718,7 @@ module Garage {
                 //action設定用のpulldownをレンダリング
                 this.renderActionPulllDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
-                this.renderRemoteIdOf(order, remoteId, stateId,  unknownRcType);
+                this.renderRemoteIdOf(order, remoteId, stateId, unknownRcType);
             }
 
             /*
@@ -735,7 +737,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (!Util.JQueryUtils.isValidJQueryElement($signalsContainer)) {
@@ -748,7 +750,7 @@ module Garage {
 
                 let inputData = {
                     order: order,
-                    order_plus_one:order+1
+                    order_plus_one: order + 1
                 };
 
                 let $signalDetail = $(templateSignal(inputData));
@@ -764,12 +766,12 @@ module Garage {
             * @param stateid{number} 
             * @param inputAction? {string} プルダウンの初期値 
             */
-            private renderActionPulllDownOf(order: number,stateId:number, inputAction? : string) {
+            private renderActionPulllDownOf(order: number, stateId: number, inputAction?: string) {
                 let FUNCTION_NAME: string = TAG + "renderActionPulllDownOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 if (stateId == null) {
@@ -820,7 +822,7 @@ module Garage {
                 $actionContainer.trigger('create');
 
             }
-            
+
             /*
            * アクション設定用のpullldownMenuをgetする
            * @param order{number} 
@@ -830,7 +832,7 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
@@ -845,7 +847,7 @@ module Garage {
                     return;
                 }
 
-                let inputType : string = $actionPullDown.val();
+                let inputType: string = $actionPullDown.val();
 
                 //"none"も見つからない扱いとする。
                 if (!Util.JQueryUtils.isValidValue(inputType)) {
@@ -866,10 +868,10 @@ module Garage {
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
-                    return;;
+                    return;
                 }
 
-               
+
                 let $signalContainerElement = this.getSignalContainerElementOf(order);
                 if ($signalContainerElement == null) {
                     console.warn(FUNCTION_NAME + "$signalContainerElement is null");
@@ -886,7 +888,7 @@ module Garage {
                     $actionPullDown.val(inputType);
                 }
 
-                
+
 
             }
 
@@ -961,7 +963,7 @@ module Garage {
                 let $signalContainers: JQuery = this.$el.find(".signal-container-element");
 
                 //設定できるアクションの最大数だった場合、表示すらしない。
-                if (Util.JQueryUtils.isValidJQueryElement($signalContainers) &&  $signalContainers.length >= Object.keys(ACTION_INPUTS).length) {
+                if (Util.JQueryUtils.isValidJQueryElement($signalContainers) && $signalContainers.length >= Object.keys(ACTION_INPUTS).length) {
                     $target.addClass("gone");
                 } else {
                     $target.removeClass("gone");
@@ -974,7 +976,7 @@ module Garage {
             * this.assignedInputActionsを更新する。
             * 描画より前に必要なため、Modelから取得する
             */
-            private updateAssiendInputActionsFromModel(stateId : number) {
+            private updateAssiendInputActionsFromModel(stateId: number) {
                 let FUNCTION_NAME = TAG + "updateAssiendInputActions : ";
 
                 if (stateId == null) {
@@ -986,13 +988,13 @@ module Garage {
                 this.assignedInputActions = [];
 
                 //現状表示されている 各信号のJquery値を取得
-                let targetActions = this.getModel().state[stateId].action;
+                let targetActions = this.getModel().getStateByStateId(stateId).action;
 
-                if (targetActions == null || targetActions.length ==0) {
+                if (targetActions == null || targetActions.length == 0) {
                     return;
                 }
 
-                for (let i = 0; i<targetActions.length; i++){
+                for (let i = 0; i < targetActions.length; i++) {
                     this.assignedInputActions.push(targetActions[i].input);
                 }
 
@@ -1005,7 +1007,7 @@ module Garage {
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
-                let signalLength: number = this.getDefaultState().action.length;
+                let signalLength: number = this.getModel().getDefaultState().action.length;
 
                 //actionが1つしかない場合、削除ボタンtを削除。
                 if (signalLength <= 1) {

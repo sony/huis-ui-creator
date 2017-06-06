@@ -21,6 +21,12 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
+        namespace constValue {
+            //デフォルトとして利用されるステートのstateCollection_.models[]の配列インデックス
+            //defaultがない場合に利用される。
+            export const DEFAULT_STATE_INDEX: number = 0;
+        }
+
         export class ButtonItem extends Model.Item {
 
             remoteId: string;
@@ -125,6 +131,35 @@ module Garage {
                 }
             }
 
+            /*
+             * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
+             */
+            getDefaultState(): Model.ButtonState {
+                let FUNCTION_NAME = TAG + " getDefaultState() : ";
+
+                if (this.default !== null) {
+                    return this.getStateByStateId(this.default);
+                }
+
+                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                return this.stateCollection_.models[constValue.DEFAULT_STATE_INDEX];
+            }
+
+            /*
+             * @param {number} stateId 取得したいModel.ButtonStateのStateId
+             * @return {Model.ButtonState} 発見できない場合、nullを返す。
+             */
+            getStateByStateId(stateId: number): Model.ButtonState {
+
+                for(let targetState of this.stateCollection_.models) {
+                        if (targetState.stateId == stateId) {
+                            return targetState;
+                        }
+                }
+
+                return null;
+            }
+
             /**
              * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
              *
@@ -177,7 +212,7 @@ module Garage {
                 this.set("version", val);
             }
 
-            get interval(): number{
+            get interval(): number {
                 return this.get("interval");
             }
 
@@ -238,7 +273,7 @@ module Garage {
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);
                     if (stateModel && stateModel.action && stateModel.action.length) {
-                        for (let targetAction of stateModel.action){
+                        for (let targetAction of stateModel.action) {
                             if (targetAction && targetAction.code_db && !targetAction.deviceInfo) {
                                 // 機器情報が設定されていない場合はactionに設定されている情報をコピー
                                 targetAction.deviceInfo = {
@@ -249,7 +284,7 @@ module Garage {
                                 };
                             }
                         }
-                        
+
                     }
                 }
                 this._setStateItemsArea(this.area);
@@ -259,8 +294,8 @@ module Garage {
             /**
              * 変更可能なプロパティーの一覧
              */
-            get properties(): string[]{
-                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
+            get properties(): string[] {
+                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name", "version", "interval"];
             }
 
             // TODO: delete
@@ -290,7 +325,7 @@ module Garage {
                     default: 0,
                     currentStateId: 0,
                     state: states,
-                    name:"button",
+                    name: "button",
                 };
 
                 return button;
@@ -331,12 +366,12 @@ module Garage {
                     return;
                 }
                 var stateModel: ButtonState = new ButtonState({
-                        stateId: state.id,
-                        active: state.active,
-                        action: state.action,
-                        translate: state.translate,
-                        image: state.image,
-                        label: state.label
+                    stateId: state.id,
+                    active: state.active,
+                    action: state.action,
+                    translate: state.translate,
+                    image: state.image,
+                    label: state.label
                 });
                 this.stateCollection_.add(stateModel);
             }

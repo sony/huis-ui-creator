@@ -40,7 +40,7 @@ module Garage {
                     this.facePageHeight = options.facePageHeight;
                 }
 
-                this.modufyModules(models,this.facePageHeight);
+                this.modufyModules(models, this.facePageHeight);
             }
 
             /**
@@ -64,14 +64,14 @@ module Garage {
              * @param facePageHeight{number} 1ページ分の高さ
              * @param inifialPageIndex?{number} 追加前のページインデックス
              */
-            modufyModules(models: Module[], facePageHeight:number, inifialPageIndex? : number) {
+            modufyModules(models: Module[], facePageHeight: number, inifialPageIndex?: number) {
 
                 let offsetY = 0
                 let pageIndex = 0;
                 if (inifialPageIndex != null) {
                     pageIndex = inifialPageIndex;
                 }
-          
+
                 for (var i = 0, l = models.length; i < l; i++) {
                     let model = models[i];
                     let height = model.area.h;
@@ -94,7 +94,7 @@ module Garage {
              * @param facePageHeight{number} 1ページ分の高さ
              */
             addModules(models: Module[], facePageHeight: number) {
-                let pageCount= this.getPageCount();
+                let pageCount = this.getPageCount();
                 this.modufyModules(models, facePageHeight, pageCount);
                 super.add(models);
             }

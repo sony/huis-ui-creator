@@ -31,10 +31,10 @@ module Garage {
              * @param face{Model} エクスポート対象のリモコンのFaceモデル
              * @param masterFace{Model} エクスポート対象のリモコンのMasterFaceのfaceモデル。いっしょにエクスポートする場合に入力。
              */
-             constructor(face:Model.Face, masterFace : Model.Face= null) {
-                 this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
-                 this.targetFace = face;
-                 this.targetMasterFace = masterFace;
+            constructor(face: Model.Face, masterFace: Model.Face = null) {
+                this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
+                this.targetFace = face;
+                this.targetMasterFace = masterFace;
             }
 
 
@@ -42,81 +42,81 @@ module Garage {
              * エクスポートを実行
              * ファイル選択およびプログレスダイアログを表示し、実際のエクスポート処理を呼び出す
              */
-             exec() {
-                 let FUNCTION_NAME = TAG + "exec : ";
+            exec() {
+                let FUNCTION_NAME = TAG + "exec : ";
 
-                 
-                 let options: Util.ElectronSaveFileDialogOptions = {
-                     title: PRODUCT_NAME,
-                     filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
-                 };
-                 //ビジネス仕向けの場合、専用 拡張子で書き出す。
-                 if (Util.MiscUtil.isBz()){
-                     options = {
-                         title: PRODUCT_NAME,
-                         filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
-                     };
-                 }
 
-                 electronDialog.showSaveFileDialog(
-                     options,
-                     (file) => {
-                         if (!file ||
-                             file.length == 0) {
-                             return;
-                         }
+                let options: Util.ElectronSaveFileDialogOptions = {
+                    title: PRODUCT_NAME,
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                };
+                //ビジネス仕向けの場合、専用 拡張子で書き出す。
+                if (Util.MiscUtil.isBz()) {
+                    options = {
+                        title: PRODUCT_NAME,
+                        filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
+                    };
+                }
 
-                         let dstFile = this.fixExportFileExtension(file);
-                         if (Util.MiscUtil.isBz()){
-                             dstFile = this.fixExportFileExtensionB2B(file);
-                         }
+                electronDialog.showSaveFileDialog(
+                    options,
+                    (file) => {
+                        if (!file ||
+                            file.length == 0) {
+                            return;
+                        }
 
-                         let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
-                             src: CDP.Framework.toUrl("/templates/dialogs.html"),
-                             title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
-                         });
-                         dialog.show();
-                         //console.time("export");
-                         this.export(dstFile).then(() => {
-                             //console.timeEnd("export");
+                        let dstFile = this.fixExportFileExtension(file);
+                        if (Util.MiscUtil.isBz()) {
+                            dstFile = this.fixExportFileExtensionB2B(file);
+                        }
 
-                             //完了を示すダイアログにする。
-                             var $dialog = $(".spinner-dialog");
-                             var $spinner = $("#common-dialog-center-spinner");
+                        let dialog: CDP.UI.Dialog = new CDP.UI.Dialog("#common-dialog-spinner", {
+                            src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                            title: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_IN_EXPORTING")
+                        });
+                        dialog.show();
+                        //console.time("export");
+                        this.export(dstFile).then(() => {
+                            //console.timeEnd("export");
 
-                             $spinner.removeClass("spinner");//アイコンが回転しないようにする。
-                             $spinner.css("background-image", 'url("../res/images/icon_done.png")');
-                             $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE"));
+                            //完了を示すダイアログにする。
+                            var $dialog = $(".spinner-dialog");
+                            var $spinner = $("#common-dialog-center-spinner");
 
-                             setTimeout(() => {
-                                 dialog.close();
+                            $spinner.removeClass("spinner");//アイコンが回転しないようにする。
+                            $spinner.css("background-image", 'url("../res/images/icon_done.png")');
+                            $dialog.find("p").html($.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_DONE"));
 
-                             }, DURATION_DIALOG_CLOSE);
-                         }).fail((err) => {
-                             // 失敗
-                             this.showErrorDialog(err, FUNCTION_NAME);
-                             dialog.close();
-                         });
-                     }
-                 );
-             }
+                            setTimeout(() => {
+                                dialog.close();
 
-             /**
-              * 失敗時のダイアログを表示する。
-              * err {Error} エラー内容
-              * functionName {string} エラーが発生したfunction名
-              */
-             private showErrorDialog(err: Error, functionName: string) {
+                            }, DURATION_DIALOG_CLOSE);
+                        }).fail((err) => {
+                            // 失敗
+                            this.showErrorDialog(err, FUNCTION_NAME);
+                            dialog.close();
+                        });
+                    }
+                );
+            }
 
-                 console.error(functionName + err);
-                 electronDialog.showMessageBox({
-                     type: "error",
-                     message: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL"),
-                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                     title: PRODUCT_NAME,
-                 });
+            /**
+             * 失敗時のダイアログを表示する。
+             * err {Error} エラー内容
+             * functionName {string} エラーが発生したfunction名
+             */
+            private showErrorDialog(err: Error, functionName: string) {
 
-             }
+                console.error(functionName + err);
+                electronDialog.showMessageBox({
+                    type: "error",
+                    message: $.i18n.t("dialog.message.STR_GARAGE_DIALOG_MESSAGE_EXPORT_FAIL"),
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
+
+            }
 
             /**
              * エクスポートファイル名の拡張子がHUISリモコンファイルのものでない場合、
@@ -125,16 +125,16 @@ module Garage {
              * @param fileName {string} エクスポートファイル名
              * @return HUISリモコンファイルの拡張子付きファイル名
              */
-             private fixExportFileExtension(filePath: string): string {
-                 let fileName = path.basename(filePath);
+            private fixExportFileExtension(filePath: string): string {
+                let fileName = path.basename(filePath);
 
-                 if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length + 1 &&
-                     fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length) {
-                     return filePath;
-                 }
+                if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length + 1 &&
+                    fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE.length) {
+                    return filePath;
+                }
 
-                 return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE;
-             }
+                return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE;
+            }
 
 
             /**
@@ -144,229 +144,229 @@ module Garage {
              * @param fileName {string} エクスポートファイル名
              * @return HUISリモコンファイルの拡張子付きファイル名
              */
-             private fixExportFileExtensionB2B(filePath: string): string {
-                 let fileName = path.basename(filePath);
+            private fixExportFileExtensionB2B(filePath: string): string {
+                let fileName = path.basename(filePath);
 
-                 if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length + 1 &&
-                     fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length) {
-                     return filePath;
-                 }
+                if (fileName.length > EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length + 1 &&
+                    fileName.lastIndexOf(EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B) == fileName.length - EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B.length) {
+                    return filePath;
+                }
 
-                 return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B;
-             }
+                return filePath + "." + EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B;
+            }
 
 
             /**
              * エクスポート処理
              * @param dstFile {string} エクスポートファイルの出力先（フルパス）
              */
-             private export(dstFile: string): CDP.IPromise<void> {
-                 let df = $.Deferred<void>();
-                 let promise = CDP.makePromise(df);
+            private export(dstFile: string): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
-                 this.deleteTmpFolerAsync()
-                     .then(() => {
-                         return this.outputTemporaryFolder();
-                     }).then(() => {
-                         return this.compress(dstFile);
-                     }).then(() => {
-                         this.deleteTmpFolder();
-                         df.resolve();
-                     }).fail(() => {
-                         this.deleteTmpFolder();
-                         df.reject();
-                     });
+                this.deleteTmpFolerAsync()
+                    .then(() => {
+                        return this.outputTemporaryFolder();
+                    }).then(() => {
+                        return this.compress(dstFile);
+                    }).then(() => {
+                        this.deleteTmpFolder();
+                        df.resolve();
+                    }).fail(() => {
+                        this.deleteTmpFolder();
+                        df.reject();
+                    });
 
-                 return promise;
-             }
+                return promise;
+            }
 
             /*
              * エクスポートするファイルをzip化する前に一時フォルダに書き出しておく
              */
-             private outputTemporaryFolder(): CDP.IPromise<void> {
-                 let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
+            private outputTemporaryFolder(): CDP.IPromise<void> {
+                let FUNCTION_NAME = TAG + "outputTemporaryFolder : ";
 
-                 console.log("create temporary files: " + this.targetFace.name);
+                console.log("create temporary files: " + this.targetFace.name);
 
-                 let df = $.Deferred<void>();
-                 let promise = CDP.makePromise(df);
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
-                 if (!fs.existsSync(this.filePathBeforeCompressionFile)) {// 存在しない場合フォルダを作成。
-                     fs.mkdirSync(this.filePathBeforeCompressionFile);
-                 }
+                if (!fs.existsSync(this.filePathBeforeCompressionFile)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(this.filePathBeforeCompressionFile);
+                }
 
-                 let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId()).replace(/\\/g, "/");
-                 if (!fs.existsSync(targetRemoteIdFolderPath)) {// 存在しない場合フォルダを作成。
-                     fs.mkdirSync(targetRemoteIdFolderPath);
-                 }
+                let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId()).replace(/\\/g, "/");
+                if (!fs.existsSync(targetRemoteIdFolderPath)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(targetRemoteIdFolderPath);
+                }
 
-                 let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
-                 if (!fs.existsSync(targetRemoteIdRemoteimagesFolderPath)) {// 存在しない場合フォルダを作成。
-                     fs.mkdirSync(targetRemoteIdRemoteimagesFolderPath);
-                 }
+                let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
+                if (!fs.existsSync(targetRemoteIdRemoteimagesFolderPath)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(targetRemoteIdRemoteimagesFolderPath);
+                }
 
-                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                 let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
-                 //コピー先のファイルパス : HuisFiles以下のremoteImages
-                 let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRECTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
+                //コピー元のファイルパス ：展開されたリモコン のremoteImages
+                let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
+                //コピー先のファイルパス : HuisFiles以下のremoteImages
+                let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRECTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
 
-                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
-                     fs.mkdirSync(dst);
-                 }
+                if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(dst);
+                }
 
-                 try {
-                     
-                     //画像をコピー
-                     let syncTask = new Util.HuisDev.FileSyncTask();
-                     syncTask.copyFilesSimply(src, dst, () => {
+                try {
 
-                         let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId() );
-                         // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+                    //画像をコピー
+                    let syncTask = new Util.HuisDev.FileSyncTask();
+                    syncTask.copyFilesSimply(src, dst, () => {
 
-                         //現在のfaceを書き出す。
-                         huisFiles.updateFace(
-                             this.targetFace,
-                             cache,
-                             true,
-                             this.filePathBeforeCompressionFile).then(() => {
+                        let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId());
+                        // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+
+                        //現在のfaceを書き出す。
+                        huisFiles.updateFace(
+                            this.targetFace,
+                            cache,
+                            true,
+                            this.filePathBeforeCompressionFile).then(() => {
                                 //キャッシュファイルをコピー
                                 this.copyCache(targetRemoteIdFolderPath);
 
                                 //masterFaceがある場合、内容をコピー
-                                 if (this.targetMasterFace != null) {
-                                     return huisFiles.updateFace(
-                                         this.targetMasterFace,
-                                         cache,
-                                         true,
-                                         this.filePathBeforeCompressionFile,
-                                         true);
-                                 } else {                             
-                                     console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
-                                     df.resolve();
-                                 }
+                                if (this.targetMasterFace != null) {
+                                    return huisFiles.updateFace(
+                                        this.targetMasterFace,
+                                        cache,
+                                        true,
+                                        this.filePathBeforeCompressionFile,
+                                        true);
+                                } else {
+                                    console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                                    df.resolve();
+                                }
 
                             }).done(() => {
                                 console.log("succeeded to updateFace with fullcustom: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                 df.resolve();
                             }).fail(() => {
-                                 console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
-                                 df.reject();
+                                console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                                df.reject();
                             });
 
-                     });
-                 } catch (err) {
-                     console.error(FUNCTION_NAME + err);
-                     df.reject();
-                 }
+                    });
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
+                    df.reject();
+                }
 
-                 return promise;
-             }
+                return promise;
+            }
 
             /**
              * 圧縮対象のファイル一覧を作成
              */
-             private findCompressTargetFiles(): string[] {
-                 console.log("search target for compress] " + this.filePathBeforeCompressionFile);
-                 if (!fs.existsSync(this.filePathBeforeCompressionFile)) {
-                     return [];
-                 }
+            private findCompressTargetFiles(): string[] {
+                console.log("search target for compress] " + this.filePathBeforeCompressionFile);
+                if (!fs.existsSync(this.filePathBeforeCompressionFile)) {
+                    return [];
+                }
 
-                 let files = this.getFiles(this.filePathBeforeCompressionFile);
+                let files = this.getFiles(this.filePathBeforeCompressionFile);
 
-                 for (let i = 0; i < files.length; i++) {
-                     files[i] = path.relative(this.filePathBeforeCompressionFile, files[i]);
-                 }
+                for (let i = 0; i < files.length; i++) {
+                    files[i] = path.relative(this.filePathBeforeCompressionFile, files[i]);
+                }
 
-                 return files;
-             }
+                return files;
+            }
 
             /**
              * 対象のパス以下のファイル一覧を取得
              * @param targetPath {string} 対象パス
              */
-             private getFiles(targetPath: string): string[] {
-                 let stat = fs.lstatSync(targetPath);
-                 if (!stat.isDirectory()) {
-                     return [targetPath];
-                 }
+            private getFiles(targetPath: string): string[] {
+                let stat = fs.lstatSync(targetPath);
+                if (!stat.isDirectory()) {
+                    return [targetPath];
+                }
 
-                 let tmpPath: string[] = [];
-                 let children: string[] = fs.readdirSync(targetPath);
-                 for (let child of children) {
-                     tmpPath = tmpPath.concat(this.getFiles(path.join(targetPath, child)));
-                 }
+                let tmpPath: string[] = [];
+                let children: string[] = fs.readdirSync(targetPath);
+                for (let child of children) {
+                    tmpPath = tmpPath.concat(this.getFiles(path.join(targetPath, child)));
+                }
 
-                 return tmpPath;
-             }
+                return tmpPath;
+            }
 
 
             /**
              * 圧縮処理
              * @param dstFile {string} 出力ファイル名（フルパス）
              */
-             private compress(dstFile: string): CDP.IPromise<void> {
-                 console.log("compress: " + dstFile);
-                 let df = $.Deferred<void>();
-                 let promise = CDP.makePromise(df);
+            private compress(dstFile: string): CDP.IPromise<void> {
+                console.log("compress: " + dstFile);
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
-                 let files: string[];
-                 try {
-                     files = this.findCompressTargetFiles();
-                 } catch (e) {
-                     console.error("failed to find temporary files for compress: " + e);
-                     df.reject();
-                     return promise;
-                 }
+                let files: string[];
+                try {
+                    files = this.findCompressTargetFiles();
+                } catch (e) {
+                    console.error("failed to find temporary files for compress: " + e);
+                    df.reject();
+                    return promise;
+                }
 
-                 ZipManager.compress(files, this.filePathBeforeCompressionFile, dstFile)
-                     .done(() => { df.resolve(); })
-                     .fail(() => { df.reject(); });
+                ZipManager.compress(files, this.filePathBeforeCompressionFile, dstFile)
+                    .done(() => { df.resolve(); })
+                    .fail(() => { df.reject(); });
 
-                 return promise;
-             }
+                return promise;
+            }
 
 
 
             /*
             * エクスポートにつかう一時ファイルを削除する。
             */
-             private deleteTmpFolder() {
-                 console.log("delete temporary files");
+            private deleteTmpFolder() {
+                console.log("delete temporary files");
                 let FUNCTION_NAME = TAG + "deleteTmpFolder : ";
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.deleteDirectory(this.filePathBeforeCompressionFile);
-             }
+            }
 
 
             /**
              * エクスポートに使う一時ファイルを非同期に削除する。
              */
-             private deleteTmpFolerAsync(): CDP.IPromise<void> {
-                 let df = $.Deferred<void>();
-                 let promise = CDP.makePromise(df);
+            private deleteTmpFolerAsync(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
 
-                 let syncTask = new Util.HuisDev.FileSyncTask();
-                 if (fs.existsSync(this.filePathBeforeCompressionFile)) {
-                     syncTask.deleteDirectory(this.filePathBeforeCompressionFile, (err) => {
-                         if (err) {
-                             df.reject();
-                         } else {
-                             df.resolve();
-                         }
-                     });
-                 } else {
-                     df.resolve();
-                 }
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                if (fs.existsSync(this.filePathBeforeCompressionFile)) {
+                    syncTask.deleteDirectory(this.filePathBeforeCompressionFile, (err) => {
+                        if (err) {
+                            df.reject();
+                        } else {
+                            df.resolve();
+                        }
+                    });
+                } else {
+                    df.resolve();
+                }
 
-                 return promise;
-             }
+                return promise;
+            }
 
             /*
             * エクスポート対象のキャッシュを一時フォルダにコピーする。
             * @param コピー先のフォルダ
             * @return キャッシュファイルがないときnullを変えす。
             */
-            private copyCache(filePath : string) {
+            private copyCache(filePath: string) {
                 let FUNCITON_NAME = TAG + "copyCache : ";
 
                 try {
@@ -387,7 +387,7 @@ module Garage {
                     console.error(FUNCITON_NAME + "error occur : " + err);
                     return null;
                 }
-             }
+            }
 
 
             /*
@@ -395,7 +395,7 @@ module Garage {
              * @return remoteId{string}
              */
             private getTargetRemoteId() {
-                let FUNCTION_NAME =TAG +  " getRemoteId() : ";
+                let FUNCTION_NAME = TAG + " getRemoteId() : ";
 
                 if (this.targetFace == null) {
                     console.error(FUNCTION_NAME + "this.targetFace is invalid");
@@ -403,7 +403,7 @@ module Garage {
 
                 return this.targetFace.remoteId;
             }
-            
+
 
         }
     }

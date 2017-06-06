@@ -58,7 +58,7 @@ module Garage {
                 data['checkHomeAsHomeRadio'] = checkHomeAsHomeRadio;
 
                 data['allowAccessToStorage'] = this.model.allowAccessToStorage;
-                
+
 
                 let $dialog = $(jst(data));
 

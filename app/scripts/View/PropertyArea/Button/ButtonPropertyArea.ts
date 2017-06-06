@@ -26,12 +26,6 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-        namespace constValue {
-            //デフォルトとして利用されるステートのbutton.state[]の配列インデックス
-            //this.model.defaultがない場合に利用される。
-            export const DEFAULT_STATE_INDEX : number = 0;
-        }
-
         export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -57,17 +51,17 @@ module Garage {
             /**
              * constructor
              */
-            constructor(button: Model.ButtonItem, templateDomId: string, $el:JQuery, commandManager : CommandManager) {
+            constructor(button: Model.ButtonItem, templateDomId: string, $el: JQuery, commandManager: CommandManager) {
                 //TODO : 
                 //ボタンのプロパティエリアをリファクタする際には、
                 //this.$elはrender()でテンプレートから生成し、呼び出し元でappend(render().$el)という形で呼び出す形に統合したいので
                 //ここのel : $elは消す。
-                super(button, templateDomId, commandManager, { el : $el });
+                super(button, templateDomId, commandManager, { el: $el });
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
             }
 
 
-           
+
 
 
 
@@ -78,7 +72,7 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
@@ -88,7 +82,7 @@ module Garage {
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
                 if (Util.JQueryUtils.isValidJQueryElement($target)) {
-                    $target.css("opacity","1");
+                    $target.css("opacity", "1");
                 }
             }
 
@@ -126,7 +120,7 @@ module Garage {
             public setStates(inputStates: Model.ButtonState[]) {
                 let FUNCTION_NAME = "setState";
 
-                if (inputStates == null){
+                if (inputStates == null) {
                     console.warn(FUNCTION_NAME + "inputStates is null");
                     return;
                 }
@@ -139,37 +133,14 @@ module Garage {
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            /*
-             * デフォルトで表示するStateを取得する。存在場合nullを返す。
-             */
-            protected getDefaultState(): Model.ButtonState {
-                let FUNCTION_NAME = TAG + " getDefaultState() : ";
-
-                let states: Model.ButtonState[] = this.getModel().state;
-
-                if (states == null || states.length == 0){
-                    console.warn(FUNCTION_NAME + "states is invalid");
-                    return null
-                }
-
-                for (let targetState of states) {
-                    if (targetState.stateId == this.getDefaultStateId()) {
-                        return targetState;
-                    }
-                }
-
-                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
-                return this.getModel().state[constValue.DEFAULT_STATE_INDEX];
-            }
-
 
             /*
              *@return {number} ボタンに設定されているデフォルトのstateIdを取得
             */
-            protected getDefaultStateId(): number{
-                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+            protected getDefaultStateId(): number {
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
                 if (this.getModel().default == null) {
-                    return this.getModel().state[constValue.DEFAULT_STATE_INDEX].stateId;
+                    return this.getModel().getDefaultState().stateId;
                 }
                 return this.getModel().default;
             }
@@ -202,7 +173,7 @@ module Garage {
                 return stateData;
             }
 
-          
+
             /*
            * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
            * @param $target{JQuery} 対象となるJQuery
@@ -218,7 +189,7 @@ module Garage {
 
                 let result: number = parseInt(JQUtils.data($target, "signalOrder"), 10);
 
-                if (! this.isValidOrder(result)) {
+                if (!this.isValidOrder(result)) {
                     console.warn(FUNCTION_NAME + "result is invalid");
                     return undefined;
                 }
@@ -295,7 +266,7 @@ module Garage {
             * @param order{number}
             * @return {JQuery}
             */
-            protected getRemoteIdPullDownJQueryElement(order : number):JQuery{
+            protected getRemoteIdPullDownJQueryElement(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
                 if (!this.isValidOrder(order)) {
@@ -361,11 +332,11 @@ module Garage {
 
 
 
-         /**
-          * 入力したorderのremoteプルダウンに、inputの値を代入する。
-          * order{number} ： マクロ信号の順番
-          * inputRemoteId{string} : プルダウンに設定する値。
-          */
+            /**
+             * 入力したorderのremoteプルダウンに、inputの値を代入する。
+             * order{number} ： マクロ信号の順番
+             * inputRemoteId{string} : プルダウンに設定する値。
+             */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
 
@@ -410,8 +381,9 @@ module Garage {
 
                     let $additionalRemote = $(additionalRemoteTemplrate(inputSignalData));
                     $remoteIdPullDown.prepend($additionalRemote);
-                   
+
                 }
+
 
                 $remoteIdPullDown.val(inputRemoteId);
             }
@@ -441,7 +413,7 @@ module Garage {
             * @param order{number}
             * @return {string} プルダウンに表示されている文字列
             */
-            protected getTextInRemoteIdOf(order: number) :string{
+            protected getTextInRemoteIdOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
                 if (!this.isValidOrder(order)) {
@@ -497,7 +469,7 @@ module Garage {
             * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
             * @param {string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -513,7 +485,7 @@ module Garage {
                 if ($target == null || $target.length == 0) {
                     console.warn("$target is undefined");
                     return;
-                }               
+                }
 
                 //RemoteIdプルダウンのDOMを表示。
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
@@ -530,10 +502,10 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (Util.JQueryUtils.isValidValue(inputRemoteId) ) {
+                    if (Util.JQueryUtils.isValidValue(inputRemoteId)) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
-                    }else{
+                    } else {
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
                         let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this._getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
@@ -696,7 +668,7 @@ module Garage {
              * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
              * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
              */
-            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -724,10 +696,10 @@ module Garage {
                         functions = $.extend(true, [], [functionName]);
                     }
                 } else {
-                  
+
                     //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
                     functions = $.extend(true, [], this.getFunctionsOf(order));
-                    
+
                 }
 
                 if (functions != null && functions.length != 0) {
@@ -771,8 +743,8 @@ module Garage {
             * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
             * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
             */
-            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo{
-                let FUNCTION_NAME = TAG + "cloneDeviceInfo"; 
+            protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo {
+                let FUNCTION_NAME = TAG + "cloneDeviceInfo";
 
                 if (!Util.JQueryUtils.isValidValue(src)) {
                     console.warn(FUNCTION_NAME + "src is invalid");
@@ -812,7 +784,7 @@ module Garage {
                     return false;
                 }
 
-            } 
+            }
 
             /*
             * 設定したOrderのfunction用PullDownを消す。
@@ -840,7 +812,7 @@ module Garage {
            * @param stateId? {number} 信号リストを取得したい、ボタンのstate
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
-            protected getFunctionsOf(order: number, stateId? : number) {
+            protected getFunctionsOf(order: number, stateId?: number) {
                 let FUNCTION_NAME = TAG + "getFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -877,7 +849,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId: number = this.getDefaultStateId(), page: number = -1) {
+            protected renderPagesOf(order: number, stateId: number, page: number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -1100,13 +1072,13 @@ module Garage {
                 $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
             }
 
-          
-          /*
-           * ＋ボタンを押下する際のアニメーション. 
-           * @param order{number} 出現するdom のorder
-           * @param duration{number} アニメーションのduration
-           */
-            protected animateAddButton(order: number, duration:number, callback? : Function) {
+
+            /*
+             * ＋ボタンを押下する際のアニメーション. 
+             * @param order{number} 出現するdom のorder
+             * @param duration{number} アニメーションのduration
+             */
+            protected animateAddButton(order: number, duration: number, callback?: Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
 
 
@@ -1129,11 +1101,11 @@ module Garage {
                 let tmpSignalContainerDuration = $target.css("transition-duration");
                 this.setAnimationDuration($target, duration / 1000);
                 $target.removeClass("before-add-animation");
-                
-                
+
+
                 setTimeout(
                     () => {
-                        $target.find(".delete-signal-area").removeClass("show");;
+                        $target.find(".delete-signal-area").removeClass("show");
                         $target.find(".sort-button-area").removeClass("show");
                     }
                     , DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS
@@ -1191,7 +1163,7 @@ module Garage {
 
                 //durationを設定,対象を透明に
                 let tmpTargetDuration = $target.css("transition-duration");
-                let tmpTargetMarginBottom = parseInt ($target.css("transition-duration").replace("px",""),10);
+                let tmpTargetMarginBottom = parseInt($target.css("transition-duration").replace("px", ""), 10);
                 this.setAnimationDuration($target, duration / 1000);
                 $target.css("opacity", "0");
                 $target.css("margin-bottom", tmpTargetMarginBottom - $target.outerHeight(true) + "px");
@@ -1236,7 +1208,7 @@ module Garage {
              * 対象のJQueryのoffset座標系でのpositionを取得する
              * 
              */
-            protected getPosition($target: JQuery): IPosition{
+            protected getPosition($target: JQuery): IPosition {
                 let FUNCTION_NAME = TAG + "getPosition : ";
 
                 if (!Util.JQueryUtils.isValidJQueryElement($target) || $target.offset() == null) {
@@ -1260,9 +1232,9 @@ module Garage {
              * @param $target2 {JQuery}
              * @param duration {number} アニメーションの期間 [ms]
              */
-            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration : number) {
+            protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
-                
+
 
                 if (!Util.JQueryUtils.isValidJQueryElement($target1)) {
                     console.warn(FUNCTION_NAME + "$target1 is invalid");
@@ -1284,18 +1256,18 @@ module Garage {
                 this.setAnimationDuration($target1, duration / 1000);
                 this.setAnimationDuration($target2, duration / 1000);
 
-                
+
                 //移動
                 $target1.css("transform", "translateX(" + (target2Position.x - target1Position.x) + "px)");
                 $target2.css("transform", "translateX(" + (target1Position.x - target2Position.x) + "px)");
                 $target1.css("transform", "translateY(" + (target2Position.y - target1Position.y) + "px)");
                 $target2.css("transform", "translateY(" + (target1Position.y - target2Position.y) + "px)");
 
-                setTimeout(()=>{
+                setTimeout(() => {
                     //durationをセット。
                     $target1.css("transition-duration", tmpTarget1Duration);
                     $target2.css("transition-duration", tmpTarget2Duration);
-                },duration);
+                }, duration);
             }
 
 
@@ -1305,7 +1277,7 @@ module Garage {
              * order {number} チェックするorder情報
              * @return true:orderとして有効、false:orderとして利用不可。
              */
-            protected isValidOrder(order: number):boolean {
+            protected isValidOrder(order: number): boolean {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
 
                 //値として利用できるかチェック
@@ -1336,7 +1308,7 @@ module Garage {
             * @param remoteId{string} deviceInfoを取得したいremoteId
             * @return {IButtonDeviceInfo} 見つからなかった場合nullを返す。
             */
-            protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo{
+            protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "isCachedMenberRemoteId : ";
 
                 if (!Util.JQueryUtils.isValidValue(remoteId)) {
@@ -1346,11 +1318,11 @@ module Garage {
 
 
                 //modelのアクション中のdeviceInfo
-                for (let action of this.getDefaultState().action) {
-                    let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
+                for (let action of this.getModel().getDefaultState().action) {
+                    let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
-                        
+
                     }
 
                 }

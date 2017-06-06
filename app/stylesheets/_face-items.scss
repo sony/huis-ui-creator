@@ -22,49 +22,47 @@
     box-sizing: border-box;
 
     #face-pages-area {
-        width : $SIZE_FACE_PAGES_AREA_WIDTH;
+        width: $SIZE_FACE_PAGES_AREA_WIDTH;
         height: $SIZE_FACE_PAGES_AREA_HEIGHT;
-        margin-top :$SIZE_FACE_PAGES_AREA_MARING_TOP;
+        margin-top: $SIZE_FACE_PAGES_AREA_MARING_TOP;
     }
 
     .image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした
         position: absolute;
         z-index: -10;
     }
-
 }
 
 #face-canvas-inner {
-    position:relative;
+    position: relative;
     padding: $SIZE_CANVAS_INNER_PADDING_TOP $SIZE_CANVAS_INNER_PADDING_LEFT 0 $SIZE_CANVAS_INNER_PADDING_RIGHT;
 }
 
-#face-name-area{
+#face-name-area {
     position: relative;
     width: $SIZE_FACE_NAME_AREA_WIDTH;
     //height: $SIZE_FACE_NAME_AREA_HEIGHT;
     margin: 0 auto;
 
-    #input-face-name{
+    #input-face-name {
         background-clip: padding-box;
-        background : none;
-        border-color :$COLOR_NAME_AREA_BORDER;
-
+        background: none;
+        border-color: $COLOR_NAME_AREA_BORDER;
         width: 100%;
-        text-align:center;
+        text-align: center;
         font-size: $FONT_SIZE_CANVAS_NAME_AREA;
-        font-family:$FONT_WEIGHT_BUTTON_ITEM;
-        
-        &:hover{
-            background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
+        font-family: $FONT_WEIGHT_BUTTON_ITEM;
+
+        &:hover {
+            background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
             //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
         }
 
-        &:focus{
-            outline:none;
-            background-color:$COLOR_FACE_PAGES_AREA_BACKGROUND;
+        &:focus {
+            outline: none;
+            background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
             //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
-        }     
+        }
     }
 }
 
@@ -76,8 +74,8 @@
 }
 
 .face-page {
-    width:$SIZE_FACE_PAGE_WIDTH;
-    height:$SIZE_FACE_PAGE_HEIGHT;
+    width: $SIZE_FACE_PAGE_WIDTH;
+    height: $SIZE_FACE_PAGE_HEIGHT;
     border-bottom: $SIZE_FACE_PAGE_SEPARATOR_BOARDER_THICKNESS solid $COLOR_FACE_PAGE_SEPARATOR_BOARDER;
     color: black;
 }
@@ -97,28 +95,28 @@
 
 #page-count {
     margin: 0 8px;
-    text-align:center;
+    text-align: center;
     color: #333333;
     font-size: 20px;
-    visibility:hidden;
+    visibility: hidden;
 }
 
 #button-add-page {
     position: absolute;
     width: $SIZE_BUTTON_ADD_PAGE_WIDTH;
     height: $SIZE_BUTTON_ADD_PAGE_HEIGHT;
-    right:$SIZE_BUTTON_ADD_PAGE_RIGHT;
-    bottom:$SIZE_BUTTON_ADD_PAGE_BOTTOM;
-    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;    
+    right: $SIZE_BUTTON_ADD_PAGE_RIGHT;
+    bottom: $SIZE_BUTTON_ADD_PAGE_BOTTOM;
+    font-size: $FONT_SIZE_ADD_PAGE_BUTTON;
 }
 
-.module-separator{
+.module-separator {
     margin: 0 auto;
     text-align: center;
     font-size: $SIZE_MODULE_SEPARATOR_FONT_SIZE;
     font-weight: normal;
-    left:0px;
-    top:0px;
+    left: 0px;
+    top: 0px;
     width: $SIZE_MODULE_SEPARATOR_WIDTH;
     height: auto;
     padding-top: $SIZE_MODULE_SEPARATOR_PADDING_TOP;
@@ -140,12 +138,12 @@
     text-shadow: none;
 }
 
-.label-item{
-    font-family:$FONT_WEIGHT_LABEL_ITEM;
+.label-item {
+    font-family: $FONT_WEIGHT_LABEL_ITEM;
 }
 
 .state-label {
-    font-family:$FONT_WEIGHT_BUTTON_ITEM;
+    font-family: $FONT_WEIGHT_BUTTON_ITEM;
 }
 
 .label-value,
@@ -158,7 +156,7 @@
 .image-item,
 .state-image {
     position: absolute;
-    background-position:center;
+    background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -168,7 +166,7 @@
 }
 
 .image-stretch {
-    background-size:100% 100%;
+    background-size: 100% 100%;
 }
 
 .button-state {
@@ -176,7 +174,7 @@
 }
 
 .button-state.active {
-    display:block;
+    display: block;
 }
 
 .selected-item {
