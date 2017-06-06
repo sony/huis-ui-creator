@@ -4878,7 +4878,7 @@ module Garage {
                         this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
                     }
                     $detail.append(this.propertyArea_.render().$el);
-                    
+
                 } else {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
@@ -4896,7 +4896,7 @@ module Garage {
                     return null;
                 }
 
-                let changedModel : Model.Item = this.propertyArea_.getModel();
+                let changedModel: Model.Item = this.propertyArea_.getModel();
                 if (!Util.JQueryUtils.isValidValue(changedModel)) {
                     console.warn(FUNCTION_NAME + "this.propertyArea is invalid");
                     return null;
@@ -5003,7 +5003,7 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    
+
                     this.macroProperty = new MacroButtonPropertyArea(
                         button,
                         $buttonDetail,
@@ -5310,7 +5310,7 @@ module Garage {
                         this.faceRenderer_canvas_.getRemoteId(),
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules()
-                        );
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
                 } else {

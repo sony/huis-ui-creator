@@ -30,30 +30,30 @@ module Garage {
         export abstract class PropertyArea extends Backbone.View<Model.Item> {
 
             private commandManager_: CommandManager;
-            protected template_ : CDP.Tools.JST;
+            protected template_: CDP.Tools.JST;
 
             /**
              * constructor
              */
-            constructor(item : Model.Item, templateDomId:string, commandManager:CommandManager, options? : Backbone.ViewOptions<Model.Item>) {
+            constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
                 super({
                     model: item,
                     el: (options != null && options.el != null) ? options.el : null //TODO:ボタンのプロパティエリア整理後は削除。詳しくはButtonPropertyArea.tsのconstructorにて。
                 });
                 this.commandManager_ = commandManager;
-                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());  
+                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
 
 
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
 
-            abstract render(option? : any): Backbone.View<Model.Item>;
+            abstract render(option?: any): Backbone.View<Model.Item>;
 
 
             /*
@@ -103,7 +103,7 @@ module Garage {
              * ただし、重たい処理なので、全てプルダウンをレンダリングした後に1度だけ呼ぶこと。
              * @param {JQuery} $target プルダウンを内包しているDOMのJQuery
              */
-            protected _adaptJqueryMobileStyleToPulldown($target : JQuery) {
+            protected _adaptJqueryMobileStyleToPulldown($target: JQuery) {
                 let pulldownContainerDomClass = ".custom-select";
                 $target.find(pulldownContainerDomClass).trigger('create');
             }

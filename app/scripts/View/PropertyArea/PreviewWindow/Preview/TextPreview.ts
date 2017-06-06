@@ -24,7 +24,7 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.TextPreview] ";
 
         namespace constValue {
-            
+
             export const TEMPLATE_DOM_ID: string = "#template-text-preview";
             export const DOM_ID: string = "#text-preview";
 
@@ -33,7 +33,7 @@ module Garage {
             export const SIZE_PULLDOWM_SELECT_DOM_ID: string = "#select-text-size";
             export const TEMPLATE_SIZE_PULLDOWN_DOM_ID: string = "#template-text-size-pullldown";
             export const SIZE_PULLLDOWN_VALUES: number[] = [
-                12, 14, 16, 18, 20, 23, 28, 30, 32, 36, 
+                12, 14, 16, 18, 20, 23, 28, 30, 32, 36,
                 40, 44, 48, 54, 60, 72, 80, 88, 96
             ];
 
@@ -55,8 +55,8 @@ module Garage {
                 // Please add events
                 return {
                     //TODO : constValueを流用したい。しかし、stringのように + でつなぐだけではうまくいかなかった。
-                    "change #select-text-size" : "_onTextSizePulldownChanged", 
-                    "change #text-field" : "_onTextFieldChanged"
+                    "change #select-text-size": "_onTextSizePulldownChanged",
+                    "change #text-field": "_onTextFieldChanged"
                 };
             }
 
@@ -105,7 +105,7 @@ module Garage {
             /*
              * @return {number} テキストサイズ変更用プルダウンの値を取得する。
              */
-            getTextSize(): number{
+            getTextSize(): number {
                 return this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val();
             }
 

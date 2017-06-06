@@ -25,16 +25,16 @@ module Garage {
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-label-property-area";
-        } 
+        }
 
         export class LabelPropertyArea extends PropertyArea {
 
-            private labelPreviewWindow_ : LabelPreviewWindow;
+            private labelPreviewWindow_: LabelPreviewWindow;
 
             /**
              * constructor
              */
-            constructor(label:Model.LabelItem, commandManager:CommandManager) {
+            constructor(label: Model.LabelItem, commandManager: CommandManager) {
                 super(label, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
 
@@ -49,25 +49,25 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
 
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = this.labelPreviewWindow_.getTextSize();
-                this._setMementCommand(this.getModel(), { "size" : this.getModel().size }, { "size" : changedSize })
+                this._setMementCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
             }
 
 
             private _onTextFieldChanged(event: Event) {
                 let changedText = this.labelPreviewWindow_.getText();
-                this._setMementCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText})
+                this._setMementCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
             }
 
 
             render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : "; 
+                let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));

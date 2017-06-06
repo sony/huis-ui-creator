@@ -30,12 +30,12 @@ module Garage {
 
         export class LabelPreviewWindow extends PreviewWindow {
 
-            private textPreview_ : TextPreview;
+            private textPreview_: TextPreview;
 
             /**
              * constructor
              */
-            constructor(label : Model.LabelItem) {
+            constructor(label: Model.LabelItem) {
                 super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
                 this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
@@ -46,7 +46,7 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
