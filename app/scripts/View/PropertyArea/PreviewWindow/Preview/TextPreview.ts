@@ -79,7 +79,7 @@ module Garage {
 
             render(option?: any): Backbone.View<Model.Item> {
                 let FUNCTIN_NAME = TAG + "render ";
-
+                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
 
@@ -97,7 +97,7 @@ module Garage {
                 }
 
                 this.$el.i18n();//localize text
-
+                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             };
 

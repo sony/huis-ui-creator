@@ -88,6 +88,7 @@ module Garage {
 
             private bindedLayoutPage = null;
 
+            private propertyArea_: PropertyArea;
             private macroProperty: MacroButtonPropertyArea;
             private buttonProperty: NormalButtonPropertyArea;
             private jumpProperty: JumpButtonPropertyArea;
@@ -125,6 +126,7 @@ module Garage {
                 requirejs(["garage.view.fullcustomcommand"], () => {
 
                     super.onPageShow(event, data);
+                    this.propertyArea_ = null;
                     this.macroProperty = null;
                     this.buttonProperty = null;
                     this.jumpProperty = null;
@@ -4717,6 +4719,11 @@ module Garage {
                 this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
+                if (this.propertyArea_ != null) {
+                    this.propertyArea_.stopListening(this.propertyArea_.getModel());
+                    this.propertyArea_.remove();
+                    this.propertyArea_ = null;
+                }
 
                 //ボタン用のプロパティのインスタンスを削除
                 if (this.buttonProperty != null) {
@@ -4868,11 +4875,16 @@ module Garage {
                     $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 
                 } else if (item instanceof Model.LabelItem) {
-                    let labelPropertyArea: LabelPropertyArea = new LabelPropertyArea(
-                        item,
-                        this.commandManager_ 
-                    )
-                    $detail.append(labelPropertyArea.render().$el);
+
+                    if (this.propertyArea_ == null) {
+                        this.propertyArea_ = new LabelPropertyArea(
+                            item,
+                            this.commandManager_
+                        )
+                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                    }
+                    $detail.append(this.propertyArea_.render().$el);
+                    
                 } else {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
@@ -4882,6 +4894,23 @@ module Garage {
                 $('.custom-select').trigger('create');
                 
             }
+
+
+            private _updateElementsOnCanvasProperyAreaChanged() {
+                let FUNCTION_NAME = TAG + "_updateElementsOnCanvasProperyAreaChanged : ";
+                if (this.propertyArea_ == null) {
+                    return null;
+                }
+
+                let changedModel : Model.Item = this.propertyArea_.getModel();
+                if (!Util.JQueryUtils.isValidValue(changedModel)) {
+                    console.warn(FUNCTION_NAME + "this.propertyArea is invalid");
+                    return null;
+                }
+
+                this._updateItemElementsOnCanvas([changedModel]);
+            }
+
 
             /**
              * ページの背景の詳細編集エリアの表示
