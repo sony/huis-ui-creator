@@ -4720,7 +4720,7 @@ module Garage {
                 this.currentTargetButtonStatesUpdated_ = false;
 
                 if (this.propertyArea_ != null) {
-                    this.propertyArea_.stopListening(this.propertyArea_.getModel());
+                    this.stopListening(this.propertyArea_.getModel());
                     this.propertyArea_.remove();
                     this.propertyArea_ = null;
                 }
