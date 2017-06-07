@@ -105,7 +105,7 @@ module Garage {
                     options,
                     (imageFiles: string[]) => {
                         if (!imageFiles || !imageFiles.length) {
-                            return;
+                            df.reject(null);
                         }
                         //画像ファイルダイアログが表示されると、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、直後にフォーカスを設定しなおす。
