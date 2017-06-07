@@ -65,7 +65,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
-                this.$el.append(this.template_(this.model));
+                this.$el.append(this.template_());
                 this.$el.find(this.imagePreview_.getDomId()).append(this.imagePreview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
