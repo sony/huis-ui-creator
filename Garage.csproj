@@ -313,6 +313,7 @@
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\JumpButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\MacroButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\NormalButtonPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\PropertyAreaFactory.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
     <TypeScriptCompile Include="app\scripts\View\VersionDialog.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
