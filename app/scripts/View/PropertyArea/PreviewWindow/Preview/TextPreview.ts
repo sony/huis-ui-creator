@@ -51,11 +51,10 @@ module Garage {
 
             events() {
                 // Please add events
-                return {
-                    //TODO : constValueを流用したい。しかし、stringのように + でつなぐだけではうまくいかなかった。
-                    "change #select-text-size": "_onTextSizePulldownChanged",
-                    "change #text-field": "_onTextFieldChanged"
-                };
+                let events: Object = {};
+                events["change " + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
+                events["change " + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
+                return events;
             }
 
 
