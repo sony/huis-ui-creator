@@ -37,7 +37,7 @@ module Garage {
                 this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);
 
                 this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
-                this.listenTo(this.getModel(), "change:path", this.render);
+                this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
 
 
