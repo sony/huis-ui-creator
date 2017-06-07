@@ -56,7 +56,7 @@ module Garage {
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
 
-                this._setMementCommand(
+                this._setMementoCommand(
                     this.getModel(),
                     {
                         "path": this.getModel().path,
