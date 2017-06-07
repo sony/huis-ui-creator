@@ -251,7 +251,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 値が有効か判定する。
              * @return {boolen} nullでも、"none"でも、""でも、NaNでもない場合、trueを返す。
              */
@@ -269,7 +269,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * JQuery要素が有効か判定する
              * @param $target{JQuery}判定対象
              * @return {boolean} 有効な場合、true
