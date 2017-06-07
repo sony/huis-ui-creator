@@ -23,7 +23,7 @@ module Garage {
         }
 
         export class JQueryUtils {
-            
+
 
             /**
              * jQuery オブジェクトで選択された DOM の data 属性を取得する。
