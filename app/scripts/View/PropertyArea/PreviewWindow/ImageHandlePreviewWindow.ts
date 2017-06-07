@@ -63,7 +63,7 @@ module Garage {
             abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
+            /**
              * @return {string} DOM全体を示すIDを返す。
              */
             getDomId(): string {
@@ -71,7 +71,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} 一時的なファイルパスを返す。
              */
             getTmpImagePath(): string {
@@ -84,7 +84,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * エクスプローラー/ファインダーから画像を選択する。
              * @return {CDP.IPromise<string>} 成功時 アプリ用のフォルダへコピー済みの 選択された画像の絶対パスを返す。失敗時 nullを返す。
              */
@@ -140,7 +140,7 @@ module Garage {
 
 
 
-            /*
+            /**
              * @param {string} レンダリング元の画像パス
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
@@ -170,7 +170,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルの拡張子が対応していない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -196,7 +196,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルのが大きすぎる場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -217,7 +217,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルサポート外のJpegだった場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -243,7 +243,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルがJpeg形式だが中身がJpegでない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -268,7 +268,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 何らかのトラブルでファイルが読めない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
