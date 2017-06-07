@@ -72,17 +72,7 @@ module Garage {
 
             render(): LabelItem {
                 this.collection.each((item: Model.LabelItem, index: number) => {
-                    let label: Model.LabelItem = $.extend(true, {}, item);
-                    //label.resolvedColor = this._getResolvedColor(label.color);
-
-                    //HUISとGarageで大きさが異なるために表示用に補正する。
-                    let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
-
-                    modelForDisplay.size = JQUtils.getOffsetTextLabelSize(label.size);
-
-
-                    modelForDisplay.resolvedColor = item.resolvedColor;
-                    this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
+                    this.$el.append($(this.labelItemTemplate_(item)));
                 });
                 return this;
             }
@@ -106,12 +96,7 @@ module Garage {
              * collection に LabelItem が追加されたら、追加分をレンダリングする
              */
             private _renderNewModel(model: Model.LabelItem) {
-                var label: Model.LabelItem = $.extend(true, {}, model);
-                label.resolvedColor = model.resolvedColor;
-                let modelForDisplay: Model.LabelItem = jQuery.extend(true, {}, label);
-                //HUISとGarageで大きさが異なるために表示用に補正する。
-                modelForDisplay.size = JQUtils.getOffsetTextLabelSize(label.size);
-                this.$el.append($(this.labelItemTemplate_(modelForDisplay)));
+                this.$el.append($(this.labelItemTemplate_(model)));
             }
         }
     }
