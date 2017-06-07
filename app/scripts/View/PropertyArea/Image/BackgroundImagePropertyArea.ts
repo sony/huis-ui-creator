@@ -36,8 +36,8 @@ module Garage {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
 
-                //this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
-                //this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
+                this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
+                this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
 
 
@@ -48,23 +48,25 @@ module Garage {
                 };
             }
 
-            /*
+
             private _onImageFilePathChanged(event: Event) {
-                //let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath: string = this.backgroundImagePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
-                let changedImageFileRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
+                let changedImageFileRelativePath = path.join(this.getModel().getNotDefaultImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
                     this.getModel(),
                     {
+                        "enabled": this.getModel().enabled,
                         "path": this.getModel().path,
                         "resizeOriginal": this.getModel().resizeOriginal
                     },
                     {
+                        "enabled": true,
                         "path": changedImageFileRelativePath,
                         "resizeOriginal": changedImageFileRelativePath
                     });
-            }*/
+            }
 
 
             render(): Backbone.View<Model.Item> {
