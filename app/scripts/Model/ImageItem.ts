@@ -246,7 +246,7 @@ module Garage {
             }
 
             get properties(): string[] {
-                return ["enabled", "area", "path", "resizeMode"];
+                return ["enabled", "area", "path", "resizeMode", "resizeOriginal"];
             }
 
             get itemType(): string {
@@ -329,8 +329,10 @@ module Garage {
                         // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
                         let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
                         garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
+                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     } else {
                         garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     }
                 } else {
                     if (this.remoteId_ === "common") {
@@ -342,12 +344,14 @@ module Garage {
                             resizeMode: "contain",
                             resolvedOriginalPath: resolvedOriginalPath
                         };
+                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     } else {
                         garageExtensions = {
                             original: val,
                             resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
                             resizeMode: "contain"
                         };
+                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     }
                 }
                 this.garageExtensions = garageExtensions;
