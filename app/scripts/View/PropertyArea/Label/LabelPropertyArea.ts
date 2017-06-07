@@ -31,9 +31,7 @@ module Garage {
 
             private labelPreviewWindow_: LabelPreviewWindow;
 
-            /**
-             * constructor
-             */
+
             constructor(label: Model.LabelItem, commandManager: CommandManager) {
                 super(label, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);

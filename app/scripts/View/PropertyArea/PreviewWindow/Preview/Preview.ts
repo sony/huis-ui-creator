@@ -33,9 +33,6 @@ module Garage {
             protected domId_: string;
 
 
-            /**
-             * constructor
-             */
             constructor(item : Model.Item, domId:string, templateDomId:string, options? : Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;

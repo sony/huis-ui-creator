@@ -32,9 +32,7 @@ module Garage {
 
             private textPreview_: TextPreview;
 
-            /**
-             * constructor
-             */
+
             constructor(label: Model.LabelItem) {
                 super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);

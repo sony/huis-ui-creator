@@ -43,9 +43,7 @@ module Garage {
 
         export class TextPreview extends Preview {
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.LabelItem) {
                 super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
             }

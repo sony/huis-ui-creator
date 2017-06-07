@@ -32,9 +32,7 @@ module Garage {
             private commandManager_: CommandManager;
             protected template_: CDP.Tools.JST;
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
                 super({
                     model: item,
