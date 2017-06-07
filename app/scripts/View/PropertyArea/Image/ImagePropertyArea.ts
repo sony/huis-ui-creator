@@ -38,7 +38,8 @@ module Garage {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);
 
-                //this.listenTo(this.getModel(), "change:size change:text", this.render); TODO
+                this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
+                this.listenTo(this.getModel(), "change:path", this.render);
             }
 
 
@@ -47,6 +48,24 @@ module Garage {
                 return {
 
                 };
+            }
+
+
+            private _onImageFilePathChanged(event: Event) {
+                let changedImagePath: string = this.imagePreviewWindow_.getTmpImagePath();
+                let changedImageName = path.basename(changedImagePath);
+                let changedImageRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageName).replace(/\\/g, "/");
+
+                this._setMementCommand(
+                    this.getModel(),
+                    {
+                        "path": this.getModel().path,
+                        "resizeOriginal": (this.getModel().resizeOriginal != null) ? this.getModel().resizeOriginal : null
+                    },
+                    {
+                        "path": changedImageRelativePath,
+                        "resizeOriginal": changedImageRelativePath
+                    });
             }
 
 

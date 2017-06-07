@@ -387,6 +387,20 @@ module Garage {
                 this.set("resizeResolvedOriginalPathCSS", val);
             }
 
+            /*
+             * @return {string} ユーザーが選択した画像が格納されるディレクトリの絶対パスを返す。
+             */
+            getUserSelectImageDirFullPath(): string {
+                return path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, this.getUserSelectImageDirRelativePath())).replace(/\\/g, "/");
+            }
+
+            /*
+             * @return {string} ユーザーが選択した画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
+             */
+            getUserSelectImageDirRelativePath(): string {
+                return path.join(this.remoteId_).replace(/\\/g, "/");
+            }
+
             /**
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。

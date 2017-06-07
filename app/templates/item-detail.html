@@ -38,14 +38,21 @@
     <script type="text/template" id="template-image-property-area">
         <h3 id="face-item-detail-title">Image<span class="property-cid"></span></h3>
         <div id="image-preview-window">
-            <div id="edit-image-non-button-image"></div>
+            
         </div>
     </script>
 
 
     <!--ImagePreviewWindow-->
     <script type="text/template" id="template-image-preview-window">
-        <div id="image-preview" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
+        <div id="image-preview"></div>
+        <div id="edit-btn"></div>
+    </script>
+
+
+    <!--ImagePreview-->
+    <script type="text/template" id="template-image-preview">
+        <div id="image-container" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
         </div>
     </script>
 

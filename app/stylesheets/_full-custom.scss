@@ -775,7 +775,8 @@
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
-                #edit-image-non-button-image {
+                #edit-image-non-button-image,
+                #edit-btn {
                     position: absolute;
                     z-index: 1;
                     bottom: 0;
@@ -809,7 +810,8 @@
                     }
                 }
 
-                #image-preview {
+                #image-preview,
+                #image-container {
                     box-sizing: border-box;
                     position: relative;
                     background-position: center;

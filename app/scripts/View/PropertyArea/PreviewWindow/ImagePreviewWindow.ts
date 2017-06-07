@@ -26,40 +26,55 @@ module Garage {
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-image-preview-window";
             export const DOM_ID = "#image-preview-window";
+            export const EDIT_BTN_DOM_ID = "#edit-btn";
         }
 
-        export class ImagePreviewWindow extends PreviewWindow {
+        export class ImagePreviewWindow extends ImageHandlePreviewWindow {
 
-            //private textPreview_: TextPreview;
+            private imagePreview_: ImagePreview;
+
 
             /**
              * constructor
              */
             constructor(image: Model.ImageItem) {
                 super(image, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
-                //this.textPreview_ = new TextPreview(label);
-                //this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
-                //this.listenTo(this.textPreview_, "uiChange:text", this._onTextFieldChanged);
+                this.imagePreview_ = new ImagePreview(image);
             }
 
 
             events() {
                 // Please add events
                 return {
-
+                    "click #edit-btn": "_onEditBtnClicked"
                 };
             }
 
+
+            private _onEditBtnClicked(event: Event) {
+                let FUNCTION_NAME = TAG + "_onEditBtnClicked";
+
+                this._showImageSelectDialog().done((imageFilePath: string) => {
+                    if (imageFilePath == null){
+                        console.warn(FUNCTION_NAME + "imagePath is invalid");
+                        return;
+                    }
+                    this.tmpImageFilePath_ = imageFilePath;
+                    this.trigger("uiChange:path");
+                });
+            }
 
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.model));
-                //this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
+                this.$el.find(this.imagePreview_.getDomId()).append(this.imagePreview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             };
+
+
 
         }
     }

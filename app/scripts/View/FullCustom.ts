@@ -2641,7 +2641,6 @@ module Garage {
                     // 背景画像の削除
                     $(".property-value.page-background-src").val("");
                     $("#property-image-preview").css("background-image", "none");
-                    $("#image-preview").css("background-image", "none"); // TODO: ボタンのプロパティエリア作成後削除
                     this._updateCurrentModelData("path", "");
                     this._updateCurrentModelData("enabled", false);
                 }
@@ -3140,7 +3139,6 @@ module Garage {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
                                     // 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
-                                    this._updatePreviewInDetailArea(resolvedPath, $("#image-preview"));//TODO:画像プレビュー作成後、削除
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
                                     } catch (e) {
@@ -3220,7 +3218,6 @@ module Garage {
 
                                         // プレビュー部分の更新
                                         this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
-                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#image-preview")); //TODO:画像プレビュー作成後削除。
                                     };
 
                                 }
@@ -4857,32 +4854,9 @@ module Garage {
                             item,
                             this.commandManager_
                         )
-                        //this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
                     }
                     $detail.append(this.propertyArea_.render().$el);
-                    /*
-                    // 画像アイテムの詳細エリアを表示
-                    let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
-                    let $imageDetail = $(templateImage(item));
-                    let $areaContainer = $imageDetail.nextAll("#area-container");
-                    $areaContainer.append($(templateArea(item)));
-                    $detail.append($imageDetail);
-
-                    // リサイズモードの反映
-                    let resizeMode = item.resizeMode;
-                    if (resizeMode) {
-                        $(".image-resize-mode").val(resizeMode);
-                    }
-
-                    //オリジナルのパスがある場合は、そちらを表示。
-                    //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
-                    let inputURL = this.getValidPathOfImageItemForCSS(item);
-                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
-
-                    //テキストをローカライズ
-                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
-                    */
-
                 } else if (item instanceof Model.LabelItem) {
 
                     if (this.propertyArea_ == null) {
