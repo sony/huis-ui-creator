@@ -41,7 +41,7 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                   
+
                 };
             }
 
