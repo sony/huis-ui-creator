@@ -50,12 +50,12 @@ module Garage {
 
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger("uiChange:size");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger("uiChange:text");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
 
