@@ -41,10 +41,9 @@ module Garage {
 
 
             events() {
-                // Please add events
-                return {
-                    "click #edit-btn": "_onEditBtnClicked"
-                };
+                let events = {};
+                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                return events;
             }
 
 
