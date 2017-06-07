@@ -5003,7 +5003,6 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-
                     this.macroProperty = new MacroButtonPropertyArea(
                         button,
                         $buttonDetail,
