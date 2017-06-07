@@ -32,6 +32,7 @@ module Garage {
             export const EXT_JPG: string = EXT_CHAR + FILE_TYPE_JPG;
             export const EXT_JPEG: string = EXT_CHAR + FILE_TYPE_JPEG;
             export const EXT_PNG: string = EXT_CHAR + FILE_TYPE_PNG;
+            export const DIALOG_TYPE_ERROR: string = "error";
         }
 
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
@@ -184,7 +185,7 @@ module Garage {
                     // 警告を出す
                     console.warn(FUNCTION_NAME + "ONLY jpg, png, jpeg are supported");
                     let response = electronDialog.showMessageBox({
-                        type: "error",
+                        type: constValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -204,7 +205,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "_showTooLargeFileSizeError : ";
                 if (Util.MiscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) {
                     let response = electronDialog.showMessageBox({
-                        type: "error",
+                        type: constValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -229,7 +230,7 @@ module Garage {
                     if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
                         // JPEG2000及びJPEG Losslessはサポートしていない警告を出す
                         let response = electronDialog.showMessageBox({
-                            type: "error",
+                            type: constValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
@@ -254,7 +255,7 @@ module Garage {
                     let result = Util.MiscUtil.checkJPEG(imageFilePath);
                     if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
                         let response = electronDialog.showMessageBox({
-                            type: "error",
+                            type: constValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
