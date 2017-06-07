@@ -32,16 +32,17 @@ module Garage {
             export const EXT_JPG: string = EXT_CHAR + FILE_TYPE_JPG;
             export const EXT_JPEG: string = EXT_CHAR + FILE_TYPE_JPEG;
             export const EXT_PNG: string = EXT_CHAR + FILE_TYPE_PNG;
-
         }
 
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
 
-            protected tmpImageFilePath_: string;//モデルに適そうする前に一時的に保持するファイルパス。
+            protected tmpImageFilePath_: string;//モデルに設定されているのパス。モデル適応する前に親クラスが取得するために保持。
 
 
             constructor(item: Model.ImageItem, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
+                this.listenTo(this.getModel(), "change:path", this._onPathChanged);
+                this.tmpImageFilePath_ = item.path;
             }
 
 
@@ -50,6 +51,11 @@ module Garage {
                 return {
 
                 };
+            }
+
+
+            private _onPathChanged(event: Event) {
+                this.tmpImageFilePath_ = this.getModel().path;
             }
 
 
