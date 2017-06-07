@@ -4824,7 +4824,7 @@ module Garage {
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
             private _showDetailItemArea(item: Model.Item) {
-                //TODOE:delete this. after all propertyare class developed
+                //TODO: delete this. after all propertyare class developed
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
@@ -4832,7 +4832,7 @@ module Garage {
                     return;
                 }
 
-                //TODOE:delete this. after all propertyare class developed
+                //TODO: delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
                 if (item instanceof Model.ButtonItem) {
