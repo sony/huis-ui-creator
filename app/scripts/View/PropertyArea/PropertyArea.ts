@@ -79,8 +79,8 @@ module Garage {
              * @param {Object} prevValue 変更前の値。undo時に利用。
              * @param {Object} nextValue 変更後の愛。redo時に利用。
              */
-            protected _setMementCommand(target: Model.Item, previousData: Object, nextData: Object) {
-                let FUNCTION_NAME = TAG + "_setMementCommand ";
+            protected _setMementoCommand(target: Model.Item, previousData: Object, nextData: Object) {
+                let FUNCTION_NAME = TAG + "_setMementoCommand ";
 
                 //TODO: previousDataとnextDataをクラス化
                 var memento: IMemento = {

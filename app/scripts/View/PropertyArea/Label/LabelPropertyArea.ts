@@ -54,13 +54,13 @@ module Garage {
 
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = this.labelPreviewWindow_.getTextSize();
-                this._setMementCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
+                this._setMementoCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
             }
 
 
             private _onTextFieldChanged(event: Event) {
                 let changedText = this.labelPreviewWindow_.getText();
-                this._setMementCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
+                this._setMementoCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
             }
 
 
