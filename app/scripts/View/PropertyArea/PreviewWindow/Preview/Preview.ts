@@ -52,16 +52,16 @@ module Garage {
             abstract render(option? : any): Backbone.View<Model.Item>;
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
+             */
             getModel(): Model.Item {
                 return this.model;
             }
 
 
-            /*
+            /**
              * @return {string} DOM全体に示すIDを返す。
              */
             getDomId(): string {
@@ -69,7 +69,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */

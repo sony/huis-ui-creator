@@ -70,7 +70,7 @@ module Garage {
             };
 
 
-            /*
+            /**
              * @return {number} テキストサイズ用のプルダウンの値を取得
              */
             getTextSize(): number {
@@ -78,7 +78,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} テキストフィールドの値を取得
              */
             getText(): string {

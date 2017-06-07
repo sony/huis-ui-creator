@@ -100,7 +100,7 @@ module Garage {
             };
 
 
-            /*
+            /**
              * @return {number} テキストサイズ変更用プルダウンの値を取得する。
              */
             getTextSize(): number {
@@ -108,17 +108,17 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} テキストフィールドの値を取得する。
              */
             getText(): string {
                 return this.$el.find(constValue.TEXT_FIELD_DOM_ID).val();
             }
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.LabelItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.LabelItem}
+             */
             getModel(): Model.LabelItem {
                 return <Model.LabelItem>this.model;
             }
