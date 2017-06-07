@@ -51,13 +51,19 @@ module Garage {
             /**
              * constructor
              */
-            constructor(options: Backbone.ViewOptions<Model.ButtonItem>) {
-                super(options);
+            constructor(button: Model.ButtonItem, templateDomId: string, $el: JQuery, commandManager: CommandManager) {
+                //TODO: 
+                //ボタンのプロパティエリアをリファクタする際には、
+                //this.$elはrender()でテンプレートから生成し、呼び出し元でappend(render().$el)という形で呼び出す形に統合したいので
+                //ここのel : $elは消す。
+                //現状バグが発生してしまうので、ここの修正はButtonPropertyArea系のリファクタの際に後回しにさせてください。
+                //備考：el: $el.get(0)ではうまく動かないようです。
+                super(button, templateDomId, commandManager, { el: $el });
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
             }
 
 
-           
+
 
 
 
@@ -77,7 +83,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onHoverInSignalContainer";
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
-                if (this.isValidJQueryElement($target)) {
+                if (Util.JQueryUtils.isValidJQueryElement($target)) {
                     $target.css("opacity", "1");
                 }
             }
@@ -87,7 +93,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onHoverOutSignalContainer";
 
                 let $target = $(event.currentTarget).find(".signal-control-button");
-                if (this.isValidJQueryElement($target)) {
+                if (Util.JQueryUtils.isValidJQueryElement($target)) {
                     $target.css("opacity", "0");
                 }
             }
@@ -100,7 +106,7 @@ module Garage {
 
             /*
             *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.BUttonItem}
+            * @return {Model.ButtonItem}
             */
             public getModel(): Model.ButtonItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。
@@ -133,7 +139,7 @@ module Garage {
             /*
              *@return {number} ボタンに設定されているデフォルトのstateIdを取得
             */
-            protected getDefaultStateId(): number{
+            protected getDefaultStateId(): number {
                 //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
                 if (this.getModel().default == null) {
                     return this.getModel().getDefaultState().stateId;
@@ -249,7 +255,7 @@ module Garage {
                 remoteId = $remotePullDown.val();
 
                 //"none"も見つからない扱いとする。
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     return undefined;
                 }
 
@@ -277,7 +283,7 @@ module Garage {
                 }
 
                 let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if (!this.isValidJQueryElement($remoteIdPullDown)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($remoteIdPullDown)) {
                     console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
                     return;
                 }
@@ -353,7 +359,7 @@ module Garage {
                 }
 
                 let $remoteIdPullDown = $signalContainerElement.find(".remote-input[data-signal-order=\"" + order + "\"]");
-                if (!this.isValidJQueryElement($remoteIdPullDown)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($remoteIdPullDown)) {
                     console.warn(FUNCTION_NAME + "$remoteIdPullDown is invalid");
                     return;
                 }
@@ -363,13 +369,13 @@ module Garage {
                     remoteName = this._getRemoteNameOfUnknownRemote(unknownRcId);
                 } else {
                     let cachedDeviceInfo = this.getDeviceInfoByRemoteId(inputRemoteId);
-                    if (this.isValidValue(cachedDeviceInfo)) {
+                    if (Util.JQueryUtils.isValidValue(cachedDeviceInfo)) {
                         remoteName = cachedDeviceInfo.remoteName;
                     }
                 }
 
                 if (remoteName != null) {
-                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this.getTemplateFilePath());
+                    let additionalRemoteTemplrate: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-additional-option", this._getTemplateFilePath());
                     let inputSignalData = {
                         remoteId: inputRemoteId,
                         name: remoteName
@@ -465,7 +471,7 @@ module Garage {
             * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
             * @param {string} 描写するfunctionsプルダウンに設定する値。
             */
-            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -487,7 +493,7 @@ module Garage {
                 let remoteList: IRemoteInfo[] = this.availableRemotelist.concat();  //加工する可能性があるのでコピーを生成
                 if (remoteList != null) {
                     let $remoteContainer = $target.find("#signal-remote-container");
-                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this.getTemplateFilePath());
+                    let templateRemote: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote", this._getTemplateFilePath());
 
                     let inputSignalData = {
                         id: stateId,
@@ -498,12 +504,12 @@ module Garage {
                     let $functionsDetail = $(templateRemote(inputSignalData));
                     $remoteContainer.append($functionsDetail);
 
-                    if (this.isValidValue(inputRemoteId)) {
+                    if (Util.JQueryUtils.isValidValue(inputRemoteId)) {
                         //inputにmodelがある場合、値を表示
                         this.setRemoteIdPullDownOf(order, inputRemoteId, unknownRcId);
                     } else {
                         //まだ、値がない場合、リストの一番上に、noneの値のDOMを追加。
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this.getTemplateFilePath());
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-remote-none-option", this._getTemplateFilePath());
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
@@ -648,7 +654,7 @@ module Garage {
 
                 functionName = $functionPullDown.val();
 
-                if (!this.isValidValue(functionName)) {
+                if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return undefined;
                 }
 
@@ -664,7 +670,7 @@ module Garage {
              * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
              * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
              */
-            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(),  unknownRcId?: string) {
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -700,13 +706,13 @@ module Garage {
 
                 if (functions != null && functions.length != 0) {
                     // functionsに自分のキーが存在しない場合は追加
-                    if (this.isValidValue(functionName) &&
+                    if (Util.JQueryUtils.isValidValue(functionName) &&
                         functions.indexOf(functionName) < 0) {
                         functions.unshift(functionName);
                     }
 
                     let $functionlContainer = $target.find("#signal-function-container");
-                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this.getTemplateFilePath());
+                    let templateFunctions: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions", this._getTemplateFilePath());
 
                     //functionsが0個の場合のエラーケース対応
                     let inputFunctions = [];
@@ -723,11 +729,11 @@ module Garage {
                     $functionlContainer.append($functionsDetail);
 
                     //inputにmodelがある場合、値を表示
-                    if (this.isValidValue(functionName)) {
+                    if (Util.JQueryUtils.isValidValue(functionName)) {
                         this.setFunctionNamePullDownOf(order, functionName);
                     } else {
                         //値がない場合、初期値をrender
-                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this.getTemplateFilePath());
+                        let noneOption: Tools.JST = Tools.Template.getJST("#template-property-button-signal-functions-none-option", this._getTemplateFilePath());
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
@@ -742,7 +748,7 @@ module Garage {
             protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "cloneDeviceInfo";
 
-                if (!this.isValidValue(src)) {
+                if (!Util.JQueryUtils.isValidValue(src)) {
                     console.warn(FUNCTION_NAME + "src is invalid");
                     return;
                 }
@@ -767,7 +773,7 @@ module Garage {
             */
             protected isRelearnedFunctionName(functionName: string): boolean {
                 let FUNCTION_NAME = TAG + "isRelearnedFunctionName ";
-                if (!this.isValidValue(functionName)) {
+                if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return false;
                 }
 
@@ -808,7 +814,7 @@ module Garage {
            * @param stateId? {number} 信号リストを取得したい、ボタンのstate
            * @return {string[]} 見つからなかった場合、undefinedを返す。
            */
-            protected getFunctionsOf(order: number, stateId? : number) {
+            protected getFunctionsOf(order: number, stateId?: number) {
                 let FUNCTION_NAME = TAG + "getFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -845,7 +851,7 @@ module Garage {
              * @param stateId {number}
              * @param page {number}
              */
-            protected renderPagesOf(order: number, stateId:number, page:number) {
+            protected renderPagesOf(order: number, stateId: number, page: number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -895,7 +901,7 @@ module Garage {
 
 
                 let $container = $target.find("#signal-page-container");
-                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this.getTemplateFilePath());
+                let template: Tools.JST = Tools.Template.getJST("#template-property-button-signal-pages", this._getTemplateFilePath());
 
                 let inputData = {
                     order: order,
@@ -1043,7 +1049,8 @@ module Garage {
              */
             protected triggerCreateRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
-                $container.find('#signal-remote-container .custom-select').trigger('create');
+                let $target = $container.find("#signal-remote-container");
+                this._adaptJqueryMobileStyleToPulldown($target);
             }
 
 
@@ -1077,7 +1084,7 @@ module Garage {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
 
 
-                if (!this.isValidValue(order)) {
+                if (!Util.JQueryUtils.isValidValue(order)) {
                     console.warn(FUNCTINO_NAME + "order is invalid");
                     return;
                 }
@@ -1136,7 +1143,7 @@ module Garage {
                 }
 
                 let $target = this.getSignalContainerElementOf(order);
-                if (!this.isValidJQueryElement($target)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target)) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
@@ -1184,12 +1191,12 @@ module Garage {
             protected setAnimationDuration($target: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "setAnimationDuration : ";
 
-                if (!this.isValidJQueryElement($target)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target)) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(duration)) {
+                if (!Util.JQueryUtils.isValidValue(duration)) {
                     console.warn(FUNCTION_NAME + "duration is invalid");
                     return;
                 }
@@ -1206,7 +1213,7 @@ module Garage {
             protected getPosition($target: JQuery): IPosition {
                 let FUNCTION_NAME = TAG + "getPosition : ";
 
-                if (!this.isValidJQueryElement($target) || $target.offset() == null) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target) || $target.offset() == null) {
                     console.warn(FUNCTION_NAME + "$target is invalid");
                     return;
                 }
@@ -1231,12 +1238,12 @@ module Garage {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
 
 
-                if (!this.isValidJQueryElement($target1)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target1)) {
                     console.warn(FUNCTION_NAME + "$target1 is invalid");
                     return;
                 }
 
-                if (!this.isValidJQueryElement($target2)) {
+                if (!Util.JQueryUtils.isValidJQueryElement($target2)) {
                     console.warn(FUNCTION_NAME + "$target2 is invalid");
                     return;
                 }
@@ -1276,7 +1283,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
 
                 //値として利用できるかチェック
-                if (!this.isValidValue(order)) {
+                if (!Util.JQueryUtils.isValidValue(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return false;
                 }
@@ -1306,7 +1313,7 @@ module Garage {
             protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "isCachedMenberRemoteId : ";
 
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     console.warn(FUNCTION_NAME + "remoteId is invalid");
                     return null;
                 }
@@ -1314,7 +1321,7 @@ module Garage {
 
                 //modelのアクション中のdeviceInfo
                 for (let action of this.getModel().getDefaultState().action) {
-                    let deviceInfo: IButtonDeviceInfo= action.deviceInfo;
+                    let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
 
@@ -1335,12 +1342,12 @@ module Garage {
             protected isIncludeSpecificDeviceType(button: Model.ButtonItem, category: string): boolean {
                 let FUNCTION_NAME = TAG + "isIncludeSpecificDeviceType : ";
 
-                if (!this.isValidValue(button)) {
+                if (!Util.JQueryUtils.isValidValue(button)) {
                     console.warn(FUNCTION_NAME + "button is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(category)) {
+                if (!Util.JQueryUtils.isValidValue(category)) {
                     console.warn(FUNCTION_NAME + "category is invalid");
                     return;
                 }
@@ -1374,12 +1381,12 @@ module Garage {
                 : string): boolean {
                 let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
 
-                if (!this.isValidValue(button)) {
+                if (!Util.JQueryUtils.isValidValue(button)) {
                     console.warn(FUNCTION_NAME + "button is invalid");
                     return;
                 }
 
-                if (!this.isValidValue(actionType)) {
+                if (!Util.JQueryUtils.isValidValue(actionType)) {
                     console.warn(FUNCTION_NAME + "actionType is invalid");
                     return;
                 }

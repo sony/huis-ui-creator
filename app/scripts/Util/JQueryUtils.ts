@@ -23,7 +23,7 @@ module Garage {
         }
 
         export class JQueryUtils {
-            static TAG = "JQueryUtils";
+
 
             /**
              * jQuery オブジェクトで選択された DOM の data 属性を取得する。
@@ -248,7 +248,38 @@ module Garage {
                         return Number(values[0]);
                     }
                 }
+            }
 
+
+            /**
+             * 値が有効か判定する。
+             * @return {boolen} nullでも、"none"でも、""でも、NaNでもない場合、trueを返す。
+             */
+            static isValidValue(value): boolean {
+                if (value == null) {
+                    return false;
+                } else if (value == "none") {
+                    return false;
+                } else if (value === "") {
+                    return false;
+                } else if (Util.JQueryUtils.isNaN(value)) {
+                    return false;
+                }
+                return true;
+            }
+
+
+            /**
+             * JQuery要素が有効か判定する
+             * @param $target{JQuery}判定対象
+             * @return {boolean} 有効な場合、true
+             */
+            static isValidJQueryElement($target: JQuery): boolean {
+                if ($target == null || $target.length == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
 
 

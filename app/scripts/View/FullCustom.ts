@@ -87,9 +87,9 @@ module Garage {
             private isMouseDown: Boolean;
 
             private bindedLayoutPage = null;
-            //マクロのプロパティView用
+
+            private propertyArea_: PropertyArea;
             private macroProperty: MacroButtonPropertyArea;
-            //通常ボタンのプロパティView用
             private buttonProperty: NormalButtonPropertyArea;
             private jumpProperty: JumpButtonPropertyArea;
 
@@ -126,6 +126,7 @@ module Garage {
                 requirejs(["garage.view.fullcustomcommand"], () => {
 
                     super.onPageShow(event, data);
+                    this.propertyArea_ = null;
                     this.macroProperty = null;
                     this.buttonProperty = null;
                     this.jumpProperty = null;
@@ -2287,10 +2288,13 @@ module Garage {
                 }
             }
 
+            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
             /**
              * 詳細編集エリア内のフォームで値の変更があったときに呼び出される。
              */
             private onItemPropertyChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onItemPropertyChanged : ";
+
                 var $target = $(event.currentTarget);
                 var $parent = $target.parent();
 
@@ -2317,10 +2321,14 @@ module Garage {
                 }
             }
 
+
+            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
             /**
              * 詳細編集エリア内の select メニューに値の変更があったときに呼び出される。
              */
             private onItemPropertySelectChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onItemPropertySelectChanged : ";
+
                 var $target = $(event.currentTarget);
                 if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
                     this._setImageResizeModeBySelect($target);
@@ -4705,6 +4713,11 @@ module Garage {
                 this.currentTargetButtonStates_ = null;
                 this.currentTargetButtonStatesUpdated_ = false;
 
+                if (this.propertyArea_ != null) {
+                    this.stopListening(this.propertyArea_.getModel());
+                    this.propertyArea_.remove();
+                    this.propertyArea_ = null;
+                }
 
                 //ボタン用のプロパティのインスタンスを削除
                 if (this.buttonProperty != null) {
@@ -4811,6 +4824,7 @@ module Garage {
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
             private _showDetailItemArea(item: Model.Item) {
+                //TODO: delete this. after all propertyare class developed
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
@@ -4818,6 +4832,7 @@ module Garage {
                     return;
                 }
 
+                //TODO: delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
                 if (item instanceof Model.ButtonItem) {
@@ -4854,26 +4869,42 @@ module Garage {
                     $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
 
                 } else if (item instanceof Model.LabelItem) {
-                    // ラベルアイテムの詳細エリアを表示
-                    let templateLabel = Tools.Template.getJST("#template-label-detail", this.templateItemDetailFile_);
-                    let $labelDetail = $(templateLabel(item));
-                    let $areaContainer = $labelDetail.nextAll("#area-container");
-                    $areaContainer.append($(templateArea(item)));
-                    $detail.append($labelDetail);
-                    var $labelTextSize = $labelDetail.find(".property-text-size");
-                    $labelTextSize.val(item.size.toString());
 
-                    //テキストをローカライズ
-                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_LABEL"));
-                    $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
+                    if (this.propertyArea_ == null) {
+                        this.propertyArea_ = new LabelPropertyArea(
+                            item,
+                            this.commandManager_
+                        )
+                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                    }
+                    $detail.append(this.propertyArea_.render().$el);
+
                 } else {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
 
+                //TODO:PropertyAreaに動作を移管して削除する。
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
 
             }
+
+
+            private _updateElementsOnCanvasProperyAreaChanged() {
+                let FUNCTION_NAME = TAG + "_updateElementsOnCanvasProperyAreaChanged : ";
+                if (this.propertyArea_ == null) {
+                    return;
+                }
+
+                let changedModel: Model.Item = this.propertyArea_.getModel();
+                if (!Util.JQueryUtils.isValidValue(changedModel)) {
+                    console.warn(FUNCTION_NAME + "this.propertyArea is invalid");
+                    return;
+                }
+
+                this._updateItemElementsOnCanvas([changedModel]);
+            }
+
 
             /**
              * ページの背景の詳細編集エリアの表示
@@ -4972,10 +5003,11 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-                    this.macroProperty = new MacroButtonPropertyArea({
-                        el: $buttonDetail,
-                        model: button,
-                    });
+                    this.macroProperty = new MacroButtonPropertyArea(
+                        button,
+                        $buttonDetail,
+                        this.commandManager_
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel, this);
                 } else {
@@ -5134,10 +5166,11 @@ module Garage {
 
                 //信号用のViewの初期化・更新
                 if (this.buttonProperty == null) {
-                    this.buttonProperty = new NormalButtonPropertyArea({
-                        el: $buttonDetail,
-                        model: button,
-                    });
+                    this.buttonProperty = new NormalButtonPropertyArea(
+                        button,
+                        $buttonDetail,
+                        this.commandManager_
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
                 } else {
@@ -5270,13 +5303,13 @@ module Garage {
                 //信号用のViewの初期化・更新
                 if (this.jumpProperty == null) {
                     this.jumpProperty = new JumpButtonPropertyArea(
+                        button,
+                        $buttonDetail,
+                        this.commandManager_,
                         this.faceRenderer_canvas_.getRemoteId(),
                         $("#input-face-name").val(),
-                        this.faceRenderer_canvas_.getModules(),
-                        {
-                            el: $buttonDetail,
-                            model: button,
-                        });
+                        this.faceRenderer_canvas_.getModules()
+                    );
                     //モデルが更新されたときfullcustom側のmodelも更新する
                     this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
                 } else {

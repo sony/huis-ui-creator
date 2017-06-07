@@ -9,6 +9,7 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
         namespace constValue {
+            export const TEMPLATE_DOM_ID = "#template-property-jump-button-state";
             export const NO_PAGE_SELECT_NUM: number = -1; //ページ指定用プルダウンで、なにも選択されていない状態での値。
         }
 
@@ -21,12 +22,15 @@ module Garage {
 
             /**
              * constructor
-             * @param remoteId {string} 編集中のリモコンの remote_id
-             * @param faceName {string} 編集中のリモコン名
-             * @param modules {Model.Module[]} 編集中のリモコンのモジュール
+             * @param {Model.ButtonItem} button 表示するページジャンプボタン
+             * @param {JQuery} $el PropertyArea全体のJQuery
+             * @param {CommandManager} commandManager モデルの更新を実際におこなうCommandManager
+             * @param {string} remoteId 編集中のリモコンの remote_id
+             * @param {string} faceName  編集中のリモコン名
+             * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
-            constructor(remoteId: string, faceName: string, modules: Model.Module[], options?: Backbone.ViewOptions<Model.ButtonItem>) {
-                super(options);
+            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
+                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;
@@ -117,7 +121,7 @@ module Garage {
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
-                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this.getTemplateFilePath());
+                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this._getTemplateFilePath());
                 let $jumpContainer = this.$el.nextAll("#states-container");
                 let stateData = this.createStateData(this.getModel().getDefaultState());
                 stateData.actionList = ACTION_INPUTS_JUMP;
@@ -265,7 +269,7 @@ module Garage {
 
                 let remoteId = this.getRemoteIdFromPullDownOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
 
-                if (!this.isValidValue(remoteId)) {
+                if (!Util.JQueryUtils.isValidValue(remoteId)) {
                     let input = this.$el.find("#select-remote-input-" + JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER);
                     setTimeout(() => {
                         input.focus();

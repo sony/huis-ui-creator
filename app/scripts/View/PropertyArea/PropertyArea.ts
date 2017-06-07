@@ -21,82 +21,90 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
 
         namespace constValue {
-            export const TEMPLATE_FILE_PATH : string = CDP.Framework.toUrl("/templates/item-detail.html");
+            export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
         export abstract class PropertyArea extends Backbone.View<Model.Item> {
 
-            /**
-             * constructor
-             */
-            constructor(options?: Backbone.ViewOptions<Model.Item>) {
-                super(options);
+            private commandManager_: CommandManager;
+            protected template_: CDP.Tools.JST;
+
+
+            constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
+                super({
+                    model: item,
+                    el: (options != null && options.el != null) ? options.el : null //TODO:ボタンのプロパティエリア整理後は削除。詳しくはButtonPropertyArea.tsのconstructorにて。
+                });
+                this.commandManager_ = commandManager;
+                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
 
 
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
 
-            abstract render(option? : any): Backbone.View<Model.Item>;
+            abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
+             */
             getModel(): Model.Item {
                 return this.model;
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
-            getTemplateFilePath() {
+            protected _getTemplateFilePath() {
                 return constValue.TEMPLATE_FILE_PATH;
             }
 
-            /*
-             * 値が有効か判定する。
-             * @return {boolen} nullでも、"none"でも、""でも、NaNでもない場合、trueを返す。
-             */ 
-            protected isValidValue(value): boolean {
-                let FUNCTION_NAME = TAG + "isInvalidPullDownValue";
-                if (value == null) {
-                    return false;
-                } else if (value == "none") {
-                    return false;
-                } else if (value === "") {
-                    return false;
-                } else if (Util.JQueryUtils.isNaN(value)) {
-                    return false;
-                }
-                return true;
-            }
 
-
-            /*
-             * JQuery要素が有効か判定する
-             * @param $target{JQuery}判定対象
-             * @return {boolean} 有効な場合、true
+            /**
+             * CommandManagerにModelの変更を登録する。
+             * PropertyArea上の変更はこの関数での変更のみとする。
+             * @param {Model.Item} target 変更対象のモデル。
+             * @param {Object} previousData 変更前の値。undo時に利用。
+             * @param {Object} nextData 変更後の愛。redo時に利用。
              */
-            protected isValidJQueryElement($target: JQuery): boolean {
-                if ($target == null || $target.length == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
+            protected _setMementoCommand(target: Model.Item, previousData: Object, nextData: Object) {
+                let FUNCTION_NAME = TAG + "_setMementoCommand ";
+
+                //TODO: previousDataとnextDataをクラス化
+                var memento: IMemento = {
+                    target: target,
+                    previousData: previousData,
+                    nextData: nextData
+                };
+
+                var mementoCommand = new MementoCommand([memento]);
+                this.commandManager_.invoke(mementoCommand);
             }
 
+
+            /**
+             * プルダウンにJQueryMobileのスタイルを適応する。
+             * JQueryMobileのスタイルは、新たに生成したDOM要素には自動的には適応されないため、
+             * プルダウンをレンダリングした後に、この関数を利用する。
+             * ただし、重たい処理なので、全てプルダウンをレンダリングした後に1度だけ呼ぶこと。
+             * @param {JQuery} $target プルダウンを内包しているDOMのJQuery
+             */
+            protected _adaptJqueryMobileStyleToPulldown($target: JQuery) {
+                let pulldownContainerDomClass = ".custom-select";
+                $target.find(pulldownContainerDomClass).trigger('create');
+            }
 
         }
     }

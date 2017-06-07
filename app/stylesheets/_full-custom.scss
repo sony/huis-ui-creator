@@ -761,6 +761,7 @@
                 width: calc(100% - 20px);
             }*/
             #property-image-preview,
+            #label-preview-window,
             .property-state-image-preview {
                 box-sizing: border-box;
                 position: relative;
@@ -807,8 +808,9 @@
                     }
                 }
                 //テキストエリア
-                .text-field-in-preview {
-                    margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+                #text-preview,
+                .text-field-in-preview{
+                    margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
                     .title-edit-label {
                         height: $SIZE_TITLE_EDIT_LABEL_HEIGHT;
@@ -831,9 +833,10 @@
                         }
                     }
 
-                    .text-size-pulldown {
-                        margin: 0 auto;
-                        width: $SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+                    #text-size-pulldown,
+                    .text-size-pulldown{
+                            margin:0 auto;
+                            width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
                     }
 
                     .property-text-value,
