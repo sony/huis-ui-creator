@@ -188,6 +188,22 @@ module Garage {
                 return convertedImage;
             }
 
+            /*
+             * @return {boolen} 背景画像だった場合true, 違う場合falseを返す。
+             */
+            isBackgroundImage(): boolean {
+                let area: IArea = this.area;
+                //TODO: develop Model.Area and isEqueal Method
+                if (area.x == HUIS_PAGE_BACKGROUND_AREA.x
+                    && area.y == HUIS_PAGE_BACKGROUND_AREA.y
+                    && area.w == HUIS_PAGE_BACKGROUND_AREA.w
+                    && area.h == HUIS_PAGE_BACKGROUND_AREA.h
+                ) {
+                    return true;
+                }
+                return false
+            }
+
             /**
              * getters and setters
              */
