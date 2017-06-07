@@ -61,7 +61,7 @@ module Garage {
 
             private _onDeleteBtnClicked(event: Event) {
                 this.tmpImageFilePath_ = "";
-                this.trigger("uiChange:path");
+                this.trigger("uiChange:delete");
             }
 
             render(): Backbone.View<Model.Item> {

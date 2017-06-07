@@ -37,6 +37,7 @@ module Garage {
                 this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
 
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
+                this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:delete", this._onImageFilePathChanged);
                 this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
 
@@ -46,6 +47,10 @@ module Garage {
                 return {
 
                 };
+            }
+
+            private _onBackgroundImageDeleted(event: Event) {
+
             }
 
 
