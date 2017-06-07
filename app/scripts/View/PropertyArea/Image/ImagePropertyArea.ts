@@ -52,19 +52,19 @@ module Garage {
 
 
             private _onImageFilePathChanged(event: Event) {
-                let changedImagePath: string = this.imagePreviewWindow_.getTmpImagePath();
-                let changedImageName = path.basename(changedImagePath);
-                let changedImageRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageName).replace(/\\/g, "/");
+                let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
+                let changedImageFileName = path.basename(changedImageFilePath);
+                let changedImageFileRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementCommand(
                     this.getModel(),
                     {
                         "path": this.getModel().path,
-                        "resizeOriginal": (this.getModel().resizeOriginal != null) ? this.getModel().resizeOriginal : null
+                        "resizeOriginal": this.getModel().resizeOriginal
                     },
                     {
-                        "path": changedImageRelativePath,
-                        "resizeOriginal": changedImageRelativePath
+                        "path": changedImageFileRelativePath,
+                        "resizeOriginal": changedImageFileRelativePath
                     });
             }
 
