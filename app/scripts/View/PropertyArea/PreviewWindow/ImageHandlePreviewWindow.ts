@@ -158,7 +158,9 @@ module Garage {
                 let dirPath = this.getModel().getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
-                Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, outputImagePath)
+                let params = this.getModel().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+
+                Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {
                         df.resolve(editedImage.path);
                     }).fail((err) => {

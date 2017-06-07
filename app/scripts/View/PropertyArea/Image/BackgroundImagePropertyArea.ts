@@ -29,12 +29,12 @@ module Garage {
 
         export class BackgroundImagePropertyArea extends PropertyArea {
 
-            //private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
+            private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
 
 
             constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                //this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);
+                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
 
                 //this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
                 //this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
@@ -72,7 +72,7 @@ module Garage {
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
-                //this.$el.find(this.imagePreviewWindow_.getDomId()).append(this.imagePreviewWindow_.render().$el);
+                this.$el.find(this.backgroundImagePreviewWindow_.getDomId()).append(this.backgroundImagePreviewWindow_.render().$el);
                 this.$el.i18n();
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;

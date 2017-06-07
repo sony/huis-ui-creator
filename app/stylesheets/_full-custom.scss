@@ -727,7 +727,7 @@
                 width: calc(100% - 70px);
             }
 
-            #delete-background-image {
+            #delete-btn {
                 width: $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
                 margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
             }
@@ -761,6 +761,7 @@
                 width: calc(100% - 20px);
             }*/
             #image-preview-window,
+            #background-image-preview-window,
             #property-image-preview,
             #label-preview-window,
             .property-state-image-preview {
@@ -793,7 +794,7 @@
                     }
                 }
                 //背景画像削除ボタン
-                #delete-background-image {
+                #delete-btn {
                     position: absolute;
                     z-index: 1;
                     top: 0;
@@ -861,7 +862,7 @@
                 }
             }
 
-            #property-image-preview.background {
+            #background-image-preview-window.background {
                 height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
             }
 

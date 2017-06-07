@@ -92,11 +92,14 @@
     <!--背景画像の詳細編集エリア-->
     <script type="text/template" id="template-background-image-property-area">
         <h3 id="face-item-detail-title" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND">Background<span class="property-cid"></span></h3>
-        <!-- プレビュー -->
-        <div id="property-image-preview" class="background" {{#enabled}} style="background-image:url('{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}');{{/enabled}}">
-            <div id="edit-image-background"></div>
-            <div id="delete-background-image"></div>
-        </div>
+        <div id="background-image-preview-window" class="background"></div>
+    </script>
+
+    <!--ImagePreviewWindow-->
+    <script type="text/template" id="template-background-image-preview-window">
+        <div id="image-preview"></div>
+        <div id="edit-btn"></div>
+        <div id="delete-btn"></div>
     </script>
 
     <!--CID表示用のテンプレート-->
