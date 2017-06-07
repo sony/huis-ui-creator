@@ -30,7 +30,7 @@ module Garage {
 
             /**
              * 入力されたアイテムから判断して、表示すべきPropertyAreaを返す。
-             * @param {Model.Item} item PropertyAreaに表示するアイテム。
+             * @param {Model.Item} item PropertyAreaに表示させるアイテム。
              * @param {CommandManager} commandManager PropertyAreaで利用するCommandManager。
              * @return {PrjopertyArea} アイテムに応じたPropertyArea。適したPropertyAreaがない場合、nullを返す。
              */
