@@ -4836,7 +4836,7 @@ module Garage {
                         this._renderButtonItemDetailArea(item, $detail);
                     }
                 } else {
-                    (this.propertyArea_ == null) {
+                    if (this.propertyArea_ == null) {
                         let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
                         this.propertyArea_ = propertyAreaFactory.create(
                             item,
@@ -4846,10 +4846,10 @@ module Garage {
                     }
                     $detail.append(this.propertyArea_.render().$el);
 
-                    if (this.propertyArea_ == null){
+                    if (this.propertyArea_ == null) {
                         console.warn(TAG + "_showDetailItemArea() unknown type item");
                     }
-                } 
+                }
 
                 //TODO:PropertyAreaに動作を移管して削除する。
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
