@@ -1074,7 +1074,9 @@ module Garage {
 
                 let functionOrder0 = this.getFunctionFromlPullDownOf(0);
 
-                if (ActionNum <= 1 && !Util.JQueryUtils.isValidValue(remoteIdOrder0) && !Util.JQueryUtils.isValidValue(functionOrder0)) {
+                if (ActionNum <= 1
+                    && !Util.JQueryUtils.isValidValue(remoteIdOrder0)
+                    && !Util.JQueryUtils.isValidValue(functionOrder0)) {
                     this.$el.find("#select-remote-input-0").focus();
                 }
             }
