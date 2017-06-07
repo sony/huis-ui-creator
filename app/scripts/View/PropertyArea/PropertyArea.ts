@@ -54,16 +54,16 @@ module Garage {
             abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
+             */
             getModel(): Model.Item {
                 return this.model;
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
@@ -72,7 +72,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * CommandManagerにModelの変更を登録する。
              * PropertyArea上の変更はこの関数での変更のみとする。
              * @param {Model.Item} target 変更対象のモデル。
@@ -94,7 +94,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * プルダウンにJQueryMobileのスタイルを適応する。
              * JQueryMobileのスタイルは、新たに生成したDOM要素には自動的には適応されないため、
              * プルダウンをレンダリングした後に、この関数を利用する。
