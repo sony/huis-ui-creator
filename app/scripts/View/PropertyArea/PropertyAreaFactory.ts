@@ -36,11 +36,38 @@ module Garage {
              */
             create(item: Model.Item, commandManager: CommandManager): PropertyArea {
                 if (item instanceof Model.ImageItem) {
-                    return new ImagePropertyArea(item, commandManager);
+                    if (this._isBackgroundImage) {
+                        return new BackgroundImagePropertyArea(item, commandManager);
+                    } else {
+                        return new ImagePropertyArea(item, commandManager);
+                    }
                 } else if (item instanceof Model.LabelItem) {
                     return new LabelPropertyArea(item, commandManager);
                 }
                 return null;
+            }
+
+            /*
+             * @param {Model.ImageItem} image 背景画像か否か判定するImageItem
+             * @return {boolen} 背景画像だった場合true,違う場合falseを返す。
+             */
+            private _isBackgroundImage(image: Model.ImageItem): boolean {
+                let FUNCTION_NAME = TAG + "isBackgroundImage : ";
+                if (!Util.JQueryUtils.isValidValue(image)) {
+                    console.warn(FUNCTION_NAME + "image is invalid");
+                    return false;
+                }
+
+                let area: IArea = image.area;
+                //TODO: develop Model.Area and isEqueal Method
+                if (area.x == HUIS_PAGE_BACKGROUND_AREA.x
+                    && area.y == HUIS_PAGE_BACKGROUND_AREA.y
+                    && area.w == HUIS_PAGE_BACKGROUND_AREA.w
+                    && area.h == HUIS_PAGE_BACKGROUND_AREA.h
+                ) {
+                    return true;
+                }
+                return false
             }
 
         }

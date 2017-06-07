@@ -825,9 +825,21 @@ module Garage {
                     // ページ背景の model の作成、もしくは既存のものを取得する
                     let backgroundImageModel: Model.ImageItem = this._resolvePageBackgroundImageItem($page);
                     this.currentItem_ = backgroundImageModel;
-                    $("#face-item-detail-area").addClass("active");
+                    $("#face-item-detail-area").addClass("active")
+
+                    let backgroundModel: Model.ImageItem = null;
+                    // page module 内に background 
+                    let $pageBackground = $page.find(".background");
+                    if (0 < $pageBackground.length) {
+                        let moduleId: string = JQUtils.data($page, "cid");
+                        let itemId: string = JQUtils.data($pageBackground, "cid");
+                        if (moduleId && itemId) {
+                            backgroundModel = this.faceRenderer_canvas_.getImage(moduleId, itemId);
+                        }
+                    }
+
                     // ページの背景の detail エリアを作成する
-                    this._showDetailItemAreaOfPage($page);
+                    this._showDetailItemArea(backgroundModel);
                 }
                 event.stopPropagation();
             }
@@ -4869,9 +4881,7 @@ module Garage {
             }
 
 
-            /**
-             * ページの背景の詳細編集エリアの表示
-             */
+            /* TODO: delete 
             private _showDetailItemAreaOfPage($pageModule: JQuery) {
                 let FUNCTION_NAME = TAG + " : _showDetailItemAreaOfPage : ";
 
@@ -4910,7 +4920,7 @@ module Garage {
                 }
 
                 $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
-            }
+            }*/
 
 
             /*
