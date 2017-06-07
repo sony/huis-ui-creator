@@ -31,9 +31,7 @@ module Garage {
 
             private imagePreviewWindow_: ImagePreviewWindow;
 
-            /**
-             * constructor
-             */
+
             constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);

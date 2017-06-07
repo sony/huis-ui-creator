@@ -34,9 +34,6 @@ module Garage {
             private imagePreview_: ImagePreview;
 
 
-            /**
-             * constructor
-             */
             constructor(image: Model.ImageItem) {
                 super(image, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.imagePreview_ = new ImagePreview(image);

@@ -32,9 +32,7 @@ module Garage {
 
         export class ImagePreview extends Preview {
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.ImageItem) {
                 super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
             }

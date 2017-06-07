@@ -39,9 +39,7 @@ module Garage {
 
             protected tmpImageFilePath_: string;//モデルに適そうする前に一時的に保持するファイルパス。
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.ImageItem, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
             }
