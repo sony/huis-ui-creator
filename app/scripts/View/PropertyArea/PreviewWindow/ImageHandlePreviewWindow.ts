@@ -32,6 +32,7 @@ module Garage {
             export const EXT_JPG: string = EXT_CHAR + FILE_TYPE_JPG;
             export const EXT_JPEG: string = EXT_CHAR + FILE_TYPE_JPEG;
             export const EXT_PNG: string = EXT_CHAR + FILE_TYPE_PNG;
+            export const DIALOG_TYPE_ERROR: string = "error";
         }
 
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
@@ -62,7 +63,7 @@ module Garage {
             abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
+            /**
              * @return {string} DOM全体を示すIDを返す。
              */
             getDomId(): string {
@@ -70,7 +71,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} 一時的なファイルパスを返す。
              */
             getTmpImagePath(): string {
@@ -83,7 +84,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * エクスプローラー/ファインダーから画像を選択する。
              * @return {CDP.IPromise<string>} 成功時 アプリ用のフォルダへコピー済みの 選択された画像の絶対パスを返す。失敗時 nullを返す。
              */
@@ -104,7 +105,7 @@ module Garage {
                     options,
                     (imageFiles: string[]) => {
                         if (!imageFiles || !imageFiles.length) {
-                            return;
+                            df.reject(null);
                         }
                         //画像ファイルダイアログが表示されると、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、直後にフォーカスを設定しなおす。
@@ -139,7 +140,7 @@ module Garage {
 
 
 
-            /*
+            /**
              * @param {string} レンダリング元の画像パス
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
@@ -154,7 +155,7 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let imageName = path.basename(imageFilePath);
-                let dirPath = this.getModel().getUserSelectImageDirFullPath();
+                let dirPath = this.getModel().getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, outputImagePath)
@@ -169,7 +170,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルの拡張子が対応していない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -184,7 +185,7 @@ module Garage {
                     // 警告を出す
                     console.warn(FUNCTION_NAME + "ONLY jpg, png, jpeg are supported");
                     let response = electronDialog.showMessageBox({
-                        type: "error",
+                        type: constValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -195,7 +196,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルのが大きすぎる場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -204,7 +205,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "_showTooLargeFileSizeError : ";
                 if (Util.MiscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) {
                     let response = electronDialog.showMessageBox({
-                        type: "error",
+                        type: constValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -216,7 +217,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルサポート外のJpegだった場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -229,7 +230,7 @@ module Garage {
                     if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
                         // JPEG2000及びJPEG Losslessはサポートしていない警告を出す
                         let response = electronDialog.showMessageBox({
-                            type: "error",
+                            type: constValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
@@ -242,7 +243,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 画像ファイルがJpeg形式だが中身がJpegでない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。
@@ -254,7 +255,7 @@ module Garage {
                     let result = Util.MiscUtil.checkJPEG(imageFilePath);
                     if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
                         let response = electronDialog.showMessageBox({
-                            type: "error",
+                            type: constValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
@@ -267,7 +268,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * 何らかのトラブルでファイルが読めない場合、エラーダイアログを表示する。
              * @param {string} imageFilePath 画像ファイルのパス
              * @return {boolean} エラーダイアログが出力された場合trueを返す。そうでない場合falseを返す。

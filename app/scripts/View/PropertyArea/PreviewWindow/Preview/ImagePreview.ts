@@ -56,10 +56,10 @@ module Garage {
             };
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.ImagelItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.ImagelItem}
+             */
             getModel(): Model.ImageItem {
                 return <Model.ImageItem>this.model;
             }

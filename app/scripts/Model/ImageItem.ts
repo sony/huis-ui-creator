@@ -329,10 +329,8 @@ module Garage {
                         // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
                         let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
                         garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
-                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     } else {
                         garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     }
                 } else {
                     if (this.remoteId_ === "common") {
@@ -344,16 +342,19 @@ module Garage {
                             resizeMode: "contain",
                             resolvedOriginalPath: resolvedOriginalPath
                         };
-                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     } else {
                         garageExtensions = {
                             original: val,
                             resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
                             resizeMode: "contain"
                         };
-                        this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                     }
                 }
+
+                if (!Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
+                    this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
+                }
+
                 this.garageExtensions = garageExtensions;
             }
 
@@ -392,16 +393,21 @@ module Garage {
             }
 
             /**
-             * @return {string} ユーザーが選択した画像が格納されるディレクトリの絶対パスを返す。
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの絶対パスを返す。
              */
-            getUserSelectImageDirFullPath(): string {
-                return path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, this.getUserSelectImageDirRelativePath())).replace(/\\/g, "/");
+            getNotDefaultImageDirFullPath(): string {
+                return path.resolve(
+                    path.join(
+                        HUIS_FILES_ROOT,
+                        REMOTE_IMAGES_DIRECTORY_NAME,
+                        this.getNotDefaultImageDirRelativePath()
+                    )).replace(/\\/g, "/");
             }
 
             /**
-             * @return {string} ユーザーが選択した画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
              */
-            getUserSelectImageDirRelativePath(): string {
+            getNotDefaultImageDirRelativePath(): string {
                 return path.join(this.remoteId_).replace(/\\/g, "/");
             }
 

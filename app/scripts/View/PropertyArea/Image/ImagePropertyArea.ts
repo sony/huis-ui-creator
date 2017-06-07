@@ -52,7 +52,7 @@ module Garage {
             private _onImageFilePathChanged(event: Event) {
                 let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
-                let changedImageFileRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
+                let changedImageFileRelativePath = path.join(this.getModel().getNotDefaultImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
                     this.getModel(),
@@ -78,10 +78,10 @@ module Garage {
             }
 
 
-            /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.LabelItem}
-            */
+            /**
+             * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
+             * @return {Model.LabelItem}
+             */
             getModel(): Model.ImageItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.LabelItem型に限らない。
                 //このクラスとその子供のクラスはthis.modelをModel.ImageItemとして扱ってほしいのでダウンキャストしている。
