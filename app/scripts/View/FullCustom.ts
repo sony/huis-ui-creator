@@ -4893,13 +4893,13 @@ module Garage {
             private _updateElementsOnCanvasProperyAreaChanged() {
                 let FUNCTION_NAME = TAG + "_updateElementsOnCanvasProperyAreaChanged : ";
                 if (this.propertyArea_ == null) {
-                    return null;
+                    return;
                 }
 
                 let changedModel: Model.Item = this.propertyArea_.getModel();
                 if (!Util.JQueryUtils.isValidValue(changedModel)) {
                     console.warn(FUNCTION_NAME + "this.propertyArea is invalid");
-                    return null;
+                    return;
                 }
 
                 this._updateItemElementsOnCanvas([changedModel]);
