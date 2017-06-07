@@ -72,15 +72,6 @@ module Garage {
             }
 
 
-            /*
-             * テンプレート用の.htmlへのファイルパスを返す。
-             * @return {string}
-             */
-            protected _getTemplateFilePath() {
-                return constValue.TEMPLATE_FILE_PATH;
-            }
-
-
             protected getModel(): Model.ImageItem {
                 return <Model.ImageItem>this.model;
             }
