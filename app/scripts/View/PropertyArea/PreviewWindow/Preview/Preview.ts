@@ -29,14 +29,11 @@ module Garage {
 
         export abstract class Preview extends Backbone.View<Model.Item> {
 
-            protected template_: CDP.Tools.JST; 
+            protected template_: CDP.Tools.JST;
             protected domId_: string;
 
 
-            /**
-             * constructor
-             */
-            constructor(item : Model.Item, domId:string, templateDomId:string, options? : Backbone.ViewOptions<Model.Item>) {
+            constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;
                 this.domId_ = domId;
@@ -47,24 +44,24 @@ module Garage {
             events() {
                 // Please add events
                 return {
-                    
+
                 };
             }
 
 
-            abstract render(option? : any): Backbone.View<Model.Item>;
+            abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
+             */
             getModel(): Model.Item {
                 return this.model;
             }
 
 
-            /*
+            /**
              * @return {string} DOM全体に示すIDを返す。
              */
             getDomId(): string {
@@ -72,7 +69,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */

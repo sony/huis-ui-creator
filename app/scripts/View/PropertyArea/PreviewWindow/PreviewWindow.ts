@@ -32,9 +32,7 @@ module Garage {
             protected template_: CDP.Tools.JST;
             protected domId_: string;
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(options);
                 this.model = item;
@@ -54,7 +52,7 @@ module Garage {
             abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
+            /**
              * @return {string} DOM全体を示すIDを返す。
              */
             getDomId(): string {
@@ -62,7 +60,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */

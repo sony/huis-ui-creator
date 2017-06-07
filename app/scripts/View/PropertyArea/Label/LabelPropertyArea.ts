@@ -31,9 +31,7 @@ module Garage {
 
             private labelPreviewWindow_: LabelPreviewWindow;
 
-            /**
-             * constructor
-             */
+
             constructor(label: Model.LabelItem, commandManager: CommandManager) {
                 super(label, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
@@ -56,13 +54,13 @@ module Garage {
 
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = this.labelPreviewWindow_.getTextSize();
-                this._setMementCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
+                this._setMementoCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
             }
 
 
             private _onTextFieldChanged(event: Event) {
                 let changedText = this.labelPreviewWindow_.getText();
-                this._setMementCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
+                this._setMementoCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
             }
 
 
@@ -78,10 +76,10 @@ module Garage {
             }
 
 
-            /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.LabelItem}
-            */
+            /**
+             * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
+             * @return {Model.LabelItem}
+             */
             getModel(): Model.LabelItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.LabelItem型に限らない。
                 //このクラスとその子供のクラスはthis.modelをModel.LabelItemとして扱ってほしいのでダウンキャストしている。

@@ -32,9 +32,7 @@ module Garage {
 
             private textPreview_: TextPreview;
 
-            /**
-             * constructor
-             */
+
             constructor(label: Model.LabelItem) {
                 super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
@@ -52,12 +50,12 @@ module Garage {
 
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger("uiChange:size");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger("uiChange:text");//PropertyAraでUIの変更イベントの発火を探知するために用意。
+                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
 
@@ -72,7 +70,7 @@ module Garage {
             };
 
 
-            /*
+            /**
              * @return {number} テキストサイズ用のプルダウンの値を取得
              */
             getTextSize(): number {
@@ -80,7 +78,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} テキストフィールドの値を取得
              */
             getText(): string {

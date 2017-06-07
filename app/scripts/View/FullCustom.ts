@@ -4826,7 +4826,7 @@ module Garage {
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
             private _showDetailItemArea(item: Model.Item) {
-                //TODOE:delete this. after all propertyare class developed
+                //TODO: delete this. after all propertyare class developed
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
@@ -4834,7 +4834,7 @@ module Garage {
                     return;
                 }
 
-                //TODOE:delete this. after all propertyare class developed
+                //TODO: delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
                 if (item instanceof Model.ButtonItem) {
@@ -4882,13 +4882,13 @@ module Garage {
             private _updateElementsOnCanvasProperyAreaChanged() {
                 let FUNCTION_NAME = TAG + "_updateElementsOnCanvasProperyAreaChanged : ";
                 if (this.propertyArea_ == null) {
-                    return null;
+                    return;
                 }
 
                 let changedModel: Model.Item = this.propertyArea_.getModel();
                 if (!Util.JQueryUtils.isValidValue(changedModel)) {
                     console.warn(FUNCTION_NAME + "this.propertyArea is invalid");
-                    return null;
+                    return;
                 }
 
                 this._updateItemElementsOnCanvas([changedModel]);
@@ -4992,7 +4992,6 @@ module Garage {
 
 
                 if (this.macroProperty == null) {
-
                     this.macroProperty = new MacroButtonPropertyArea(
                         button,
                         $buttonDetail,

@@ -43,9 +43,7 @@ module Garage {
 
         export class TextPreview extends Preview {
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.LabelItem) {
                 super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
             }
@@ -53,11 +51,10 @@ module Garage {
 
             events() {
                 // Please add events
-                return {
-                    //TODO : constValueを流用したい。しかし、stringのように + でつなぐだけではうまくいかなかった。
-                    "change #select-text-size": "_onTextSizePulldownChanged",
-                    "change #text-field": "_onTextFieldChanged"
-                };
+                let events: Object = {};
+                events["change " + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
+                events["change " + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
+                return events;
             }
 
 
@@ -102,7 +99,7 @@ module Garage {
             };
 
 
-            /*
+            /**
              * @return {number} テキストサイズ変更用プルダウンの値を取得する。
              */
             getTextSize(): number {
@@ -110,17 +107,17 @@ module Garage {
             }
 
 
-            /*
+            /**
              * @return {string} テキストフィールドの値を取得する。
              */
             getText(): string {
                 return this.$el.find(constValue.TEXT_FIELD_DOM_ID).val();
             }
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.LabelItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.LabelItem}
+             */
             getModel(): Model.LabelItem {
                 return <Model.LabelItem>this.model;
             }

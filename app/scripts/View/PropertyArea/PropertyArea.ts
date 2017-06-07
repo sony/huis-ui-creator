@@ -32,9 +32,7 @@ module Garage {
             private commandManager_: CommandManager;
             protected template_: CDP.Tools.JST;
 
-            /**
-             * constructor
-             */
+
             constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
                 super({
                     model: item,
@@ -56,16 +54,16 @@ module Garage {
             abstract render(option?: any): Backbone.View<Model.Item>;
 
 
-            /*
-            *保持しているモデルを取得する
-            * @return {Model.BUttonItem}
-            */
+            /**
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
+             */
             getModel(): Model.Item {
                 return this.model;
             }
 
 
-            /*
+            /**
              * テンプレート用の.htmlへのファイルパスを返す。
              * @return {string}
              */
@@ -74,15 +72,15 @@ module Garage {
             }
 
 
-            /*
+            /**
              * CommandManagerにModelの変更を登録する。
              * PropertyArea上の変更はこの関数での変更のみとする。
              * @param {Model.Item} target 変更対象のモデル。
-             * @param {Object} prevValue 変更前の値。undo時に利用。
-             * @param {Object} nextValue 変更後の愛。redo時に利用。
+             * @param {Object} previousData 変更前の値。undo時に利用。
+             * @param {Object} nextData 変更後の愛。redo時に利用。
              */
-            protected _setMementCommand(target: Model.Item, previousData: Object, nextData: Object) {
-                let FUNCTION_NAME = TAG + "_setMementCommand ";
+            protected _setMementoCommand(target: Model.Item, previousData: Object, nextData: Object) {
+                let FUNCTION_NAME = TAG + "_setMementoCommand ";
 
                 //TODO: previousDataとnextDataをクラス化
                 var memento: IMemento = {
@@ -96,7 +94,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * プルダウンにJQueryMobileのスタイルを適応する。
              * JQueryMobileのスタイルは、新たに生成したDOM要素には自動的には適応されないため、
              * プルダウンをレンダリングした後に、この関数を利用する。
