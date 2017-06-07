@@ -4838,10 +4838,7 @@ module Garage {
                 } else {
                     if (this.propertyArea_ == null) {
                         let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
-                        this.propertyArea_ = propertyAreaFactory.create(
-                            item,
-                            this.commandManager_
-                        );
+                        this.propertyArea_ = propertyAreaFactory.create(item, this.commandManager_);
                         this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
                     }
                     $detail.append(this.propertyArea_.render().$el);
