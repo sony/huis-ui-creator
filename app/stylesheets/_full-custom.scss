@@ -864,6 +864,9 @@
 
             #background-image-preview-window.background {
                 height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
+                #image-container{
+                    height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_INTER_HEIGHT;
+                }
             }
 
             .property-state-image {
