@@ -51,7 +51,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "_onEditBtnClicked";
 
                 this._showImageSelectDialog().done((imageFilePath: string) => {
-                    if (imageFilePath == null){
+                    if (imageFilePath == null) {
                         console.warn(FUNCTION_NAME + "imagePath is invalid");
                         return;
                     }

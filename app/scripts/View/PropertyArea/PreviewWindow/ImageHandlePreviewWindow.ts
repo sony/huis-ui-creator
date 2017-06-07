@@ -128,7 +128,7 @@ module Garage {
                             img.src = renderedImagePath;
                             img.onload = () => {
                                 df.resolve(renderedImagePath);
-                            };                           
+                            };
                         }).fail((err) => {
                             console.error(FUNCTION_NAME + "_convertImage calling failed : err : " + err);
                             df.reject(null);
