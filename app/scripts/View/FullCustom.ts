@@ -267,7 +267,6 @@ module Garage {
                     //画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
                     "click #edit-image-background": "onEditImageBackgroundClicked",
-                    "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
                     "click #command-change-button-image": "onEditImageButtonInPopupClicked",
                     "click #command-change-button-text": "onEditTextButtonInPopupClicked",
 
@@ -2386,14 +2385,6 @@ module Garage {
                 this.startEditButtonImage($target, imageType);
             }
 
-            /**
-             * 詳細編集(画像)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditImageNonButtonImageClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                var imageType: IMAGE_TYPE = IMAGE_TYPE.NON_BUTTON_IMAGE;
-                this.startEditButtonImage($target, imageType);
-            }
 
             /**
              * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
@@ -2597,8 +2588,6 @@ module Garage {
                             this._reflectImageToButtonState(remoteId, $target, imageFilePath);
                         } else if (imageType === IMAGE_TYPE.BACKGROUND_IMAGE) { // ページ背景の場合
                             this._reflectImageToImageItem(remoteId, imageFilePath, true);
-                        } else { // 通常の image の場合
-                            this._reflectImageToImageItem(remoteId, imageFilePath);
                         }
                     }
                 );
