@@ -351,7 +351,7 @@ module Garage {
                     }
                 }
 
-                if (!Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
+                if (Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
                     this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
                 }
 
