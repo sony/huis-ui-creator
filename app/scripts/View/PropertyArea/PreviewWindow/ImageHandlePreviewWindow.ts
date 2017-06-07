@@ -155,7 +155,7 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let imageName = path.basename(imageFilePath);
-                let dirPath = this.getModel().getUserSelectImageDirFullPath();
+                let dirPath = this.getModel().getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, outputImagePath)

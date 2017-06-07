@@ -52,7 +52,7 @@ module Garage {
             private _onImageFilePathChanged(event: Event) {
                 let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
-                let changedImageFileRelativePath = path.join(this.getModel().getUserSelectImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
+                let changedImageFileRelativePath = path.join(this.getModel().getNotDefaultImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
                     this.getModel(),
