@@ -82,6 +82,7 @@ module Garage {
                 return constValue.TEMPLATE_FILE_PATH;
             }
 
+
             protected getModel(): Model.ImageItem {
                 return <Model.ImageItem>this.model;
             }
