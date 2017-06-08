@@ -276,7 +276,7 @@ module Garage {
              */
             copy(dstRemoteId: string): Model.Face {
                 let newFace: Model.Face = this.clone();
-                let images = newFace._searchImages();
+                let images = newFace.searchImages();
                 newFace._copyImage(images, dstRemoteId);
                 newFace.setWholeRemoteId(dstRemoteId);
                 return newFace;
@@ -321,7 +321,7 @@ module Garage {
              *
              * @return {Model.ImageItem[]} 検索されたImage。
              */
-            private _searchImages(): Model.ImageItem[] {
+            searchImages(): Model.ImageItem[] {
                 let images: Model.ImageItem[] = [];
                 for (let module of this.modules) {
                     if (module.image != null) {
