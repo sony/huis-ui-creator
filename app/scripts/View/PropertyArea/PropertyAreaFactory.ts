@@ -35,7 +35,9 @@ module Garage {
              * @return {PrjopertyArea} アイテムに応じたPropertyArea。適したPropertyAreaがない場合、nullを返す。
              */
             create(item: Model.Item, commandManager: CommandManager): PropertyArea {
-                if (item instanceof Model.ImageItem) {
+                if (item instanceof Model.ButtonItem) {
+                    return new NormalButtonPropertyArea(item, commandManager);
+                } else if (item instanceof Model.ImageItem) {
                     if (item.isBackgroundImage()) {
                         return new BackgroundImagePropertyArea(item, commandManager);
                     } else {

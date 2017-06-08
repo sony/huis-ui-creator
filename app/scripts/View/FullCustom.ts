@@ -4616,17 +4616,12 @@ module Garage {
                 //TODO: delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
-                if (item instanceof Model.ButtonItem) {
-                    if (this.isMacroButton(item)) {
-                        // マクロボタンアイテムの詳細エリアを表示
-                        this._renderMacroButtonItemDetailArea(item, $detail);
-                    } else if (this.isJumpButton(item)) {
-                        // ジャンプボタンアイテムの詳細エリアを表示
-                        this._renderJumpButtonItemDetailArea(item, $detail);
-                    } else {
-                        // ボタンアイテムの詳細エリアを表示
-                        this._renderButtonItemDetailArea(item, $detail);
-                    }
+                if (item instanceof Model.ButtonItem && this.isMacroButton(item)) {
+                    // マクロボタンアイテムの詳細エリアを表示
+                    this._renderMacroButtonItemDetailArea(item, $detail);
+                } else if (item instanceof Model.ButtonItem && this.isJumpButton(item)) {
+                    // ジャンプボタンアイテムの詳細エリアを表示
+                    this._renderJumpButtonItemDetailArea(item, $detail);
                 } else {
                     if (this.propertyArea_ == null) {
                         let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
@@ -4638,6 +4633,11 @@ module Garage {
                     if (this.propertyArea_ == null) {
                         console.warn(TAG + "_showDetailItemArea() unknown type item");
                     }
+                }
+
+                //TODO: 全ボタンのpropertyAreaをリファクタ後、削除
+                if (item instanceof Model.ButtonItem) {
+                    this.currentTargetButtonStates_ = item.state;
                 }
 
                 //TODO:PropertyAreaに動作を移管して削除する。
@@ -4660,7 +4660,7 @@ module Garage {
                 this._updateItemElementsOnCanvas([changedModel]);
             }
 
-           
+
 
 
             /*
@@ -4771,40 +4771,6 @@ module Garage {
                 this.currentTargetButtonStates_ = newButtonState;
 
                 this.$el.focus();
-            }
-
-
-            /**
-             * ボタンアイテムの詳細情報エリアのレンダリング
-             */
-            private _renderButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
-                if (!button || !$detail) {
-                    return;
-                }
-
-                //信号用のViewの初期化・更新
-                if (this.buttonProperty == null) {
-                    this.buttonProperty = new NormalButtonPropertyArea(
-                        button,
-                        this.commandManager_
-                    );
-                    //モデルが更新されたときfullcustom側のmodelも更新する
-                    this.buttonProperty.bind("updateModel", this.updateNormalButtonItemModel, this);
-                } else {
-                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
-                    this.buttonProperty.undelegateEvents();
-                    this.buttonProperty.delegateEvents();
-                }
-                this.currentTargetButtonStates_ = button.state;
-
-                //previewの情報を別途更新。
-                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
-                var inputURL = this._extractUrlFunction($preview.css("background-image"));
-                this._updatePreviewInDetailArea(inputURL, $preview);
-                //テキストボタン、あるいは画像のどちらかを表示する。
-                this.toggleImagePreview(button.default);
-
-                $detail.append(this.buttonProperty.render().$el);
             }
 
             /**
