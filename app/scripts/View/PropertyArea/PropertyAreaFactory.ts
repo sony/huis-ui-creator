@@ -36,7 +36,11 @@ module Garage {
              */
             create(item: Model.Item, commandManager: CommandManager): PropertyArea {
                 if (item instanceof Model.ImageItem) {
-                    return new ImagePropertyArea(item, commandManager);
+                    if (item.isBackgroundImage()) {
+                        return new BackgroundImagePropertyArea(item, commandManager);
+                    } else {
+                        return new ImagePropertyArea(item, commandManager);
+                    }
                 } else if (item instanceof Model.LabelItem) {
                     return new LabelPropertyArea(item, commandManager);
                 }
