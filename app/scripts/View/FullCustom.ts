@@ -4795,95 +4795,7 @@ module Garage {
                     this.buttonProperty.undelegateEvents();
                     this.buttonProperty.delegateEvents();
                 }
-
-                // ボタンの state 情報を付加
-                var $statesContainer = $buttonDetail.nextAll("#states-container");
                 this.currentTargetButtonStates_ = button.state;
-                if (this.currentTargetButtonStates_) {
-                    let templateState: Tools.JST = null;
-
-                    if (button.isAirconButton()) {
-                        // エアコンのパーツはひとつのパーツに複数の要素(例えば温度には19℃～29℃、±0, 1, 2,...など)が登録されている。
-                        // エアコンのパーツはファイル名変更等の編集作業を受け付けない(位置変更のみ)
-                        templateState = Tools.Template.getJST("#template-property-button-state-ac", this.templateItemDetailFile_);
-                    } else {
-                        templateState = Tools.Template.getJST("#template-property-button-state", this.templateItemDetailFile_);
-                    }
-
-
-                    // HUIS本体で「デフォルト指定が間違っていて要素のレンジ外を指している」ケースがあり得るのでその対策
-                    // もしレンジ外を指している場合はレンジ内の最初に見つかった要素をdefaultとして一時的に設定し直す
-                    // HUIS本体のデータ異常は解消されるわけではないので要注意
-
-                    var checkedArray: IStateDetail[] = [];
-
-                    checkedArray = this.currentTargetButtonStates_.filter((state: IStateDetail, i: number, arr: IStateDetail[]) => {
-                        return (
-                            (button.default == state.stateId) &&
-                            (((state.image != null) && (state.image[0] != null)) ||
-                                ((state.label != null) && (state.label[0] != null)))
-                        );
-                    });
-
-                    if (checkedArray.length === 0) { // レンジ内をdefaultが指していなかった(チェック用配列が空)
-                        button.default = this.currentTargetButtonStates_[0].stateId; // 先頭のをdefault値として設定
-                    }
-
-
-
-                    this.currentTargetButtonStates_.forEach((state: IStateDetail) => {
-                        let stateData: any = {};
-
-                        stateData.stateId = state.stateId;
-                        let resizeMode: string;
-                        if (state.image != null && state.image.length > 0) {
-                            stateData.image = state.image[0];
-                            let garageImageExtensions = state.image[0].garageExtensions;
-                            if (garageImageExtensions) {
-                                resizeMode = garageImageExtensions.resizeMode;
-                            }
-                        }
-                        if (state.label) {
-                            stateData.label = state.label[0];
-                        }
-
-                        if (state.action &&
-                            state.action[0] &&
-                            state.action[0].deviceInfo &&
-                            state.action[0].deviceInfo.functions) {
-                            stateData.functions = state.action[0].deviceInfo.functions;
-                        }
-
-                        this._setActionListToState(state);
-
-                        if (this.currentTargetButtonStates_.length > 1) { // Stateが２つ以上あるとき、default値に一致したパーツのみ表示する
-                            if (state.stateId != button.default) return;
-                        }
-
-                        let $stateDetail = $(templateState(stateData));
-                        $statesContainer.append($stateDetail);
-
-
-                        //テキストラベルの大きさの設定値を反映する。
-                        var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.stateId + "\"]");
-                        if (!_.isUndefined(stateData.label)) {
-                            var textSizeString: string = stateData.label.size;
-                            $textSize.val(textSizeString);
-                        }
-
-                        //信号コンテナを描画
-                        $statesContainer.append(this.buttonProperty.render(state.stateId).$el);
-
-                        // 文言あて・ローカライズ
-                        $statesContainer.i18n();
-
-
-
-                    });
-
-                }
-
-                $detail.append($buttonDetail);
 
                 //previewの情報を別途更新。
                 let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
@@ -4891,11 +4803,6 @@ module Garage {
                 this._updatePreviewInDetailArea(inputURL, $preview);
                 //テキストボタン、あるいは画像のどちらかを表示する。
                 this.toggleImagePreview(button.default);
-
-                //テキストをローカライズ
-                $("#face-item-detail-title").find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BUTTON"));
-                $("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
-                $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 
                 $detail.append(this.buttonProperty.render().$el);
             }
