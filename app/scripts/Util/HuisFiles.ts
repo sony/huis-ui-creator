@@ -610,7 +610,7 @@ module Garage {
                     return;
                 }
 
-                let masterFace = this._getFace(remoteId, true);
+                let masterFace = this.getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterFaceCode() masterFace is not found.");
                     return null;
@@ -644,7 +644,7 @@ module Garage {
                     return;
                 }
 
-                let face = this._getFace(remoteId, false);
+                let face = this.getFace(remoteId, false);
                 if (!face) {
                     console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
                     return null;
@@ -654,12 +654,12 @@ module Garage {
             }
 
             private _getMasterFunctions(remoteId: string): string[] {
-                let masterFace = this._getFace(remoteId, true);
+                let masterFace = this.getFace(remoteId, true);
                 return (masterFace != null) ? masterFace.getFunctions() : null;
             }
 
             public getFaceFunctions(remoteId: string): string[] {
-                let face = this._getFace(remoteId, false);
+                let face = this.getFace(remoteId, false);
                 return (face != null) ? face.getFunctions() : null;
             }
 
@@ -726,7 +726,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の code_db。見つからない場合は null。
              */
             getMasterCodeDb(remoteId: string): ICodeDB {
-                let masterFace = this._getFace(remoteId, true);
+                let masterFace = this.getFace(remoteId, true);
                 return (masterFace != null) ? masterFace.getCodeDb() : null;
             }
 
@@ -755,7 +755,7 @@ module Garage {
                     return null;
                 }
 
-                let face: Model.Face = this._getFace(remoteId, isMaster);
+                let face: Model.Face = this.getFace(remoteId, isMaster);
                 if (!face) {
                     return null;
                 }
@@ -940,7 +940,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
              */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
-                let masterFace: Model.Face = this._getFace(remoteId, true);
+                let masterFace: Model.Face = this.getFace(remoteId, true);
                 if (!masterFace) {
                     return null;
                 }
@@ -1548,37 +1548,6 @@ module Garage {
                     remote_id: remoteId,
                     scene_no: sceneNo
                 }
-            }
-
-            private _getFace(remoteId: string, isMaster: boolean): Model.Face {
-                if (!_.isArray(this.remoteInfos_)) {
-                    return null;
-                }
-
-                // Commonの場合はMasterFaceがないので、faceを返す。
-                if (remoteId == "common") {
-                    return this.commonRemoteInfo_.face;
-                }
-
-
-                // 指定した remoteId の情報を取得する
-                var targetRemoteInfos = this.remoteInfos_.filter((remoteInfo) => {
-                    if (remoteInfo.remoteId === remoteId) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-                if (!_.isArray(targetRemoteInfos) || targetRemoteInfos.length < 1) {
-                    return null;
-                }
-
-                var face = isMaster ? targetRemoteInfos[0].mastarFace : targetRemoteInfos[0].face;
-                if (!face) {
-                    return null;
-                }
-                return face;
             }
 
             /**
