@@ -108,6 +108,7 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             render(): Backbone.View<Model.Item> {
+                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_(this.getModel()));
                 this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);

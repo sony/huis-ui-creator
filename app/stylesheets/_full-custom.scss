@@ -897,7 +897,9 @@
         }
     }
     //画像編集ボタンのpopup
-    #edit-image-popup {
+    #edit-image-popup,
+    #edit-popup 
+    {
         position: relative;
         box-shadow: none;
         text-shadow: none;

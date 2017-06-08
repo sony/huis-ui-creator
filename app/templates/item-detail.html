@@ -102,7 +102,7 @@
         <div class="state-container">
             <div id="state-preview-window"></div>
 
-            <!-- プレビュー 
+            <!-- プレビュー
             <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
                 <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
                 <div class="text-field-in-preview">
@@ -135,7 +135,6 @@
                 </div>
             </div>
              -->
-
             <!-- アクション -->
             <div class="property-state-action">
                 <div id="signals-container"></div>
@@ -157,15 +156,6 @@
         <div id="text-preview"></div>
         <div id="edit-btn"></div>
     </script>
-
-    <!--画像編集用のPOPUP-->
-    <section id="edit-image-popup" data-role="popup">
-        <div id="popup-arrow"></div>
-        <ul class="popup-list">
-            <li id="command-change-button-image" class="popup-menu-item-text-black"><div id="popup-icon-image-image-button"></div><span class="menu-item-text">画像ボタン</span></li>
-            <li id="command-change-button-text" class="popup-menu-item-text-black"><div id="popup-icon-image-text-button"></div><span class="menu-item-text">テキストボタン</span></li>
-        </ul>
-    </section>
 
     <!-- 通常のボタンの１信号分のテンプレート -->
     <script type="text/template" id="template-property-button-signal-normal">

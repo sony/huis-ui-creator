@@ -311,6 +311,7 @@ module Garage {
                 }
                 this.$el.i18n();
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
+                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             }
 

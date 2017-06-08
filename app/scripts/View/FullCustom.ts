@@ -2332,7 +2332,7 @@ module Garage {
                 var $target = $(event.currentTarget);
 
                 //popのJquery
-                var $overflow = this.$page.find("#edit-image-popup"); // ポップアップのjQuery DOMを取得
+                var $overflow = this.$page.find("#edit-popup"); // ポップアップのjQuery DOMを取得
                 var previewBorderWidth: number = +(this.$page.find(".property-state-image-preview").css("border-width").replace("px", ""));
                 var $editImageBtn = $overflow.find("#command-change-button-image");
                 var $editTextBtn = $overflow.find("#command-change-button-text");
