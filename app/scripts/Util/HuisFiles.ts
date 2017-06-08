@@ -655,12 +655,12 @@ module Garage {
 
             private _getMasterFunctions(remoteId: string): string[] {
                 let masterFace = this._getFace(remoteId, true);
-                return HuisFiles.getFunctions(masterFace);
+                return (masterFace != null) ? masterFace.getFunctions() : null;
             }
 
             public getFaceFunctions(remoteId: string): string[] {
                 let face = this._getFace(remoteId, false);
-                return HuisFiles.getFunctions(face);
+                return (face != null) ? face.getFunctions() : null;
             }
 
             public getAllFunctions(remoteId: string): string[] {
@@ -716,91 +716,6 @@ module Garage {
                 }
 
                 return merged;
-            }
-
-
-            /**
-             * face内に存在する信号名を取得
-             */
-            private static getFunctions(face: Model.Face): string[] {
-                if (!face) {
-                    //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
-                    return null;
-                }
-
-                //var functions: string[] = [];
-                let functionCodeHash: IStringStringHash = {};
-                let faceModules = face.modules;
-
-                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(modules)) {
-                        return;
-                    }
-
-                    modules.forEach((module: IModule) => {
-                        let buttons = module.button;
-                        getFunctions_buttons(buttons, functionCodeHash);
-                    });
-
-                };
-
-                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(buttons)) {
-                        return;
-                    }
-
-                    buttons.forEach((button: IButton) => {
-                        let states = button.state;
-                        getFunctions_states(states, functionCodeHash);
-                    });
-                };
-
-                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(states)) {
-                        return;
-                    }
-
-                    states.forEach((state: IState) => {
-                        let actions = state.action;
-                        getFunctions_actions(actions, functionCodeHash);
-                    });
-                };
-
-                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
-                    let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
-
-                    if (!_.isArray(actions)) {
-                        return;
-                    }
-
-                    actions.forEach((action: IAction) => {
-                        let code_db = action.code_db;
-                        let code = action.code;
-                        if (code_db && code_db.function) {
-
-                            if (code != null && code != undefined && code != " ") {
-                                //学習によって登録された用 codeがある場合
-                                functionCodeHash[code_db.function] = action.code;
-                            } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
-                                //プリセット用 db_codeset と brand が空白文字で。
-                                functionCodeHash[code_db.function] = "";
-                            } else {
-                                //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
-                            }
-                        } else {
-                            console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
-                        }
-
-
-                    });
-
-                };
-
-                // module にあるすべてのボタンの機能を取得する
-                getFunctions_modules(faceModules, functionCodeHash);
-
-
-                return Object.keys(functionCodeHash);
             }
 
             /**
