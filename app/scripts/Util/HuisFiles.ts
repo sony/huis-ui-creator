@@ -47,10 +47,6 @@ module Garage {
             label: string;
         }
 
-
-
-
-
         /**
          * @class HuisFiles
          * @brief HUIS 内のファイルの parse 等を行うユーティリティークラス
@@ -526,11 +522,6 @@ module Garage {
                 }
             }
 
-
-
-
-
-
             /**
              * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
              * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
@@ -565,8 +556,6 @@ module Garage {
                 return null;
             }
 
-
-
             /**
             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
@@ -594,7 +583,6 @@ module Garage {
 
                 return null;
             }
-
 
             /**
              * 機器の master face に記述されている最初の code を取得する。
@@ -738,7 +726,6 @@ module Garage {
             getMasterFunctionCodeMap(remoteId: string): IStringStringHash {
                 return this.getFunctionCodeMap(remoteId, true);
             }
-
 
             /**
              * 指定リモコンの信号名：信号の連想配列を取得
