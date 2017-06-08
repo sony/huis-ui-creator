@@ -5462,15 +5462,9 @@ module Garage {
                 }
             }
 
-
-
         }
 
-
-
-
         var View = new FullCustom();
-
 
     }
 }
