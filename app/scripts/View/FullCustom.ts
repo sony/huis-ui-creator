@@ -829,10 +829,10 @@ module Garage {
                     // page module 内に background 
                     let $pageBackground = $page.find(".background");
                     if (0 < $pageBackground.length) {
-                        let moduleId: string = JQUtils.data($page, "cid");
-                        let itemId: string = JQUtils.data($pageBackground, "cid");
-                        if (moduleId && itemId) {
-                            backgroundModel = this.faceRenderer_canvas_.getImage(moduleId, itemId);
+                        let moduleCid: string = JQUtils.data($page, "cid");
+                        let itemCid: string = JQUtils.data($pageBackground, "cid");
+                        if (moduleCid && itemCid) {
+                            backgroundModel = this.faceRenderer_canvas_.getImage(moduleCid, itemCid);
                         }
                     }
 
