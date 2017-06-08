@@ -106,7 +106,6 @@ module Garage {
              * Model の initialize
              */
             initialize(attribute?, options?) {
-                //console.log("Model.ButtonItem initialize");
             }
 
             public isAirconButton() {
