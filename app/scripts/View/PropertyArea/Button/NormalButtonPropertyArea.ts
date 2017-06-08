@@ -171,10 +171,12 @@ module Garage {
                     return;
                 }
 
+                let stateId = this.getStateIdFrom($target);
+
                 //すでに、同じorderのDOMがない場合には追加
                 let $newSignalContainerElement = this.getSignalContainerElementOf(order);
                 if ($newSignalContainerElement.length == 0) {
-                    this.renderSignalContainerMin(order, this.getDefaultStateId());
+                    this.renderSignalContainerMin(order, stateId);
                     //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
 
                     //一個と同じ remoteIdを入力
