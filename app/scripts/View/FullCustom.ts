@@ -4758,34 +4758,7 @@ module Garage {
                 this._updateItemElementsOnCanvas([changedModel]);
             }
 
-            /*
-            *  ボタンの中のコード(学習して登録した際の信号)をすべて返す
-            */
-            private getCodesFrom(button: Model.ButtonItem): string[] {
-                let FUNCTION_NAME: string = TAG + "getCodesFrom";
-
-                if (button == undefined) {
-                    console.warn(FUNCTION_NAME + "button is undefined");
-                    return;
-                }
-
-                let result: string[] = [];
-
-                for (let state of button.state) {
-                    for (let action of state.action) {
-                        if (action.code != undefined) {
-                            result.push(action.code);
-                        }
-                    }
-                }
-
-                if (result.length == 0) {
-                    return null;
-                }
-
-                return result;
-
-            }
+           
 
 
             /*
@@ -4905,66 +4878,6 @@ module Garage {
             private _renderButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
                 if (!button || !$detail) {
                     return;
-                }
-
-                let codes: string[] = this.getCodesFrom(button);
-
-                // masterFunctions が未取得の場合は取得する
-                for (let state of button.state) {
-                    if (!state.action) continue;
-
-                    for (let action of state.action) {
-                        if (!action.deviceInfo) continue;
-
-                        let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
-
-                        if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
-                            let codeDb = deviceInfo.code_db;
-
-                            if (codeDb.brand != " " && codeDb.brand != undefined &&
-                                codeDb.device_type != " " && codeDb.device_type != undefined &&
-                                codeDb.model_number != " " && codeDb.device_type != undefined) {
-                                //codeDbの情報がそろっている場合、codeDbからfunctionsを代入
-                                let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
-
-                                let face = huisFiles.getFace(remoteId);
-                                if (face != null) {
-                                    deviceInfo.remoteName = face.name;
-                                } else {
-                                    deviceInfo.remoteName = null;
-                                }
-
-                                deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-
-                            } else if (codes != null) {
-                                //codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
-                                let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
-                                if (remoteId != null) {
-
-                                    let face = huisFiles.getFace(remoteId);
-                                    if (face != null) {
-                                        deviceInfo.remoteName = face.name;
-                                    } else {
-                                        deviceInfo.remoteName = null;
-                                    }
-
-
-                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-                                    deviceInfo.functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
-                                }
-                            } else if (deviceInfo.bluetooth_data != null) {
-                                //Bluetooth情報しかない場合
-                                let remoteId = this.faceRenderer_pallet_.getRemoteId();
-                                if (remoteId != null) {
-                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
-                                    deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
-                                }
-                            }
-
-                            action.deviceInfo = deviceInfo;
-
-                        }
-                    }
                 }
 
                 // ボタン情報の外枠部分をレンダリング
