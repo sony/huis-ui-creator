@@ -100,8 +100,9 @@
         </h3>
 
         <div class="state-container">
+            <div id="state-preview-window"></div>
 
-            <!-- プレビュー -->
+            <!-- プレビュー 
             <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPath}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
                 <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
                 <div class="text-field-in-preview">
@@ -133,6 +134,7 @@
                     </div>
                 </div>
             </div>
+             -->
 
             <!-- アクション -->
             <div class="property-state-action">
@@ -149,6 +151,11 @@
         </div>
     </script>
 
+    <!--state preview window-->
+    <script type="text/template" id="template-state-preview-window">
+        <div id="image-preview"></div>
+        <div id="text-preview"></div>
+        <div id="edit-btn"></div>
 
         <!--画像編集用のPOPUP-->
         <section id="edit-image-popup" data-role="popup">
