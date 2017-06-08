@@ -99,7 +99,7 @@ module Garage {
              * face内に存在する信号名を取得
              * @return {string[]} 信号名を表す文字列の配列
              */
-            getFunctions() {
+            getFunctions(): string[] {
                 //var functions: string[] = [];
                 let functionCodeHash: IStringStringHash = {};
                 let faceModules = this.modules;
@@ -177,7 +177,7 @@ module Garage {
              *
              * @return {ICodeDB} faceに記述されている最初の code_db。見つからない場合は null。
              */
-            getCodeDb() {
+            getCodeDb(): ICodeDB {
                 var modules = this.modules;
                 for (let i = 0, ml = modules.length; i < ml; i++) {
                     var buttons = modules[i].button;
