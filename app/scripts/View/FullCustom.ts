@@ -28,26 +28,6 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
-        interface IActionList {
-            touch: string;
-            touch_top: string;
-            touch_bottom: string;
-            touch_right: string;
-            touch_left: string;
-            long_press: string;
-            swipe_up: string;
-            swipe_down: string;
-            swipe_right: string;
-            swipe_left: string;
-            ring_right: string;
-            ring_left: string;
-        }
-
-        interface IStateDetail extends Model.ButtonState {
-            actionList?: IActionList;
-            actionListTranslate?: IActionList;
-        }
-
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -71,7 +51,7 @@ module Garage {
             private $currentTargetDummy_: JQuery;
             private currentItem_: Model.Item;
             private currentTargetPageIndex_: number;
-            private currentTargetButtonStates_: IStateDetail[];
+            private currentTargetButtonStates_: Model.ButtonState[];
             private currentTargetButtonStatesUpdated_: boolean;
             private selectedResizer_: string;
             private mouseMoveStartTargetPosition_: Model.Position;
@@ -256,10 +236,6 @@ module Garage {
                     "change #face-item-detail select": "onItemPropertySelectChanged",
                     "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
                     "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
-
-                    "click .delete-state-image": "onDeleteImageClicked",
-                    "click #add-state": "onAddButtonStateClicked",
-                    "click .remove-state": "onRemoveButtonStateClicked",
 
                     //画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
@@ -2632,80 +2608,6 @@ module Garage {
             }
 
             /**
-             * ボタンアイテムの詳細編集エリア内の状態追加ボタンを押したときに呼び出される
-             */
-            private onAddButtonStateClicked(event: Event) {
-                if (!this.currentItem_) {
-                    return;
-                }
-
-                let button = this.currentItem_;
-                if (button instanceof Model.ButtonItem) {
-                    var states = button.state;
-                    var newStateId = 0;
-                    if (states) {
-                        // 未使用の stateId を探す
-                        let sortedStates = states.sort((state1, state2) => {
-                            return state1.stateId - state2.stateId;
-                        });
-                        sortedStates.forEach((state) => {
-                            if (newStateId === state.stateId) {
-                                newStateId++;
-                            }
-                        });
-                    }
-                    var newState: IState = {
-                        id: newStateId
-                    };
-
-                    if (!this.currentTargetButtonStates_) {
-                        this.currentTargetButtonStates_ = [];
-                    }
-                    this.currentTargetButtonStates_.push(new Model.ButtonState({
-                        stateId: newStateId
-                    }));
-                    this.currentTargetButtonStatesUpdated_ = true;
-
-                    this._updateCurrentModelButtonStatesData();
-                    this._showDetailItemArea(this.currentItem_);
-                }
-            }
-
-            /**
-             * ボタンアイテムの詳細編集エリア内の状態削除ボタンを押したときに呼び出される
-             */
-            private onRemoveButtonStateClicked(event: Event) {
-                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
-                    return;
-                }
-
-                var $target = $(event.currentTarget);
-                var stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-                if (_.isUndefined(stateId)) {
-                    return;
-                }
-
-                // stateId と一致する state を検索し、削除する
-                var targetStateIndex = -1;
-                for (let i = 0, l = this.currentTargetButtonStates_.length; i < l && targetStateIndex < 0; i++) {
-                    let state = this.currentTargetButtonStates_[i];
-                    if (state.stateId === stateId) {
-                        targetStateIndex = i;
-                    }
-                }
-                if (targetStateIndex < 0) {
-                    return;
-                }
-
-                this.currentTargetButtonStates_.splice(targetStateIndex, 1);
-                this.currentTargetButtonStatesUpdated_ = true;
-
-                this._updateCurrentModelButtonStatesData();
-                this._showDetailItemArea(this.currentItem_);
-
-            }
-
-            /**
             * 戻るボタンが押されたときに呼び出される
             */
             private onBackButtonClicked(event: Event) {
@@ -3641,7 +3543,7 @@ module Garage {
              * @param stateId {number} 現在ターゲットとなっているボタンから取得する state の ID
              * @return {IStateDetail} 取得した state の情報。存在しない場合は undefined
              */
-            private _getCurrentTargetState(stateId: number): IStateDetail {
+            private _getCurrentTargetState(stateId: number): Model.ButtonState {
                 if (!this.currentTargetButtonStates_) {
                     return undefined;
                 }
@@ -5057,10 +4959,6 @@ module Garage {
                 $detail.i18n();
             }
 
-
-
-
-
             /*
             * url("***");から、***を抽出する
             */
@@ -5073,66 +4971,6 @@ module Garage {
                 return result;
 
             }
-
-
-            /**
-             * フルカスタムリモコン編集画面で扱いやすくするために、button.state 内の action と translate を
-             * input に対して1対1になるように格納する
-             */
-            private _setActionListToState(state: IStateDetail) {
-                var actionList: IActionList = {
-                    touch: "none",
-                    touch_top: "none",
-                    touch_bottom: "none",
-                    touch_right: "none",
-                    touch_left: "none",
-                    long_press: "none",
-                    swipe_up: "none",
-                    swipe_down: "none",
-                    swipe_right: "none",
-                    swipe_left: "none",
-                    ring_right: "none",
-                    ring_left: "none"
-                };
-
-                var actionListTranslate: IActionList = {
-                    touch: "none",
-                    touch_top: "none",
-                    touch_bottom: "none",
-                    touch_right: "none",
-                    touch_left: "none",
-                    long_press: "none",
-                    swipe_up: "none",
-                    swipe_down: "none",
-                    swipe_right: "none",
-                    swipe_left: "none",
-                    ring_right: "none",
-                    ring_left: "none"
-                };
-
-                var actions: IAction[] = state.action;
-                if (actions) {
-                    actions.forEach((action) => {
-                        let codeDb = action.code_db;
-                        if (codeDb) {
-                            actionList[action.input] = codeDb.function;
-                        }
-                        //actionList[action.input] = action.code;
-                    });
-                }
-
-
-                var translates: IStateTranslate[] = state.translate;
-                if (translates) {
-                    translates.forEach((translate) => {
-                        actionListTranslate[translate.input] = "translate-state-" + translate.next;
-                    });
-                }
-
-                state.actionList = actionList;
-                state.actionListTranslate = actionListTranslate;
-            }
-
 
             /**
              * 指定した要素にひも付けられている model を取得
