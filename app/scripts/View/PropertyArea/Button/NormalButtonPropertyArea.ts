@@ -27,7 +27,7 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.NormalButtonPropertyArea] ";
 
         namespace constValue {
-            export const TEMPLATE_DOM_ID = "#template-property-button-state";
+            export const TEMPLATE_DOM_ID = "#template-normal-button-property-area";
         }
 
         //アクションpulldownの選択肢をコントロールするためにつかうModelクラス。
