@@ -259,14 +259,12 @@ module Garage {
 
                     "click #refer-image": "onReferImageClicked",
                     "click .refer-state-image": "onReferImageClicked",
-                    "click #delete-background-image": "onDeleteImageClicked",
                     "click .delete-state-image": "onDeleteImageClicked",
                     "click #add-state": "onAddButtonStateClicked",
                     "click .remove-state": "onRemoveButtonStateClicked",
 
                     //画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
-                    "click #edit-image-background": "onEditImageBackgroundClicked",
                     "click #command-change-button-image": "onEditImageButtonInPopupClicked",
                     "click #command-change-button-text": "onEditTextButtonInPopupClicked",
 
@@ -2389,16 +2387,6 @@ module Garage {
             }
 
             /**
-             * 詳細編集(背景)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditImageBackgroundClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                var imageType: IMAGE_TYPE = IMAGE_TYPE.BACKGROUND_IMAGE;
-                this.startEditButtonImage($target, imageType);
-            }
-
-
-            /**
              * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
              * 出現したポップアップの中の画像編集ボタンがクリックされたときに呼び出される
              **/
@@ -2499,6 +2487,7 @@ module Garage {
                 event.preventDefault();
             }
 
+            // TODO: 使われていないか調査して削除
             /**
              * 画像参照ボタンをクリックしたときに呼び出される。
              */
@@ -2508,8 +2497,6 @@ module Garage {
 
                 if ($target.hasClass("refer-state-image")) {// ボタン内の state の場合
                     ImageType = IMAGE_TYPE.BUTTON_IMAGE;
-                } else if ($target.hasClass("page-background-src")) { // ページ背景の場合
-                    ImageType = IMAGE_TYPE.BACKGROUND_IMAGE;
                 } else { // 通常の image の場合
                     ImageType = IMAGE_TYPE.NON_BUTTON_IMAGE;
                 }
@@ -2598,93 +2585,9 @@ module Garage {
 
                         if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
                             this._reflectImageToButtonState(remoteId, $target, imageFilePath);
-                        } else if (imageType === IMAGE_TYPE.BACKGROUND_IMAGE) { // ページ背景の場合
-                            this._reflectImageToImageItem(remoteId, imageFilePath, true);
                         }
                     }
                 );
-            }
-
-
-            /**
-             * 詳細編集エリア内の画像削除ボタンを押したときに呼ばれる。
-             */
-            private onDeleteImageClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                this.procDeleteImage($target);
-                this._updatePreviewInDetailArea("none", $("#property-image-preview"));
-            }
-
-            /*
-            * 画像の削除処理
-            */
-            private procDeleteImage($target: JQuery) {
-
-                if ($target.hasClass("delete-state-image") || $target.hasClass("property-state-value")) {
-                    let stateId = parseInt(JQUtils.data($target, "stateId"), 10);
-                    if (_.isUndefined(stateId)) {
-                        return;
-                    }
-                    let targetState = this._getCurrentTargetState(stateId);
-                    if (!targetState) {
-                        return;
-                    }
-                    // 状態内の image を削除
-                    targetState.image = null;
-                    this._updateCurrentModelStateData(stateId, {
-                        "path": null,
-                        "resolved-path": null
-                    });
-
-                    $(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
-                    $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
-                } else if ($target.attr("id") === "delete-background-image") {
-                    // 背景画像の削除
-                    $(".property-value.page-background-src").val("");
-                    $("#property-image-preview").css("background-image", "none");
-                    this._updateCurrentModelData("path", "");
-                    this._updateCurrentModelData("enabled", false);
-                }
-
-            }
-
-            /**
-             * 画像アイテムに指定した画像を反映させる
-             */
-            private _reflectImageToImageItem(remoteId: string, imageFilePath: string, pageBackground?: boolean) {
-                let imageFileName = path.basename(imageFilePath);
-
-                /* model の更新 */
-
-                // 画像は remoteimages/[remoteId]/ 以下に配置される。
-                // image.path には remoteimages 起点の画像パスを指定する。
-                var imagePath = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                // face ディレクトリ内に配置されるべき画像のパスを取得
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, imagePath)).replace(/\\/g, "/");
-                // 画像を face ディレクトリ内にコピー
-                // 画像のリサイズとグレースケール化
-                Model.OffscreenEditor.editImage(imageFilePath, pageBackground ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS, resolvedPath)
-                    .done((editedImage) => {
-                        // 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-                        let editedImageName = path.basename(editedImage.path);
-                        let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-                        if (pageBackground) {
-                            // pageBackground の場合、画像の指定がないときは disabled になっているので enabled にする
-                            this._updateCurrentModelData({
-                                "enabled": true,
-                                "path": editedImagePath,
-                                "resizeOriginal": editedImagePath,
-                                "resized": true
-                            });
-                        } else {
-                            this._updateCurrentModelData({
-                                "path": editedImagePath,
-                                "resizeOriginal": editedImagePath,
-                                "resized": true
-                            });
-                        }
-
-                    });
             }
 
             private _reflectImageToButtonState(remoteId: string, $target: JQuery, imageFilePath: string) {
@@ -4879,49 +4782,6 @@ module Garage {
 
                 this._updateItemElementsOnCanvas([changedModel]);
             }
-
-
-            /* TODO: delete 
-            private _showDetailItemAreaOfPage($pageModule: JQuery) {
-                let FUNCTION_NAME = TAG + " : _showDetailItemAreaOfPage : ";
-
-                let $detail = $("#face-item-detail");
-                $detail.children().remove();
-                if (!$pageModule) {
-                    return;
-                }
-
-                let templatePageBackground = Tools.Template.getJST("#template-page-background-detail", this.templateItemDetailFile_);
-
-                let backgroundModel: Model.ImageItem = null;
-
-                // page module 内に background 
-                let $pageBackground = $pageModule.find(".background");
-                if (0 < $pageBackground.length) {
-                    let moduleId: string = JQUtils.data($pageModule, "cid");
-                    let itemId: string = JQUtils.data($pageBackground, "cid");
-                    if (moduleId && itemId) {
-                        backgroundModel = this.faceRenderer_canvas_.getImage(moduleId, itemId);
-                    }
-                }
-                if (backgroundModel && backgroundModel.enabled) {
-
-                    let $pageBackgroundDetail = $(templatePageBackground(backgroundModel));
-                    $detail.append($pageBackgroundDetail);
-                    let resizeMode = backgroundModel.resizeMode;
-                    if (resizeMode) {
-                        $(".image-resize-mode").val(resizeMode);
-                    }
-                    let inputURL = JQUtils.enccodeUriValidInCSS(backgroundModel.resolvedPath);
-                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
-                } else {
-                    let $pageBackgroundDetail = $(templatePageBackground({}));
-                    $detail.append($pageBackgroundDetail);
-                }
-
-                $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_BACKGROUND"));
-            }*/
-
 
             /*
             *  ボタンの中のコード(学習して登録した際の信号)をすべて返す
