@@ -1303,40 +1303,46 @@ module Garage {
                 var moduleCount = modules.length;
                 let iModules: IModule[] = [];
                 var moduleNames: string[] = [];
-                // module ファイルの更新
-                for (let i = 0; i < moduleCount; i++) {
-                    let moduleInfo = this._updateModule(remoteId, modules[i], outputDirPath);
-                    iModules.push(moduleInfo.module);
-                    moduleNames.push(moduleInfo.name);
+
+                let images: Model.ImageItem[] = inputFace.searchImages();
+                for (let image of images) {
+                    image.reserveResizeImageFile(remoteId, outputDirPath);
                 }
-
-                // face ファイルの更新
-                var face: IPlainFace = {
-                    name: faceName,
-                    category: deviceType,
-                    modules: moduleNames
-                };
-
-                let faceFileName = remoteId + ".face"
-                if (isMasterFace) {
-                    faceFileName = "master_" + faceFileName;
-                }
-
-                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, faceFileName);
-
-                //ファイルパスの指定がある場合、書き出し先を変更する。
-                if (outputDirPath != null) {
-                    faceFilePath = path.join(outputDirPath, remoteId, faceFileName);
-                }
-
-                fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
                 // サイズ変更を行った画像を一括でリサイズする
                 this._resizeImages().always(() => {
                     // 不要な画像を削除
                     if (!isToImportExport) {
-                        this._removeUnnecessaryImages(remoteId, iModules);
+                        this._removeUnnecessaryImages(inputFace);
                     }
+
+                    // module ファイルの更新
+                    for (let i = 0; i < moduleCount; i++) {
+                        let moduleInfo = this._updateModule(remoteId, modules[i], outputDirPath);
+                        iModules.push(moduleInfo.module);
+                        moduleNames.push(moduleInfo.name);
+                    }
+
+                    // face ファイルの更新
+                    var face: IPlainFace = {
+                        name: faceName,
+                        category: deviceType,
+                        modules: moduleNames
+                    };
+
+                    let faceFileName = remoteId + ".face"
+                    if (isMasterFace) {
+                        faceFileName = "master_" + faceFileName;
+                    }
+
+                    var faceFilePath = path.join(this.huisFilesRoot_, remoteId, faceFileName);
+
+                    //ファイルパスの指定がある場合、書き出し先を変更する。
+                    if (outputDirPath != null) {
+                        faceFilePath = path.join(outputDirPath, remoteId, faceFileName);
+                    }
+
+                    fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
                     /* remotelist.ini ファイルを更新 */
 
@@ -2060,33 +2066,6 @@ module Garage {
             }
 
 
-            /*
-            * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
-            * @param module :IModule 参照元のモジュール
-            * @param images :Model.ImageItem[] 代入先のモジュール
-            */
-            private setVersionInfoToImage(iModule: IModule, images: Model.ImageItem[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToModel.ImageItem : ";
-
-                if (iModule == null) {
-                    console.warn(FUNCTION_NAME + "iModule is null");
-                    return;
-                }
-
-                if (images == null) {
-                    console.warn(FUNCTION_NAME + "images is null");
-                    return;
-                }
-
-                if (!iModule.version) {
-                    return;//バージョン情報が存在しない場合、なにもしない。
-                }
-
-                for (let i = 0; i < images.length; i++) {
-                    images[i].version = iModule.version;
-                }
-            }
-
             /**
              * module ファイルを parse する
              */
@@ -2169,105 +2148,27 @@ module Garage {
             /**
              * module リストから使用している画像パスをすべて取得する
              */
-            private _getImagePathsReferredInModules(modules: IModule[]): string[] {
-                let results: string[] = [];
-                if (!modules || !_.isArray(modules)) {
+            private _getImagePathsReferredInFace(face: Model.Face): string[] {
+
+                if (face == null) {
                     return [];
                 }
 
-                modules.forEach((module) => {
-                    results = results.concat(this._getImagePathsReferredInModule(module));
-                });
-
-                return results;
-            }
-
-            /**
-             * 指定したモジュール内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInModule(module: IModule): string[] {
                 let results: string[] = [];
-                if (!module || !_.isObject(module)) {
-                    return [];
-                }
-
-                if (module.image) {
-                    results = results.concat(this._getImagePathsReferredInImages(module.image));
-                }
-                if (module.button) {
-                    results = results.concat(this._getImagePathsReferredInButtons(module.button));
-                }
-
-                return results;
-            }
-
-            /**
-             * 指定したボタン内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInButtons(buttons: IButton[]): string[] {
-                let results: string[] = [];
-                if (!buttons || !_.isArray(buttons)) {
-                    return [];
-                }
-
-                buttons.forEach((button) => {
-                    if (button.state) {
-                        results = results.concat(this._getImagePathsReferredInButtonStates(button.state));
+                for (let image of face.searchImages()) {
+                    results = results.concat(image.path.replace(/\\/g, "/"));
+                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
+                        results = results.concat(image.garageExtensions.original.replace(/\\/g, "/"));
                     }
-                });
-
-                return results;
-            }
-
-            /**
-             * 指定したボタンの状態で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInButtonStates(states: IState[]): string[] {
-                let results: string[] = [];
-                if (!states || !_.isArray(states)) {
-                    return [];
                 }
-
-                states.forEach((state) => {
-                    if (state.image) {
-                        results = results.concat(this._getImagePathsReferredInImages(state.image));
-                    }
-                });
-                return results;
-            }
-
-            /**
-             * 指定した画像アイテム内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInImages(images: IImage[]): string[] {
-                let results: string[] = [];
-                if (!images || !_.isArray(images)) {
-                    return [];
-                }
-
-                images.forEach((image) => {
-                    if (image) {
-                        if (_.isString(image.path)) {
-                            results.push(image.path);
-                        }
-                        let garage_extensions = image.garage_extensions;
-                        if (garage_extensions) {
-                            if (_.isString(garage_extensions.original)) {
-                                results.push(garage_extensions.original);
-                            }
-                        }
-                    }
-
-                });
-
                 return results;
             }
 
             /**
              * face が参照している module 内で使用されていない画像を削除する
              */
-            private _removeUnnecessaryImages(remoteId: string, modules: IModule[]) {
-                let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, remoteId)).replace(/\\/g, "/");
+            private _removeUnnecessaryImages(face: Model.Face) {
+                let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, face.remoteId)).replace(/\\/g, "/");
                 if (!fs.existsSync(remoteImageDirectory)) {
                     return;
                 }
@@ -2282,7 +2183,7 @@ module Garage {
                     });
 
                 // face が参照している module 内で参照されている画像を列挙
-                let referredImageFiles = this._getImagePathsReferredInModules(modules);
+                let referredImageFiles = this._getImagePathsReferredInFace(face);
 
                 // 参照されていない画像を削除
                 fileList.forEach((file) => {
