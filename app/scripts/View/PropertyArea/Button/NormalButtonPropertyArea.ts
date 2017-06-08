@@ -289,9 +289,9 @@ module Garage {
              * @return {Backbone.View<Model.Item>}
              */
             render(): Backbone.View<Model.Item> {
+                super.render();
                 let FUNCTION_NAME = TAG + "renderViewState";
-                this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
+                
 
                 if (this.getModel().isAirconButton() ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||

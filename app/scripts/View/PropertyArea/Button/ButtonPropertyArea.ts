@@ -30,7 +30,6 @@ module Garage {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
-
             protected availableRemotelist: IRemoteInfo[];
 
             /**
@@ -47,6 +46,8 @@ module Garage {
              * 編集中リモコンのmodules
              */
             protected modules: Model.Module[];
+            protected statePreviewWindow_: StatePreviewWindow;
+
 
             /**
              * constructor
@@ -60,6 +61,7 @@ module Garage {
                 //備考：el: $el.get(0)ではうまく動かないようです。
                 super(button, templateDomId, commandManager, { el: $el });
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
+                this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId());
                 this._setDeviceInfo();
             }
 
@@ -104,6 +106,13 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// public method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            render(): Backbone.View<Model.Item> {
+                this.$el.children().remove();
+                this.$el.append(this.template_(this.getModel()));
+                this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);
+                return this
+            }
 
             /*
             *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。

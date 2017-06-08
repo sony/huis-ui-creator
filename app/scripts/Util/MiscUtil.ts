@@ -188,6 +188,13 @@ module Garage {
 
                 return false;
             }
+
+            /** 
+             * @return{boolen} 有効な配列の場合trueを返す。
+             */
+            static isValidArray(array: any[]) {
+                return array.length > 0;
+            }
         }
     }
 }

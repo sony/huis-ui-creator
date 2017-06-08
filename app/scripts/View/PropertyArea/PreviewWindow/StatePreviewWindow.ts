@@ -27,17 +27,19 @@ module Garage {
             export const TEMPLATE_DOM_ID = "#template-state-preview-window";
             export const DOM_ID = "#state-preview-window";
             export const EDIT_BTN_DOM_ID = "#edit-btn";
+            export const TARGET_IMAGE_INDEX = 0;
+            export const TARGET_TEXT_INDEX = 0;
         }
 
         export class StatePreviewWindow extends PreviewWindow {
 
-            private imageOrTextPreview_: Preview;
-            private targetState_: Model.ButtonState;
+            private preview_: Preview;
+            private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId :number) {
                 super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
-                this.targetState_ = button.getStateByStateId(stateId);
-                //this.imagePreview_ = new ImagePreview(image);
+                this.targetStateId_ = stateId;
+                this.preview_ = this._createPreview();
             }
 
 
@@ -68,12 +70,24 @@ module Garage {
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_());
-                //this.$el.find(this.imagePreview_.getDomId()).append(this.imagePreview_.render().$el);
+                this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             };
 
+            private _createPreview(): Preview {
+                let targetState = this._getModel().getStateByStateId(this.targetStateId_);
+                if (Util.MiscUtil.isValidArray(targetState.image)) {
+                    return new ImagePreview(targetState.image[constValue.TARGET_IMAGE_INDEX]);
+                } else {
+                    return new TextPreview(targetState.label[constValue.TARGET_TEXT_INDEX]);
+                }
+            }
 
+            private _getModel(): Model.ButtonItem {
+                return <Model.ButtonItem>this.model;
+            }
+            
         }
     }
 }
