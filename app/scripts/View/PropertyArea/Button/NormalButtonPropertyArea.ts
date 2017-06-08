@@ -285,13 +285,13 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             /*
-             * モデルをレンダリングする。stateIdを指定した場合、そのstateIdの内容を描画する。
-             * @param {number} stateId? 指定した場合、特定のステートを描画する。
+             * モデルをレンダリングする。
              * @return {Backbone.View<Model.Item>}
              */
-            render(stateId: number = this.getDefaultStateId()): Backbone.View<Model.Item> {
-
+            render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "renderViewState";
+                this.$el.children().remove();
+                this.$el.append(this.template_(this.getModel()));
 
                 if (this.getModel().isAirconButton() ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
@@ -305,10 +305,12 @@ module Garage {
                     //＋ボタンも表示しない
                     this.$el.find(".add-btn-container").remove();
                 } else {
+                    let stateId: number = this.getDefaultStateId();
                     this.updateAssiendInputActionsFromModel(stateId);
                     this.renderSignals(stateId);
                 }
-
+                this.$el.i18n();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
                 return this;
             }
 
