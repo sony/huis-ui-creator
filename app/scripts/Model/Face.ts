@@ -170,6 +170,36 @@ module Garage {
                 return Object.keys(functionCodeHash);
             }
 
+            getCodeDb() {
+                var modules = this.modules;
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                var codeDb = actions[l].code_db;
+                                if (codeDb) {
+                                    return $.extend(true, {}, codeDb);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+
             /*
              * このFaceをfullcustomで生成されるModuleと同様のフォーマットのFaceに変換する。
              */
