@@ -257,8 +257,6 @@ module Garage {
                     "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
                     "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
 
-                    "click #refer-image": "onReferImageClicked",
-                    "click .refer-state-image": "onReferImageClicked",
                     "click .delete-state-image": "onDeleteImageClicked",
                     "click #add-state": "onAddButtonStateClicked",
                     "click .remove-state": "onRemoveButtonStateClicked",
@@ -2485,22 +2483,6 @@ module Garage {
              */
             private onSelectMenuMouseDown(event: Event) {
                 event.preventDefault();
-            }
-
-            // TODO: 使われていないか調査して削除
-            /**
-             * 画像参照ボタンをクリックしたときに呼び出される。
-             */
-            private onReferImageClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                var ImageType: IMAGE_TYPE = null;
-
-                if ($target.hasClass("refer-state-image")) {// ボタン内の state の場合
-                    ImageType = IMAGE_TYPE.BUTTON_IMAGE;
-                } else { // 通常の image の場合
-                    ImageType = IMAGE_TYPE.NON_BUTTON_IMAGE;
-                }
-                this.startEditButtonImage($target, ImageType);
             }
 
             /*
