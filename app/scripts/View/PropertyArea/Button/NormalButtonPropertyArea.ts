@@ -531,19 +531,12 @@ module Garage {
 
 
             /*
-            * 現在、表示されているStateIdを取得する
+            * 現在、表示されているStateIdを取得する.
             */
             private getStateId(): number {
                 let FUNCTION_NAME: string = TAG + "getStateId : ";
-
-                //+ボタンをstateIdを取得できるソースととる
-                let $sorce = this.$el.find("#add-signal-btn");
-
-                if (!Util.JQueryUtils.isValidJQueryElement($sorce)) {
-                    console.warn(FUNCTION_NAME + "$source is invalid");
-                }
-
-                return parseInt(JQUtils.data($sorce, "stateId"), 10);
+                //現在はデフォルトを返す。
+                return this.getDefaultStateId();
             }
 
             /*
