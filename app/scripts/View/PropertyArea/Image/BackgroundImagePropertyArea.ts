@@ -25,6 +25,7 @@ module Garage {
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-background-image-property-area";
+            export const INVALID_PATH = "";
         }
 
         export class BackgroundImagePropertyArea extends PropertyArea {
@@ -37,7 +38,7 @@ module Garage {
                 this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
 
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
-                this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:delete", this._onImageFilePathChanged);
+                this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:delete", this._onBackgroundImageDeleted);
                 this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
 
@@ -50,7 +51,18 @@ module Garage {
             }
 
             private _onBackgroundImageDeleted(event: Event) {
-
+                this._setMementoCommand(
+                    this.getModel(),
+                    {
+                        "enabled": this.getModel().enabled,
+                        "path": this.getModel().path,
+                        "resizeOriginal": this.getModel().resizeOriginal
+                    },
+                    {
+                        "enabled": false,
+                        "path": constValue.INVALID_PATH,
+                        "resizeOriginal": constValue.INVALID_PATH
+                    });
             }
 
 
