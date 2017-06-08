@@ -107,8 +107,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(button: Model.ButtonItem, commandManager: CommandManager) {
+                super(button, constValue.TEMPLATE_DOM_ID, null, commandManager);
                 this.assignedInputActions = [];
             }
 

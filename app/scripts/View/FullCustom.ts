@@ -4782,16 +4782,10 @@ module Garage {
                     return;
                 }
 
-                // ボタン情報の外枠部分をレンダリング
-                var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-
-                var $buttonDetail = $(templateButton(button));
-
                 //信号用のViewの初期化・更新
                 if (this.buttonProperty == null) {
                     this.buttonProperty = new NormalButtonPropertyArea(
                         button,
-                        $buttonDetail,
                         this.commandManager_
                     );
                     //モデルが更新されたときfullcustom側のmodelも更新する
@@ -4799,7 +4793,6 @@ module Garage {
                 } else {
                     //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
                     this.buttonProperty.undelegateEvents();
-                    this.buttonProperty.$el = $buttonDetail;
                     this.buttonProperty.delegateEvents();
                 }
 
@@ -4904,6 +4897,7 @@ module Garage {
                 $("#button-state-label-action").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_ACTION"));
                 $("#text-title-edit-label").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL"));
 
+                $detail.append(this.buttonProperty.render().$el);
             }
 
             /**
