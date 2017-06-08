@@ -291,7 +291,6 @@ module Garage {
                 let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
                 huisFiles.updateFace(face, buttonDeviceInfoCache)
                     .always(() => {
-                        garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
                             let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {

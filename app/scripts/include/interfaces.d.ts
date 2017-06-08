@@ -24,7 +24,6 @@
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
 /// <reference path="../Util/MiscUtil.ts" />
-/// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
 /// <reference path="../Util/SelectRemotePageDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
@@ -510,11 +509,6 @@ declare module Garage {
      * Util.HuisFiles のインスタンス
      */
     var huisFiles: Util.HuisFiles;
-    /**
-     * Util.GarageFiles のインスタンス
-     */
-    var garageFiles: Util.GarageFiles;
-
     /**
      * face のページの横サイズ
      */
