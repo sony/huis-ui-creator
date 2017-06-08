@@ -299,9 +299,13 @@
     <TypeScriptCompile Include="app\scripts\Model\ButtonItem.ts" />
     <TypeScriptCompile Include="app\scripts\Model\ButtonItemsCollection.ts" />
     <TypeScriptCompile Include="app\scripts\View\PhnConfig.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Image\ImagePropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Label\LabelPropertyArea.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\ImagePreviewWindow.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\LabelPreviewWindow.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\ImageHandlePreviewWindow.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\PreviewWindow.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\ImagePreview.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\TextPreview.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\Preview.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PropertyArea.ts" />

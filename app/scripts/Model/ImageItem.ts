@@ -246,7 +246,7 @@ module Garage {
             }
 
             get properties(): string[] {
-                return ["enabled", "area", "path", "resizeMode"];
+                return ["enabled", "area", "path", "resizeMode", "resizeOriginal"];
             }
 
             get itemType(): string {
@@ -350,6 +350,11 @@ module Garage {
                         };
                     }
                 }
+
+                if (Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
+                    this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
+                }
+
                 this.garageExtensions = garageExtensions;
             }
 
@@ -385,6 +390,25 @@ module Garage {
 
             set resizeResolvedOriginalPathCSS(val: string) {
                 this.set("resizeResolvedOriginalPathCSS", val);
+            }
+
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの絶対パスを返す。
+             */
+            getNotDefaultImageDirFullPath(): string {
+                return path.resolve(
+                    path.join(
+                        HUIS_FILES_ROOT,
+                        REMOTE_IMAGES_DIRECTORY_NAME,
+                        this.getNotDefaultImageDirRelativePath()
+                    )).replace(/\\/g, "/");
+            }
+
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
+             */
+            getNotDefaultImageDirRelativePath(): string {
+                return path.join(this.remoteId_).replace(/\\/g, "/");
             }
 
             /**

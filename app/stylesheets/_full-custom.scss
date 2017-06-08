@@ -760,6 +760,7 @@
             input.property-value {
                 width: calc(100% - 20px);
             }*/
+            #image-preview-window,
             #property-image-preview,
             #label-preview-window,
             .property-state-image-preview {
@@ -774,7 +775,8 @@
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
-                #edit-image-non-button-image {
+                #edit-image-non-button-image,
+                #edit-btn {
                     position: absolute;
                     z-index: 1;
                     bottom: 0;
@@ -807,10 +809,21 @@
                         background-image: $PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
                     }
                 }
+
+                #image-preview,
+                #image-container {
+                    box-sizing: border-box;
+                    position: relative;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    width: $SIZE_PROPATY_AREA_IMAGE_PREVIEW_WIDTH;
+                    height: $SIZE_PROPATY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
+                }
                 //テキストエリア
                 #text-preview,
-                .text-field-in-preview{
-                    margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+                .text-field-in-preview {
+                    margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
                     .title-edit-label {
                         height: $SIZE_TITLE_EDIT_LABEL_HEIGHT;
@@ -834,9 +847,9 @@
                     }
 
                     #text-size-pulldown,
-                    .text-size-pulldown{
-                            margin:0 auto;
-                            width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+                    .text-size-pulldown {
+                        margin: 0 auto;
+                        width: $SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
                     }
 
                     .property-text-value,

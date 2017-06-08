@@ -151,10 +151,10 @@ module Garage {
              */
             getStateByStateId(stateId: number): Model.ButtonState {
 
-                for(let targetState of this.stateCollection_.models) {
-                        if (targetState.stateId == stateId) {
-                            return targetState;
-                        }
+                for (let targetState of this.stateCollection_.models) {
+                    if (targetState.stateId == stateId) {
+                        return targetState;
+                    }
                 }
 
                 return null;

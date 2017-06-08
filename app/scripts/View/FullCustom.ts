@@ -267,7 +267,6 @@ module Garage {
                     //画像変更用popup
                     "click #edit-image-or-text": "onEditImageButtonClicked",
                     "click #edit-image-background": "onEditImageBackgroundClicked",
-                    "click #edit-image-non-button-image": "onEditImageNonButtonImageClicked",
                     "click #command-change-button-image": "onEditImageButtonInPopupClicked",
                     "click #command-change-button-text": "onEditTextButtonInPopupClicked",
 
@@ -2386,14 +2385,6 @@ module Garage {
                 this.startEditButtonImage($target, imageType);
             }
 
-            /**
-             * 詳細編集(画像)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditImageNonButtonImageClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                var imageType: IMAGE_TYPE = IMAGE_TYPE.NON_BUTTON_IMAGE;
-                this.startEditButtonImage($target, imageType);
-            }
 
             /**
              * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
@@ -2597,8 +2588,6 @@ module Garage {
                             this._reflectImageToButtonState(remoteId, $target, imageFilePath);
                         } else if (imageType === IMAGE_TYPE.BACKGROUND_IMAGE) { // ページ背景の場合
                             this._reflectImageToImageItem(remoteId, imageFilePath, true);
-                        } else { // 通常の image の場合
-                            this._reflectImageToImageItem(remoteId, imageFilePath);
                         }
                     }
                 );
@@ -3139,7 +3128,6 @@ module Garage {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
                                     // 詳細編集エリアのプレビュー部分の更新
                                     this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
-
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
                                     } catch (e) {
@@ -3210,6 +3198,7 @@ module Garage {
                                     if ($("#property-image-preview").css("background-image") !== "none") { // 削除されている場合はそのまま
                                         img.src = resolvedOriginalPath;
                                     }
+
                                     img.onload = () => {
                                         this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
 
@@ -4847,27 +4836,14 @@ module Garage {
                         this._renderButtonItemDetailArea(item, $detail);
                     }
                 } else if (item instanceof Model.ImageItem) {
-                    // 画像アイテムの詳細エリアを表示
-                    let templateImage = Tools.Template.getJST("#template-image-detail", this.templateItemDetailFile_);
-                    let $imageDetail = $(templateImage(item));
-                    let $areaContainer = $imageDetail.nextAll("#area-container");
-                    $areaContainer.append($(templateArea(item)));
-                    $detail.append($imageDetail);
-
-                    // リサイズモードの反映
-                    let resizeMode = item.resizeMode;
-                    if (resizeMode) {
-                        $(".image-resize-mode").val(resizeMode);
+                    if (this.propertyArea_ == null) {
+                        this.propertyArea_ = new ImagePropertyArea(
+                            item,
+                            this.commandManager_
+                        )
+                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
                     }
-
-                    //オリジナルのパスがある場合は、そちらを表示。
-                    //resolvedPathの場合、アスペクト比が変更されている可能性があるため。
-                    let inputURL = this.getValidPathOfImageItemForCSS(item);
-                    this._updatePreviewInDetailArea(inputURL, $("#property-image-preview"));
-
-                    //テキストをローカライズ
-                    $("#face-item-detail-title").html($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_IMAGE"));
-
+                    $detail.append(this.propertyArea_.render().$el);
                 } else if (item instanceof Model.LabelItem) {
 
                     if (this.propertyArea_ == null) {
