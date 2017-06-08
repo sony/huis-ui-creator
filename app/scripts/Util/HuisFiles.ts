@@ -2133,7 +2133,7 @@ module Garage {
 
 
             /**
-             * module リストから使用している画像パスをすべて取得する
+             * faceから使用している画像パスをすべて取得する
              */
             private _getImagePathsReferredInFace(face: Model.Face): string[] {
 

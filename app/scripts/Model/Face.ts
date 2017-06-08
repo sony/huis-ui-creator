@@ -97,6 +97,7 @@ module Garage {
 
             /**
              * face内に存在する信号名を取得
+             * @return {string[]} 信号名を表す文字列の配列
              */
             getFunctions() {
                 //var functions: string[] = [];
@@ -170,6 +171,12 @@ module Garage {
                 return Object.keys(functionCodeHash);
             }
 
+            /**
+             * face に記述されている最初の code_db を取得する。
+             * 取得した code_db は、機器の「ブランド」、「種類」等の情報のために使用されることを想定している。
+             *
+             * @return {ICodeDB} faceに記述されている最初の code_db。見つからない場合は null。
+             */
             getCodeDb() {
                 var modules = this.modules;
                 for (let i = 0, ml = modules.length; i < ml; i++) {
