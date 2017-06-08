@@ -4835,36 +4835,23 @@ module Garage {
                         // ボタンアイテムの詳細エリアを表示
                         this._renderButtonItemDetailArea(item, $detail);
                     }
-                } else if (item instanceof Model.ImageItem) {
-                    if (this.propertyArea_ == null) {
-                        this.propertyArea_ = new ImagePropertyArea(
-                            item,
-                            this.commandManager_
-                        )
-                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
-                    }
-                    $detail.append(this.propertyArea_.render().$el);
-                } else if (item instanceof Model.LabelItem) {
-
-                    if (this.propertyArea_ == null) {
-                        this.propertyArea_ = new LabelPropertyArea(
-                            item,
-                            this.commandManager_
-                        )
-                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
-                    }
-                    $detail.append(this.propertyArea_.render().$el);
-
                 } else {
-                    console.warn(TAG + "_showDetailItemArea() unknown type item");
+                    if (this.propertyArea_ == null) {
+                        let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
+                        this.propertyArea_ = propertyAreaFactory.create(item, this.commandManager_);
+                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                    }
+                    $detail.append(this.propertyArea_.render().$el);
+
+                    if (this.propertyArea_ == null) {
+                        console.warn(TAG + "_showDetailItemArea() unknown type item");
+                    }
                 }
 
                 //TODO:PropertyAreaに動作を移管して削除する。
                 //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
                 $('.custom-select').trigger('create');
-
             }
-
 
             private _updateElementsOnCanvasProperyAreaChanged() {
                 let FUNCTION_NAME = TAG + "_updateElementsOnCanvasProperyAreaChanged : ";
