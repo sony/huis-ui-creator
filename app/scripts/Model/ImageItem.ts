@@ -194,14 +194,10 @@ module Garage {
             isBackgroundImage(): boolean {
                 let area: IArea = this.area;
                 //TODO: develop Model.Area and isEqueal Method
-                if (area.x == HUIS_PAGE_BACKGROUND_AREA.x
+                return area.x == HUIS_PAGE_BACKGROUND_AREA.x
                     && area.y == HUIS_PAGE_BACKGROUND_AREA.y
                     && area.w == HUIS_PAGE_BACKGROUND_AREA.w
                     && area.h == HUIS_PAGE_BACKGROUND_AREA.h
-                ) {
-                    return true;
-                }
-                return false
             }
 
             /**
