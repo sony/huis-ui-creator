@@ -38,7 +38,10 @@ module Garage {
             export const FIRST_MACRO_ORDER: number = 0;
             export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
-            export const TEMPLATE_DOM_ID = "#template-macro-button-detail";
+            export const TEMPLATE_DOM_ID = "#template-macro-button-propety-area";
+            export const TEMPLATE_ACTION_PULLDOWN = "#template-action-pulldown";
+            export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
+            export const ACTION_PULLDOWN_SELECT_DOM_ID = "#action-pulldown-select";
         }
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
@@ -49,8 +52,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager) {
-                super(button, macroConstValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(button: Model.ButtonItem, commandManager: CommandManager) {
+                super(button, macroConstValue.TEMPLATE_DOM_ID, null, commandManager);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -360,13 +363,11 @@ module Garage {
             * 保持しているモデルの内容でプルダウンを描画する
             */
             render(): Backbone.View<Model.Item> {
+                super.render();
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
                 //マクロの基本情報を付与
-                // ボタンの state 情報を付加
-                var $macroContainer = this.$el.nextAll("#macro-container");
                 let macroData: any = {};
-                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this._getTemplateFilePath());
 
                 let state = this.getModel().getDefaultState();
                 let id: number = state.stateId;
@@ -381,42 +382,26 @@ module Garage {
                         resizeMode = garageImageExtensions.resizeMode;
                     }
                 }
-
-                let labelSize: number = null;
-                if (state.label != null && state.label.length != 0) {
-                    let label: Model.LabelItem = state.label[0];
-                    macroData.label = label;
-                    labelSize = label.size;
-                }
-
                 macroData.actionList = ACTION_INPUTS_MACRO;
-
-                let $macroDetail = $(templateMacro(macroData));
-                $macroContainer.append($macroDetail);
-
-                //テキストラベルのpullDownを変更する。
-                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.stateId + "\"]");
-                if (labelSize != null) {
-                    $textSizePullDown.val(labelSize.toString());
-                }
-
                 let actions: IAction[] = state.action;
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "acctions is null");
                     return;
                 }
+                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(macroConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
+                this.$el.find(macroConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(macroData));
 
                 //ActionのPullDownを変更する。
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
+                var $actionPullDown: JQuery = this.$el.find(macroConstValue.ACTION_PULLDOWN_SELECT_DOM_ID);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
-                $macroContainer.i18n();
-                this._adaptJqueryMobileStyleToPulldown($macroContainer);
+                this.$el.i18n();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.renderSignalContainers();
 
                 return this;
@@ -444,7 +429,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
+                let tmpInput = this.$el.find(macroConstValue.ACTION_PULLDOWN_SELECT_DOM_ID).val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -565,8 +550,7 @@ module Garage {
 
                 states.push(this.getModel().getDefaultState());
 
-                this.getModel().state = states;
-                this.trigger("updateModel");
+                this._setStateMementoCommand(states);
             }
 
             /*

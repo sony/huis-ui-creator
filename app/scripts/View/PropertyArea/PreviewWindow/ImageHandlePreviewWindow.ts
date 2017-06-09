@@ -47,6 +47,11 @@ module Garage {
              */
             constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
+
+                if (item instanceof Model.ButtonItem && (<Model.ButtonItem>item).getDefaultState().getDefaultImage() == null) {
+                    this._initImage(<Model.ButtonItem>item);
+                }
+
                 this.listenTo(this.getImage(), "change:path", this._onPathChanged);
                 this.tmpImageFilePath_ = this.getImage().path;
             }
@@ -90,8 +95,7 @@ module Garage {
             protected getImage(): Model.ImageItem {
                 let FUNCTION_NAME = TAG + "getImage ";
                 if (this.model instanceof Model.ButtonItem) {
-                    let button = <Model.ButtonItem>this.model;
-                    return button.getDefaultState().getDefaultImage();
+                    return (<Model.ButtonItem>this.model).getDefaultState().getDefaultImage();
                 } else if (this.model instanceof Model.ImageItem) {
                     return <Model.ImageItem>this.model;
                 } else {
@@ -306,6 +310,12 @@ module Garage {
                 return false;
             }
 
+            private _initImage(button: Model.ButtonItem) {
+                let tmpImages: Model.ImageItem[] = [];
+                let tmpImage = new Model.ImageItem({ remoteId: button.remoteId });
+                tmpImages.push(tmpImage);
+                button.getDefaultState().image = tmpImages;
+            }
 
         }
     }

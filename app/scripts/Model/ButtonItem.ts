@@ -113,6 +113,18 @@ module Garage {
                 return (this.name.indexOf(airconButtonNamePrefix) == 0);
             }
 
+            /**
+             * @return {boolean} マクロボタンの場合、trueを返す。
+             */
+            isMacroButton(): boolean {
+                let FUNCTION_NAME = TAG + "isMacroButton : ";
+                if (this.getDefaultState().action[0].interval !== undefined) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
             get area(): IArea {
                 return this.get("area");
             }

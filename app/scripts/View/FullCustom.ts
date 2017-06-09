@@ -69,7 +69,6 @@ module Garage {
             private bindedLayoutPage = null;
 
             private propertyArea_: PropertyArea;
-            private macroProperty: MacroButtonPropertyArea;
             private jumpProperty: JumpButtonPropertyArea;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
@@ -106,7 +105,6 @@ module Garage {
 
                     super.onPageShow(event, data);
                     this.propertyArea_ = null;
-                    this.macroProperty = null;
                     this.jumpProperty = null;
                     this.newRemote_ = false;
 
@@ -236,9 +234,9 @@ module Garage {
                     "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
 
                     //画像変更用popup
-                    "click #edit-image-or-text": "onEditImageButtonClicked",
-                    "click #command-change-button-image": "onEditImageButtonInPopupClicked",
-                    "click #command-change-button-text": "onEditTextButtonInPopupClicked",
+                    //"click #edit-image-or-text": "onEditImageButtonClicked",
+                    //"click #command-change-button-image": "onEditImageButtonInPopupClicked",
+                    //"click #command-change-button-text": "onEditTextButtonInPopupClicked",
 
                     //リモコン名編集用のテキストフィールド
                     "click #input-face-name": "onRemoteNameTextFieldClicked",
@@ -1206,10 +1204,9 @@ module Garage {
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
-                        if (this.macroProperty != null) {
-                            //フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
-                            this.macroProperty.focusFirstPulldown();
-                        } else if (this.jumpProperty != null) {
+
+                        //TODO: フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
+                        if (this.jumpProperty != null) {
                             this.jumpProperty.focusFirstPulldown();
                         }
                     }
@@ -2029,7 +2026,7 @@ module Garage {
                 }
 
                 //マクロボタンの場合、リモコン名を特殊表記
-                if (this.isMacroButton(buttonModel)) {
+                if (buttonModel.isMacroButton()) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
                 } else if (this.isJumpButton(buttonModel)) {
                     remoteInfo = $.i18n.t("button.jump.STR_REMOTE_BTN_JUMP");
@@ -3368,10 +3365,6 @@ module Garage {
 
                 //propertyArea用のクラス内のモデルを更新する。
                 if (states != null) {
-                    if (this.macroProperty != null) {
-                        this.macroProperty.setStates(states);
-                    }
-
                     if (this.jumpProperty != null) {
                         this.jumpProperty.setStates(states);
                     }
@@ -4493,13 +4486,6 @@ module Garage {
                     this.propertyArea_ = null;
                 }
 
-                //マクロ用のプロパティのインスタンスを削除
-                if (this.macroProperty != null) {
-                    this.macroProperty.unbind("updateModel", this.updateMacroButtonItemModel, this);
-                    this.macroProperty.remove();
-                    this.macroProperty = null
-                }
-
                 //ページジャンプ用のプロパティのインスタンスを削除
                 if (this.jumpProperty != null) {
                     this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
@@ -4545,25 +4531,6 @@ module Garage {
                 }
             }
 
-            /*
-            * マクロボタンか否か判定する。
-            * @param buttonModel{Model.ButtonItem} :判定対象のモデル
-            */
-            private isMacroButton(button: Model.ButtonItem): boolean {
-                let FUNCTION_NAME = TAG + "isMacroButton : ";
-
-                if (button == null) {
-                    console.warn(FUNCTION_NAME + "button is null");
-                    return false;
-                }
-
-                if (button.state[0].action[0].interval !== undefined) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
             /**
              * ジャンプボタンか否か判定する。
              * @param button {Model.ButtonItem} 判定対象のモデル
@@ -4602,10 +4569,7 @@ module Garage {
                 //TODO: delete this. after all propertyare class developed
                 var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
 
-                if (item instanceof Model.ButtonItem && this.isMacroButton(item)) {
-                    // マクロボタンアイテムの詳細エリアを表示
-                    this._renderMacroButtonItemDetailArea(item, $detail);
-                } else if (item instanceof Model.ButtonItem && this.isJumpButton(item)) {
+                if (item instanceof Model.ButtonItem && this.isJumpButton(item)) {
                     // ジャンプボタンアイテムの詳細エリアを表示
                     this._renderJumpButtonItemDetailArea(item, $detail);
                 } else {
@@ -4644,73 +4608,6 @@ module Garage {
                 }
 
                 this._updateItemElementsOnCanvas([changedModel]);
-            }
-
-
-
-
-            /*
-            * マクロボタンアイテムの詳細情報エリアのレンダリング
-            * 
-            */
-            private _renderMacroButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
-                let FUNCTION_NAME = TAG + "_renderMacroButtonItemDetailArea: ";
-
-                if (!button) {
-                    console.warn(FUNCTION_NAME + "button is null");
-                    return;
-                }
-
-                if (!$detail) {
-                    console.warn(FUNCTION_NAME + "$detail is null");
-                    return;
-                }
-
-                var templateButton = Tools.Template.getJST("#template-macro-button-detail", this.templateItemDetailFile_);
-                var $buttonDetail = $(templateButton(button));
-                $detail.append($buttonDetail);
-
-
-                if (this.macroProperty == null) {
-                    this.macroProperty = new MacroButtonPropertyArea(
-                        button,
-                        $buttonDetail,
-                        this.commandManager_
-                    );
-                    //モデルが更新されたときfullcustom側のmodelも更新する
-                    this.macroProperty.bind("updateModel", this.updateMacroButtonItemModel, this);
-                } else {
-                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
-                    this.macroProperty.undelegateEvents();
-                    this.macroProperty.$el = $buttonDetail;
-                    this.macroProperty.delegateEvents();
-                }
-
-                $detail.append(this.macroProperty.render().$el);
-
-                //previewの情報を別途更新。
-                let $preview = this.$el.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
-                var resolvedPath = this._extractUrlFunction($preview.css("background-image"));
-                this._updatePreviewInDetailArea(resolvedPath, $preview);
-                //テキストボタン、あるいは画像のどちらかを表示する。
-                this.toggleImagePreview(button.default);
-
-                //ボタンステートを入力
-                this.currentTargetButtonStates_ = button.state;
-
-
-                //初期状態の場合、最初のプルダウンをフォーカス。
-                this.macroProperty.focusFirstPulldown();
-
-                $detail.i18n();
-            }
-
-            //マクロボタンのモデルが変更された際に呼び出される
-            private updateMacroButtonItemModel(event: JQueryEventObject) {
-                let button: Model.ButtonItem = this.macroProperty.getModel();
-                if (button != null) {
-                    this.updateButtonItemModel(button);
-                }
             }
 
             private updateJumpButtonItemModel(event: JQueryEventObject) {

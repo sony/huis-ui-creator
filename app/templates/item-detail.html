@@ -194,13 +194,12 @@
 
 
     <!--マクロボタン用の詳細編集エリア-->
-    <script type="text/template" id="template-macro-button-detail">
+    <script type="text/template" id="template-macro-button-propety-area">
         {{! マクロボタンの詳細情報エリア}}
 
         <div class="header">
             <h3 id="face-item-detail-title">
                 <span class="title-label" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_MACRO">Macro Button</span>
-
             </h3>
             <div id="about-macro">
                 <div class="popup">
@@ -215,87 +214,45 @@
             </div>
         </div>
 
-        <div id="macro-container"></div>
+        <div class="state-container">
+            <div id="state-preview-window"></div>
 
-    </script>
-
-
-
-
-
-    <!--マクロ 基本ボタン情報表示用テンプレート-->
-    <script type="text/template" id="template-property-macro-button">
-        <div class="macro-container" data-state-id="{{stateId}}">
-            <!-- プレビュー -->
-            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}">
-                <div id="edit-image-or-text" class="property-value property-state-value" value="{{#image}}{{#resizeOriginal}}{{resizeOriginal}}{{/resizeOriginal}}{{^resizeOriginal}}{{path}}{{/resizeOriginal}}{{/image}}" data-state-id="{{stateId}}"></div>
-                <div class="text-field-in-preview">
-                    <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
-                    <input class="property-value property-state-text-value text-field-type2" data-property="state-text" type="text" value="{{#label}}{{text}}{{/label}}" data-state-id="{{stateId}}" />
-
-                    <div class="custom-select text-size-pulldown">
-                        <select id="select-state-text-size-{{id}}" class="property-value property-state-text-size" data-property="state-size" type="range" value="{{#label}}{{#size}}{{size}}{{/size}}{{^size}}30{{/size}}{{/label}}{{^label}}30{{/label}}" data-state-id="{{stateId}}" data-native-menu="false">
-                            <option value="12">12px</option>
-                            <option value="14">14px</option>
-                            <option value="16">16px</option>
-                            <option value="18">18px</option>
-                            <option value="20">20px</option>
-                            <option value="23">23px</option>
-                            <option value="28">28px</option>
-                            <option value="30" selected>30px</option>
-                            <option value="32">32px</option>
-                            <option value="36">36px</option>
-                            <option value="40">40px</option>
-                            <option value="44">44px</option>
-                            <option value="48">48px</option>
-                            <option value="54">54px</option>
-                            <option value="60">60px</option>
-                            <option value="72">72px</option>
-                            <option value="80">80px</option>
-                            <option value="88">88px</option>
-                            <option value="96">96px</option>
-                        </select>
-                    </div>
+            <div class="macro-container" data-state-id="{{stateId}}">
+                <div class="button-macro-action-container-element">
+                    <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
                 </div>
-            </div>
 
-            <div class="button-macro-action-container-element">
-                <h4 id="button-state-label-action" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_ACTION">操作</h4>
-            </div>
+                <div id="action-pulldown"></div>
 
-            <div class="custom-select">
-                <select class="action-input" id="select-state-action-input-{{id}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
-                    {{#actionList}}
-                    <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
-                    {{/actionList}}
-                </select>
-            </div>
+                <!--信号用プルダウンたちが入るスペース-->
+                <div id="signals-container">
+                </div>
 
-            <!--信号用プルダウンたちが入るスペース-->
-            <div id="signals-container">
-            </div>
-
-            <div class="add-btn-container">
-                <div id="add-signal-btn">
-                    <div class="btn-image"></div>
-                    <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">操作を追加</span>
+                <div class="add-btn-container">
+                    <div id="add-signal-btn">
+                        <div class="btn-image"></div>
+                        <span data-i18n="edit.property.STR_EDIT_PROPERTY_ADD_MACRO_SIGNAL">操作を追加</span>
+                    </div>
                 </div>
             </div>
         </div>
     </script>
-
-
-
-
 
     <!--プルダウンの左側に出現するdot線-->
     <script type="text/template" id="template-macro-signal-dot-line">
         <div class="dot-line"></div>
     </script>
 
-
-
-
+    <!--アクションプルダウン-->
+    <script type="text/template" id="template-action-pulldown">
+        <div class="custom-select">
+            <select class="action-input" id="action-pulldown-select" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
+                {{#actionList}}
+                <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
+                {{/actionList}}
+            </select>
+        </div>
+    </script>
 
     <!--マクロのリモコン1信号分のテンプレート-->
     <script type="text/template" id="template-property-button-signal-macro">
