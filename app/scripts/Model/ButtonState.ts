@@ -240,12 +240,12 @@ module Garage {
                 this.set("active", val);
             }
 
-            getDefaultImage() {
+            getDefaultImage():Model.ImageItem {
                 return this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX];
             }
 
-            getDefaultLabel() {
-                return this.labelCollection_.models[constValue.DEFAULT_LABEL_INDEX];
+            getDefaultLabel():Model.LabelItem {
+                return this.label[constValue.DEFAULT_LABEL_INDEX];
             }
 
         }

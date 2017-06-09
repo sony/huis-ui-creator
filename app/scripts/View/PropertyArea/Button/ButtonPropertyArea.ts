@@ -1600,8 +1600,9 @@ module Garage {
                     font_weight: constValue.BUTTON_FONT_WEIGHT,
                     area: defaultLabelArea
                 })
-
-                state.label.push(tmpLabel);
+                let tmpLabels: Model.LabelItem[] = [];
+                tmpLabels.push(tmpLabel);
+                state.label = tmpLabels;
             }
 
             private _initLabelAndImage(state: Model.ButtonState) {
