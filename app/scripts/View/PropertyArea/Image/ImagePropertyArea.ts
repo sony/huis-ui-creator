@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Label.ImagePropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.Image.ImagePropertyArea] ";
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-image-property-area";
