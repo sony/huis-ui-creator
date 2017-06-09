@@ -311,6 +311,7 @@ module Garage {
                     this.renderSignals(stateId);
                 }
                 this.$el.i18n();
+                this.controlPlusButtonEnable();//+ボタンの有効・無効判定を行う。
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
@@ -486,15 +487,9 @@ module Garage {
                     }
                 }
 
+                this._setStateMementoCommand(states);
 
-
-                this.getModel().state = states;
-
-                //更新後の値で、+ボタンの有効・無効判定を行う。
-                this.controlPlusButtonEnable();
                 this.updateAssiendInputActionsFromModel(stateId);
-                this.trigger("updateModel");
-
 
             }
 

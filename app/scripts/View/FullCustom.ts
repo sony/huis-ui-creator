@@ -70,7 +70,6 @@ module Garage {
 
             private propertyArea_: PropertyArea;
             private macroProperty: MacroButtonPropertyArea;
-            private buttonProperty: NormalButtonPropertyArea;
             private jumpProperty: JumpButtonPropertyArea;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
@@ -108,7 +107,6 @@ module Garage {
                     super.onPageShow(event, data);
                     this.propertyArea_ = null;
                     this.macroProperty = null;
-                    this.buttonProperty = null;
                     this.jumpProperty = null;
                     this.newRemote_ = false;
 
@@ -3370,11 +3368,6 @@ module Garage {
 
                 //propertyArea用のクラス内のモデルを更新する。
                 if (states != null) {
-
-                    if (this.buttonProperty != null) {
-                        this.buttonProperty.setStates(states);
-                    }
-
                     if (this.macroProperty != null) {
                         this.macroProperty.setStates(states);
                     }
@@ -4500,13 +4493,6 @@ module Garage {
                     this.propertyArea_ = null;
                 }
 
-                //ボタン用のプロパティのインスタンスを削除
-                if (this.buttonProperty != null) {
-                    this.buttonProperty.unbind("updateModel", this.updateNormalButtonItemModel, this);
-                    this.buttonProperty.remove();
-                    this.buttonProperty = null
-                }
-
                 //マクロ用のプロパティのインスタンスを削除
                 if (this.macroProperty != null) {
                     this.macroProperty.unbind("updateModel", this.updateMacroButtonItemModel, this);
@@ -4722,15 +4708,6 @@ module Garage {
             //マクロボタンのモデルが変更された際に呼び出される
             private updateMacroButtonItemModel(event: JQueryEventObject) {
                 let button: Model.ButtonItem = this.macroProperty.getModel();
-                if (button != null) {
-                    this.updateButtonItemModel(button);
-                }
-            }
-
-
-            //通常のボタンのモデルが変更された際に呼び出される
-            private updateNormalButtonItemModel(event: JQueryEventObject) {
-                let button: Model.ButtonItem = this.buttonProperty.getModel();
                 if (button != null) {
                     this.updateButtonItemModel(button);
                 }

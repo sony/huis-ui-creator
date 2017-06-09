@@ -147,7 +147,14 @@ module Garage {
                 this._setStateMementoCommand(tmpStates);
             }
 
-            private _setStateMementoCommand(changedStates: Model.ButtonState[]) {
+            events() {
+                // Please add events
+                return {
+
+                };
+            }
+
+            protected _setStateMementoCommand(changedStates: Model.ButtonState[]) {
                 this._setMementoCommand(
                     this.getModel(),
                     {
@@ -156,13 +163,6 @@ module Garage {
                     {
                         "state": changedStates
                     });
-            }
-
-            events() {
-                // Please add events
-                return {
-
-                };
             }
 
             //signalContainerがマウスオーバーされたときに呼び出される
