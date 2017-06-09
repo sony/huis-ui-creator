@@ -35,8 +35,13 @@ module Garage {
             export const CSS_BOARDER_WIDTH = "border-width";
             export const UNIT_PX = "px";
             export const POPUP_LIST_DOM_CLASS = ".popup-list";
-            export const EDIT_IMAGE_BTN_DOM_ID = "command-change-button-image";
-            export const EDIT_TEXT_BTN_DOM_ID = "command-change-button-text";
+            export const EDIT_IMAGE_BTN_DOM_ID = "#command-change-button-image";
+            export const EDIT_TEXT_BTN_DOM_ID = "#command-change-button-text";
+
+            //preview
+            export const PREVIEW_DOM_ID = "#preview";
+            export const IMAGE_PREVIEW_DOM_CLASS_NAME = "image-preview";
+            export const TEXT_PREVIEW_DOM_CLASS_NAME = "text-preview";
         }
 
         export class StatePreviewWindow extends PreviewWindow {
@@ -44,10 +49,15 @@ module Garage {
             private preview_: Preview;
             private targetStateId_: number;
 
-            constructor(button: Model.ButtonItem, stateId :number) {
+            constructor(button: Model.ButtonItem, stateId: number) {
                 super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this.preview_ = this._createPreview();
+
+                //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
+                //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
+                //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
+                $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID).click($.proxy(this._onEditTextBtnClicked, this));
             }
 
 
@@ -55,17 +65,20 @@ module Garage {
                 let events = {};
                 events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 events["click " + constValue.EDIT_IMAGE_BTN_DOM_ID] = "_onEditImageBtnClicked";
-                events["click " + constValue.EDIT_TEXT_BTN_DOM_ID] = "_onEditTextBtnClicked";
                 return events;
             }
 
+            private _onEditTextBtnClicked(event: Event) {
+                this.trigger("uiChange:editTextBtn");
+            }
 
             private _onEditBtnClicked(event: Event) {
                 let FUNCTION_NAME = TAG + "_onEditBtnClicked";
+                //popupを表示する。
 
                 //popのJquery
                 // ポップアップのjQuery DOMを取得.JQueryMobileのpopupを利用しているので$(document)からfindする必要がある。
-                var $overflow = $(document).find(constValue.POPUP_DOM_ID); 
+                var $overflow = $(document).find(constValue.POPUP_DOM_ID);
                 var previewBorderWidth: number = +(this.$el.parents(constValue.DOM_ID).css(constValue.CSS_BOARDER_WIDTH).replace(constValue.UNIT_PX, ""));
                 var overFlowWidth = $overflow.find(constValue.POPUP_LIST_DOM_CLASS).outerWidth(true);
 
@@ -84,16 +97,17 @@ module Garage {
                 $overflow.popup(options).popup("open").on("vclick", () => {
                     $overflow.popup("close");
                 });
-                
+
                 this.$el.i18n();
             }
-
 
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_());
+                this._resetPreview();
+                this.preview_ = this._createPreview();//imageがくるかtextがくるかわからないのでpreviewを初期化
                 this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
@@ -108,10 +122,25 @@ module Garage {
                 }
             }
 
+            private _resetPreview() {
+                this.preview_ = this._createPreview();
+
+                //domのクラスをTextPreview用とImagePrevie用に切り替える
+                let $preview = this.$el.find(constValue.PREVIEW_DOM_ID);
+                $preview.removeClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
+                $preview.removeClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
+
+                if (this.preview_ instanceof ImagePreview) {
+                    $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
+                } else {
+                    $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
+                }
+            }
+
             private _getModel(): Model.ButtonItem {
                 return <Model.ButtonItem>this.model;
             }
-            
+
         }
     }
 }

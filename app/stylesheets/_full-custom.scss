@@ -812,7 +812,7 @@
                     }
                 }
 
-                #image-preview,
+                #preview.image-preview,
                 #image-container {
                     box-sizing: border-box;
                     position: relative;
@@ -823,7 +823,7 @@
                     height: $SIZE_PROPATY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
                 }
                 //テキストエリア
-                #text-preview,
+                #preview.text-preview,
                 .text-field-in-preview {
                     margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 

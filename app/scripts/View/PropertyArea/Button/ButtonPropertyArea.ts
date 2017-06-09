@@ -26,6 +26,12 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
+        namespace constValue {
+            export const DEFAULT_TEXT = "TEXT BUTTON";
+            export const DEFAULT_TEXT_SIZE = 30;
+            export const BUTTON_FONT_WEIGHT = "bold";
+        }
+
         export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
@@ -63,6 +69,7 @@ module Garage {
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
                 this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId());
                 this._setDeviceInfo();
+                this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
             }
 
 
@@ -73,6 +80,29 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            private _onStateChanged(event: Event) {
+
+            }
+
+            private _onChangeToTextBtn(event: Event) {
+                // TODO: button.stateのクローンができるようになったら、それに書き換える。
+                let tmpButton: Model.ButtonItem = this.getModel().clone();
+                let tmpStates: Model.ButtonState[] = tmpButton.state
+                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                this._initLabelItem(tmpState);
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                tmpStates[targetStateIndex] = tmpState;
+
+                this._setMementoCommand(
+                    this.getModel(),
+                    {
+                        "state": this.getModel().state
+                    },
+                    {
+                        "state": tmpStates
+                    });
+            }
 
             events() {
                 // Please add events
@@ -1495,6 +1525,43 @@ module Garage {
 
                             action.deviceInfo = deviceInfo;
                         }
+                    }
+                }
+            }
+
+            private _initLabelItem(state: Model.ButtonState) {
+                this._initLabelAndImage(state);
+
+                let buttonArea = this.getModel().area;
+                let defaultLabelArea: IArea = {
+                    x: buttonArea.x,
+                    y: buttonArea.y,
+                    w: 0,
+                    h: 0
+                }
+
+                let tmpLabel: Model.LabelItem = new Model.LabelItem({
+                    text: constValue.DEFAULT_TEXT,
+                    size: constValue.DEFAULT_TEXT_SIZE,
+                    font_weight: constValue.BUTTON_FONT_WEIGHT,
+                    area: defaultLabelArea
+                })
+
+                state.label.push(tmpLabel);
+            }
+
+            private _initLabelAndImage(state: Model.ButtonState) {
+                state.image = [];
+                state.label = [];
+            }
+
+
+            //TODO: ButtonItemがget state で Model.StateItem[]でなくStateCollectionを返すようになったら、この関数を移動。あるいは削除。
+            private _getStateIndexByStateId(stateId: number, states: Model.ButtonState[]): number {
+                for (let i = 0; states.length > i; i++) {
+                    let targetState = states[i];
+                    if (targetState.stateId == stateId) {
+                        return i;
                     }
                 }
             }

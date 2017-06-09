@@ -25,7 +25,7 @@ module Garage {
 
         namespace constValue {
             export const TEMPLATE_DOM_ID: string = "#template-image-preview";
-            export const DOM_ID: string = "#image-preview";
+            export const DOM_ID: string = "#preview";
 
             export const IMAGE_CONTAINER_DOM_ID: string = "#image-container";
         }

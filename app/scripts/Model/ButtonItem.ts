@@ -287,6 +287,7 @@ module Garage {
                     }
                 }
                 this._setStateItemsArea(this.area);
+                this.set("state", this.stateCollection_.models);
             }
 
 

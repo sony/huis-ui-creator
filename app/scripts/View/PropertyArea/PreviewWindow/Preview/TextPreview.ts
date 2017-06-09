@@ -26,7 +26,7 @@ module Garage {
         namespace constValue {
 
             export const TEMPLATE_DOM_ID: string = "#template-text-preview";
-            export const DOM_ID: string = "#text-preview";
+            export const DOM_ID: string = "#preview";
 
             //text size pulldown
             export const SIZE_PULLDOWM_CONTAINER_DOM_ID: string = "#text-size-pulldown";
