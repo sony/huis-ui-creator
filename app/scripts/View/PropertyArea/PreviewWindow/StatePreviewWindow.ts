@@ -55,7 +55,21 @@ module Garage {
                 //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
                 //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
                 //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
+                $(document).find(constValue.EDIT_IMAGE_BTN_DOM_ID).click($.proxy(this._onEditImageBtnClicked, this));
                 $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID).click($.proxy(this._onEditTextBtnClicked, this));
+            }
+
+            private _onEditImageBtnClicked(event: Event) {
+                let FUNCTION_NAME = TAG + "_onEditBtnClicked";
+
+                this._showImageSelectDialog().done((imageFilePath: string) => {
+                    if (imageFilePath == null) {
+                        console.warn(FUNCTION_NAME + "imagePath is invalid");
+                        return;
+                    }
+                    this.tmpImageFilePath_ = imageFilePath;
+                    this.trigger("uiChange:editImageBtn");
+                });
             }
 
             private _onTextSizePulldownChanged(event: Event) {
@@ -69,7 +83,6 @@ module Garage {
             events() {
                 let events = {};
                 events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
-                events["click " + constValue.EDIT_IMAGE_BTN_DOM_ID] = "_onEditImageBtnClicked";
                 return events;
             }
 

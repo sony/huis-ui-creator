@@ -75,6 +75,7 @@ module Garage {
                 this.listenTo(this.statePreviewWindow_, "uiChange:text", this._onTextFieldChanged);
 
                 this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
+                this.listenTo(this.statePreviewWindow_, "uiChange:editImageBtn", this._onChangeToImageBtn);
             }
 
 
@@ -85,6 +86,26 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
+
+            private _onChangeToImageBtn(event: Event) {
+                let changedImageFilePath = this.statePreviewWindow_.getTmpImagePath();
+                let changedImageFileName = path.basename(changedImageFilePath);
+                let changedImageFileRelativePath = path.join(
+                    this.getModel().getDefaultState().getDefaultImage().getNotDefaultImageDirRelativePath(),
+                    changedImageFileName).replace(/\\/g, "/");
+
+                // TODO: button.stateのクローンができるようになったら、それに書き換える。
+                let tmpButton: Model.ButtonItem = this.getModel().clone();
+                let tmpStates: Model.ButtonState[] = tmpButton.state
+                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                let targetImageItem = tmpState.getDefaultImage();
+                targetImageItem.path = changedImageFileRelativePath;
+                targetImageItem.resizeOriginal = changedImageFileRelativePath;
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                tmpStates[targetStateIndex] = tmpState;
+
+                this._setStateMementoCommand(tmpStates);
+            }
 
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = this.statePreviewWindow_.getTextSize();
