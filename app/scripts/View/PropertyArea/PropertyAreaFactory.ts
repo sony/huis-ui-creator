@@ -36,8 +36,10 @@ module Garage {
              */
             create(item: Model.Item, commandManager: CommandManager): PropertyArea {
                 if (item instanceof Model.ButtonItem) {
-                    if (item.isAirconButton()){
+                    if (item.isAirconButton()) {
                         return new AcButtonPropertyArea(item, commandManager);
+                    } else if (item.isTouchPatButton()) {
+                        return new TouchPadButtonPropertyArea(item, commandManager);
                     } else {
                         return new NormalButtonPropertyArea(item, commandManager);
                     }

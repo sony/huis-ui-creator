@@ -299,6 +299,7 @@
     <TypeScriptCompile Include="app\scripts\Model\ButtonItem.ts" />
     <TypeScriptCompile Include="app\scripts\Model\ButtonItemsCollection.ts" />
     <TypeScriptCompile Include="app\scripts\View\PhnConfig.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\TouchPadButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\AcButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Image\BackgroundImagePropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Image\ImagePropertyArea.ts" />

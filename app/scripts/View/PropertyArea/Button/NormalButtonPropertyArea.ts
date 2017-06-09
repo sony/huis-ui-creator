@@ -285,30 +285,17 @@ module Garage {
             ///// public method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            /*
+            /**
              * モデルをレンダリングする。
              * @return {Backbone.View<Model.Item>}
              */
             render(): Backbone.View<Model.Item> {
                 super.render();
                 let FUNCTION_NAME = TAG + "renderViewState";
-                
 
-                if (this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
-                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
-                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_LEFT_VALUE) ||
-                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_DOWN_VALUE)
-                ) {
-                    //スワイプ系のアクションを含むモジュールの場合、プルダウンを描画しない。
-                    //エアコンの場合、プルダウンを描画しない
-
-                    //＋ボタンも表示しない
-                    this.$el.find(".add-btn-container").remove();
-                } else {
-                    let stateId: number = this.getDefaultStateId();
-                    this.updateAssiendInputActionsFromModel(stateId);
-                    this.renderSignals(stateId);
-                }
+                let stateId: number = this.getDefaultStateId();
+                this.updateAssiendInputActionsFromModel(stateId);
+                this.renderSignals(stateId);
                 this.$el.i18n();
                 this.controlPlusButtonEnable();//+ボタンの有効・無効判定を行う。
                 this._adaptJqueryMobileStyleToPulldown(this.$el);

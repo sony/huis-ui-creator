@@ -375,6 +375,15 @@ module Garage {
                 });
                 this.stateCollection_.add(stateModel);
             }
+            /**
+             * @return {boolean} タッチパット用のボタンだった場合trueを返す。
+             */
+            isTouchPatButton(): boolean {
+                return this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_UP_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_LEFT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_DOWN_VALUE);
+            }
 
             /**
              * コピー元の画像ディレクトリーが存在していたら、
@@ -539,6 +548,34 @@ module Garage {
                     }
                 });
             }
+
+            /**
+             * ボタンのactionに、特定のアクションが含まれるか判定する
+             * @param actiionType{string} buttonに含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+             */
+            private _isIncludeSpecificActionType(actionType: string): boolean {
+                let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
+
+                if (!Util.JQueryUtils.isValidValue(actionType)) {
+                    console.warn(FUNCTION_NAME + "actionType is invalid");
+                    return;
+                }
+
+                for (let state of this.state) {
+                    if (!state.action) continue;
+
+                    for (let action of state.action) {
+                        if (!action.input) continue;
+
+                        if (action.input == actionType) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
         }
     }
 }
