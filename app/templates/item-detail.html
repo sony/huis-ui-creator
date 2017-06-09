@@ -25,13 +25,11 @@
         </div>
     </script>
 
-
     <!--ImagePreviewWindow-->
     <script type="text/template" id="template-image-preview-window">
         <div id="preview" class="image-preview"></div>
         <div id="edit-btn"></div>
     </script>
-
 
     <!--ImagePreview-->
     <script type="text/template" id="template-image-preview">
@@ -39,19 +37,16 @@
         </div>
     </script>
 
-
     <!-- ラベルアイテムの詳細情報エリア-->
     <script type="text/template" id="template-label-property-area">
         <h3 id="face-item-detail-title" data-i18n="edit.property.STR_EDIT_PROPERTY_TITLE_LABEL">Lalel<span class="property-cid"></span></h3>
         <div id="label-preview-window"></div>
     </script>
 
-
     <!--LabelPreviewWindow-->
     <script type="text/template" id="template-label-preview-window">
         <div id="preview" class="text-preview"></div>
     </script>
-
 
     <!--TextPreview-->
     <script type="text/template" id="template-text-preview">
@@ -59,7 +54,6 @@
         <input id="text-field" class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
         <div id="text-size-pulldown"></div>
     </script>
-
 
     <!--textsize pullldown-->
     <script type="text/template" id="template-text-size-pullldown">
@@ -115,6 +109,21 @@
             </div>
 
         </div>
+    </script>
+
+    <!--エアコンの詳細編集エリア-->
+    <script type="text/template" id="template-ac-button-property-area">
+        <h3 id="face-item-detail-title">
+            <span class="title-label" data-i18n="edit.property.str_edit_property_title_button">Button</span>
+        </h3>
+        <div class="state-container">
+            <div id="ac-state-preview-window"></div>
+        </div>
+    </script>
+
+    <!--ac state preview window-->
+    <script type="text/template" id="template-ac-state-preview-window">
+        <div id="preview" class="text-preview image-preview"></div>
     </script>
 
     <!--state preview window-->
@@ -474,18 +483,7 @@
                 <div id="signal-page-container">
                 </div>
             </div>
-
         </div>
     </script>
 
-    <!--エアコンの詳細編集エリア-->
-    <script type="text/template" id="template-ac-button-property-area">
-        <!-- Air Conditioner button has less items -->
-        <div class="state-container">
-
-            <!-- プレビュー -->
-            <div class="property-state-image-preview" style="background-image:url('{{#image}}{{#resizeResolvedOriginalPathCSS}}{{resizeResolvedOriginalPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{^resizeResolvedOriginalPathCSS}}{{resolvedPathCSS}}{{/resizeResolvedOriginalPathCSS}}{{/image}}');" data-state-id="{{stateId}}"></div>
-
-        </div>
-    </script>
 </article>

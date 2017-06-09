@@ -36,7 +36,11 @@ module Garage {
              */
             create(item: Model.Item, commandManager: CommandManager): PropertyArea {
                 if (item instanceof Model.ButtonItem) {
-                    return new NormalButtonPropertyArea(item, commandManager);
+                    if (item.isAirconButton()){
+                        return new AcButtonPropertyArea(item, commandManager);
+                    } else {
+                        return new NormalButtonPropertyArea(item, commandManager);
+                    }
                 } else if (item instanceof Model.ImageItem) {
                     if (item.isBackgroundImage()) {
                         return new BackgroundImagePropertyArea(item, commandManager);

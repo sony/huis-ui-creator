@@ -294,8 +294,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "renderViewState";
                 
 
-                if (this.getModel().isAirconButton() ||
-                    this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
+                if (this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_UP_VALUE) ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_LEFT_VALUE) ||
                     this.isIncludeSpecificActionType(this.getModel(), ACTION_INPUT_SWIPE_DOWN_VALUE)
