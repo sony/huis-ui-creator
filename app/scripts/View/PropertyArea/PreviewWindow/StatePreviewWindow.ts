@@ -70,6 +70,8 @@ module Garage {
                     this.tmpImageFilePath_ = imageFilePath;
                     this.trigger("uiChange:editImageBtn");
                 });
+                this._closePopup();
+                event.stopPropagation();
             }
 
             private _onTextSizePulldownChanged(event: Event) {
@@ -87,7 +89,9 @@ module Garage {
             }
 
             private _onEditTextBtnClicked(event: Event) {
+                this._closePopup();
                 this.trigger("uiChange:editTextBtn");
+                event.stopPropagation();
             }
 
             private _onEditBtnClicked(event: Event) {
@@ -181,6 +185,11 @@ module Garage {
 
             private _getModel(): Model.ButtonItem {
                 return <Model.ButtonItem>this.model;
+            }
+
+            private _closePopup() {
+                var $overflow = $(document).find(constValue.POPUP_DOM_ID);
+                $overflow.popup("close");
             }
 
         }
