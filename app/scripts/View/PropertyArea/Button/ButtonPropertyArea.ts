@@ -101,7 +101,7 @@ module Garage {
                 let targetImageItem = tmpState.getDefaultImage();
                 targetImageItem.path = changedImageFileRelativePath;
                 targetImageItem.resizeOriginal = changedImageFileRelativePath;
-                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId());
                 tmpStates[targetStateIndex] = tmpState;
 
                 this._setStateMementoCommand(tmpStates);
@@ -115,7 +115,7 @@ module Garage {
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
                 tmpState.getDefaultLabel().size = changedSize;
-                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId());
                 tmpStates[targetStateIndex] = tmpState;
 
                 this._setStateMementoCommand(tmpStates);
@@ -129,7 +129,7 @@ module Garage {
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
                 tmpState.getDefaultLabel().text = changedText;
-                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId());
                 tmpStates[targetStateIndex] = tmpState;
 
                 this._setStateMementoCommand(tmpStates);
@@ -141,7 +141,7 @@ module Garage {
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
                 this._initLabelItem(tmpState);
-                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId());
                 tmpStates[targetStateIndex] = tmpState;
 
                 this._setStateMementoCommand(tmpStates);
@@ -1610,11 +1610,11 @@ module Garage {
                 state.label = [];
             }
 
-
             //TODO: ButtonItemがget state で Model.StateItem[]でなくStateCollectionを返すようになったら、この関数を移動。あるいは削除。
-            private _getStateIndexByStateId(stateId: number, states: Model.ButtonState[]): number {
-                for (let i = 0; states.length > i; i++) {
-                    let targetState = states[i];
+            private _getStateIndexByStateId(stateId: number): number {
+                let targetStates = this.getModel().state; 
+                for (let i = 0; targetStates.length > i; i++) {
+                    let targetState = targetStates[i];
                     if (targetState.stateId == stateId) {
                         return i;
                     }
