@@ -52,7 +52,7 @@ module Garage {
             constructor(button: Model.ButtonItem, stateId: number) {
                 super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
-                this.preview_ = this._createPreview();
+                this._initPreview();
 
                 //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
                 //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
@@ -60,6 +60,13 @@ module Garage {
                 $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID).click($.proxy(this._onEditTextBtnClicked, this));
             }
 
+            private _onTextSizePulldownChanged(event: Event) {
+                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+            }
+
+            private _onTextFieldChanged(event: Event) {
+                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+            }
 
             events() {
                 let events = {};
@@ -101,13 +108,34 @@ module Garage {
                 this.$el.i18n();
             }
 
+            /**
+             * @return {number} previewが所持しているtext sizeを返す。ない場合0を返す。
+             */
+            getTextSize():number {
+                if (this.preview_ instanceof TextPreview) {
+                    let tmpTextPreview: TextPreview = <TextPreview>this.preview_;
+                    return tmpTextPreview.getTextSize();
+                }
+                return 0;
+            }
+
+            /**
+             * @return {number} previewが所持しているtextを返す。ない場合nullを返す。
+             */
+            getText(): string {
+                if (this.preview_ instanceof TextPreview) {
+                    let tmpTextPreview: TextPreview = <TextPreview>this.preview_;
+                    return tmpTextPreview.getText();
+                }
+                return null;
+            }
+
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_());
-                this._resetPreview();
-                this.preview_ = this._createPreview();//imageがくるかtextがくるかわからないのでpreviewを初期化
+                this._initPreview();
                 this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
@@ -122,7 +150,8 @@ module Garage {
                 }
             }
 
-            private _resetPreview() {
+            private _initPreview() {
+                this.preview_ = null;
                 this.preview_ = this._createPreview();
 
                 //domのクラスをTextPreview用とImagePrevie用に切り替える
@@ -132,9 +161,11 @@ module Garage {
 
                 if (this.preview_ instanceof ImagePreview) {
                     $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                } else {
+                } else if (this.preview_ instanceof TextPreview){
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
+                this.listenTo(this.preview_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, "uiChange:text", this._onTextFieldChanged);
             }
 
             private _getModel(): Model.ButtonItem {

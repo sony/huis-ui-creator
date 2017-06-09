@@ -30,6 +30,10 @@ module Garage {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
+
+            //TOOD: merge those arguments with statePreviewWindows
+            export const TARGET_IMAGE_INDEX = 0;
+            export const TARGET_TEXT_INDEX = 0;
         }
 
         export abstract class ButtonPropertyArea extends PropertyArea {
@@ -69,6 +73,11 @@ module Garage {
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
                 this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId());
                 this._setDeviceInfo();
+
+                //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
+                this.listenTo(this.statePreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.statePreviewWindow_, "uiChange:text", this._onTextFieldChanged);
+
                 this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
             }
 
@@ -81,6 +90,34 @@ module Garage {
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
 
+            private _onTextSizePulldownChanged(event: Event) {
+                let changedSize = this.statePreviewWindow_.getTextSize();
+
+                // TODO: button.stateのクローンができるようになったら、それに書き換える。
+                let tmpButton: Model.ButtonItem = this.getModel().clone();
+                let tmpStates: Model.ButtonState[] = tmpButton.state
+                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                tmpState.label[constValue.TARGET_TEXT_INDEX].size = changedSize;
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                tmpStates[targetStateIndex] = tmpState;
+
+                this._setStateMementoCommand(tmpStates);
+            }
+
+            private _onTextFieldChanged(event: Event) {
+                let changedText = this.statePreviewWindow_.getText();
+
+                // TODO: button.stateのクローンができるようになったら、それに書き換える。
+                let tmpButton: Model.ButtonItem = this.getModel().clone();
+                let tmpStates: Model.ButtonState[] = tmpButton.state
+                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                tmpState.label[constValue.TARGET_TEXT_INDEX].text = changedText;
+                let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
+                tmpStates[targetStateIndex] = tmpState;
+
+                this._setStateMementoCommand(tmpStates);
+            }
+
             private _onChangeToTextBtn(event: Event) {
                 // TODO: button.stateのクローンができるようになったら、それに書き換える。
                 let tmpButton: Model.ButtonItem = this.getModel().clone();
@@ -90,13 +127,17 @@ module Garage {
                 let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
                 tmpStates[targetStateIndex] = tmpState;
 
+                this._setStateMementoCommand(tmpStates);
+            }
+
+            private _setStateMementoCommand(changedStates: Model.ButtonState[]) {
                 this._setMementoCommand(
                     this.getModel(),
                     {
                         "state": this.getModel().state
                     },
                     {
-                        "state": tmpStates
+                        "state": changedStates
                     });
             }
 
