@@ -100,7 +100,6 @@ module Garage {
              * @return {string[]} 信号名を表す文字列の配列
              */
             getFunctions(): string[] {
-                //var functions: string[] = [];
                 let functionCodeHash: IStringStringHash = {};
                 let faceModules = this.modules;
 
