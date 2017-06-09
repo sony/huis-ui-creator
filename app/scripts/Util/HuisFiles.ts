@@ -2131,26 +2131,6 @@ module Garage {
                 return promise;
             }
 
-
-            /**
-             * faceから使用している画像パスをすべて取得する
-             */
-            private _getImagePathsReferredInFace(face: Model.Face): string[] {
-
-                if (face == null) {
-                    return [];
-                }
-
-                let results: string[] = [];
-                for (let image of face.searchImages()) {
-                    results = results.concat(image.path.replace(/\\/g, "/"));
-                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
-                        results = results.concat(image.garageExtensions.original.replace(/\\/g, "/"));
-                    }
-                }
-                return results;
-            }
-
             /**
              * face が参照している module 内で使用されていない画像を削除する
              */
@@ -2170,7 +2150,7 @@ module Garage {
                     });
 
                 // face が参照している module 内で参照されている画像を列挙
-                let referredImageFiles = this._getImagePathsReferredInFace(face);
+                let referredImageFiles = face.getAllImagePaths();
 
                 // 参照されていない画像を削除
                 fileList.forEach((file) => {

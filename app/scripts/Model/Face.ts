@@ -345,6 +345,21 @@ module Garage {
             }
 
             /**
+             * faceが使用している画像パスをすべて取得する
+             * @return {string[]} 画像パスの配列
+             */
+            getAllImagePaths(): string[] {
+                let results: string[] = [];
+                for (let image of this.searchImages()) {
+                    results = results.concat(image.path.replace(/\\/g, "/"));
+                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
+                        results = results.concat(image.garageExtensions.original.replace(/\\/g, "/"));
+                    }
+                }
+                return results;
+            }
+
+            /**
              * faceのcloneを作成する。型情報はコピーされない事に注意。
              *
              * @return {Model.Face} コピーされたface。
