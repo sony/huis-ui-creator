@@ -311,7 +311,7 @@ module Garage {
             ///// private method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            /*
+            /**
              * モデルを更新する。
              * @param {number} stateId 更新するステート。
              */
@@ -479,11 +479,11 @@ module Garage {
 
             }
 
-            /*
-            * 現在のモデルから、入力したファンクション名のcodeを検索。容易につかわないこと
-            * @param functionName {string} ファンクション名の後ろにIDがついているに限り、現在のmodelからコードを検索する。
-            * @return {string} モデルの中に同じファンクション名の信号があったら、codeを取得する。みつからない場合nullを返す。
-            */
+            /**
+             * 現在のモデルから、入力したファンクション名のcodeを検索。容易につかわないこと
+             * @param functionName {string} ファンクション名の後ろにIDがついているに限り、現在のmodelからコードを検索する。
+             * @return {string} モデルの中に同じファンクション名の信号があったら、codeを取得する。みつからない場合nullを返す。
+             */
             private getCodeFromThisModel(functionNameWithID: string): string {
                 let FUNCTION_NAME: string = TAG + "getSgetCodeFromThisModeltateId : ";
 
@@ -513,19 +513,19 @@ module Garage {
             }
 
 
-            /*
-            * 現在、表示されているStateIdを取得する.
-            */
+            /**
+             * 現在、表示されているStateIdを取得する.
+             */
             private getStateId(): number {
                 let FUNCTION_NAME: string = TAG + "getStateId : ";
                 //現在はデフォルトを返す。
                 return this.getDefaultStateId();
             }
 
-            /*
-            * 入力されたorderに設定されている信号を削除する
-            * @param order{number}: それぞれの信号に設定されている順番
-            */
+            /**
+             * 入力されたorderに設定されている信号を削除する
+             * @param order{number}: それぞれの信号に設定されている順番
+             */
             private deleteSignal(order: number) {
                 let FUNCTION_NAME = TAG + "deleteSignal";
 
@@ -594,11 +594,11 @@ module Garage {
                 return remoteId;
             }
 
-            /*
-            * 信号プルダウンメニューたちをレンダリングする
-            * @param stateId{number} ターゲットとなるstateId.指定しない場合、default値になる。
-            * @param $signalsContainer{JQuery} ベースとなるJQuery要素
-            */
+            /**
+             * 信号プルダウンメニューたちをレンダリングする
+             * @param stateId{number} ターゲットとなるstateId.指定しない場合、default値になる。
+             * @param $signalsContainer{JQuery} ベースとなるJQuery要素
+             */
             private renderSignals(stateId: number = this.getDefaultStateId()) {
                 let FUNCTION_NAME: string = TAG + "renderSignals : ";
 
@@ -648,9 +648,9 @@ module Garage {
 
             }
 
-            /*
-           * 信号が1つしかない場合、signalの要素を削除する
-           */
+            /**
+             * 信号が1つしかない場合、signalの要素を削除する
+             */
             private renderSomeElementIfOneSignalOnlyExist() {
                 let FUNCTION_NAME = TAG + "renderSomeElementIfOneSignalOnlyExist:";
 
@@ -663,14 +663,14 @@ module Garage {
                 }
             }
 
-            /*
-            * 信号のベースと必須のアクション選択プルダウン分をレンダリングする
-            * @param order{number}
-            * @param stateId{number}
-            * @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
-            * @param inputAction{string}
-            * @param remoteId?{string}
-            */
+            /**
+             * 信号のベースと必須のアクション選択プルダウン分をレンダリングする
+             * @param order{number}
+             * @param stateId{number}
+             * @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
+             * @param inputAction{string}
+             * @param remoteId?{string}
+             */
             private renderSignalContainerMin(order: number, stateId: number, inputAction?: string, remoteId?: string, unknownRcType?: string) {
                 let FUNCTION_NAME: string = TAG + "renderSignalContainer";
 
@@ -699,11 +699,11 @@ module Garage {
                 this.renderRemoteIdOf(order, remoteId, stateId, unknownRcType);
             }
 
-            /*
-            *  信号を描画するベースとなる部分をレンダリングする。
-            *  @param order{number}
-            *  @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
-            */
+            /**
+             *  信号を描画するベースとなる部分をレンダリングする。
+             *  @param order{number}
+             *  @param $signalContainer{JQuery} 信号をレンダリングするベースとなりJQuery要素
+             */
             private renderSignalContainerBase(order: number) {
                 let FUNCTION_NAME = TAG + "renderSignalContainerBase : ";
 
@@ -738,12 +738,12 @@ module Garage {
 
             }
 
-            /*
-            * アクション設定用のpullldownMenuをレンダリングする
-            * @param order{number} 上から何番目の信号か
-            * @param stateid{number} 
-            * @param inputAction? {string} プルダウンの初期値 
-            */
+            /**
+             * アクション設定用のpullldownMenuをレンダリングする
+             * @param order{number} 上から何番目の信号か
+             * @param stateid{number} 
+             * @param inputAction? {string} プルダウンの初期値 
+             */
             private renderActionPulllDownOf(order: number, stateId: number, inputAction?: string) {
                 let FUNCTION_NAME: string = TAG + "renderActionPulllDownOf : ";
 
@@ -801,10 +801,10 @@ module Garage {
 
             }
 
-            /*
-           * アクション設定用のpullldownMenuをgetする
-           * @param order{number} 
-           */
+            /**
+             * アクション設定用のpullldownMenuをgetする
+             * @param order{number} 
+             */
             private getInputAction(order: number) {
                 let FUNCTION_NAME = TAG + "getInputAction : ";
 
@@ -836,7 +836,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * inputするアクションをセットする
              * @param order{number} 
              * @param stateid{number}
@@ -871,9 +871,9 @@ module Garage {
             }
 
 
-            /*
-            * 表示されているすべての信号登録用pulldownに情報が埋まっているか否かを返す。
-            */
+            /**
+             * 表示されているすべての信号登録用pulldownに情報が埋まっているか否かを返す。
+             */
             private isAllSignalPullDownSelected() {
                 let FUNCTION_NAME = TAG + "isAllPullDownSelected";
 
@@ -949,11 +949,11 @@ module Garage {
 
             }
 
-            /*
-            * 現在、入力されているinputActionを更新する
-            * this.assignedInputActionsを更新する。
-            * 描画より前に必要なため、Modelから取得する
-            */
+            /**
+             * 現在、入力されているinputActionを更新する
+             * this.assignedInputActionsを更新する。
+             * 描画より前に必要なため、Modelから取得する
+             */
             private updateAssiendInputActionsFromModel(stateId: number) {
                 let FUNCTION_NAME = TAG + "updateAssiendInputActions : ";
 
@@ -979,9 +979,9 @@ module Garage {
             }
 
 
-            /*
-           * 信号が1つしかない場合、signalのある要素を削除する
-           */
+            /**
+             * 信号が1つしかない場合、signalのある要素を削除する
+             */
             private renderSpecialElementDependingSignalNum() {
                 let FUNCTION_NAME = TAG + "renderSpecialElementDependingSignalNum:";
 
