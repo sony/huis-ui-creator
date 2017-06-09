@@ -81,10 +81,6 @@ module Garage {
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            private _onStateChanged(event: Event) {
-
-            }
-
             private _onChangeToTextBtn(event: Event) {
                 // TODO: button.stateのクローンができるようになったら、それに書き換える。
                 let tmpButton: Model.ButtonItem = this.getModel().clone();
