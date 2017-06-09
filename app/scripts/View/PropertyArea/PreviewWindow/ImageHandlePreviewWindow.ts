@@ -39,11 +39,16 @@ module Garage {
 
             protected tmpImageFilePath_: string;//モデルに設定されているのパス。モデル適応する前に親クラスが取得するために保持。
 
-
-            constructor(item: Model.ImageItem, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
+            /**
+             * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
+             * @param {string} domId 自身を指す DOMのID
+             * @param {string} templateDomId 自身のテンプレートのDOMのID
+             * @param {Backbone.ViewOptions<Model.Item>} options? Backbone.Viewのオプション
+             */
+            constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
-                this.listenTo(this.getModel(), "change:path", this._onPathChanged);
-                this.tmpImageFilePath_ = item.path;
+                this.listenTo(this.getImage(), "change:path", this._onPathChanged);
+                this.tmpImageFilePath_ = this.getImage().path;
             }
 
 
@@ -56,7 +61,7 @@ module Garage {
 
 
             private _onPathChanged(event: Event) {
-                this.tmpImageFilePath_ = this.getModel().path;
+                this.tmpImageFilePath_ = this.getImage().path;
             }
 
 
@@ -79,8 +84,20 @@ module Garage {
             }
 
 
-            protected getModel(): Model.ImageItem {
-                return <Model.ImageItem>this.model;
+            /**
+             * @return {Model.ImageItem} this.ModelがImageItemである、あるいは持ている場合 Model.Imageを返す。いずれでもない場合nullを返す。
+             */
+            protected getImage(): Model.ImageItem {
+                let FUNCTION_NAME = TAG + "getImage ";
+                if (this.model instanceof Model.ButtonItem) {
+                    let button = <Model.ButtonItem>this.model;
+                    return button.getDefaultState().getDefaultImage();
+                } else if (this.model instanceof Model.ImageItem) {
+                    return <Model.ImageItem>this.model;
+                } else {
+                    console.error(FUNCTION_NAME + "this.model do not include Model.ImageItem");
+                    return null;
+                }
             }
 
 
@@ -155,11 +172,11 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let imageName = path.basename(imageFilePath);
-                let dirPath = this.getModel().getNotDefaultImageDirFullPath();
+                let dirPath = this.getImage().getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
                 
                 //TODO: move const variables difinition from init.ts to more specific place
-                let params = this.getModel().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+                let params = this.getImage().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
                 Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {
