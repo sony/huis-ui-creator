@@ -30,10 +30,6 @@ module Garage {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
-
-            //TOOD: merge those arguments with statePreviewWindows
-            export const TARGET_IMAGE_INDEX = 0;
-            export const TARGET_TEXT_INDEX = 0;
         }
 
         export abstract class ButtonPropertyArea extends PropertyArea {
@@ -97,7 +93,7 @@ module Garage {
                 let tmpButton: Model.ButtonItem = this.getModel().clone();
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                tmpState.label[constValue.TARGET_TEXT_INDEX].size = changedSize;
+                tmpState.getDefaultLabel().size = changedSize;
                 let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
                 tmpStates[targetStateIndex] = tmpState;
 
@@ -111,7 +107,7 @@ module Garage {
                 let tmpButton: Model.ButtonItem = this.getModel().clone();
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                tmpState.label[constValue.TARGET_TEXT_INDEX].text = changedText;
+                tmpState.getDefaultLabel().text = changedText;
                 let targetStateIndex = this._getStateIndexByStateId(this.getDefaultStateId(), tmpStates);
                 tmpStates[targetStateIndex] = tmpState;
 

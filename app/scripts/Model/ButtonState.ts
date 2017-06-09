@@ -21,6 +21,11 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
+        namespace constValue{
+            export const DEFAULT_IMAGE_INDEX: number = 0;
+            export const DEFAULT_LABEL_INDEX: number = 0;
+        }
+
         export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
@@ -234,6 +239,15 @@ module Garage {
             set active(val: boolean) {
                 this.set("active", val);
             }
+
+            getDefaultImage() {
+                return this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX];
+            }
+
+            getDefaultLabel() {
+                return this.labelCollection_.models[constValue.DEFAULT_LABEL_INDEX];
+            }
+
         }
     }
 }

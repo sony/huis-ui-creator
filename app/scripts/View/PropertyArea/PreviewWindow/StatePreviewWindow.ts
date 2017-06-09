@@ -27,8 +27,6 @@ module Garage {
             export const TEMPLATE_DOM_ID = "#template-state-preview-window";
             export const DOM_ID = "#state-preview-window";
             export const EDIT_BTN_DOM_ID = "#edit-btn";
-            export const TARGET_IMAGE_INDEX = 0;
-            export const TARGET_TEXT_INDEX = 0;
 
             //popup
             export const POPUP_DOM_ID = "#edit-popup";
@@ -144,9 +142,9 @@ module Garage {
             private _createPreview(): Preview {
                 let targetState = this._getModel().getStateByStateId(this.targetStateId_);
                 if (Util.MiscUtil.isValidArray(targetState.image)) {
-                    return new ImagePreview(targetState.image[constValue.TARGET_IMAGE_INDEX]);
+                    return new ImagePreview(targetState.getDefaultImage());
                 } else {
-                    return new TextPreview(targetState.label[constValue.TARGET_TEXT_INDEX]);
+                    return new TextPreview(targetState.getDefaultLabel());
                 }
             }
 
