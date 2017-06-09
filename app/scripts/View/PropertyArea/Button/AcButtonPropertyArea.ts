@@ -53,7 +53,6 @@ module Garage {
                 return this;
             }
 
-
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
              * @return {Model.ButtonItem}
@@ -63,7 +62,6 @@ module Garage {
                 //このクラスとその子供のクラスはthis.modelをModel.ButtonItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.ButtonItem>this.model;
             }
-
 
         }
     }
