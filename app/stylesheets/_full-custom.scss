@@ -866,7 +866,8 @@
 
             #background-image-preview-window.background {
                 height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
-                #image-container{
+
+                #image-container {
                     height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_INTER_HEIGHT;
                 }
             }
@@ -899,8 +900,7 @@
     }
     //画像編集ボタンのpopup
     #edit-image-popup,
-    #edit-popup 
-    {
+    #edit-popup {
         position: relative;
         box-shadow: none;
         text-shadow: none;

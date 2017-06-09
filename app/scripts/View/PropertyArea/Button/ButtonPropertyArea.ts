@@ -1467,7 +1467,7 @@ module Garage {
 
 
 
-      
+
 
 
             /**
@@ -1578,7 +1578,7 @@ module Garage {
 
             //TODO: ButtonItemがget state で Model.StateItem[]でなくStateCollectionを返すようになったら、この関数を移動。あるいは削除。
             private _getStateIndexByStateId(stateId: number): number {
-                let targetStates = this.getModel().state; 
+                let targetStates = this.getModel().state;
                 for (let i = 0; targetStates.length > i; i++) {
                     let targetState = targetStates[i];
                     if (targetState.stateId == stateId) {

@@ -122,7 +122,7 @@ module Garage {
             /**
              * @return {number} previewが所持しているtext sizeを返す。ない場合0を返す。
              */
-            getTextSize():number {
+            getTextSize(): number {
                 if (this.preview_ instanceof TextPreview) {
                     let tmpTextPreview: TextPreview = <TextPreview>this.preview_;
                     return tmpTextPreview.getTextSize();
@@ -172,7 +172,7 @@ module Garage {
 
                 if (this.preview_ instanceof ImagePreview) {
                     $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                } else if (this.preview_ instanceof TextPreview){
+                } else if (this.preview_ instanceof TextPreview) {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
                 this.listenTo(this.preview_, "uiChange:size", this._onTextSizePulldownChanged);

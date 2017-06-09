@@ -80,7 +80,7 @@ module Garage {
 
                 if (this.preview_ instanceof ImagePreview) {
                     $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                } else if (this.preview_ instanceof TextPreview){
+                } else if (this.preview_ instanceof TextPreview) {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
             }

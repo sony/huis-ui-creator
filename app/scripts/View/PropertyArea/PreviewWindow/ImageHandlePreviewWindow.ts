@@ -174,7 +174,7 @@ module Garage {
                 let imageName = path.basename(imageFilePath);
                 let dirPath = this.getImage().getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
-                
+
                 //TODO: move const variables difinition from init.ts to more specific place
                 let params = this.getImage().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
