@@ -51,8 +51,6 @@ module Garage {
             private $currentTargetDummy_: JQuery;
             private currentItem_: Model.Item;
             private currentTargetPageIndex_: number;
-            private currentTargetButtonStates_: Model.ButtonState[];
-            private currentTargetButtonStatesUpdated_: boolean;
             private selectedResizer_: string;
             private mouseMoveStartTargetPosition_: Model.Position;
             private mouseMoveStartPosition_: Model.Position;
@@ -171,8 +169,6 @@ module Garage {
                     if (remoteId == undefined) {
                         $("li#command-delete-remote").remove();
                     }
-
-
 
                     //html上の文言をローカライズ
                     $("#page-title-edit").html($.i18n.t("edit.STR_EDIT_TITLE"));
@@ -401,7 +397,7 @@ module Garage {
 
                 this.faceRenderer_canvas_.render();
 
-                this._setGridSize(this.gridSize_);
+                this._setGridSize();
 
 
                 this.currentTargetPageIndex_ = 0;
@@ -789,8 +785,6 @@ module Garage {
                 // マウスポインター位置が、選択中のターゲット上は、
                 // ターゲットを外す
                 if (!remainsTarget && !selectedResizer) {
-                    // 直前に選択されていたボタンの状態更新があれば行う
-                    this._updateCurrentModelButtonStatesData();
 
                     // 現在のターゲットを外す
                     this._loseTarget();
@@ -804,10 +798,6 @@ module Garage {
                         }
 
                     }
-                }
-                if (remainsTarget) {
-                    // 選択中のアイテムがボタンの場合、状態の更新を行う
-                    this._updateCurrentModelButtonStatesData();
                 }
                 if (selectedResizer) {
                     this.selectedResizer_ = selectedResizer;
@@ -827,9 +817,6 @@ module Garage {
                 this.countPalletItemClick(event);
 
                 this.selectedResizer_ = null;
-
-                // 直前に選択されていたボタンの状態更新があれば行う
-                this._updateCurrentModelButtonStatesData();
 
                 // 現在のターゲットを外す
                 this._loseTarget();
@@ -1630,39 +1617,6 @@ module Garage {
 
                 var $facePages = $("#face-canvas").find(".face-page");
 
-                var menuItem_gridSize = new MenuItem({   // 当面使わなくなったが将来用に残しておきます
-                    label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE"),
-                    type: "submenu",
-                    submenu: Menu.buildFromTemplate([
-                        {
-                            label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_NON"), type: "checkbox", checked: this.gridSize_ === 2 ? true : false, click: () => {
-                                this._setGridSize(2);
-                            }
-                        }, {
-                            label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_8PX"), type: "checkbox", checked: this.gridSize_ === 8 ? true : false, click: () => {
-                                this._setGridSize(8);
-                            }
-                        }, {
-                            label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_16PX"), type: "checkbox", checked: this.gridSize_ === 16 ? true : false, click: () => {
-                                this._setGridSize(16);
-                            }
-                        }, {
-                            label: DEFAULT_GRID + "px", type: "checkbox", checked: this.gridSize_ === DEFAULT_GRID ? true : false, click: () => {
-                                this._setGridSize(DEFAULT_GRID);
-                            }
-                        }, {
-                            label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_32PX"), type: "checkbox", checked: this.gridSize_ === 32 ? true : false, click: () => {
-                                this._setGridSize(32);
-                            }
-                        }, {
-                            label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_GRID_SIZE_64PX"), type: "checkbox", checked: this.gridSize_ === 64 ? true : false, click: () => {
-                                this._setGridSize(64);
-                            }
-                        }
-                    ])
-                });
-
-
                 // カーソルがアイテムの上にある場合
                 if (this.$currentTarget_) {
                     let menuItem_copyItem = new MenuItem({
@@ -1851,7 +1805,7 @@ module Garage {
             private onAddPageButtonClicked(event: Event) {
                 // ページを追加する
                 this.faceRenderer_canvas_.addPage();
-                this._setGridSize(this.gridSize_);
+                this._setGridSize();
 
                 // ページ数が最大の場合はページ追加ボタンを無効化する
                 if (this.faceRenderer_canvas_.isPageNumMax()) {
@@ -2220,154 +2174,6 @@ module Garage {
                 }
             }
 
-            
-
-            /*
-            * アイテムの画像変更処理
-            * @param $target:Jquery 呼び出した側のJquery
-            */
-            private startEditButtonImage($target: JQuery, imageType: IMAGE_TYPE) {
-                var options: Util.ElectronOpenFileDialogOptions = {
-                    properties: ["openFile"],
-                    filters: [
-                        { name: "画像", extensions: ["jpg", "png", "jpeg"] },
-                    ],
-                    title: PRODUCT_NAME, // Electron uses Appname as the default title
-                };
-
-                // 画像ファイルを開く
-                electronDialog.showOpenFileDialog(
-                    options,
-                    (imageFiles: string[]) => {
-                        if (!imageFiles || !imageFiles.length) {
-                            return;
-                        }
-
-                        //画像ファイルダイアログが表示されると、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
-                        //そのため、直後にフォーカスを設定しなおす。
-                        this.$el.focus();
-
-                        let imageFilePath = imageFiles[0];
-                        let remoteId = this.faceRenderer_canvas_.getRemoteId();
-                        let imageFileExt = path.extname(imageFilePath).toLowerCase();
-                        if (!((imageFileExt === ".jpg") || (imageFileExt === ".png") || (imageFileExt === ".jpeg"))) {
-                            // 警告を出す
-                            console.warn("ONLY jpg, png, jpeg are supported");
-                            let response = electronDialog.showMessageBox({
-                                type: "error",
-                                message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE"),
-                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                                title: PRODUCT_NAME,
-                            });
-                            return;
-                        }
-
-                        if (Util.MiscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) { // ファイルが大きすぎる
-                            let response = electronDialog.showMessageBox({
-                                type: "error",
-                                message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
-                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                                title: PRODUCT_NAME,
-                            });
-                            console.warn("Image file too large");
-                            return;
-                        }
-
-                        if ((imageFileExt === ".jpg") || (imageFileExt === ".jpeg")) {
-                            let result = Util.MiscUtil.checkJPEG(imageFilePath);
-                            if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
-                                // JPEG2000及びJPEG Losslessはサポートしていない警告を出す
-                                let response = electronDialog.showMessageBox({
-                                    type: "error",
-                                    message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE"),
-                                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                                    title: PRODUCT_NAME,
-                                });
-                                console.warn("JPEG lossless or JPEG2000 are not supported");
-                                return;
-                            }
-                            else if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
-                                let response = electronDialog.showMessageBox({
-                                    type: "error",
-                                    message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE"),
-                                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                                    title: PRODUCT_NAME,
-                                });
-                                console.warn("This type of JPEG is not supported");
-                                return;
-                            }
-                            else if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない                                
-                                console.warn("Imega file not found"); // 普通はこないので特にダイアログは出さないで、編集画面にも何も起きない状態に
-                                return;
-                            }
-                        }
-
-                        if (imageType === IMAGE_TYPE.BUTTON_IMAGE) {// ボタン内の state の場合
-                            this._reflectImageToButtonState(remoteId, $target, imageFilePath);
-                        }
-                    }
-                );
-            }
-
-            private _reflectImageToButtonState(remoteId: string, $target: JQuery, imageFilePath: string) {
-                let imageFileName = path.basename(imageFilePath);
-                let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-                if (_.isUndefined(stateId)) {
-                    return;
-                }
-
-                let targetState = this._getCurrentTargetState(stateId);
-                if (!targetState) {
-                    return;
-                }
-                if (!targetState.image) {
-                    targetState.image = [];
-                }
-                if (targetState.image.length < 1) {
-                    targetState.image.push(new Model.ImageItem({
-                        remoteId: remoteId,
-                        areaRatio: {
-                            x: 0, y: 0, w: 1, h: 1
-                        },
-                        path: ""
-                    }));
-                }
-                // 画像は remoteimages/[remoteId]/ 以下に配置される。
-                // image.path には remoteimages 起点の画像パスを指定する。
-                var image = targetState.image[0];
-                image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                let resolvedPath = path.resolve(path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME, image.path)).replace(/\\/g, "/");
-                // 画像のリサイズとグレースケール化
-                Model.OffscreenEditor.editImage(imageFilePath, IMAGE_EDIT_PARAMS, resolvedPath)
-                    .done((editedImage) => {
-                        // 画像編集後に出力パスが変わる場合があるので、再度 model 更新
-                        let editedImageName = path.basename(editedImage.path);
-                        let editedImagePath = path.join(remoteId, editedImageName).replace(/\\/g, "/");
-                        let resolvedPath = editedImage.path.replace(/\\/g, "/");
-                        image.path = editedImagePath;
-                        image.resizeOriginal = editedImagePath;
-                        image.resolvedPath = resolvedPath;
-
-                        //このバージョンでは、すべてのステートの画像を変更する。
-                        this._updateCurrentModelStateData(TARGET_ALL_STATE, {
-                            "path": editedImagePath,
-                            "resolved-path": resolvedPath,
-                            "resizeOriginal": editedImagePath,
-                            "text": ""
-                        });
-
-                        // テキストエリアの文字表示をアップデート
-                        $(".property-state-text-value[data-state-id=\"" + stateId + "\"]").val("");
-
-
-                        //previewを更新する
-                        let inputURL = JQUtils.enccodeUriValidInCSS(resolvedPath);
-                        let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                        this._updatePreviewInDetailArea(inputURL, $preview);
-
-                    });
-            }
-
             /**
             * 戻るボタンが押されたときに呼び出される
             */
@@ -2415,8 +2221,6 @@ module Garage {
                 let FUNCTION_NAME = TAG + "onEditDoneButtonClicked : ";
 
                 $("#button-edit-done").prop("disabled", true); // 二度押し対策
-                // 直前に選択されていたボタンの状態更新があれば行う
-                this._updateCurrentModelButtonStatesData();
 
                 //doneボタンの非活性タイマー
                 let durationTimerDoneButtonEnable = 5000;
@@ -2674,14 +2478,11 @@ module Garage {
                                 // 存在しない場合は、image.path を使う。
                                 let resolvedPath = this.getValidPathOfImageItemForCSS(targetModel);
 
-
                                 // 画像のロードが完了してから表示を更新する
                                 let img = new Image();
                                 img.src = resolvedPath;
                                 img.onload = () => {
                                     this.setBackgroundImageUrlInCSS($target, resolvedPath);
-                                    // 詳細編集エリアのプレビュー部分の更新
-                                    this._updatePreviewInDetailArea(resolvedPath, $("#property-image-preview"));
                                     try {
                                         this.$currentTargetDummy_.css("background-image", $target.css("background-image"));
                                     } catch (e) {
@@ -2712,31 +2513,6 @@ module Garage {
                             }
                             break;
 
-                        case "resizeMode":
-                            {
-                                switch (value) {
-                                    case "contain":
-                                        $target.removeClass("image-stretch")
-                                            .removeClass("image-cover");
-                                        break;
-
-                                    case "cover":
-                                        $target.addClass("image-cover")
-                                            .removeClass("image-stretch");
-                                        break;
-
-                                    case "stretch":
-                                        $target.addClass("image-stretch")
-                                            .removeClass("image-cover");
-                                        break;
-
-                                    default:
-                                        $target.removeClass("image-stretch")
-                                            .removeClass("image-cover");
-                                }
-                            }
-                            break;
-
                         case "resizeOriginal":
                             {
                                 let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
@@ -2755,10 +2531,6 @@ module Garage {
 
                                     img.onload = () => {
                                         this.setBackgroundImageUrlInCSS($target, resolvedOriginalPath);
-
-
-                                        // プレビュー部分の更新
-                                        this._updatePreviewInDetailArea(resolvedOriginalPath, $("#property-image-preview"));
                                     };
 
                                 }
@@ -2897,32 +2669,6 @@ module Garage {
             }
 
             /**
-             * 詳細設定エリアのプレビューの画像を更新する
-             * このとき、resolvedImagePathForCSSは、CSSに対して、resolvedされていなければならない。
-             *
-             * @param {string} resolvedImagePathForCSS 画像パス
-             * @param {JQeury} $preview プレビュー
-             */
-            private _updatePreviewInDetailArea(resolvedImagePathForCSS: string, $preview: JQuery) {
-                if (resolvedImagePathForCSS == undefined) {
-                    console.log("FullCustom.ts:_updatePreviewInDetailArea:imagePath is Undefined");
-                    return;
-                }
-
-                if ($preview == undefined) {
-                    console.log("FullCustom.ts:_updatePreviewInDetailArea:$previewId is Undefined");
-                    return;
-                }
-
-                if (this._isValidResolvedImagePathForCSS(resolvedImagePathForCSS)) {
-                    this.setBackgroundImageUrlInCSS($preview, resolvedImagePathForCSS);
-                    let previewWidth = $preview.width();
-                    let img = new Image();
-                    img.src = resolvedImagePathForCSS;
-                }
-            }
-
-            /**
              * パスが画像パスとして有効か確認する
              *
              * @param resolvedImagePathForCSS {string} 画像パス
@@ -2932,201 +2678,6 @@ module Garage {
                 return resolvedImagePathForCSS != HUIS_REMOTEIMAGES_ROOT
                     && resolvedImagePathForCSS != ""
                     && resolvedImagePathForCSS != "none";
-            }
-
-            /**
-             * データとして持っている state のリストを Button Model に更新する
-             */
-            private _updateCurrentModelButtonStatesData() {
-                if (!this.currentItem_ || !(this.currentItem_ instanceof Model.ButtonItem) || !this.currentTargetButtonStates_) {
-                    return;
-                }
-                // 更新がない場合は何もしない
-                if (!this.currentTargetButtonStatesUpdated_) {
-                    return;
-                }
-                // this.currentTargetButtonStatesUpdated_ を true にするルートが現状存在しないため
-                // 以下のコードが実行されることはないはず
-                console.error("unexpected path to _updateCurrentModelButtonStateData()");
-                this.currentTargetButtonStatesUpdated_ = false;
-            }
-
-            /**
-             * 現在ターゲットとなっているボタン内の「状態」にデータをセットする
-             *
-             * @param stateId {number} データをセットする状態の ID。undefined の場合は、全 state を更新。
-             * @param key {string} データのキー
-             * @param value {any} 値
-             */
-            private _updateCurrentModelStateData(stateId: number, key: string, value);
-
-            /**
-             * 現在ターゲットとなっているボタン内の「状態」にデータをセットする
-             *
-             * @param stateId {number} データをセットする状態の ID。undefined の場合は、全 state を更新。 
-             * @param properties {Object} キーと値のセット
-             */
-            private _updateCurrentModelStateData(stateId: number, properties: any);
-
-            private _updateCurrentModelStateData(stateId: number, param1: any, param2?: any) {
-
-                if (!this.currentItem_) {
-                    console.warn(TAG + "_updateCurrentModelStateData() target model is not found");
-                    return;
-                }
-                if (!(this.currentItem_ instanceof Model.ButtonItem)) {
-                    console.warn(TAG + "_updateCurrentModelStateData() target model is not button item");
-                    return;
-                }
-
-                /**
-                 * state 内に label が存在しない場合に、補完する
-                 */
-                var solveLabel = function (state: Model.ButtonState) {
-                    var defaltTextSize = 30;
-                    let localStateId = state.stateId;
-
-                    var $targetTextSizePullDown: JQuery = $(".property-state-text-size[data-state-id=\"" + localStateId + "\"]");
-
-                    if ($targetTextSizePullDown.length == 0) {//DOMが存在しないとき(長さが0のとき)stateId=0の際のDOMを読み込み
-                        $targetTextSizePullDown = $(".property-state-text-size[data-state-id=\"0\"]");
-                    }
-
-                    if ($targetTextSizePullDown) {
-                        defaltTextSize = +($targetTextSizePullDown.val());
-                    }
-
-                    if (!state.label || !state.label.length) {
-                        state.label = [new Model.LabelItem({
-                            text: "",
-                            size: defaltTextSize,
-                            font_weight: FontWeight.FONT_BOLD
-                        })];
-                    }
-                };
-
-                let props: Object;
-                if (_.isString(param1)) {
-                    props = {};
-                    props[param1] = param2;
-                } else if (_.isObject(param1)) {
-                    props = param1;
-                } else {
-                    console.warn(TAG + "_updateCurrentModelStateData() unknown type param");
-                    return;
-                }
-
-                var button = this.castToButton(this.currentItem_);
-                var states = button.state;
-                if (!states) {
-                    console.warn(TAG + "_updateCurrentModelStateData() state is not found in button");
-                    return;
-                }
-                var currentStates: Model.ButtonState[] = $.extend(true, [], states);
-
-                let targetStates: Model.ButtonState[];
-                if (_.isUndefined(stateId)) {
-                    // stateId が指定されていない場合は、全 state を更新
-                    targetStates = states;
-                } else if (stateId === TARGET_ALL_STATE) {
-                    // stateIdがTARGET_ALL_STATEの場合、全stateを更新
-                    targetStates = states;
-                } else {
-                    targetStates = states.filter((state) => {
-                        return state.stateId === stateId;
-                    });
-                }
-
-                if (!targetStates || targetStates.length < 1) {
-                    console.warn(TAG + "_updateCurrentModelStateData() state id is not found");
-                    return;
-                }
-
-                // state id は重複することはないが、もし複数の state が見つかった場合は、最初の state をターゲットとする
-                var targetState = targetStates[0];
-                var $targetStateElem = this.$currentTarget_.find(".button-state").filter((index: number, elem: Element) => {
-                    let tmpStateId = stateId;
-                    if (_.isUndefined(stateId)) {
-                        // stateId が指定されていない場合は、state:0のDOMを利用する。
-                        tmpStateId = 0;
-                    } else if (stateId === TARGET_ALL_STATE) {
-                        // stateId がTARGET_ALL_STATEの場合は、state:0のDOMを利用する。
-                        tmpStateId = 0;
-                    }
-                    return parseInt(JQUtils.data($(elem), "stateId"), 10) === tmpStateId;
-                });
-                if (!$targetStateElem || $targetStateElem.length < 1) {
-                    console.warn(TAG + "_updateCurrentModelStateData() target state elem is not found");
-                    return;
-                }
-
-                targetStates.forEach((targetState: Model.ButtonState) => {
-
-                    let keys = Object.keys(props);
-                    keys.forEach((key) => {
-                        let value = props[key];
-                        // データの更新
-                        switch (key) {
-                            case "text":
-                                solveLabel(targetState);
-                                targetState.label[0].text = value;
-                                break;
-
-                            case "size":
-                                solveLabel(targetState);
-
-                                if (isFinite(value)) {//numberでない場合、numberに変換。
-                                    value = + (value);
-                                }
-
-                                targetState.label[0].size = value;
-                                break;
-
-                            case "path":
-                                if (value) {
-                                    targetState.image[0].path = value;
-                                } else {// 未指定の場合は削除
-                                    targetState.image = null;
-                                }
-                                break;
-
-                            case "resolved-path":
-                                if (value) {
-                                    targetState.image[0].resolvedPath = value;
-                                } else {
-                                    targetState.image = null;
-                                }
-                                break;
-
-                            case "resizeOriginal":
-                                if (value) {
-                                    targetState.image[0].resizeOriginal = value;
-                                }
-                                break;
-
-                            case "resizeMode":
-                                if (value) {
-                                    targetState.image[0].resizeMode = value;
-                                }
-                                break;
-
-                            default:
-
-                        }
-                        let currentStateId = targetState.stateId;
-                        this.updateButtonOnCanvas(currentStateId, key, value, targetState, $targetStateElem, button.area.w, button.area.h);
-
-
-                    });
-                });
-
-                var memento: IMemento = {
-                    target: button,
-                    previousData: { "state": currentStates },
-                    nextData: { "state": states }
-                };
-                var mementoCommand = new MementoCommand([memento]);
-                this.commandManager_.invoke(mementoCommand);
             }
 
             /*
@@ -3190,91 +2741,9 @@ module Garage {
                             this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
                         }
                         break;
-                    case "resizeMode":
-                        {
-                            let $imageElement = $targetStateElem.find(".state-image");
-                            switch (value) {
-                                case "contain":
-                                    $imageElement.removeClass("image-stretch")
-                                        .removeClass("image-cover");
-                                    break;
-                                case "cover":
-                                    $imageElement.addClass("image-cover")
-                                        .removeClass("image-stretch");
-                                    break;
-                                case "stretch":
-                                    $imageElement.addClass("image-stretch")
-                                        .removeClass("image-cover");
-                                    break;
-                                default:
-                                    $imageElement.removeClass("image-stretch")
-                                        .removeClass("image-cover");
-                            }
-                        }
-                        break;
                 }
             }
 
-
-            /*
-            * ボタン画像がある場合、テキストエリアを表示に。する
-            */
-            private toggleImagePreview(stateId: number) {
-                let FUNCTION_NAME = TAG + " :toggleImagePreview: ";
-
-                var $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-                if ($preview == null) {
-                    //redo, undoの際に、previewが表示されていない場合がある。
-                    return;
-                }
-
-                var $textFieldInPreview = $preview.find(".text-field-in-preview");
-                if ($textFieldInPreview == null) {
-                    console.warn(FUNCTION_NAME + "$textFieldInPreview is undefined");
-                    return;
-                }
-
-                //cssのbackgroundImage要素から、画像名を抽出
-                let previceBagroundCSS: string = $preview.css("background-image");
-                if (previceBagroundCSS == null) {
-                    return;
-                }
-
-                let decodePath = JQUtils.extractBackgroundImagePathFromCss(previceBagroundCSS);
-
-                var backgroundImageCssArray = decodePath.split("/");
-                var pathArray = backgroundImageCssArray[backgroundImageCssArray.length - 1].split('"');
-                var path = pathArray[0];
-
-                //なぜか、background-imageにfull-custom.htmlが紛れることがある。
-                if (path != "null" && path != "full-custom.html" && path != "none" && Util.MiscUtil.existsFile(decodePath)) {
-                    $textFieldInPreview.css("visibility", "hidden");
-                } else {//画像が存在しないとき、テキストEdit機能を表示する。
-                    this._updatePreviewInDetailArea("none", $preview);
-                    $textFieldInPreview.css("visibility", "visible");
-
-                }
-            }
-
-            /**
-             * 現在ターゲットとなっているボタンの state を取得する
-             * 
-             * @param stateId {number} 現在ターゲットとなっているボタンから取得する state の ID
-             * @return {IStateDetail} 取得した state の情報。存在しない場合は undefined
-             */
-            private _getCurrentTargetState(stateId: number): Model.ButtonState {
-                if (!this.currentTargetButtonStates_) {
-                    return undefined;
-                }
-                var targetStates = this.currentTargetButtonStates_.filter((state) => {
-                    return state.stateId === stateId;
-                });
-                if (!targetStates || !targetStates.length) {
-                    return undefined;
-                }
-
-                return targetStates[0];
-            }
 
             /**
              * 現在選択中のアイテムをアイテム用クリップボードに記憶する
@@ -3381,23 +2850,6 @@ module Garage {
 
                 this._updateItemElementOnCanvas(model);
                 return memento;
-            }
-
-
-
-            /**
-             * 画像の resizeMode を設定する。
-             * 
-             * @param $select {JQuery} 
-             */
-            private _setImageResizeModeBySelect($select: JQuery) {
-                let resizeMode: string = $select.val();
-                if ($select.hasClass("button-state-property")) {
-                    let stateId = parseInt(JQUtils.data($select, "stateId"), 10);
-                    this._updateCurrentModelStateData(stateId, "resizeMode", resizeMode);
-                } else {
-                    this._updateCurrentModelData("resizeMode", resizeMode);
-                }
             }
 
             /**
@@ -4210,8 +3662,6 @@ module Garage {
 
                 this.$currentTarget_ = null;
                 this.currentItem_ = null;
-                this.currentTargetButtonStates_ = null;
-                this.currentTargetButtonStatesUpdated_ = false;
 
                 if (this.propertyArea_ != null) {
                     this.stopListening(this.propertyArea_.getModel());
@@ -4223,38 +3673,10 @@ module Garage {
             /**
              * グリッドを設定する
              */
-            private _setGridSize(gridSize: number) {
+            private _setGridSize() {
                 var $facePages = $("#face-canvas").find(".face-page");
-                switch (gridSize) {
-                    case 8:
-                        this.gridSize_ = 8;
-                        $facePages.css("background-image", "url(../res/icons/grid_08.png)");
-                        break;
-
-                    case 16:
-                        this.gridSize_ = 16;
-                        $facePages.css("background-image", "url(../res/icons/grid_16.png)");
-                        break;
-
-                    case DEFAULT_GRID:
-                        this.gridSize_ = DEFAULT_GRID;
-                        $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
-                        break;
-
-                    case 32:
-                        this.gridSize_ = 32;
-                        $facePages.css("background-image", "url(../res/icons/grid_32.png)");
-                        break;
-
-                    case 64:
-                        this.gridSize_ = 64;
-                        $facePages.css("background-image", "url(../res/icons/grid_64.png)");
-                        break;
-
-                    default:
-                        this.gridSize_ = 2;
-                        $facePages.css("background-image", "url(../res/icons/nogrid.png)");
-                }
+                this.gridSize_ = DEFAULT_GRID;
+                $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
             }
 
             /**
@@ -4263,7 +3685,6 @@ module Garage {
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
              */
             private _showDetailItemArea(item: Model.Item) {
-                //TODO: delete this. after all propertyare class developed
                 var $detail = $("#face-item-detail");
                 $detail.children().remove();
 
@@ -4287,15 +3708,6 @@ module Garage {
                 if (this.propertyArea_ == null) {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
-
-                //TODO: 全ボタンのpropertyAreaをリファクタ後、削除
-                if (item instanceof Model.ButtonItem) {
-                    this.currentTargetButtonStates_ = item.state;
-                }
-
-                //TODO:PropertyAreaに動作を移管して削除する。
-                //動的に追加されたcustom-selecctないのselectに対して、JQueryを適応する
-                $('.custom-select').trigger('create');
             }
 
             private _updateElementsOnCanvasProperyAreaChanged() {
@@ -4312,84 +3724,6 @@ module Garage {
 
                 this._updateItemElementsOnCanvas([changedModel]);
             }
-
-            /*
-             * propertyエリアの情報が更新された際、ボタンのモデルを更新する
-             * @param button {Model.ButtonItem}
-             */
-            private updateButtonItemModel(button: Model.ButtonItem) {
-                let FUNCTION_NAME = TAG + "updateButtonItemModel : ";
-
-                if (button == null) {
-                    console.warn(FUNCTION_NAME + "button is null");
-                    return;
-                }
-
-                let currentButtonState = this.currentTargetButtonStates_;
-                let newButtonState = button.state;
-
-                // 状態を更新する
-                var memento: IMemento = {
-                    target: button,
-                    previousData: { "state": currentButtonState },
-                    nextData: { "state": newButtonState }
-                };
-                var mementoCommand = new MementoCommand([memento]);
-                this.commandManager_.invoke(mementoCommand);
-
-                //this.currentTargetButtonStates_を更新する。 commandManagerの状態と一致するようにする。
-                this.currentTargetButtonStates_ = newButtonState;
-
-                this.$el.focus();
-            }
-
-            /**
-            private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
-                if (!button || !$detail) {
-                    return;
-                }
-
-                // ボタン情報の外枠部分をレンダリング
-                var templateButton = Tools.Template.getJST("#template-button-detail", this.templateItemDetailFile_);
-                var $buttonDetail = $(templateButton(button));
-                $buttonDetail.find(".title-label").text($.i18n.t("edit.property.STR_EDIT_PROPERTY_TITLE_JUMP"));
-                $detail.append($buttonDetail);
-
-                //信号用のViewの初期化・更新
-                if (this.jumpProperty == null) {
-                    this.jumpProperty = new JumpButtonPropertyArea(
-                        button,
-                        $buttonDetail,
-                        this.commandManager_,
-                        this.faceRenderer_canvas_.getRemoteId(),
-                        $("#input-face-name").val(),
-                        this.faceRenderer_canvas_.getModules()
-                    );
-                    //モデルが更新されたときfullcustom側のmodelも更新する
-                    this.jumpProperty.bind("updateModel", this.updateJumpButtonItemModel, this);
-                } else {
-                    //ボタンを移動して、Propertyを再表示する際、elを更新する必要がある。
-                    this.jumpProperty.undelegateEvents();
-                    this.jumpProperty.$el = $buttonDetail;
-                    this.jumpProperty.delegateEvents();
-                }
-
-                $detail.append(this.jumpProperty.render().$el);
-
-                //previewの情報を別途更新。
-                let $preview = $detail.find(".property-state-image-preview[data-state-id=\"" + button.default + "\"]");
-                var inputURL = this._extractUrlFunction($preview.css("background-image"));
-                this._updatePreviewInDetailArea(inputURL, $preview);
-                //テキストボタン、あるいは画像のどちらかを表示する。
-                this.toggleImagePreview(button.default);
-
-                //ボタンステートを入力
-                this.currentTargetButtonStates_ = button.state;
-
-                this.jumpProperty.focusFirstPulldown();
-
-                $detail.i18n();
-            }*/
 
             /*
             * url("***");から、***を抽出する
