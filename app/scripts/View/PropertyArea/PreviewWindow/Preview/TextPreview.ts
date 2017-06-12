@@ -60,7 +60,6 @@ module Garage {
 
             private _onTextSizePulldownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextSizePulldownChanged : ";
-                console.log(FUNCTION_NAME + "called");
                 this.trigger("uiChange:size");//PropertyAreaでUIの変更イベント発火を探知される。
                 event.stopPropagation();//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
             }
@@ -68,7 +67,6 @@ module Garage {
 
             private _onTextFieldChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextFieldChanged : ";
-                console.log(FUNCTION_NAME + "called");
                 this.trigger("uiChange:text");//PropertyAreaでUIの変更イベント発火を探知される。
                 event.stopPropagation;//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
             }
