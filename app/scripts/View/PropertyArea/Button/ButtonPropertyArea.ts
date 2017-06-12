@@ -30,6 +30,9 @@ module Garage {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
+            export const ACTION_PULLDOWN_DOM_CLASS = ".action-input";
+            export const JQUERY_STRING_TARGET_STATE_ID_OPEN = "[data-state-id=\"";
+            export const JQUERY_STRING_TARGET_STATE_ID_CLOSE = "\"]";
         }
 
         export abstract class ButtonPropertyArea extends PropertyArea {
@@ -1585,6 +1588,15 @@ module Garage {
                         return i;
                     }
                 }
+            }
+
+            protected _getActionPulldownJquery(stateId: number): JQuery {
+                return this.$el.find(
+                    constValue.ACTION_PULLDOWN_DOM_CLASS +
+                    constValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
+                    stateId + 
+                    constValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
+                    );
             }
 
         }

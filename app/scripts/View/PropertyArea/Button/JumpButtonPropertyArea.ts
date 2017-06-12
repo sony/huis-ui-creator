@@ -198,7 +198,7 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
+                var $actionPullDown: JQuery = this._getActionPulldownJquery(state.stateId);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }

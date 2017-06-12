@@ -246,7 +246,7 @@
     <!--アクションプルダウン-->
     <script type="text/template" id="template-action-pulldown">
         <div class="custom-select">
-            <select class="action-input" id="action-pulldown-select" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
+            <select class="action-input" id="select-state-action-input-{{stateId}}" data-type="state-input" data-state-id="{{stateId}}" data-signal-order="{{order}}" data-native-menu="false">
                 {{#actionList}}
                 <option value="{{value}}" data-i18n="button.input.{{key}}">{{value}}</option>
                 {{/actionList}}

@@ -41,7 +41,6 @@ module Garage {
             export const TEMPLATE_DOM_ID = "#template-macro-button-propety-area";
             export const TEMPLATE_ACTION_PULLDOWN = "#template-action-pulldown";
             export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
-            export const ACTION_PULLDOWN_SELECT_DOM_ID = "#action-pulldown-select";
         }
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
@@ -370,8 +369,7 @@ module Garage {
                 let macroData: any = {};
 
                 let state = this.getModel().getDefaultState();
-                let id: number = state.stateId;
-                macroData.id = id;
+                macroData.stateId = state.stateId;
 
                 let resizeMode: string;
 
@@ -388,6 +386,7 @@ module Garage {
                     console.warn(FUNCTION_NAME + "acctions is null");
                     return;
                 }
+
                 let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(macroConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
                 this.$el.find(macroConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(macroData));
 
@@ -395,7 +394,7 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(macroConstValue.ACTION_PULLDOWN_SELECT_DOM_ID);
+                var $actionPullDown: JQuery = this._getActionPulldownJquery(macroData.stateId);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
@@ -429,7 +428,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(macroConstValue.ACTION_PULLDOWN_SELECT_DOM_ID).val();
+                let tmpInput = this._getActionPulldownJquery(this.getDefaultStateId()).val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
