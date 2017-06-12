@@ -3388,9 +3388,6 @@ module Garage {
                                 color: "rgb(0,0,0)",
                                 fontSize: size + "pt"
                             });
-
-                            //画像が存在するとき、テキストEdit機能を非表示にする
-                            this.toggleImagePreview(stateId);
                         }
                         break;
 
@@ -3412,34 +3409,14 @@ module Garage {
                                 width: buttonAreaW + "px",
                                 height: buttonAreaH + "px",
                             });
-
                             let inputUrl: string = null;
-
                             inputUrl = JQUtils.enccodeUriValidInCSS(value);
-
-
 
                             if (inputUrl == null) {
                                 inputUrl = "none";
                             }
 
                             this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
-
-
-                            // 画像のロードが完了してから表示を更新する
-                            let img = new Image();
-                            img.src = inputUrl;
-                            img.onload = () => {
-                                this.setBackgroundImageUrlInCSS($imageElement, inputUrl);
-                                // 詳細エリアのプレビュー更新
-                                let $preview = $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]");
-
-                                //画像が存在するとき、テキストEdit機能を非表示にする
-                                this.toggleImagePreview(stateId);
-
-                            };
-
-
                         }
                         break;
                     case "resizeMode":
@@ -4596,11 +4573,6 @@ module Garage {
             }
 
             /**
-             * ページジャンプボタンの詳細エリアをレンダリング
-             *
-             * @param button {Model.ButtonItem} ページジャンプボタンのモデル
-             * @param $detail {JQuery} 
-             */
             private _renderJumpButtonItemDetailArea(button: Model.ButtonItem, $detail: JQuery) {
                 if (!button || !$detail) {
                     return;
@@ -4646,7 +4618,7 @@ module Garage {
                 this.jumpProperty.focusFirstPulldown();
 
                 $detail.i18n();
-            }
+            }*/
 
             /*
             * url("***");から、***を抽出する
