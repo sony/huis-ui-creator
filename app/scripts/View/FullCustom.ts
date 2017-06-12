@@ -2254,7 +2254,7 @@ module Garage {
                 var $target = $(event.currentTarget);
                 var value: any = $target.val();
                 //禁則文字がある場合、表示を取り消す。
-                let filteredString: string = this.getRemovedInhibitionWords(value);
+                let filteredString: string = Util.MiscUtil.getRemovedInhibitionWords(value);
                 if (filteredString != value) {
                     $target.val(filteredString);
                     value = filteredString;
@@ -2279,7 +2279,7 @@ module Garage {
 
 
                 //禁則文字がある場合、表示を取り消す。
-                let filteredString: string = this.getRemovedInhibitionWords(value);
+                let filteredString: string = Util.MiscUtil.getRemovedInhibitionWords(value);
                 if (filteredString != value) {
                     $target.val(filteredString);
                     value = filteredString;

@@ -21,6 +21,8 @@
 module Garage {
     export module View {
 
+        import UI = CDP.UI;
+
         var TAG = "[Garage.View.PropertyArea.Image.ImagePropertyArea] ";
 
         namespace constValue {

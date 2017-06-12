@@ -35,6 +35,56 @@ module Garage {
         }
 
         /**
+         * @class StyleBuilderDefault
+         * @brief スタイル変更時に使用する既定の構造体オブジェクト
+         */
+        class StyleBuilderDefault implements CDP.UI.Toast.StyleBuilder {
+
+            //! class attribute に設定する文字列を取得
+            getClass(): string {
+                return "ui-loader ui-overlay-shadow ui-corner-all ui-body-b";
+            }
+
+            //! style attribute に設定する JSON オブジェクトを取得
+            getStyle(): any {
+                let style = {
+                    "display": "block",
+                    "opacity": 1
+                };
+                return style;
+            }
+
+            //! オフセットの基準位置を取得
+            getOffsetPoint(): number {
+                //! @enum オフセットの基準
+                enum OffsetX {
+                    LEFT = 0x0001,
+                    RIGHT = 0x0002,
+                    CENTER = 0x0004,
+                }
+
+                //! @enum オフセットの基準
+                enum OffsetY {
+                    TOP = 0x0010,
+                    BOTTOM = 0x0020,
+                    CENTER = 0x0040,
+                }
+
+                return OffsetX.CENTER | OffsetY.TOP;
+            }
+
+            //! X 座標のオフセット値を取得
+            getOffsetX(): number {
+                return 0;
+            }
+
+            //! Y 座標のオフセット値を取得
+            getOffsetY(): number {
+                return 87;
+            }
+        }
+
+        /**
          * @class MiscUtil
          * @brief その他のユーティリティーを集めたクラス
          */
@@ -195,6 +245,80 @@ module Garage {
             static isValidArray(array: any[]) {
                 return array.length > 0;
             }
+
+            /**
+             * 禁則文字が入力された場合、トーストを出力し、禁則文字をぬいた文字列を返す。。
+             */
+            static getRemovedInhibitionWords(inputValue: string): string {
+                //入力した文字に禁則文字が含まれていた場合、トーストで表示。文字内容も削除。
+                let inhibitWords: string[] = this.getInhibitionWords(inputValue);
+                let resultString: string = inputValue;
+                if (inhibitWords != null) {
+                    let outputString: string = "";
+                    for (let i = 0; i < inhibitWords.length; i++) {
+                        if (i > 0) {
+                            outputString += ", "
+                        }
+                        outputString += inhibitWords[i] + " ";
+
+                        //GegExp(正規表現)を利用するために、頭に\\をつける。
+                        inhibitWords[i] = "\\" + inhibitWords[i];
+
+                        var regExp = new RegExp(inhibitWords[i], "g");
+                        resultString = resultString.replace(regExp, "");
+                    }
+                    outputString += $.i18n.t("toast.STR_TOAST_INPUT_INHIBITION_WORD");
+                    this.showGarageToast(outputString);
+                }
+
+                return resultString;
+            }
+
+            /**
+             * 禁則文字が入力された場合、含まれた禁則文字の文字列を返す。
+             */
+            static getInhibitionWords(inputKey: string): string[] {
+                let FUNCTION_NAME = "BasePage.ts : isInhibitionWord : "
+
+                let result: string[] = [];
+                let BLACK_LIST_INPUT_KEY: string[] =
+                    ['/',
+                        ":",
+                        ";",
+                        "*",
+                        "?",
+                        "<",
+                        ">",
+                        '"',
+                        "|",
+                        '\\'];
+
+                for (let i = 0; i < BLACK_LIST_INPUT_KEY.length; i++) {
+                    if (inputKey.indexOf(BLACK_LIST_INPUT_KEY[i]) != -1) {
+                        result.push(BLACK_LIST_INPUT_KEY[i]);
+                    }
+                }
+
+                if (result.length === 0) {
+                    return null;
+                }
+
+                return result;
+            }
+
+            /*
+             * Garageのデザインで、Toastを標示する。
+             */
+            static showGarageToast(message: string) {
+                var FUNCTION_NAME = "BasePage.ts : showGarageToast : ";
+                if (_.isUndefined(message)) {
+                    console.log(FUNCTION_NAME + "message is undefined");
+                }
+
+                var style: CDP.UI.Toast.StyleBuilderDefault = new StyleBuilderDefault();
+                CDP.UI.Toast.show(message, 1500, style);
+            }
+
         }
     }
 }
