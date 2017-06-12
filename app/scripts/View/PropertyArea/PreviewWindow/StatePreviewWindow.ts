@@ -51,12 +51,6 @@ module Garage {
                 super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this._initPreview();
-
-                //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
-                //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
-                //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
-                $(document).find(constValue.EDIT_IMAGE_BTN_DOM_ID).click($.proxy(this._onEditImageBtnClicked, this));
-                $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID).click($.proxy(this._onEditTextBtnClicked, this));
             }
 
             private _onEditImageBtnClicked(event: Event) {
@@ -150,6 +144,7 @@ module Garage {
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_());
+                this._bindPopupButtonEvent();
                 this._initPreview();
                 this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
@@ -190,6 +185,20 @@ module Garage {
             private _closePopup() {
                 var $overflow = $(document).find(constValue.POPUP_DOM_ID);
                 $overflow.popup("close");
+            }
+
+            private _bindPopupButtonEvent() {
+                //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
+                //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
+                //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
+                let $editImageBtn: JQuery = $(document).find(constValue.EDIT_IMAGE_BTN_DOM_ID);
+                let $editTextBtn: JQuery = $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID);
+
+                //2重発火防止のため、最初にoffする。
+                $editImageBtn.off("click", $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.off("click", $.proxy(this._onEditTextBtnClicked, this));
+                $editImageBtn.on("click", $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.on("click", $.proxy(this._onEditTextBtnClicked, this));
             }
 
         }
