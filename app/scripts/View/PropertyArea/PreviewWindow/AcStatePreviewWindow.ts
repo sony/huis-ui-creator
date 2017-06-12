@@ -29,19 +29,17 @@ module Garage {
 
             //preview
             export const PREVIEW_DOM_ID = "#preview";
-            export const IMAGE_PREVIEW_DOM_CLASS_NAME = "image-preview";
-            export const TEXT_PREVIEW_DOM_CLASS_NAME = "text-preview";
         }
 
         export class AcStatePreviewWindow extends PreviewWindow {
 
-            private preview_: Preview;
+            private preview_: ImagePreview;
             private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId: number) {
                 super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
-                this._initPreview();
+                this.preview_ = new ImagePreview(button.getStateByStateId(stateId).getDefaultImage());
             }
 
             events() {
@@ -54,40 +52,10 @@ module Garage {
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
                 this.$el.append(this.template_());
-                this._initPreview();
                 this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             };
-
-            private _createPreview(): Preview {
-                let targetState = this._getModel().getStateByStateId(this.targetStateId_);
-                if (Util.MiscUtil.isValidArray(targetState.image)) {
-                    return new ImagePreview(targetState.getDefaultImage());
-                } else {
-                    return new TextPreview(targetState.getDefaultLabel());
-                }
-            }
-
-            private _initPreview() {
-                this.preview_ = null;
-                this.preview_ = this._createPreview();
-
-                //domのクラスをTextPreview用とImagePrevie用に切り替える
-                let $preview = this.$el.find(constValue.PREVIEW_DOM_ID);
-                $preview.removeClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                $preview.removeClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
-
-                if (this.preview_ instanceof ImagePreview) {
-                    $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                } else if (this.preview_ instanceof TextPreview) {
-                    $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
-                }
-            }
-
-            private _getModel(): Model.ButtonItem {
-                return <Model.ButtonItem>this.model;
-            }
 
         }
     }
