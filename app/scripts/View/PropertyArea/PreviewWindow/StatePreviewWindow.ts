@@ -47,8 +47,8 @@ module Garage {
             private preview_: Preview;
             private targetStateId_: number;
 
-            constructor(button: Model.ButtonItem, stateId: number) {
-                super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+            constructor(button: Model.ButtonItem, stateId: number, editingRemoteId: string) {
+                super(button, editingRemoteId, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this._initPreview();
             }

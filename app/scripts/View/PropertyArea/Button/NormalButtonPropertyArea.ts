@@ -103,12 +103,8 @@ module Garage {
 
             private assignedInputActions: string[];
 
-
-            /**
-             * constructor
-             */
-            constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
+            constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
+                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.assignedInputActions = [];
                 this.listenTo(this.getModel(), "change:state", this.render);
             }

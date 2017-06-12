@@ -46,11 +46,8 @@ module Garage {
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
-            /**
-             * constructor
-             */
-            constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, macroConstValue.TEMPLATE_DOM_ID, commandManager);
+            constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
+                super(button, editingRemoteId, macroConstValue.TEMPLATE_DOM_ID, commandManager);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////

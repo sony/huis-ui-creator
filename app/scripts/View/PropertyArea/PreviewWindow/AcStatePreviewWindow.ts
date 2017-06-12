@@ -33,7 +33,7 @@ module Garage {
             export const TEXT_PREVIEW_DOM_CLASS_NAME = "text-preview";
         }
 
-        export class AcStatePreviewWindow extends ImageHandlePreviewWindow {
+        export class AcStatePreviewWindow extends PreviewWindow {
 
             private preview_: Preview;
             private targetStateId_: number;

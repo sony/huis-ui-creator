@@ -25,20 +25,19 @@ module Garage {
             /**
              * constructor
              * @param {Model.ButtonItem} button 表示するページジャンプボタン
-             * @param {JQuery} $el PropertyArea全体のJQuery
+             * @param {string} editingRemoteId 編集中のリモコンのremoteId
              * @param {CommandManager} commandManager モデルの更新を実際におこなうCommandManager
-             * @param {string} remoteId 編集中のリモコンの remote_id
              * @param {string} faceName  編集中のリモコン名
              * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
-            constructor(button: Model.ButtonItem, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
-                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
+            constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager, faceName: string, modules: Model.Module[]) {
+                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
 
-                this.remoteId = remoteId;
+                this.remoteId = editingRemoteId;
                 this.faceName = faceName;
                 this.modules = modules;
 
-                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, modules);
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(editingRemoteId, faceName, modules);
             }
 
 

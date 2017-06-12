@@ -32,9 +32,9 @@ module Garage {
 
             private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
 
-            constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
+            constructor(iamge: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
+                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge, editingRemoteId);
 
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:delete", this._onBackgroundImageDeleted);

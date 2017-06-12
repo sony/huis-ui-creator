@@ -61,14 +61,10 @@ module Garage {
             protected modules: Model.Module[];
             protected statePreviewWindow_: StatePreviewWindow;
 
-
-            /**
-             * constructor
-             */
-            constructor(button: Model.ButtonItem, templateDomId: string, commandManager: CommandManager) {
+            constructor(button: Model.ButtonItem, editingRemoteId: string, templateDomId: string, commandManager: CommandManager) {
                 super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId());
+                this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId(), editingRemoteId);
                 this._setDeviceInfo();
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
@@ -1602,7 +1598,7 @@ module Garage {
              * @param {number} stateId ターゲットとするstateId
              * @param {IStringKeyValue[]} actionList プルダウンで選択可能なアクション
              */
-            protected _renderNonOrderActionPulldown(stateId: number, actionList:IStringKeyValue[]) {
+            protected _renderNonOrderActionPulldown(stateId: number, actionList: IStringKeyValue[]) {
                 let inputDate = {
                     actionList: actionList,
                     stateId: stateId

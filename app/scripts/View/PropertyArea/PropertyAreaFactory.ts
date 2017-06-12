@@ -31,30 +31,30 @@ module Garage {
             /**
              * 入力されたアイテムから判断して、表示すべきPropertyAreaを返す。
              * @param {Model.Item} item PropertyAreaに表示させるアイテム。
+             * @param {string} editingRemoteId 編集中のリモコンのremoteId
              * @param {CommandManager} commandManager PropertyAreaで利用するCommandManager。
-             * @param {string} remoteId 編集中のリモコンのremoteId
              * @param {string} remoteName 編集中のリモコンの名前
              * @param {Model.Module[]} modules現在編集中のリモコンのモジュール
              * @return {PrjopertyArea} アイテムに応じたPropertyArea。適したPropertyAreaがない場合、nullを返す。
              */
-            create(item: Model.Item, commandManager: CommandManager, remoteId:string, remoteName : string, modules:Model.Module[]): PropertyArea {
+            create(item: Model.Item, editingRemoteId: string, commandManager: CommandManager, remoteName: string, modules: Model.Module[]): PropertyArea {
                 if (item instanceof Model.ButtonItem) {
                     if (item.isJumpButton()) {
-                        return new JumpButtonPropertyArea(item, commandManager, remoteId, remoteName, modules);
-                    }else if (item.isMacroButton()) {
-                        return new MacroButtonPropertyArea(item, commandManager);
-                    }else if (item.isAirconButton()) {
+                        return new JumpButtonPropertyArea(item, editingRemoteId, commandManager, remoteName, modules);
+                    } else if (item.isMacroButton()) {
+                        return new MacroButtonPropertyArea(item, editingRemoteId, commandManager);
+                    } else if (item.isAirconButton()) {
                         return new AcButtonPropertyArea(item, commandManager);
                     } else if (item.isTouchPatButton()) {
-                        return new TouchPadButtonPropertyArea(item, commandManager);
+                        return new TouchPadButtonPropertyArea(item, editingRemoteId, commandManager);
                     } else {
-                        return new NormalButtonPropertyArea(item, commandManager);
+                        return new NormalButtonPropertyArea(item, editingRemoteId, commandManager);
                     }
                 } else if (item instanceof Model.ImageItem) {
                     if (item.isBackgroundImage()) {
-                        return new BackgroundImagePropertyArea(item, commandManager);
+                        return new BackgroundImagePropertyArea(item, editingRemoteId, commandManager);
                     } else {
-                        return new ImagePropertyArea(item, commandManager);
+                        return new ImagePropertyArea(item, editingRemoteId, commandManager);
                     }
                 } else if (item instanceof Model.LabelItem) {
                     return new LabelPropertyArea(item, commandManager);

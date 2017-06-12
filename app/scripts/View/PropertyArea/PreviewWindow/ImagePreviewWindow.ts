@@ -34,8 +34,8 @@ module Garage {
             private imagePreview_: ImagePreview;
 
 
-            constructor(image: Model.ImageItem) {
-                super(image, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+            constructor(image: Model.ImageItem, editingRemoteId: string) {
+                super(image, editingRemoteId, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.imagePreview_ = new ImagePreview(image);
             }
 

@@ -41,11 +41,12 @@ module Garage {
 
             /**
              * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
+             * @param {string} editingRemoteId 編集中のリモコンのremoteId
              * @param {string} domId 自身を指す DOMのID
              * @param {string} templateDomId 自身のテンプレートのDOMのID
              * @param {Backbone.ViewOptions<Model.Item>} options? Backbone.Viewのオプション
              */
-            constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
+            constructor(item: Model.Item, editingRemoteId: string, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
 
                 if (item instanceof Model.ButtonItem && (<Model.ButtonItem>item).getDefaultState().getDefaultImage() == null) {
