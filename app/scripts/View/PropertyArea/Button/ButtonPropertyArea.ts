@@ -1547,9 +1547,9 @@ module Garage {
                 }
             }
 
-            private _initImageItem(state: Model.ButtonState, buttonRemoteId:string) {
+            private _initImageItem(state: Model.ButtonState, buttonRemoteId: string) {
                 this._initLabelAndImage(state);
-                let buttonArea= this.getModel().area;
+                let buttonArea = this.getModel().area;
                 let defaultImageArea: IArea = {
                     x: 0,
                     y: 0,
