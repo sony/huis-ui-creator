@@ -35,7 +35,9 @@ module Garage {
             }
 
             render(): Backbone.View<Model.Item> {
-                return super.render();
+                super.render();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
+                return this;
             }
         }
     }
