@@ -2261,55 +2261,6 @@ module Garage {
                 }
             }
 
-            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
-            /**
-             * 詳細編集エリア内のフォームで値の変更があったときに呼び出される。
-             */
-            private onItemPropertyChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onItemPropertyChanged : ";
-
-                var $target = $(event.currentTarget);
-                var $parent = $target.parent();
-
-                var key: string = JQUtils.data($parent, "property"); //$parent.data("property");
-                if (!key) {
-                    key = JQUtils.data($target, "property");
-                }
-                var value: any = $target.val();
-
-
-                //禁則文字がある場合、表示を取り消す。
-                let filteredString: string = Util.MiscUtil.getRemovedInhibitionWords(value);
-                if (filteredString != value) {
-                    $target.val(filteredString);
-                    value = filteredString;
-                }
-
-                if (key.indexOf("state-") === 0) {
-                    //let stateId = parseInt(JQUtils.data($target, "stateId"), 10); //$target.data("state-id");
-                    //このバージョンでは、すべての画像を変更する。
-                    this._updateCurrentModelStateData(TARGET_ALL_STATE, key.slice("state-".length), value);
-                } else {
-                    this._updateCurrentModelData(key, value);
-                }
-            }
-
-
-            //TODO: ボタンのプロパティエリアを整理後は削除。Previewに機能を移管。
-            /**
-             * 詳細編集エリア内の select メニューに値の変更があったときに呼び出される。
-             */
-            private onItemPropertySelectChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onItemPropertySelectChanged : ";
-
-                var $target = $(event.currentTarget);
-                if ($target.hasClass("image-resize-mode") || $target.hasClass("state-image-resize-mode")) {
-                    this._setImageResizeModeBySelect($target);
-                } else if ($target.hasClass("property-state-text-size") || $target.hasClass("property-text-size")) {
-                    this.onItemPropertyChanged(event);//テキストの大きさを変える際の処理
-                }
-            }
-
             /**
              * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
              **/
