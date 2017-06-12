@@ -158,7 +158,7 @@ module Garage {
 
                     //テキストフィールドにフォーカス
                     var $remoteName: JQuery = $("#input-face-name");
-                    this.setFocusAndMoveCursorToEnd($remoteName);
+                    Util.JQueryUtils.setFocusAndMoveCursorToEnd($remoteName);
 
                     this.isTextBoxFocused = false;
                     this.isDragging = false;
@@ -224,20 +224,9 @@ module Garage {
                     "mouseleave #face-canvas #face-pages-area .button-item ": "onHoverOutButtonItemInCanvas",
                     "mouseleave #canvas-tooltip": "onHoverOutTooltip",
 
-                    // 詳細編集エリアのイベント
-                    "change #face-item-detail input": "onItemPropertyChanged",
-                    'change #input-face-name ': "onRemoteNameTextFieldChanged",
-                    "change #face-item-detail select": "onItemPropertySelectChanged",
-                    "click #face-item-detail .custom-select": "onItemPropertySelectClicked",
-                    "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
-
-                    //画像変更用popup
-                    //"click #edit-image-or-text": "onEditImageButtonClicked",
-                    //"click #command-change-button-image": "onEditImageButtonInPopupClicked",
-                    //"click #command-change-button-text": "onEditTextButtonInPopupClicked",
-
                     //リモコン名編集用のテキストフィールド
                     "click #input-face-name": "onRemoteNameTextFieldClicked",
+                    'change #input-face-name ': "onRemoteNameTextFieldChanged",
 
                     // 編集完了ボタン
                     "click #button-edit-done": "onEditDoneButtonClicked",
@@ -255,8 +244,6 @@ module Garage {
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
-
-
 
                     // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     "focusin input[type='text']": "_onTextBoxFocusIn",
@@ -294,32 +281,6 @@ module Garage {
 
                 this.exportRemote(face);
             }
-
-
-            /*
-            * テキストエリアにフォーカスを移し、カーソルを末尾に移動する。
-            */
-            private setFocusAndMoveCursorToEnd($target) {
-                var FUNCTION_NAME = "setFocusAndMoveCursorToEnd";
-
-                if (_.isUndefined($target)) {
-                    console.log(FUNCTION_NAME + ": $target is Undefined");
-                    return;
-                }
-
-                if ($target.attr('type') !== "text") {
-                    console.log(FUNCTION_NAME + ": $target is not input[text]");
-                    return;
-                }
-
-                var remoteName: string = $target.val();
-                $target.val("");
-                $target.focus();
-                $target.val(remoteName);
-
-                this.isTextBoxFocused = true;
-            }
-
 
             /**
              * 画面のレイアウト。
@@ -2259,146 +2220,7 @@ module Garage {
                 }
             }
 
-            /**
-             * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditImageButtonClicked(event: Event) {
-                //popupメニューのテキスト 今後別のファイルにすべき。
-                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE = $.i18n.t("edit.property.STR_EDIT_PROPERTY_ITEM_TYPE_IMAGE_BUTTON");
-                var STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT = $.i18n.t("edit.property.STR_EDIT_PROPERTY_ITEM_TYPE_TEXT_BUTTON");
-
-                //押下されたボタンのJquery
-                var $target = $(event.currentTarget);
-
-                //popのJquery
-                var $overflow = this.$page.find("#edit-popup"); // ポップアップのjQuery DOMを取得
-                var previewBorderWidth: number = +(this.$page.find(".property-state-image-preview").css("border-width").replace("px", ""));
-                var $editImageBtn = $overflow.find("#command-change-button-image");
-                var $editTextBtn = $overflow.find("#command-change-button-text");
-
-                //popupのテキストを更新
-                $editImageBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_IMAGE);
-                $editTextBtn.find(".menu-item-text").text(STR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT);
-
-                var overFlowWidth = $overflow.find(".popup-list").outerWidth(true);
-
-                var popupY = $target.offset().top + $target.height();
-                var popupX = $target.offset().left - overFlowWidth + $target.outerWidth() + previewBorderWidth;
-
-                var options: PopupOptions = {
-                    x: 0,
-                    y: 0,
-                    tolerance: popupY + ",0,0," + popupX,
-                    corners: false,
-                    afterclose: (event, ui) => { this.$el.focus(); }
-                };
-
-
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
-                });
-            }
-
-            /**
-             * 詳細編集(ボタン)エリア内の プレビュー内の画像編集ボタンで、
-             * 出現したポップアップの中の画像編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditImageButtonInPopupClicked(event: Event) {
-                var FUNCTION_NAME = "onEditImageButtonInPopupClicked";
-                var $target = $(event.currentTarget);
-                var imageType: IMAGE_TYPE = IMAGE_TYPE.BUTTON_IMAGE;
-
-                //stateID付きのJQueryObjectをわたす
-                var $editButton = this.$page.find("#edit-image-or-text");
-
-                this.startEditButtonImage($editButton, imageType);
-            }
-
-            /**
-             * 詳細編集エリア内の プレビュー内の画像編集ボタンで、
-             * 出現したポップアップの中のテキスト編集ボタンがクリックされたときに呼び出される
-             **/
-            private onEditTextButtonInPopupClicked(event: Event) {
-                var FUNCTION_NAME = "onEditTextButtonInPopupClicked";
-                var $target = $(event.currentTarget);
-                var $editButton = this.$page.find("#edit-image-or-text");
-                let stateId = parseInt(JQUtils.data($editButton, "stateId"), 10); //$target.data("state-id");
-
-                //画像を削除 procDeleteをつかうと、無駄な履歴が残るので使わない。
-                let targetState = this._getCurrentTargetState(stateId);
-                if (!targetState) {
-                    return;
-                }
-                // 状態内の image を削除
-                targetState.image = null;
-                $(".property-state-image .propery-state-image-src input[data-state-id=\"" + stateId + "\"]").val("");
-                $(".property-state-image-preview[data-state-id=\"" + stateId + "\"]").css("background-image", "");
-                let $textField: JQuery = $(".property-state-text-value[data-state-id=\"" + stateId + "\"]");
-
-                let textInTextFiled: string = $textField.val();
-
-                if (textInTextFiled == null || textInTextFiled == "") {
-                    textInTextFiled = $.i18n.t("button.text_button.STR_REMOTE_BTN_TEXT_BTN_DEFAULT");
-                    $textField.val(textInTextFiled);
-                }
-
-                this._updateCurrentModelStateData(TARGET_ALL_STATE,
-                    {
-                        "text": textInTextFiled,
-                        "path": null,
-                        "resolved-path": null
-                    });
-                // TODO: Temporary comment out for workaround
-                //this.setFocusAndMoveCursorToEnd($textField);
-            }
-
-
-            /**
-             * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
-             */
-            private onItemPropertySelectClicked(event: Event) {
-                var $target = $(event.currentTarget);
-                var selectId = $target.find("select").attr("id");
-                var $selectMenu = $("#" + selectId + "-listbox");
-
-                var targetWidth = $target.width();
-                var targeHeight = $target.height();
-                var popupMenuWidth = $selectMenu.outerWidth(true);
-                var popupMenuHeight = $selectMenu.outerHeight(true);
-
-                var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
-
-                $selectMenu.outerWidth(Math.max(popupMenuWidth, targetWidth));
-
-                var options: PopupOptions = {
-                    x: 0,
-                    y: 0,
-                    tolerance: popupMenuY + ",0,0," + $target.offset().left,
-                    corners: false
-                };
-
-                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
-                    popupMenuY = innerHeight - $target.offset().top;
-
-                    options = {
-                        x: 0,
-                        y: 0,
-                        tolerance: "0,0," + popupMenuY + "," + $target.offset().left,
-                        corners: false
-                    };
-                }
-
-                $selectMenu.popup(options);
-
-            }
-
-            /**
-             * 詳細編集エリアの select メニュー上で mousedown されたときに呼び出される。
-             * @param event {Event} mousedownイベント
-             */
-            private onSelectMenuMouseDown(event: Event) {
-                event.preventDefault();
-            }
+            
 
             /*
             * アイテムの画像変更処理
@@ -2701,7 +2523,7 @@ module Garage {
                     if (response === 0) {
                         //テキストフィールドにフォーカス
                         var $remoteName: JQuery = $("#input-face-name");
-                        this.setFocusAndMoveCursorToEnd($remoteName);
+                        Util.JQueryUtils.setFocusAndMoveCursorToEnd($remoteName);
                     }
                     return true;
                 }

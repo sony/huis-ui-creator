@@ -136,10 +136,57 @@ module Garage {
 
             events(): any {  // 共通のイベント
                 return {
-                    // プルダウンメニューのリスト
+                    "click .custom-select": "onSelectClicked",
+                    "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
                 };
+            }
+
+            /**
+             * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
+             */
+            private onSelectClicked(event: Event) {
+                var $target = $(event.currentTarget);
+                var selectId = $target.find("select").attr("id");
+                var $selectMenu = $("#" + selectId + "-listbox");
+
+                var targetWidth = $target.width();
+                var targeHeight = $target.height();
+                var popupMenuWidth = $selectMenu.outerWidth(true);
+                var popupMenuHeight = $selectMenu.outerHeight(true);
+
+                var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
+
+                $selectMenu.outerWidth(Math.max(popupMenuWidth, targetWidth));
+
+                var options: PopupOptions = {
+                    x: 0,
+                    y: 0,
+                    tolerance: popupMenuY + ",0,0," + $target.offset().left,
+                    corners: false
+                };
+
+                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
+                    popupMenuY = innerHeight - $target.offset().top;
+
+                    options = {
+                        x: 0,
+                        y: 0,
+                        tolerance: "0,0," + popupMenuY + "," + $target.offset().left,
+                        corners: false
+                    };
+                }
+
+                $selectMenu.popup(options);
+            }
+
+            /**
+             * 詳細編集エリアの select メニュー上で mousedown されたときに呼び出される。
+             * @param event {Event} mousedownイベント
+             */
+            private onSelectMenuMouseDown(event: Event) {
+                event.preventDefault();
             }
 
             // ドロップダウンメニューから起動される共通の関数
@@ -548,9 +595,7 @@ module Garage {
                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                     title: PRODUCT_NAME,
                 });
-
             }
-
 
         }
     }
