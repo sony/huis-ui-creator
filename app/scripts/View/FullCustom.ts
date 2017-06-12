@@ -1202,8 +1202,6 @@ module Garage {
                         //preventDefaultしてしまうと、すべてのフォーカスがはずれてKeydownが働かなくなってしまう。
                         //そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
-
-                        //TODO: ジャンプボタンと、マクロボタンが空の時、フォーカスをあてる。
                     }
                 }
             }

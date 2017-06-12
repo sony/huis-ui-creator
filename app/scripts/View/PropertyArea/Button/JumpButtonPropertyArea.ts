@@ -140,6 +140,8 @@ module Garage {
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.$el.i18n();
 
+                this.focusFirstPulldown();
+
                 return this;
             }
 

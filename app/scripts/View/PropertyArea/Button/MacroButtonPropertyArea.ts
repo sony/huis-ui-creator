@@ -383,6 +383,8 @@ module Garage {
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.renderSignalContainers();
 
+                this.focusFirstPulldown();
+
                 return this;
             }
 
@@ -1040,8 +1042,11 @@ module Garage {
                 if (ActionNum <= 1
                     && !Util.JQueryUtils.isValidValue(remoteIdOrder0)
                     && !Util.JQueryUtils.isValidValue(functionOrder0)) {
-                    this.$el.find("#select-remote-input-0").focus();
+                    setTimeout(() => {
+                        this.$el.find("#select-remote-input-0").focus();
+                    });
                 }
+
             }
 
             /*
