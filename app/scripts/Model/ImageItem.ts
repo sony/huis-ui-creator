@@ -405,25 +405,6 @@ module Garage {
             }
 
             /**
-             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの絶対パスを返す。
-             */
-            getNotDefaultImageDirFullPath(): string {
-                return path.resolve(
-                    path.join(
-                        HUIS_FILES_ROOT,
-                        REMOTE_IMAGES_DIRECTORY_NAME,
-                        this.getNotDefaultImageDirRelativePath()
-                    )).replace(/\\/g, "/");
-            }
-
-            /**
-             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
-             */
-            getNotDefaultImageDirRelativePath(): string {
-                return path.join(this.remoteId_).replace(/\\/g, "/");
-            }
-
-            /**
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */

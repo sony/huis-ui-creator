@@ -88,7 +88,7 @@ module Garage {
                 let changedImageFilePath = this.statePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.getModel().getDefaultState().getDefaultImage().getNotDefaultImageDirRelativePath(),
+                    this.statePreviewWindow_.getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 // TODO: button.stateのクローンができるようになったら、それに書き換える。

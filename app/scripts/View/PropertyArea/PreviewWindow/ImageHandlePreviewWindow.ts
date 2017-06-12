@@ -38,6 +38,7 @@ module Garage {
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
 
             protected tmpImageFilePath_: string;//モデルに設定されているのパス。モデル適応する前に親クラスが取得するために保持。
+            protected editingRemoteId_: string;
 
             /**
              * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
@@ -55,6 +56,7 @@ module Garage {
 
                 this.listenTo(this.getImage(), "change:path", this._onPathChanged);
                 this.tmpImageFilePath_ = this.getImage().path;
+                this.editingRemoteId_ = editingRemoteId;
             }
 
 
@@ -89,6 +91,24 @@ module Garage {
                 return this.tmpImageFilePath_;
             }
 
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの絶対パスを返す。
+             */
+            getNotDefaultImageDirFullPath(): string {
+                return path.resolve(
+                    path.join(
+                        HUIS_FILES_ROOT,
+                        REMOTE_IMAGES_DIRECTORY_NAME,
+                        this.getNotDefaultImageDirRelativePath()
+                    )).replace(/\\/g, "/");
+            }
+
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
+             */
+            getNotDefaultImageDirRelativePath(): string {
+                return path.join(this.editingRemoteId_).replace(/\\/g, "/");
+            }
 
             /**
              * @return {Model.ImageItem} this.ModelがImageItemである、あるいは持ている場合 Model.Imageを返す。いずれでもない場合nullを返す。
@@ -177,7 +197,7 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let imageName = path.basename(imageFilePath);
-                let dirPath = this.getImage().getNotDefaultImageDirFullPath();
+                let dirPath = this.getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 //TODO: move const variables difinition from init.ts to more specific place
