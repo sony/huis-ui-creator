@@ -95,6 +95,7 @@ module Garage {
                 let tmpButton: Model.ButtonItem = this.getModel().clone();
                 let tmpStates: Model.ButtonState[] = tmpButton.state
                 let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                this._initImageItem(tmpState, this.getModel().remoteId);
                 let targetImageItem = tmpState.getDefaultImage();
                 targetImageItem.path = changedImageFileRelativePath;
                 targetImageItem.resizeOriginal = changedImageFileRelativePath;
@@ -1544,6 +1545,25 @@ module Garage {
                         }
                     }
                 }
+            }
+
+            private _initImageItem(state: Model.ButtonState, buttonRemoteId:string) {
+                this._initLabelAndImage(state);
+                let buttonArea= this.getModel().area;
+                let defaultImageArea: IArea = {
+                    x: 0,
+                    y: 0,
+                    w: buttonArea.w,
+                    h: buttonArea.h
+                }
+
+                let tmpImage: Model.ImageItem = new Model.ImageItem({
+                    remoteId: buttonRemoteId
+                })
+                tmpImage.area = defaultImageArea;
+                let tmpImages: Model.ImageItem[] = [];
+                tmpImages.push(tmpImage);
+                state.image = tmpImages;
             }
 
             private _initLabelItem(state: Model.ButtonState) {

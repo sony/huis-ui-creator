@@ -37,8 +37,9 @@ module Garage {
 
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
 
-            protected tmpImageFilePath_: string;//モデルに設定されているのパス。モデル適応する前に親クラスが取得するために保持。
+            protected tmpImageFilePath_: string;//変更後の画像パス。モデル適応する前に親クラスが取得するために保持。
             protected editingRemoteId_: string;
+            private isBackgroundImge_: boolean;
 
             /**
              * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
@@ -49,13 +50,7 @@ module Garage {
              */
             constructor(item: Model.Item, editingRemoteId: string, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
-
-                if (item instanceof Model.ButtonItem && (<Model.ButtonItem>item).getDefaultState().getDefaultImage() == null) {
-                    this._initImage(<Model.ButtonItem>item);
-                }
-
-                this.listenTo(this.getImage(), "change:path", this._onPathChanged);
-                this.tmpImageFilePath_ = this.getImage().path;
+                this.tmpImageFilePath_ = null;
                 this.editingRemoteId_ = editingRemoteId;
             }
 
@@ -67,14 +62,7 @@ module Garage {
                 };
             }
 
-
-            private _onPathChanged(event: Event) {
-                this.tmpImageFilePath_ = this.getImage().path;
-            }
-
-
             abstract render(option?: any): Backbone.View<Model.Item>;
-
 
             /**
              * @return {string} DOM全体を示すIDを返す。
@@ -82,7 +70,6 @@ module Garage {
             getDomId(): string {
                 return this.domId_;
             }
-
 
             /**
              * @return {string} 一時的なファイルパスを返す。
@@ -108,21 +95,6 @@ module Garage {
              */
             getNotDefaultImageDirRelativePath(): string {
                 return path.join(this.editingRemoteId_).replace(/\\/g, "/");
-            }
-
-            /**
-             * @return {Model.ImageItem} this.ModelがImageItemである、あるいは持ている場合 Model.Imageを返す。いずれでもない場合nullを返す。
-             */
-            protected getImage(): Model.ImageItem {
-                let FUNCTION_NAME = TAG + "getImage ";
-                if (this.model instanceof Model.ButtonItem) {
-                    return (<Model.ButtonItem>this.model).getDefaultState().getDefaultImage();
-                } else if (this.model instanceof Model.ImageItem) {
-                    return <Model.ImageItem>this.model;
-                } else {
-                    console.error(FUNCTION_NAME + "this.model do not include Model.ImageItem");
-                    return null;
-                }
             }
 
 
@@ -201,7 +173,7 @@ module Garage {
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 //TODO: move const variables difinition from init.ts to more specific place
-                let params = this.getImage().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+                let params = this.isBackgroundImge_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
                 Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {
