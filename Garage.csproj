@@ -189,6 +189,8 @@
     <Content Include="app\res\images\pulldowmmenu_up_icon.png" />
     <Content Include="app\res\locales\translation-dev.json" />
     <Content Include="app\res\locales\translation-ja.json" />
+    <Content Include="app\res\version\mac\version.txt" />
+    <Content Include="app\res\version\windows\version.txt" />
     <Content Include="app\stylesheets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
