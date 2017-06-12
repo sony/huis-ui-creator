@@ -39,8 +39,6 @@ module Garage {
             export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
             export const TEMPLATE_DOM_ID = "#template-macro-button-propety-area";
-            export const TEMPLATE_ACTION_PULLDOWN = "#template-action-pulldown";
-            export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
         }
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
@@ -365,39 +363,23 @@ module Garage {
                 super.render();
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
-                //マクロの基本情報を付与
-                let macroData: any = {};
-
-                let state = this.getModel().getDefaultState();
-                macroData.stateId = state.stateId;
-
-                let resizeMode: string;
-
-                if (state.image != null && state.image.length != 0) {
-                    macroData.image = state.image[0];
-                    let garageImageExtensions = state.image[0].garageExtensions;
-                    if (garageImageExtensions) {
-                        resizeMode = garageImageExtensions.resizeMode;
-                    }
-                }
-                macroData.actionList = ACTION_INPUTS_MACRO;
-                let actions: IAction[] = state.action;
+                let targetState: Model.ButtonState = this.getModel().getDefaultState();
+                this._renderNonOrderActionPulldown(targetState.stateId, ACTION_INPUTS_MACRO);
+                let actions: IAction[] = targetState.action;
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "acctions is null");
                     return;
                 }
 
-                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(macroConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
-                this.$el.find(macroConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(macroData));
-
                 //ActionのPullDownを変更する。
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this._getActionPulldownJquery(macroData.stateId);
+                var $actionPullDown: JQuery = this._getActionPulldownJquery(targetState.stateId);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
+
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
                 this.$el.i18n();
                 this._adaptJqueryMobileStyleToPulldown(this.$el);

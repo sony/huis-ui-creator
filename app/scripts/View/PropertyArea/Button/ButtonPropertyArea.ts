@@ -30,6 +30,10 @@ module Garage {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
+
+            //action pulldown
+            export const TEMPLATE_ACTION_PULLDOWN = "#template-non-order-action-pulldown";
+            export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
             export const ACTION_PULLDOWN_DOM_CLASS = ".action-input";
             export const JQUERY_STRING_TARGET_STATE_ID_OPEN = "[data-state-id=\"";
             export const JQUERY_STRING_TARGET_STATE_ID_CLOSE = "\"]";
@@ -1588,9 +1592,23 @@ module Garage {
                 return this.$el.find(
                     constValue.ACTION_PULLDOWN_DOM_CLASS +
                     constValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
-                    stateId + 
+                    stateId +
                     constValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
-                    );
+                );
+            }
+
+            /*
+             * オーダー情報のないプルダウンをレンダリングする
+             * @param {number} stateId ターゲットとするstateId
+             * @param {IStringKeyValue[]} actionList プルダウンで選択可能なアクション
+             */
+            protected _renderNonOrderActionPulldown(stateId: number, actionList:IStringKeyValue[]) {
+                let inputDate = {
+                    actionList: actionList,
+                    stateId: stateId
+                }
+                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(constValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
+                this.$el.find(constValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
             }
 
         }
