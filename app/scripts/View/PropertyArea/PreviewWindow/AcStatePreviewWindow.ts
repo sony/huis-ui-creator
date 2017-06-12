@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.PreviewWindow.StatePreviewWindow] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.AcStatePreviewWindow] ";
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-ac-state-preview-window";
