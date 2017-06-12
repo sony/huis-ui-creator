@@ -81,9 +81,6 @@ module Garage {
                 this.renderPagesOf(order, this.getDefaultStateId(), constValue.NO_PAGE_SELECT_NUM);
 
                 this.updateModel();
-
-                this.triggerCreateRemoteSelect(order);
-                this.refreshPageSelect(order);
             }
 
 
@@ -137,8 +134,8 @@ module Garage {
                 }
                 this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, targetState.stateId, targetJump.scene_no);
 
-                this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.$el.i18n();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
 
                 this.focusFirstPulldown();
 
@@ -158,17 +155,18 @@ module Garage {
             private updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
-                let tmpInput = this._getActionPulldownJquery(this.getDefaultStateId());
-                let newAction = $.extend(true, {}, this.getModel().getDefaultState().action[0]);
+                let tmpInput = this._getActionPulldownJquery(this.getDefaultStateId()).val();
+                let tmpButton: Model.ButtonItem = this.getModel().clone();
+                let tmpStates: Model.ButtonState[] = tmpButton.state;
+                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
+                let newAction = tmpState.action[0];
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [newAction];
-                this.getModel().getDefaultState().action = newActions;
+                tmpState.action = newActions;
+                tmpStates[this.getDefaultStateId()] = tmpState;
 
-                let states: Model.ButtonState[] = [];
-                states.push(this.getModel().getDefaultState());
-
-                this._setStateMementoCommand(states);
+                this._setStateMementoCommand(tmpStates);
             }
 
             /**
