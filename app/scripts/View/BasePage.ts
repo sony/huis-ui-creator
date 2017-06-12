@@ -145,6 +145,7 @@ module Garage {
 
             /**
              * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
+             * selectで表示されるプルダウンの位置を調節する。
              */
             private onSelectClicked(event: Event) {
                 var $target = $(event.currentTarget);
@@ -182,7 +183,7 @@ module Garage {
             }
 
             /**
-             * 詳細編集エリアの select メニュー上で mousedown されたときに呼び出される。
+             * select メニュー上で mousedown されたときに呼び出される。これがないと、プルダウン内のスクロールバーの挙動がおかしくなります。
              * @param event {Event} mousedownイベント
              */
             private onSelectMenuMouseDown(event: Event) {
