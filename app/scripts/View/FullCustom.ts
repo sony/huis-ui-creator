@@ -4527,8 +4527,8 @@ module Garage {
                     let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
                     this.propertyArea_ = propertyAreaFactory.create(
                         item,
-                        this.commandManager_,
                         this.faceRenderer_canvas_.getRemoteId(),
+                        this.commandManager_,
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules()
                     );
