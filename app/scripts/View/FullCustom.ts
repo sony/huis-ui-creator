@@ -3704,7 +3704,7 @@ module Garage {
                     this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
                 }
                 $detail.append(this.propertyArea_.render().$el);
-                $detail.trigger("create");
+                $detail.find(".custom-select").trigger("create");
 
                 if (this.propertyArea_ == null) {
                     console.warn(TAG + "_showDetailItemArea() unknown type item");
