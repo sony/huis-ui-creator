@@ -52,7 +52,7 @@ module Garage {
              * constructor
              */
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, macroConstValue.TEMPLATE_DOM_ID, null, commandManager);
+                super(button, macroConstValue.TEMPLATE_DOM_ID, commandManager);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////

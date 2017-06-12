@@ -36,7 +36,6 @@ module Garage {
             constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
                 super({
                     model: item,
-                    el: (options != null && options.el != null) ? options.el : null //TODO:ボタンのプロパティエリア整理後は削除。詳しくはButtonPropertyArea.tsのconstructorにて。
                 });
                 this.commandManager_ = commandManager;
                 this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());

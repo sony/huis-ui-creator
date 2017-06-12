@@ -29,8 +29,8 @@ module Garage {
              * @param {string} faceName  編集中のリモコン名
              * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
-            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
-                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(button: Model.ButtonItem, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
+                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
 
                 this.remoteId = remoteId;
                 this.faceName = faceName;

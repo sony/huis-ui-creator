@@ -69,7 +69,6 @@ module Garage {
             private bindedLayoutPage = null;
 
             private propertyArea_: PropertyArea;
-            private jumpProperty: JumpButtonPropertyArea;
 
             private buttonDeviceInfoCache: Util.ButtonDeviceInfoCache;
 
@@ -105,7 +104,6 @@ module Garage {
 
                     super.onPageShow(event, data);
                     this.propertyArea_ = null;
-                    this.jumpProperty = null;
                     this.newRemote_ = false;
 
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
@@ -1205,10 +1203,7 @@ module Garage {
                         //そのため、preventDefault直後にフォーカスを設定しなおす。
                         this.$el.focus();
 
-                        //TODO: フォーカスの寿命の関係で、このタイミングでもフォーカスする必要がある。
-                        if (this.jumpProperty != null) {
-                            this.jumpProperty.focusFirstPulldown();
-                        }
+                        //TODO: ジャンプボタンと、マクロボタンが空の時、フォーカスをあてる。
                     }
                 }
             }
@@ -2028,7 +2023,7 @@ module Garage {
                 //マクロボタンの場合、リモコン名を特殊表記
                 if (buttonModel.isMacroButton()) {
                     remoteInfo = $.i18n.t("button.macro.STR_REMOTE_BTN_MACRO");
-                } else if (this.isJumpButton(buttonModel)) {
+                } else if (buttonModel.isJumpButton()) {
                     remoteInfo = $.i18n.t("button.jump.STR_REMOTE_BTN_JUMP");
                 }
 
@@ -2051,7 +2046,7 @@ module Garage {
                 var localizedString = null;
                 if (outputFunctionName === "none") {
                     localizedString = $.i18n.t("button.none.STR_REMOTE_BTN_NONE");
-                } else if (this.isJumpButton(buttonModel)) {
+                } else if (buttonModel.isJumpButton()) {
                     // ジャンプボタンは機能ではなく跳び先が格納されるのでローカライズしない
                     localizedString = outputFunctionName;
                 } else {
@@ -3361,16 +3356,6 @@ module Garage {
                 };
                 var mementoCommand = new MementoCommand([memento]);
                 this.commandManager_.invoke(mementoCommand);
-
-
-                //propertyArea用のクラス内のモデルを更新する。
-                if (states != null) {
-                    if (this.jumpProperty != null) {
-                        this.jumpProperty.setStates(states);
-                    }
-                }
-
-
             }
 
             /*
@@ -4485,13 +4470,6 @@ module Garage {
                     this.propertyArea_.remove();
                     this.propertyArea_ = null;
                 }
-
-                //ページジャンプ用のプロパティのインスタンスを削除
-                if (this.jumpProperty != null) {
-                    this.jumpProperty.unbind("updateModel", this.updateJumpButtonItemModel, this);
-                    this.jumpProperty.remove();
-                    this.jumpProperty = null;
-                }
             }
 
             /**
@@ -4532,27 +4510,6 @@ module Garage {
             }
 
             /**
-             * ジャンプボタンか否か判定する。
-             * @param button {Model.ButtonItem} 判定対象のモデル
-             */
-            private isJumpButton(button: Model.ButtonItem): boolean {
-                let FUNCTION_NAME = TAG + "isJumpButton : ";
-
-                if (button == null) {
-                    console.warn(FUNCTION_NAME + "button is null");
-                    return false;
-                }
-
-                try {
-                    if (button.state[0].action[0].jump !== undefined) {
-                        return true;
-                    }
-                } catch (e) { }
-
-                return false;
-            }
-
-            /**
              * 詳細編集エリアを表示する。
              * 
              * @param targetModel {TagetModel} 詳細編集エリアに表示するモデル
@@ -4566,23 +4523,21 @@ module Garage {
                     return;
                 }
 
-                //TODO: delete this. after all propertyare class developed
-                var templateArea = Tools.Template.getJST("#template-property-area", this.templateItemDetailFile_);
+                if (this.propertyArea_ == null) {
+                    let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
+                    this.propertyArea_ = propertyAreaFactory.create(
+                        item,
+                        this.commandManager_,
+                        this.faceRenderer_canvas_.getRemoteId(),
+                        $("#input-face-name").val(),
+                        this.faceRenderer_canvas_.getModules()
+                    );
+                    this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                }
+                $detail.append(this.propertyArea_.render().$el);
 
-                if (item instanceof Model.ButtonItem && this.isJumpButton(item)) {
-                    // ジャンプボタンアイテムの詳細エリアを表示
-                    this._renderJumpButtonItemDetailArea(item, $detail);
-                } else {
-                    if (this.propertyArea_ == null) {
-                        let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
-                        this.propertyArea_ = propertyAreaFactory.create(item, this.commandManager_);
-                        this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
-                    }
-                    $detail.append(this.propertyArea_.render().$el);
-
-                    if (this.propertyArea_ == null) {
-                        console.warn(TAG + "_showDetailItemArea() unknown type item");
-                    }
+                if (this.propertyArea_ == null) {
+                    console.warn(TAG + "_showDetailItemArea() unknown type item");
                 }
 
                 //TODO: 全ボタンのpropertyAreaをリファクタ後、削除
@@ -4608,13 +4563,6 @@ module Garage {
                 }
 
                 this._updateItemElementsOnCanvas([changedModel]);
-            }
-
-            private updateJumpButtonItemModel(event: JQueryEventObject) {
-                let button: Model.ButtonItem = this.jumpProperty.getModel();
-                if (button != null) {
-                    this.updateButtonItemModel(button);
-                }
             }
 
             /*

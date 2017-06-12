@@ -30,7 +30,7 @@ module Garage {
         export class TouchPadButtonPropertyArea extends ButtonPropertyArea {
 
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, null, commandManager);
+                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.listenTo(this.getModel(), "change:state", this.render);
             }
 

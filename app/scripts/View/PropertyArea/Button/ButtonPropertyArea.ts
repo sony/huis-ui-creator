@@ -61,14 +61,8 @@ module Garage {
             /**
              * constructor
              */
-            constructor(button: Model.ButtonItem, templateDomId: string, $el: JQuery, commandManager: CommandManager) {
-                //TODO: 
-                //ボタンのプロパティエリアをリファクタする際には、
-                //this.$elはrender()でテンプレートから生成し、呼び出し元でappend(render().$el)という形で呼び出す形に統合したいので
-                //ここのel : $elは消す。
-                //現状バグが発生してしまうので、ここの修正はButtonPropertyArea系のリファクタの際に後回しにさせてください。
-                //備考：el: $el.get(0)ではうまく動かないようです。
-                super(button, templateDomId, commandManager, { el: $el });
+            constructor(button: Model.ButtonItem, templateDomId: string, commandManager: CommandManager) {
+                super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
                 this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId());
                 this._setDeviceInfo();

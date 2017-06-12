@@ -125,6 +125,19 @@ module Garage {
                 }
             }
 
+            /**
+             * @return {boolean} ジャンプボタンの場合trueを返す。
+             */
+            isJumpButton(): boolean {
+                let FUNCTION_NAME = TAG + "isJumpButton : ";
+                try {
+                    if (this.state[0].action[0].jump !== undefined) {
+                        return true;
+                    }
+                } catch (e) { }
+                return false;
+            }
+
             get area(): IArea {
                 return this.get("area");
             }

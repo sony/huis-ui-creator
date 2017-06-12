@@ -108,7 +108,7 @@ module Garage {
              * constructor
              */
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, null, commandManager);
+                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
                 this.assignedInputActions = [];
                 this.listenTo(this.getModel(), "change:state", this.render);
             }
