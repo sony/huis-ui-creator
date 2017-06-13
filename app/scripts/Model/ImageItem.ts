@@ -334,13 +334,14 @@ module Garage {
 
             set resizeOriginal(val: string) {
                 let garageExtensions = this.garageExtensions;
+                let changedResolvedOriginalPath: string = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
                 if (garageExtensions) {
                     garageExtensions.original = val;
-                    garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                    garageExtensions.resolvedOriginalPath = changedResolvedOriginalPath;
                 } else {
                     garageExtensions = {
                         original: val,
-                        resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
+                        resolvedOriginalPath: changedResolvedOriginalPath,
                         resizeMode: "contain"
                     };
                 }
