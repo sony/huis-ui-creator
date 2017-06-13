@@ -603,7 +603,9 @@ module Garage {
                 }
 
                 for (let state of this.state) {
-                    return state.isIncludeSpecificActionType(actionType)
+                    if (state.isIncludeSpecificActionType(actionType)) {
+                        return true;
+                    }
                 }
                 return false;
             }
