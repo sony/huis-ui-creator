@@ -250,8 +250,9 @@ module Garage {
 
             /**
              * テキストエリアにフォーカスを移し、カーソルを末尾に移動する。
+             * @param {JQuery} $target テキストエリアのJQuery
              */
-            static setFocusAndMoveCursorToEnd($target) {
+            static setFocusAndMoveCursorToEnd($target: JQuery) {
                 var FUNCTION_NAME = "setFocusAndMoveCursorToEnd";
 
                 if (_.isUndefined($target)) {
