@@ -243,7 +243,7 @@ module Garage {
 
             /**
              * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
-             * @param $target{JQuery} 対象となるJQuery
+             * @param $target {JQuery} 対象となるJQuery
              * @return {number} order情報 みつからない場合、undefinedを返す。
              */
             protected getOrderFrom($target: JQuery): number {
@@ -330,7 +330,7 @@ module Garage {
 
             /**
              * 入力したorderのremoteIdのプルダウンのJQuery要素を返す。
-             * @param order{number}
+             * @param {number} order
              * @return {JQuery}
              */
             protected getRemoteIdPullDownJQueryElement(order: number): JQuery {
@@ -401,8 +401,8 @@ module Garage {
 
             /**
              * 入力したorderのremoteプルダウンに、inputの値を代入する。
-             * order{number} ： マクロ信号の順番
-             * inputRemoteId{string} : プルダウンに設定する値。
+             * @param {number} order マクロ信号の順番
+             * @param {string} inputRemoteId プルダウンに設定する値。
              */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
@@ -458,7 +458,7 @@ module Garage {
 
             /**
              * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
-             * @param order{number}
+             * @param {number} order
              */
             protected removeRemoteIdPullDownOf(order: number) {
                 let FUNCTION_NAME = TAG + "removeRemoteIdPullDownOf";
@@ -477,7 +477,7 @@ module Garage {
 
             /**
              * 入力したorderのremoteId用プルダウンに表示されている文字列を取得する
-             * @param order{number}
+             * @param {number} order
              * @return {string} プルダウンに表示されている文字列
              */
             protected getTextInRemoteIdOf(order: number): string {
@@ -496,7 +496,7 @@ module Garage {
 
             /**
              * 入力したorderのremoteId用プルダウンに入力されているのが「不明なリモコン」か判定する
-             * @param order{number}
+             * @param {number} order
              * @return {boolean}
              */
             protected isUnknownRemoteTypeInPulldownOf(order: number): boolean {
@@ -585,8 +585,8 @@ module Garage {
 
             /**
              * アクションに設定されているFunctionNameを取得する
-             * @param action{IAction} : functionNameを抽出するAction
-             * @return {string} : functionName, 見つからない場合、 nullを返す。
+             * @param {IAction} action functionNameを抽出するAction
+             * @return {string} functionName 見つからない場合、 nullを返す。
              */
             protected getFunctionNameFromAction(action: IAction): string {
                 let FUNCTION_NAME = TAG + "getFunctionNameFromAction : ";
@@ -614,8 +614,8 @@ module Garage {
 
             /**
              * アクションに設定されているリモコン信号がもつFunctionを取得する
-             * @param action{IAction} : functionNameを抽出するAction
-             * @return {string[]} : functions, 見つからない場合、 nullを返す。
+             * @param {IAction} action functionNameを抽出するAction
+             * @return {string[]} functions, 見つからない場合、 nullを返す。
              */
             protected getFunctionsFromAction(action: IAction) {
                 let FUNCTION_NAME = TAG + "getFunctionsFromAction : ";
@@ -643,8 +643,8 @@ module Garage {
 
             /**
              * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
-             * order{number} ： マクロ信号の順番
-             * inputFunctionNameId{string} : プルダウンに設定する値。
+             * @param {number} order マクロ信号の順番
+             * @param {string} inputFunctionNameId プルダウンに設定する値。
              */
             protected setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
                 let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
@@ -676,7 +676,7 @@ module Garage {
 
             /**
              * 入力してorderの$signal-container-elementを返す。
-             * @param order{number} 入手したい$signal-container-elementの順番
+             * @param {number} order 入手したい$signal-container-elementの順番
              * @return {JQuery} $signal-container-element
              */
             protected getSignalContainerElementOf(order: number): JQuery {
@@ -693,8 +693,8 @@ module Garage {
             /**
              * 入力したorderの信号に登録されているfunctionをpulldownから取得する。
              * 見つからなかった場合、undefinedを返す。
-             * @order{number} : functionを取得したい信号の順番
-             * @{string} functionName
+             * @param {number} @order functionを取得したい信号の順番
+             * @return {string} functionName
              */
             protected getFunctionFromlPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf : ";
@@ -807,7 +807,7 @@ module Garage {
 
             /**
              * IButtonDeviceInfoをディープコピーする.
-             * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
+             * @param {IButtonDeviceInfo} src コピー元のIButtonDeviceInfo
              * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
              */
             protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo {
@@ -833,7 +833,7 @@ module Garage {
 
             /**
              * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
-             * @param functionName {string}
+             * @param {string} functionName
              * @return {boolean} ##付きのfunctionの場合true,それ以外はfalse
              */
             protected isRelearnedFunctionName(functionName: string): boolean {
@@ -841,9 +841,6 @@ module Garage {
                 if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return false;
                 }
-
-
-
                 //## を含んでいるとき、trueを返す。
                 if (functionName.indexOf(FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED) != -1) {
                     return true;
@@ -855,7 +852,7 @@ module Garage {
 
             /**
              * 設定したOrderのfunction用PullDownを消す。
-             * @param order {number}
+             * @param {number} order
              */
             protected removeFunctionPullDown(order: number) {
                 let FUNCTION_NAME = TAG + "removeFunctionPullDown";
@@ -875,8 +872,8 @@ module Garage {
 
             /**
              * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
-             * @param order {number} 信号リストを取得したい、マクロ信号の順番
-             * @param stateId? {number} 信号リストを取得したい、ボタンのstate
+             * @param {number} order 信号リストを取得したい、マクロ信号の順番
+             * @param {number} stateId? 信号リストを取得したい、ボタンのstate
              * @return {string[]} 見つからなかった場合、undefinedを返す。
              */
             protected getFunctionsOf(order: number, stateId?: number) {
@@ -912,9 +909,9 @@ module Garage {
             /**
              * ページプルダウンをレンダリング
              *
-             * @param order {number}
-             * @param stateId {number}
-             * @param page {number}
+             * @param {number} order
+             * @param {number} stateId
+             * @param {number} page
              */
             protected renderPagesOf(order: number, stateId: number, page: number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
@@ -948,8 +945,8 @@ module Garage {
              * ページ選択用プルダウンのDOMを追加し、そのJQueryオブジェクトを返す。
              * 既に存在する場合は追加せずに対象のJQueryオブジェクトを返す。
              *
-             * @param order {number}
-             * @param stateId {number}
+             * @param {number} order
+             * @param {number} stateId
              */
             private appendPagesPullDown(order: number, stateId: number = this.getModel().getDefaultStateId()): JQuery {
                 //targetとなるJQueryを取得
@@ -1020,9 +1017,9 @@ module Garage {
             /**
              * ページプルダウン各項目の表示/非表示を切り替える
              *
-             * @param $pulldown {JQuery}
-             * @param maxPage {number} 対象リモコンのページ数
-             * @param defaultPageValue {number} 初期選択状態にするページのvalue（ページ番号ではない）
+             * @param {JQuery} $pulldown
+             * @param {number} maxPage 対象リモコンのページ数
+             * @param {number} defaultPageValue 初期選択状態にするページのvalue（ページ番号ではない）
              */
             private controlHiddennessOfPagesPullDown($pulldown: JQuery, maxPage: number, defaultPageValue: number) {
                 let $pageOption = $pulldown.find('option');
@@ -1045,8 +1042,8 @@ module Garage {
             /**
              * ページプルダウンの選択項目を設定
              *
-             * @param order {number}
-             * @param page {number} 設定する項目の値（ページ番号ではない）
+             * @param {number} order
+             * @param {number} page 設定する項目の値（ページ番号ではない）
              */
             protected setPagePullDownOf(order: number, page: number) {
                 let FUNCTION_NAME = TAG + "setPagePullDownOf";
@@ -1080,8 +1077,7 @@ module Garage {
             /**
              * 入力したorderの信号に登録されているpageをpulldownから取得する。
              * 見つからなかった場合、undefinedを返す。
-             * @order{number} : remoeIdを取得したい信号の順番
-             * @{string} remoteId
+             * @param {number} order remoeIdを取得したい信号の順番
              */
             protected getPageFromPullDownOf(order: number): number {
                 let FUNCTION_NAME = TAG + "getPageFromPullDownOf";
@@ -1103,14 +1099,12 @@ module Garage {
                     return;
                 }
                 return $pagePullDown.val();
-
             }
-
 
             /**
              * 新規作成されたリモコン選択プルダウンにスタイルを適用する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected triggerCreateRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
@@ -1118,11 +1112,10 @@ module Garage {
                 this._adaptJqueryMobileStyleToPulldown($target);
             }
 
-
             /**
              * リモコン選択プルダウンの変更を表示に反映する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected refreshRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
@@ -1132,18 +1125,17 @@ module Garage {
             /**
              * ページ選択プルダウンの変更を表示に反映する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected refreshPageSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
                 $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
             }
 
-
             /**
              * ＋ボタンを押下する際のアニメーション. 
-             * @param order{number} 出現するdom のorder
-             * @param duration{number} アニメーションのduration
+             * @param {number} order 出現するdom のorder
+             * @param {number} duration アニメーションのduration
              */
             protected animateAddButton(order: number, duration: number, callback?: Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
@@ -1189,9 +1181,7 @@ module Garage {
                     }
                     , duration
                 );
-
             }
-
 
             /**
              * deleteボタンを押した際のアニメーション
@@ -1244,14 +1234,12 @@ module Garage {
                     }
 
                 }, duration);
-
             }
-
 
             /**
              * アニメーションのdurationを設定する。
-             * $target{JQuery} アニメーションを設定する対象
-             * duration{number} アニメーションにかかる時間[ms]
+             * @param {JQuery} $target アニメーションを設定する対象
+             * @param {number} duration アニメーションにかかる時間[ms]
              */
             protected setAnimationDuration($target: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "setAnimationDuration : ";
@@ -1270,10 +1258,9 @@ module Garage {
 
             }
 
-
             /**
              * 対象のJQueryのoffset座標系でのpositionを取得する
-             * 
+             * @parm {JQuery} $target 対象のJQuery
              */
             protected getPosition($target: JQuery): IPosition {
                 let FUNCTION_NAME = TAG + "getPosition : ";
@@ -1292,12 +1279,11 @@ module Garage {
                 return resultPosition
             }
 
-
             /**
              * 対象のdomの位置を入れ替えるアニメーションをする。
-             * @param $target1 {JQuery}
-             * @param $target2 {JQuery}
-             * @param duration {number} アニメーションの期間 [ms]
+             * @param {JQuery} $target1
+             * @param {JQuery} $target2
+             * @param {number} duration  アニメーションの期間 [ms]
              */
             protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
@@ -1337,12 +1323,10 @@ module Garage {
                 }, duration);
             }
 
-
-
             /**
              * orderの違反をチェックする。
-             * order {number} チェックするorder情報
-             * @return true:orderとして有効、false:orderとして利用不可。
+             * @param {number} order チェックするorder情報
+             * @return {boolean} true:orderとして有効、false:orderとして利用不可。
              */
             protected isValidOrder(order: number): boolean {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
@@ -1366,13 +1350,11 @@ module Garage {
                 }
 
                 return true;
-
             }
-
 
             /**
              * 入力したremoteIdが、キャッシュされたものだった場合、deviceInfoを取得する
-             * @param remoteId{string} deviceInfoを取得したいremoteId
+             * @param {string} remoteId deviceInfoを取得したいremoteId
              * @return {IButtonDeviceInfo} 見つからなかった場合nullを返す。
              */
             protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo {
@@ -1383,25 +1365,21 @@ module Garage {
                     return null;
                 }
 
-
                 //modelのアクション中のdeviceInfo
                 for (let action of this.getModel().getDefaultState().action) {
                     let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
-
                     }
-
                 }
 
                 return null;
             }
 
-
             /**
              * ボタンに、入力したデバイスタイプの信号がはいっているかチェックする。
-             * @param button{Model.ButtonItem} 判定対象のボタン
-             * @param category{string} 特定したいデバイスタイプ
+             * @param {Model.ButtonItem} button 判定対象のボタン
+             * @param {string} category 特定したいデバイスタイプ
              * @return {boolean} ボタンの信号に入力したデバイスタイプがひとつでもある場合 true, ひとつもない場合false, エラーが発生した場合undefined
              */
             protected isIncludeSpecificDeviceType(button: Model.ButtonItem, category: string): boolean {
@@ -1416,8 +1394,6 @@ module Garage {
                     console.warn(FUNCTION_NAME + "category is invalid");
                     return;
                 }
-
-
 
                 for (let state of button.state) {
                     if (!state.action) continue;
@@ -1434,13 +1410,10 @@ module Garage {
                 return false;
             }
 
-
-
-
-
-
             /**
              * ボタンの中のコード(学習して登録した際の信号)をすべて返す
+             * @param {Model.ButtonItem} button コードを取得したいボタン
+             * @return {string[]} ボタン中のコードを格納した配列
              */
             private _getCodesFrom(button: Model.ButtonItem): string[] {
                 let FUNCTION_NAME: string = TAG + "getCodesFrom";
@@ -1573,7 +1546,7 @@ module Garage {
                 );
             }
 
-            /*
+            /**
              * オーダー情報のないプルダウンをレンダリングする
              * @param {number} stateId ターゲットとするstateId
              * @param {IStringKeyValue[]} actionList プルダウンで選択可能なアクション
