@@ -161,7 +161,6 @@ module Garage {
             }
 
             private _initPreview() {
-                this.preview_ = null;
                 this.preview_ = this._createPreview();
 
                 //domのクラスをTextPreview用とImagePrevie用に切り替える
