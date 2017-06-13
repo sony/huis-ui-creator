@@ -34,18 +34,18 @@ module Garage {
             export const IS_BZ: boolean = false;
         }
 
-        /**
-         * @class StyleBuilderDefault
-         * @brief スタイル変更時に使用する既定の構造体オブジェクト
-         */
         class StyleBuilderDefault implements CDP.UI.Toast.StyleBuilder {
 
-            //! class attribute に設定する文字列を取得
+            /** 
+             * class attribute に設定する文字列を取得
+             */
             getClass(): string {
                 return "ui-loader ui-overlay-shadow ui-corner-all ui-body-b";
             }
 
-            //! style attribute に設定する JSON オブジェクトを取得
+            /**
+             * style attribute に設定する JSON オブジェクトを取得
+             */
             getStyle(): any {
                 let style = {
                     "display": "block",
@@ -54,16 +54,18 @@ module Garage {
                 return style;
             }
 
-            //! オフセットの基準位置を取得
+            /**
+             * オフセットの基準位置を取得
+             */
             getOffsetPoint(): number {
-                //! @enum オフセットの基準
+                // @enum オフセットの基準
                 enum OffsetX {
                     LEFT = 0x0001,
                     RIGHT = 0x0002,
                     CENTER = 0x0004,
                 }
 
-                //! @enum オフセットの基準
+                // @enum オフセットの基準
                 enum OffsetY {
                     TOP = 0x0010,
                     BOTTOM = 0x0020,
@@ -73,12 +75,16 @@ module Garage {
                 return OffsetX.CENTER | OffsetY.TOP;
             }
 
-            //! X 座標のオフセット値を取得
+            /**
+             * X 座標のオフセット値を取得
+             */ 
             getOffsetX(): number {
                 return 0;
             }
 
-            //! Y 座標のオフセット値を取得
+            /**
+             * Y 座標のオフセット値を取得
+             */
             getOffsetY(): number {
                 return 87;
             }
