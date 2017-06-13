@@ -14,56 +14,48 @@
     limitations under the License.
 */
 
-/// <reference path="../../../../include/interfaces.d.ts" />
+/// <reference path="../../../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
 
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.ImagePreview] ";
+        var TAG = "[Garage.View.PropertyArea.PreviewWindow.AcStatePreviewWindow] ";
 
         namespace constValue {
-            export const TEMPLATE_DOM_ID: string = "#template-image-preview";
-            export const DOM_ID: string = "#preview";
+            export const TEMPLATE_DOM_ID = "#template-ac-state-preview-window";
+            export const DOM_ID = "#ac-state-preview-window";
 
-            export const IMAGE_CONTAINER_DOM_ID: string = "#image-container";
+            //preview
+            export const PREVIEW_DOM_ID = "#preview";
         }
 
-        export class ImagePreview extends Preview {
+        export class AcStatePreviewWindow extends PreviewWindow {
 
+            private preview_: ImagePreview;
+            private targetStateId_: number;
 
-            constructor(item: Model.ImageItem) {
-                super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+            constructor(button: Model.ButtonItem, stateId: number) {
+                super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                this.targetStateId_ = stateId;
+                this.preview_ = new ImagePreview(button.getStateByStateId(stateId).getDefaultImage());
             }
-
 
             events() {
-                // Please add events
-                return {
-
-                };
+                let events = {};
+                return events;
             }
 
-
-            render(option?: any): Backbone.View<Model.Item> {
-                let FUNCTIN_NAME = TAG + "render ";
+            render(): Backbone.View<Model.Item> {
+                let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
                 this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
+                this.$el.append(this.template_());
+                this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
                 return this;
             };
-
-
-            /**
-             * 保持しているモデルを取得する
-             * @return {Model.ImagelItem}
-             */
-            getModel(): Model.ImageItem {
-                return <Model.ImageItem>this.model;
-            }
-
 
         }
     }

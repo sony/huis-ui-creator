@@ -21,7 +21,9 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Label.ImagePropertyArea] ";
+        import UI = CDP.UI;
+
+        var TAG = "[Garage.View.PropertyArea.Image.ImagePropertyArea] ";
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-image-property-area";
@@ -32,9 +34,9 @@ module Garage {
             private imagePreviewWindow_: ImagePreviewWindow;
 
 
-            constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
-                super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.imagePreviewWindow_ = new ImagePreviewWindow(iamge);
+            constructor(image: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
+                super(image, constValue.TEMPLATE_DOM_ID, commandManager);
+                this.imagePreviewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
 
                 this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
                 this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
@@ -52,7 +54,9 @@ module Garage {
             private _onImageFilePathChanged(event: Event) {
                 let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
-                let changedImageFileRelativePath = path.join(this.getModel().getNotDefaultImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
+                let changedImageFileRelativePath = path.join(
+                    this.imagePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
                     this.getModel(),

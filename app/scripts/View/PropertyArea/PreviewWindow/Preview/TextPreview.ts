@@ -26,7 +26,7 @@ module Garage {
         namespace constValue {
 
             export const TEMPLATE_DOM_ID: string = "#template-text-preview";
-            export const DOM_ID: string = "#text-preview";
+            export const DOM_ID: string = "#preview";
 
             //text size pulldown
             export const SIZE_PULLDOWM_CONTAINER_DOM_ID: string = "#text-size-pulldown";
@@ -60,17 +60,22 @@ module Garage {
 
             private _onTextSizePulldownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextSizePulldownChanged : ";
-                console.log(FUNCTION_NAME + "called");
                 this.trigger("uiChange:size");//PropertyAreaでUIの変更イベント発火を探知される。
-                event.stopPropagation();//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
             }
 
 
             private _onTextFieldChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextFieldChanged : ";
-                console.log(FUNCTION_NAME + "called");
+
+                var $target = $(event.currentTarget);
+                var value: any = $target.val();
+                //禁則文字がある場合、表示を取り消す。
+                let filteredString: string = Util.MiscUtil.getRemovedInhibitionWords(value);
+                if (filteredString != value) {
+                    $target.val(filteredString);
+                }
+
                 this.trigger("uiChange:text");//PropertyAreaでUIの変更イベント発火を探知される。
-                event.stopPropagation;//FullCustom.tsのイベントの発火を防ぐ。TODO: FulllCustom.tsのイベントを削除後はここも削除。
             }
 
 

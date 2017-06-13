@@ -21,7 +21,7 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.Label.BackgroundImagePropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.Image.BackgroundImagePropertyArea] ";
 
         namespace constValue {
             export const TEMPLATE_DOM_ID = "#template-background-image-property-area";
@@ -32,9 +32,9 @@ module Garage {
 
             private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
 
-            constructor(iamge: Model.ImageItem, commandManager: CommandManager) {
+            constructor(iamge: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
                 super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge);
+                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge, editingRemoteId);
 
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
                 this.listenTo(this.backgroundImagePreviewWindow_, "uiChange:delete", this._onBackgroundImageDeleted);
@@ -66,7 +66,9 @@ module Garage {
             private _onImageFilePathChanged(event: Event) {
                 let changedImageFilePath: string = this.backgroundImagePreviewWindow_.getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
-                let changedImageFileRelativePath = path.join(this.getModel().getNotDefaultImageDirRelativePath(), changedImageFileName).replace(/\\/g, "/");
+                let changedImageFileRelativePath = path.join(
+                    this.backgroundImagePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
                     this.getModel(),
@@ -93,10 +95,10 @@ module Garage {
                 return this;
             }
 
-            /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.LabelItem}
-            */
+            /**
+             * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
+             * @return {Model.LabelItem}
+             */
             getModel(): Model.ImageItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.LabelItem型に限らない。
                 //このクラスとその子供のクラスはthis.modelをModel.ImageItemとして扱ってほしいのでダウンキャストしている。

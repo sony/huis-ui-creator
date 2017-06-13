@@ -9,8 +9,10 @@ module Garage {
         var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
         namespace constValue {
-            export const TEMPLATE_DOM_ID = "#template-property-jump-button-state";
+            export const TEMPLATE_DOM_ID = "#template-jump-button-property-area";
             export const NO_PAGE_SELECT_NUM: number = -1; //ページ指定用プルダウンで、なにも選択されていない状態での値。
+            export const TEMPLATE_ACTION_PULLDOWN = "#template-action-pulldown";
+            export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
         }
 
         export class JumpButtonPropertyArea extends ButtonPropertyArea {
@@ -23,20 +25,20 @@ module Garage {
             /**
              * constructor
              * @param {Model.ButtonItem} button 表示するページジャンプボタン
-             * @param {JQuery} $el PropertyArea全体のJQuery
+             * @param {string} editingRemoteId 編集中のリモコンのremoteId
              * @param {CommandManager} commandManager モデルの更新を実際におこなうCommandManager
-             * @param {string} remoteId 編集中のリモコンの remote_id
              * @param {string} faceName  編集中のリモコン名
              * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
-            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager, remoteId: string, faceName: string, modules: Model.Module[]) {
-                super(button, constValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager, faceName: string, modules: Model.Module[]) {
+                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
 
-                this.remoteId = remoteId;
+                this.remoteId = editingRemoteId;
                 this.faceName = faceName;
                 this.modules = modules;
 
-                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(remoteId, faceName, modules);
+                this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(editingRemoteId, faceName, modules);
+                this.listenTo(this.getModel(), "change:state", this.render);
             }
 
 
@@ -76,12 +78,9 @@ module Garage {
                 }
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order, this.getDefaultStateId(), constValue.NO_PAGE_SELECT_NUM);
+                this.renderPagesOf(order, this.getModel().getDefaultStateId(), constValue.NO_PAGE_SELECT_NUM);
 
                 this.updateModel();
-
-                this.triggerCreateRemoteSelect(order);
-                this.refreshPageSelect(order);
             }
 
 
@@ -98,7 +97,7 @@ module Garage {
                     return;
                 }
 
-                this.renderPagesOf(order, this.getDefaultStateId(), this.getPageFromPullDownOf(order));
+                this.renderPagesOf(order, this.getModel().getDefaultStateId(), this.getPageFromPullDownOf(order));
                 this.refreshPageSelect(order);
                 this.updateModel();
             }
@@ -119,36 +118,26 @@ module Garage {
              * 保持しているモデルの内容で詳細エリアを描画する
              */
             render(): Backbone.View<Model.Item> {
+                super.render();
                 let FUNCTION_NAME = TAG + ":renderView : ";
+                let targetState: Model.ButtonState = this.getModel().getDefaultState();
 
-                let templateState = Tools.Template.getJST("#template-property-jump-button-state", this._getTemplateFilePath());
-                let $jumpContainer = this.$el.nextAll("#states-container");
-                let stateData = this.createStateData(this.getModel().getDefaultState());
-                stateData.actionList = ACTION_INPUTS_JUMP;
-                stateData.jump = this.getModel().getDefaultState().action[0].jump;
-                let $stateDetail = $(templateState(stateData));
-
-                //テキストラベルの大きさの設定値を反映する。
-                var $textSize = $stateDetail.find(".property-state-text-size[data-state-id=\"" + stateData.stateId + "\"]");
-                if (!_.isUndefined(stateData.label)) {
-                    var textSizeString: string = stateData.label.size;
-                    $textSize.val(textSizeString);
-                }
-
-                $jumpContainer.append($stateDetail);
-
+                this._renderNonOrderActionPulldown(targetState.stateId, ACTION_INPUTS_JUMP);
                 this.setActionPullDown(this.getModel().getDefaultState());
 
-                let targetRemoteId = stateData.jump.remote_id;
+                let targetJump = this.getModel().getDefaultState().action[0].jump;
+                let targetRemoteId = targetJump.remote_id;
                 if (huisFiles.getFace(targetRemoteId) != null || targetRemoteId == this.remoteId) {
-                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, stateData.jump.remote_id);
+                    this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, targetJump.remote_id);
                 } else {
                     this.renderRemoteIdOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, null);
                 }
+                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, targetState.stateId, targetJump.scene_no);
 
-                this.renderPagesOf(JumpButtonPropertyArea.DEFAULT_SIGNAL_ORDER, this.getDefaultStateId(), stateData.jump.scene_no);
+                this.$el.i18n();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
 
-                $jumpContainer.i18n();
+                this.focusFirstPulldown();
 
                 return this;
             }
@@ -166,18 +155,16 @@ module Garage {
             private updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
-                let newAction = $.extend(true, {}, this.getModel().getDefaultState().action[0]);
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                let tmpInput = this._getActionPulldownJquery(this.getModel().getDefaultStateId()).val();
+                let newAction = targetState.action[0];
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [newAction];
-                this.getModel().getDefaultState().action = newActions;
+                targetState.action = newActions;
 
-                let states: Model.ButtonState[] = [];
-                states.push(this.getModel().getDefaultState());
-
-                this.getModel().state = states;
-                this.trigger("updateModel");
+                this._setStateMementoCommand(targetStates);
             }
 
             /**
@@ -198,7 +185,7 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
+                var $actionPullDown: JQuery = this._getActionPulldownJquery(state.stateId);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }

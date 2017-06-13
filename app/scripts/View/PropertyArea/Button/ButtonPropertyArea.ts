@@ -26,11 +26,23 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
+        namespace constValue {
+            export const DEFAULT_TEXT = "TEXT BUTTON";
+            export const DEFAULT_TEXT_SIZE = 30;
+            export const BUTTON_FONT_WEIGHT = "bold";
+
+            //action pulldown
+            export const TEMPLATE_ACTION_PULLDOWN = "#template-non-order-action-pulldown";
+            export const ACTION_PULLDOWN_DOM_ID = "#action-pulldown";
+            export const ACTION_PULLDOWN_DOM_CLASS = ".action-input";
+            export const JQUERY_STRING_TARGET_STATE_ID_OPEN = "[data-state-id=\"";
+            export const JQUERY_STRING_TARGET_STATE_ID_CLOSE = "\"]";
+        }
+
         export abstract class ButtonPropertyArea extends PropertyArea {
 
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
-
             protected availableRemotelist: IRemoteInfo[];
 
             /**
@@ -47,19 +59,20 @@ module Garage {
              * 編集中リモコンのmodules
              */
             protected modules: Model.Module[];
+            protected statePreviewWindow_: StatePreviewWindow;
 
-            /**
-             * constructor
-             */
-            constructor(button: Model.ButtonItem, templateDomId: string, $el: JQuery, commandManager: CommandManager) {
-                //TODO: 
-                //ボタンのプロパティエリアをリファクタする際には、
-                //this.$elはrender()でテンプレートから生成し、呼び出し元でappend(render().$el)という形で呼び出す形に統合したいので
-                //ここのel : $elは消す。
-                //現状バグが発生してしまうので、ここの修正はButtonPropertyArea系のリファクタの際に後回しにさせてください。
-                //備考：el: $el.get(0)ではうまく動かないようです。
-                super(button, templateDomId, commandManager, { el: $el });
+            constructor(button: Model.ButtonItem, editingRemoteId: string, templateDomId: string, commandManager: CommandManager) {
+                super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
+                this.statePreviewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
+                this._setDeviceInfo();
+
+                //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
+                this.listenTo(this.statePreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.statePreviewWindow_, "uiChange:text", this._onTextFieldChanged);
+
+                this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
+                this.listenTo(this.statePreviewWindow_, "uiChange:editImageBtn", this._onChangeToImageBtn);
             }
 
 
@@ -71,11 +84,67 @@ module Garage {
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
 
+            private _onChangeToImageBtn(event: Event) {
+                let changedImageFilePath = this.statePreviewWindow_.getTmpImagePath();
+                let changedImageFileName = path.basename(changedImageFilePath);
+                let changedImageFileRelativePath = path.join(
+                    this.statePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    changedImageFileName).replace(/\\/g, "/");
+
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                this._initImageItem(targetState, this.getModel().remoteId);
+                let targetImageItem = targetState.getDefaultImage();
+                targetImageItem.path = changedImageFileRelativePath;
+                targetImageItem.resizeOriginal = changedImageFileRelativePath;
+
+                this._setStateMementoCommand(targetStates);
+            }
+
+            private _onTextSizePulldownChanged(event: Event) {
+                let changedSize = this.statePreviewWindow_.getTextSize();
+
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().size = changedSize;
+
+                this._setStateMementoCommand(targetStates);
+            }
+
+            private _onTextFieldChanged(event: Event) {
+                let changedText = this.statePreviewWindow_.getText();
+
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().text = changedText;
+
+                this._setStateMementoCommand(targetStates);
+            }
+
+            private _onChangeToTextBtn(event: Event) {
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                this._initLabelItem(targetState);
+
+                this._setStateMementoCommand(targetStates);
+            }
+
             events() {
                 // Please add events
                 return {
 
                 };
+            }
+
+            protected _setStateMementoCommand(changedStates: Model.ButtonState[]) {
+                this._setMementoCommand(
+                    this.getModel(),
+                    {
+                        "state": this.getModel().state
+                    },
+                    {
+                        "state": changedStates
+                    });
             }
 
             //signalContainerがマウスオーバーされたときに呼び出される
@@ -104,10 +173,19 @@ module Garage {
             ///// public method
             /////////////////////////////////////////////////////////////////////////////////////////
 
-            /*
-            *保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-            * @return {Model.ButtonItem}
-            */
+            render(): Backbone.View<Model.Item> {
+                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
+                this.$el.children().remove();
+                this.$el.append(this.template_(this.getModel()));
+                this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);
+                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
+                return this;
+            }
+
+            /**
+             * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
+             * @return {Model.ButtonItem}
+             */
             public getModel(): Model.ButtonItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。
                 //このクラスとその子供のクラスはthis.modelをModel.ButtonItemとして扱ってほしいのでダウンキャストしている。
@@ -115,7 +193,7 @@ module Garage {
             }
 
 
-            /*
+            /**
              * このクラス内のbuttonモデルのstateを、入力されたものに更新する
              * @param inputStates{Model.ButtonState[]}
              */
@@ -134,19 +212,6 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
-
-
-            /*
-             *@return {number} ボタンに設定されているデフォルトのstateIdを取得
-            */
-            protected getDefaultStateId(): number {
-                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
-                if (this.getModel().default == null) {
-                    return this.getModel().getDefaultState().stateId;
-                }
-                return this.getModel().default;
-            }
-
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
@@ -176,11 +241,11 @@ module Garage {
             }
 
 
-            /*
-           * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
-           * @param $target{JQuery} 対象となるJQuery
-           * @return {number} order情報 みつからない場合、undefinedを返す。
-           */
+            /**
+             * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
+             * @param $target {JQuery} 対象となるJQuery
+             * @return {number} order情報 みつからない場合、undefinedを返す。
+             */
             protected getOrderFrom($target: JQuery): number {
                 let FUNCTION_NAME = TAG + "getOrderFrom";
 
@@ -203,7 +268,7 @@ module Garage {
                 }
             }
 
-            /*
+            /**
              * 入力したJQueryに登録されている order情報(何番目のマクロ信号か.0からはじまる)を取得する。
              * @param $target{JQuery} 対象となるJQuery
              * @return {number} stateID みつからない場合、undefinedを返す。
@@ -263,11 +328,11 @@ module Garage {
 
             }
 
-            /*
-            * 入力したorderのremoteIdのプルダウンのJQuery要素を返す。
-            * @param order{number}
-            * @return {JQuery}
-            */
+            /**
+             * 入力したorderのremoteIdのプルダウンのJQuery要素を返す。
+             * @param {number} order
+             * @return {JQuery}
+             */
             protected getRemoteIdPullDownJQueryElement(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getPullDownJQueryElement : ";
 
@@ -336,8 +401,8 @@ module Garage {
 
             /**
              * 入力したorderのremoteプルダウンに、inputの値を代入する。
-             * order{number} ： マクロ信号の順番
-             * inputRemoteId{string} : プルダウンに設定する値。
+             * @param {number} order マクロ信号の順番
+             * @param {string} inputRemoteId プルダウンに設定する値。
              */
             protected setRemoteIdPullDownOf(order: number, inputRemoteId: string, unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "setIntervalPullDownOf";
@@ -391,10 +456,10 @@ module Garage {
             }
 
 
-            /*
-            * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
-            * @param order{number}
-            */
+            /**
+             * 入力したorder, stateIdのRemoteId設定用のプルダウンメニューを削除する
+             * @param {number} order
+             */
             protected removeRemoteIdPullDownOf(order: number) {
                 let FUNCTION_NAME = TAG + "removeRemoteIdPullDownOf";
 
@@ -410,11 +475,11 @@ module Garage {
             }
 
 
-            /*
-            * 入力したorderのremoteId用プルダウンに表示されている文字列を取得する
-            * @param order{number}
-            * @return {string} プルダウンに表示されている文字列
-            */
+            /**
+             * 入力したorderのremoteId用プルダウンに表示されている文字列を取得する
+             * @param {number} order
+             * @return {string} プルダウンに表示されている文字列
+             */
             protected getTextInRemoteIdOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
@@ -429,11 +494,11 @@ module Garage {
 
             }
 
-            /*
-            * 入力したorderのremoteId用プルダウンに入力されているのが「不明なリモコン」か判定する
-            * @param order{number}
-            * @return {boolean}
-            */
+            /**
+             * 入力したorderのremoteId用プルダウンに入力されているのが「不明なリモコン」か判定する
+             * @param {number} order
+             * @return {boolean}
+             */
             protected isUnknownRemoteTypeInPulldownOf(order: number): boolean {
                 let FUNCTION_NAME = TAG + "getTextInRemoteIdOf";
 
@@ -464,14 +529,14 @@ module Garage {
             }
 
 
-            /*
-            * 入力したorderRemoteId用のプルダウンを描画する。
-            * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか
-            * @param {string} inputRemoteId 表示するリモコンのID
-            * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
-            * @param {string} 描写するfunctionsプルダウンに設定する値。
-            */
-            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
+            /**
+             * 入力したorderRemoteId用のプルダウンを描画する。
+             * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか
+             * @param {string} inputRemoteId 表示するリモコンのID
+             * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
+             * @param {string} 描写するfunctionsプルダウンに設定する値。
+             */
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getModel().getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -518,10 +583,10 @@ module Garage {
             }
 
 
-            /*
+            /**
              * アクションに設定されているFunctionNameを取得する
-             * @param action{IAction} : functionNameを抽出するAction
-             * @return {string} : functionName, 見つからない場合、 nullを返す。
+             * @param {IAction} action functionNameを抽出するAction
+             * @return {string} functionName 見つからない場合、 nullを返す。
              */
             protected getFunctionNameFromAction(action: IAction): string {
                 let FUNCTION_NAME = TAG + "getFunctionNameFromAction : ";
@@ -547,10 +612,10 @@ module Garage {
             }
 
 
-            /*
+            /**
              * アクションに設定されているリモコン信号がもつFunctionを取得する
-             * @param action{IAction} : functionNameを抽出するAction
-             * @return {string[]} : functions, 見つからない場合、 nullを返す。
+             * @param {IAction} action functionNameを抽出するAction
+             * @return {string[]} functions, 見つからない場合、 nullを返す。
              */
             protected getFunctionsFromAction(action: IAction) {
                 let FUNCTION_NAME = TAG + "getFunctionsFromAction : ";
@@ -576,11 +641,11 @@ module Garage {
 
             }
 
-            /*
-            * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
-            * order{number} ： マクロ信号の順番
-            * inputFunctionNameId{string} : プルダウンに設定する値。
-            */
+            /**
+             * 入力したorderのfunctionsプルダウンに、inputの値を代入する。
+             * @param {number} order マクロ信号の順番
+             * @param {string} inputFunctionNameId プルダウンに設定する値。
+             */
             protected setFunctionNamePullDownOf(order: number, inputFunctionName: string) {
                 let FUNCTION_NAME = TAG + "setFunctionNamePullDownOf";
 
@@ -609,11 +674,11 @@ module Garage {
                 $functionNamePullDown.val(inputFunctionName);
             }
 
-            /*
-            * 入力してorderの$signal-container-elementを返す。
-            * @param order{number} 入手したい$signal-container-elementの順番
-            * @return {JQuery} $signal-container-element
-            */
+            /**
+             * 入力してorderの$signal-container-elementを返す。
+             * @param {number} order 入手したい$signal-container-elementの順番
+             * @return {JQuery} $signal-container-element
+             */
             protected getSignalContainerElementOf(order: number): JQuery {
                 let FUNCTION_NAME = TAG + "getSignalContainerElementOf";
 
@@ -625,12 +690,12 @@ module Garage {
                 return this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
             }
 
-            /*
-            * 入力したorderの信号に登録されているfunctionをpulldownから取得する。
-            * 見つからなかった場合、undefinedを返す。
-            * @order{number} : functionを取得したい信号の順番
-            * @{string} functionName
-            */
+            /**
+             * 入力したorderの信号に登録されているfunctionをpulldownから取得する。
+             * 見つからなかった場合、undefinedを返す。
+             * @param {number} @order functionを取得したい信号の順番
+             * @return {string} functionName
+             */
             protected getFunctionFromlPullDownOf(order: number): string {
                 let FUNCTION_NAME = TAG + "getFunctionFromlPullDownOf : ";
                 if (!this.isValidOrder(order)) {
@@ -663,14 +728,14 @@ module Garage {
 
 
 
-            /*
+            /**
              * 入力したorderのFunctionsを描画する。
              * @param {number} order 描写するfunctionsプルダウンがどの順番の信号に属しているか.
              * @param {string} functionName 描写するfunctionsプルダウンに設定する値。nullでも
              * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
              * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
              */
-            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getModel().getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -740,11 +805,11 @@ module Garage {
                 }
             }
 
-            /*
-            * IButtonDeviceInfoをディープコピーする.
-            * @param src {IButtonDeviceInfo} コピー元のIButtonDeviceInfo
-            * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
-            */
+            /**
+             * IButtonDeviceInfoをディープコピーする.
+             * @param {IButtonDeviceInfo} src コピー元のIButtonDeviceInfo
+             * @return {IButtonDeviceInfo} ディープコピーされたIButtonDeviceInfo
+             */
             protected cloneDeviceInfo(src: IButtonDeviceInfo): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "cloneDeviceInfo";
 
@@ -766,19 +831,16 @@ module Garage {
                 return result;
             }
 
-            /*
-            * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
-            * @param functionName {string}
-            * @return {boolean} ##付きのfunctionの場合true,それ以外はfalse
-            */
+            /**
+             * 入力した信号名が 再学習用の##つきなのか判定する。 危険多様しないこと。
+             * @param {string} functionName
+             * @return {boolean} ##付きのfunctionの場合true,それ以外はfalse
+             */
             protected isRelearnedFunctionName(functionName: string): boolean {
                 let FUNCTION_NAME = TAG + "isRelearnedFunctionName ";
                 if (!Util.JQueryUtils.isValidValue(functionName)) {
                     return false;
                 }
-
-
-
                 //## を含んでいるとき、trueを返す。
                 if (functionName.indexOf(FUNC_NUM_DELIMITER + FUNC_CODE_RELEARNED) != -1) {
                     return true;
@@ -788,10 +850,10 @@ module Garage {
 
             }
 
-            /*
-            * 設定したOrderのfunction用PullDownを消す。
-            * @param order {number}
-            */
+            /**
+             * 設定したOrderのfunction用PullDownを消す。
+             * @param {number} order
+             */
             protected removeFunctionPullDown(order: number) {
                 let FUNCTION_NAME = TAG + "removeFunctionPullDown";
 
@@ -808,12 +870,12 @@ module Garage {
 
 
 
-            /*
-           * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
-           * @param order {number} 信号リストを取得したい、マクロ信号の順番
-           * @param stateId? {number} 信号リストを取得したい、ボタンのstate
-           * @return {string[]} 見つからなかった場合、undefinedを返す。
-           */
+            /**
+             * 入力したorderのリモコンが持てる信号のリストFunctionsを返す。
+             * @param {number} order 信号リストを取得したい、マクロ信号の順番
+             * @param {number} stateId? 信号リストを取得したい、ボタンのstate
+             * @return {string[]} 見つからなかった場合、undefinedを返す。
+             */
             protected getFunctionsOf(order: number, stateId?: number) {
                 let FUNCTION_NAME = TAG + "getFunctionsOf : ";
 
@@ -847,9 +909,9 @@ module Garage {
             /**
              * ページプルダウンをレンダリング
              *
-             * @param order {number}
-             * @param stateId {number}
-             * @param page {number}
+             * @param {number} order
+             * @param {number} stateId
+             * @param {number} page
              */
             protected renderPagesOf(order: number, stateId: number, page: number) {
                 let FUNCTION_NAME = TAG + "renderPagesOf : ";
@@ -883,10 +945,10 @@ module Garage {
              * ページ選択用プルダウンのDOMを追加し、そのJQueryオブジェクトを返す。
              * 既に存在する場合は追加せずに対象のJQueryオブジェクトを返す。
              *
-             * @param order {number}
-             * @param stateId {number}
+             * @param {number} order
+             * @param {number} stateId
              */
-            private appendPagesPullDown(order: number, stateId: number = this.getDefaultStateId()): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = this.getModel().getDefaultStateId()): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
@@ -921,7 +983,7 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPageNumOf(order: number, stateId: number = this.getDefaultStateId()): number {
+            private getPageNumOf(order: number, stateId: number = this.getModel().getDefaultStateId()): number {
                 let FUNCTION_NAME = TAG + "getPageNumOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -955,9 +1017,9 @@ module Garage {
             /**
              * ページプルダウン各項目の表示/非表示を切り替える
              *
-             * @param $pulldown {JQuery}
-             * @param maxPage {number} 対象リモコンのページ数
-             * @param defaultPageValue {number} 初期選択状態にするページのvalue（ページ番号ではない）
+             * @param {JQuery} $pulldown
+             * @param {number} maxPage 対象リモコンのページ数
+             * @param {number} defaultPageValue 初期選択状態にするページのvalue（ページ番号ではない）
              */
             private controlHiddennessOfPagesPullDown($pulldown: JQuery, maxPage: number, defaultPageValue: number) {
                 let $pageOption = $pulldown.find('option');
@@ -980,8 +1042,8 @@ module Garage {
             /**
              * ページプルダウンの選択項目を設定
              *
-             * @param order {number}
-             * @param page {number} 設定する項目の値（ページ番号ではない）
+             * @param {number} order
+             * @param {number} page 設定する項目の値（ページ番号ではない）
              */
             protected setPagePullDownOf(order: number, page: number) {
                 let FUNCTION_NAME = TAG + "setPagePullDownOf";
@@ -1015,8 +1077,7 @@ module Garage {
             /**
              * 入力したorderの信号に登録されているpageをpulldownから取得する。
              * 見つからなかった場合、undefinedを返す。
-             * @order{number} : remoeIdを取得したい信号の順番
-             * @{string} remoteId
+             * @param {number} order remoeIdを取得したい信号の順番
              */
             protected getPageFromPullDownOf(order: number): number {
                 let FUNCTION_NAME = TAG + "getPageFromPullDownOf";
@@ -1038,14 +1099,12 @@ module Garage {
                     return;
                 }
                 return $pagePullDown.val();
-
             }
-
 
             /**
              * 新規作成されたリモコン選択プルダウンにスタイルを適用する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected triggerCreateRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
@@ -1053,11 +1112,10 @@ module Garage {
                 this._adaptJqueryMobileStyleToPulldown($target);
             }
 
-
             /**
              * リモコン選択プルダウンの変更を表示に反映する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected refreshRemoteSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
@@ -1067,18 +1125,17 @@ module Garage {
             /**
              * ページ選択プルダウンの変更を表示に反映する
              *
-             * @param order {number}
+             * @param {number} order
              */
             protected refreshPageSelect(order: number) {
                 let $container = this.getSignalContainerElementOf(order);
                 $container.find('#signal-page-container .custom-select select').selectmenu('refresh', true);
             }
 
-
-            /*
+            /**
              * ＋ボタンを押下する際のアニメーション. 
-             * @param order{number} 出現するdom のorder
-             * @param duration{number} アニメーションのduration
+             * @param {number} order 出現するdom のorder
+             * @param {number} duration アニメーションのduration
              */
             protected animateAddButton(order: number, duration: number, callback?: Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
@@ -1124,11 +1181,9 @@ module Garage {
                     }
                     , duration
                 );
-
             }
 
-
-            /*
+            /**
              * deleteボタンを押した際のアニメーション
              * @param order{number} 削除するdom のorder
              * duration{number} アニメーションにかかる時間[ms]
@@ -1179,15 +1234,13 @@ module Garage {
                     }
 
                 }, duration);
-
             }
 
-
-            /*
-            * アニメーションのdurationを設定する。
-            * $target{JQuery} アニメーションを設定する対象
-            * duration{number} アニメーションにかかる時間[ms]
-            */
+            /**
+             * アニメーションのdurationを設定する。
+             * @param {JQuery} $target アニメーションを設定する対象
+             * @param {number} duration アニメーションにかかる時間[ms]
+             */
             protected setAnimationDuration($target: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "setAnimationDuration : ";
 
@@ -1205,10 +1258,9 @@ module Garage {
 
             }
 
-
-            /*
+            /**
              * 対象のJQueryのoffset座標系でのpositionを取得する
-             * 
+             * @parm {JQuery} $target 対象のJQuery
              */
             protected getPosition($target: JQuery): IPosition {
                 let FUNCTION_NAME = TAG + "getPosition : ";
@@ -1227,12 +1279,11 @@ module Garage {
                 return resultPosition
             }
 
-
-            /*
+            /**
              * 対象のdomの位置を入れ替えるアニメーションをする。
-             * @param $target1 {JQuery}
-             * @param $target2 {JQuery}
-             * @param duration {number} アニメーションの期間 [ms]
+             * @param {JQuery} $target1
+             * @param {JQuery} $target2
+             * @param {number} duration  アニメーションの期間 [ms]
              */
             protected exchangeJQueryPositionAnimation($target1: JQuery, $target2: JQuery, duration: number) {
                 let FUNCTION_NAME = TAG + "exchangeJQueryPositionAnimation : ";
@@ -1272,12 +1323,10 @@ module Garage {
                 }, duration);
             }
 
-
-
-            /*
+            /**
              * orderの違反をチェックする。
-             * order {number} チェックするorder情報
-             * @return true:orderとして有効、false:orderとして利用不可。
+             * @param {number} order チェックするorder情報
+             * @return {boolean} true:orderとして有効、false:orderとして利用不可。
              */
             protected isValidOrder(order: number): boolean {
                 let FUNCTION_NAME = TAG + "isValidOrder : ";
@@ -1301,15 +1350,13 @@ module Garage {
                 }
 
                 return true;
-
             }
 
-
-            /*
-            * 入力したremoteIdが、キャッシュされたものだった場合、deviceInfoを取得する
-            * @param remoteId{string} deviceInfoを取得したいremoteId
-            * @return {IButtonDeviceInfo} 見つからなかった場合nullを返す。
-            */
+            /**
+             * 入力したremoteIdが、キャッシュされたものだった場合、deviceInfoを取得する
+             * @param {string} remoteId deviceInfoを取得したいremoteId
+             * @return {IButtonDeviceInfo} 見つからなかった場合nullを返す。
+             */
             protected getDeviceInfoByRemoteId(remoteId: string): IButtonDeviceInfo {
                 let FUNCTION_NAME = TAG + "isCachedMenberRemoteId : ";
 
@@ -1318,27 +1365,23 @@ module Garage {
                     return null;
                 }
 
-
                 //modelのアクション中のdeviceInfo
                 for (let action of this.getModel().getDefaultState().action) {
                     let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
                     if (deviceInfo != null && deviceInfo.id == remoteId) {
                         return deviceInfo;
-
                     }
-
                 }
 
                 return null;
             }
 
-
-            /*
-            * ボタンに、入力したデバイスタイプの信号がはいっているかチェックする。
-            * @param button{Model.ButtonItem} 判定対象のボタン
-            * @param category{string} 特定したいデバイスタイプ
-            * @return {boolean} ボタンの信号に入力したデバイスタイプがひとつでもある場合 true, ひとつもない場合false, エラーが発生した場合undefined
-            */
+            /**
+             * ボタンに、入力したデバイスタイプの信号がはいっているかチェックする。
+             * @param {Model.ButtonItem} button 判定対象のボタン
+             * @param {string} category 特定したいデバイスタイプ
+             * @return {boolean} ボタンの信号に入力したデバイスタイプがひとつでもある場合 true, ひとつもない場合false, エラーが発生した場合undefined
+             */
             protected isIncludeSpecificDeviceType(button: Model.ButtonItem, category: string): boolean {
                 let FUNCTION_NAME = TAG + "isIncludeSpecificDeviceType : ";
 
@@ -1351,8 +1394,6 @@ module Garage {
                     console.warn(FUNCTION_NAME + "category is invalid");
                     return;
                 }
-
-
 
                 for (let state of button.state) {
                     if (!state.action) continue;
@@ -1369,45 +1410,155 @@ module Garage {
                 return false;
             }
 
+            /**
+             * ボタンの中のコード(学習して登録した際の信号)をすべて返す
+             * @param {Model.ButtonItem} button コードを取得したいボタン
+             * @return {string[]} ボタン中のコードを格納した配列
+             */
+            private _getCodesFrom(button: Model.ButtonItem): string[] {
+                let FUNCTION_NAME: string = TAG + "getCodesFrom";
 
-
-            /*
-          * ボタンのactionに、特定のアクションが含まれるか判定する
-          * @param inputButton{Model.ButtonItem} 判定対象のボタン
-          * @param actiionType{string} buttonに含まれているか確かめたいアクションタイプ
-          * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
-          */
-            protected isIncludeSpecificActionType(button: Model.ButtonItem, actionType
-                : string): boolean {
-                let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
-
-                if (!Util.JQueryUtils.isValidValue(button)) {
-                    console.warn(FUNCTION_NAME + "button is invalid");
+                if (button == undefined) {
+                    console.warn(FUNCTION_NAME + "button is undefined");
                     return;
                 }
 
-                if (!Util.JQueryUtils.isValidValue(actionType)) {
-                    console.warn(FUNCTION_NAME + "actionType is invalid");
-                    return;
-                }
-
+                let result: string[] = [];
                 for (let state of button.state) {
-                    if (!state.action) continue;
-
                     for (let action of state.action) {
-                        if (!action.input) continue;
-
-                        if (action.input == actionType) {
-                            return true;
+                        if (action.code != undefined) {
+                            result.push(action.code);
                         }
                     }
                 }
 
+                if (result.length == 0) {
+                    return null;
+                }
 
-                return false;
-
+                return result;
             }
 
+            private _setDeviceInfo() {
+                let button: Model.ButtonItem = this.getModel();
+                let codes: string[] = this._getCodesFrom(button);
+                let remoteId: string = button.remoteId;
+                // masterFunctions が未取得の場合は取得する
+                for (let state of this.getModel().state) {
+                    if (!state.action) continue;
+                    for (let action of state.action) {
+                        if (!action.deviceInfo) continue;
+                        let deviceInfo: IButtonDeviceInfo = action.deviceInfo;
+                        if (!deviceInfo.functions || deviceInfo.functions.length < 1) {
+                            let codeDb = deviceInfo.code_db;
+                            if (codeDb.brand != " " && codeDb.brand != undefined &&
+                                codeDb.device_type != " " && codeDb.device_type != undefined &&
+                                codeDb.model_number != " " && codeDb.device_type != undefined) {
+                                //codeDbの情報がそろっている場合、codeDbからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.model_number);
+
+                                let face = huisFiles.getFace(remoteId);
+                                if (face != null) {
+                                    deviceInfo.remoteName = face.name;
+                                } else {
+                                    deviceInfo.remoteName = null;
+                                }
+                                deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                            } else if (codes != null) {
+                                //codeDbの情報がそろっていない、かつcode情報がある場合、codeからfunctionsを代入
+                                let remoteId = huisFiles.getRemoteIdByCode(codes[0]);
+                                if (remoteId != null) {
+                                    let face = huisFiles.getFace(remoteId);
+                                    if (face != null) {
+                                        deviceInfo.remoteName = face.name;
+                                    } else {
+                                        deviceInfo.remoteName = null;
+                                    }
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
+                                }
+                            } else if (deviceInfo.bluetooth_data != null) {
+                                //Bluetooth情報しかない場合
+                                if (remoteId != null) {
+                                    deviceInfo.functions = huisFiles.getMasterFunctions(remoteId);
+                                    deviceInfo.bluetooth_data = huisFiles.getMasterBluetoothData(remoteId);
+                                }
+                            }
+
+                            action.deviceInfo = deviceInfo;
+                        }
+                    }
+                }
+            }
+
+            private _initImageItem(state: Model.ButtonState, buttonRemoteId: string) {
+                this._initLabelAndImage(state);
+                let buttonArea = this.getModel().area;
+                let defaultImageArea: IArea = {
+                    x: 0,
+                    y: 0,
+                    w: buttonArea.w,
+                    h: buttonArea.h
+                }
+
+                let tmpImage: Model.ImageItem = new Model.ImageItem({
+                    remoteId: buttonRemoteId
+                })
+                tmpImage.area = defaultImageArea;
+                let tmpImages: Model.ImageItem[] = [];
+                tmpImages.push(tmpImage);
+                state.image = tmpImages;
+            }
+
+            private _initLabelItem(state: Model.ButtonState) {
+                this._initLabelAndImage(state);
+
+                let buttonArea = this.getModel().area;
+                let defaultLabelArea: IArea = {
+                    x: buttonArea.x,
+                    y: buttonArea.y,
+                    w: 0,
+                    h: 0
+                }
+
+                let tmpLabel: Model.LabelItem = new Model.LabelItem({
+                    text: constValue.DEFAULT_TEXT,
+                    size: constValue.DEFAULT_TEXT_SIZE,
+                    font_weight: constValue.BUTTON_FONT_WEIGHT,
+                    area: defaultLabelArea
+                })
+                let tmpLabels: Model.LabelItem[] = [];
+                tmpLabels.push(tmpLabel);
+                state.label = tmpLabels;
+            }
+
+            private _initLabelAndImage(state: Model.ButtonState) {
+                state.image = [];
+                state.label = [];
+            }
+
+            protected _getActionPulldownJquery(stateId: number): JQuery {
+                return this.$el.find(
+                    constValue.ACTION_PULLDOWN_DOM_CLASS +
+                    constValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
+                    stateId +
+                    constValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
+                );
+            }
+
+            /**
+             * オーダー情報のないプルダウンをレンダリングする
+             * @param {number} stateId ターゲットとするstateId
+             * @param {IStringKeyValue[]} actionList プルダウンで選択可能なアクション
+             */
+            protected _renderNonOrderActionPulldown(stateId: number, actionList: IStringKeyValue[]) {
+                let inputDate = {
+                    actionList: actionList,
+                    stateId: stateId
+                }
+                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(constValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
+                this.$el.find(constValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
+            }
 
         }
     }

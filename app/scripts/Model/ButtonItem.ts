@@ -108,9 +108,41 @@ module Garage {
             initialize(attribute?, options?) {
             }
 
+            /**
+             * @return {Model.ButtonState[]} 所持しているstateの配列のディープコピーを返す。
+             */
+            cloneStates(): Model.ButtonState[] {
+                return this.stateCollection_.clone().models;
+            }
+
             public isAirconButton() {
                 let airconButtonNamePrefix = "STR_REMOTE_BTN_AIRCON";
                 return (this.name.indexOf(airconButtonNamePrefix) == 0);
+            }
+
+            /**
+             * @return {boolean} マクロボタンの場合、trueを返す。
+             */
+            isMacroButton(): boolean {
+                let FUNCTION_NAME = TAG + "isMacroButton : ";
+                if (this.getDefaultState().action[0].interval !== undefined) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            /**
+             * @return {boolean} ジャンプボタンの場合trueを返す。
+             */
+            isJumpButton(): boolean {
+                let FUNCTION_NAME = TAG + "isJumpButton : ";
+                try {
+                    if (this.state[0].action[0].jump !== undefined) {
+                        return true;
+                    }
+                } catch (e) { }
+                return false;
             }
 
             get area(): IArea {
@@ -130,7 +162,7 @@ module Garage {
                 }
             }
 
-            /*
+            /**
              * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
              */
             getDefaultState(): Model.ButtonState {
@@ -144,7 +176,7 @@ module Garage {
                 return this.stateCollection_.models[constValue.DEFAULT_STATE_INDEX];
             }
 
-            /*
+            /**
              * @param {number} stateId 取得したいModel.ButtonStateのStateId
              * @return {Model.ButtonState} 発見できない場合、nullを返す。
              */
@@ -157,6 +189,38 @@ module Garage {
                 }
 
                 return null;
+            }
+
+            /**
+             * @param {number} stateId 配列インデックスを取得したいModel.ButtonStateのstateId
+             * @return {number} 入力に対応したModel.ButtonState[]の配列インデックス
+             */
+            getStateIndexByStateId(stateId: number): number {
+                let targetStates = this.stateCollection_.models;
+                for (let i = 0; targetStates.length > i; i++) {
+                    let targetState = targetStates[i];
+                    if (targetState.stateId == stateId) {
+                        return i;
+                    }
+                }
+            }
+
+            /**
+             * @return {number} ボタンに設定されているデフォルトのstateIdを取得
+             */
+            getDefaultStateId(): number {
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
+                if (this.default == null) {
+                    return this.getDefaultState().stateId;
+                }
+                return this.default;
+            }
+
+            /**
+             * @return defaultとして利用されるStateのState配列上のインデックス
+             */
+            getDefaultStateIndex(): number {
+                return this.getStateIndexByStateId(this.getDefaultStateId());
             }
 
             /**
@@ -230,7 +294,7 @@ module Garage {
             // TODO: change name, state to states
             get state(): Model.ButtonState[] {
                 if (this.stateCollection_ != null && this.stateCollection_.models != null) {
-                    return this.stateCollection_.models;
+                    return this.get("state");
                 }
             }
 
@@ -287,6 +351,7 @@ module Garage {
                     }
                 }
                 this._setStateItemsArea(this.area);
+                this.set("state", this.stateCollection_.models);
             }
 
 
@@ -373,6 +438,16 @@ module Garage {
                     label: state.label
                 });
                 this.stateCollection_.add(stateModel);
+            }
+
+            /**
+             * @return {boolean} タッチパット用のボタンだった場合trueを返す。
+             */
+            isTouchPatButton(): boolean {
+                return this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_UP_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_LEFT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_DOWN_VALUE);
             }
 
             /**
@@ -538,6 +613,28 @@ module Garage {
                     }
                 });
             }
+
+            /**
+             * ボタンのactionに、特定のアクションが含まれるか判定する
+             * @param actiionType{string} buttonに含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+             */
+            private _isIncludeSpecificActionType(actionType: string): boolean {
+                let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
+
+                if (!Util.JQueryUtils.isValidValue(actionType)) {
+                    console.warn(FUNCTION_NAME + "actionType is invalid");
+                    return;
+                }
+
+                for (let state of this.state) {
+                    if (state.isIncludeSpecificActionType(actionType)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         }
     }
 }

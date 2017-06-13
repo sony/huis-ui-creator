@@ -38,7 +38,7 @@ module Garage {
             export const FIRST_MACRO_ORDER: number = 0;
             export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
-            export const TEMPLATE_DOM_ID = "#template-macro-button-detail";
+            export const TEMPLATE_DOM_ID = "#template-macro-button-propety-area";
         }
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
@@ -46,11 +46,9 @@ module Garage {
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
-            /**
-             * constructor
-             */
-            constructor(button: Model.ButtonItem, $el: JQuery, commandManager: CommandManager) {
-                super(button, macroConstValue.TEMPLATE_DOM_ID, $el, commandManager);
+            constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
+                super(button, editingRemoteId, macroConstValue.TEMPLATE_DOM_ID, commandManager);
+                this.listenTo(this.getModel(), "change:state", this.render);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -360,47 +358,12 @@ module Garage {
             * 保持しているモデルの内容でプルダウンを描画する
             */
             render(): Backbone.View<Model.Item> {
+                super.render();
                 let FUNCTION_NAME = TAG + ":renderView : ";
 
-                //マクロの基本情報を付与
-                // ボタンの state 情報を付加
-                var $macroContainer = this.$el.nextAll("#macro-container");
-                let macroData: any = {};
-                let templateMacro: Tools.JST = Tools.Template.getJST("#template-property-macro-button", this._getTemplateFilePath());
-
-                let state = this.getModel().getDefaultState();
-                let id: number = state.stateId;
-                macroData.id = id;
-
-                let resizeMode: string;
-
-                if (state.image != null && state.image.length != 0) {
-                    macroData.image = state.image[0];
-                    let garageImageExtensions = state.image[0].garageExtensions;
-                    if (garageImageExtensions) {
-                        resizeMode = garageImageExtensions.resizeMode;
-                    }
-                }
-
-                let labelSize: number = null;
-                if (state.label != null && state.label.length != 0) {
-                    let label: Model.LabelItem = state.label[0];
-                    macroData.label = label;
-                    labelSize = label.size;
-                }
-
-                macroData.actionList = ACTION_INPUTS_MACRO;
-
-                let $macroDetail = $(templateMacro(macroData));
-                $macroContainer.append($macroDetail);
-
-                //テキストラベルのpullDownを変更する。
-                var $textSizePullDown = this.$el.find(".property-state-text-size[data-state-id=\"" + state.stateId + "\"]");
-                if (labelSize != null) {
-                    $textSizePullDown.val(labelSize.toString());
-                }
-
-                let actions: IAction[] = state.action;
+                let targetState: Model.ButtonState = this.getModel().getDefaultState();
+                this._renderNonOrderActionPulldown(targetState.stateId, ACTION_INPUTS_MACRO);
+                let actions: IAction[] = targetState.action;
                 if (actions == null || actions.length == 0) {
                     console.warn(FUNCTION_NAME + "acctions is null");
                     return;
@@ -410,14 +373,17 @@ module Garage {
                 //inputを読み取るアクションのIDは0とする。
                 //マクロは複数の異なるアクションを設定できないためどのアクションを選択しても変わらない。
                 let TARGET_ACTION = 0;
-                var $actionPullDown: JQuery = this.$el.find(".action-input[data-state-id=\"" + state.stateId + "\"]");
+                var $actionPullDown: JQuery = this._getActionPulldownJquery(targetState.stateId);
                 if ($actionPullDown && actions[TARGET_ACTION] && actions[TARGET_ACTION].input) {
                     $actionPullDown.val(actions[TARGET_ACTION].input);
                 }
+
                 //一度、ここで、jQueryMoblieのレイアウトをあてる。
-                $macroContainer.i18n();
-                this._adaptJqueryMobileStyleToPulldown($macroContainer);
+                this.$el.i18n();
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
                 this.renderSignalContainers();
+
+                this.focusFirstPulldown();
 
                 return this;
             }
@@ -444,7 +410,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this.$el.find(".action-input[data-state-id=\"" + this.getModel().default + "\"]").val();
+                let tmpInput = this._getActionPulldownJquery(this.getModel().getDefaultStateId()).val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -565,8 +531,7 @@ module Garage {
 
                 states.push(this.getModel().getDefaultState());
 
-                this.getModel().state = states;
-                this.trigger("updateModel");
+                this._setStateMementoCommand(states);
             }
 
             /*
@@ -787,7 +752,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id: this.getDefaultStateId()
+                    id: this.getModel().getDefaultStateId()
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this._getTemplateFilePath());
@@ -1077,7 +1042,9 @@ module Garage {
                 if (ActionNum <= 1
                     && !Util.JQueryUtils.isValidValue(remoteIdOrder0)
                     && !Util.JQueryUtils.isValidValue(functionOrder0)) {
-                    this.$el.find("#select-remote-input-0").focus();
+                    setTimeout(() => {
+                        this.$el.find("#select-remote-input-0").focus();
+                    });
                 }
             }
 

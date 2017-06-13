@@ -37,13 +37,21 @@ module Garage {
 
         export abstract class ImageHandlePreviewWindow extends PreviewWindow {
 
-            protected tmpImageFilePath_: string;//モデルに設定されているのパス。モデル適応する前に親クラスが取得するために保持。
+            protected tmpImageFilePath_: string;//変更後の画像パス。モデル適応する前に親クラスが取得するために保持。
+            protected editingRemoteId_: string;
+            private isBackgroundImge_: boolean;
 
-
-            constructor(item: Model.ImageItem, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
+            /**
+             * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
+             * @param {string} editingRemoteId 編集中のリモコンのremoteId
+             * @param {string} domId 自身を指す DOMのID
+             * @param {string} templateDomId 自身のテンプレートのDOMのID
+             * @param {Backbone.ViewOptions<Model.Item>} options? Backbone.Viewのオプション
+             */
+            constructor(item: Model.Item, editingRemoteId: string, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, domId, templateDomId, options);
-                this.listenTo(this.getModel(), "change:path", this._onPathChanged);
-                this.tmpImageFilePath_ = item.path;
+                this.tmpImageFilePath_ = null;
+                this.editingRemoteId_ = editingRemoteId;
             }
 
 
@@ -54,14 +62,7 @@ module Garage {
                 };
             }
 
-
-            private _onPathChanged(event: Event) {
-                this.tmpImageFilePath_ = this.getModel().path;
-            }
-
-
             abstract render(option?: any): Backbone.View<Model.Item>;
-
 
             /**
              * @return {string} DOM全体を示すIDを返す。
@@ -70,7 +71,6 @@ module Garage {
                 return this.domId_;
             }
 
-
             /**
              * @return {string} 一時的なファイルパスを返す。
              */
@@ -78,9 +78,23 @@ module Garage {
                 return this.tmpImageFilePath_;
             }
 
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの絶対パスを返す。
+             */
+            getNotDefaultImageDirFullPath(): string {
+                return path.resolve(
+                    path.join(
+                        HUIS_FILES_ROOT,
+                        REMOTE_IMAGES_DIRECTORY_NAME,
+                        this.getNotDefaultImageDirRelativePath()
+                    )).replace(/\\/g, "/");
+            }
 
-            protected getModel(): Model.ImageItem {
-                return <Model.ImageItem>this.model;
+            /**
+             * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
+             */
+            getNotDefaultImageDirRelativePath(): string {
+                return path.join(this.editingRemoteId_).replace(/\\/g, "/");
             }
 
 
@@ -155,11 +169,11 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let imageName = path.basename(imageFilePath);
-                let dirPath = this.getModel().getNotDefaultImageDirFullPath();
+                let dirPath = this.getNotDefaultImageDirFullPath();
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
-                
+
                 //TODO: move const variables difinition from init.ts to more specific place
-                let params = this.getModel().isBackgroundImage() ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+                let params = this.isBackgroundImge_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
                 Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {
@@ -289,6 +303,10 @@ module Garage {
                 return false;
             }
 
+            private _initImage(button: Model.ButtonItem) {
+                let tmpImage = new Model.ImageItem({ remoteId: button.remoteId });
+                button.getDefaultState().image = [tmpImage];
+            }
 
         }
     }

@@ -764,6 +764,8 @@
             #background-image-preview-window,
             #property-image-preview,
             #label-preview-window,
+            #state-preview-window,
+            #ac-state-preview-window,
             .property-state-image-preview {
                 box-sizing: border-box;
                 position: relative;
@@ -811,7 +813,7 @@
                     }
                 }
 
-                #image-preview,
+                #preview.image-preview,
                 #image-container {
                     box-sizing: border-box;
                     position: relative;
@@ -822,7 +824,7 @@
                     height: $SIZE_PROPATY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
                 }
                 //テキストエリア
-                #text-preview,
+                #preview.text-preview,
                 .text-field-in-preview {
                     margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
@@ -864,7 +866,8 @@
 
             #background-image-preview-window.background {
                 height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
-                #image-container{
+
+                #image-container {
                     height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_INTER_HEIGHT;
                 }
             }
@@ -896,7 +899,8 @@
         }
     }
     //画像編集ボタンのpopup
-    #edit-image-popup {
+    #edit-image-popup,
+    #edit-popup {
         position: relative;
         box-shadow: none;
         text-shadow: none;

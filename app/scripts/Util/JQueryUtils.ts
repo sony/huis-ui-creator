@@ -248,6 +248,29 @@ module Garage {
                 }
             }
 
+            /**
+             * テキストエリアにフォーカスを移し、カーソルを末尾に移動する。
+             * @param {JQuery} $target テキストエリアのJQuery
+             */
+            static setFocusAndMoveCursorToEnd($target: JQuery) {
+                var FUNCTION_NAME = "setFocusAndMoveCursorToEnd";
+
+                if (_.isUndefined($target)) {
+                    console.log(FUNCTION_NAME + ": $target is Undefined");
+                    return;
+                }
+
+                if ($target.attr('type') !== "text") {
+                    console.log(FUNCTION_NAME + ": $target is not input[text]");
+                    return;
+                }
+
+                var remoteName: string = $target.val();
+                $target.val("");
+                $target.focus();
+                $target.val(remoteName);
+            }
+
 
         }
     }
