@@ -21,6 +21,11 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
+        namespace constValue {
+            export const DEFAULT_IMAGE_INDEX: number = 0;
+            export const DEFAULT_LABEL_INDEX: number = 0;
+        }
+
         export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
@@ -74,6 +79,20 @@ module Garage {
                 }
 
                 return cloneState;
+            }
+
+            /**
+             * @return {boolean} 有効なModel.ImageItemを持っている場合、trueを返す。
+             */
+            hasValidImage(): boolean {
+                return this.imageCollection_.models.length > 0;
+            }
+
+            /**
+             * @return {boolean} 有効なModel.LabelItemを持っている場合、trueを返す。
+             */
+            hasValidLabel(): boolean {
+                return this.labelCollection_.models.length > 0;
             }
 
             /**
@@ -234,6 +253,31 @@ module Garage {
             set active(val: boolean) {
                 this.set("active", val);
             }
+
+            getDefaultImage(): Model.ImageItem {
+                return this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX];
+            }
+
+            getDefaultLabel(): Model.LabelItem {
+                return this.label[constValue.DEFAULT_LABEL_INDEX];
+            }
+
+            /**
+             * actionに特定のアクションが含まれるか判定する
+             * @param actiionType{string} アクション含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+             */
+            isIncludeSpecificActionType(actionType: string): boolean {
+                for (let action of this.action) {
+                    if (!action.input) continue;
+
+                    if (action.input == actionType) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         }
     }
 }

@@ -106,7 +106,7 @@ module Garage {
                 console.log("onClickNotFullCustomFace");
                 let $clickedFace = $(event.currentTarget);
                 let remoteId = $clickedFace.data("remoteid");
-                this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
+                Util.MiscUtil.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
             }
 
             /*

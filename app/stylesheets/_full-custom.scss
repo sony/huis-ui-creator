@@ -727,7 +727,7 @@
                 width: calc(100% - 70px);
             }
 
-            #delete-background-image {
+            #delete-btn {
                 width: $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
                 margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
             }
@@ -760,7 +760,12 @@
             input.property-value {
                 width: calc(100% - 20px);
             }*/
+            #image-preview-window,
+            #background-image-preview-window,
             #property-image-preview,
+            #label-preview-window,
+            #state-preview-window,
+            #ac-state-preview-window,
             .property-state-image-preview {
                 box-sizing: border-box;
                 position: relative;
@@ -773,7 +778,8 @@
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
-                #edit-image-non-button-image {
+                #edit-image-non-button-image,
+                #edit-btn {
                     position: absolute;
                     z-index: 1;
                     bottom: 0;
@@ -790,7 +796,7 @@
                     }
                 }
                 //背景画像削除ボタン
-                #delete-background-image {
+                #delete-btn {
                     position: absolute;
                     z-index: 1;
                     top: 0;
@@ -806,7 +812,19 @@
                         background-image: $PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
                     }
                 }
+
+                #preview.image-preview,
+                #image-container {
+                    box-sizing: border-box;
+                    position: relative;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    width: $SIZE_PROPATY_AREA_IMAGE_PREVIEW_WIDTH;
+                    height: $SIZE_PROPATY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
+                }
                 //テキストエリア
+                #preview.text-preview,
                 .text-field-in-preview {
                     margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
@@ -831,6 +849,7 @@
                         }
                     }
 
+                    #text-size-pulldown,
                     .text-size-pulldown {
                         margin: 0 auto;
                         width: $SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
@@ -845,8 +864,12 @@
                 }
             }
 
-            #property-image-preview.background {
+            #background-image-preview-window.background {
                 height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
+
+                #image-container {
+                    height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_INTER_HEIGHT;
+                }
             }
 
             .property-state-image {
@@ -876,7 +899,8 @@
         }
     }
     //画像編集ボタンのpopup
-    #edit-image-popup {
+    #edit-image-popup,
+    #edit-popup {
         position: relative;
         box-shadow: none;
         text-shadow: none;

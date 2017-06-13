@@ -188,6 +188,18 @@ module Garage {
                 return convertedImage;
             }
 
+            /*
+             * @return {boolen} 背景画像だった場合true, 違う場合falseを返す。
+             */
+            isBackgroundImage(): boolean {
+                let area: IArea = this.area;
+                //TODO: develop Model.Area and isEqueal Method
+                return area.x == HUIS_PAGE_BACKGROUND_AREA.x
+                    && area.y == HUIS_PAGE_BACKGROUND_AREA.y
+                    && area.w == HUIS_PAGE_BACKGROUND_AREA.w
+                    && area.h == HUIS_PAGE_BACKGROUND_AREA.h
+            }
+
             /**
              * getters and setters
              */
@@ -246,7 +258,7 @@ module Garage {
             }
 
             get properties(): string[] {
-                return ["enabled", "area", "path", "resizeMode"];
+                return ["enabled", "area", "path", "resizeMode", "resizeOriginal"];
             }
 
             get itemType(): string {
@@ -322,34 +334,22 @@ module Garage {
 
             set resizeOriginal(val: string) {
                 let garageExtensions = this.garageExtensions;
+                let changedResolvedOriginalPath: string = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
                 if (garageExtensions) {
                     garageExtensions.original = val;
-                    if (this.remoteId_ === "common") {
-                        // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
-                        // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-                        let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
-                        garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
-                    } else {
-                        garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-                    }
+                    garageExtensions.resolvedOriginalPath = changedResolvedOriginalPath;
                 } else {
-                    if (this.remoteId_ === "common") {
-                        // common フェイスはアプリの res 内にあるが、デバッグ版とパッケージ版でパスが変わるので、CDP.Framework.toUrl() で絶対パスを得る。
-                        // file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す。
-                        let resolvedOriginalPath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images/" + val), true);
-                        garageExtensions = {
-                            original: val,
-                            resizeMode: "contain",
-                            resolvedOriginalPath: resolvedOriginalPath
-                        };
-                    } else {
-                        garageExtensions = {
-                            original: val,
-                            resolvedOriginalPath: path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/"),
-                            resizeMode: "contain"
-                        };
-                    }
+                    garageExtensions = {
+                        original: val,
+                        resolvedOriginalPath: changedResolvedOriginalPath,
+                        resizeMode: "contain"
+                    };
                 }
+
+                if (Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
+                    this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
+                }
+
                 this.garageExtensions = garageExtensions;
             }
 
