@@ -185,6 +185,20 @@ module Garage {
             }
 
             /**
+             * @param {number} stateId 配列インデックスを取得したいModel.ButtonStateのstateId
+             * @return {number} 入力に対応したModel.ButtonState[]の配列インデックス
+             */
+            getStateIndexByStateId(stateId: number): number {
+                let targetStates = this.stateCollection_.models;
+                for (let i = 0; targetStates.length > i; i++) {
+                    let targetState = targetStates[i];
+                    if (targetState.stateId == stateId) {
+                        return i;
+                    }
+                }
+            }
+
+            /**
              * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
              *
              * @param {string} remoteId このButtonItemが所属するremoteId
