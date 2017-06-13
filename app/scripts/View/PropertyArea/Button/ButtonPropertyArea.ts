@@ -184,7 +184,7 @@ module Garage {
 
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
-             *  @return {Model.ButtonItem}
+             * @return {Model.ButtonItem}
              */
             public getModel(): Model.ButtonItem {
                 //親クラスのthis.modelはModel.Item型という抽象的な型でありModel.ButtonItem型に限らない。
