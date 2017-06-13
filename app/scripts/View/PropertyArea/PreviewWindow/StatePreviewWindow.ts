@@ -30,7 +30,7 @@ module Garage {
 
             //popup
             export const POPUP_DOM_ID = "#edit-popup";
-            export const CSS_BOARDER_WIDTH = "border-width";
+            export const CSS_BORDER_WIDTH = "border-width";
             export const UNIT_PX = "px";
             export const POPUP_LIST_DOM_CLASS = ".popup-list";
             export const EDIT_IMAGE_BTN_DOM_ID = "#command-change-button-image";
@@ -95,7 +95,7 @@ module Garage {
                 //popのJquery
                 // ポップアップのjQuery DOMを取得.JQueryMobileのpopupを利用しているので$(document)からfindする必要がある。
                 var $overflow = $(document).find(constValue.POPUP_DOM_ID);
-                var previewBorderWidth: number = +(this.$el.parents(constValue.DOM_ID).css(constValue.CSS_BOARDER_WIDTH).replace(constValue.UNIT_PX, ""));
+                var previewBorderWidth: number = +(this.$el.parents(constValue.DOM_ID).css(constValue.CSS_BORDER_WIDTH).replace(constValue.UNIT_PX, ""));
                 var overFlowWidth = $overflow.find(constValue.POPUP_LIST_DOM_CLASS).outerWidth(true);
 
                 //押下されたボタンのJquery
