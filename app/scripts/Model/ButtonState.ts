@@ -82,6 +82,20 @@ module Garage {
             }
 
             /**
+             * @return {boolean} 有効なModel.ImageItemを持っている場合、trueを返す。
+             */
+            hasValidImage(): boolean {
+                return this.imageCollection_.models.length > 0;
+            }
+
+            /**
+             * @return {boolean} 有効なModel.LabelItemを持っている場合、trueを返す。
+             */
+            hasValidLabel(): boolean {
+                return this.labelCollection_.models.length > 0;
+            }
+
+            /**
              * Model.ButtonStateをHUIS出力用のデータ形式に変換する。
              *
              * @param {string} remoteId このButtonStateが所属するremoteId

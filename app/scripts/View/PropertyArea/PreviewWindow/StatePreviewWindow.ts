@@ -153,7 +153,7 @@ module Garage {
 
             private _createPreview(): Preview {
                 let targetState = this._getModel().getStateByStateId(this.targetStateId_);
-                if (Util.MiscUtil.isValidArray(targetState.image)) {
+                if (targetState.hasValidImage()) {
                     return new ImagePreview(targetState.getDefaultImage());
                 } else {
                     return new TextPreview(targetState.getDefaultLabel());
