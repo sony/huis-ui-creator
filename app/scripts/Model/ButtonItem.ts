@@ -108,6 +108,13 @@ module Garage {
             initialize(attribute?, options?) {
             }
 
+            /**
+             * @return {Model.ButtonState[]} 所持しているstateの配列のディープコピーを返す。
+             */
+            cloneStates(): Model.ButtonState[] {
+                return this.stateCollection_.clone().models;
+            }
+
             public isAirconButton() {
                 let airconButtonNamePrefix = "STR_REMOTE_BTN_AIRCON";
                 return (this.name.indexOf(airconButtonNamePrefix) == 0);
@@ -208,6 +215,14 @@ module Garage {
                 }
                 return this.default;
             }
+
+            /**
+             * @return defaultとして利用されるStateのState配列上のインデックス
+             */
+            getDefaultStateIndex(): number {
+                return this.getStateIndexByStateId(this.getDefaultStateId());
+            }
+
             /**
              * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
              *

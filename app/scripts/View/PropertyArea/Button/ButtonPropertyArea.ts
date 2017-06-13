@@ -91,58 +91,42 @@ module Garage {
                     this.statePreviewWindow_.getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
-                // TODO: button.stateのクローンができるようになったら、それに書き換える。
-                let tmpButton: Model.ButtonItem = this.getModel().clone();
-                let tmpStates: Model.ButtonState[] = tmpButton.state
-                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                this._initImageItem(tmpState, this.getModel().remoteId);
-                let targetImageItem = tmpState.getDefaultImage();
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                this._initImageItem(targetState, this.getModel().remoteId);
+                let targetImageItem = targetState.getDefaultImage();
                 targetImageItem.path = changedImageFileRelativePath;
                 targetImageItem.resizeOriginal = changedImageFileRelativePath;
-                let targetStateIndex = tmpButton.getStateIndexByStateId(this.getDefaultStateId());
-                tmpStates[targetStateIndex] = tmpState;
 
-                this._setStateMementoCommand(tmpStates);
+                this._setStateMementoCommand(targetStates);
             }
 
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = this.statePreviewWindow_.getTextSize();
 
-                // TODO: button.stateのクローンができるようになったら、それに書き換える。
-                let tmpButton: Model.ButtonItem = this.getModel().clone();
-                let tmpStates: Model.ButtonState[] = tmpButton.state
-                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                tmpState.getDefaultLabel().size = changedSize;
-                let targetStateIndex = tmpButton.getStateIndexByStateId(this.getDefaultStateId());
-                tmpStates[targetStateIndex] = tmpState;
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().size = changedSize;
 
-                this._setStateMementoCommand(tmpStates);
+                this._setStateMementoCommand(targetStates);
             }
 
             private _onTextFieldChanged(event: Event) {
                 let changedText = this.statePreviewWindow_.getText();
 
-                // TODO: button.stateのクローンができるようになったら、それに書き換える。
-                let tmpButton: Model.ButtonItem = this.getModel().clone();
-                let tmpStates: Model.ButtonState[] = tmpButton.state
-                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                tmpState.getDefaultLabel().text = changedText;
-                let targetStateIndex = tmpButton.getStateIndexByStateId(this.getDefaultStateId());
-                tmpStates[targetStateIndex] = tmpState;
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().text = changedText;
 
-                this._setStateMementoCommand(tmpStates);
+                this._setStateMementoCommand(targetStates);
             }
 
             private _onChangeToTextBtn(event: Event) {
-                // TODO: button.stateのクローンができるようになったら、それに書き換える。
-                let tmpButton: Model.ButtonItem = this.getModel().clone();
-                let tmpStates: Model.ButtonState[] = tmpButton.state
-                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                this._initLabelItem(tmpState);
-                let targetStateIndex = tmpButton.getStateIndexByStateId(this.getDefaultStateId());
-                tmpStates[targetStateIndex] = tmpState;
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                this._initLabelItem(targetState);
 
-                this._setStateMementoCommand(tmpStates);
+                this._setStateMementoCommand(targetStates);
             }
 
             events() {
