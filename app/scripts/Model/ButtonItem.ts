@@ -414,6 +414,7 @@ module Garage {
                 });
                 this.stateCollection_.add(stateModel);
             }
+
             /**
              * @return {boolean} タッチパット用のボタンだった場合trueを返す。
              */
