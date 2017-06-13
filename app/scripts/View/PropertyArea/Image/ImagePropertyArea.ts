@@ -34,9 +34,9 @@ module Garage {
             private imagePreviewWindow_: ImagePreviewWindow;
 
 
-            constructor(iamge: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.imagePreviewWindow_ = new ImagePreviewWindow(iamge, editingRemoteId);
+            constructor(image: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
+                super(image, constValue.TEMPLATE_DOM_ID, commandManager);
+                this.imagePreviewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
 
                 this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
                 this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。

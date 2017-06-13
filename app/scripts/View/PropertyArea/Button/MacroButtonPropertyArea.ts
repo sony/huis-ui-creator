@@ -1046,7 +1046,6 @@ module Garage {
                         this.$el.find("#select-remote-input-0").focus();
                     });
                 }
-
             }
 
             /*
