@@ -155,18 +155,16 @@ module Garage {
             private updateModel() {
                 let FUNCTION_NAME = TAG + "updateModel : ";
 
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
                 let tmpInput = this._getActionPulldownJquery(this.getModel().getDefaultStateId()).val();
-                let tmpButton: Model.ButtonItem = this.getModel().clone();
-                let tmpStates: Model.ButtonState[] = tmpButton.state;
-                let tmpState: Model.ButtonState = tmpButton.getDefaultState();
-                let newAction = tmpState.action[0];
+                let newAction = targetState.action[0];
                 newAction.input = tmpInput;
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [newAction];
-                tmpState.action = newActions;
-                tmpStates[this.getModel().getDefaultStateIndex()] = tmpState;
+                targetState.action = newActions;
 
-                this._setStateMementoCommand(tmpStates);
+                this._setStateMementoCommand(targetStates);
             }
 
             /**
