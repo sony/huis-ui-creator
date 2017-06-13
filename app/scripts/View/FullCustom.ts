@@ -3693,8 +3693,7 @@ module Garage {
                 }
 
                 if (this.propertyArea_ == null) {
-                    let propertyAreaFactory: PropertyAreaFactory = new PropertyAreaFactory();
-                    this.propertyArea_ = propertyAreaFactory.create(
+                    this.propertyArea_ = PropertyAreaFactory.create(
                         item,
                         this.faceRenderer_canvas_.getRemoteId(),
                         this.commandManager_,

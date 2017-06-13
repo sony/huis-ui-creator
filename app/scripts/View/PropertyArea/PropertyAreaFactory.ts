@@ -37,7 +37,7 @@ module Garage {
              * @param {Model.Module[]} modules現在編集中のリモコンのモジュール
              * @return {PrjopertyArea} アイテムに応じたPropertyArea。適したPropertyAreaがない場合、nullを返す。
              */
-            create(item: Model.Item, editingRemoteId: string, commandManager: CommandManager, remoteName: string, modules: Model.Module[]): PropertyArea {
+            static create(item: Model.Item, editingRemoteId: string, commandManager: CommandManager, remoteName: string, modules: Model.Module[]): PropertyArea {
                 if (item instanceof Model.ButtonItem) {
                     if (item.isJumpButton()) {
                         return new JumpButtonPropertyArea(item, editingRemoteId, commandManager, remoteName, modules);
