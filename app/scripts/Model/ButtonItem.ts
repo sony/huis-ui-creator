@@ -155,7 +155,7 @@ module Garage {
                 }
             }
 
-            /*
+            /**
              * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
              */
             getDefaultState(): Model.ButtonState {
@@ -169,7 +169,7 @@ module Garage {
                 return this.stateCollection_.models[constValue.DEFAULT_STATE_INDEX];
             }
 
-            /*
+            /**
              * @param {number} stateId 取得したいModel.ButtonStateのStateId
              * @return {Model.ButtonState} 発見できない場合、nullを返す。
              */
