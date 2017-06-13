@@ -64,7 +64,7 @@ module Garage {
             constructor(button: Model.ButtonItem, editingRemoteId: string, templateDomId: string, commandManager: CommandManager) {
                 super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.statePreviewWindow_ = new StatePreviewWindow(button, this.getDefaultStateId(), editingRemoteId);
+                this.statePreviewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
                 this._setDeviceInfo();
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
@@ -228,19 +228,6 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// protected method
             /////////////////////////////////////////////////////////////////////////////////////////
-
-
-            /**
-             * @return {number} ボタンに設定されているデフォルトのstateIdを取得
-             */
-            protected getDefaultStateId(): number {
-                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
-                if (this.getModel().default == null) {
-                    return this.getModel().getDefaultState().stateId;
-                }
-                return this.getModel().default;
-            }
-
 
             /**
              * state情報からテンプレート生成に必要なstateDataを生成する
@@ -565,7 +552,7 @@ module Garage {
              * @param {number} stateId 描画するステート。指定しない場合デフォルト値になる。
              * @param {string} 描写するfunctionsプルダウンに設定する値。
              */
-            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
+            protected renderRemoteIdOf(order: number, inputRemoteId: string, stateId: number = this.getModel().getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderRemoteIdOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -764,7 +751,7 @@ module Garage {
              * @param {number} stateId 描画するステートのID。指定しない場合、デフォルト値になる。
              * @param {string} unknownRcId 不明なリモコンIDを表示する場合、その種類を入力。
              */
-            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getDefaultStateId(), unknownRcId?: string) {
+            protected renderFunctionsOf(order: number, functionName: string = null, stateId: number = this.getModel().getDefaultStateId(), unknownRcId?: string) {
                 let FUNCTION_NAME = TAG + "renderFunctionsOf : ";
 
                 if (!this.isValidOrder(order)) {
@@ -980,7 +967,7 @@ module Garage {
              * @param order {number}
              * @param stateId {number}
              */
-            private appendPagesPullDown(order: number, stateId: number = this.getDefaultStateId()): JQuery {
+            private appendPagesPullDown(order: number, stateId: number = this.getModel().getDefaultStateId()): JQuery {
                 //targetとなるJQueryを取得
                 let $target: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
                 if ($target == null || $target.length == 0) {
@@ -1015,7 +1002,7 @@ module Garage {
             /**
              * orderに設定されているリモコンのページ数を取得
              */
-            private getPageNumOf(order: number, stateId: number = this.getDefaultStateId()): number {
+            private getPageNumOf(order: number, stateId: number = this.getModel().getDefaultStateId()): number {
                 let FUNCTION_NAME = TAG + "getPageNumOf : ";
 
                 if (!this.isValidOrder(order)) {

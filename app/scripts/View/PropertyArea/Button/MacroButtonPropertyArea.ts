@@ -410,7 +410,7 @@ module Garage {
                     return;
                 }
 
-                let tmpInput = this._getActionPulldownJquery(this.getDefaultStateId()).val();
+                let tmpInput = this._getActionPulldownJquery(this.getModel().getDefaultStateId()).val();
 
                 //それぞのアクションのプルダウンの値を取得。
                 for (let i = 0; i < $signalContainers.length; i++) {
@@ -752,7 +752,7 @@ module Garage {
                 //intervalのプルダウンを表示するには、orderとstateIdが必要
                 let signalData = {
                     order: order,
-                    id: this.getDefaultStateId()
+                    id: this.getModel().getDefaultStateId()
                 }
 
                 let templateInterval: Tools.JST = Tools.Template.getJST("#template-property-button-signal-interval", this._getTemplateFilePath());

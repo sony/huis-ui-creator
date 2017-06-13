@@ -199,6 +199,16 @@ module Garage {
             }
 
             /**
+             * @return {number} ボタンに設定されているデフォルトのstateIdを取得
+             */
+            getDefaultStateId(): number {
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
+                if (this.default == null) {
+                    return this.getDefaultState().stateId;
+                }
+                return this.default;
+            }
+            /**
              * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
              *
              * @param {string} remoteId このButtonItemが所属するremoteId

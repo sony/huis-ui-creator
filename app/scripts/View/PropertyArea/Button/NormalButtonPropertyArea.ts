@@ -191,7 +191,7 @@ module Garage {
                         }
                     }
 
-                    this.updateModel(this.getDefaultStateId());
+                    this.updateModel(this.getModel().getDefaultStateId());
                     this.controlPlusButtonEnable();
                     this.$el.i18n();
                     $('.custom-select').trigger('create');
@@ -217,7 +217,7 @@ module Garage {
                     return;
                 }
 
-                this.updateModel(this.getDefaultStateId());
+                this.updateModel(this.getModel().getDefaultStateId());
                 this.renderSignals();
             }
 
@@ -248,7 +248,7 @@ module Garage {
 
                 //Function選択用のPullダウンにFunctionを設定する。
                 this.renderFunctionsOf(order);
-                this.updateModel(this.getDefaultStateId());
+                this.updateModel(this.getModel().getDefaultStateId());
 
                 //jQueryのスタイルをあてる。
                 let $targetSignalContainer = this.getSignalContainerElementOf(order);
@@ -265,7 +265,7 @@ module Garage {
             //機能選択用のプルダウンが変更されたときに呼び出される
             private onFunctionPulllDownListChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
-                this.updateModel(this.getDefaultStateId());
+                this.updateModel(this.getModel().getDefaultStateId());
 
                 let $target = $(event.currentTarget);
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
@@ -289,7 +289,7 @@ module Garage {
                 super.render();
                 let FUNCTION_NAME = TAG + "renderViewState";
 
-                let stateId: number = this.getDefaultStateId();
+                let stateId: number = this.getModel().getDefaultStateId();
                 this.updateAssiendInputActionsFromModel(stateId);
                 this.renderSignals(stateId);
                 this.$el.i18n();
@@ -515,7 +515,7 @@ module Garage {
             private getStateId(): number {
                 let FUNCTION_NAME: string = TAG + "getStateId : ";
                 //現在はデフォルトを返す。
-                return this.getDefaultStateId();
+                return this.getModel().getDefaultStateId();
             }
 
             /**
@@ -595,7 +595,7 @@ module Garage {
              * @param stateId{number} ターゲットとなるstateId.指定しない場合、default値になる。
              * @param $signalsContainer{JQuery} ベースとなるJQuery要素
              */
-            private renderSignals(stateId: number = this.getDefaultStateId()) {
+            private renderSignals(stateId: number = this.getModel().getDefaultStateId()) {
                 let FUNCTION_NAME: string = TAG + "renderSignals : ";
 
                 let actions: IAction[] = this.getModel().getStateByStateId(stateId).action;
