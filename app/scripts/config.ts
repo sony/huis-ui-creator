@@ -59,7 +59,6 @@ module Config {
             "garage.util.selectremotepagedialog": "scripts/Util/SelectRemotePageDialog",
             "garage.util.huisdev": "scripts/Util/HuisDev",
             "garage.util.miscutil": "scripts/Util/MiscUtil",
-            "garage.util.garagefiles": "scripts/Util/GarageFiles",
             "garage.util.jqutils": "scripts/Util/JQueryUtils",
             "garage.util.buttondeviceinfocache": "scripts/Util/ButtonDeviceInfoCache",
             "garage.util.zipmanager": "scripts/Util/ZipManager",

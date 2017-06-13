@@ -249,7 +249,6 @@ module Garage {
             "garage.util.selectremotepagedialog",
             "garage.util.miscutil",
             "garage.util.huisdev",
-            "garage.util.garagefiles",
             "garage.util.jqutils",
             "garage.util.zipmanager",
             "garage.util.itemclipboard",
@@ -259,7 +258,6 @@ module Garage {
                 try {
                     electronDialog = new Util.ElectronDialog();
                     huisFiles = new Util.HuisFiles();
-                    garageFiles = new Util.GarageFiles();
                 } catch (e) {
                     console.error("init.ts loadUtils failed. " + e);
                 }
@@ -274,7 +272,6 @@ module Garage {
                         try {
                             electronDialog = new Util.ElectronDialog();
                             huisFiles = new Util.HuisFiles();
-                            garageFiles = new Util.GarageFiles();
                         } catch (e) {
                             console.error("init.ts loadUtils failed. " + e);
                         }
