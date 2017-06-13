@@ -164,7 +164,7 @@ module Garage {
                 newAction.jump = this.getJumpSettings();
                 let newActions: IAction[] = [newAction];
                 tmpState.action = newActions;
-                tmpStates[this.getDefaultStateId()] = tmpState;
+                tmpStates[this.getModel().getDefaultStateIndex()] = tmpState;
 
                 this._setStateMementoCommand(tmpStates);
             }
