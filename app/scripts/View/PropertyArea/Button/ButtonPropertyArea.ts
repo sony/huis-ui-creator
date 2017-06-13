@@ -195,7 +195,7 @@ module Garage {
                 this.$el.append(this.template_(this.getModel()));
                 this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);
                 this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this
+                return this;
             }
 
             /**
