@@ -603,15 +603,7 @@ module Garage {
                 }
 
                 for (let state of this.state) {
-                    if (!state.action) continue;
-
-                    for (let action of state.action) {
-                        if (!action.input) continue;
-
-                        if (action.input == actionType) {
-                            return true;
-                        }
-                    }
+                    return state.isIncludeSpecificActionType(actionType)
                 }
                 return false;
             }

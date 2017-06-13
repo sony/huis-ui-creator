@@ -248,6 +248,22 @@ module Garage {
                 return this.label[constValue.DEFAULT_LABEL_INDEX];
             }
 
+            /**
+             * actionに特定のアクションが含まれるか判定する
+             * @param actiionType{string} アクション含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+             */
+            isIncludeSpecificActionType(actionType: string): boolean {
+                for (let action of this.action) {
+                    if (!action.input) continue;
+
+                    if (action.input == actionType) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         }
     }
 }
