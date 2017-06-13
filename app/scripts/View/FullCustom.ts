@@ -2682,14 +2682,15 @@ module Garage {
 
             /*
             *  button のcanvas 上のスタイルと詳細エリアの更新する
-            *  @param stateId {number} buttonのステートID
-            *  @param key{string} update対象の種類 "text", "size" など
-            *  @param value 変更量
-            *  @$targetStateElem {JQuery} 対象のJQuery要素
-            *  @buttonAreaW{number} 変更対象のボタンのW
-            *  @buttonAreaH{number} 変更対象のボタンのH
+            *  @param {number} stateId buttonのステートID
+            *  @param {string} key update対象の種類 "text", "size" など
+            *  @param {Model.ButtonState} targetState 対象となるstate
+            *  @param {any} value 変更量
+            *  @param {JQuery} $targetStateElem 対象のJQuery要素
+            *  @param {number} buttonAreaW 変更対象のボタンのW
+            *  @param {number} buttonAreaH 変更対象のボタンのH
             */
-            private updateButtonOnCanvas(stateId: number, key: string, value, targetState: Model.ButtonState, $targetStateElem: JQuery, buttonAreaW: number, buttonAreaH: number) {
+            private updateButtonOnCanvas(stateId: number, key: string, value: any, targetState: Model.ButtonState, $targetStateElem: JQuery, buttonAreaW: number, buttonAreaH: number) {
                 // canvas 上のスタイルと詳細エリアの更新
                 switch (key) {
                     case "text":
