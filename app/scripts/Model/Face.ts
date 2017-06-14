@@ -95,6 +95,117 @@ module Garage {
                 return resultCodes;
             }
 
+            /**
+             * face内に存在する信号名を取得
+             * @return {string[]} 信号名を表す文字列の配列
+             */
+            getFunctions(): string[] {
+                let functionCodeHash: IStringStringHash = {};
+                let faceModules = this.modules;
+
+                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(modules)) {
+                        return;
+                    }
+
+                    modules.forEach((module: IModule) => {
+                        let buttons = module.button;
+                        getFunctions_buttons(buttons, functionCodeHash);
+                    });
+
+                };
+
+                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(buttons)) {
+                        return;
+                    }
+
+                    buttons.forEach((button: IButton) => {
+                        let states = button.state;
+                        getFunctions_states(states, functionCodeHash);
+                    });
+                };
+
+                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(states)) {
+                        return;
+                    }
+
+                    states.forEach((state: IState) => {
+                        let actions = state.action;
+                        getFunctions_actions(actions, functionCodeHash);
+                    });
+                };
+
+                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
+                    let FUNCTION_NAME = TAG + ": getFunctions_actions : ";
+
+                    if (!_.isArray(actions)) {
+                        return;
+                    }
+
+                    actions.forEach((action: IAction) => {
+                        let code_db = action.code_db;
+                        let code = action.code;
+                        if (code_db && code_db.function) {
+
+                            if (code != null && code != undefined && code != " ") {
+                                //学習によって登録された用 codeがある場合
+                                functionCodeHash[code_db.function] = action.code;
+                            } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
+                                //プリセット用 db_codeset と brand が空白文字で。
+                                functionCodeHash[code_db.function] = "";
+                            } else {
+                                //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
+                            }
+                        } else {
+                            console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
+                        }
+                    });
+                };
+
+                // module にあるすべてのボタンの機能を取得する
+                getFunctions_modules(faceModules, functionCodeHash);
+
+                return Object.keys(functionCodeHash);
+            }
+
+            /**
+             * face に記述されている最初の code_db を取得する。
+             * 取得した code_db は、機器の「ブランド」、「種類」等の情報のために使用されることを想定している。
+             *
+             * @return {ICodeDB} faceに記述されている最初の code_db。見つからない場合は null。
+             */
+            getCodeDb(): ICodeDB {
+                var modules = this.modules;
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                var codeDb = actions[l].code_db;
+                                if (codeDb) {
+                                    return $.extend(true, {}, codeDb);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+
             /*
              * このFaceをfullcustomで生成されるModuleと同様のフォーマットのFaceに変換する。
              */
@@ -171,7 +282,7 @@ module Garage {
              */
             copy(dstRemoteId: string): Model.Face {
                 let newFace: Model.Face = this.clone();
-                let images = newFace._searchImages();
+                let images = newFace.searchImages();
                 newFace._copyImage(images, dstRemoteId);
                 newFace.setWholeRemoteId(dstRemoteId);
                 return newFace;
@@ -216,7 +327,7 @@ module Garage {
              *
              * @return {Model.ImageItem[]} 検索されたImage。
              */
-            private _searchImages(): Model.ImageItem[] {
+            searchImages(): Model.ImageItem[] {
                 let images: Model.ImageItem[] = [];
                 for (let module of this.modules) {
                     if (module.image != null) {
@@ -231,6 +342,21 @@ module Garage {
                     }
                 }
                 return images;
+            }
+
+            /**
+             * faceが使用している画像パスをすべて取得する
+             * @return {string[]} 画像パスの配列
+             */
+            getAllImagePaths(): string[] {
+                let results: string[] = [];
+                for (let image of this.searchImages()) {
+                    results = results.concat(image.path.replace(/\\/g, "/"));
+                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
+                        results = results.concat(image.garageExtensions.original.replace(/\\/g, "/"));
+                    }
+                }
+                return results;
             }
 
             /**

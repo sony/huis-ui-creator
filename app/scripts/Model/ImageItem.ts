@@ -102,31 +102,7 @@ module Garage {
                 return newImage;
             }
 
-            /**
-             * Image データから module 化に不要な物を間引いて、
-             * HUIS出力用のデータ形式に変換する。
-             * また、リモコン編集時に画像のリサイズが発生している場合は、
-             * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
-             * リサイズ処理自体はここでは行わない。
-             *
-             * @param {string} remoteId このButtonStateが所属するremoteId
-             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
-             * @return {IImage} 変換されたデータ
-             */
-            convertToHuisData(remoteId: string, outputDirPath?: string): IImage {
-
-                let garageExtensions = this.garageExtensions;
-                if (garageExtensions) {
-                    if (!garageExtensions.original) {
-                        garageExtensions.original = this.path;
-                    }
-                } else {
-                    garageExtensions = {
-                        resizeMode: "contain",
-                        original: this.path,
-                        resolvedOriginalPath: this.resolvedPath
-                    };
-                }
+            reserveResizeImageFile(remoteId: string, outputDirPath?: string) {
 
                 let convertedImage: IImage;
 
@@ -134,14 +110,14 @@ module Garage {
                 // 要素に合うサイズへのリサイズ処理を予約する。
                 // この時のリサイズ処理後のファイル名は、
                 // originalのファイル名に時間を追加してハッシュ化したものになる。
-                let originalPath = garageExtensions.original;
-                let resolvedOriginalPath = garageExtensions.resolvedOriginalPath;
+                let originalPath = this.garageExtensions.original;
+                let resolvedOriginalPath = this.garageExtensions.resolvedOriginalPath;
                 if (!resolvedOriginalPath) {
                     resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
-                    garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
+                    this.garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
                 }
                 let parsedPath = path.parse(resolvedOriginalPath);
-                let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + this.area.w + "_h" + this.area.h + "_" + garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
+                let newFileName = Model.OffscreenEditor.getEncodedPath(parsedPath.name + "_w" + this.area.w + "_h" + this.area.h + "_" + this.garageExtensions.resizeMode + parsedPath.ext) + parsedPath.ext;
                 // ファイル名をSHA1エンコードして文字コードの非互換性を解消する
 
                 let newFileFullPath: string;
@@ -162,27 +138,54 @@ module Garage {
                 // 補正は拡張子の付け替え。
                 newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
 
-                convertedImage = {
-                    area: this.area,
-                    path: path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/")
-                };
+                this.path = path.relative(HUIS_REMOTEIMAGES_ROOT, newFileFullPath).replace(/\\/g, "/");
 
                 // リサイズ待機リストに追加
                 huisFiles.addWaitingResizeImageList({
-                    src: garageExtensions.resolvedOriginalPath,
+                    src: this.garageExtensions.resolvedOriginalPath,
                     dst: newFileFullPath,
                     params: {
                         width: this.area.w,
                         height: this.area.h,
-                        mode: garageExtensions.resizeMode,
+                        mode: this.garageExtensions.resizeMode,
                         force: true,
                         padding: true
                     }
                 });
+            }
 
-                convertedImage.garage_extensions = {
-                    original: garageExtensions.original,
-                    resize_mode: garageExtensions.resizeMode
+            /**
+             * Image データから module 化に不要な物を間引いて、
+             * HUIS出力用のデータ形式に変換する。
+             * また、リモコン編集時に画像のリサイズが発生している場合は、
+             * image.path に image.garage_extensions.original をリサイズした画像のパスにする。
+             * リサイズ処理自体はここでは行わない。
+             *
+             * @param {string} remoteId このButtonStateが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IImage} 変換されたデータ
+             */
+            convertToHuisData(remoteId: string, outputDirPath?: string): IImage {
+
+                if (this.garageExtensions != null) {
+                    if (!this.garageExtensions.original) {
+                        this.garageExtensions.original = this.path;
+                    }
+                } else {
+                    this.garageExtensions = {
+                        resizeMode: "contain",
+                        original: this.path,
+                        resolvedOriginalPath: this.resolvedPath
+                    };
+                }
+
+                let convertedImage: IImage = {
+                    area: this.area,
+                    path: this.path,
+                    garage_extensions : {
+                        original: this.garageExtensions.original,
+                        resize_mode: this.garageExtensions.resizeMode
+                    }
                 };
 
                 return convertedImage;

@@ -47,10 +47,6 @@ module Garage {
             label: string;
         }
 
-
-
-
-
         /**
          * @class HuisFiles
          * @brief HUIS 内のファイルの parse 等を行うユーティリティークラス
@@ -526,11 +522,6 @@ module Garage {
                 }
             }
 
-
-
-
-
-
             /**
              * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
              * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
@@ -565,8 +556,6 @@ module Garage {
                 return null;
             }
 
-
-
             /**
             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
@@ -595,7 +584,6 @@ module Garage {
                 return null;
             }
 
-
             /**
              * 機器の master face に記述されている最初の code を取得する。
              * 取得した code は、「このcodeをもつリモコンはどのremoteIdか」検索するために利用されると想定。
@@ -610,7 +598,7 @@ module Garage {
                     return;
                 }
 
-                let masterFace = this._getFace(remoteId, true);
+                let masterFace = this.getFace(remoteId, true);
                 if (!masterFace) {
                     console.warn(TAGS.HuisFiles + "getMasterFaceCode() masterFace is not found.");
                     return null;
@@ -644,7 +632,7 @@ module Garage {
                     return;
                 }
 
-                let face = this._getFace(remoteId, false);
+                let face = this.getFace(remoteId, false);
                 if (!face) {
                     console.warn(TAGS.HuisFiles + "getMasterCode() masterFace is not found.");
                     return null;
@@ -654,13 +642,13 @@ module Garage {
             }
 
             private _getMasterFunctions(remoteId: string): string[] {
-                let masterFace = this._getFace(remoteId, true);
-                return HuisFiles.getFunctions(masterFace);
+                let masterFace = this.getFace(remoteId, true);
+                return (masterFace != null) ? masterFace.getFunctions() : null;
             }
 
             public getFaceFunctions(remoteId: string): string[] {
-                let face = this._getFace(remoteId, false);
-                return HuisFiles.getFunctions(face);
+                let face = this.getFace(remoteId, false);
+                return (face != null) ? face.getFunctions() : null;
             }
 
             public getAllFunctions(remoteId: string): string[] {
@@ -718,91 +706,6 @@ module Garage {
                 return merged;
             }
 
-
-            /**
-             * face内に存在する信号名を取得
-             */
-            private static getFunctions(face: Model.Face): string[] {
-                if (!face) {
-                    //console.warn(TAGS.HuisFiles + "getMasterFunctions() masterFace is not found.");
-                    return null;
-                }
-
-                //var functions: string[] = [];
-                let functionCodeHash: IStringStringHash = {};
-                let faceModules = face.modules;
-
-                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(modules)) {
-                        return;
-                    }
-
-                    modules.forEach((module: IModule) => {
-                        let buttons = module.button;
-                        getFunctions_buttons(buttons, functionCodeHash);
-                    });
-
-                };
-
-                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(buttons)) {
-                        return;
-                    }
-
-                    buttons.forEach((button: IButton) => {
-                        let states = button.state;
-                        getFunctions_states(states, functionCodeHash);
-                    });
-                };
-
-                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
-                    if (!_.isArray(states)) {
-                        return;
-                    }
-
-                    states.forEach((state: IState) => {
-                        let actions = state.action;
-                        getFunctions_actions(actions, functionCodeHash);
-                    });
-                };
-
-                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
-                    let FUNCTION_NAME = TAGS + ": getFunctions_actions : ";
-
-                    if (!_.isArray(actions)) {
-                        return;
-                    }
-
-                    actions.forEach((action: IAction) => {
-                        let code_db = action.code_db;
-                        let code = action.code;
-                        if (code_db && code_db.function) {
-
-                            if (code != null && code != undefined && code != " ") {
-                                //学習によって登録された用 codeがある場合
-                                functionCodeHash[code_db.function] = action.code;
-                            } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
-                                //プリセット用 db_codeset と brand が空白文字で。
-                                functionCodeHash[code_db.function] = "";
-                            } else {
-                                //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
-                            }
-                        } else {
-                            console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
-                        }
-
-
-                    });
-
-                };
-
-                // module にあるすべてのボタンの機能を取得する
-                getFunctions_modules(faceModules, functionCodeHash);
-
-
-                return Object.keys(functionCodeHash);
-            }
-
             /**
              * 機器の master face に記述されている最初の code_db を取得する。
              * 取得した code_db は、機器の「ブランド」、「種類」等の情報のために使用されることを想定している。
@@ -811,38 +714,8 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の code_db。見つからない場合は null。
              */
             getMasterCodeDb(remoteId: string): ICodeDB {
-                let masterFace = this._getFace(remoteId, true);
-                if (!masterFace) {
-                    return null;
-                }
-
-                var modules = masterFace.modules;
-                for (let i = 0, ml = modules.length; i < ml; i++) {
-                    var buttons = modules[i].button;
-                    if (!buttons) {
-                        continue;
-                    }
-                    for (let j = 0, bl = buttons.length; j < bl; j++) {
-                        var states = buttons[j].state;
-                        if (!states) {
-                            continue;
-                        }
-                        for (let k = 0, sl = states.length; k < sl; k++) {
-                            var actions = states[k].action;
-                            if (!actions) {
-                                continue;
-                            }
-                            for (let l = 0, al = actions.length; l < al; l++) {
-                                var codeDb = actions[l].code_db;
-                                if (codeDb) {
-                                    return $.extend(true, {}, codeDb);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                return null;
+                let masterFace = this.getFace(remoteId, true);
+                return (masterFace != null) ? masterFace.getCodeDb() : null;
             }
 
             /*
@@ -853,7 +726,6 @@ module Garage {
             getMasterFunctionCodeMap(remoteId: string): IStringStringHash {
                 return this.getFunctionCodeMap(remoteId, true);
             }
-
 
             /**
              * 指定リモコンの信号名：信号の連想配列を取得
@@ -870,7 +742,7 @@ module Garage {
                     return null;
                 }
 
-                let face: Model.Face = this._getFace(remoteId, isMaster);
+                let face: Model.Face = this.getFace(remoteId, isMaster);
                 if (!face) {
                     return null;
                 }
@@ -1055,7 +927,7 @@ module Garage {
              * @return {ICodeDB} master face に記述されている最初の bluetooth_data。見つからない場合は null。
              */
             getMasterBluetoothData(remoteId: string): IBluetoothData {
-                let masterFace: Model.Face = this._getFace(remoteId, true);
+                let masterFace: Model.Face = this.getFace(remoteId, true);
                 if (!masterFace) {
                     return null;
                 }
@@ -1418,40 +1290,46 @@ module Garage {
                 var moduleCount = modules.length;
                 let iModules: IModule[] = [];
                 var moduleNames: string[] = [];
-                // module ファイルの更新
-                for (let i = 0; i < moduleCount; i++) {
-                    let moduleInfo = this._updateModule(remoteId, modules[i], outputDirPath);
-                    iModules.push(moduleInfo.module);
-                    moduleNames.push(moduleInfo.name);
+
+                let images: Model.ImageItem[] = inputFace.searchImages();
+                for (let image of images) {
+                    image.reserveResizeImageFile(remoteId, outputDirPath);
                 }
-
-                // face ファイルの更新
-                var face: IPlainFace = {
-                    name: faceName,
-                    category: deviceType,
-                    modules: moduleNames
-                };
-
-                let faceFileName = remoteId + ".face"
-                if (isMasterFace) {
-                    faceFileName = "master_" + faceFileName;
-                }
-
-                var faceFilePath = path.join(this.huisFilesRoot_, remoteId, faceFileName);
-
-                //ファイルパスの指定がある場合、書き出し先を変更する。
-                if (outputDirPath != null) {
-                    faceFilePath = path.join(outputDirPath, remoteId, faceFileName);
-                }
-
-                fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
                 // サイズ変更を行った画像を一括でリサイズする
                 this._resizeImages().always(() => {
                     // 不要な画像を削除
                     if (!isToImportExport) {
-                        this._removeUnnecessaryImages(remoteId, iModules);
+                        this._removeUnnecessaryImages(inputFace);
                     }
+
+                    // module ファイルの更新
+                    for (let i = 0; i < moduleCount; i++) {
+                        let moduleInfo = this._updateModule(remoteId, modules[i], outputDirPath);
+                        iModules.push(moduleInfo.module);
+                        moduleNames.push(moduleInfo.name);
+                    }
+
+                    // face ファイルの更新
+                    var face: IPlainFace = {
+                        name: faceName,
+                        category: deviceType,
+                        modules: moduleNames
+                    };
+
+                    let faceFileName = remoteId + ".face"
+                    if (isMasterFace) {
+                        faceFileName = "master_" + faceFileName;
+                    }
+
+                    var faceFilePath = path.join(this.huisFilesRoot_, remoteId, faceFileName);
+
+                    //ファイルパスの指定がある場合、書き出し先を変更する。
+                    if (outputDirPath != null) {
+                        faceFilePath = path.join(outputDirPath, remoteId, faceFileName);
+                    }
+
+                    fs.outputJSONSync(faceFilePath, face, { spaces: 2 });
 
                     /* remotelist.ini ファイルを更新 */
 
@@ -1663,37 +1541,6 @@ module Garage {
                     remote_id: remoteId,
                     scene_no: sceneNo
                 }
-            }
-
-            private _getFace(remoteId: string, isMaster: boolean): Model.Face {
-                if (!_.isArray(this.remoteInfos_)) {
-                    return null;
-                }
-
-                // Commonの場合はMasterFaceがないので、faceを返す。
-                if (remoteId == "common") {
-                    return this.commonRemoteInfo_.face;
-                }
-
-
-                // 指定した remoteId の情報を取得する
-                var targetRemoteInfos = this.remoteInfos_.filter((remoteInfo) => {
-                    if (remoteInfo.remoteId === remoteId) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-                if (!_.isArray(targetRemoteInfos) || targetRemoteInfos.length < 1) {
-                    return null;
-                }
-
-                var face = isMaster ? targetRemoteInfos[0].mastarFace : targetRemoteInfos[0].face;
-                if (!face) {
-                    return null;
-                }
-                return face;
             }
 
             /**
@@ -2206,33 +2053,6 @@ module Garage {
             }
 
 
-            /*
-            * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
-            * @param module :IModule 参照元のモジュール
-            * @param images :Model.ImageItem[] 代入先のモジュール
-            */
-            private setVersionInfoToImage(iModule: IModule, images: Model.ImageItem[]) {
-                let FUNCTION_NAME = TAGS.HuisFiles + " : setVersionInfoToModel.ImageItem : ";
-
-                if (iModule == null) {
-                    console.warn(FUNCTION_NAME + "iModule is null");
-                    return;
-                }
-
-                if (images == null) {
-                    console.warn(FUNCTION_NAME + "images is null");
-                    return;
-                }
-
-                if (!iModule.version) {
-                    return;//バージョン情報が存在しない場合、なにもしない。
-                }
-
-                for (let i = 0; i < images.length; i++) {
-                    images[i].version = iModule.version;
-                }
-            }
-
             /**
              * module ファイルを parse する
              */
@@ -2311,109 +2131,11 @@ module Garage {
                 return promise;
             }
 
-
-            /**
-             * module リストから使用している画像パスをすべて取得する
-             */
-            private _getImagePathsReferredInModules(modules: IModule[]): string[] {
-                let results: string[] = [];
-                if (!modules || !_.isArray(modules)) {
-                    return [];
-                }
-
-                modules.forEach((module) => {
-                    results = results.concat(this._getImagePathsReferredInModule(module));
-                });
-
-                return results;
-            }
-
-            /**
-             * 指定したモジュール内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInModule(module: IModule): string[] {
-                let results: string[] = [];
-                if (!module || !_.isObject(module)) {
-                    return [];
-                }
-
-                if (module.image) {
-                    results = results.concat(this._getImagePathsReferredInImages(module.image));
-                }
-                if (module.button) {
-                    results = results.concat(this._getImagePathsReferredInButtons(module.button));
-                }
-
-                return results;
-            }
-
-            /**
-             * 指定したボタン内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInButtons(buttons: IButton[]): string[] {
-                let results: string[] = [];
-                if (!buttons || !_.isArray(buttons)) {
-                    return [];
-                }
-
-                buttons.forEach((button) => {
-                    if (button.state) {
-                        results = results.concat(this._getImagePathsReferredInButtonStates(button.state));
-                    }
-                });
-
-                return results;
-            }
-
-            /**
-             * 指定したボタンの状態で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInButtonStates(states: IState[]): string[] {
-                let results: string[] = [];
-                if (!states || !_.isArray(states)) {
-                    return [];
-                }
-
-                states.forEach((state) => {
-                    if (state.image) {
-                        results = results.concat(this._getImagePathsReferredInImages(state.image));
-                    }
-                });
-                return results;
-            }
-
-            /**
-             * 指定した画像アイテム内で使用されている画像のパスを列挙する
-             */
-            private _getImagePathsReferredInImages(images: IImage[]): string[] {
-                let results: string[] = [];
-                if (!images || !_.isArray(images)) {
-                    return [];
-                }
-
-                images.forEach((image) => {
-                    if (image) {
-                        if (_.isString(image.path)) {
-                            results.push(image.path);
-                        }
-                        let garage_extensions = image.garage_extensions;
-                        if (garage_extensions) {
-                            if (_.isString(garage_extensions.original)) {
-                                results.push(garage_extensions.original);
-                            }
-                        }
-                    }
-
-                });
-
-                return results;
-            }
-
             /**
              * face が参照している module 内で使用されていない画像を削除する
              */
-            private _removeUnnecessaryImages(remoteId: string, modules: IModule[]) {
-                let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, remoteId)).replace(/\\/g, "/");
+            private _removeUnnecessaryImages(face: Model.Face) {
+                let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, face.remoteId)).replace(/\\/g, "/");
                 if (!fs.existsSync(remoteImageDirectory)) {
                     return;
                 }
@@ -2428,7 +2150,7 @@ module Garage {
                     });
 
                 // face が参照している module 内で参照されている画像を列挙
-                let referredImageFiles = this._getImagePathsReferredInModules(modules);
+                let referredImageFiles = face.getAllImagePaths();
 
                 // 参照されていない画像を削除
                 fileList.forEach((file) => {
