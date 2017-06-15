@@ -27,21 +27,13 @@ module Garage {
         export class ImageItem extends Model.Item {
 
             private resolvedPathDirectory_: string;
-            private remoteId_: string;
             private initialArea_: IArea;
             private initialResizeMode_: string;
 
             // TODO: change constructor
             constructor(attributes?: any) {
                 super(attributes, null);
-                if (attributes) {
-                    if (attributes.remoteId) {
-                        this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
-                        this.remoteId_ = attributes.remoteId;
-                    } else {
-                        console.error("remoteId and rootpath is not set properly");
-                    }
-                }
+                this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
             }
 
             /**
@@ -72,9 +64,7 @@ module Garage {
              * @return {ImageItem}
              */
             public clone(): ImageItem {
-                var newImage = new Model.ImageItem({
-                    remoteId: this.remoteId_
-                });
+                var newImage = new Model.ImageItem();
 
                 newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
 

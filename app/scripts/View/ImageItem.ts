@@ -60,7 +60,7 @@ module Garage {
 
                         let imageModels: Model.ImageItem[] = [];
                         for (let i = 0, l = images.length; i < l; i++) {
-                            let imageModel: Model.ImageItem = new Model.ImageItem({ materialsRootPath: this.materialsRootPath_, remoteId: this.remoteId_ });
+                            let imageModel: Model.ImageItem = new Model.ImageItem();
                             imageModel.area = $.extend(true, {}, images[i].area);
                             imageModel.path = images[i].path;
                             if (images[i].garageExtensions) {

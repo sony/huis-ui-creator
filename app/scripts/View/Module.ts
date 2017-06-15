@@ -472,10 +472,7 @@ module Garage {
                 var srcImagePath: string;
                 // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
-                    newImage = new Model.ImageItem({
-                        materialsRootPath: this.materialsRootPath_,
-                        remoteId: module.remoteId
-                    });
+                    newImage = new Model.ImageItem();
 
                     // area はページ背景のものを使用する
                     newArea = {
@@ -550,10 +547,7 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId
-                });
+                var newImage = new Model.ImageItem();
 
                 var newArea: IArea;
                 // image が string の場合は、image をパスとして扱う
