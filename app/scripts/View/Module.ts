@@ -354,7 +354,7 @@ module Garage {
 
                 var buttonView = this.buttonViews_[moduleIndex];
                 if (!buttonView) {
-                    buttonView = new ButtonItem({
+                    buttonView = new View.ButtonItem({
                         attributes: {
                             materialsRootPath: this.materialsRootPath_,
                             remoteId: module.remoteId
@@ -457,7 +457,7 @@ module Garage {
 
                 var imageView = this.imageViews_[moduleIndex];
                 if (!imageView) {
-                    imageView = new ImageItem({
+                    imageView = new View.ImageItem({
                         attributes: {
                             materialsRootPath: HUIS_FILES_ROOT,
                             remoteId: module.remoteId
@@ -540,7 +540,7 @@ module Garage {
 
                 var imageView = this.imageViews_[moduleIndex];
                 if (!imageView) {
-                    imageView = new ImageItem({
+                    imageView = new View.ImageItem({
                         attributes: {
                             materialsRootPath: this.materialsRootPath_,
                             remoteId: module.remoteId
@@ -645,7 +645,7 @@ module Garage {
 
                 var labelView = this.labelViews_[moduleIndex];
                 if (!labelView) {
-                    labelView = new LabelItem({
+                    labelView = new View.LabelItem({
                     });
                     this.labelViews_[moduleIndex] = labelView;
                 }
@@ -744,7 +744,7 @@ module Garage {
             private generateViews(module: Model.Module) {
                 // モジュール内に button があったら、ButtonItem View を生成
                 if (module.button) {
-                    this.buttonViews_.push(new ButtonItem({
+                    this.buttonViews_.push(new View.ButtonItem({
                         attributes: {
                             buttons: module.button,
                             materialsRootPath: this.materialsRootPath_,
@@ -757,7 +757,7 @@ module Garage {
 
                 // モジュール内に label があったら、LabelItem View を生成
                 if (module.label) {
-                    this.labelViews_.push(new LabelItem({
+                    this.labelViews_.push(new View.LabelItem({
                         attributes: {
                             labels: module.label,
                             materialsRootPath: this.materialsRootPath_
@@ -769,7 +769,7 @@ module Garage {
 
                 // モジュール内に image があったら、ImageItem View を生成
                 if (module.image) {
-                    this.imageViews_.push(new ImageItem({
+                    this.imageViews_.push(new View.ImageItem({
                         attributes: {
                             images: module.image,
                             materialsRootPath: this.materialsRootPath_,
