@@ -181,7 +181,7 @@ module Garage {
             /*
              * @return {boolen} 背景画像だった場合true, 違う場合falseを返す。
              */
-            isBackgroundImage(): boolean {
+            get isBackgroundImage(): boolean {
                 let area: IArea = this.area;
                 //TODO: develop Model.Area and isEqueal Method
                 return area.x == HUIS_PAGE_BACKGROUND_AREA.x
@@ -253,14 +253,6 @@ module Garage {
 
             get itemType(): string {
                 return "image";
-            }
-
-            get pageBackground(): boolean {
-                return this.get("pageBackground");
-            }
-
-            set pageBackground(val: boolean) {
-                this.set("pageBackground", val);
             }
 
             get garageExtensions(): IGGarageImageExtensions {
