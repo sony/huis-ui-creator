@@ -495,11 +495,10 @@ module Garage {
              * state 内の画像アイテムの area の設定
              */
             private _setStateImageItemArea(images: Model.ImageItem[], buttonArea: IArea) {
-                if (!images || !this.initialArea_) {
+                if (!images) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
                 images.forEach((image: Model.ImageItem) => {
                     image.area = {
                         x: 0,
@@ -514,11 +513,10 @@ module Garage {
              * state 内のラベルアイテムの area の設定
              */
             private _setStateLabelItemArea(labels: Model.LabelItem[], buttonArea: IArea) {
-                if (!labels || !this.initialArea_) {
+                if (!labels) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
                 labels.forEach((label: Model.LabelItem) => {
                     label.area = {
                         x: 0,
