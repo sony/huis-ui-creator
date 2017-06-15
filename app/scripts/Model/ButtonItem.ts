@@ -495,28 +495,17 @@ module Garage {
              * state 内の画像アイテムの area の設定
              */
             private _setStateImageItemArea(images: Model.ImageItem[], buttonArea: IArea) {
-                if (!images || !this.initialArea_) {
+                if (!images) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
                 images.forEach((image: Model.ImageItem) => {
-                    if (!image.areaRatio) {
-                        let imageArea = image.area;
-                        image.areaRatio = {
-                            x: 0 < initialArea.w ? imageArea.x / initialArea.w : 1,
-                            y: 0 < initialArea.h ? imageArea.y / initialArea.h : 1,
-                            w: 0 < initialArea.w ? imageArea.w / initialArea.w : 1,
-                            h: 0 < initialArea.h ? imageArea.h / initialArea.h : 1
-                        };
-                    } else {
-                        image.area = {
-                            x: buttonArea.x * image.areaRatio.x,
-                            y: buttonArea.y * image.areaRatio.y,
-                            w: buttonArea.w * image.areaRatio.w,
-                            h: buttonArea.h * image.areaRatio.h
-                        };
-                    }
+                    image.area = {
+                        x: 0,
+                        y: 0,
+                        w: buttonArea.w,
+                        h: buttonArea.h
+                    };
                 });
             }
 
@@ -524,93 +513,17 @@ module Garage {
              * state 内のラベルアイテムの area の設定
              */
             private _setStateLabelItemArea(labels: Model.LabelItem[], buttonArea: IArea) {
-                if (!labels || !this.initialArea_) {
+                if (!labels) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
                 labels.forEach((label: Model.LabelItem) => {
-                    if (!label.areaRatio) {
-                        let labelArea = label.area;
-                        label.areaRatio = {
-                            x: 0 < initialArea.w ? labelArea.x / initialArea.w : 1,
-                            y: 0 < initialArea.h ? labelArea.y / initialArea.h : 1,
-                            w: 0 < initialArea.w ? labelArea.w / initialArea.w : 1,
-                            h: 0 < initialArea.h ? labelArea.h / initialArea.h : 1
-                        };
-                    } else {
-                        label.area = {
-                            x: buttonArea.x * label.areaRatio.x,
-                            y: buttonArea.y * label.areaRatio.y,
-                            w: buttonArea.w * label.areaRatio.w,
-                            h: buttonArea.h * label.areaRatio.h
-                        };
-                    }
-                });
-            }
-
-            /**
-             * state 内のアイテムに areaRatio を付加する
-             */
-            private _setAreaRatioToStateItems(): void {
-                var states = this.state;
-                if (!states) {
-                    return;
-                }
-
-                states.forEach((state: Model.ButtonState) => {
-                    if (state.image) {
-                        this._setAreaRatioToStateImageItems(state.image);
-                    }
-                    if (state.label) {
-                        this._setAreaRatioToStateLabelItems(state.label);
-                    }
-                });
-
-                this.state = states;
-            }
-
-            /**
-             * state 内の画像アイテムに areaRatio を付加する
-             */
-            private _setAreaRatioToStateImageItems(images: Model.ImageItem[]) {
-                if (!this.initialArea_) {
-                    return;
-                }
-
-                var buttonArea = this.initialArea_;
-                images.forEach((image: Model.ImageItem) => {
-                    if (!image.areaRatio) {
-                        let imageArea = image.area;
-                        image.areaRatio = {
-                            x: 0 < buttonArea.x ? imageArea.x / buttonArea.x : 1,
-                            y: 0 < buttonArea.y ? imageArea.y / buttonArea.y : 1,
-                            w: 0 < buttonArea.w ? imageArea.w / buttonArea.w : 1,
-                            h: 0 < buttonArea.h ? imageArea.h / buttonArea.h : 1
-                        };
-                    }
-                });
-            }
-
-            /**
-             * state 内のラベルアイテムに areaRatio を付加する
-             */
-            private _setAreaRatioToStateLabelItems(labels: Model.LabelItem[]) {
-                if (!this.initialArea_) {
-                    return;
-                }
-
-                var buttonArea = this.initialArea_;
-                labels.forEach((label: Model.LabelItem) => {
-                    if (!label.areaRatio) {
-                        let labelArea = label.area;
-                        label.areaRatio = {
-                            x: 0 < buttonArea.x ? labelArea.x / buttonArea.x : 1,
-                            y: 0 < buttonArea.y ? labelArea.y / buttonArea.y : 1,
-                            w: 0 < buttonArea.w ? labelArea.w / buttonArea.w : 1,
-                            h: 0 < buttonArea.h ? labelArea.h / buttonArea.h : 1
-                        };
-                    }
+                    label.area = {
+                        x: 0,
+                        y: 0,
+                        w: buttonArea.w,
+                        h: buttonArea.h
+                    };
                 });
             }
 

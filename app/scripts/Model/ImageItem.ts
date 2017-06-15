@@ -95,9 +95,6 @@ module Garage {
                 if (this.resizeResolvedOriginalPathCSS) {
                     newImage.resizeResolvedOriginalPathCSS = this.resizeResolvedOriginalPathCSS;
                 }
-                if (this.areaRatio) {
-                    newImage.areaRatio = $.extend(true, {}, this.areaRatio);
-                }
 
                 return newImage;
             }
@@ -274,24 +271,6 @@ module Garage {
 
             set pageBackground(val: boolean) {
                 this.set("pageBackground", val);
-            }
-
-            get areaRatio(): IGAreaRatio {
-                let areaRatio: IGAreaRatio = this.get("areaRatio");
-                if (!areaRatio) {
-                    // 未指定の場合は、親要素の全体の領域として返す
-                    areaRatio = {
-                        x: 0,
-                        y: 0,
-                        w: 1,
-                        h: 1
-                    };
-                }
-                return areaRatio;
-            }
-
-            set areaRatio(val: IGAreaRatio) {
-                this.set("areaRatio", val);
             }
 
             get garageExtensions(): IGGarageImageExtensions {

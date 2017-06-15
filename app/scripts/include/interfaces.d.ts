@@ -77,29 +77,6 @@ interface IArea {
 }
 
 /**
- * @interface IGAreaRatio
- * @brief 親の Area に対しての子要素の Area の比率。button の state の image や label での使用を想定。
- */
-interface IGAreaRatio {
-    /**
-     * 親の Area に対しての x の比率
-     */
-    x: number;
-    /**
-     * 親の Area に対しての y の比率
-     */
-    y: number;
-    /**
-     * 親の Area に対しての w の比率
-     */
-    w: number;
-    /**
-     * 親の Area に対しての h の比率
-     */
-    h: number;
-}
-
-/**
  * @interface IAction
  * @brief HUIS の module ファイルにおける button.state.action にあたる
  */

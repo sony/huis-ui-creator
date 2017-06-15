@@ -200,7 +200,6 @@ module Garage {
             set area(val: IArea) {
                 this.set("area", val);
                 // state 内の model の area 更新
-                // [TODO] areaRatio を考慮すべきだが、暫定的に親要素と同じサイズ
                 this.imageCollection_.forEach((imageModel) => {
                     imageModel.area = {
                         x: 0,
