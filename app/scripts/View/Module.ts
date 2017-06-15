@@ -489,7 +489,6 @@ module Garage {
                         srcImagePath = image;
                         newImage.path = module.remoteId + "/" + path.basename(image);
                     }
-                    newImage.pageBackground = true;
                 } else { // image が文字列でない場合は、model として情報をコピーする
                     newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
 
@@ -499,7 +498,7 @@ module Garage {
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {
@@ -575,7 +574,7 @@ module Garage {
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {

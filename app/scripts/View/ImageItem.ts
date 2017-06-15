@@ -78,12 +78,6 @@ module Garage {
                             // 先頭の画像、かつサイズがページサイズと同じ場合は背景画像として扱う
                             if (i === 0) {
                                 let area = imageModel.area;
-                                if (area.x === HUIS_PAGE_BACKGROUND_AREA.x
-                                    && area.y === HUIS_PAGE_BACKGROUND_AREA.y
-                                    && area.w === HUIS_PAGE_BACKGROUND_AREA.w
-                                    && area.h === HUIS_PAGE_BACKGROUND_AREA.h) {
-                                    imageModel.pageBackground = true;
-                                }
                             }
                             imageModels.push(imageModel);
                         }
@@ -174,7 +168,7 @@ module Garage {
                     }
                 }
                 // 背景の場合は先頭に、それ以外の場合は末尾に追加する
-                if (image.pageBackground) {
+                if (image.isBackgroundImage) {
                     this.$el.prepend($(this.imageItemTemplate_(image)));
                 } else {
                     this.$el.append($(this.imageItemTemplate_(image)));
