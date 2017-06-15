@@ -304,7 +304,7 @@ module Garage {
             }
 
             private _initImage(button: Model.ButtonItem) {
-                let tmpImage = new Model.ImageItem({ remoteId: button.remoteId });
+                let tmpImage = new Model.ImageItem();
                 button.getDefaultState().image = [tmpImage];
             }
 
