@@ -43,13 +43,13 @@
             <div class="button-state{{#active}} active{{/active}}" data-state-id="{{stateId}}">
                 {{#image}}
                 <!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
-                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
+                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}"></div>
                 {{/image}}
                 {{^image}}
                 <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
                 {{/image}}
                 {{#label}}
-                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
+                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}}">{{text}}</div>
                 {{/label}}
                 {{^label}}
                 <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>

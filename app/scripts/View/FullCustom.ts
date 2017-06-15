@@ -1565,28 +1565,14 @@ module Garage {
                     let $element = $(element);
                     $element.children().each((index: number, child: Element) => {
                         let $child = $(child);
-                        let areaRatioX = parseFloat(JQUtils.data($child, "ratioX")); //$child.data("ratio-x");
-                        let areaRatioY = parseFloat(JQUtils.data($child, "ratioY")); //$child.data("ratio-y");
-                        let areaRatioW = parseFloat(JQUtils.data($child, "ratioW")); //$child.data("ratio-w");
-                        let areaRatioH = parseFloat(JQUtils.data($child, "ratioH")); //$child.data("ratio-h");
-                        // areaRatio の全プロパティーが揃っている場合は、ボタンの area に areaRatio を掛け合わせる
-                        if (!_.isUndefined(areaRatioX) && !_.isUndefined(areaRatioY) && !_.isUndefined(areaRatioW) && !_.isUndefined(areaRatioH)) {
-                            $child.css({
-                                left: newArea.w * areaRatioX + "px",
-                                top: newArea.h * areaRatioY + "px",
-                                width: newArea.w * areaRatioW + "px",
-                                height: newArea.h * areaRatioH + "px",
-                                lineHeight: newArea.h * areaRatioH + "px"
-                            });
-                        } else {
-                            $child.css({
-                                left: 0,
-                                top: 0,
-                                width: newArea.w + "px",
-                                height: newArea.h + "px",
-                                lineHeight: newArea.h + "px"
-                            });
-                        }
+
+                        $child.css({
+                            left: 0,
+                            top: 0,
+                            width: newArea.w + "px",
+                            height: newArea.h + "px",
+                            lineHeight: newArea.h + "px"
+                        });
                     });
                 });
             }

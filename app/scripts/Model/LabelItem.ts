@@ -127,24 +127,6 @@ module Garage {
                 this.set("version", val);
             }
 
-            get areaRatio(): IGAreaRatio {
-                let areaRatio: IGAreaRatio = this.get("areaRatio");
-                if (!areaRatio) {
-                    // 未指定の場合は、親要素の全体の領域として返す
-                    areaRatio = {
-                        x: 0,
-                        y: 0,
-                        w: 1,
-                        h: 1
-                    };
-                }
-                return areaRatio;
-            }
-
-            set areaRatio(val: IGAreaRatio) {
-                this.set("areaRatio", val);
-            }
-
             get color(): number {
                 return this.get("color");
             }
