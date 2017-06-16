@@ -311,10 +311,10 @@ module Garage {
                 }
                 let scaleX = 0 < texture.width ? resize.width / texture.width : 1,
                     scaleY = 0 < texture.height ? resize.height / texture.height : 1;
-                let resizeMode = resize.mode ? resize.mode : "contain";
+                let resizeMode = resize.mode ? resize.mode : ImageResizeMode.DEFAULT;
 
                 switch (resizeMode) {
-                    case "contain":
+                    case ImageResizeMode.CONTAIN:
                         {
                             // scale は X, Y の小さい方を採用する
                             let scale = scaleX < scaleY ? scaleX : scaleY;
@@ -334,7 +334,7 @@ module Garage {
                             }
                         }
                         break;
-                    case "cover":
+                    case ImageResizeMode.COVER:
                         {
                             // scale は X, Y の小さい方を採用する
                             let scale = scaleX < scaleY ? scaleY : scaleX;
