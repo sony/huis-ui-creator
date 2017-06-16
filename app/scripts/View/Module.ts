@@ -472,7 +472,7 @@ module Garage {
                 var srcImagePath: string;
                 // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
-                    newImage = new Model.ImageItem();
+                    let newPath;
 
                     // area はページ背景のものを使用する
                     newArea = {
@@ -481,11 +481,19 @@ module Garage {
                         w: HUIS_PAGE_BACKGROUND_AREA.w,
                         h: HUIS_PAGE_BACKGROUND_AREA.h
                     };
-                    newImage.area = newArea;
+
                     if (0 < image.length) {
                         srcImagePath = image;
-                        newImage.path = module.remoteId + "/" + path.basename(image);
+                        newPath = module.remoteId + "/" + path.basename(image);
+                    } else {
+                        newPath = "";
                     }
+
+                    newImage = new Model.ImageItem({
+                        area: newArea,
+                        path: newPath,
+                    });
+
                 } else { // image が文字列でない場合は、model として情報をコピーする
                     newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
 
@@ -546,24 +554,14 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem();
 
-                var newArea: IArea;
-                // image が string の場合は、image をパスとして扱う
-                newArea = $.extend(true, {}, image.area);
-                newArea.y += offsetY;
-                newImage.area = newArea;
+                var newImage = image.clone();
 
                 // 画像の path を出力先の remoteId のディレクトリーになるように指定
                 newImage.path = image.path;
                 newImage.resolvedPath = image.resolvedPath;
                 newImage.resizeOriginal = image.resizeOriginal;
 
-
-                //バージョン情報をもっている場合、引き継ぐ
-                if (image.version != null) {
-                    newImage.version = image.version;
-                }
 
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");

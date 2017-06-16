@@ -60,25 +60,7 @@ module Garage {
 
                         let imageModels: Model.ImageItem[] = [];
                         for (let i = 0, l = images.length; i < l; i++) {
-                            let imageModel: Model.ImageItem = new Model.ImageItem();
-                            imageModel.area = $.extend(true, {}, images[i].area);
-                            imageModel.path = images[i].path;
-                            if (images[i].garageExtensions) {
-                                imageModel.garageExtensions = $.extend(true, {}, images[i].garageExtensions);
-                            }
-                            if (!imageModel.resizeOriginal) {
-                                imageModel.resizeOriginal = images[i].path;
-                            }
-
-                            //バージョンの情報がある場合は、代入
-                            if (images[i].version !== null) {
-                                imageModel.version = images[i].version;
-                            }
-
-                            // 先頭の画像、かつサイズがページサイズと同じ場合は背景画像として扱う
-                            if (i === 0) {
-                                let area = imageModel.area;
-                            }
+                            let imageModel: Model.ImageItem = images[i].clone();
                             imageModels.push(imageModel);
                         }
 

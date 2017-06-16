@@ -71,19 +71,18 @@ module Garage {
 
             private itemizeHorizontalLine(remoteId: string): Model.ImageItem {
 
-                // 新しい model を追加する
-                var horizontalLineImage = new Model.ImageItem();
-
-                var newArea: IArea;
-                var srcImagePath: string;
-                newArea = {
+                let horizonLineArea = {
                     x: BIAS_X_DEFAULT_GRID_LEFT,
                     y: 0,
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                horizontalLineImage.area = newArea;
-                horizontalLineImage.path = remoteId + "/" + path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+                let horizontalLineSrcPath = remoteId + "/" + path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+
+                var horizontalLineImage = new Model.ImageItem({
+                    area : horizonLineArea,
+                    path: horizontalLineSrcPath
+                });
 
                 return horizontalLineImage;
             }

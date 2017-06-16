@@ -93,12 +93,26 @@ module Garage {
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
-                this._initImageItem(targetState, this.getModel().remoteId);
-                let targetImageItem = targetState.getDefaultImage();
-                targetImageItem.path = changedImageFileRelativePath;
-                targetImageItem.resizeOriginal = changedImageFileRelativePath;
+
+                this._initLabelAndImage(targetState);
+                this._setDefaultImageToState(targetState, changedImageFileRelativePath);
 
                 this._setStateMementoCommand(targetStates);
+            }
+
+            private _setDefaultImageToState(state, path) {
+                let buttonArea = this.getModel().area;
+                let defaultImageArea: IArea = {
+                    x: 0,
+                    y: 0,
+                    w: buttonArea.w,
+                    h: buttonArea.h
+                }
+                let defaultImage = new Model.ImageItem({
+                    area: defaultImageArea,
+                    path: path
+                }, this.getModel().remoteId);
+                state.setDefaultImage(defaultImage);
             }
 
             private _onTextSizePulldownChanged(event: Event) {
@@ -1489,23 +1503,6 @@ module Garage {
                         }
                     }
                 }
-            }
-
-            private _initImageItem(state: Model.ButtonState, buttonRemoteId: string) {
-                this._initLabelAndImage(state);
-                let buttonArea = this.getModel().area;
-                let defaultImageArea: IArea = {
-                    x: 0,
-                    y: 0,
-                    w: buttonArea.w,
-                    h: buttonArea.h
-                }
-
-                let tmpImage: Model.ImageItem = new Model.ImageItem();
-                tmpImage.area = defaultImageArea;
-                let tmpImages: Model.ImageItem[] = [];
-                tmpImages.push(tmpImage);
-                state.image = tmpImages;
             }
 
             private _initLabelItem(state: Model.ButtonState) {

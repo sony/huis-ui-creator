@@ -8,7 +8,6 @@ module Garage {
 
             // Called before each test case
             beforeEach(() => {
-                imageItem = new Model.ImageItem();
             });
 
             // Called after each test case
