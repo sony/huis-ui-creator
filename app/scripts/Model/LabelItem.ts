@@ -34,9 +34,9 @@ module Garage {
              * LabelItemの複製を生成
              *
              * @param offsetY {number} 
-             * @return {LabelItem}
+             * @return {Model.LabelItem}
              */
-            public clone(offsetY: number = 0): LabelItem {
+            public clone(offsetY: number = 0): Model.LabelItem {
                 let newLabel = new Model.LabelItem(this);
                 newLabel.area.y += offsetY;
 

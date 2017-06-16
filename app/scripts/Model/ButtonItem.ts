@@ -63,9 +63,9 @@ module Garage {
              *
              * @param dstRemoteId {string}
              * @param offsetY {number}
-             * @return {ButtonItem}
+             * @return {Model.ButtonItem}
              */
-            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): ButtonItem {
+            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): Model.ButtonItem {
                 var newButton = new Model.ButtonItem({
                     materialsRootPath: this.materialsRootPath_,
                     remoteId: dstRemoteId,

@@ -28,9 +28,9 @@ module Garage {
             private remoteId_: string;
             private materialsRootPath_: string;
 
-            private buttonViews_: ButtonItem[];
-            private labelViews_: LabelItem[];
-            private imageViews_: ImageItem[];
+            private buttonViews_: View.ButtonItem[];
+            private labelViews_: View.LabelItem[];
+            private imageViews_: View.ImageItem[];
 
             private faceAreaTemplate_: Tools.JST;
             private moduleContainerTemplate_: Tools.JST;
