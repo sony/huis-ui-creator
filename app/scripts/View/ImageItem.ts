@@ -125,10 +125,10 @@ module Garage {
                     let $image = $(this.imageItemTemplate_(image));
                     if (image.garageExtensions) {
                         switch (image.garageExtensions.resizeMode) {
-                            case "cover":
+                            case Model.ImageResizeMode.COVER:
                                 $image.addClass("image-cover");
                                 break;
-                            case "stretch":
+                            case Model.ImageResizeMode.STRETCH:
                                 $image.addClass("image-stretch");
                                 break;
                             default:

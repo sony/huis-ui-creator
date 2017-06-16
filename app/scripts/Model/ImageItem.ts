@@ -24,6 +24,15 @@ module Garage {
         var TAG = "[Garage.Model.ImageItem] ";
         import JQUtils = Util.JQueryUtils;
 
+        export namespace ImageResizeMode {
+            export const CONTAIN: string = "contain";
+            export const DEFAULT: string = CONTAIN;
+
+            // COVER and STRETCH mode is not used now
+            export const COVER: string = "cover";
+            export const STRETCH: string = "stretch";
+        }
+
         export class ImageItem extends Model.Item {
 
             private resolvedPathDirectory_: string;
@@ -160,7 +169,7 @@ module Garage {
                     }
                 } else {
                     this.garageExtensions = {
-                        resizeMode: "contain",
+                        resizeMode: ImageResizeMode.DEFAULT,
                         original: this.path,
                         resolvedOriginalPath: this.resolvedPath
                     };
@@ -265,7 +274,7 @@ module Garage {
 
             get resizeMode(): string {
                 let garageExtensions = this.garageExtensions;
-                let resizeMode = "contain";
+                let resizeMode = ImageResizeMode.DEFAULT;
                 if (garageExtensions) {
                     if (garageExtensions.resizeMode) {
                         resizeMode = garageExtensions.resizeMode;
@@ -306,7 +315,7 @@ module Garage {
                     garageExtensions = {
                         original: val,
                         resolvedOriginalPath: changedResolvedOriginalPath,
-                        resizeMode: "contain"
+                        resizeMode: ImageResizeMode.DEFAULT
                     };
                 }
 
