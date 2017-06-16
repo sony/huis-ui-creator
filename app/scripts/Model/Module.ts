@@ -453,10 +453,7 @@ module Garage {
                 let images: Model.ImageItem[] = [];
                 // TODO: Replace this method with creating new object
                 for (let iImage of iImages) {
-                    let imageItem = new Model.ImageItem({
-                        materialsRootPath: HUIS_FILES_ROOT,
-                        remoteId: remoteId
-                    });
+                    let imageItem = new Model.ImageItem();
                     imageItem.area = $.extend(true, {}, iImage.area);
                     imageItem.path = iImage.path;
                     imageItem.resizeOriginal = iImage.path;

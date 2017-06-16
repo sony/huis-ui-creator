@@ -51,7 +51,7 @@ module Garage {
                         return new NormalButtonPropertyArea(item, editingRemoteId, commandManager);
                     }
                 } else if (item instanceof Model.ImageItem) {
-                    if (item.isBackgroundImage()) {
+                    if (item.isBackgroundImage) {
                         return new BackgroundImagePropertyArea(item, editingRemoteId, commandManager);
                     } else {
                         return new ImagePropertyArea(item, editingRemoteId, commandManager);

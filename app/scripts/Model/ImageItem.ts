@@ -27,21 +27,13 @@ module Garage {
         export class ImageItem extends Model.Item {
 
             private resolvedPathDirectory_: string;
-            private remoteId_: string;
             private initialArea_: IArea;
             private initialResizeMode_: string;
 
             // TODO: change constructor
             constructor(attributes?: any) {
                 super(attributes, null);
-                if (attributes) {
-                    if (attributes.remoteId) {
-                        this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
-                        this.remoteId_ = attributes.remoteId;
-                    } else {
-                        console.error("remoteId and rootpath is not set properly");
-                    }
-                }
+                this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
             }
 
             /**
@@ -72,9 +64,7 @@ module Garage {
              * @return {Model.ImageItem}
              */
             public clone(): Model.ImageItem {
-                var newImage = new Model.ImageItem({
-                    remoteId: this.remoteId_
-                });
+                var newImage = new Model.ImageItem();
 
                 newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
 
@@ -191,7 +181,7 @@ module Garage {
             /*
              * @return {boolen} 背景画像だった場合true, 違う場合falseを返す。
              */
-            isBackgroundImage(): boolean {
+            get isBackgroundImage(): boolean {
                 let area: IArea = this.area;
                 //TODO: develop Model.Area and isEqueal Method
                 return area.x == HUIS_PAGE_BACKGROUND_AREA.x
@@ -263,14 +253,6 @@ module Garage {
 
             get itemType(): string {
                 return "image";
-            }
-
-            get pageBackground(): boolean {
-                return this.get("pageBackground");
-            }
-
-            set pageBackground(val: boolean) {
-                this.set("pageBackground", val);
             }
 
             get garageExtensions(): IGGarageImageExtensions {

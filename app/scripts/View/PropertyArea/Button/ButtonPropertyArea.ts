@@ -1501,9 +1501,7 @@ module Garage {
                     h: buttonArea.h
                 }
 
-                let tmpImage: Model.ImageItem = new Model.ImageItem({
-                    remoteId: buttonRemoteId
-                })
+                let tmpImage: Model.ImageItem = new Model.ImageItem();
                 tmpImage.area = defaultImageArea;
                 let tmpImages: Model.ImageItem[] = [];
                 tmpImages.push(tmpImage);

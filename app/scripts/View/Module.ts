@@ -472,10 +472,7 @@ module Garage {
                 var srcImagePath: string;
                 // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
-                    newImage = new Model.ImageItem({
-                        materialsRootPath: this.materialsRootPath_,
-                        remoteId: module.remoteId
-                    });
+                    newImage = new Model.ImageItem();
 
                     // area はページ背景のものを使用する
                     newArea = {
@@ -489,7 +486,6 @@ module Garage {
                         srcImagePath = image;
                         newImage.path = module.remoteId + "/" + path.basename(image);
                     }
-                    newImage.pageBackground = true;
                 } else { // image が文字列でない場合は、model として情報をコピーする
                     newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
 
@@ -499,7 +495,7 @@ module Garage {
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {
@@ -550,10 +546,7 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId
-                });
+                var newImage = new Model.ImageItem();
 
                 var newArea: IArea;
                 // image が string の場合は、image をパスとして扱う
@@ -575,7 +568,7 @@ module Garage {
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {
