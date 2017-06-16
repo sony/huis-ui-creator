@@ -70,7 +70,7 @@ module Garage {
                 this.labelItemTemplate_ = Tools.Template.getJST("#template-label-item", templateFile);
             }
 
-            render(): LabelItem {
+            render(): View.LabelItem {
                 this.collection.each((item: Model.LabelItem, index: number) => {
                     this.$el.append($(this.labelItemTemplate_(item)));
                 });

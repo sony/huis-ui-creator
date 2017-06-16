@@ -100,7 +100,7 @@ module Garage {
                 };
             }
 
-            render(): ButtonItem {
+            render(): View.ButtonItem {
                 this.collection.each((model: Model.ButtonItem) => {
                     this._modifyModel(model);
                     let filtered_state = null;

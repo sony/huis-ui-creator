@@ -61,9 +61,9 @@ module Garage {
             /**
              * ImageItemの複製を生成
              *
-             * @return {ImageItem}
+             * @return {Model.ImageItem}
              */
-            public clone(): ImageItem {
+            public clone(): Model.ImageItem {
                 var newImage = new Model.ImageItem();
 
                 newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;

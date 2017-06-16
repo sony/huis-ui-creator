@@ -99,7 +99,7 @@ module Garage {
             /**
              * ImageItem Collection をレンダリングする
              */
-            render(): ImageItem {
+            render(): View.ImageItem {
                 this.collection.each((item: Model.ImageItem, index: number) => {
                     let image: Model.ImageItem = $.extend(true, {}, item);
                     if (this.remoteId_ === "common") {
