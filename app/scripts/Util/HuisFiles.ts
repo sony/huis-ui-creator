@@ -1582,9 +1582,9 @@ module Garage {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
                     return null;
                 }
+
                 // remotelist.ini を node-ini で parse
-                var nodeIni = require("node-ini");
-                var remoteListIni = nodeIni.parseSync(remoteListIniPath);
+                var remoteListIni = this._parseIniFile(remoteListIniPath);
                 if (!remoteListIni) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() [parseError] remotelist.ini");
                     return null;

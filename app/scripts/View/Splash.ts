@@ -112,6 +112,7 @@ module Garage {
              */
             private _MoveHomeBeforeSync() {
 
+                deviceInfo = huisFiles.loadDeviceInfo();
                 //本体のバージョン確認。
                 this.checkRcVersionFromDevice();
 
@@ -294,22 +295,17 @@ module Garage {
             */
             private checkRcVersionFromDevice(callback?: Function) {
                 let FUNCTION_NAME = TAG + "checkRcVersionFromDevice : ";
-                try {
-                    RC_VERSION = fs.readFileSync(RC_VERSION_FILE_NAME, 'utf8');
-                } catch (err) {
-                    console.error(FUNCTION_NAME + "erro occur : " + err);
-                }
 
-                let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
+                let rcVersion: Model.VersionString = new Model.VersionString(deviceInfo.version);
 
                 //このバージョンのGarageに必要になるHUISのバージョン
                 let rcVersionAvailableThisGarage = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
 
-                console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
+                console.log(FUNCTION_NAME + "RC version is " + deviceInfo.version);
 
                 //HUIS RCとバージョン不一致の判定
                 //RC_VERSIONがない場合、ダイアログを表示。
-                if (RC_VERSION == null) {
+                if (deviceInfo.version == null) {
                     if (Util.MiscUtil.isBz()) {
                         this.showHuisRcVersonIsNotBtoB();
                     } else {

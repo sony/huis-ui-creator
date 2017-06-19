@@ -478,10 +478,6 @@ declare module Garage {
     */
     var APP_VERSION: string;
     /*
-     * 接続しているHUIS REMOTE CONTROLLER のバージョン
-     */
-    var RC_VERSION: string;
-    /*
      * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
      */
     var RC_VERSION_FILE_NAME: string;
@@ -493,6 +489,10 @@ declare module Garage {
      * Util.StorageLock のインスタンス
      */
     var storageLock: Util.StorageLock;
+    /**
+     * Model.DeviceInfo のインスタンス
+     */
+    var deviceInfo: Model.DeviceInfo;
     /**
      * Util.HuisFiles のインスタンス
      */
