@@ -1561,6 +1561,18 @@ module Garage {
                 return faces;
             }
 
+            loadDeviceInfo(): Model.DeviceInfo {
+                const sharedInfoFilePath = path.join(HUIS_FILES_ROOT, "sharedinfo.ini");
+                let sharedInfo: ISharedInfoIni = this._parseIniFile(sharedInfoFilePath);
+                console.log(sharedInfo);
+                return new Model.DeviceInfo(sharedInfo);
+            }
+
+            private _parseIniFile(path): any {
+                var nodeIni = require("node-ini");
+                return nodeIni.parseSync(path);
+            }
+
             /**
              * remotelist.json から remoteList を取得する
              */
