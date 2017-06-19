@@ -33,6 +33,7 @@
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
+/// <reference path="../Model/DeviceInfo.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -74,6 +75,16 @@ interface IArea {
      * 縦の大きさ
      */
     h: number;
+}
+
+interface ISharedInfoIni {
+    system: {
+        version: string;
+    },
+    color: {
+        model_color: string;
+        setting_color: string;
+    }
 }
 
 /**
