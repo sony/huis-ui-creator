@@ -111,18 +111,15 @@ module Garage {
 
                 let newFileFullPath: string;
 
-                let newDirPath = parsedPath.dir;
+                let newDirPath = HUIS_REMOTEIMAGES_ROOT;
                 if (outputDirPath != null) {
                     newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
                 }
 
                 // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
                 // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
-                if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
-                    newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
-                } else {
-                    newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
-                }
+                newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
+
                 // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
                 // 補正は拡張子の付け替え。
                 newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");

@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        const HORIZONTAL_LINE_IMAGE_PATH: string = "/res/images/divider_pickup_custom.png";
+        const HORIZONTAL_LINE_IMAGE_PATH: string = HUIS_REMOTEIMAGES_ROOT + "/divider_pickup_custom.png";
 
         const MODULE_SEPARATOR_LABEL_FONT_SIZE = 18;
         const MODULE_SEPARATOR_LABEL_FONT_WEIGHT = "normal";
@@ -77,7 +77,7 @@ module Garage {
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                let horizontalLineSrcPath = remoteId + "/" + path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+                let horizontalLineSrcPath = path.basename(HORIZONTAL_LINE_IMAGE_PATH);
 
                 var horizontalLineImage = new Model.ImageItem({
                     area : horizonLineArea,
