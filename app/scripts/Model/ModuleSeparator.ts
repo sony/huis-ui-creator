@@ -80,7 +80,7 @@ module Garage {
                 let horizontalLineSrcPath = path.basename(HORIZONTAL_LINE_IMAGE_PATH);
 
                 var horizontalLineImage = new Model.ImageItem({
-                    area : horizonLineArea,
+                    area: horizonLineArea,
                     path: horizontalLineSrcPath
                 });
 

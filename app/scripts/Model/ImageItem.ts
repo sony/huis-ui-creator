@@ -168,7 +168,7 @@ module Garage {
                 let convertedImage: IImage = {
                     area: this.area,
                     path: this.path,
-                    garage_extensions : {
+                    garage_extensions: {
                         original: this.garageExtensions.original,
                         resize_mode: this.garageExtensions.resizeMode
                     }
