@@ -290,7 +290,7 @@ module Garage {
             get resizeOriginal(): string {
                 if (this.garageExtensions == null) {
                     console.error("garageExtensions is null");
-                    return;
+                    return "";
                 }
                 return this.garageExtensions.original;
             }
