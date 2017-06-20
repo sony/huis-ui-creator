@@ -59,7 +59,7 @@ module Garage {
                     this.garageExtensions = {
                         original: image.path,
                         resolvedOriginalPath: "",
-                        resizeMode: "contain"
+                        resizeMode: ImageResizeMode.DEFAULT
                     }
                 }
                 return this;
