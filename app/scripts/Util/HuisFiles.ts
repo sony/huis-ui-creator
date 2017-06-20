@@ -1542,6 +1542,13 @@ module Garage {
                 }
             }
 
+            /**		
+             * getter		
+             */
+            get remoteList(): IRemoteId[] {
+                return this.remoteList_;
+            }
+
             get faces(): Model.Face[] {
                 if (!_.isArray(this.remoteInfos_)) {
                     return null;
