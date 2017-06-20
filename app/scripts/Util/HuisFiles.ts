@@ -1400,7 +1400,6 @@ module Garage {
                     switch (file) {
                         case REMOTE_IMAGES_DIRECTORY_NAME:
                         case "lost+found":
-                        case "9999": // "9999" (special face) の扱いをどうするか要検討
                             return false;
 
                         default:
@@ -1547,9 +1546,7 @@ module Garage {
              * getter
              */
             get remoteList(): IRemoteId[] {
-                return this.remoteList_.filter((val: IRemoteId) => {
-                    return (val.remote_id !== "9999");
-                });
+                return this.remoteList_;
             }
 
             get faces(): Model.Face[] {
