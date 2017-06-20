@@ -1542,8 +1542,8 @@ module Garage {
                 }
             }
 
-            /**		
-             * getter		
+            /**
+             * getter
              */
             get remoteList(): IRemoteId[] {
                 return this.remoteList_;
