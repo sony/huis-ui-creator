@@ -299,6 +299,15 @@ module Garage {
 
                 if (action != null) {
 
+                    // bluetoothの情報で検索
+                    if (action.bluetooth_data &&
+                        action.bluetooth_data.bluetooth_device) {
+                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
+                        if (remoteId != null) {
+                            return remoteId
+                        }
+                    }
+
                     // codeで検索
                     let code = action.code;
                     if (remoteId == null && code != null) {
