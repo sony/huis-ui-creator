@@ -113,6 +113,11 @@ module Garage {
             private _MoveHomeBeforeSync() {
 
                 sharedInfo = huisFiles.loadSharedInfo();
+                // If failed to load sharedinfo.init, treat it as old HUIS
+                if (sharedInfo == null) {
+                    this.showHuisRcVersionIsOldDialog();
+                }
+
                 //本体のバージョン確認。
                 this.checkRcVersionFromDevice();
 
