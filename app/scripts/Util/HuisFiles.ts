@@ -300,12 +300,9 @@ module Garage {
                 if (action != null) {
 
                     // bluetoothの情報で検索
-                    if (action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
-                        if (remoteId != null) {
-                            return remoteId
-                        }
+                    remoteId = this.getRemoteIdByBluetoothDevice(action);
+                    if (remoteId != null) {
+                        return remoteId
                     }
 
                     // codeで検索
@@ -450,11 +447,23 @@ module Garage {
 
             /**
             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
-            * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+            * @param {IAction} action IBluetoothDeviceを含むIAction
             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
             */
-            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice): string {
+            getRemoteIdByBluetoothDevice(action: IAction): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return null;
+                }
+
+                if (action.bluetooth_data == null) {
+                    console.warn(FUNCTION_NAME + "bluetooth_data is null");
+                    return null;
+                }
+
+                let bluetoothDevice: IBluetoothDevice = action.bluetooth_data.bluetooth_device;
 
                 if (bluetoothDevice == null) {
                     console.warn(FUNCTION_NAME + "bluetoothDevice is null");
