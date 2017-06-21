@@ -371,6 +371,7 @@ module Garage {
             /**
              * action.deviceInfo.functionCodeHashから、codeでremoteIdを検索する。
              * 再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策用の関数。
+             * また、actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)もこの関数で対応。
              * @param {IAction} action codeを含むIAction
              * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
              */
@@ -381,6 +382,7 @@ module Garage {
                     return null;
                 }
 
+                // actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)を考慮して
                 // codeがnullのケースも許容する。
                 let code = action.code;
                 
