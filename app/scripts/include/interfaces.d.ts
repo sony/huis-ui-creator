@@ -625,6 +625,7 @@ declare module Garage {
 
     var FACE_TYPE_FULL_CUSTOM: string;
     var FACE_TYPE_NOT_FULL_CUSTOM: string;
+    var DEVICE_TYPE_COMMON: string;// macroやjumpボタン用。本来の意味でのdeviceTypeでない。
 
     /**
     * DetailAreaの機能に表示されないデバイスタイプ

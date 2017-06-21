@@ -315,12 +315,37 @@ module Garage {
                     return remoteId;
                 }
 
+                if (this._isInitialCommonButton(action)) {
+                    return null;
+                }
+
                 //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                if (action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
+                if (action.deviceInfo) {
                     return remoteId = action.deviceInfo.id;
                 }
 
                 return null;
+            }
+
+            /**
+             * マクロや、ジャンプボタンなど、共通ボタンの初期値か否か判定。
+             * @param {IAction} action
+             * @return actionに設定されるのがCommonボタンの初期値の場合、true。
+             */
+            private _isInitialCommonButton(action: IAction): boolean {
+                if (action == null) {
+                    return false;
+                }
+
+                if (action.deviceInfo == null) {
+                    return false;
+                }
+
+                if (action.deviceInfo.code_db == null) {
+                    return false;
+                }
+
+                return action.deviceInfo.code_db.device_type == DEVICE_TYPE_COMMON
             }
 
             /**
