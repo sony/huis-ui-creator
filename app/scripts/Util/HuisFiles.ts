@@ -47,6 +47,10 @@ module Garage {
             label: string;
         }
 
+        namespace constValue {
+            export const SHARED_INFO_FILE_NAME: string = "sharedinfo.ini";
+        }
+
         /**
          * @class HuisFiles
          * @brief HUIS 内のファイルの parse 等を行うユーティリティークラス
@@ -1562,15 +1566,23 @@ module Garage {
             }
 
             loadDeviceInfo(): Model.DeviceInfo {
-                const sharedInfoFilePath = path.join(HUIS_ROOT_PATH, "sharedinfo.ini");
+                const sharedInfoFilePath = path.join(HUIS_ROOT_PATH, constValue.SHARED_INFO_FILE_NAME);
                 let sharedInfo: ISharedInfo = this._parseIniFile(sharedInfoFilePath);
-                console.log(sharedInfo);
-                return new Model.DeviceInfo(sharedInfo);
+                if (sharedInfo != null) {
+                    return new Model.DeviceInfo(sharedInfo);
+                } else {
+                    return null;
+                }
             }
 
             private _parseIniFile(path): any {
                 var nodeIni = require("node-ini");
-                return nodeIni.parseSync(path);
+                try {
+                    return nodeIni.parseSync(path);
+                } catch (e) {
+                    console.warn("failed to load sharedinfo.ini, connected HUIS may be old");
+                    return;
+                }
             }
 
             /**
