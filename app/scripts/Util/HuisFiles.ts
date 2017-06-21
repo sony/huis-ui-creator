@@ -326,16 +326,6 @@ module Garage {
                         remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
                     }
 
-                    //TODO
-                    //remoteNameがない場合のBluetoothDeviceの検索
-                    //！！！！！！！！！負債コード！！！！！！
-                    if (remoteId == null &&
-                        action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        remoteId = this.getRemoteIdByBluetoothDeviceNoRemoteName(action.bluetooth_data.bluetooth_device);
-                    }
-
-
                     // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
                     if (remoteId == null && action.code_db && !action.bluetooth_data) {
                         let codeDb = action.code_db;
@@ -444,54 +434,18 @@ module Garage {
                 return null;
             }
 
-
             /**
-             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
-             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
-             * @param remoteName{string} リモコン名
-             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
-             */
-            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice, remoteName: string): string {
+            * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
+            * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+            * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
+            */
+            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
 
                 if (bluetoothDevice == null) {
                     console.warn(FUNCTION_NAME + "bluetoothDevice is null");
                     return null;
                 }
-
-                if (remoteName == null) {
-                    return null;
-                }
-
-                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
-                    let targetRemoteId = this.remoteInfos_[i].remoteId;
-                    let targetRemoteName = this.remoteInfos_[i].face.name;
-                    let bluetoothData = this.getMasterBluetoothData(targetRemoteId);
-                    if (bluetoothData &&
-                        bluetoothData.bluetooth_device &&
-                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address &&
-                        remoteName == targetRemoteName
-                    ) {
-                        return targetRemoteId;
-                    }
-                }
-
-                return null;
-            }
-
-            /**
-            * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
-            * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
-            * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
-            */
-            getRemoteIdByBluetoothDeviceNoRemoteName(bluetoothDevice: IBluetoothDevice): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDeviceNoRemoteName: ";
-
-                if (bluetoothDevice == null) {
-                    console.warn(FUNCTION_NAME + "bluetoothDevice is null");
-                    return null;
-                }
-
 
                 for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
                     let targetRemoteId = this.remoteInfos_[i].remoteId;
@@ -1821,9 +1775,8 @@ module Garage {
                         if (remoteId == null &&
                             action.bluetooth_data &&
                             action.bluetooth_data.bluetooth_device &&
-                            action.deviceInfo &&
-                            action.deviceInfo.remoteName != null) {
-                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
+                            action.deviceInfo) {
+                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device);
                         }
 
                         // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
