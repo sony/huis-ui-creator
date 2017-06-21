@@ -299,40 +299,19 @@ module Garage {
 
                 if (action != null) {
 
-                    // bluetoothの情報で検索
                     remoteId = this.getRemoteIdByBluetoothDevice(action);
                     if (remoteId != null) {
                         return remoteId
                     }
 
-                    // codeで検索
-                    let code = action.code;
-                    if (code != null) {
-                        remoteId = this.getRemoteIdByCode(code);
-                        if (remoteId != null) {
-                            return remoteId;
-                        }
+                    remoteId = this.getRemoteIdByCodeInAction(action);
+                    if (remoteId != null) {
+                        return remoteId;
                     }
 
-                    // functionCodeHashで検索。
-                    //再学習されたボタン用。
-                    //再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策。
-                    if (action.deviceInfo &&
-                        action.deviceInfo.functionCodeHash != null) {
-                        let functionCodeHash = action.deviceInfo.functionCodeHash;
-                        let checkCode: string = null;
-
-                        //functionCodeHashのうち、適当なcodeで検索。ただし上述で検索したcodeとは異なること。
-                        for (let key in functionCodeHash) {
-                            checkCode = functionCodeHash[key];
-                            if (checkCode != code) {
-                                break
-                            }
-                        }
-                        remoteId = this.getRemoteIdByCode(checkCode);
-                        if (remoteId != null) {
-                            return remoteId;
-                        }
+                    remoteId = this.getRemoteIdByCodeWithFunctionCodeHash(action);
+                    if (remoteId != null) {
+                        return remoteId;
                     }
 
                     // code_dbで検索。
@@ -350,21 +329,81 @@ module Garage {
                     if (action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
                         return remoteId = action.deviceInfo.id;
                     }
-
                 }
 
                 return null;
-
             }
 
 
-            /*
-            * 同一のコードを持つremoteがあった場合そのremoteIdをする
-            * @param code{string} 学習して登録した際の button/state/action/code
-            * @return remoteId{string} 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
-            */
+            /**
+             * 同一のコードを持つremoteがあった場合そのremoteIdをする
+             * @param {IAction} action codeを含むIAction
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
+             */
+            getRemoteIdByCodeInAction(action: IAction): string {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is undefined");
+                    return null;
+                }
+
+                let code = action.code;
+                if (code == null) {
+                    console.warn(FUNCTION_NAME + "code is undefined");
+                    return null;
+                }
+
+                return this.getRemoteIdByCode(code);
+            }
+
+            /**
+             * action.deviceInfo.functionCodeHashから、codeでremoteIdを検索する。
+             * 再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策。
+             * @param {IAction} action codeを含むIAction
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
+             */
+            getRemoteIdByCodeWithFunctionCodeHash(action: IAction): string {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCodeWithFunctionCodeHash : ";
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is undefined");
+                    return null;
+                }
+
+                let code = action.code;
+                if (code == null) {
+                    console.warn(FUNCTION_NAME + "code is undefined");
+                    return null;
+                }
+
+                if (action.deviceInfo &&
+                    action.deviceInfo.functionCodeHash != null) {
+                    let functionCodeHash = action.deviceInfo.functionCodeHash;
+
+                    //functionCodeHashのうち、適当なcodeで検索。ただし上述で検索したcodeとは異なること。
+                    for (let key in functionCodeHash) {
+                        let checkCode = functionCodeHash[key];
+                        if (checkCode != code) {
+                            break;
+                        }
+                    }
+                    let remoteId = this.getRemoteIdByCode(code);
+                    if (remoteId != null) {
+                        return remoteId;
+                    }
+                }
+                return null;
+            }
+
+            /**
+             * 同一のコードを持つremoteがあった場合そのremoteIdをする
+             * @param {string} code
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合, nullを返す。
+             */
             getRemoteIdByCode(code: string): string {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+
                 if (code == null) {
                     console.warn(FUNCTION_NAME + "code is undefined");
                     return null;
@@ -392,9 +431,7 @@ module Garage {
                             }
                         }
                     }
-
                 }
-
                 return null;
             }
 
