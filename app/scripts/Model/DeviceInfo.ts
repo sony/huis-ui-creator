@@ -14,9 +14,7 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
-
 
 module Garage {
     export module Model {
