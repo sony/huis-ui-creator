@@ -304,6 +304,8 @@ module Garage {
                 }
                 this.garageExtensions.original = val;
                 this.garageExtensions.resolvedOriginalPath = changedResolvedOriginalPath;
+
+                this.set("resizeOriginal", this.garageExtensions.resolvedOriginalPath);
             }
 
             get resizeResolvedOriginalPath(): string {
