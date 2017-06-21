@@ -71,7 +71,7 @@ module Garage {
 
             private itemizeHorizontalLine(remoteId: string): Model.ImageItem {
 
-                let horizonLineArea = {
+                let horizontalLineArea = {
                     x: BIAS_X_DEFAULT_GRID_LEFT,
                     y: 0,
                     w: GRID_AREA_WIDTH,
@@ -80,7 +80,7 @@ module Garage {
                 let horizontalLineSrcPath = path.basename(HORIZONTAL_LINE_IMAGE_PATH);
 
                 var horizontalLineImage = new Model.ImageItem({
-                    area: horizonLineArea,
+                    area: horizontalLineArea,
                     path: horizontalLineSrcPath
                 });
 
