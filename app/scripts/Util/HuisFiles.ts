@@ -345,11 +345,11 @@ module Garage {
                     return false;
                 }
 
-                return action.deviceInfo.code_db.device_type == DEVICE_TYPE_COMMON
+                return action.deviceInfo.code_db.device_type == DEVICE_TYPE_COMMON;
             }
 
             /**
-             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdをする
+             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdを返す。
              * @param {IAction} action codeを含むIAction
              * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
              */
