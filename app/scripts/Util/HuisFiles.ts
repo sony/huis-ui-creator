@@ -292,7 +292,6 @@ module Garage {
             getRemoteIdByAction(action: IAction): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
                 if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
                 let remoteId: string;
@@ -338,13 +337,11 @@ module Garage {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
 
                 if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is undefined");
                     return null;
                 }
 
                 let code = action.code;
                 if (code == null) {
-                    console.warn(FUNCTION_NAME + "code is undefined");
                     return null;
                 }
 
@@ -361,13 +358,10 @@ module Garage {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCodeWithFunctionCodeHash : ";
 
                 if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is undefined");
                     return null;
                 }
-
                 let code = action.code;
                 if (code == null) {
-                    console.warn(FUNCTION_NAME + "code is undefined");
                     return null;
                 }
 
@@ -399,7 +393,6 @@ module Garage {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
 
                 if (code == null) {
-                    console.warn(FUNCTION_NAME + "code is undefined");
                     return null;
                 }
 
