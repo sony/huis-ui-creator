@@ -1563,7 +1563,7 @@ module Garage {
 
             loadDeviceInfo(): Model.DeviceInfo {
                 const sharedInfoFilePath = path.join(HUIS_FILES_ROOT, "sharedinfo.ini");
-                let sharedInfo: ISharedInfoIni = this._parseIniFile(sharedInfoFilePath);
+                let sharedInfo: ISharedInfo = this._parseIniFile(sharedInfoFilePath);
                 console.log(sharedInfo);
                 return new Model.DeviceInfo(sharedInfo);
             }

@@ -77,7 +77,7 @@ interface IArea {
     h: number;
 }
 
-interface ISharedInfoIni {
+interface ISharedInfo {
     system: {
         version: string;
     },

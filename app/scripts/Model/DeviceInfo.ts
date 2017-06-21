@@ -29,7 +29,7 @@ module Garage {
             private _modelColor;
             private _settingColor;
 
-            constructor(sharedInfo: ISharedInfoIni) {
+            constructor(sharedInfo: ISharedInfo) {
                 this._version = sharedInfo.system.version;
                 this._modelColor = sharedInfo.color.model_color;
                 this._settingColor = sharedInfo.color.setting_color;
