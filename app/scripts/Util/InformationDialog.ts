@@ -23,11 +23,11 @@ module Garage {
 
         namespace constValue {
             export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
-            export const FILE_NAME_DATE = "date.txt";
-            export const FILE_NAME_IMAGE = "image.png";
-            export const FILE_NAME_NOTE = "note.txt";
-            export const DIR_NAME_WINDOWS = "Windows";
-            export const DIR_NAME_MAC = "Mac";
+            export const FILE_NAME_DATE: string = "date.txt";
+            export const FILE_NAME_IMAGE: string = "image.png";
+            export const FILE_NAME_NOTE: string = "note.txt";
+            export const DIR_NAME_WINDOWS: string = "Windows";
+            export const DIR_NAME_MAC: string = "Mac";
         }
 
         /**
