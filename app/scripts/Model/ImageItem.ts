@@ -116,8 +116,6 @@ module Garage {
                     newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
                 }
 
-                // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
-                // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
                 newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
 
                 // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
