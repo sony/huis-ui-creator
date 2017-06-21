@@ -283,7 +283,6 @@ module Garage {
                 }
             }
 
-
             /**
              * IActionオブジェクトからremoteIdを取得する
              * @param action {IAction}
@@ -324,9 +323,8 @@ module Garage {
                 return null;
             }
 
-
             /**
-             * 同一のコードを持つremoteがあった場合そのremoteIdをする
+             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdをする
              * @param {IAction} action codeを含むIAction
              * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
              */
@@ -347,7 +345,7 @@ module Garage {
 
             /**
              * action.deviceInfo.functionCodeHashから、codeでremoteIdを検索する。
-             * 再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策。
+             * 再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策用の関数。
              * @param {IAction} action codeを含むIAction
              * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
              */
@@ -366,7 +364,7 @@ module Garage {
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
 
-                    //functionCodeHashのうち、適当なcodeで検索。ただし上述で検索したcodeとは異なること。
+                    //functionCodeHashのうち、適当なcodeで検索。ただしactionに登録されたcodeとは異なること。
                     for (let key in functionCodeHash) {
                         let checkCode = functionCodeHash[key];
                         if (checkCode != code) {
@@ -382,7 +380,7 @@ module Garage {
             }
 
             /**
-             * 同一のコードを持つremoteがあった場合そのremoteIdをする
+             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdを返す。
              * @param {string} code
              * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合, nullを返す。
              */
@@ -421,7 +419,7 @@ module Garage {
 
             /**
              * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
-             * ただし、誤検出の懸念から、Bluetoothは対象外とする
+             * ただし、誤検出の懸念からBluetoothは対象外とする
              * @param {IAction} action code_dbを持つaction
              * @return {string} remoteId remoteId. 見つからない場合、nullを返す。
              */
@@ -432,7 +430,7 @@ module Garage {
                     return null;
                 }
 
-                // 学習して登録したリモコンとご検出されるケースがあるので対象外に
+                // Bluetoothリモコンが、学習登録のリモコンと誤検出されるケースがあるので対象外に
                 if (action.bluetooth_data != null) {
                     return null;
                 }
