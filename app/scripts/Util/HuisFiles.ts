@@ -1571,6 +1571,7 @@ module Garage {
                 if (sharedInfo != null) {
                     return new Model.DeviceInfo(sharedInfo);
                 } else {
+                    console.warn(TAGS.HuisFiles + "failed to parse sharedinfo.ini, connected HUIS may be old");
                     return null;
                 }
             }
@@ -1580,7 +1581,7 @@ module Garage {
                 try {
                     return nodeIni.parseSync(path);
                 } catch (e) {
-                    console.warn("failed to load sharedinfo.ini, connected HUIS may be old");
+                    console.warn(TAGS.HuisFiles + "failed to parse ini file: file_path=" + path);
                     return;
                 }
             }
