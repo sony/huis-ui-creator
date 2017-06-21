@@ -124,11 +124,11 @@ module Garage {
 
 
 
-            /*
-            * お知らせダイアログに表示するコンテンツが存在するか判定する。
-            * @param {string[]} お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
-            * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
-            */
+            /**
+             * お知らせダイアログに表示するコンテンツが存在するか判定する。
+             * @param {string[]} contentsDirs お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
+             * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
+             */
             private isExistValidContents(contentsDirs: string[]): boolean {
                 let FUNCTION_NAME: string = TAG + " : isExistValidContents : ";
 
