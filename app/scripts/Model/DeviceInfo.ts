@@ -28,11 +28,18 @@ module Garage {
             private _version;
             private _modelColor;
             private _settingColor;
+            private _isBtoB;
+            private _winRequiredVersion;
+            private _macRequiredVersion;
 
             constructor(sharedInfo: ISharedInfo) {
                 this._version = sharedInfo.system.version;
                 this._modelColor = sharedInfo.color.model_color;
                 this._settingColor = sharedInfo.color.setting_color;
+                this._winRequiredVersion = sharedInfo.system.win_required_version;
+                this._macRequiredVersion = sharedInfo.system.mac_required_version;
+
+                this._isBtoB = (sharedInfo.system.is_btob != null);
             }
 
             get version() {
@@ -47,6 +54,13 @@ module Garage {
                 return this._settingColor;
             }
 
+            get isBtoB() {
+                return this._isBtoB;
+            }
+
+            get requiredGarageVersion(): string {
+                return Util.MiscUtil.isDarwin() ? this._macRequiredVersion : this._winRequiredVersion;
+            }
         }
     }
 }

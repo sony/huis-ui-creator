@@ -80,6 +80,9 @@ interface IArea {
 interface ISharedInfo {
     system: {
         version: string;
+        win_required_version: string;
+        mac_required_version: string;
+        is_btob: boolean;
     },
     color: {
         model_color: string;
