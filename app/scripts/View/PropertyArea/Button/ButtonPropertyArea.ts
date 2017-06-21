@@ -100,7 +100,7 @@ module Garage {
                 this._setStateMementoCommand(targetStates);
             }
 
-            private _setDefaultImageToState(state, path) {
+            private _setDefaultImageToState(state: Model.ButtonState, path: string) {
                 let buttonArea = this.getModel().area;
                 let defaultImageArea: IArea = {
                     x: 0,
