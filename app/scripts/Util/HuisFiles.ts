@@ -296,32 +296,29 @@ module Garage {
                 }
                 let remoteId: string;
 
-                if (action != null) {
+                remoteId = this.getRemoteIdByBluetoothDevice(action);
+                if (remoteId != null) {
+                    return remoteId
+                }
 
-                    remoteId = this.getRemoteIdByBluetoothDevice(action);
-                    if (remoteId != null) {
-                        return remoteId
-                    }
+                remoteId = this.getRemoteIdByCodeInAction(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
 
-                    remoteId = this.getRemoteIdByCodeInAction(action);
-                    if (remoteId != null) {
-                        return remoteId;
-                    }
+                remoteId = this.getRemoteIdByCodeWithFunctionCodeHash(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
 
-                    remoteId = this.getRemoteIdByCodeWithFunctionCodeHash(action);
-                    if (remoteId != null) {
-                        return remoteId;
-                    }
+                remoteId = this.getRemoteIdByCodeDbElementsInAction(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
 
-                    remoteId = this.getRemoteIdByCodeDbElementsInAction(action);
-                    if (remoteId != null) {
-                        return remoteId;
-                    }
-
-                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                    if (action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
-                        return remoteId = action.deviceInfo.id;
-                    }
+                //remoteIdがみつからない場合、キャッシュからremoteIdを取得
+                if (action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
+                    return remoteId = action.deviceInfo.id;
                 }
 
                 return null;
