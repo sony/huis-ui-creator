@@ -310,40 +310,48 @@ module Garage {
 
                     // codeで検索
                     let code = action.code;
-                    if (remoteId == null && code != null) {
+                    if (code != null) {
                         remoteId = this.getRemoteIdByCode(code);
+                        if (remoteId != null) {
+                            return remoteId;
+                        }
                     }
 
-                    //codeで検索でわからないばあい、functionCodeHashで取得
-                    if (remoteId == null &&
-                        action.deviceInfo &&
+                    // functionCodeHashで検索。
+                    //再学習されたボタン用。
+                    //再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策。
+                    if (action.deviceInfo &&
                         action.deviceInfo.functionCodeHash != null) {
                         let functionCodeHash = action.deviceInfo.functionCodeHash;
                         let checkCode: string = null;
 
-                        //functionCodeHashのうち、適当なcodeで検索
+                        //functionCodeHashのうち、適当なcodeで検索。ただし上述で検索したcodeとは異なること。
                         for (let key in functionCodeHash) {
                             checkCode = functionCodeHash[key];
-                            break;
+                            if (checkCode != code) {
+                                break
+                            }
                         }
                         remoteId = this.getRemoteIdByCode(checkCode);
+                        if (remoteId != null) {
+                            return remoteId;
+                        }
                     }
 
-                    // functionCodeHashでみつからない場合、deviceinfoで検索
-                    if (remoteId == null &&
-                        action.deviceInfo) {
-                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
-                    }
-
-                    // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
-                    if (remoteId == null && action.code_db && !action.bluetooth_data) {
+                    // code_dbで検索。
+                    // ただし、学習して登録されたリモコンと、Bluetoothリモコンで
+                    // 誤検出のするので、Bluetooth_dataがあるときは使わない
+                    if (action.code_db && !action.bluetooth_data) {
                         let codeDb = action.code_db;
                         remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
+                        if (remoteId != null) {
+                            return remoteId;
+                        }
                     }
 
                     //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
-                        remoteId = action.deviceInfo.id;
+                    if (action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
+                        return remoteId = action.deviceInfo.id;
                     }
 
                 }
