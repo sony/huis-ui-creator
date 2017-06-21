@@ -287,7 +287,7 @@ module Garage {
             /**
              * IActionオブジェクトからremoteIdを取得する
              * @param action {IAction}
-             * @return {string} remoteId
+             * @return {string} remoteId。見つからない場合、nullを返す。
              */
             getRemoteIdByAction(action: IAction): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
@@ -295,7 +295,7 @@ module Garage {
                     console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
-                let remoteId: string = undefined;
+                let remoteId: string;
 
                 if (action != null) {
 
@@ -348,7 +348,7 @@ module Garage {
 
                 }
 
-                return remoteId;
+                return null;
 
             }
 
@@ -356,13 +356,13 @@ module Garage {
             /*
             * 同一のコードを持つremoteがあった場合そのremoteIdをする
             * @param code{string} 学習して登録した際の button/state/action/code
-            * @return remoteId{string} 入力したcodeをもつリモコンのID
+            * @return remoteId{string} 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
             */
             getRemoteIdByCode(code: string): string {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
                 if (code == null) {
                     console.warn(FUNCTION_NAME + "code is undefined");
-                    return;
+                    return null;
                 }
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
@@ -394,15 +394,15 @@ module Garage {
             }
 
             /**
-            * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
-            * ただし、誤検出の懸念から、Bluetoothは対象外とする
-            * @param brand{string} 機器のブランド
-            * @param deviceType{string} 機器のタイプ
-            * @param codeset{string} 機器のコードセット
-            * @return remoteId{string}リモコンのID
-            */
-            getRemoteIdByCodeDbElements(brand, deviceType, codeset): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
+             * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
+             * ただし、誤検出の懸念から、Bluetoothは対象外とする
+             * @param {string} brand 機器のブランド
+             * @param {string} deviceType 機器のタイプ
+             * @param {string} codeset 機器のコードセット
+             * @return {string} remoteId remoteId. 見つからない場合、nullを返す。
+             */
+            getRemoteIdByCodeDbElements(brand: string, deviceType: string, codeset: string): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDbElements: ";
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
                     let remoteId = this.remoteList_[i].remote_id;
