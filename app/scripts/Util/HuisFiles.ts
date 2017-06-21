@@ -380,11 +380,10 @@ module Garage {
                 if (action == null) {
                     return null;
                 }
-                let code = action.code;
-                if (code == null) {
-                    return null;
-                }
 
+                // codeがnullのケースも許容する。
+                let code = action.code;
+                
                 if (action.deviceInfo &&
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
