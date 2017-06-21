@@ -363,15 +363,15 @@ module Garage {
                 if (action.deviceInfo &&
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
-
+                    let checkCode: string;
                     //functionCodeHashのうち、適当なcodeで検索。ただしactionに登録されたcodeとは異なること。
                     for (let key in functionCodeHash) {
-                        let checkCode = functionCodeHash[key];
+                        checkCode = functionCodeHash[key];
                         if (checkCode != code) {
                             break;
                         }
                     }
-                    let remoteId = this.getRemoteIdByCode(code);
+                    let remoteId = this.getRemoteIdByCode(checkCode);
                     if (remoteId != null) {
                         return remoteId;
                     }
