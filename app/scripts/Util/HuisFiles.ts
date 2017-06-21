@@ -413,9 +413,6 @@ module Garage {
                         continue;
                     }
 
-
-
-
                     if (codeDb) {
                         //brandを取得
                         if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
@@ -1803,7 +1800,6 @@ module Garage {
                 }
 
                 return remoteId;
-
             }
 
             /**
