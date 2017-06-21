@@ -480,10 +480,6 @@ declare module Garage {
     * HUIS UI CREATOR のバージョン
     */
     var APP_VERSION: string;
-    /*
-     * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
-     */
-    var RC_VERSION_FILE_NAME: string;
     /**
      * Util.ElectronDialog のインスタンス
      */

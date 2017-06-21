@@ -359,13 +359,6 @@ module Garage {
                 }
                 isHUISConnected = true; // HUISが接続されている
 
-                //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                //BZ版の場合、読み込むファイルが異なる
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
-                if (Util.MiscUtil.isBz()) {
-                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
-                }
-
                 callback(); // 次の処理へ
 
             } else {
