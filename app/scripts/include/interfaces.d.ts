@@ -355,8 +355,8 @@ interface IGarageImageExtensions {
  * @brief HUIS の module ファイルにおける image にあたる
  */
 interface IImage {
-    area?: IArea;
-    path?: string;
+    area: IArea;
+    path: string;
     garage_extensions?: IGarageImageExtensions;
 }
 

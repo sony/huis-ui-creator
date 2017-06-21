@@ -39,30 +39,28 @@ module Garage {
             private initialArea_: IArea;
             private initialResizeMode_: string;
 
-            // TODO: change constructor
-            constructor(attributes?: any) {
+            constructor(image: IImage, attributes?: any) {
                 super(attributes, null);
-                this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
-            }
 
-            /**
-             * IImage を Model.ImageItem に変換する。主に garage_extensions を garageExtensions に付け替え。
-             *
-             * @param images {IImage[]} [in] Model.ImageItem[] に変換する IImage[]
-             * @return {Model.ImageItem[]} 変換された Model.ImageItem[]
-             */
-            setInfoFromIImage(image: IImage): Model.ImageItem {
-                this.area = $.extend(true, [], image.area);
+                this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
+
+                this.area = $.extend(true, {}, image.area);
                 this.path = image.path;
 
                 // Copy IImage.gatage_extensions to ImageItem.garageExtensions
                 let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
-                if (garage_extensions) {
+                if (garage_extensions != null) {
                     this.garageExtensions = {
                         original: garage_extensions.original,
                         resolvedOriginalPath: "",
                         resizeMode: garage_extensions.resize_mode
                     };
+                } else {
+                    this.garageExtensions = {
+                        original: image.path,
+                        resolvedOriginalPath: "",
+                        resizeMode: ImageResizeMode.DEFAULT
+                    }
                 }
                 return this;
             }
@@ -73,13 +71,8 @@ module Garage {
              * @return {Model.ImageItem}
              */
             public clone(): Model.ImageItem {
-                var newImage = new Model.ImageItem();
+                var newImage = new Model.ImageItem(this);
 
-                newImage.resolvedPathDirectory_ = this.resolvedPathDirectory_;
-
-                var newArea: IArea = $.extend(true, {}, this.area);
-                newImage.area = newArea;
-                newImage.path = this.path;
                 newImage.resizeOriginal = this.resizeOriginal;
 
                 if (this.version != null) {
@@ -118,18 +111,13 @@ module Garage {
 
                 let newFileFullPath: string;
 
-                let newDirPath = parsedPath.dir;
+                let newDirPath = HUIS_REMOTEIMAGES_ROOT;
                 if (outputDirPath != null) {
                     newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
                 }
 
-                // original の画像が remoteimages 直下にある場合は、リサイズ後のファイルの保存先を各モジュールのディレクトリーにする
-                // outputDirPathmがある場合は、remoteimages/[remoteid]のしたにコピーする
-                if (originalPath.indexOf("/") === -1 || outputDirPath != null) {
-                    newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
-                } else {
-                    newFileFullPath = path.join(newDirPath, newFileName).replace(/\\/g, "/");
-                }
+                newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
+
                 // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
                 // 補正は拡張子の付け替え。
                 newFileFullPath = Model.OffscreenEditor.getEditResultPath(newFileFullPath, "image/png");
@@ -178,7 +166,7 @@ module Garage {
                 let convertedImage: IImage = {
                     area: this.area,
                     path: this.path,
-                    garage_extensions : {
+                    garage_extensions: {
                         original: this.garageExtensions.original,
                         resize_mode: this.garageExtensions.resizeMode
                     }
@@ -298,32 +286,24 @@ module Garage {
             }
 
             get resizeOriginal(): string {
-                let garageExtensions = this.garageExtensions;
-                if (garageExtensions) {
-                    return garageExtensions.original;
+                if (this.garageExtensions == null) {
+                    console.error("garageExtensions is null");
+                    return "";
                 }
-                return "";
+                return this.garageExtensions.original;
             }
 
             set resizeOriginal(val: string) {
-                let garageExtensions = this.garageExtensions;
                 let changedResolvedOriginalPath: string = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
-                if (garageExtensions) {
-                    garageExtensions.original = val;
-                    garageExtensions.resolvedOriginalPath = changedResolvedOriginalPath;
-                } else {
-                    garageExtensions = {
-                        original: val,
-                        resolvedOriginalPath: changedResolvedOriginalPath,
-                        resizeMode: ImageResizeMode.DEFAULT
-                    };
-                }
 
-                if (Util.JQueryUtils.isValidValue(garageExtensions.resolvedOriginalPath)) {
-                    this.set("resizeOriginal", garageExtensions.resolvedOriginalPath);
+                if (this.garageExtensions == null) {
+                    console.error("garageExtensions is null");
+                    return;
                 }
+                this.garageExtensions.original = val;
+                this.garageExtensions.resolvedOriginalPath = changedResolvedOriginalPath;
 
-                this.garageExtensions = garageExtensions;
+                this.set("resizeOriginal", this.garageExtensions.resolvedOriginalPath);
             }
 
             get resizeResolvedOriginalPath(): string {

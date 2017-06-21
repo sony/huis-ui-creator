@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        const HORIZONTAL_LINE_IMAGE_PATH: string = "/res/images/divider_pickup_custom.png";
+        const HORIZONTAL_LINE_IMAGE_PATH: string = HUIS_REMOTEIMAGES_ROOT + "/divider_pickup_custom.png";
 
         const MODULE_SEPARATOR_LABEL_FONT_SIZE = 18;
         const MODULE_SEPARATOR_LABEL_FONT_WEIGHT = "normal";
@@ -71,19 +71,18 @@ module Garage {
 
             private itemizeHorizontalLine(remoteId: string): Model.ImageItem {
 
-                // 新しい model を追加する
-                var horizontalLineImage = new Model.ImageItem();
-
-                var newArea: IArea;
-                var srcImagePath: string;
-                newArea = {
+                let horizontalLineArea = {
                     x: BIAS_X_DEFAULT_GRID_LEFT,
                     y: 0,
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                horizontalLineImage.area = newArea;
-                horizontalLineImage.path = remoteId + "/" + path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+                let horizontalLineSrcPath = path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+
+                var horizontalLineImage = new Model.ImageItem({
+                    area: horizontalLineArea,
+                    path: horizontalLineSrcPath
+                });
 
                 return horizontalLineImage;
             }

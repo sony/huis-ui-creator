@@ -261,8 +261,16 @@ module Garage {
                 return this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX];
             }
 
+            setDefaultImage(image: Model.ImageItem) {
+                this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX] = image;
+            }
+
             getDefaultLabel(): Model.LabelItem {
                 return this.label[constValue.DEFAULT_LABEL_INDEX];
+            }
+
+            setDefaultLabel(label: Model.LabelItem) {
+                this.label[constValue.DEFAULT_LABEL_INDEX] = label;
             }
 
             /**
