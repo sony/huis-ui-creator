@@ -1565,11 +1565,11 @@ module Garage {
                 return faces;
             }
 
-            loadDeviceInfo(): Model.DeviceInfo {
+            loadSharedInfo(): Model.SharedInfo {
                 const sharedInfoFilePath = path.join(HUIS_ROOT_PATH, constValue.SHARED_INFO_FILE_NAME);
                 let sharedInfo: ISharedInfo = this._parseIniFile(sharedInfoFilePath);
                 if (sharedInfo != null) {
-                    return new Model.DeviceInfo(sharedInfo);
+                    return new Model.SharedInfo(sharedInfo);
                 } else {
                     console.warn(TAGS.HuisFiles + "failed to parse sharedinfo.ini, connected HUIS may be old");
                     return null;

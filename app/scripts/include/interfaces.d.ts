@@ -33,7 +33,7 @@
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
-/// <reference path="../Model/DeviceInfo.ts" />
+/// <reference path="../Model/SharedInfo.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -493,9 +493,9 @@ declare module Garage {
      */
     var storageLock: Util.StorageLock;
     /**
-     * Model.DeviceInfo のインスタンス
+     * Model.SharedInfo のインスタンス
      */
-    var deviceInfo: Model.DeviceInfo;
+    var sharedInfo: Model.SharedInfo;
     /**
      * Util.HuisFiles のインスタンス
      */

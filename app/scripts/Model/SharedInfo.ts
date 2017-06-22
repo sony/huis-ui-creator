@@ -21,7 +21,11 @@ module Garage {
 
         const TAG: string = "[Garage.Model.DeviceInfo] ";
 
-        export class DeviceInfo {
+        /**
+         * HUISと共有する情報を格納するクラス。
+         * 色情報、Version情報が主。
+         */
+        export class SharedInfo {
 
             private _version;
             private _modelColor;
