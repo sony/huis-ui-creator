@@ -19,7 +19,7 @@
 module Garage {
     export module Model {
 
-        const TAG: string = "[Garage.Model.DeviceInfo] ";
+        const TAG: string = "[Garage.Model.SharedInfo] ";
 
         /**
          * HUISと共有する情報を格納するクラス。
