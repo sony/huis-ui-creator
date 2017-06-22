@@ -351,7 +351,7 @@ module Garage {
             }
 
             /**
-             * HUISがBtoB向けのバージョンではない場合のダイアログを表示
+             * 接続されたHUISのバージョンがサポート外である場合のDialogを表示
              */
             private showHuisRcVersonIsNotSupported() {
 
