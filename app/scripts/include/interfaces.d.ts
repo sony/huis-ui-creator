@@ -33,6 +33,7 @@
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
+/// <reference path="../Model/SharedInfo.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -74,6 +75,19 @@ interface IArea {
      * 縦の大きさ
      */
     h: number;
+}
+
+interface ISharedInfo {
+    system: {
+        version: string;
+        win_required_version: string;
+        mac_required_version: string;
+        is_btob: boolean;
+    },
+    color: {
+        model_color: string;
+        setting_color: string;
+    }
 }
 
 /**
@@ -467,10 +481,6 @@ declare module Garage {
     */
     var APP_VERSION: string;
     /*
-     * 接続しているHUIS REMOTE CONTROLLER のバージョン
-     */
-    var RC_VERSION: string;
-    /*
      * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
      */
     var RC_VERSION_FILE_NAME: string;
@@ -482,6 +492,10 @@ declare module Garage {
      * Util.StorageLock のインスタンス
      */
     var storageLock: Util.StorageLock;
+    /**
+     * Model.SharedInfo のインスタンス
+     */
+    var sharedInfo: Model.SharedInfo;
     /**
      * Util.HuisFiles のインスタンス
      */

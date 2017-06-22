@@ -47,6 +47,10 @@ module Garage {
             label: string;
         }
 
+        namespace constValue {
+            export const SHARED_INFO_FILE_NAME: string = "sharedinfo.ini";
+        }
+
         /**
          * @class HuisFiles
          * @brief HUIS 内のファイルの parse 等を行うユーティリティークラス
@@ -1561,6 +1565,27 @@ module Garage {
                 return faces;
             }
 
+            loadSharedInfo(): Model.SharedInfo {
+                const sharedInfoFilePath = path.join(HUIS_ROOT_PATH, constValue.SHARED_INFO_FILE_NAME);
+                let sharedInfo: ISharedInfo = this._parseIniFile(sharedInfoFilePath);
+                if (sharedInfo != null) {
+                    return new Model.SharedInfo(sharedInfo);
+                } else {
+                    console.warn(TAGS.HuisFiles + "failed to parse sharedinfo.ini, connected HUIS may be old");
+                    return null;
+                }
+            }
+
+            private _parseIniFile(path): any {
+                var nodeIni = require("node-ini");
+                try {
+                    return nodeIni.parseSync(path);
+                } catch (e) {
+                    console.warn(TAGS.HuisFiles + "failed to parse ini file: file_path=" + path);
+                    return;
+                }
+            }
+
             /**
              * remotelist.json から remoteList を取得する
              */
@@ -1570,9 +1595,9 @@ module Garage {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
                     return null;
                 }
+
                 // remotelist.ini を node-ini で parse
-                var nodeIni = require("node-ini");
-                var remoteListIni = nodeIni.parseSync(remoteListIniPath);
+                var remoteListIni = this._parseIniFile(remoteListIniPath);
                 if (!remoteListIni) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() [parseError] remotelist.ini");
                     return null;

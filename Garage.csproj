@@ -265,6 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\SharedInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Face.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Item.ts" />
     <TypeScriptCompile Include="app\scripts\app.ts" />

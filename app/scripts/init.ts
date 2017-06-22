@@ -176,10 +176,6 @@ module Garage {
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
 
-        //接続しているHUISリモコンのバージョンを取得
-        //初期値。splashスクリーンで値をいれる。
-        RC_VERSION = null;
-
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
