@@ -113,6 +113,7 @@ module Garage {
             private _MoveHomeBeforeSync() {
 
                 sharedInfo = huisFiles.loadSharedInfo();
+
                 //本体のバージョン確認。
                 this.checkRcVersionFromDevice();
 
@@ -289,52 +290,76 @@ module Garage {
                     });
             }
 
+            private _isExistAppVersionBtoB() {
+                let app_version_btob_path = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
+                return fs.existsSync(app_version_btob_path);
+            }
 
-            /*
-            * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
-            */
-            private checkRcVersionFromDevice(callback?: Function) {
-                let FUNCTION_NAME = TAG + "checkRcVersionFromDevice : ";
-
+            private __checkVersion() {
                 let rcVersion: Model.VersionString = new Model.VersionString(sharedInfo.version);
+                let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
 
-                //このバージョンのGarageに必要になるHUISのバージョン
-                let rcVersionAvailableThisGarage = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
+                let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
+                let requiredGarageVersion = new Model.VersionString(sharedInfo.requiredGarageVersion);
 
-                console.log(FUNCTION_NAME + "RC version is " + sharedInfo.version);
 
-                //HUIS RCとバージョン不一致の判定
-                //RC_VERSIONがない場合、ダイアログを表示。
-                if (sharedInfo.version == null) {
-                    if (Util.MiscUtil.isBz()) {
-                        this.showHuisRcVersonIsNotBtoB();
-                    } else {
-                        this.showHuisRcVersionIsOldDialog();
-                    }
-                }
-
-                //BZ仕向けのとき、BZ版かどうか判定。
-                if (Util.MiscUtil.isBz()) {
-                    if (!rcVersion.isSameMajorVersion(rcVersionAvailableThisGarage)) {
-                        this.showHuisRcVersonIsNotBtoB();
-                    }
-                } else {
-                    if (rcVersion.isOlderThan(rcVersionAvailableThisGarage)) {
-                        this.showHuisRcVersionIsOldDialog();
-                    }
+                if (rcVersion.isOlderThan(requiredRcVersion)) {
+                    this.showHuisRcVersionIsOldDialog();
+                } else if (garageVersion.isOlderThan(requiredGarageVersion)) {
+                    this.showGarageVersionIsOldDialog();
                 }
             }
 
-            /*
-            * HUISがBtoB向けのバージョンではない場合のダイアログを表示
-            */
-            private showHuisRcVersonIsNotBtoB() {
+            private _checkVersionForBz() {
+                if (sharedInfo == null) {
+                    console.warn("deviceInfo is not found, HUIS may be old.");
+                    console.warn("old version is not supported by BtoB UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
+                }
+
+                if (!sharedInfo.isBtoB) {
+                    console.warn("BtoC HUIS is not supported by BtoB UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
+                }
+
+                this.__checkVersion();
+            }
+
+            private _checkVersion() {
+                if (this._isExistAppVersionBtoB()) {
+                    console.warn("BtoB HUIS is not supported by BtoC UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
+                }
+
+                if (sharedInfo == null) {
+                    console.warn("deviceInfo is not found, HUIS may be old.");
+                    this.showHuisRcVersionIsOldDialog();
+                }
+
+                this.__checkVersion();
+            }
+
+            /**
+             * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
+             */
+            private checkRcVersionFromDevice(callback?: Function) {
+                if (Util.MiscUtil.isBz()) {
+                    this._checkVersionForBz();
+                } else {
+                    this._checkVersion();
+                }
+            }
+
+            /**
+             * 接続されたHUISのバージョンがサポート外である場合のDialogを表示
+             */
+            private showHuisRcVersonIsNotSupported() {
 
                 //ダイアログを表示
                 let response = electronDialog.showMessageBox(
                     {
                         type: "error",
-                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_BTOB"),
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_SUPPORTED"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
                     }
@@ -342,9 +367,28 @@ module Garage {
                 app.exit(0);
             }
 
-            /*
-            * HUIS本体のバージョンが古い場合のダイアログを表示
-            */
+            /**
+             * UI-Creatorのバージョンが古い場合のダイアログを表示
+             */
+            private showGarageVersionIsOldDialog() {
+
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_1") +
+                        $.i18n.t("hp.update.app.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_2") +
+                        sharedInfo.requiredGarageVersion + $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_3"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
+
+            /**
+             * HUIS本体のバージョンが古い場合のダイアログを表示
+             */
             private showHuisRcVersionIsOldDialog() {
 
                 //ダイアログを表示
