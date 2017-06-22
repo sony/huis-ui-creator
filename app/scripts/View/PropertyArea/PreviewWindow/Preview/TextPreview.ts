@@ -82,7 +82,7 @@ module Garage {
             render(option?: any): Backbone.View<Model.Item> {
                 let FUNCTIN_NAME = TAG + "render ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
+                this.setElement("<div></div>");
                 this.$el.append(this.template_(this.getModel()));
 
                 //render size pulldown

@@ -67,7 +67,7 @@ module Garage {
             render(): Backbone.View<Model.Item> {
                 let FUNCTION_NAME = TAG + "render : ";
                 this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
+                this.setElement("<div></div>");
                 this.$el.append(this.template_(this.getModel()));
                 this.$el.find(this.labelPreviewWindow_.getDomId()).append(this.labelPreviewWindow_.render().$el);
                 this._adaptJqueryMobileStyleToPulldown(this.$el);
