@@ -21,6 +21,11 @@ module Garage {
 
         const TAG: string = "[Garage.Model.SharedInfo] ";
 
+        export namespace SettingColor {
+            export const WHITE: string = "white";
+            export const BLACK: string = "black";
+        }
+
         /**
          * HUISと共有する情報を格納するクラス。
          * 色情報、Version情報が主。

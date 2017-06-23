@@ -397,22 +397,14 @@ interface IGroup {
 }
 
 /**
+ * HUIS の face ファイルの内容
  * @interface IFace
- * @breif HUIS の face ファイルの内容にあたる
  */
 interface IFace {
-    /**
-     * face の名前
-     */
     name: string;
-    /**
-     * face のカテゴリー
-     */
     category: string;
-    /**
-     * face が参照する module (module ファイルを展開したもの)
-     */
     modules: IModule[];
+    color: string;
 }
 
 /**

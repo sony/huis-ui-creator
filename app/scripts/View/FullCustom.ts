@@ -2232,7 +2232,7 @@ module Garage {
                 });
                 dialog.show().css("color", "white");
 
-                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, modules);
+                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, this.currentFace_.color, modules);
 
                 huisFiles.updateFace(inputFace, this.buttonDeviceInfoCache)
                     .always(() => {

@@ -30,6 +30,7 @@ module Garage {
              * @param {string} faceName  編集中のリモコン名
              * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
+            // TODO: change arguments to Model.Face
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager, faceName: string, modules: Model.Module[]) {
                 super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
 
@@ -244,9 +245,9 @@ module Garage {
             }
 
 
-            /*
-            * 何も設定されていない場合、プルダウンをアクセント表示
-            */
+            /**
+             * 何も設定されていない場合、プルダウンをアクセント表示
+             */
             focusFirstPulldown() {
                 let FUNCTION_NAME = TAG + "focusFirstPulldown";
 

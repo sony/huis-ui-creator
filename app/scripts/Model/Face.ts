@@ -22,9 +22,18 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
-        export class Face extends Backbone.Model {
+        export namespace FaceColor {
+            export const WHITE: string = "white";
+            export const BLACK: string = "black";
+            export const DEFAULT: string = WHITE;
 
-            constructor(remoteId: string, name: string, category: string, modules?: Model.Module[], attributes?: any, options?: any) {
+            // SETTING is replaced with other face color according to SettingColor
+            export const SETTING: string = "setting";
+        }
+
+        export class Face extends Backbone.Model implements IFace {
+
+            constructor(remoteId: string, name: string, category: string, color: string, modules?: Model.Module[], attributes?: any, options?: any) {
                 super(attributes, options);
 
                 this.modules = [];
@@ -35,6 +44,7 @@ module Garage {
                 this.remoteId = remoteId;
                 this.name = name;
                 this.category = category;
+                this.color = (color != null) ? color : FaceColor.DEFAULT;
             }
 
             private _createEmptyModule(remoteId: string, pageIndex: number): Model.Module {
@@ -451,6 +461,28 @@ module Garage {
 
             set modules(val) {
                 this.set("modules", val);
+            }
+
+            get color(): string {
+                return this.get("color");
+            }
+
+            private _getSettingColor() {
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    return FaceColor.BLACK;
+                } else if (sharedInfo.settingColor === SettingColor.WHITE) {
+                    return FaceColor.WHITE;
+                }
+
+                console.warn(TAG + " Unexpected setting color, set face color WHITE");
+                return FaceColor.WHITE;
+            }
+
+            set color(val: string) {
+                if (val === FaceColor.SETTING) {
+                    val = this._getSettingColor();
+                }
+                this.set("color", val);
             }
 
             /**
