@@ -26,6 +26,8 @@ module Garage {
             export const PAGE_NUM_MAX = 5;
         }
 
+        // TODO: split this class into View.Canvs and View.Pallet class
+
         export class FaceRenderer extends Backbone.View<any> {
 
 
@@ -52,10 +54,7 @@ module Garage {
                 this.face_ = options.attributes["face"];
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
-                    let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
-                    let module = new Model.Module();
-                    module.setInfo(remoteId, 0);
-                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [module]);
+                    console.error(TAG + " initialize: face is null");
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
