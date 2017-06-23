@@ -2443,9 +2443,9 @@ module Garage {
 
                         case "color":
                             // 16階調グレースケールを RGB 変換して CSS に設定
-                            var resolvedColor = targetModel["resolvedColor"];
-                            if (resolvedColor) {
-                                $target.css("color", resolvedColor);
+                            let color = targetModel["color"];
+                            if (color) {
+                                $target.css("color", color);
                             }
                             break;
 
