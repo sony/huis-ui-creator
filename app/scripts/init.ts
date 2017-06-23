@@ -81,6 +81,7 @@ module Garage {
         DEVICE_TYPE_BT = "Bluetooth";
         DEVICE_TYPE_SPECIAL = "special";
         DEVICE_TYPE_LEARNED = "Device";
+        DEVICE_TYPE_COMMON = "Common";
 
         FACE_TYPE_FULL_CUSTOM = DEVICE_TYPE_FULL_CUSTOM;
         FACE_TYPE_NOT_FULL_CUSTOM = "not-" + FACE_TYPE_FULL_CUSTOM;
