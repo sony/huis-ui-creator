@@ -185,6 +185,13 @@ module Garage {
                 return null;
             }
 
+            createNewFace() {
+                let remoteId = this.createNewRemoteId();
+                let module = new Model.Module();
+                module.setInfo(remoteId, 0);
+                return new Model.Face(remoteId, "New Remote", "fullcustom", [module]);
+            }
+
             /*
             * 一時的に利用するFaceModelを返す。
             * @param {string} remoteId 生成されるFaceのRemoteId
