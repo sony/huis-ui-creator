@@ -36,9 +36,6 @@ module Garage {
             private type_: string;
             private $facePlane_: JQuery; //描画のベースとなるfacePagesArea
 
-            /**
-             * constructor
-             */
             constructor(options?: Backbone.ViewOptions<any>) {
                 super(options);
             }
@@ -74,9 +71,9 @@ module Garage {
                 return this;
             }
 
-            /*
-            * すでに描画されているFaceに追加で描画する
-            */
+            /**
+             * すでに描画されているFaceに追加で描画する
+             */
             addFace(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFace : ";
                 switch (this.type_) {
@@ -91,9 +88,9 @@ module Garage {
             }
 
 
-            /*
-            * すでに描画されているFaceに追加で描画する。Canvas以外用。
-            */
+            /**
+             * すでに描画されているFaceに追加で描画する。Canvas以外用。
+             */
             private addFaceAsPlain(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
 
