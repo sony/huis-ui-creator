@@ -80,11 +80,7 @@ module Garage {
 
 
             render(option?: any): Backbone.View<Model.Item> {
-                let FUNCTIN_NAME = TAG + "render ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.setElement("<div></div>");
-                this.$el.append(this.template_(this.getModel()));
-
+                super.render();
                 //render size pulldown
                 let templateTextSizePulldown = CDP.Tools.Template.getJST(constValue.TEMPLATE_SIZE_PULLDOWN_DOM_ID, this._getTemplateFilePath());
                 let dataSizePulldownRender = {
@@ -97,9 +93,7 @@ module Garage {
                 if (Util.JQueryUtils.isValidValue(size)) {
                     this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val(size.toString());
                 }
-
-                this.$el.i18n();//localize text
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
+                this.endProcessOfRender();
                 return this;
             };
 
