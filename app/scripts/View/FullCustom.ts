@@ -119,13 +119,15 @@ module Garage {
                     huisFiles.initWatingResizeImages();
 
                     var remoteId = this._getUrlQueryParameter("remoteId");
-                    this._renderCanvas(remoteId);
                     if (remoteId != null) {
                         this.currentFace_ = huisFiles.getFace(remoteId);
                     } else {
                         this.newRemote_ = true;
                         this.currentFace_ = huisFiles.createNewFace();
                     }
+                    this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
+                    this.faceRenderer_canvas_.render();
+                    this._setGridSize();
 
                     // ページ数が最大の場合はページ追加ボタンを無効化する
                     if (this.faceRenderer_canvas_.isPageNumMax()) {
@@ -375,44 +377,26 @@ module Garage {
 
             }
 
-            /**
-             * face canvas を作成する。
-             */
-            private _renderCanvas(remoteId?: string) {
+            private _createCanvas(face: Model.Face): FaceRenderer {
                 var $faceCanvasArea = $("#face-canvas-area");
-                var face = remoteId ? huisFiles.getFace(remoteId) : null;
-                if (face) {
-                    this.faceRenderer_canvas_ = new FaceRenderer({
-                        el: $faceCanvasArea,
-                        attributes: {
-                            face: face,
-                            type: "canvas",
-                            materialsRootPath: HUIS_FILES_DIRECTORY
-                        }
-                    });
-                } else {
-                    this.faceRenderer_canvas_ = new FaceRenderer({
-                        el: $faceCanvasArea,
-                        attributes: {
-                            remoteId: huisFiles.createNewRemoteId(),
-                            type: "canvas",
-                            materialsRootPath: HUIS_FILES_DIRECTORY
-                        }
-                    });
-                    this.newRemote_ = true;
-                }
 
-                this.faceRenderer_canvas_.render();
-
-                this._setGridSize();
-
-
-                this.currentTargetPageIndex_ = 0;
+                let faceRenderer = new FaceRenderer({
+                    el: $faceCanvasArea,
+                    attributes: {
+                        face: face,
+                        type: "canvas",
+                        materialsRootPath: HUIS_FILES_DIRECTORY
+                    }
+                });
 
                 // [TODO] Canvas 内の page scroll
                 $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
                     this.onCanvasPageScrolled(event);
                 });
+
+                this.currentTargetPageIndex_ = 0;
+
+                return faceRenderer;
             }
 
             /**
