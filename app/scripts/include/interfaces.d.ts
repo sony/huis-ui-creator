@@ -627,6 +627,7 @@ declare module Garage {
 
     var FACE_TYPE_FULL_CUSTOM: string;
     var FACE_TYPE_NOT_FULL_CUSTOM: string;
+    var DEVICE_TYPE_COMMON: string;// macroやjumpボタン用。本来の意味でのdeviceTypeでない。
 
     /**
     * DetailAreaの機能に表示されないデバイスタイプ
@@ -764,12 +765,6 @@ declare module Garage {
 
     /** 信号がフルカスタムで再学習されたことを示すコード */
     var FUNC_CODE_RELEARNED: string;
-
-    /** MacとWindowsで参照するフォルダが変わる場合の、フォルダ名 */
-    var DIR_NAME_WINDOWS;
-    var DIR_NAME_MAC;
-
-
 }
 
 

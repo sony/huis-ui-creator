@@ -295,96 +295,138 @@ module Garage {
                 }
             }
 
-
             /**
              * IActionオブジェクトからremoteIdを取得する
              * @param action {IAction}
-             * @return {string} remoteId
+             * @return {string} remoteId。見つからない場合、nullを返す。
              */
             getRemoteIdByAction(action: IAction): string {
                 let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
                 if (action == null) {
-                    console.warn(FUNCTION_NAME + "action is null");
                     return;
                 }
-                let remoteId: string = undefined;
+                let remoteId: string;
 
-                if (action != null) {
-
-                    // codeで検索
-                    let code = action.code;
-                    if (remoteId == null && code != null) {
-                        remoteId = this.getRemoteIdByCode(code);
-                    }
-
-                    //codeで検索でわからないばあい、functionCodeHashで取得
-                    if (remoteId == null &&
-                        action.deviceInfo &&
-                        action.deviceInfo.functionCodeHash != null) {
-                        let functionCodeHash = action.deviceInfo.functionCodeHash;
-                        let checkCode: string = null;
-
-                        //functionCodeHashのうち、適当なcodeで検索
-                        for (let key in functionCodeHash) {
-                            checkCode = functionCodeHash[key];
-                            break;
-                        }
-                        remoteId = this.getRemoteIdByCode(checkCode);
-                    }
-
-                    // functionCodeHashでみつからない場合、deviceinfoで検索
-                    if (remoteId == null &&
-                        action.deviceInfo) {
-                        remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
-                    }
-
-                    //deviceinfoでみつからない場合、deviceInfo内のbluetoothの情報で検索
-                    if (remoteId == null &&
-                        action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device &&
-                        action.deviceInfo &&
-                        action.deviceInfo.remoteName != null) {
-                        remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
-                    }
-
-                    //TODO
-                    //remoteNameがない場合のBluetoothDeviceの検索
-                    //！！！！！！！！！負債コード！！！！！！
-                    if (remoteId == null &&
-                        action.bluetooth_data &&
-                        action.bluetooth_data.bluetooth_device) {
-                        remoteId = this.getRemoteIdByBluetoothDeviceNoRemoteName(action.bluetooth_data.bluetooth_device);
-                    }
-
-
-                    // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
-                    if (remoteId == null && action.code_db && !action.bluetooth_data) {
-                        let codeDb = action.code_db;
-                        remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
-                    }
-
-                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
-                        remoteId = action.deviceInfo.id;
-                    }
-
+                remoteId = this.getRemoteIdByBluetoothDevice(action);
+                if (remoteId != null) {
+                    return remoteId
                 }
 
-                return remoteId;
+                remoteId = this.getRemoteIdByCodeInAction(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
 
+                remoteId = this.getRemoteIdByCodeWithFunctionCodeHash(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
+
+                remoteId = this.getRemoteIdByCodeDbElementsInAction(action);
+                if (remoteId != null) {
+                    return remoteId;
+                }
+
+                if (this._isInitialCommonButton(action)) {
+                    return null;
+                }
+
+                //remoteIdがみつからない場合、キャッシュからremoteIdを取得
+                if (action.deviceInfo) {
+                    return remoteId = action.deviceInfo.id;
+                }
+
+                return null;
             }
 
+            /**
+             * マクロや、ジャンプボタンなど、共通ボタンの初期値か否か判定。
+             * @param {IAction} action
+             * @return actionに設定されるのがCommonボタンの初期値の場合、true。
+             */
+            private _isInitialCommonButton(action: IAction): boolean {
+                if (action == null) {
+                    return false;
+                }
 
-            /*
-            * 同一のコードを持つremoteがあった場合そのremoteIdをする
-            * @param code{string} 学習して登録した際の button/state/action/code
-            * @return remoteId{string} 入力したcodeをもつリモコンのID
-            */
+                if (action.deviceInfo == null) {
+                    return false;
+                }
+
+                if (action.deviceInfo.code_db == null) {
+                    return false;
+                }
+
+                return action.deviceInfo.code_db.device_type == DEVICE_TYPE_COMMON;
+            }
+
+            /**
+             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdを返す。
+             * @param {IAction} action codeを含むIAction
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
+             */
+            getRemoteIdByCodeInAction(action: IAction): string {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+
+                if (action == null) {
+                    return null;
+                }
+
+                let code = action.code;
+                if (code == null) {
+                    return null;
+                }
+
+                return this.getRemoteIdByCode(code);
+            }
+
+            /**
+             * action.deviceInfo.functionCodeHashから、codeでremoteIdを検索する。
+             * 再学習されたボタンの場合、actionに登録されたcodeでは検索に引っかからないのでその対策用の関数。
+             * また、actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)もこの関数で対応。
+             * @param {IAction} action codeを含むIAction
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合,nullを返す。
+             */
+            getRemoteIdByCodeWithFunctionCodeHash(action: IAction): string {
+                let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCodeWithFunctionCodeHash : ";
+
+                if (action == null) {
+                    return null;
+                }
+
+                // actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)を考慮して
+                // codeがnullのケースも許容する。
+                let code = action.code;
+                
+                if (action.deviceInfo &&
+                    action.deviceInfo.functionCodeHash != null) {
+                    let functionCodeHash = action.deviceInfo.functionCodeHash;
+                    let checkCode: string;
+                    //functionCodeHashのうち、適当なcodeで検索。ただしactionに登録されたcodeとは異なること。
+                    for (let key in functionCodeHash) {
+                        checkCode = functionCodeHash[key];
+                        if (checkCode != code) {
+                            break;
+                        }
+                    }
+                    let remoteId = this.getRemoteIdByCode(checkCode);
+                    if (remoteId != null) {
+                        return remoteId;
+                    }
+                }
+                return null;
+            }
+
+            /**
+             * 同一のcodeを持つリモコンがあった場合、そのリモコンのremoteIdを返す。
+             * @param {string} code
+             * @return {string} remoteId 入力したcodeをもつリモコンのIDを返す。見つからない場合, nullを返す。
+             */
             getRemoteIdByCode(code: string): string {
                 let FUNCTION_NAME: string = TAGS.HuisFiles + " : getRemoteIdByCode : ";
+
                 if (code == null) {
-                    console.warn(FUNCTION_NAME + "code is undefined");
-                    return;
+                    return null;
                 }
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
@@ -409,22 +451,55 @@ module Garage {
                             }
                         }
                     }
-
                 }
-
                 return null;
             }
 
             /**
-            * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
-            * ただし、誤検出の懸念から、Bluetoothは対象外とする
-            * @param brand{string} 機器のブランド
-            * @param deviceType{string} 機器のタイプ
-            * @param codeset{string} 機器のコードセット
-            * @return remoteId{string}リモコンのID
-            */
-            getRemoteIdByCodeDbElements(brand, deviceType, codeset): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDb: ";
+             * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
+             * ただし、誤検出の懸念からBluetoothは対象外とする
+             * @param {IAction} action code_dbを持つaction
+             * @return {string} remoteId remoteId. 見つからない場合、nullを返す。
+             */
+            getRemoteIdByCodeDbElementsInAction(action: IAction): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDbElementsInAction: ";
+
+                if (action == null) {
+                    return null;
+                }
+
+                // Bluetoothリモコンが、学習登録のリモコンと誤検出されるケースがあるので対象外に
+                if (action.bluetooth_data != null) {
+                    return null;
+                }
+
+                let codeDb = action.code_db;
+                if (codeDb == null) {
+                    return null;
+                }
+
+                let brand = codeDb.brand;
+                let deviceType = codeDb.device_type;
+                let codeset = codeDb.db_codeset;
+
+                if (brand == null
+                    || deviceType == null
+                    || codeset == null) {
+                    return null;
+                }
+
+                return this.getRemoteIdByCodeDbElements(brand, deviceType, codeset);
+            }
+
+            /**
+             * 同じbrand, deviceType, codesetをもつリモコンのremoteIdを取得する。
+             * @param {string} brand 機器のブランド
+             * @param {string} deviceType 機器のタイプ
+             * @param {string} codeset 機器のコードセット
+             * @return {string} remoteId remoteId. 見つからない場合、nullを返す。
+             */
+            getRemoteIdByCodeDbElements(brand: string, deviceType: string, codeset: string): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByCodeDbElements: ";
 
                 for (let i = 0, l = this.remoteList_.length; i < l; i++) {
                     let remoteId = this.remoteList_[i].remote_id;
@@ -434,9 +509,6 @@ module Garage {
                     if (deviceInfo != null && deviceInfo.bluetooth_data != null) {
                         continue;
                     }
-
-
-
 
                     if (codeDb) {
                         //brandを取得
@@ -465,122 +537,30 @@ module Garage {
                 return null;
             }
 
-
-            /*
-            * deviceInfoの情報から、remoteIdを特定して取得する
-            * @param inputDeviceInfo{IButtonDecviceInfo}
-            * @return {string} remoteId 見つからない場合、nullを返す。
-            */
-            getRemoteIdByButtonDeviceInfo(inputDeviceInfo: IButtonDeviceInfo): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByButtonDeviceInfo : ";
-
-                if (inputDeviceInfo == null) {
-                    return null;
-
-                }
-
-                // remtoeNameを取得
-                if (inputDeviceInfo.remoteName == null) {
-                    return null;
-                }
-                let remoteName = inputDeviceInfo.remoteName;
-
-
-
-                //bluetooth_dataがある場合、別の判定基準を設ける。
-                if (inputDeviceInfo.bluetooth_data != null &&
-                    inputDeviceInfo.bluetooth_data.bluetooth_device != null) {
-                    return this.getRemoteIdByBluetoothDevice(inputDeviceInfo.bluetooth_data.bluetooth_device, remoteName);
-                }
-
-
-                if (inputDeviceInfo.code_db == null) {
-                    console.warn(FUNCTION_NAME + "inputDeviceInfo.code_db is null");
-                    return;
-                }
-                let codeDb = inputDeviceInfo.code_db;
-
-                //brandを取得
-                if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
-                    return;
-                }
-                let brand = codeDb.brand;
-
-                //deviceTypeを取得
-                if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
-                    return;
-                }
-                let deviceType = codeDb.device_type;
-
-                //codesetを取得
-                if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
-                    return;
-                }
-                let codeset = codeDb.db_codeset;
-
-                //ブランド、デバイスタイプ、コードセットが同一の場合、同じリモコンだと判定する。
-                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
-                    let targetRemoteId = this.remoteInfos_[i].remoteId;
-                    let targetRemoteName = this.remoteInfos_[i].face.name;
-                    let codeDb = this.getMasterCodeDb(targetRemoteId);
-                    if (codeDb) {
-                        if (codeDb.brand === brand &&
-                            codeDb.device_type === deviceType &&
-                            codeDb.db_codeset === codeset &&
-                            remoteName == targetRemoteName) {
-                            return targetRemoteId;
-                        }
-                    }
-                }
-            }
-
-            /**
-             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
-             * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
-             * @param remoteName{string} リモコン名
-             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
-             */
-            getRemoteIdByBluetoothDevice(bluetoothDevice: IBluetoothDevice, remoteName: string): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
-
-                if (bluetoothDevice == null) {
-                    console.warn(FUNCTION_NAME + "bluetoothDevice is null");
-                    return null;
-                }
-
-                if (remoteName == null) {
-                    return null;
-                }
-
-                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
-                    let targetRemoteId = this.remoteInfos_[i].remoteId;
-                    let targetRemoteName = this.remoteInfos_[i].face.name;
-                    let bluetoothData = this.getMasterBluetoothData(targetRemoteId);
-                    if (bluetoothData &&
-                        bluetoothData.bluetooth_device &&
-                        bluetoothData.bluetooth_device.bluetooth_address === bluetoothDevice.bluetooth_address &&
-                        remoteName == targetRemoteName
-                    ) {
-                        return targetRemoteId;
-                    }
-                }
-
-                return null;
-            }
-
             /**
             * 該当するBluetooth機器を持つリモコンのremoteIdを取得する。
-            * @param bluetoothDevice {IBluetoothDevice} Bluetooth機器情報
+            * @param {IAction} action IBluetoothDeviceを含むIAction
             * @return {string} リモコンのID。該当リモコンが存在しない場合はnull。
             */
-            getRemoteIdByBluetoothDeviceNoRemoteName(bluetoothDevice: IBluetoothDevice): string {
-                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDeviceNoRemoteName: ";
+            getRemoteIdByBluetoothDevice(action: IAction): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + " :getRemoteIdByBluetoothDevice: ";
+
+                if (action == null) {
+                    console.warn(FUNCTION_NAME + "action is null");
+                    return null;
+                }
+
+                if (action.bluetooth_data == null) {
+                    console.warn(FUNCTION_NAME + "bluetooth_data is null");
+                    return null;
+                }
+
+                let bluetoothDevice: IBluetoothDevice = action.bluetooth_data.bluetooth_device;
 
                 if (bluetoothDevice == null) {
                     console.warn(FUNCTION_NAME + "bluetoothDevice is null");
                     return null;
                 }
-
 
                 for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
                     let targetRemoteId = this.remoteInfos_[i].remoteId;
@@ -1842,7 +1822,7 @@ module Garage {
                                     continue;
                                 }
 
-                                let remoteId = this.traceOriginalRemoteIdByAction(action);
+                                let remoteId = this.getRemoteIdByAction(action);
                                 if (remoteId == null || remoteId == "") {
                                     // 基リモコンなしの場合、学習されたコードであればfunctionに"##"を付ける
                                     if (action.code_db != null && action.code != null) {
@@ -1885,7 +1865,7 @@ module Garage {
                                     continue;
                                 }
 
-                                let remoteId = this.traceOriginalRemoteIdByAction(action);
+                                let remoteId = this.getRemoteIdByAction(action);
                                 if (this.remoteList.filter((remote) => { return remote.remote_id == remoteId }).length > 0) {
                                     // 基リモコンが存在する場合はそちらを優先するため、ここでは信号名を更新しない
                                     continue;
@@ -1907,57 +1887,6 @@ module Garage {
                         }
                     }
                 }
-            }
-
-            traceOriginalRemoteIdByAction(action: IAction) {
-                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByAction";
-                if (action == null) {
-                    return;
-                }
-                let remoteId: string = undefined;
-
-                if (action != null) {
-
-                    // codeで検索
-                    let code = action.code;
-                    if (remoteId == null && code != null) {
-                        remoteId = this.getRemoteIdByCode(code);
-                    }
-
-                    //DEVICE_TYPE_LEARNEDの場合、間違ったremoteIdを検索してしまうので防止する。
-                    if (action.code_db.device_type !== DEVICE_TYPE_LEARNED) {
-
-                        // functionCodeHashでみつからない場合、deviceinfoで検索
-                        if (remoteId == null &&
-                            action.deviceInfo) {
-                            remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
-                        }
-
-                        //deviceinfoでみつからない場合、bluetoothの情報で検索
-                        if (remoteId == null &&
-                            action.bluetooth_data &&
-                            action.bluetooth_data.bluetooth_device &&
-                            action.deviceInfo &&
-                            action.deviceInfo.remoteName != null) {
-                            remoteId = this.getRemoteIdByBluetoothDevice(action.bluetooth_data.bluetooth_device, action.deviceInfo.remoteName);
-                        }
-
-                        // それでもみつからない場合、code_dbで検索.ただし、ご検出のするので、Bluetooth_dataがあるときは使わない
-                        if (remoteId == null && action.code_db && !action.bluetooth_data) {
-                            let codeDb = action.code_db;
-                            remoteId = this.getRemoteIdByCodeDbElements(codeDb.brand, codeDb.device_type, codeDb.db_codeset);
-                        }
-                    }
-
-                    //remoteIdがみつからない場合、キャッシュからremoteIdを取得
-                    if (remoteId == null && action.deviceInfo && action.deviceInfo.remoteName !== "Special") {
-                        remoteId = action.deviceInfo.id;
-                    }
-
-                }
-
-                return remoteId;
-
             }
 
             /**
