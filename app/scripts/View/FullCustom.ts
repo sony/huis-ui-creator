@@ -400,10 +400,6 @@ module Garage {
             }
 
             /**
-             * face canvas を作成する。
-             */
-
-            /**
              * HUIS 内の face の一覧を表示する
              */
             private _listupFaces() {
