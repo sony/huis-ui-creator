@@ -23,6 +23,10 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
 
+        namespace constValue {
+            export const ARTICLE_DOM = "article"
+        }
+
         export abstract class PropertyArea extends PropertyAreaElement {
 
             private commandManager_: CommandManager;
@@ -39,6 +43,9 @@ module Garage {
                 };
             }
 
+            endProcessOfRender() {
+                super.endProcessOfRender();
+                $(document).find("article").focus();
             }
 
             /**
