@@ -36,7 +36,6 @@ module Garage {
             private type_: string;
             private $facePlane_: JQuery; //描画のベースとなるfacePagesArea
 
-            //private template_: Tools.JST;
             /**
              * constructor
              */
