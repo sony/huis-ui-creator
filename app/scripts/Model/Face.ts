@@ -27,7 +27,7 @@ module Garage {
             export const BLACK: string = "black";
             export const DEFAULT: string = WHITE;
 
-            // DEFAULT is replaced with other face color according to SettingColor
+            // SETTING is replaced with other face color according to SettingColor
             export const SETTING: string = "setting";
         }
 
@@ -467,20 +467,20 @@ module Garage {
                 return this.get("color");
             }
 
-            private _getDefaultColor() {
+            private _getSettingColor() {
                 if (sharedInfo.settingColor === SettingColor.BLACK) {
                     return FaceColor.BLACK;
                 } else if (sharedInfo.settingColor === SettingColor.WHITE) {
                     return FaceColor.WHITE;
                 }
 
-                console.warn(TAG + " Unexpected setting color, set default face color WHITE");
+                console.warn(TAG + " Unexpected setting color, set face color WHITE");
                 return FaceColor.WHITE;
             }
 
             set color(val: string) {
                 if (val === FaceColor.SETTING) {
-                    val = this._getDefaultColor();
+                    val = this._getSettingColor();
                 }
                 this.set("color", val);
             }
