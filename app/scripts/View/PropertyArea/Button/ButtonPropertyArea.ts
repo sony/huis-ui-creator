@@ -45,6 +45,7 @@ module Garage {
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
             protected availableRemotelist: IRemoteInfo[];
 
+            // TODO: replace with Model.Face
             /**
              * 編集中リモコンのremote_id
              */
