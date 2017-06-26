@@ -32,6 +32,9 @@ module Garage {
                 export const SIZE: string = "size";
                 export const TEXT: string = "text";
             }
+            export namespace Image {
+                export const PATH: string = "path";
+            }
         }
 
         export namespace Events {
@@ -43,6 +46,9 @@ module Garage {
                 export const CHANGE_TEXT: string = CHANGE + PropertyValues.Label.TEXT;
                 export const UI_CHANGE_SIZE: string = UI_CHANGE + PropertyValues.Label.SIZE;
                 export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyValues.Label.TEXT;
+            }
+            export namespace Image {
+                export const UI_CHANGE_PATH: string = UI_CHANGE + PropertyValues.Image.PATH;
             }
         }
 

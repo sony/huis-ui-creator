@@ -55,7 +55,7 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger("uiChange:path");
+                    this.trigger(Events.Image.UI_CHANGE_PATH);
                 });
             }
 
