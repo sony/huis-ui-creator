@@ -30,7 +30,7 @@ module Garage {
 
         let TAG_BASE: string = "[Garage.View.BasePage] ";
 
-        //This namespace NOT include some events usinng in property area, please check PropertyAreaEvents.
+        //This namespace NOT include some events using in property area, please check PropertyAreaEvents.
         export namespace Events {
             export const DIVIDER: string = " ";
             export const CLICK: string = "click";
