@@ -63,8 +63,6 @@ module Garage {
                 };
             }
 
-            abstract render(option?: any): Backbone.View<Model.Item>;
-
             /**
              * @return {string} DOM全体を示すIDを返す。
              */

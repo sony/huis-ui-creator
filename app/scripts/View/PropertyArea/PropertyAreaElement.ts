@@ -21,52 +21,49 @@
 module Garage {
     export module View {
 
-        var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
+        var TAG = "[Garage.View.PropertyArea.PropertyAreaElement] ";
 
         namespace constValue {
-            export const ARTICLE_DOM = "article"
+            export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
-        export abstract class PropertyArea extends PropertyAreaElement {
+        export abstract class PropertyAreaElement extends Backbone.View<Model.Item> {
 
-            private commandManager_: CommandManager;
+            protected template_: CDP.Tools.JST;
 
-            constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
-                super(item, templateDomId);
-                this.commandManager_ = commandManager;
+            constructor(item: Model.Item, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
+                super({
+                    model: item,
+                });
+                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
 
-            events() {
-                // Please add events
-                return {
-
-                };
+            render(option?: any): Backbone.View<Model.Item> {
+                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
+                this.$el.children().remove();
+                this.$el.append(this.template_(this.getModel()));
+                return this;
             }
 
             endProcessOfRender() {
-                super.endProcessOfRender();
-                $(document).find("article").focus();
+                this.$el.i18n();
+                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
             }
 
             /**
-             * CommandManagerにModelの変更を登録する。
-             * PropertyArea上の変更はこの関数での変更のみとする。
-             * @param {Model.Item} target 変更対象のモデル。
-             * @param {Object} previousData 変更前の値。undo時に利用。
-             * @param {Object} nextData 変更後の愛。redo時に利用。
+             * 保持しているモデルを取得する
+             * @return {Model.BUttonItem}
              */
-            protected _setMementoCommand(target: Model.Item, previousData: Object, nextData: Object) {
-                let FUNCTION_NAME = TAG + "_setMementoCommand ";
+            getModel(): Model.Item {
+                return this.model;
+            }
 
-                //TODO: previousDataとnextDataをクラス化
-                var memento: IMemento = {
-                    target: target,
-                    previousData: previousData,
-                    nextData: nextData
-                };
-
-                var mementoCommand = new MementoCommand([memento]);
-                this.commandManager_.invoke(mementoCommand);
+            /**
+             * テンプレート用の.htmlへのファイルパスを返す。
+             * @return {string}
+             */
+            protected _getTemplateFilePath() {
+                return constValue.TEMPLATE_FILE_PATH;
             }
 
             /**
