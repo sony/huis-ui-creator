@@ -36,6 +36,9 @@ module Garage {
                 export const PATH: string = "path";
                 export const RESIZE_ORIGINAL: string = "resizeOriginal";
             }
+            export namespace Button {
+                export const STATE: string = "state";
+            }
         }
 
         export namespace PropertyAreaEvents {
@@ -52,6 +55,7 @@ module Garage {
                 export const UI_CHANGE_DELETE: string = UI_CHANGE_WITH_COLON + "delete";
             }
             export namespace Button {
+                export const CHANGE_STATE: string = Events.CHANGE_WITH_COLON + PropertyValues.Button.STATE;
                 export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE_WITH_COLON + "editTextBtn";
                 export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE_WITH_COLON + "editImageBtn";
             }
