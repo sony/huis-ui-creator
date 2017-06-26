@@ -31,21 +31,16 @@ module Garage {
 
         export class ImagePreviewWindow extends ImageHandlePreviewWindow {
 
-            private imagePreview_: ImagePreview;
-
-
             constructor(image: Model.ImageItem, editingRemoteId: string) {
                 super(image, editingRemoteId, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
-                this.imagePreview_ = new ImagePreview(image);
+                this.preview_ = new ImagePreview(image);
             }
-
 
             events() {
                 let events = {};
                 events[Events.CLICK_WITH_DIVIDER + ConstValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 return events;
             }
-
 
             private _onEditBtnClicked(event: Event) {
                 let FUNCTION_NAME = TAG + "_onEditBtnClicked";
@@ -59,15 +54,6 @@ module Garage {
                     this.trigger(PropertyAreaEvents.Image.UI_CHANGE_PATH);
                 });
             }
-
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.imagePreview_.getDomId()).append(this.imagePreview_.render().$el);
-                this.endProcessOfRender();
-                return this;
-            };
-
 
         }
     }
