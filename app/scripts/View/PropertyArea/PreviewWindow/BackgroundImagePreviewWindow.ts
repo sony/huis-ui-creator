@@ -55,13 +55,13 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger(Events.Image.UI_CHANGE_PATH);
+                    this.trigger(PropertyAreaEvents.Image.UI_CHANGE_PATH);
                 });
             }
 
             private _onDeleteBtnClicked(event: Event) {
                 this.tmpImageFilePath_ = "";
-                this.trigger(Events.Image.UI_CHANGE_DELETE);
+                this.trigger(PropertyAreaEvents.Image.UI_CHANGE_DELETE);
             }
 
             render(): Backbone.View<Model.Item> {

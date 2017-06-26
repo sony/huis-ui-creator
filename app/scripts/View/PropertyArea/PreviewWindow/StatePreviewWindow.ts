@@ -62,18 +62,18 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger(Events.Button.UI_CHANGE_EDIT_IMAGE_BUTTON);
+                    this.trigger(PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON);
                 });
                 this._closePopup();
                 event.stopPropagation();
             }
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger(Events.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger(Events.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             events() {
@@ -84,7 +84,7 @@ module Garage {
 
             private _onEditTextBtnClicked(event: Event) {
                 this._closePopup();
-                this.trigger(Events.Button.UI_CHANGE_EDIT_TEXT_BUTTON);
+                this.trigger(PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON);
                 event.stopPropagation();
             }
 
@@ -173,8 +173,8 @@ module Garage {
                 } else if (this.preview_ instanceof TextPreview) {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
-                this.listenTo(this.preview_, Events.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
-                this.listenTo(this.preview_, Events.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
 
             private _getModel(): Model.ButtonItem {

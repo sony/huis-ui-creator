@@ -38,22 +38,16 @@ module Garage {
             }
         }
 
-        export namespace Events {
-            export const DIVIDER: string = " ";
-            export const CLICK: string = "click";
-            export const CLICK_WITH_DIVIDER: string = CLICK + DIVIDER;
-            export const CHANGE: string = "change";
-            export const CHANGE_WITH_COLON: string = CHANGE + ":";
-            export const CHANGE_WITH_DIVIDER: string = CHANGE + DIVIDER;
+        export namespace PropertyAreaEvents {
             export const UI_CHANGE_WITH_COLON: string = "uiChange:";
             export namespace Label {
-                export const CHANGE_SIZE: string = CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
-                export const CHANGE_TEXT: string = CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
+                export const CHANGE_SIZE: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const CHANGE_TEXT: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
                 export const UI_CHANGE_SIZE: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
                 export const UI_CHANGE_TEXT: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
             }
             export namespace Image {
-                export const CHANGE_RESIZE_ORIGINAL: string = CHANGE_WITH_COLON + PropertyValues.Image.RESIZE_ORIGINAL;
+                export const CHANGE_RESIZE_ORIGINAL: string = Events.CHANGE_WITH_COLON + PropertyValues.Image.RESIZE_ORIGINAL;
                 export const UI_CHANGE_PATH: string = UI_CHANGE_WITH_COLON + PropertyValues.Image.PATH;
                 export const UI_CHANGE_DELETE: string = UI_CHANGE_WITH_COLON + "delete";
             }
