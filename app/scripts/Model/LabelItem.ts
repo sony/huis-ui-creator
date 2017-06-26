@@ -156,7 +156,11 @@ module Garage {
             }
 
             set color(val: string) {
-                this.set("color", val);
+                if (this._isValidColor(val)) {
+                    this.set("color", val);
+                } else {
+                    console.error(TAG + " invalid color is passed to color setter, no-op");
+                }
             }
 
             private _getSettingColor(): string {
