@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.AcStatePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-ac-state-preview-window";
             export const DOM_ID = "#ac-state-preview-window";
 
@@ -37,7 +37,7 @@ module Garage {
             private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId: number) {
-                super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(button, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this.preview_ = new ImagePreview(button.getStateByStateId(stateId).getDefaultImage());
             }

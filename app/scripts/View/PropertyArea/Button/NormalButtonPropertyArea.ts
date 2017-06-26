@@ -26,7 +26,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.NormalButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-normal-button-property-area";
         }
 
@@ -104,7 +104,7 @@ module Garage {
             private assignedInputActions: string[];
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(button, editingRemoteId, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.assignedInputActions = [];
                 this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }

@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.StatePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-state-preview-window";
             export const DOM_ID = "#state-preview-window";
             export const EDIT_BTN_DOM_ID = "#edit-btn";
@@ -48,7 +48,7 @@ module Garage {
             private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId: number, editingRemoteId: string) {
-                super(button, editingRemoteId, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(button, editingRemoteId, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this._initPreview();
             }
@@ -78,7 +78,7 @@ module Garage {
 
             events() {
                 let events = {};
-                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + ConstValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 return events;
             }
 
@@ -94,9 +94,9 @@ module Garage {
 
                 //popのJquery
                 // ポップアップのjQuery DOMを取得.JQueryMobileのpopupを利用しているので$(document)からfindする必要がある。
-                var $overflow = $(document).find(constValue.POPUP_DOM_ID);
-                var previewBorderWidth: number = +(this.$el.parents(constValue.DOM_ID).css(constValue.CSS_BORDER_WIDTH).replace(constValue.UNIT_PX, ""));
-                var overFlowWidth = $overflow.find(constValue.POPUP_LIST_DOM_CLASS).outerWidth(true);
+                var $overflow = $(document).find(ConstValue.POPUP_DOM_ID);
+                var previewBorderWidth: number = +(this.$el.parents(ConstValue.DOM_ID).css(ConstValue.CSS_BORDER_WIDTH).replace(ConstValue.UNIT_PX, ""));
+                var overFlowWidth = $overflow.find(ConstValue.POPUP_LIST_DOM_CLASS).outerWidth(true);
 
                 //押下されたボタンのJquery
                 var $target = $(event.currentTarget);
@@ -164,14 +164,14 @@ module Garage {
                 this.preview_ = this._createPreview();
 
                 //domのクラスをTextPreview用とImagePrevie用に切り替える
-                let $preview = this.$el.find(constValue.PREVIEW_DOM_ID);
-                $preview.removeClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
-                $preview.removeClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
+                let $preview = this.$el.find(ConstValue.PREVIEW_DOM_ID);
+                $preview.removeClass(ConstValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
+                $preview.removeClass(ConstValue.TEXT_PREVIEW_DOM_CLASS_NAME);
 
                 if (this.preview_ instanceof ImagePreview) {
-                    $preview.addClass(constValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
+                    $preview.addClass(ConstValue.IMAGE_PREVIEW_DOM_CLASS_NAME);
                 } else if (this.preview_ instanceof TextPreview) {
-                    $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
+                    $preview.addClass(ConstValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
                 this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
@@ -182,7 +182,7 @@ module Garage {
             }
 
             private _closePopup() {
-                var $overflow = $(document).find(constValue.POPUP_DOM_ID);
+                var $overflow = $(document).find(ConstValue.POPUP_DOM_ID);
                 $overflow.popup("close");
             }
 
@@ -190,8 +190,8 @@ module Garage {
                 //JQueryModileのPopup UI要素を利用しているため、BackboneではなくJQueryのeventバインドを利用。
                 //PopupされたUIは articleの下に生成されるため、このViewからは参照できない。
                 //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
-                let $editImageBtn: JQuery = $(document).find(constValue.EDIT_IMAGE_BTN_DOM_ID);
-                let $editTextBtn: JQuery = $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID);
+                let $editImageBtn: JQuery = $(document).find(ConstValue.EDIT_IMAGE_BTN_DOM_ID);
+                let $editTextBtn: JQuery = $(document).find(ConstValue.EDIT_TEXT_BTN_DOM_ID);
                 
                 //2重発火防止のため、最初にoffする。
                 $editImageBtn.off(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));

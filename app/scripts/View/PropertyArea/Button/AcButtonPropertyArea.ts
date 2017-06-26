@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.AcButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-ac-button-property-area";
         }
 
@@ -32,7 +32,7 @@ module Garage {
             private acStatePreviewWindow_: AcStatePreviewWindow;
 
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(button, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.acStatePreviewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
             }
 

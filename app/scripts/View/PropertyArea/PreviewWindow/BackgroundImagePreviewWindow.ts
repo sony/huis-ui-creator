@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.BackgroundImagePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-background-image-preview-window";
             export const DOM_ID = "#background-image-preview-window";
             export const EDIT_BTN_DOM_ID = "#edit-btn";
@@ -35,14 +35,14 @@ module Garage {
             private imagePreview_: ImagePreview;
 
             constructor(image: Model.ImageItem, editingRemoteId: string) {
-                super(image, editingRemoteId, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(image, editingRemoteId, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
                 this.imagePreview_ = new ImagePreview(image);
             }
 
             events() {
                 let events = {};
-                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
-                events[Events.CLICK_WITH_DIVIDER + constValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + ConstValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + ConstValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
                 return events;
             }
 

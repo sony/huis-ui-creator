@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.ImagePreview] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID: string = "#template-image-preview";
             export const DOM_ID: string = "#preview";
 
@@ -34,7 +34,7 @@ module Garage {
 
 
             constructor(item: Model.ImageItem) {
-                super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(item, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
             }
 
 

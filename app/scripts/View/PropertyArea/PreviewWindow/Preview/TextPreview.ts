@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.Preview.TextPreview] ";
 
-        namespace constValue {
+        namespace ConstValue {
 
             export const TEMPLATE_DOM_ID: string = "#template-text-preview";
             export const DOM_ID: string = "#preview";
@@ -45,15 +45,15 @@ module Garage {
 
 
             constructor(item: Model.LabelItem) {
-                super(item, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(item, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
             }
 
 
             events() {
                 // Please add events
                 let events: Object = {};
-                events[Events.CHANGE_WITH_DIVIDER + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
-                events[Events.CHANGE_WITH_DIVIDER + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
+                events[Events.CHANGE_WITH_DIVIDER + ConstValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
+                events[Events.CHANGE_WITH_DIVIDER + ConstValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
                 return events;
             }
 
@@ -82,16 +82,16 @@ module Garage {
             render(option?: any): Backbone.View<Model.Item> {
                 super.render();
                 //render size pulldown
-                let templateTextSizePulldown = CDP.Tools.Template.getJST(constValue.TEMPLATE_SIZE_PULLDOWN_DOM_ID, this._getTemplateFilePath());
+                let templateTextSizePulldown = CDP.Tools.Template.getJST(ConstValue.TEMPLATE_SIZE_PULLDOWN_DOM_ID, this._getTemplateFilePath());
                 let dataSizePulldownRender = {
-                    sizeValues: constValue.SIZE_PULLLDOWN_VALUES
+                    sizeValues: ConstValue.SIZE_PULLLDOWN_VALUES
                 }
-                this.$el.find(constValue.SIZE_PULLDOWM_CONTAINER_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
+                this.$el.find(ConstValue.SIZE_PULLDOWM_CONTAINER_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
 
                 //set initial value of size pulldown
                 let size = this.getModel().size;
                 if (Util.JQueryUtils.isValidValue(size)) {
-                    this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val(size.toString());
+                    this.$el.find(ConstValue.SIZE_PULLDOWM_SELECT_DOM_ID).val(size.toString());
                 }
                 this.endProcessOfRender();
                 return this;
@@ -102,7 +102,7 @@ module Garage {
              * @return {number} テキストサイズ変更用プルダウンの値を取得する。
              */
             getTextSize(): number {
-                return this.$el.find(constValue.SIZE_PULLDOWM_SELECT_DOM_ID).val();
+                return this.$el.find(ConstValue.SIZE_PULLDOWM_SELECT_DOM_ID).val();
             }
 
 
@@ -110,7 +110,7 @@ module Garage {
              * @return {string} テキストフィールドの値を取得する。
              */
             getText(): string {
-                return this.$el.find(constValue.TEXT_FIELD_DOM_ID).val();
+                return this.$el.find(ConstValue.TEXT_FIELD_DOM_ID).val();
             }
 
             /**

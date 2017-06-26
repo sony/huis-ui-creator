@@ -8,7 +8,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.JumpButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-jump-button-property-area";
             export const NO_PAGE_SELECT_NUM: number = -1; //ページ指定用プルダウンで、なにも選択されていない状態での値。
             export const TEMPLATE_ACTION_PULLDOWN = "#template-action-pulldown";
@@ -31,7 +31,7 @@ module Garage {
              * @param {Model.Module[]} modules  編集中のリモコンのモジュール
              */
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager, faceName: string, modules: Model.Module[]) {
-                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(button, editingRemoteId, ConstValue.TEMPLATE_DOM_ID, commandManager);
 
                 this.remoteId = editingRemoteId;
                 this.faceName = faceName;
@@ -78,7 +78,7 @@ module Garage {
                 }
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
-                this.renderPagesOf(order, this.getModel().getDefaultStateId(), constValue.NO_PAGE_SELECT_NUM);
+                this.renderPagesOf(order, this.getModel().getDefaultStateId(), ConstValue.NO_PAGE_SELECT_NUM);
 
                 this.updateModel();
             }
