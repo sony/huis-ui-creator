@@ -40,7 +40,9 @@ module Garage {
                 this.listenTo(this.labelPreviewWindow_, Events.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.labelPreviewWindow_, Events.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
-                this.listenTo(this.getModel(), "change:size change:text", this.render);
+                this.listenTo(this.getModel(),
+                    Events.Label.CHANGE_SIZE + Events.DIVIDER + Events.Label.CHANGE_TEXT, 
+                    this.render);
             }
 
 

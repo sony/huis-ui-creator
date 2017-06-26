@@ -35,9 +35,12 @@ module Garage {
         }
 
         export namespace Events {
+            export const DIVIDER: string = " ";
+            export const CHANGE: string = "change:"
             export const UI_CHANGE: string = "uiChange:"
-
             export namespace Label {
+                export const CHANGE_SIZE: string = CHANGE + PropertyValues.Label.SIZE;
+                export const CHANGE_TEXT: string = CHANGE + PropertyValues.Label.TEXT;
                 export const UI_CHANGE_SIZE: string = UI_CHANGE + PropertyValues.Label.SIZE;
                 export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyValues.Label.TEXT;
             }
