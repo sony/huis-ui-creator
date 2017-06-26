@@ -68,7 +68,7 @@ module Garage {
                 this._setDeviceInfo();
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
-                this.listenTo(this.statePreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.statePreviewWindow_, OriginalEvents.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.statePreviewWindow_, "uiChange:text", this._onTextFieldChanged);
 
                 this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);

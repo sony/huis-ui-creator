@@ -37,7 +37,7 @@ module Garage {
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
-                this.listenTo(this.labelPreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.labelPreviewWindow_, OriginalEvents.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.labelPreviewWindow_, "uiChange:text", this._onTextFieldChanged);
 
                 this.listenTo(this.getModel(), "change:size change:text", this.render);

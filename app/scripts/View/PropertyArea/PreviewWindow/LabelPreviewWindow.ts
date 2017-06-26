@@ -36,7 +36,7 @@ module Garage {
             constructor(label: Model.LabelItem) {
                 super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
-                this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
+                this.listenTo(this.textPreview_, OriginalEvents.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.textPreview_, "uiChange:text", this._onTextFieldChanged);
             }
 
@@ -50,7 +50,7 @@ module Garage {
 
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(OriginalEvents.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
 
