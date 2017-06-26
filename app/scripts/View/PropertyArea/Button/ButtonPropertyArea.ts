@@ -71,8 +71,8 @@ module Garage {
                 this.listenTo(this.statePreviewWindow_, Events.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.statePreviewWindow_, Events.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
-                this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
-                this.listenTo(this.statePreviewWindow_, "uiChange:editImageBtn", this._onChangeToImageBtn);
+                this.listenTo(this.statePreviewWindow_, Events.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
+                this.listenTo(this.statePreviewWindow_, Events.Button.UI_CHANGE_EDIT_IMAGE_BUTTON, this._onChangeToImageBtn);
             }
 
 

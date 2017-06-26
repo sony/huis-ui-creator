@@ -53,6 +53,9 @@ module Garage {
                 export const UI_CHANGE_PATH: string = UI_CHANGE + PropertyValues.Image.PATH;
                 export const UI_CHANGE_DELETE: string = UI_CHANGE + "delete";
             }
+            export namespace Button {
+                export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE + "editTextBtn";
+                export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE + "editImageBtn";
             }
         }
 

@@ -62,7 +62,7 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger("uiChange:editImageBtn");
+                    this.trigger(Events.Button.UI_CHANGE_EDIT_IMAGE_BUTTON);
                 });
                 this._closePopup();
                 event.stopPropagation();
@@ -84,7 +84,7 @@ module Garage {
 
             private _onEditTextBtnClicked(event: Event) {
                 this._closePopup();
-                this.trigger("uiChange:editTextBtn");
+                this.trigger(Events.Button.UI_CHANGE_EDIT_TEXT_BUTTON);
                 event.stopPropagation();
             }
 
