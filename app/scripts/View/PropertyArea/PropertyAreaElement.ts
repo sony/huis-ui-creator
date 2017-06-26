@@ -27,15 +27,20 @@ module Garage {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
-        export namespace PropertyVariables {
-            export const SIZE = "size";
-            export const TEXT = "text";
+        export namespace PropertyValues {
+            export namespace Label {
+                export const SIZE: string = "size";
+                export const TEXT: string = "text";
+            }
         }
 
         export namespace Events {
             export const UI_CHANGE: string = "uiChange:"
-            export const UI_CHANGE_SIZE: string = UI_CHANGE + PropertyVariables.SIZE;
-            export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyVariables.TEXT;
+
+            export namespace Label {
+                export const UI_CHANGE_SIZE: string = UI_CHANGE + PropertyValues.Label.SIZE;
+                export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyValues.Label.TEXT;
+            }
         }
 
         export abstract class PropertyAreaElement extends Backbone.View<Model.Item> {
