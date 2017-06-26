@@ -34,6 +34,7 @@ module Garage {
             }
             export namespace Image {
                 export const PATH: string = "path";
+                export const RESIZE_ORIGINAL: string = "resizeOriginal";
             }
         }
 
@@ -48,7 +49,10 @@ module Garage {
                 export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyValues.Label.TEXT;
             }
             export namespace Image {
+                export const CHANGE_RESIZE_ORIGINAL: string = CHANGE + PropertyValues.Image.RESIZE_ORIGINAL;
                 export const UI_CHANGE_PATH: string = UI_CHANGE + PropertyValues.Image.PATH;
+                export const UI_CHANGE_DELETE: string = UI_CHANGE + "delete";
+            }
             }
         }
 
