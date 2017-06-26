@@ -40,22 +40,26 @@ module Garage {
 
         export namespace Events {
             export const DIVIDER: string = " ";
-            export const CHANGE: string = "change:"
-            export const UI_CHANGE: string = "uiChange:"
+            export const CLICK: string = "click";
+            export const CLICK_WITH_DIVIDER: string = CLICK + DIVIDER;
+            export const CHANGE: string = "change";
+            export const CHANGE_WITH_COLON: string = CHANGE + ":";
+            export const CHANGE_WITH_DIVIDER: string = CHANGE + DIVIDER;
+            export const UI_CHANGE_WITH_COLON: string = "uiChange:";
             export namespace Label {
-                export const CHANGE_SIZE: string = CHANGE + PropertyValues.Label.SIZE;
-                export const CHANGE_TEXT: string = CHANGE + PropertyValues.Label.TEXT;
-                export const UI_CHANGE_SIZE: string = UI_CHANGE + PropertyValues.Label.SIZE;
-                export const UI_CHANGE_TEXT: string = UI_CHANGE + PropertyValues.Label.TEXT;
+                export const CHANGE_SIZE: string = CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const CHANGE_TEXT: string = CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
+                export const UI_CHANGE_SIZE: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const UI_CHANGE_TEXT: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
             }
             export namespace Image {
-                export const CHANGE_RESIZE_ORIGINAL: string = CHANGE + PropertyValues.Image.RESIZE_ORIGINAL;
-                export const UI_CHANGE_PATH: string = UI_CHANGE + PropertyValues.Image.PATH;
-                export const UI_CHANGE_DELETE: string = UI_CHANGE + "delete";
+                export const CHANGE_RESIZE_ORIGINAL: string = CHANGE_WITH_COLON + PropertyValues.Image.RESIZE_ORIGINAL;
+                export const UI_CHANGE_PATH: string = UI_CHANGE_WITH_COLON + PropertyValues.Image.PATH;
+                export const UI_CHANGE_DELETE: string = UI_CHANGE_WITH_COLON + "delete";
             }
             export namespace Button {
-                export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE + "editTextBtn";
-                export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE + "editImageBtn";
+                export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE_WITH_COLON + "editTextBtn";
+                export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE_WITH_COLON + "editImageBtn";
             }
         }
 

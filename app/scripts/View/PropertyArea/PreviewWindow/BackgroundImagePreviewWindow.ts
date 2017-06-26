@@ -41,8 +41,8 @@ module Garage {
 
             events() {
                 let events = {};
-                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
-                events["click " + constValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + constValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
                 return events;
             }
 

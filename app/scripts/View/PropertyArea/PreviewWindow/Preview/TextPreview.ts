@@ -52,8 +52,8 @@ module Garage {
             events() {
                 // Please add events
                 let events: Object = {};
-                events["change " + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
-                events["change " + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
+                events[Events.CHANGE_WITH_DIVIDER + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
+                events[Events.CHANGE_WITH_DIVIDER + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
                 return events;
             }
 

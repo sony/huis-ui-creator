@@ -78,7 +78,7 @@ module Garage {
 
             events() {
                 let events = {};
-                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 return events;
             }
 
@@ -192,12 +192,12 @@ module Garage {
                 //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
                 let $editImageBtn: JQuery = $(document).find(constValue.EDIT_IMAGE_BTN_DOM_ID);
                 let $editTextBtn: JQuery = $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID);
-
+                
                 //2重発火防止のため、最初にoffする。
-                $editImageBtn.off("click", $.proxy(this._onEditImageBtnClicked, this));
-                $editTextBtn.off("click", $.proxy(this._onEditTextBtnClicked, this));
-                $editImageBtn.on("click", $.proxy(this._onEditImageBtnClicked, this));
-                $editTextBtn.on("click", $.proxy(this._onEditTextBtnClicked, this));
+                $editImageBtn.off(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.off(Events.CLICK, $.proxy(this._onEditTextBtnClicked, this));
+                $editImageBtn.on(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.on(Events.CLICK, $.proxy(this._onEditTextBtnClicked, this));
             }
 
         }
