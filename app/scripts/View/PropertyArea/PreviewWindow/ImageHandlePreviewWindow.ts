@@ -52,6 +52,7 @@ module Garage {
                 super(item, domId, templateDomId, options);
                 this.tmpImageFilePath_ = null;
                 this.editingRemoteId_ = editingRemoteId;
+                this.isBackgroundImge_ = item instanceof Model.ImageItem ? item.isBackgroundImage : false;
             }
 
 
