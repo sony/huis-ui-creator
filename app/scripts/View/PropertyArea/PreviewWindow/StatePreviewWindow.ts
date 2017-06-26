@@ -69,7 +69,7 @@ module Garage {
             }
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger(OriginalEvents.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(Events.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             private _onTextFieldChanged(event: Event) {
@@ -173,7 +173,7 @@ module Garage {
                 } else if (this.preview_ instanceof TextPreview) {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
-                this.listenTo(this.preview_, OriginalEvents.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, Events.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.preview_, "uiChange:text", this._onTextFieldChanged);
             }
 

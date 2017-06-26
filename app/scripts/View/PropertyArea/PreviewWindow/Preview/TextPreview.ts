@@ -60,7 +60,7 @@ module Garage {
 
             private _onTextSizePulldownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextSizePulldownChanged : ";
-                this.trigger(OriginalEvents.UI_CHANGE_SIZE);//PropertyAreaでUIの変更イベント発火を探知される。
+                this.trigger(Events.UI_CHANGE_SIZE);//PropertyAreaでUIの変更イベント発火を探知される。
             }
 
 

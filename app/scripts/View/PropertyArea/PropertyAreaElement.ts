@@ -27,8 +27,8 @@ module Garage {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
-        export namespace OriginalEvents {
-            export const UI_CHANGE_SIZE :string = "uiChange:size";
+        export namespace Events {
+            export const UI_CHANGE_SIZE: string = "uiChange:size";
         }
 
         export abstract class PropertyAreaElement extends Backbone.View<Model.Item> {
