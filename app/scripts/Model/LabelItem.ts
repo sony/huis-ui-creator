@@ -46,7 +46,7 @@ module Garage {
                 }
             }
 
-            private _isValidColor(val: string) {
+            private _isValidColor(val: string): boolean {
                 return val === FontColor.BLACK
                     || val === FontColor.WHITE
                     || val === FontColor.DEFAULT
@@ -159,7 +159,7 @@ module Garage {
                 this.set("color", val);
             }
 
-            private _getSettingColor() {
+            private _getSettingColor(): string {
                 return (sharedInfo.settingColor === SettingColor.WHITE) ? FontColor.BLACK : FontColor.WHITE;
             }
 
