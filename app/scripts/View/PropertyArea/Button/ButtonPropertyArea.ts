@@ -59,20 +59,19 @@ module Garage {
              * 編集中リモコンのmodules
              */
             protected modules: Model.Module[];
-            protected statePreviewWindow_: StatePreviewWindow;
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, templateDomId: string, commandManager: CommandManager) {
                 super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.statePreviewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
+                this.previewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
                 this._setDeviceInfo();
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
-                this.listenTo(this.statePreviewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
-                this.listenTo(this.statePreviewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
+                this.listenTo((<StatePreviewWindow>this.previewWindow_), PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo((<StatePreviewWindow>this.previewWindow_), PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
-                this.listenTo(this.statePreviewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
-                this.listenTo(this.statePreviewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON, this._onChangeToImageBtn);
+                this.listenTo((<StatePreviewWindow>this.previewWindow_), PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
+                this.listenTo((<StatePreviewWindow>this.previewWindow_), PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON, this._onChangeToImageBtn);
             }
 
 
@@ -85,10 +84,10 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             private _onChangeToImageBtn(event: Event) {
-                let changedImageFilePath = this.statePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath = (<StatePreviewWindow>this.previewWindow_).getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.statePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    (<StatePreviewWindow>this.previewWindow_).getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
@@ -116,7 +115,7 @@ module Garage {
             }
 
             private _onTextSizePulldownChanged(event: Event) {
-                let changedSize = this.statePreviewWindow_.getTextSize();
+                let changedSize = (<StatePreviewWindow>this.previewWindow_).getTextSize();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
@@ -126,7 +125,7 @@ module Garage {
             }
 
             private _onTextFieldChanged(event: Event) {
-                let changedText = this.statePreviewWindow_.getText();
+                let changedText = (<StatePreviewWindow>this.previewWindow_).getText();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
@@ -186,13 +185,6 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// public method
             /////////////////////////////////////////////////////////////////////////////////////////
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);
-                this.endProcessOfRender();
-                return this;
-            }
 
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。

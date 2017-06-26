@@ -30,14 +30,12 @@ module Garage {
 
         export class BackgroundImagePropertyArea extends PropertyArea {
 
-            private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
-
             constructor(iamge: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
                 super(iamge, ConstValue.TEMPLATE_DOM_ID, commandManager);
-                this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge, editingRemoteId);
+                this.previewWindow_ = new BackgroundImagePreviewWindow(iamge, editingRemoteId);
 
-                this.listenTo(this.backgroundImagePreviewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
-                this.listenTo(this.backgroundImagePreviewWindow_, PropertyAreaEvents.Image.UI_CHANGE_DELETE, this._onBackgroundImageDeleted);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Image.UI_CHANGE_DELETE, this._onBackgroundImageDeleted);
                 this.listenTo(this.getModel(), PropertyAreaEvents.Image.CHANGE_RESIZE_ORIGINAL, this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
 
@@ -64,10 +62,10 @@ module Garage {
             }
 
             private _onImageFilePathChanged(event: Event) {
-                let changedImageFilePath: string = this.backgroundImagePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath: string = (<BackgroundImagePreviewWindow>this.previewWindow_).getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.backgroundImagePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    (<BackgroundImagePreviewWindow>this.previewWindow_).getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
@@ -86,7 +84,7 @@ module Garage {
 
             render(): Backbone.View<Model.Item> {
                 super.render()
-                this.$el.find(this.backgroundImagePreviewWindow_.getDomId()).append(this.backgroundImagePreviewWindow_.render().$el);
+                this.$el.find((<BackgroundImagePreviewWindow>this.previewWindow_).getDomId()).append((<BackgroundImagePreviewWindow>this.previewWindow_).render().$el);
                 this.endProcessOfRender();
                 return this;
             }

@@ -30,6 +30,7 @@ module Garage {
         export abstract class PropertyArea extends PropertyAreaElement {
 
             private commandManager_: CommandManager;
+            protected previewWindow_: PreviewWindow;
 
             constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, templateDomId);
@@ -46,6 +47,14 @@ module Garage {
             endProcessOfRender() {
                 super.endProcessOfRender();
                 $(document).find("article").focus();
+            }
+
+            render(): Backbone.View<Model.Item> {
+                super.render();
+                this.$el.find(this.previewWindow_.getDomId()).append(this.previewWindow_.render().$el);
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
+                this.endProcessOfRender();
+                return this;
             }
 
             /**

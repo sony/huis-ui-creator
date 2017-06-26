@@ -29,22 +29,18 @@ module Garage {
 
         export class LabelPropertyArea extends PropertyArea {
 
-            private labelPreviewWindow_: LabelPreviewWindow;
-
-
             constructor(label: Model.LabelItem, commandManager: CommandManager) {
                 super(label, ConstValue.TEMPLATE_DOM_ID, commandManager);
-                this.labelPreviewWindow_ = new LabelPreviewWindow(label);
+                this.previewWindow_ = new LabelPreviewWindow(label);
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
-                this.listenTo(this.labelPreviewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
-                this.listenTo(this.labelPreviewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
+                this.listenTo((<LabelPreviewWindow>this.previewWindow_), PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo((<LabelPreviewWindow>this.previewWindow_), PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
                 this.listenTo(this.getModel(),
                     PropertyAreaEvents.Label.CHANGE_SIZE + Events.DIVIDER + PropertyAreaEvents.Label.CHANGE_TEXT, 
                     this.render);
             }
-
 
             events() {
                 // Please add events
@@ -53,27 +49,15 @@ module Garage {
                 };
             }
 
-
             private _onTextSizePulldownChanged(event: Event) {
-                let changedSize = this.labelPreviewWindow_.getTextSize();
+                let changedSize = (<LabelPreviewWindow>this.previewWindow_).getTextSize();
                 this._setMementoCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
             }
 
-
             private _onTextFieldChanged(event: Event) {
-                let changedText = this.labelPreviewWindow_.getText();
+                let changedText = (<LabelPreviewWindow>this.previewWindow_).getText();
                 this._setMementoCommand(this.getModel(), { "text": this.getModel().text }, { "text": changedText })
             }
-
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.labelPreviewWindow_.getDomId()).append(this.labelPreviewWindow_.render().$el);
-                this._adaptJqueryMobileStyleToPulldown(this.$el);
-                this.endProcessOfRender();
-                return this;
-            }
-
 
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
@@ -84,7 +68,6 @@ module Garage {
                 //このクラスとその子供のクラスはthis.modelをModel.LabelItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.LabelItem>this.model;
             }
-
 
         }
     }

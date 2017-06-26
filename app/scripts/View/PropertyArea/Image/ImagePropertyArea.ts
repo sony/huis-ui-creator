@@ -31,17 +31,13 @@ module Garage {
 
         export class ImagePropertyArea extends PropertyArea {
 
-            private imagePreviewWindow_: ImagePreviewWindow;
-
-
             constructor(image: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
                 super(image, ConstValue.TEMPLATE_DOM_ID, commandManager);
-                this.imagePreviewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
+                this.previewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
 
-                this.listenTo(this.imagePreviewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
                 this.listenTo(this.getModel(), PropertyAreaEvents.Image.CHANGE_RESIZE_ORIGINAL, this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
-
 
             events() {
                 // Please add events
@@ -50,12 +46,11 @@ module Garage {
                 };
             }
 
-
             private _onImageFilePathChanged(event: Event) {
-                let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath: string = (<ImagePreviewWindow>this.previewWindow_).getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.imagePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    (<ImagePreviewWindow>this.previewWindow_).getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
@@ -70,15 +65,6 @@ module Garage {
                     });
             }
 
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.imagePreviewWindow_.getDomId()).append(this.imagePreviewWindow_.render().$el);
-                this.endProcessOfRender();
-                return this;
-            }
-
-
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
              * @return {Model.LabelItem}
@@ -88,7 +74,6 @@ module Garage {
                 //このクラスとその子供のクラスはthis.modelをModel.ImageItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.ImageItem>this.model;
             }
-
 
         }
     }
