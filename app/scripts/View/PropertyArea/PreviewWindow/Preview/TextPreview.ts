@@ -75,7 +75,7 @@ module Garage {
                     $target.val(filteredString);
                 }
 
-                this.trigger("uiChange:text");//PropertyAreaでUIの変更イベント発火を探知される。
+                this.trigger(Events.UI_CHANGE_TEXT);//PropertyAreaでUIの変更イベント発火を探知される。
             }
 
 

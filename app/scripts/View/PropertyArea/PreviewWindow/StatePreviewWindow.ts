@@ -73,7 +73,7 @@ module Garage {
             }
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(Events.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             events() {
@@ -174,7 +174,7 @@ module Garage {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
                 this.listenTo(this.preview_, Events.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
-                this.listenTo(this.preview_, "uiChange:text", this._onTextFieldChanged);
+                this.listenTo(this.preview_, Events.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
 
             private _getModel(): Model.ButtonItem {

@@ -29,6 +29,7 @@ module Garage {
 
         export namespace Events {
             export const UI_CHANGE_SIZE: string = "uiChange:size";
+            export const UI_CHANGE_TEXT: string = "uiChange:text";
         }
 
         export abstract class PropertyAreaElement extends Backbone.View<Model.Item> {
