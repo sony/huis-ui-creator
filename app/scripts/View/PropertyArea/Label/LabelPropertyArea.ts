@@ -38,7 +38,7 @@ module Garage {
                 this.listenTo((<LabelPreviewWindow>this.previewWindow_), PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
                 this.listenTo(this.getModel(),
-                    PropertyAreaEvents.Label.CHANGE_SIZE + Events.DIVIDER + PropertyAreaEvents.Label.CHANGE_TEXT, 
+                    PropertyAreaEvents.Label.CHANGE_SIZE + Events.DIVIDER + PropertyAreaEvents.Label.CHANGE_TEXT,
                     this.render);
             }
 
