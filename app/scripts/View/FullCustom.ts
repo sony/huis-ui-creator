@@ -58,7 +58,6 @@ module Garage {
             private mouseMoving_: boolean;
             private gridSize_: number;
             private minItemSize_: number;
-            private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
             private clipboard: Util.ItemClipboard;
             private delayedContextMenuEvent: Event;
@@ -170,7 +169,6 @@ module Garage {
                     var $remoteName: JQuery = $("#input-face-name");
                     Util.JQueryUtils.setFocusAndMoveCursorToEnd($remoteName);
 
-                    this.isTextBoxFocused = false;
                     this.isDragging = false;
 
                     this.isMouseDown = false;
@@ -252,10 +250,6 @@ module Garage {
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
-
-                    // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
-                    "focusin input[type='text']": "_onTextBoxFocusIn",
-                    "focusout input[type='text']": "_onTextBoxFocusOut",
                 });
             }
 
@@ -1594,7 +1588,9 @@ module Garage {
                 var $facePages = $("#face-canvas").find(".face-page");
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストをコピーなのか、アイテムをコピーなのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテムコピーを表示しない。
+                if (this.$currentTarget_ && !this._isTextFieldFocused()) {
                     let menuItem_copyItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
                         accelerator: "CmdOrCtrl+C",
@@ -1617,7 +1613,9 @@ module Garage {
                 this.contextMenu_.append(menuItem_pasteItem);
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストを削除なのか、アイテムを削除なのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテム削除を表示しない。
+                if (this.$currentTarget_ && !this._isTextFieldFocused()) {
                     let menuItem_deleteItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_DELETE_ITEM"),
                         accelerator: "Delete",
@@ -3901,14 +3899,6 @@ module Garage {
                 }
             }
 
-            private _onTextBoxFocusIn() {
-                this.isTextBoxFocused = true;
-            }
-
-            private _onTextBoxFocusOut() {
-                this.isTextBoxFocused = false;
-            }
-
             private _getCurrentTargetPosition(): IPosition {
                 return {
                     x: this.$currentTarget_.offset().left,
@@ -4045,7 +4035,7 @@ module Garage {
                     return;
                 }
 
-                if (!this.isTextBoxFocused) {
+                if (!this._isTextFieldFocused()) { //テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     if (Util.MiscUtil.isDarwin()) {
                         event = this._translateDarwinMetaKeyEvent(event);
                     }
@@ -4202,6 +4192,10 @@ module Garage {
                             break;
                     }
                 }
+            }
+
+            private _isTextFieldFocused(): boolean {
+                return $("input[type='text']").is(':focus');
             }
 
         }
