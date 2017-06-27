@@ -52,15 +52,15 @@ module Garage {
             events() {
                 // Please add events
                 let events: Object = {};
-                events["change " + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
-                events["change " + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
+                events[Events.CHANGE_WITH_DIVIDER + constValue.SIZE_PULLDOWM_SELECT_DOM_ID] = "_onTextSizePulldownChanged";
+                events[Events.CHANGE_WITH_DIVIDER + constValue.TEXT_FIELD_DOM_ID] = "_onTextFieldChanged";
                 return events;
             }
 
 
             private _onTextSizePulldownChanged(event: Event) {
                 let FUNCTION_NAME = TAG + "_onTextSizePulldownChanged : ";
-                this.trigger("uiChange:size");//PropertyAreaでUIの変更イベント発火を探知される。
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//PropertyAreaでUIの変更イベント発火を探知される。
             }
 
 
@@ -75,7 +75,7 @@ module Garage {
                     $target.val(filteredString);
                 }
 
-                this.trigger("uiChange:text");//PropertyAreaでUIの変更イベント発火を探知される。
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//PropertyAreaでUIの変更イベント発火を探知される。
             }
 
 

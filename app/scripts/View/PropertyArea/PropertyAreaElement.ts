@@ -27,6 +27,40 @@ module Garage {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
         }
 
+        export namespace PropertyValues {
+            export namespace Label {
+                export const SIZE: string = "size";
+                export const TEXT: string = "text";
+            }
+            export namespace Image {
+                export const PATH: string = "path";
+                export const RESIZE_ORIGINAL: string = "resizeOriginal";
+            }
+            export namespace Button {
+                export const STATE: string = "state";
+            }
+        }
+
+        export namespace PropertyAreaEvents {
+            export const UI_CHANGE_WITH_COLON: string = "uiChange:";
+            export namespace Label {
+                export const CHANGE_SIZE: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const CHANGE_TEXT: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
+                export const UI_CHANGE_SIZE: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const UI_CHANGE_TEXT: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
+            }
+            export namespace Image {
+                export const CHANGE_RESIZE_ORIGINAL: string = Events.CHANGE_WITH_COLON + PropertyValues.Image.RESIZE_ORIGINAL;
+                export const UI_CHANGE_PATH: string = UI_CHANGE_WITH_COLON + PropertyValues.Image.PATH;
+                export const UI_CHANGE_DELETE: string = UI_CHANGE_WITH_COLON + "delete";
+            }
+            export namespace Button {
+                export const CHANGE_STATE: string = Events.CHANGE_WITH_COLON + PropertyValues.Button.STATE;
+                export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE_WITH_COLON + "editTextBtn";
+                export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE_WITH_COLON + "editImageBtn";
+            }
+        }
+
         export abstract class PropertyAreaElement extends Backbone.View<Model.Item> {
 
             protected template_: CDP.Tools.JST;

@@ -423,10 +423,9 @@ module Garage {
                 var $faceItem = $(".face-item");
                 var $faceItemList = $("#face-item-list");
 
-                $faceItem.on("click", (event: JQueryEventObject) => {
+                $faceItem.on(Events.CLICK, (event: JQueryEventObject) => {
                     this._onFaceItemSelected($(event.currentTarget));
                 });
-
 
                 // face list のスクロール (左方向)
                 $listScrollLeft.click(() => {
@@ -3677,7 +3676,7 @@ module Garage {
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules()
                     );
-                    this.listenTo(item, "change", this._updateElementsOnCanvasProperyAreaChanged);
+                    this.listenTo(item, Events.CHANGE, this._updateElementsOnCanvasProperyAreaChanged);
                 }
                 $detail.append(this.propertyArea_.render().$el);
                 $detail.find(".custom-select").trigger("create");

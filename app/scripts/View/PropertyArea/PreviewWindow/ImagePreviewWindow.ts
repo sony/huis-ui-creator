@@ -42,7 +42,7 @@ module Garage {
 
             events() {
                 let events = {};
-                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 return events;
             }
 
@@ -56,7 +56,7 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger("uiChange:path");
+                    this.trigger(PropertyAreaEvents.Image.UI_CHANGE_PATH);
                 });
             }
 

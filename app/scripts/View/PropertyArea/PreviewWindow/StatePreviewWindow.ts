@@ -62,29 +62,29 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger("uiChange:editImageBtn");
+                    this.trigger(PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON);
                 });
                 this._closePopup();
                 event.stopPropagation();
             }
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
             events() {
                 let events = {};
-                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
                 return events;
             }
 
             private _onEditTextBtnClicked(event: Event) {
                 this._closePopup();
-                this.trigger("uiChange:editTextBtn");
+                this.trigger(PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON);
                 event.stopPropagation();
             }
 
@@ -173,8 +173,8 @@ module Garage {
                 } else if (this.preview_ instanceof TextPreview) {
                     $preview.addClass(constValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
-                this.listenTo(this.preview_, "uiChange:size", this._onTextSizePulldownChanged);
-                this.listenTo(this.preview_, "uiChange:text", this._onTextFieldChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
 
             private _getModel(): Model.ButtonItem {
@@ -194,10 +194,10 @@ module Garage {
                 let $editTextBtn: JQuery = $(document).find(constValue.EDIT_TEXT_BTN_DOM_ID);
 
                 //2重発火防止のため、最初にoffする。
-                $editImageBtn.off("click", $.proxy(this._onEditImageBtnClicked, this));
-                $editTextBtn.off("click", $.proxy(this._onEditTextBtnClicked, this));
-                $editImageBtn.on("click", $.proxy(this._onEditImageBtnClicked, this));
-                $editTextBtn.on("click", $.proxy(this._onEditTextBtnClicked, this));
+                $editImageBtn.off(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.off(Events.CLICK, $.proxy(this._onEditTextBtnClicked, this));
+                $editImageBtn.on(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));
+                $editTextBtn.on(Events.CLICK, $.proxy(this._onEditTextBtnClicked, this));
             }
 
         }

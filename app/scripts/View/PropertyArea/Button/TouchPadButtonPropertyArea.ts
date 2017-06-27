@@ -31,7 +31,7 @@ module Garage {
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
                 super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.listenTo(this.getModel(), "change:state", this.render);
+                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }
 
             render(): Backbone.View<Model.Item> {
