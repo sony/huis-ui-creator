@@ -22,13 +22,16 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
+        // Change of FaceColor affects FaceColorCssClass and $FACE_COLOR_BLACK/WHITE in _classname.css
         export namespace FaceColor {
             export const WHITE: string = "white";
             export const BLACK: string = "black";
-            export const DEFAULT: string = WHITE;
 
             // SETTING is replaced with other face color according to SettingColor
             export const SETTING: string = "setting";
+
+            export const FULL_CUSTOM_DEFAULT: string = WHITE;
+            export const NOT_FULL_CUSTOM_DFEFAULT: string = SETTING;
         }
 
         export class Face extends Backbone.Model implements IFace {
@@ -44,7 +47,14 @@ module Garage {
                 this.remoteId = remoteId;
                 this.name = name;
                 this.category = category;
-                this.color = (color != null) ? color : FaceColor.DEFAULT;
+
+                if (color != null) {
+                    this.color = color;
+                } else if (category === DEVICE_TYPE_FULL_CUSTOM) {
+                    this.color = FaceColor.FULL_CUSTOM_DEFAULT;
+                } else {
+                    this.color = FaceColor.NOT_FULL_CUSTOM_DFEFAULT;
+                }
             }
 
             private _createEmptyModule(remoteId: string, pageIndex: number): Model.Module {
@@ -428,6 +438,15 @@ module Garage {
                 for (let elem of this.modules) {
                     elem.remoteId = val;
                     elem.name = elem.name.replace(/\d{4}/, val);
+                }
+            }
+
+            // TODO: move this method to View
+            getFaceColorCssClassName(): string {
+                if (this.color === FaceColor.BLACK) {
+                    return View.FaceColorCssClass.BLACK_FACE;
+                } else {
+                    return View.FaceColorCssClass.WHITE_FACE;
                 }
             }
 

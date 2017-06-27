@@ -26,6 +26,13 @@ module Garage {
             export const PAGE_NUM_MAX = 5;
         }
 
+        // Change of FaceColorCssClass affects $FACE_COLOR_BLACK/WHITE in _classname.css
+        export namespace FaceColorCssClass {
+            const PREFIX: string = "-face";
+            export const BLACK_FACE = Model.FaceColor.BLACK + PREFIX;
+            export const WHITE_FACE = Model.FaceColor.WHITE + PREFIX;
+        }
+
         // TODO: split this class into View.Canvs and View.Pallet class
 
         export class FaceRenderer extends Backbone.View<any> {
@@ -333,6 +340,8 @@ module Garage {
                     name: this.face_.name
                 }));
                 var $facePagesArea = $faceCanvas.find("#face-pages-area");
+                $facePagesArea.addClass(this.face_.getFaceColorCssClassName());
+                $facePagesArea.addClass(sharedInfo.settingColor);
 
                 this.moduleView_ = new View.Module(
                     this.face_, {

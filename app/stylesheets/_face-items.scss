@@ -21,6 +21,10 @@
     height: $SIZE_CANVAS_HEIGHT;
     box-sizing: border-box;
 
+    .#{$FACE_COLOR_BLACK} #face-pages-area {
+        background-color: black;
+    }
+
     #face-pages-area {
         width: $SIZE_FACE_PAGES_AREA_WIDTH;
         height: $SIZE_FACE_PAGES_AREA_HEIGHT;
@@ -64,6 +68,16 @@
             //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
         }
     }
+}
+
+
+.#{$FACE_COLOR_BLACK} #face-pages-area {
+    background-color: $COLOR_BLACK;
+}
+
+
+.#{$FACE_COLOR_WHITE} #face-pages-area {
+    background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
 }
 
 #face-pages-area {
