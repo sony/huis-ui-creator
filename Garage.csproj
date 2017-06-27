@@ -327,6 +327,7 @@
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ExportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\PathManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\PhnConfigFile.ts" />
     <TypeScriptCompile Include="app\scripts\Util\SelectRemotePageDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\StorageLock.ts" />

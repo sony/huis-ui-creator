@@ -35,14 +35,11 @@ module Garage {
 
         export class ImageItem extends Model.Item {
 
-            private resolvedPathDirectory_: string;
             private initialArea_: IArea;
             private initialResizeMode_: string;
 
             constructor(image: IImage, attributes?: any) {
                 super(attributes, null);
-
-                this.resolvedPathDirectory_ = path.resolve(path.join(HUIS_FILES_ROOT, "remoteimages")).replace(/\\/g, "/");
 
                 this.area = $.extend(true, {}, image.area);
                 this.path = image.path;
@@ -220,8 +217,8 @@ module Garage {
                     // path が指定されていない場合は、resolvedPath も指定しない
                     this.resolvedPath = "";
 
-                } else if (this.resolvedPathDirectory_) {
-                    this.resolvedPath = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                } else {
+                    this.resolvedPath = Util.PathManager.resolveImagePath(val);
                 }
             }
 
@@ -294,7 +291,7 @@ module Garage {
             }
 
             set resizeOriginal(val: string) {
-                let changedResolvedOriginalPath: string = path.resolve(path.join(this.resolvedPathDirectory_, val)).replace(/\\/g, "/");
+                let changedResolvedOriginalPath: string = Util.PathManager.resolveImagePath(val);
 
                 if (this.garageExtensions == null) {
                     console.error("garageExtensions is null");
@@ -313,7 +310,7 @@ module Garage {
                     if (garageExtensions.resolvedOriginalPath) {
                         return garageExtensions.resolvedOriginalPath;
                     } else {
-                        garageExtensions.resolvedOriginalPath = path.resolve(path.join(this.resolvedPathDirectory_, garageExtensions.original)).replace(/\\/g, "/");
+                        garageExtensions.resolvedOriginalPath = Util.PathManager.resolveImagePath(garageExtensions.original);
                         this.garageExtensions = garageExtensions;
                         return garageExtensions.resolvedOriginalPath;
                     }
