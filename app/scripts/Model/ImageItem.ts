@@ -228,7 +228,7 @@ module Garage {
 
             set resolvedPath(val: string) {
 
-                this.resolvedPathCSS = JQUtils.enccodeUriValidInCSS(val);
+                this.resolvedPathCSS = JQUtils.encodeUriValidInCSS(val);
 
                 this.set("resolvedPath", val);
             }
@@ -330,7 +330,7 @@ module Garage {
 
             get resizeResolvedOriginalPathCSS(): string {
                 //resizeResolvedOriginalPathCSSは、Windows用のパスを、CSSが読み取れるようにエンコードされた形。
-                return JQUtils.enccodeUriValidInCSS(this.resizeResolvedOriginalPath);
+                return JQUtils.encodeUriValidInCSS(this.resizeResolvedOriginalPath);
             }
 
             set resizeResolvedOriginalPathCSS(val: string) {

@@ -2715,7 +2715,7 @@ module Garage {
                                 height: buttonAreaH + "px",
                             });
                             let inputUrl: string = null;
-                            inputUrl = JQUtils.enccodeUriValidInCSS(value);
+                            inputUrl = JQUtils.encodeUriValidInCSS(value);
 
                             if (inputUrl == null) {
                                 inputUrl = "none";
