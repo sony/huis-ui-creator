@@ -192,7 +192,7 @@ module Garage {
                 //$.proxyを利用しないと、イベント遷移先でthisが変わってしまう。
                 let $editImageBtn: JQuery = $(document).find(ConstValue.EDIT_IMAGE_BTN_DOM_ID);
                 let $editTextBtn: JQuery = $(document).find(ConstValue.EDIT_TEXT_BTN_DOM_ID);
-                
+
                 //2重発火防止のため、最初にoffする。
                 $editImageBtn.off(Events.CLICK, $.proxy(this._onEditImageBtnClicked, this));
                 $editTextBtn.off(Events.CLICK, $.proxy(this._onEditTextBtnClicked, this));

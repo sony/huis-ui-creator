@@ -39,7 +39,7 @@ module Garage {
 
             protected tmpImageFilePath_: string;//変更後の画像パス。モデル適応する前に親クラスが取得するために保持。
             protected editingRemoteId_: string;
-            private isBackgroundImge_: boolean;
+            private isBackgroundImage_: boolean;
 
             /**
              * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
@@ -52,6 +52,7 @@ module Garage {
                 super(item, domId, templateDomId, options);
                 this.tmpImageFilePath_ = null;
                 this.editingRemoteId_ = editingRemoteId;
+                this.isBackgroundImage_ = item instanceof Model.ImageItem ? item.isBackgroundImage : false;
             }
 
 
@@ -171,7 +172,7 @@ module Garage {
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 //TODO: move const variables difinition from init.ts to more specific place
-                let params = this.isBackgroundImge_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+                let params = this.isBackgroundImage_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
                 Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {

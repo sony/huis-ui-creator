@@ -58,11 +58,14 @@ module Garage {
             private mouseMoving_: boolean;
             private gridSize_: number;
             private minItemSize_: number;
-            private isTextBoxFocused: Boolean;
             private isDragging: Boolean;
             private clipboard: Util.ItemClipboard;
             private delayedContextMenuEvent: Event;
             private isMouseDown: Boolean;
+
+            // TODO: replace face with Remote class
+            // face object under editing now
+            private currentFace_: Model.Face;
 
             private bindedLayoutPage = null;
 
@@ -115,7 +118,15 @@ module Garage {
                     huisFiles.initWatingResizeImages();
 
                     var remoteId = this._getUrlQueryParameter("remoteId");
-                    this._renderCanvas(remoteId);
+                    if (remoteId != null) {
+                        this.currentFace_ = huisFiles.getFace(remoteId);
+                    } else {
+                        this.newRemote_ = true;
+                        this.currentFace_ = huisFiles.createNewFace();
+                    }
+                    this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
+                    this.faceRenderer_canvas_.render();
+                    this._setGridSize();
 
                     // ページ数が最大の場合はページ追加ボタンを無効化する
                     if (this.faceRenderer_canvas_.isPageNumMax()) {
@@ -127,7 +138,7 @@ module Garage {
                     // ボタンに設定された信号名を基リモコンに合わせる
                     huisFiles.applyNumberedFunctionName(modules);
 
-                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.faceRenderer_canvas_.getRemoteId());
+                    this.buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, this.currentFace_.remoteId);
                     this.buttonDeviceInfoCache.load(modules);
                     // ボタンに設定された信号名をキャッシュに合わせる
                     huisFiles.applyCachedFunctionName(modules);
@@ -158,7 +169,6 @@ module Garage {
                     var $remoteName: JQuery = $("#input-face-name");
                     Util.JQueryUtils.setFocusAndMoveCursorToEnd($remoteName);
 
-                    this.isTextBoxFocused = false;
                     this.isDragging = false;
 
                     this.isMouseDown = false;
@@ -240,10 +250,6 @@ module Garage {
                     "vclick #command-delete-remote": "_onCommandDeleteRemote",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
-
-                    // テキストボックスへのfocusin/out　テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
-                    "focusin input[type='text']": "_onTextBoxFocusIn",
-                    "focusout input[type='text']": "_onTextBoxFocusOut",
                 });
             }
 
@@ -266,16 +272,13 @@ module Garage {
 
              */
             private _onCommandExportRemote(event: Event) {
-                let remoteId = this.faceRenderer_canvas_.getRemoteId();
-                let face: Model.Face = huisFiles.getFace(remoteId);
-
                 //errorハンドリング
                 let errorOccur: boolean = this._isErrorOccurBeforeSave(true);
                 if (errorOccur) {
                     return;
                 }
 
-                this.exportRemote(face);
+                this.exportRemote(this.currentFace_);
             }
 
             /**
@@ -368,44 +371,26 @@ module Garage {
 
             }
 
-            /**
-             * face canvas を作成する。
-             */
-            private _renderCanvas(remoteId?: string) {
+            private _createCanvas(face: Model.Face): FaceRenderer {
                 var $faceCanvasArea = $("#face-canvas-area");
-                var face = remoteId ? huisFiles.getFace(remoteId) : null;
-                if (face) {
-                    this.faceRenderer_canvas_ = new FaceRenderer({
-                        el: $faceCanvasArea,
-                        attributes: {
-                            face: face,
-                            type: "canvas",
-                            materialsRootPath: HUIS_FILES_DIRECTORY
-                        }
-                    });
-                } else {
-                    this.faceRenderer_canvas_ = new FaceRenderer({
-                        el: $faceCanvasArea,
-                        attributes: {
-                            remoteId: huisFiles.createNewRemoteId(),
-                            type: "canvas",
-                            materialsRootPath: HUIS_FILES_DIRECTORY
-                        }
-                    });
-                    this.newRemote_ = true;
-                }
 
-                this.faceRenderer_canvas_.render();
-
-                this._setGridSize();
-
-
-                this.currentTargetPageIndex_ = 0;
+                let faceRenderer = new FaceRenderer({
+                    el: $faceCanvasArea,
+                    attributes: {
+                        face: face,
+                        type: "canvas",
+                        materialsRootPath: HUIS_FILES_DIRECTORY
+                    }
+                });
 
                 // [TODO] Canvas 内の page scroll
                 $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
                     this.onCanvasPageScrolled(event);
                 });
+
+                this.currentTargetPageIndex_ = 0;
+
+                return faceRenderer;
             }
 
             /**
@@ -929,7 +914,7 @@ module Garage {
                 let codeDb = huisFiles.getMasterCodeDb(remoteId);
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
-                let remoteName = huisFiles.getFace(remoteId).name;
+                let remoteName = this.currentFace_.name;
 
                 let deviceInfo: IButtonDeviceInfo = {
                     id: "",
@@ -1603,7 +1588,9 @@ module Garage {
                 var $facePages = $("#face-canvas").find(".face-page");
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストをコピーなのか、アイテムをコピーなのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテムコピーを表示しない。
+                if (this.$currentTarget_ && !this._isTextFieldFocused()) {
                     let menuItem_copyItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
                         accelerator: "CmdOrCtrl+C",
@@ -1626,7 +1613,9 @@ module Garage {
                 this.contextMenu_.append(menuItem_pasteItem);
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストを削除なのか、アイテムを削除なのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテム削除を表示しない。
+                if (this.$currentTarget_ && !this._isTextFieldFocused()) {
                     let menuItem_deleteItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_DELETE_ITEM"),
                         accelerator: "Delete",
@@ -2119,7 +2108,7 @@ module Garage {
 
                 let faceLabel: string;
                 let total: number;
-                if (target.remote_id === this.faceRenderer_canvas_.getRemoteId()) {
+                if (target.remote_id === this.currentFace_.remoteId) {
                     // 編集中ページの場合
                     faceLabel = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');
 
@@ -2225,7 +2214,7 @@ module Garage {
                 }
 
                 let modules = this.faceRenderer_canvas_.getModules((area) => { return !this.isCompletelyOutOfCanvas(area); });
-                let remoteId = this.faceRenderer_canvas_.getRemoteId();
+                let remoteId = this.currentFace_.remoteId;
                 let faceName: string = $("#input-face-name").val();
 
                 let dialogProps = DIALOG_PROPS_CREATE_NEW_REMOTE;
@@ -3680,7 +3669,7 @@ module Garage {
                 if (this.propertyArea_ == null) {
                     this.propertyArea_ = PropertyAreaFactory.create(
                         item,
-                        this.faceRenderer_canvas_.getRemoteId(),
+                        this.currentFace_.remoteId,
                         this.commandManager_,
                         $("#input-face-name").val(),
                         this.faceRenderer_canvas_.getModules()
@@ -3910,14 +3899,6 @@ module Garage {
                 }
             }
 
-            private _onTextBoxFocusIn() {
-                this.isTextBoxFocused = true;
-            }
-
-            private _onTextBoxFocusOut() {
-                this.isTextBoxFocused = false;
-            }
-
             private _getCurrentTargetPosition(): IPosition {
                 return {
                     x: this.$currentTarget_.offset().left,
@@ -4054,7 +4035,7 @@ module Garage {
                     return;
                 }
 
-                if (!this.isTextBoxFocused) {
+                if (!this._isTextFieldFocused()) { //テキストボックスにfocusされている場合はBS/DELキーでの要素削除を抑制する
                     if (Util.MiscUtil.isDarwin()) {
                         event = this._translateDarwinMetaKeyEvent(event);
                     }
@@ -4211,6 +4192,10 @@ module Garage {
                             break;
                     }
                 }
+            }
+
+            private _isTextFieldFocused(): boolean {
+                return $("input[type='text']").is(':focus');
             }
 
         }
