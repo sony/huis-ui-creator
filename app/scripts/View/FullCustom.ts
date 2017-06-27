@@ -1595,7 +1595,9 @@ module Garage {
                 var $facePages = $("#face-canvas").find(".face-page");
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストをコピーなのか、アイテムをコピーなのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテムコピーを表示しない。
+                if (this.$currentTarget_ && !this.isTextBoxFocused) {
                     let menuItem_copyItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_COPY_ITEM"),
                         accelerator: "CmdOrCtrl+C",
@@ -1618,7 +1620,9 @@ module Garage {
                 this.contextMenu_.append(menuItem_pasteItem);
 
                 // カーソルがアイテムの上にある場合
-                if (this.$currentTarget_) {
+                // テキストを削除なのか、アイテムを削除なのか紛らわしいため、
+                // テキストフィールドがフォーカスされているときは、アイテム削除を表示しない。
+                if (this.$currentTarget_ && !this.isTextBoxFocused) {
                     let menuItem_deleteItem = new MenuItem({
                         label: $.i18n.t(dictionaryPathOffset + "STR_CONTEXT_DELETE_ITEM"),
                         accelerator: "Delete",
