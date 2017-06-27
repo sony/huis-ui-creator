@@ -166,6 +166,14 @@ module Garage {
                 return ConfigFlags.IS_BZ;
             }
 
+            static isSettingColorBlack(): boolean {
+                return sharedInfo.settingColor === Model.SettingColor.BLACK;
+            }
+
+            static isSettingColorWhite(): boolean {
+                return sharedInfo.settingColor === Model.SettingColor.WHITE;
+            }
+
             /**
              * HUISが取り扱えるサイズの画像ファイルならERROR_TYPE_NOERRORを返す
              * サイズ上限はGarage.MAX_IMAGE_FILESIZEで定義されている。
