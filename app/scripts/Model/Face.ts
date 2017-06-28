@@ -333,6 +333,9 @@ module Garage {
                     if (module.image != null) {
                         images = images.concat(module.image);
                     }
+                    if (module.button == null) {
+                        continue;
+                    }
                     for (let button of module.button) {
                         for (let state of button.state) {
                             if (state.image != null) {
