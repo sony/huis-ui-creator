@@ -29,11 +29,9 @@ module Garage {
 
         export class AcButtonPropertyArea extends PropertyArea {
 
-            private acStatePreviewWindow_: AcStatePreviewWindow;
-
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
                 super(button, ConstValue.TEMPLATE_DOM_ID, commandManager);
-                this.acStatePreviewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
+                this.previewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
             }
 
             events() {
@@ -41,13 +39,6 @@ module Garage {
                 return {
 
                 };
-            }
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.acStatePreviewWindow_.getDomId()).append(this.acStatePreviewWindow_.render().$el);
-                this.endProcessOfRender();
-                return this;
             }
 
             /**

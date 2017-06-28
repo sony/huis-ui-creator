@@ -30,56 +30,33 @@ module Garage {
 
         export class LabelPreviewWindow extends PreviewWindow {
 
-            private textPreview_: TextPreview;
-
-
             constructor(label: Model.LabelItem) {
                 super(label, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
-                this.textPreview_ = new TextPreview(label);
-                this.listenTo(this.textPreview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
-                this.listenTo(this.textPreview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
+                this.preview_ = new TextPreview(label);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
-
-
-            events() {
-                // Please add events
-                return {
-
-                };
-            }
-
 
             private _onTextSizePulldownChanged(event: Event) {
                 this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
-
             private _onTextFieldChanged(event: Event) {
                 this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
-
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
-                this.endProcessOfRender();
-                return this;
-            };
-
 
             /**
              * @return {number} テキストサイズ用のプルダウンの値を取得
              */
             getTextSize(): number {
-                return this.textPreview_.getTextSize();
+                return (<TextPreview>this.preview_).getTextSize();
             }
-
 
             /**
              * @return {string} テキストフィールドの値を取得
              */
             getText(): string {
-                return this.textPreview_.getText();
+                return (<TextPreview>this.preview_).getText();
             }
         }
     }

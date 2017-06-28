@@ -44,7 +44,6 @@ module Garage {
 
         export class StatePreviewWindow extends ImageHandlePreviewWindow {
 
-            private preview_: Preview;
             private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId: number, editingRemoteId: string) {

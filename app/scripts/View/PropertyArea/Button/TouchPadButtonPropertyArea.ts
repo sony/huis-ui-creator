@@ -33,12 +33,6 @@ module Garage {
                 super(button, editingRemoteId, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this._adaptJqueryMobileStyleToPulldown(this.$el);
-                return this;
-            }
         }
     }
 }

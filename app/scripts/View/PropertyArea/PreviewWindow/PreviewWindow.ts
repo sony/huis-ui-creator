@@ -26,11 +26,19 @@ module Garage {
         export abstract class PreviewWindow extends PropertyAreaElement {
 
             protected domId_: string;
+            protected preview_: Preview;
 
             constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
                 super(item, templateDomId, options);
                 this.domId_ = domId;
             }
+
+            render(): Backbone.View<Model.Item> {
+                super.render();
+                this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
+                this.endProcessOfRender();
+                return this;
+            };
 
             /**
              * @return {string} DOM全体を示すIDを返す。
