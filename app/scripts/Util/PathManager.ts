@@ -21,6 +21,7 @@ module Garage {
 
         namespace Dirs {
             export const BLACK_DIR: string = "black";
+            export const WHITE_DIR: string = "white";
         }
 
         export class PathManager {
@@ -41,7 +42,8 @@ module Garage {
             static resolveImagePath(argPath: string): string {
 
                 if (!PathManager._isRemoteDir(argPath)) {
-                    argPath = PathManager.join(Dirs.BLACK_DIR, argPath);
+                    let colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+                    argPath = PathManager.join(colorSpecificDir, argPath);
                 }
                 return PathManager.joinAndResolve(HUIS_REMOTEIMAGES_ROOT, argPath);
             }
