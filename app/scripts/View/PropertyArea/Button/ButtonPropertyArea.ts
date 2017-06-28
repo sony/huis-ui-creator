@@ -26,7 +26,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
@@ -1515,9 +1515,9 @@ module Garage {
                 }
 
                 let tmpLabel: Model.LabelItem = new Model.LabelItem({
-                    text: constValue.DEFAULT_TEXT,
-                    size: constValue.DEFAULT_TEXT_SIZE,
-                    font_weight: constValue.BUTTON_FONT_WEIGHT,
+                    text: ConstValue.DEFAULT_TEXT,
+                    size: ConstValue.DEFAULT_TEXT_SIZE,
+                    font_weight: ConstValue.BUTTON_FONT_WEIGHT,
                     area: defaultLabelArea
                 })
                 let tmpLabels: Model.LabelItem[] = [];
@@ -1532,10 +1532,10 @@ module Garage {
 
             protected _getActionPulldownJquery(stateId: number): JQuery {
                 return this.$el.find(
-                    constValue.ACTION_PULLDOWN_DOM_CLASS +
-                    constValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
+                    ConstValue.ACTION_PULLDOWN_DOM_CLASS +
+                    ConstValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
                     stateId +
-                    constValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
+                    ConstValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
                 );
             }
 
@@ -1549,8 +1549,8 @@ module Garage {
                     actionList: actionList,
                     stateId: stateId
                 }
-                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(constValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
-                this.$el.find(constValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
+                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(ConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
+                this.$el.find(ConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
             }
 
         }

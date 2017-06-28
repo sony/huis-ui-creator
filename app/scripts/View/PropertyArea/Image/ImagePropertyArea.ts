@@ -25,7 +25,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Image.ImagePropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-image-property-area";
         }
 
@@ -35,7 +35,7 @@ module Garage {
 
 
             constructor(image: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(image, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(image, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.imagePreviewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
 
                 this.listenTo(this.imagePreviewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);

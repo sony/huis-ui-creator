@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const ARTICLE_DOM = "article"
         }
 

@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.LabelPreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-label-preview-window";
             export const DOM_ID = "#label-preview-window";
         }
@@ -34,7 +34,7 @@ module Garage {
 
 
             constructor(label: Model.LabelItem) {
-                super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(label, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
                 this.textPreview_ = new TextPreview(label);
                 this.listenTo(this.textPreview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
                 this.listenTo(this.textPreview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);

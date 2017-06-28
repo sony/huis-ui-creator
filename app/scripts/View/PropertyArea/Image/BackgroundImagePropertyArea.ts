@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Image.BackgroundImagePropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-background-image-property-area";
             export const INVALID_PATH = "";
         }
@@ -33,7 +33,7 @@ module Garage {
             private backgroundImagePreviewWindow_: BackgroundImagePreviewWindow;
 
             constructor(iamge: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(iamge, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(iamge, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.backgroundImagePreviewWindow_ = new BackgroundImagePreviewWindow(iamge, editingRemoteId);
 
                 this.listenTo(this.backgroundImagePreviewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
@@ -58,8 +58,8 @@ module Garage {
                     },
                     {
                         "enabled": false,
-                        "path": constValue.INVALID_PATH,
-                        "resizeOriginal": constValue.INVALID_PATH
+                        "path": ConstValue.INVALID_PATH,
+                        "resizeOriginal": ConstValue.INVALID_PATH
                     });
             }
 

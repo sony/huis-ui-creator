@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Label.LabelPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-label-property-area";
         }
 
@@ -33,7 +33,7 @@ module Garage {
 
 
             constructor(label: Model.LabelItem, commandManager: CommandManager) {
-                super(label, constValue.TEMPLATE_DOM_ID, commandManager);
+                super(label, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.labelPreviewWindow_ = new LabelPreviewWindow(label);
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
