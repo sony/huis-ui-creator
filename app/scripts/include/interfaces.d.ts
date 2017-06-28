@@ -321,9 +321,9 @@ interface ILabel {
      */
     text: string;
     /**
-     * テキストの色 (16階調グレイスケール)
+     * テキストの色 (black, white, setting)
      */
-    color?: number;
+    color?: string;
     /**
      * テキストのフォント
      */
