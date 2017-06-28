@@ -1400,6 +1400,7 @@ module Garage {
                         /* jshint -W032:false */
                     }
 
+                    // TODO: replace with search
                     // remoteList に格納されている remoteId と同名のディレクトリーであるかチェック。
                     // 格納されていない remoteId のディレクトリーは削除対象とする。
                     for (let i = 0, l = remoteList.length; i < l; i++) {
@@ -1428,6 +1429,13 @@ module Garage {
                     // ディレクトリーであるかチェック
                     if (!fs.statSync(fullPath).isDirectory()) {
                         return false;
+                    }
+
+                    // 以下のディレクトリーは削除対象外
+                    switch (file) {
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
+                            return false;
                     }
 
                     for (let i = 0, l = remoteList.length; i < l; i++) {

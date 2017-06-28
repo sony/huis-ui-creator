@@ -19,7 +19,7 @@
 module Garage {
     export module Util {
 
-        namespace Dirs {
+        export namespace Dirs {
             export const BLACK_DIR: string = "black";
             export const WHITE_DIR: string = "white";
         }
