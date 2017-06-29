@@ -2683,7 +2683,7 @@ module Garage {
                                 width: buttonAreaW + "px",
                                 height: buttonAreaH + "px",
                                 lineHeight: buttonAreaH + "px",
-                                color: "rgb(0,0,0)",
+                                color: label.color,
                                 fontSize: size + "pt"
                             });
                         }
