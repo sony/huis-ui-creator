@@ -1511,7 +1511,8 @@ module Garage {
                     text: ConstValue.DEFAULT_TEXT,
                     size: ConstValue.DEFAULT_TEXT_SIZE,
                     font_weight: ConstValue.BUTTON_FONT_WEIGHT,
-                    area: defaultLabelArea
+                    area: defaultLabelArea,
+                    color: Model.FontColor.SETTING
                 })
                 let tmpLabels: Model.LabelItem[] = [];
                 tmpLabels.push(tmpLabel);
