@@ -48,6 +48,10 @@ module Garage {
                 return PathManager.joinAndResolve(HUIS_REMOTEIMAGES_ROOT, argPath);
             }
 
+            static basename(argPath: string): string {
+                return path.basename(argPath);
+            }
+
             static resolve(...argPath: string[]): string {
                 return path.resolve(...argPath).replace(/\\/g, "/");
             }
