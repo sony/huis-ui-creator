@@ -535,12 +535,13 @@ module Garage {
                     return CDP.makePromise(df);
                 }
 
-
+                // TODO: make public
                 private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
                     let FUNCITON_NAME = TAG + "_copyFiles : ";
                     let df = $.Deferred<Error>();
                     let promise = CDP.makePromise(df);
 
+                    // TODO: remove nop code
                     let files = targetFiles.slice();
 
                     let proc = () => {
@@ -553,6 +554,7 @@ module Garage {
                                 this._checkCancel();
                                 let option: CopyOptions = {
                                     preserveTimestamps: true,
+                                    // TODO: move filter logic out of this method
                                     // ボタンデバイス情報のキャッシュファイルは本体に送らない
                                     filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }
