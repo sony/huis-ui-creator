@@ -99,7 +99,7 @@ module Garage {
                 let originalPath = this.garageExtensions.original;
                 let resolvedOriginalPath = this.garageExtensions.resolvedOriginalPath;
                 if (!resolvedOriginalPath) {
-                    resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                    resolvedOriginalPath = Util.PathManager.resolveImagePath(originalPath);
                     this.garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
                 }
                 let parsedPath = path.parse(resolvedOriginalPath);
