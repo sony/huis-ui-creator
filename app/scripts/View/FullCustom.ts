@@ -615,6 +615,8 @@ module Garage {
                     $facePallet.removeClass("common-parts");
                 }
 
+                $facePallet.addClass(face.getFaceColorCssClassName());
+
                 this.faceRenderer_pallet_ = new FaceRenderer({
                     el: $facePallet,
                     attributes: {

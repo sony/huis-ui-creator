@@ -208,7 +208,7 @@ module Garage {
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
                 var faces = huisFiles.getFilteredFacesByCategories({});
-                var faceList: { remoteId: string, name: string, category: string }[] = [];
+                var faceList: { remoteId: string, name: string, category: string ,faceColor: string}[] = [];
                 faces.forEach((face: Model.Face) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
@@ -222,7 +222,8 @@ module Garage {
                     faceList.push({
                         remoteId: face.remoteId,
                         name: faceName,
-                        category: faceCategory
+                        category: faceCategory,
+                        faceColor: face.getFaceColorCssClassName()
                     });
 
                 });
