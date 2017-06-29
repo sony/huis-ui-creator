@@ -336,10 +336,10 @@ module Garage {
 
                 /* 詳細編集部分 */
                 //詳細編集エリアのY座標
-                let PROPATY_AREA_MARGIN_RIGHT = 100;
+                let PROPERTY_AREA_MARGIN_RIGHT = 100;
                 let detailWidth = $("#face-item-detail-area").outerWidth();
 
-                let detailLeft = faceCanvasAreaLeft - (PROPATY_AREA_MARGIN_RIGHT + detailWidth);
+                let detailLeft = faceCanvasAreaLeft - (PROPERTY_AREA_MARGIN_RIGHT + detailWidth);
                 $("#face-item-detail-area").css({
                     left: detailLeft + "px",
                 });
