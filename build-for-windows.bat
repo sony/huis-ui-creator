@@ -25,7 +25,9 @@ call npm -g config set proxy http://proxy.sonycity.sony.co.jp:10080
 call npm -g config set https-proxy http://proxy.sonycity.sony.co.jp:10080
 
 cd www
+rd /s /q "HUIS UI CREATOR-win32-ia32"
 rem electron-packager . "HUIS UI CREATOR" --platform=win32 --arch=ia32 --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
 set APP_NAME="HUIS UI CREATOR"
 call electron-packager . %APP_NAME% --platform=win32 --arch=ia32 --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$"
+cd ../
 pause
