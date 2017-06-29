@@ -31,6 +31,12 @@ module Garage {
             constructor(text: string, attributes?: any) {
                 super(attributes, null);
                 this.text = text;
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    this.color = SettingColor.WHITE;
+                } else {
+                    this.color = SettingColor.BLACK;
+                }
+
             }
 
             /*
@@ -97,7 +103,8 @@ module Garage {
                         h: DEFAULT_GRID
                     },
                     font_weight: MODULE_SEPARATOR_LABEL_FONT_WEIGHT,
-                    text: this.text
+                    text: this.text,
+                    color: Model.FontColor.SETTING
                 }
                 let newLabel = new Model.LabelItem(iLabel);
 
@@ -115,12 +122,19 @@ module Garage {
                 this.set("text", val);
             }
 
+            get color(): string {
+                return this.get("color");
+            }
+
+            set color(val: string) {
+                this.set("color", val);
+            }
 
             /**
              * 変更可能なプロパティーの一覧
              */
             get properties(): string[] {
-                return ["text"];
+                return ["text", "color"];
             }
 
             /**

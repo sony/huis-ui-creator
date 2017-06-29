@@ -323,7 +323,7 @@ interface ILabel {
     /**
      * テキストの色 (black, white, setting)
      */
-    color?: string;
+    color: string;
     /**
      * テキストのフォント
      */
