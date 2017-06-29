@@ -23,34 +23,22 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.PreviewWindow] ";
 
-        namespace constValue {
-            export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
-        }
+        export abstract class PreviewWindow extends PropertyAreaElement {
 
-        export abstract class PreviewWindow extends Backbone.View<Model.Item> {
-
-            protected template_: CDP.Tools.JST;
             protected domId_: string;
-
+            protected preview_: Preview;
 
             constructor(item: Model.Item, domId: string, templateDomId: string, options?: Backbone.ViewOptions<Model.Item>) {
-                super(options);
-                this.model = item;
+                super(item, templateDomId, options);
                 this.domId_ = domId;
-                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
 
-
-            events() {
-                // Please add events
-                return {
-
-                };
-            }
-
-
-            abstract render(option?: any): Backbone.View<Model.Item>;
-
+            render(): Backbone.View<Model.Item> {
+                super.render();
+                this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
+                this.endProcessOfRender();
+                return this;
+            };
 
             /**
              * @return {string} DOM全体を示すIDを返す。
@@ -58,16 +46,6 @@ module Garage {
             getDomId(): string {
                 return this.domId_;
             }
-
-
-            /**
-             * テンプレート用の.htmlへのファイルパスを返す。
-             * @return {string}
-             */
-            protected _getTemplateFilePath() {
-                return constValue.TEMPLATE_FILE_PATH;
-            }
-
 
         }
     }

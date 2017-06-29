@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.AcStatePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-ac-state-preview-window";
             export const DOM_ID = "#ac-state-preview-window";
 
@@ -33,11 +33,10 @@ module Garage {
 
         export class AcStatePreviewWindow extends PreviewWindow {
 
-            private preview_: ImagePreview;
             private targetStateId_: number;
 
             constructor(button: Model.ButtonItem, stateId: number) {
-                super(button, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
+                super(button, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
                 this.targetStateId_ = stateId;
                 this.preview_ = new ImagePreview(button.getStateByStateId(stateId).getDefaultImage());
             }
@@ -46,16 +45,6 @@ module Garage {
                 let events = {};
                 return events;
             }
-
-            render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_());
-                this.$el.find(this.preview_.getDomId()).append(this.preview_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
-            };
 
         }
     }

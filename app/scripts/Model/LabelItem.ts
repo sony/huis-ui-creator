@@ -46,7 +46,7 @@ module Garage {
                 }
             }
 
-            private _isValidColor(val: string) {
+            private _isValidColor(val: string): boolean {
                 return val === FontColor.BLACK
                     || val === FontColor.WHITE
                     || val === FontColor.DEFAULT
@@ -156,10 +156,14 @@ module Garage {
             }
 
             set color(val: string) {
-                this.set("color", val);
+                if (this._isValidColor(val)) {
+                    this.set("color", val);
+                } else {
+                    console.error(TAG + " invalid color is passed to color setter, no-op");
+                }
             }
 
-            private _getSettingColor() {
+            private _getSettingColor(): string {
                 return (sharedInfo.settingColor === SettingColor.WHITE) ? FontColor.BLACK : FontColor.WHITE;
             }
 

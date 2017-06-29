@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const DEFAULT_IMAGE_INDEX: number = 0;
             export const DEFAULT_LABEL_INDEX: number = 0;
         }
@@ -258,19 +258,19 @@ module Garage {
             }
 
             getDefaultImage(): Model.ImageItem {
-                return this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX];
+                return this.imageCollection_.models[ConstValue.DEFAULT_IMAGE_INDEX];
             }
 
             setDefaultImage(image: Model.ImageItem) {
-                this.imageCollection_.models[constValue.DEFAULT_IMAGE_INDEX] = image;
+                this.imageCollection_.models[ConstValue.DEFAULT_IMAGE_INDEX] = image;
             }
 
             getDefaultLabel(): Model.LabelItem {
-                return this.label[constValue.DEFAULT_LABEL_INDEX];
+                return this.label[ConstValue.DEFAULT_LABEL_INDEX];
             }
 
             setDefaultLabel(label: Model.LabelItem) {
-                this.label[constValue.DEFAULT_LABEL_INDEX] = label;
+                this.label[ConstValue.DEFAULT_LABEL_INDEX] = label;
             }
 
             /**

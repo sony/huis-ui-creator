@@ -28,9 +28,9 @@ module Garage {
 
         // Change of FaceColorCssClass affects $FACE_COLOR_BLACK/WHITE in _classname.css
         export namespace FaceColorCssClass {
-            const PREFIX: string = "-face";
-            export const BLACK_FACE = Model.FaceColor.BLACK + PREFIX;
-            export const WHITE_FACE = Model.FaceColor.WHITE + PREFIX;
+            const SUFFIX: string = "-face";
+            export const BLACK_FACE = Model.FaceColor.BLACK + SUFFIX;
+            export const WHITE_FACE = Model.FaceColor.WHITE + SUFFIX;
         }
 
         // TODO: split this class into View.Canvs and View.Pallet class

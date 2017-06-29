@@ -34,7 +34,7 @@ module Garage {
             functionName: string;
         }
 
-        namespace macroConstValue {
+        namespace ConstValue {
             export const FIRST_MACRO_ORDER: number = 0;
             export const DEFAULT_MACRO_INTERVAL: number = 400; // [ms]
             export const FIRST_MACRO_INTERVAL: number = 0; // [ms]
@@ -47,8 +47,8 @@ module Garage {
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(button, editingRemoteId, macroConstValue.TEMPLATE_DOM_ID, commandManager);
-                this.listenTo(this.getModel(), "change:state", this.render);
+                super(button, editingRemoteId, ConstValue.TEMPLATE_DOM_ID, commandManager);
+                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -109,20 +109,20 @@ module Garage {
 
                     //もし、$nextTopSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して、 自身のintervalを消してからアニメ
-                    if ((targetOrder) == macroConstValue.FIRST_MACRO_ORDER) {
+                    if ((targetOrder) == ConstValue.FIRST_MACRO_ORDER) {
                         //レイアウト崩れを防ぐため、高さは維持する。
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextAboveSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getIntervalFromPullDownOf(macroConstValue.FIRST_MACRO_ORDER);
-                        this.renderIntervalOf(macroConstValue.FIRST_MACRO_ORDER, currentInterval);
-                        this.setIntervalPullDownOf(macroConstValue.FIRST_MACRO_ORDER,
-                            macroConstValue.DEFAULT_MACRO_INTERVAL);
+                        let currentInterval = this.getIntervalFromPullDownOf(ConstValue.FIRST_MACRO_ORDER);
+                        this.renderIntervalOf(ConstValue.FIRST_MACRO_ORDER, currentInterval);
+                        this.setIntervalPullDownOf(ConstValue.FIRST_MACRO_ORDER,
+                            ConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(order);
 
                         // 先頭のシグナルの Interval は固定値のため、入れ替え後先頭になるシグナルの Interval を変更する
-                        this.setIntervalPullDownOf(order, macroConstValue.FIRST_MACRO_INTERVAL);
+                        this.setIntervalPullDownOf(order, ConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextAboveSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -178,20 +178,20 @@ module Garage {
 
                     //もし、$thisOrderSignalContainerが一番上のプルダウンなら、
                     //プルダウンを一度追加して$nextTopSignalContainerのintervalを消してからアニメ。
-                    if (order == macroConstValue.FIRST_MACRO_ORDER) {
+                    if (order == ConstValue.FIRST_MACRO_ORDER) {
                         //レイアウト崩れを防ぐため、高さは維持する。
                         let tmpHeightThis = $thisOrderSignalContainer.find(".signals").outerHeight();
                         let tmpHeightNext = $nextBelowSignalContainer.find(".signals").outerHeight();
 
                         // アニメーション表示のためのレンダリング
-                        let currentInterval = this.getIntervalFromPullDownOf(macroConstValue.FIRST_MACRO_ORDER);
-                        this.renderIntervalOf(macroConstValue.FIRST_MACRO_ORDER, currentInterval);
-                        this.setIntervalPullDownOf(macroConstValue.FIRST_MACRO_ORDER,
-                            macroConstValue.DEFAULT_MACRO_INTERVAL);
+                        let currentInterval = this.getIntervalFromPullDownOf(ConstValue.FIRST_MACRO_ORDER);
+                        this.renderIntervalOf(ConstValue.FIRST_MACRO_ORDER, currentInterval);
+                        this.setIntervalPullDownOf(ConstValue.FIRST_MACRO_ORDER,
+                            ConstValue.DEFAULT_MACRO_INTERVAL);
                         this.hideIntervalPullDown(targetOrder);
 
                         // 先頭のシグナルの Interval は固定値のため、入れ替え後先頭になるシグナルの Interval を変更する
-                        this.setIntervalPullDownOf(targetOrder, macroConstValue.FIRST_MACRO_INTERVAL);
+                        this.setIntervalPullDownOf(targetOrder, ConstValue.FIRST_MACRO_INTERVAL);
 
                         $thisOrderSignalContainer.find(".signals").outerHeight(tmpHeightThis);
                         $nextBelowSignalContainer.find(".signals").outerHeight(tmpHeightNext);
@@ -218,9 +218,9 @@ module Garage {
                 let $target = $(event.currentTarget);
                 let order = this.getOrderFrom($target);
 
-                if (order == macroConstValue.FIRST_MACRO_ORDER) {
+                if (order == ConstValue.FIRST_MACRO_ORDER) {
                     let newFirstOrder = 1;
-                    this.setIntervalPullDownOf(newFirstOrder, macroConstValue.FIRST_MACRO_INTERVAL);
+                    this.setIntervalPullDownOf(newFirstOrder, ConstValue.FIRST_MACRO_INTERVAL);
                 }
 
                 if (!this.isValidOrder(order)) {
@@ -311,7 +311,7 @@ module Garage {
 
                 let initialAction: IAction = {
                     input: tmpInput,
-                    interval: macroConstValue.DEFAULT_MACRO_INTERVAL,
+                    interval: ConstValue.DEFAULT_MACRO_INTERVAL,
                 };
                 let tmpOrder = this.getModel().getDefaultState().action.length;
 

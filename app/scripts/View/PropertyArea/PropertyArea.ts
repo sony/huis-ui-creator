@@ -23,24 +23,19 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PropertyArea] ";
 
-        namespace constValue {
-            export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
+        namespace ConstValue {
+            export const ARTICLE_DOM = "article"
         }
 
-        export abstract class PropertyArea extends Backbone.View<Model.Item> {
+        export abstract class PropertyArea extends PropertyAreaElement {
 
             private commandManager_: CommandManager;
-            protected template_: CDP.Tools.JST;
-
+            protected previewWindow_: PreviewWindow;
 
             constructor(item: Model.Item, templateDomId: string, commandManager: CommandManager, options?: Backbone.ViewOptions<Model.Item>) {
-                super({
-                    model: item,
-                });
+                super(item, templateDomId);
                 this.commandManager_ = commandManager;
-                this.template_ = CDP.Tools.Template.getJST(templateDomId, this._getTemplateFilePath());
             }
-
 
             events() {
                 // Please add events
@@ -49,27 +44,18 @@ module Garage {
                 };
             }
 
-
-            abstract render(option?: any): Backbone.View<Model.Item>;
-
-
-            /**
-             * 保持しているモデルを取得する
-             * @return {Model.BUttonItem}
-             */
-            getModel(): Model.Item {
-                return this.model;
+            endProcessOfRender() {
+                super.endProcessOfRender();
+                $(document).find("article").focus();
             }
 
-
-            /**
-             * テンプレート用の.htmlへのファイルパスを返す。
-             * @return {string}
-             */
-            protected _getTemplateFilePath() {
-                return constValue.TEMPLATE_FILE_PATH;
+            render(): Backbone.View<Model.Item> {
+                super.render();
+                this.$el.find(this.previewWindow_.getDomId()).append(this.previewWindow_.render().$el);
+                this._adaptJqueryMobileStyleToPulldown(this.$el);
+                this.endProcessOfRender();
+                return this;
             }
-
 
             /**
              * CommandManagerにModelの変更を登録する。
@@ -91,7 +77,6 @@ module Garage {
                 var mementoCommand = new MementoCommand([memento]);
                 this.commandManager_.invoke(mementoCommand);
             }
-
 
             /**
              * プルダウンにJQueryMobileのスタイルを適応する。

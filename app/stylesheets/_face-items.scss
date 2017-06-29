@@ -22,7 +22,7 @@
     box-sizing: border-box;
 
     .#{$FACE_COLOR_BLACK} #face-pages-area {
-        background-color: black;
+        background-color: $COLOR_BLACK;
     }
 
     #face-pages-area {

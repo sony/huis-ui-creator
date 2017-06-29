@@ -355,6 +355,7 @@
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\ImagePreview.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\TextPreview.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PreviewWindow\Preview\Preview.ts" />
+    <TypeScriptCompile Include="app\scripts\View\PropertyArea\PropertyAreaElement.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\ButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\JumpButtonPropertyArea.ts" />

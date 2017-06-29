@@ -26,7 +26,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.ButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const DEFAULT_TEXT = "TEXT BUTTON";
             export const DEFAULT_TEXT_SIZE = 30;
             export const BUTTON_FONT_WEIGHT = "bold";
@@ -60,20 +60,19 @@ module Garage {
              * 編集中リモコンのmodules
              */
             protected modules: Model.Module[];
-            protected statePreviewWindow_: StatePreviewWindow;
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, templateDomId: string, commandManager: CommandManager) {
                 super(button, templateDomId, commandManager);
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInMacro();
-                this.statePreviewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
+                this.previewWindow_ = new StatePreviewWindow(button, button.getDefaultStateId(), editingRemoteId);
                 this._setDeviceInfo();
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
-                this.listenTo(this.statePreviewWindow_, "uiChange:size", this._onTextSizePulldownChanged);
-                this.listenTo(this.statePreviewWindow_, "uiChange:text", this._onTextFieldChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
-                this.listenTo(this.statePreviewWindow_, "uiChange:editTextBtn", this._onChangeToTextBtn);
-                this.listenTo(this.statePreviewWindow_, "uiChange:editImageBtn", this._onChangeToImageBtn);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON, this._onChangeToImageBtn);
             }
 
 
@@ -86,10 +85,10 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
 
             private _onChangeToImageBtn(event: Event) {
-                let changedImageFilePath = this.statePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath = (<StatePreviewWindow>this.previewWindow_).getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.statePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    (<StatePreviewWindow>this.previewWindow_).getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
@@ -117,7 +116,7 @@ module Garage {
             }
 
             private _onTextSizePulldownChanged(event: Event) {
-                let changedSize = this.statePreviewWindow_.getTextSize();
+                let changedSize = (<StatePreviewWindow>this.previewWindow_).getTextSize();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
@@ -127,7 +126,7 @@ module Garage {
             }
 
             private _onTextFieldChanged(event: Event) {
-                let changedText = this.statePreviewWindow_.getText();
+                let changedText = (<StatePreviewWindow>this.previewWindow_).getText();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
@@ -187,15 +186,6 @@ module Garage {
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// public method
             /////////////////////////////////////////////////////////////////////////////////////////
-
-            render(): Backbone.View<Model.Item> {
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
-                this.$el.find(this.statePreviewWindow_.getDomId()).append(this.statePreviewWindow_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
-            }
 
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
@@ -1518,9 +1508,9 @@ module Garage {
                 }
 
                 let tmpLabel: Model.LabelItem = new Model.LabelItem({
-                    text: constValue.DEFAULT_TEXT,
-                    size: constValue.DEFAULT_TEXT_SIZE,
-                    font_weight: constValue.BUTTON_FONT_WEIGHT,
+                    text: ConstValue.DEFAULT_TEXT,
+                    size: ConstValue.DEFAULT_TEXT_SIZE,
+                    font_weight: ConstValue.BUTTON_FONT_WEIGHT,
                     area: defaultLabelArea
                 })
                 let tmpLabels: Model.LabelItem[] = [];
@@ -1535,10 +1525,10 @@ module Garage {
 
             protected _getActionPulldownJquery(stateId: number): JQuery {
                 return this.$el.find(
-                    constValue.ACTION_PULLDOWN_DOM_CLASS +
-                    constValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
+                    ConstValue.ACTION_PULLDOWN_DOM_CLASS +
+                    ConstValue.JQUERY_STRING_TARGET_STATE_ID_OPEN +
                     stateId +
-                    constValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
+                    ConstValue.JQUERY_STRING_TARGET_STATE_ID_CLOSE
                 );
             }
 
@@ -1552,8 +1542,8 @@ module Garage {
                     actionList: actionList,
                     stateId: stateId
                 }
-                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(constValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
-                this.$el.find(constValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
+                let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(ConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
+                this.$el.find(ConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
             }
 
         }

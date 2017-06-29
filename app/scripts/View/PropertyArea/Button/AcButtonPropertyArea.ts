@@ -23,17 +23,15 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.AcButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-ac-button-property-area";
         }
 
         export class AcButtonPropertyArea extends PropertyArea {
 
-            private acStatePreviewWindow_: AcStatePreviewWindow;
-
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
-                super(button, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.acStatePreviewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
+                super(button, ConstValue.TEMPLATE_DOM_ID, commandManager);
+                this.previewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
             }
 
             events() {
@@ -41,16 +39,6 @@ module Garage {
                 return {
 
                 };
-            }
-
-            render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
-                this.$el.find(this.acStatePreviewWindow_.getDomId()).append(this.acStatePreviewWindow_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
             }
 
             /**

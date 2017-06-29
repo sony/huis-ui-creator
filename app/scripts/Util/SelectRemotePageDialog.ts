@@ -194,7 +194,7 @@ module Garage {
                 var faceItemTemplate = CDP.Tools.Template.getJST("#face-list-selector-template", templateFile);
 
                 var faces = huisFiles.getFilteredFacesByCategories({});
-                var faceList: { remoteId: string, name: string }[] = [];
+                var faceList: { remoteId: string, name: string, faceColor: string }[] = [];
 
                 if (this.tmpFace) {
                     // HuisFiles に編集中の face があるか検査
@@ -205,7 +205,8 @@ module Garage {
                         // 編集中の face が HuisFiles に無い場合（新規の場合）はリストに追加
                         faceList.push({
                             remoteId: this.tmpFace.remoteId,
-                            name: this.tmpFace.name
+                            name: this.tmpFace.name,
+                            faceColor: this.tmpFace.getFaceColorCssClassName()
                         });
                     }
                 }
@@ -219,20 +220,18 @@ module Garage {
                         tmpFaceName = face.name;
                     }
 
-                    //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
+
                     var regExp = new RegExp(" ", "g");
                     tmpFaceName = tmpFaceName.replace(regExp, "");
-                    if (tmpFaceName == "") {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: "　"
-                        });
-                    } else {
-                        faceList.push({
-                            remoteId: face.remoteId,
-                            name: tmpFaceName
-                        });
-                    }
+
+                    //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
+                    tmpFaceName = (tmpFaceName != "") ? tmpFaceName : "　";
+
+                    faceList.push({
+                        remoteId: face.remoteId,
+                        name: tmpFaceName,
+                        faceColor: face.getFaceColorCssClassName()
+                    });
 
                 });
 

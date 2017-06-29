@@ -23,21 +23,15 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Button.TouchPadButtonPropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-touch-pad-button-property-area";
         }
 
         export class TouchPadButtonPropertyArea extends ButtonPropertyArea {
 
             constructor(button: Model.ButtonItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(button, editingRemoteId, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.listenTo(this.getModel(), "change:state", this.render);
-            }
-
-            render(): Backbone.View<Model.Item> {
-                super.render();
-                this._adaptJqueryMobileStyleToPulldown(this.$el);
-                return this;
+                super(button, editingRemoteId, ConstValue.TEMPLATE_DOM_ID, commandManager);
+                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }
         }
     }
