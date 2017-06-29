@@ -495,7 +495,8 @@ module Garage {
                 * srcRootDirのファイルを dstRootDirにコピーする。
                 * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
                 */
-                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void): CDP.IPromise<Error> {
+                    var df = $.Deferred();
                     this._isCanceled = false;
                     var errorValue: Error = null;
 
@@ -519,15 +520,19 @@ module Garage {
                             }).then(() => {
                                 if (callback) {
                                     callback(null);    // 成功
+                                } else {
+                                    df.resolve();
                                 }
                             }).fail((err) => {
                                 if (callback) {
                                     callback(err);    // 成功
+                                } else {
+                                    df.reject(err);
                                 }
                             });
                     }, 100);
 
-                    return { cancel: this._cancel };
+                    return CDP.makePromise(df);
                 }
 
 
