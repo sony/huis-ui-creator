@@ -397,7 +397,7 @@ module Garage {
                 // actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)を考慮して
                 // codeがnullのケースも許容する。
                 let code = action.code;
-                
+
                 if (action.deviceInfo &&
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
@@ -1391,7 +1391,11 @@ module Garage {
                     // 以下のディレクトリーは削除対象外
                     switch (file) {
                         case REMOTE_IMAGES_DIRECTORY_NAME:
+
                         case "lost+found":
+                            return false;
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
                             return false;
 
                         default:
