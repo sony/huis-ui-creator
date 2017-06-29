@@ -21,7 +21,7 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
-        namespace constValue {
+        namespace ConstValue {
             //デフォルトとして利用されるステートのstateCollection_.models[]の配列インデックス
             //defaultがない場合に利用される。
             export const DEFAULT_STATE_INDEX: number = 0;
@@ -173,7 +173,7 @@ module Garage {
                 }
 
                 //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
-                return this.stateCollection_.models[constValue.DEFAULT_STATE_INDEX];
+                return this.stateCollection_.models[ConstValue.DEFAULT_STATE_INDEX];
             }
 
             /**

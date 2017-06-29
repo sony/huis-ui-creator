@@ -200,11 +200,11 @@
             overflow: auto;
             //visibility: hidden;
             position: relative;
-            width: $SIZE_PROPATY_AREA_WIDTH;
-            height: $SIZE_PROPATY_AREA_HEIGHT;
-            top: $SIZE_PROPATY_AREA_MARGIN_TOP;
-            background-color: $COLOR_PROPATY_AREA_BACKGROUND;
-            border: $SIZE_PROPATY_AREA_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_BORDER;
+            width: $SIZE_PROPERTY_AREA_WIDTH;
+            height: $SIZE_PROPERTY_AREA_HEIGHT;
+            top: $SIZE_PROPERTY_AREA_MARGIN_TOP;
+            background-color: $COLOR_PROPERTY_AREA_BACKGROUND;
+            border: $SIZE_PROPERTY_AREA_BORDER_THICKNESS solid $COLOR_PROPERTY_AREA_BORDER;
             box-sizing: border-box;
         }
 
@@ -214,14 +214,14 @@
 
         #face-item-detail {
             position: relative;
-            width: $SIZE_PROPATY_AREA_INNNER_WIDTH;
-            margin-left: $SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-right: $SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-top: $SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            width: $SIZE_PROPERTY_AREA_INNNER_WIDTH;
+            margin-left: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-right: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWM;
             margin-bottom: 0;
             text-shadow: none;
-            font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
-            color: $COLOR_PROPATY_AREA_TEXT;
+            font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
+            color: $COLOR_PROPERTY_AREA_TEXT;
 
             .header {
                 display: flex;
@@ -232,7 +232,7 @@
                     margin-top: $SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_TOP;
                     margin-left: auto;
                     //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
-                    background-image: $PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL;
+                    background-image: $PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_NORMAL;
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
@@ -243,7 +243,7 @@
                     }
 
                     &:hover {
-                        background-image: $PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER;
+                        background-image: $PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_HOVER;
                         position: relative;
                         //マウスオーバー時にツールチップを表示
                         .popup {
@@ -252,7 +252,7 @@
                             position: absolute;
                             right: 0;
                             z-index: 100;
-                            width: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+                            width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_WIDTH;
 
 
                             .component {
@@ -268,13 +268,13 @@
                                     position: absolute;
                                     z-index: -1;
                                     padding: $SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
-                                    background-color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-                                    border: 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+                                    background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+                                    border: 1px solid $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BORDER;
                                     box-sizing: border-box;
                                     display: block; // ボックス要素にする
-                                    color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-                                    font-family: $FONT_FAMILY_PROPATY_POPUP;
-                                    font-size: $FONT_SIZE_PROPATY_POPUP;
+                                    color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                                    font-family: $FONT_FAMILY_PROPERTY_POPUP;
+                                    font-size: $FONT_SIZE_PROPERTY_POPUP;
                                 }
                             }
                         }
@@ -296,7 +296,7 @@
 
                     .btn-image {
                         margin-right: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
-                        background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                        background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
                         background-position: center;
                         background-repeat: no-repeat;
                         background-size: contain;
@@ -314,7 +314,7 @@
 
                     &:hover {
                         .btn-image {
-                            background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_HOVER;
+                            background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_HOVER;
                         }
 
                         span {
@@ -324,7 +324,7 @@
 
                     &:active {
                         .btn-image {
-                            background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_ACTIVE;
+                            background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_ACTIVE;
                         }
 
                         span {
@@ -342,7 +342,7 @@
 
                         &:hover {
                             .btn-image {
-                                background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                                background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
                             }
 
                             span {
@@ -352,7 +352,7 @@
 
                         &:active {
                             .btn-image {
-                                background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                                background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
                             }
 
                             span {
@@ -365,7 +365,7 @@
 
 
             #signals-container {
-                padding-top: $SIZE_PROPATY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
+                padding-top: $SIZE_PROPERTY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
             }
 
             .signals {
@@ -391,7 +391,7 @@
             }
             //普通の信号時の、previewとプルダウンの間のマージン
             .property-state-action {
-                margin-top: $SIZE_PROPATY_AREA_ACTION_CONTAINER_MARGIN_TOP;
+                margin-top: $SIZE_PROPERTY_AREA_ACTION_CONTAINER_MARGIN_TOP;
             }
             //マクロボタンのpreviewとアクション設定pulldownとの間のマージン
             .button-macro-action-container-element {
@@ -432,12 +432,12 @@
             //マクロの信号セット用プルダウンセット
             #macro-container {
                 .signal-container-element {
-                    padding-top: $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
-                    padding-bottom: $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
+                    padding-top: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
+                    padding-bottom: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
 
                     .separate-line {
-                        margin-left: $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
-                        width: $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
+                        margin-left: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
+                        width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
                     }
                 }
             }
@@ -458,26 +458,26 @@
                 //信号を追加時のアニメーション
                 &.before-add-animation {
                     opacity: 0;
-                    margin-top: $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_HEIGHT_WHEN_ADD;
+                    margin-top: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_HEIGHT_WHEN_ADD;
                 }
 
 
                 .separate-line {
                     position: absolute;
-                    width: $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
+                    width: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
                     top: 0;
-                    border-top: $SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
+                    border-top: $SiZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPERTY_AREA_MACRO_BORDER;
                 }
 
                 box-sizing: border-box;
-                padding-top: $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_TOP;
-                padding-bottom: $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_BOTTOM;
+                padding-top: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_PADDING_TOP;
+                padding-bottom: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_PADDING_BOTTOM;
                 position: relative;
 
                 .custom-select {
-                    margin-left: $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
-                    margin-right: $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
-                    width: $SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;
+                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+                    width: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_WIDTH;
                 }
 
                 .order-indicator-container {
@@ -499,7 +499,7 @@
                             width: $SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
                             height: $SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
                             border-radius: $SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
-                            background-color: $COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
+                            background-color: $COLOR_PROPERTY_AREA_MACRO_ORDER_DOT;
                         }
                     }
                     //縦中央揃え
@@ -510,8 +510,8 @@
                     .order-indicator-number {
                         text-align: center;
                         width: $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
-                        font-family: $FONT_FAMILY_PROPATY_MAIN_TEXT;
-                        font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
+                        font-family: $FONT_FAMILY_PROPERTY_MAIN_TEXT;
+                        font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
                     }
                 }
                 //信号deleteボタン用のarea
@@ -521,7 +521,7 @@
                     width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
                     transition-duration: 0.2s;
                     position: absolute;
-                    right: $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                    right: $SIZE_PROPERTY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
                     top: 0px;
                     display: flex;
 
@@ -534,16 +534,16 @@
                         margin-left: auto;
                         margin-right: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
                         align-self: center;
-                        background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
+                        background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_NORMAL;
                         width: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
                         height: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
                         &:hover {
-                            background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_HOVER;
                         }
 
                         &:active {
-                            background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_ACTIVE;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_ACTIVE;
                         }
                     }
                     //エリアをhoverして、表示
@@ -579,7 +579,7 @@
                     height: 100%;
                     width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
                     position: absolute;
-                    left: $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                    left: $SIZE_PROPERTY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
                     top: 0px;
                     display: flex;
 
@@ -597,16 +597,16 @@
                             background-position: center;
                             background-repeat: no-repeat;
                             background-size: contain;
-                            background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_NORMAL;
                             width: $SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
                             height: $SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
 
                             &:hover {
-                                background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER;
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_HOVER;
                             }
 
                             &:active {
-                                background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_ACTIVE;
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_ACTIVE;
                             }
                         }
 
@@ -620,17 +620,17 @@
                             background-position: center;
                             background-repeat: no-repeat;
                             background-size: contain;
-                            background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_NORMAL;
                             width: $SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
                             height: $SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
                             margin-top: $SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
 
                             &:hover {
-                                background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_HOVER;
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_HOVER;
                             }
 
                             &:active {
-                                background-image: $PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
                             }
                         }
                     }
@@ -653,69 +653,69 @@
 
             .one-line-label {
                 line-height: $TEXT_HEIGHT_DEFAULT;
-                margin-bottom: $SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
+                margin-bottom: $SIZE_PROPERTY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
                 display: flex;
-                font-family: $FONT_WEIGHT_PROPATY_X_Y_W_H;
+                font-family: $FONT_WEIGHT_PROPERTY_X_Y_W_H;
             }
 
             .label-button-state {
-                width: $SIZE_PROPATY_AREA_LAYOUT_LABEL_WIDTH;
+                width: $SIZE_PROPERTY_AREA_LAYOUT_LABEL_WIDTH;
             }
 
             .info-button-state {
-                margin-left: $SIZE_PROPATY_AREA_LAYOUT_INFO_MARING_LEFT;
-                width: $SIZE_PROPATY_AREA_LAYOUT_INFO_WIDTH;
+                margin-left: $SIZE_PROPERTY_AREA_LAYOUT_INFO_MARING_LEFT;
+                width: $SIZE_PROPERTY_AREA_LAYOUT_INFO_WIDTH;
             }
 
 
             #face-item-detail-title {
-                padding-bottom: $SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
-                line-height: $SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
-                font-size: $FONT_SIZE_PROPATY_H3;
+                padding-bottom: $SIZE_PROPERTY_AREA_TITLE_PADDING_BOTTOM;
+                line-height: $SIZE_PROPERTY_AREA_TITEL_LINE_HEIHGT;
+                font-size: $FONT_SIZE_PROPERTY_H3;
                 font-family: $FONT_FAMILY_NORMAL;
-                height: $SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
+                height: $SIZE_PROPERTY_AREA_TITEL_LINE_HEIHGT;
                 margin: 0;
 
                 .button-info-brand-and-type {
                     display: inline-flex;
                     align-items: baseline;
                     text-shadow: none;
-                    padding-left: $SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
-                    font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
+                    padding-left: $SIZE_PROPERTY_AREA_SUBTITLE_PADDING_LEFT;
+                    font-size: $FONT_SIZE_PROPERTY_BUTTON_INFO;
                     font-family: $FONT_FAMILY_NORMAL;
-                    color: $COLOR_PROPATY_AREA_SUBTITLE;
+                    color: $COLOR_PROPERTY_AREA_SUBTITLE;
                     margin: 0;
 
 
                     .slash {
                         text-align: center;
-                        width: $SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
+                        width: $SIZE_PROPERTY_AREA_SUBTITLE_SLASH_WIDTH;
                     }
 
                     .brand_name {
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
-                        max-width: $SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
+                        max-width: $SIZE_PROPERTY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
                     }
                 }
             }
 
             h4 {
-                font-size: $FONT_SIZE_PROPATY_H4;
-                font-family: $FONT_FAMILY_PROPATY_H3;
+                font-size: $FONT_SIZE_PROPERTY_H4;
+                font-family: $FONT_FAMILY_PROPERTY_H3;
             }
 
             .state-action-input,
             .state-action-function,
             .property-state-text-value,
             .property-text-value {
-                max-width: $SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
-                width: $SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
+                max-width: $SIZE_PROPERTY_AREA_INPUT_MAX_WIDTH;
+                width: $SIZE_PROPERTY_AREA_INPUT_MAX_WIDTH;
             }
 
             .text-size-pulldown {
-                width: $SIZE_PROPATY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
+                width: $SIZE_PROPERTY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
             }
 
             input.priperty-value {
@@ -728,17 +728,17 @@
             }
 
             #delete-btn {
-                width: $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
-                margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
+                width: $SIZE_PROPERTY_AREA_DELETE_BTN_WIDTH;
+                margin-left: $SIZE_PROPERTY_AREA_DELETE_BTN_MARGIN_LEFT;
             }
 
             h4 {
                 margin: 0;
-                font-size: $FONT_SIZE_PROPATY_H4;
+                font-size: $FONT_SIZE_PROPERTY_H4;
             }
 
             h5 {
-                font-size: $FONT_SIZE_PROPATY_H5;
+                font-size: $FONT_SIZE_PROPERTY_H5;
                 font-family: $FONT_FAMILY_LIGHT;
                 margin: 0;
             }
@@ -772,9 +772,9 @@
                 background-position: center;
                 background-repeat: no-repeat;
                 background-size: contain;
-                width: $SIZE_PROPATY_AREA_PREVIEW_WIDTH;
-                height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT;
-                border: $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
+                width: $SIZE_PROPERTY_AREA_PREVIEW_WIDTH;
+                height: $SIZE_PROPERTY_AREA_PREVIEW_HEIGHT;
+                border: $SIZE_PROPERTY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPERTY_PREVIEW_BORDER;
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
@@ -784,15 +784,15 @@
                     z-index: 1;
                     bottom: 0;
                     right: 0;
-                    width: $SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_WIDTH;
-                    height: $SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_HEIGHT;
-                    background-image: $PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL;
+                    width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_BTN_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_BTN_HEIGHT;
+                    background-image: $PATH_IMG_PROPERTY_AREA_EDIT_IMG_NORMAL;
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
 
                     &:hover, &:active {
-                        background-image: $PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
+                        background-image: $PATH_IMG_PROPERTY_AREA_EDIT_IMG_ACTIVE;
                     }
                 }
                 //背景画像削除ボタン
@@ -804,12 +804,12 @@
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    background-image: $PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
-                    width: $SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-                    height: $SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                    background-image: $PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+                    width: $SIZE_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
 
                     &:hover, &:active {
-                        background-image: $PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                        background-image: $PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
                     }
                 }
 
@@ -820,8 +820,8 @@
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    width: $SIZE_PROPATY_AREA_IMAGE_PREVIEW_WIDTH;
-                    height: $SIZE_PROPATY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
+                    width: $SIZE_PROPERTY_AREA_IMAGE_PREVIEW_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
                 }
                 //テキストエリア
                 #preview.text-preview,
@@ -844,8 +844,8 @@
                         }
 
                         .text-title-edit-label {
-                            font-family: $FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
-                            font-size: $FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
+                            font-family: $FONT_SIZE_PROPERTY_TITLE_EDIT_LABEL;
+                            font-size: $FONT_FAMILY_PROPERTY_TITLE_EDIT_LABEL;
                         }
                     }
 
@@ -865,15 +865,15 @@
             }
 
             #background-image-preview-window.background {
-                height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_HEIGHT;
+                height: $SIZE_PROPERTY_AREA_BACKGROUND_PREVIEW_HEIGHT;
 
                 #image-container {
-                    height: $SIZE_PROPATY_AREA_BACKGROUND_PREVIEW_INTER_HEIGHT;
+                    height: $SIZE_PROPERTY_AREA_BACKGROUND_PREVIEW_INNER_HEIGHT;
                 }
             }
 
             .property-state-image {
-                margin-top: $SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
+                margin-top: $SIZE_PROPERTY_AREA_STATE_IMAGE_MARGIN_TOP;
             }
 
             #states-container {
@@ -883,13 +883,13 @@
             }
 
             input.refer-state-image, #refer-image {
-                width: $SIZE_PROPATY_AREA_REFER_IMAGE_WIDTH;
+                width: $SIZE_PROPERTY_AREA_REFER_IMAGE_WIDTH;
             }
 
             .state-container {
                 .delete-state-image {
-                    width: $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
-                    margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
+                    width: $SIZE_PROPERTY_AREA_DELETE_BTN_WIDTH;
+                    margin-left: $SIZE_PROPERTY_AREA_DELETE_BTN_MARGIN_LEFT;
                 }
 
                 .property-title, .property-value, label {
@@ -909,19 +909,19 @@
 
 
         #popup-arrow {
-            margin-left: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
+            margin-left: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
             margin-right: auto;
         }
 
         .popup-list {
-            width: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
-            padding-top: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
-            padding-bottom: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
-            color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-            font-family: $FONT_FAMILY_PROPATY_POPUP;
-            font-size: $FONT_SIZE_PROPATY_POPUP;
-            background-color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-            border: 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
+            width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+            padding-top: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
+            padding-bottom: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
+            color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT;
+            font-family: $FONT_FAMILY_PROPERTY_POPUP;
+            font-size: $FONT_SIZE_PROPERTY_POPUP;
+            background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+            border: 1px solid $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BORDER;
             box-sizing: border-box;
             position: absolute;
             z-index: -1;
@@ -932,18 +932,18 @@
             .popup-menu-item-text-black {
                 display: flex;
                 align-items: center;
-                height: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
+                height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
 
                 &:hover, &:active {
-                    background-color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
-                    color: $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+                    background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+                    color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
 
                     #popup-icon-image-image-button {
-                        background-image: $PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+                        background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
                     }
 
                     #popup-icon-image-text-button {
-                        background-image: $PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;
+                        background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;
                     }
                 }
 
@@ -951,18 +951,18 @@
                     background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    margin-left: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
-                    margin-right: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
-                    width: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
-                    height: $SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
+                    margin-left: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
+                    width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
                 }
 
                 #popup-icon-image-image-button {
-                    background-image: $PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
+                    background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON;
                 }
 
                 #popup-icon-image-text-button {
-                    background-image: $PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                    background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON;
                 }
             }
         }
@@ -1021,7 +1021,7 @@
                     color: $COLOR_FACE_ITEM_LIST_TEXT_NORMAL;
                     font-size: $FONT_SIZE_FACE_ITEM_LIST_ITEM;
                     font-family: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
-                    max-width: $SIZE_PROPATY_AREA_FACE_ITEM_MAX_WIDTH;
+                    max-width: $SIZE_PROPERTY_AREA_FACE_ITEM_MAX_WIDTH;
                     text-align: center;
                     vertical-align: middle;
                     //text-shadow: -1px -1px 1px rgba(255,255,255,0.7), 1px 1px 1px rgba(255,255,255,0.7), -1px 1px rgba(255,255,255,0.7), 1px -1px 2px rgba(255,255,255,0.7);

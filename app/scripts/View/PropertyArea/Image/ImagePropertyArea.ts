@@ -25,23 +25,19 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.Image.ImagePropertyArea] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-image-property-area";
         }
 
         export class ImagePropertyArea extends PropertyArea {
 
-            private imagePreviewWindow_: ImagePreviewWindow;
-
-
             constructor(image: Model.ImageItem, editingRemoteId: string, commandManager: CommandManager) {
-                super(image, constValue.TEMPLATE_DOM_ID, commandManager);
-                this.imagePreviewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
+                super(image, ConstValue.TEMPLATE_DOM_ID, commandManager);
+                this.previewWindow_ = new ImagePreviewWindow(image, editingRemoteId);
 
-                this.listenTo(this.imagePreviewWindow_, "uiChange:path", this._onImageFilePathChanged);
-                this.listenTo(this.getModel(), "change:resizeOriginal", this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Image.UI_CHANGE_PATH, this._onImageFilePathChanged);
+                this.listenTo(this.getModel(), PropertyAreaEvents.Image.CHANGE_RESIZE_ORIGINAL, this.render);// "change:path"にしてしまうと、resizeOriginalが代入前にイベントが発火してしまう。
             }
-
 
             events() {
                 // Please add events
@@ -50,12 +46,11 @@ module Garage {
                 };
             }
 
-
             private _onImageFilePathChanged(event: Event) {
-                let changedImageFilePath: string = this.imagePreviewWindow_.getTmpImagePath();
+                let changedImageFilePath: string = (<ImagePreviewWindow>this.previewWindow_).getTmpImagePath();
                 let changedImageFileName = path.basename(changedImageFilePath);
                 let changedImageFileRelativePath = path.join(
-                    this.imagePreviewWindow_.getNotDefaultImageDirRelativePath(),
+                    (<ImagePreviewWindow>this.previewWindow_).getNotDefaultImageDirRelativePath(),
                     changedImageFileName).replace(/\\/g, "/");
 
                 this._setMementoCommand(
@@ -70,18 +65,6 @@ module Garage {
                     });
             }
 
-
-            render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_(this.getModel()));
-                this.$el.find(this.imagePreviewWindow_.getDomId()).append(this.imagePreviewWindow_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
-            }
-
-
             /**
              * 保持しているモデルを取得する。型が異なるため、this.modelを直接参照しないこと。
              * @return {Model.LabelItem}
@@ -91,7 +74,6 @@ module Garage {
                 //このクラスとその子供のクラスはthis.modelをModel.ImageItemとして扱ってほしいのでダウンキャストしている。
                 return <Model.ImageItem>this.model;
             }
-
 
         }
     }

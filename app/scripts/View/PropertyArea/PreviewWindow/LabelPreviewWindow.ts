@@ -23,66 +23,40 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.LabelPreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-label-preview-window";
             export const DOM_ID = "#label-preview-window";
         }
 
         export class LabelPreviewWindow extends PreviewWindow {
 
-            private textPreview_: TextPreview;
-
-
             constructor(label: Model.LabelItem) {
-                super(label, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
-                this.textPreview_ = new TextPreview(label);
-                this.listenTo(this.textPreview_, "uiChange:size", this._onTextSizePulldownChanged);
-                this.listenTo(this.textPreview_, "uiChange:text", this._onTextFieldChanged);
+                super(label, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
+                this.preview_ = new TextPreview(label);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
-
-
-            events() {
-                // Please add events
-                return {
-
-                };
-            }
-
 
             private _onTextSizePulldownChanged(event: Event) {
-                this.trigger("uiChange:size");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
-
 
             private _onTextFieldChanged(event: Event) {
-                this.trigger("uiChange:text");//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
-
-
-            render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_());
-                this.$el.find(this.textPreview_.getDomId()).append(this.textPreview_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
-            };
-
 
             /**
              * @return {number} テキストサイズ用のプルダウンの値を取得
              */
             getTextSize(): number {
-                return this.textPreview_.getTextSize();
+                return (<TextPreview>this.preview_).getTextSize();
             }
-
 
             /**
              * @return {string} テキストフィールドの値を取得
              */
             getText(): string {
-                return this.textPreview_.getText();
+                return (<TextPreview>this.preview_).getText();
             }
         }
     }

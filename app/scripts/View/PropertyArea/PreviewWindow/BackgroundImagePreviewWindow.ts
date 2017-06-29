@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.BackgroundImagePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_DOM_ID = "#template-background-image-preview-window";
             export const DOM_ID = "#background-image-preview-window";
             export const EDIT_BTN_DOM_ID = "#edit-btn";
@@ -32,17 +32,15 @@ module Garage {
 
         export class BackgroundImagePreviewWindow extends ImageHandlePreviewWindow {
 
-            private imagePreview_: ImagePreview;
-
             constructor(image: Model.ImageItem, editingRemoteId: string) {
-                super(image, editingRemoteId, constValue.DOM_ID, constValue.TEMPLATE_DOM_ID);
-                this.imagePreview_ = new ImagePreview(image);
+                super(image, editingRemoteId, ConstValue.DOM_ID, ConstValue.TEMPLATE_DOM_ID);
+                this.preview_ = new ImagePreview(image);
             }
 
             events() {
                 let events = {};
-                events["click " + constValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
-                events["click " + constValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + ConstValue.EDIT_BTN_DOM_ID] = "_onEditBtnClicked";
+                events[Events.CLICK_WITH_DIVIDER + ConstValue.DELETE_BTN_DOM_ID] = "_onDeleteBtnClicked";
                 return events;
             }
 
@@ -55,24 +53,14 @@ module Garage {
                         return;
                     }
                     this.tmpImageFilePath_ = imageFilePath;
-                    this.trigger("uiChange:path");
+                    this.trigger(PropertyAreaEvents.Image.UI_CHANGE_PATH);
                 });
             }
 
             private _onDeleteBtnClicked(event: Event) {
                 this.tmpImageFilePath_ = "";
-                this.trigger("uiChange:delete");
+                this.trigger(PropertyAreaEvents.Image.UI_CHANGE_DELETE);
             }
-
-            render(): Backbone.View<Model.Item> {
-                let FUNCTION_NAME = TAG + "render : ";
-                this.undelegateEvents(); //DOM更新前に、イベントをアンバインドしておく。
-                this.$el.children().remove();
-                this.$el.append(this.template_());
-                this.$el.find(this.imagePreview_.getDomId()).append(this.imagePreview_.render().$el);
-                this.delegateEvents();//DOM更新後に、再度イベントバインドをする。これをしないと2回目以降 イベントが発火しない。
-                return this;
-            };
 
         }
     }

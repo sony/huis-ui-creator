@@ -23,7 +23,7 @@ module Garage {
 
         var TAG = "[Garage.View.PropertyArea.PreviewWindow.ImageHandlePreviewWindow] ";
 
-        namespace constValue {
+        namespace ConstValue {
             export const TEMPLATE_FILE_PATH: string = CDP.Framework.toUrl("/templates/item-detail.html");
             export const FILE_TYPE_JPG: string = "jpg";
             export const FILE_TYPE_JPEG: string = "jpeg";
@@ -39,7 +39,7 @@ module Garage {
 
             protected tmpImageFilePath_: string;//変更後の画像パス。モデル適応する前に親クラスが取得するために保持。
             protected editingRemoteId_: string;
-            private isBackgroundImge_: boolean;
+            private isBackgroundImage_: boolean;
 
             /**
              * @param {Model.Item} Model.ButtonItemあるいは Model.ImageItem
@@ -52,6 +52,7 @@ module Garage {
                 super(item, domId, templateDomId, options);
                 this.tmpImageFilePath_ = null;
                 this.editingRemoteId_ = editingRemoteId;
+                this.isBackgroundImage_ = item instanceof Model.ImageItem ? item.isBackgroundImage : false;
             }
 
 
@@ -61,8 +62,6 @@ module Garage {
 
                 };
             }
-
-            abstract render(option?: any): Backbone.View<Model.Item>;
 
             /**
              * @return {string} DOM全体を示すIDを返す。
@@ -110,7 +109,7 @@ module Garage {
                 let options: Util.ElectronOpenFileDialogOptions = {
                     properties: ["openFile"],
                     filters: [
-                        { name: "画像", extensions: [constValue.FILE_TYPE_PNG, constValue.FILE_TYPE_JPG, constValue.FILE_TYPE_JPEG] },
+                        { name: "画像", extensions: [ConstValue.FILE_TYPE_PNG, ConstValue.FILE_TYPE_JPG, ConstValue.FILE_TYPE_JPEG] },
                     ],
                     title: PRODUCT_NAME, // Electron uses Appname as the default title
                 };
@@ -173,7 +172,7 @@ module Garage {
                 let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
 
                 //TODO: move const variables difinition from init.ts to more specific place
-                let params = this.isBackgroundImge_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
+                let params = this.isBackgroundImage_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;
 
                 Model.OffscreenEditor.editImage(imageFilePath, params, outputImagePath)
                     .done((editedImage) => {
@@ -196,13 +195,13 @@ module Garage {
                 let FUNCTION_NAME = TAG + "_showImageFileExtError : ";
 
                 let imageFileExt = path.extname(imageFilePath).toLowerCase();
-                if (!((imageFileExt === constValue.EXT_JPG)
-                    || (imageFileExt === constValue.EXT_JPEG)
-                    || (imageFileExt === constValue.EXT_PNG))) {
+                if (!((imageFileExt === ConstValue.EXT_JPG)
+                    || (imageFileExt === ConstValue.EXT_JPEG)
+                    || (imageFileExt === ConstValue.EXT_PNG))) {
                     // 警告を出す
                     console.warn(FUNCTION_NAME + "ONLY jpg, png, jpeg are supported");
                     let response = electronDialog.showMessageBox({
-                        type: constValue.DIALOG_TYPE_ERROR,
+                        type: ConstValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_NON_SUPPORTED_FILE"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -222,7 +221,7 @@ module Garage {
                 let FUNCTION_NAME = TAG + "_showTooLargeFileSizeError : ";
                 if (Util.MiscUtil.checkFileSize(imageFilePath) === Util.MiscUtil.ERROR_SIZE_TOO_LARGE) {
                     let response = electronDialog.showMessageBox({
-                        type: constValue.DIALOG_TYPE_ERROR,
+                        type: ConstValue.DIALOG_TYPE_ERROR,
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_1") + (MAX_IMAGE_FILESIZE / 1000000) + $.i18n.t("dialog.message.STR_DIALOG_ERROR_IMAGE_FILE_TOO_LARGE_2"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                         title: PRODUCT_NAME,
@@ -242,12 +241,12 @@ module Garage {
             private _showNonSupportJpegError(imageFilePath: string): boolean {
                 let FUNCTION_NAME = TAG + "_showNonSupportJpegError : ";
                 let imageFileExt = path.extname(imageFilePath).toLowerCase();
-                if ((imageFileExt === constValue.EXT_JPG) || (imageFileExt === constValue.EXT_JPEG)) {
+                if ((imageFileExt === ConstValue.EXT_JPG) || (imageFileExt === ConstValue.EXT_JPEG)) {
                     let result = Util.MiscUtil.checkJPEG(imageFilePath);
                     if ((result === Util.MiscUtil.ERROR_TYPE_JPEG2000) || (result === Util.MiscUtil.ERROR_TYPE_JPEGLOSSLESS)) {
                         // JPEG2000及びJPEG Losslessはサポートしていない警告を出す
                         let response = electronDialog.showMessageBox({
-                            type: constValue.DIALOG_TYPE_ERROR,
+                            type: ConstValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_JPEG2000_JPEG_LOSSLESS_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
@@ -268,11 +267,11 @@ module Garage {
             private _showFakeJpegError(imageFilePath: string): boolean {
                 let FUNCTION_NAME = TAG + "_showFakeJpegError : ";
                 let imageFileExt = path.extname(imageFilePath).toLowerCase();
-                if ((imageFileExt === constValue.EXT_JPG) || (imageFileExt === constValue.EXT_JPEG)) {
+                if ((imageFileExt === ConstValue.EXT_JPG) || (imageFileExt === ConstValue.EXT_JPEG)) {
                     let result = Util.MiscUtil.checkJPEG(imageFilePath);
                     if (result === Util.MiscUtil.ERROR_TYPE_NOT_JPEG) { // 拡張子はJPG/JPEGだが中身がJPEGでないものが指定された
                         let response = electronDialog.showMessageBox({
-                            type: constValue.DIALOG_TYPE_ERROR,
+                            type: ConstValue.DIALOG_TYPE_ERROR,
                             message: $.i18n.t("dialog.message.STR_DAIALOG_ERROR_MESSAGE_LOAD_BROKEN_FILE"),
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
@@ -293,7 +292,7 @@ module Garage {
             private _showAnyTroubleError(imageFilePath: string): boolean {
                 let FUNCTION_NAME = TAG + "_showAnyTroubleError : ";
                 let imageFileExt = path.extname(imageFilePath).toLowerCase();
-                if ((imageFileExt === constValue.EXT_JPG) || (imageFileExt === constValue.EXT_JPEG)) {
+                if ((imageFileExt === ConstValue.EXT_JPG) || (imageFileExt === ConstValue.EXT_JPEG)) {
                     let result = Util.MiscUtil.checkJPEG(imageFilePath);
                     if (result === Util.MiscUtil.ERROR_FILE_ACCESS) { // 何らかのトラブルでファイルが読めない                                
                         console.warn("Imega file not found"); // 普通はこないので特にダイアログは出さないで、編集画面にも何も起きない状態に

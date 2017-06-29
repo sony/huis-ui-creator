@@ -21,7 +21,7 @@ module Garage {
 
         var TAG: string = "[Garage.Util.InformationDialog]";
 
-        namespace constValue {
+        namespace ConstValue {
             export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
             export const FILE_NAME_DATE: string = "date.txt";
             export const FILE_NAME_IMAGE: string = "image.png";
@@ -45,10 +45,10 @@ module Garage {
                 try {
                     let preVersion: string = APP_VERSION;
                     let lastNotifiedVersion: string;
-                    if (fs.existsSync(constValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
-                        lastNotifiedVersion = fs.readFileSync(constValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
+                    if (fs.existsSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
+                        lastNotifiedVersion = fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
                     } else {
-                        console.log(FUNCTION_NAME + constValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
+                        console.log(FUNCTION_NAME + ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
                     }
                     if (preVersion === lastNotifiedVersion) return false;
                     else return true;
@@ -78,9 +78,9 @@ module Garage {
                     var pathToNotes: string = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
                     // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
                     if (Util.MiscUtil.isWindows()) {
-                        pathToNotes = path.join(pathToNotes, constValue.DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
+                        pathToNotes = path.join(pathToNotes, ConstValue.DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
                     } else if (Util.MiscUtil.isDarwin()) {
-                        pathToNotes = path.join(pathToNotes, constValue.DIR_NAME_MAC + "/");
+                        pathToNotes = path.join(pathToNotes, ConstValue.DIR_NAME_MAC + "/");
                     } else {
                         console.error("Error: unsupported platform");
                     }
@@ -99,9 +99,9 @@ module Garage {
                         let path = pathToNotes + dirName + "/";
                         informationList.push({
                             dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
-                            imagePath: (path + constValue.FILE_NAME_IMAGE),
-                            date: fs.readFileSync(path + constValue.FILE_NAME_DATE, "utf8"),
-                            text: fs.readFileSync(path + constValue.FILE_NAME_NOTE, "utf8")
+                            imagePath: (path + ConstValue.FILE_NAME_IMAGE),
+                            date: fs.readFileSync(path + ConstValue.FILE_NAME_DATE, "utf8"),
+                            text: fs.readFileSync(path + ConstValue.FILE_NAME_NOTE, "utf8")
                         });
                     });
 
@@ -115,7 +115,7 @@ module Garage {
                     dialog.show();
 
                     //お知らせダイアログを出すか否か判定するファイルを書き出す。
-                    fs.outputFile(constValue.LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
+                    fs.outputFile(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
 
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
