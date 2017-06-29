@@ -2676,6 +2676,7 @@ module Garage {
                             let label = targetState.label[0];
                             let text = (label && label.text) ? label.text : "";
                             let size = (label && label.sizeForRender) ? label.sizeForRender : 0;
+                            let color = (label && label.color) ? label.color : Model.FontColor.DEFAULT;
                             $labelElement.text(text);
                             $labelElement.css({
                                 left: "0",
@@ -2683,7 +2684,7 @@ module Garage {
                                 width: buttonAreaW + "px",
                                 height: buttonAreaH + "px",
                                 lineHeight: buttonAreaH + "px",
-                                color: label.color,
+                                color: color,
                                 fontSize: size + "pt"
                             });
                         }
