@@ -439,7 +439,7 @@ module Garage {
                 let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
                 let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
 
-                let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
+                syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         this.showDialogNotConnectWithHuis(err);
                     } else {//同期成功。

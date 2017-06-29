@@ -294,7 +294,7 @@ module Garage {
                     .always(() => {
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
-                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
+                            syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();
