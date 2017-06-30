@@ -1391,7 +1391,6 @@ module Garage {
                     // 以下のディレクトリーは削除対象外
                     switch (file) {
                         case REMOTE_IMAGES_DIRECTORY_NAME:
-
                         case "lost+found":
                             return false;
                         case Dirs.BLACK_DIR:
