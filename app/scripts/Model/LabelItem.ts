@@ -82,11 +82,9 @@ module Garage {
 
                 let convertedLabel: ILabel = {
                     area: this.area,
-                    text: this.text
+                    text: this.text,
+                    color: this.color
                 };
-                if (this.color !== undefined) {
-                    convertedLabel.color = this.color;
-                }
                 if (this.font !== undefined) {
                     convertedLabel.font = this.font;
                 }

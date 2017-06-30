@@ -56,7 +56,7 @@
         "h": 87
       },
       "text": "TEXT LABEL",
-      "color": 0,
+      "color": "setting",
       "font_weight": "normal",
       "font": "SST",
       "size": 23
