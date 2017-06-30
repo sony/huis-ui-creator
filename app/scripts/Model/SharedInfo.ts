@@ -26,6 +26,11 @@ module Garage {
             export const BLACK: string = "black";
         }
 
+        export namespace ModelColor {
+            export const WHITE: string = "white";
+            export const BLACK: string = "black";
+        }
+
         /**
          * HUISと共有する情報を格納するクラス。
          * 色情報、Version情報が主。
