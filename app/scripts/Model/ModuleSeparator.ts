@@ -77,11 +77,10 @@ module Garage {
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                let horizontalLineSrcPath = HORIZONTAL_LINE_IMAGE_PATH;
 
                 var horizontalLineImage = new Model.ImageItem({
                     area: horizontalLineArea,
-                    path: horizontalLineSrcPath
+                    path: HORIZONTAL_LINE_IMAGE_PATH
                 });
 
                 return horizontalLineImage;
