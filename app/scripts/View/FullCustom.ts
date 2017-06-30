@@ -28,6 +28,11 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
+        export namespace FrameColorCssClass {
+            export const BLACK_RC_FRAME: string = "black-rc-frame";
+            export const WHITE_RC_FRAME: string = "white-rc-frame";
+        }
+
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -110,13 +115,6 @@ module Garage {
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
                     this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
 
-                    this._pageLayout();
-                    this._listupFaces();
-
-                    //書き出し待ち の画像リストを初期化する。
-                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
-                    huisFiles.initWatingResizeImages();
-
                     var remoteId = this._getUrlQueryParameter("remoteId");
                     if (remoteId != null) {
                         this.currentFace_ = huisFiles.getFace(remoteId);
@@ -124,6 +122,14 @@ module Garage {
                         this.newRemote_ = true;
                         this.currentFace_ = huisFiles.createNewFace();
                     }
+
+                    this._pageLayout();
+                    this._listupFaces();
+
+                    //書き出し待ち の画像リストを初期化する。
+                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
+                    huisFiles.initWatingResizeImages();
+
                     this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
                     this.faceRenderer_canvas_.render();
                     this._setGridSize();
@@ -327,8 +333,17 @@ module Garage {
                     height: mainHeight + "px"
                 });
 
+                // TODO: move to View.Canvas
+                let $faceCanvasArea = $("#face-canvas-area");
+                if (sharedInfo.modelColor === Model.ModelColor.BLACK) {
+                    $faceCanvasArea.addClass(FrameColorCssClass.BLACK_RC_FRAME);
+                } else {
+                    $faceCanvasArea.addClass(FrameColorCssClass.WHITE_RC_FRAME);
+                }
+                $faceCanvasArea.addClass(this.currentFace_.getFaceColorCssClassName());
+
                 /* キャンバス部分の座標の指定 */
-                let faceCanvasAreaWidth = $("#face-canvas-area").width();
+                let faceCanvasAreaWidth = $faceCanvasArea.width();
                 let faceCanvasAreaLeft = (windowWidth / 2) - (faceCanvasAreaWidth / 2);
                 $("#face-canvas-area").css({
                     left: faceCanvasAreaLeft + "px"
@@ -3653,7 +3668,11 @@ module Garage {
             private _setGridSize() {
                 var $facePages = $("#face-canvas").find(".face-page");
                 this.gridSize_ = DEFAULT_GRID;
-                $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
+                if (this.currentFace_.color === Model.FaceColor.BLACK) {
+                    $facePages.css("background-image", "url(../res/images/img_huis_remote_area_black.png)");
+                } else {
+                    $facePages.css("background-image", "url(../res/images/img_huis_remote_area_white.png)");
+                }
             }
 
             /**

@@ -21,14 +21,11 @@
     height: $SIZE_CANVAS_HEIGHT;
     box-sizing: border-box;
 
-    .#{$FACE_COLOR_BLACK} #face-pages-area {
-        background-color: $COLOR_BLACK;
-    }
-
     #face-pages-area {
         width: $SIZE_FACE_PAGES_AREA_WIDTH;
         height: $SIZE_FACE_PAGES_AREA_HEIGHT;
         margin-top: $SIZE_FACE_PAGES_AREA_MARING_TOP;
+        background-color: transparent;
     }
 
     .image-item.item.background { // Gridを背景画像をの前に持ってくるため z-index を -10にした

@@ -74,8 +74,23 @@
     #face-edit-area {
         position: absolute;
         //background-color: #88ff88;
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_WHITE_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_WHITE_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_BLACK_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_BLACK_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
+
         #face-canvas-area {
-            background-image: $PATH_IMG_CANVAS_AREA;
             background-color: none;
             position: absolute;
             width: $SIZE_CANVAS_AREA_WIDTH;
