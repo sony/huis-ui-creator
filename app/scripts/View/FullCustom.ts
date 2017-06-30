@@ -28,6 +28,11 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
+        export namespace FrameColorCssClass {
+            export const BLACK_RC_FRAME: string = "black-rc-frame";
+            export const WHITE_RC_FRAME: string = "white-rc-frame";
+        }
+
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -331,16 +336,11 @@ module Garage {
                 // TODO: move to View.Canvas
                 let $faceCanvasArea = $("#face-canvas-area");
                 if (sharedInfo.modelColor === Model.ModelColor.BLACK) {
-                    $faceCanvasArea.addClass("black-rc-frame");
+                    $faceCanvasArea.addClass(FrameColorCssClass.BLACK_RC_FRAME);
                 } else {
-                    $faceCanvasArea.addClass("white-rc-frame");
+                    $faceCanvasArea.addClass(FrameColorCssClass.WHITE_RC_FRAME);
                 }
-
-                if (this.currentFace_.color === Model.FaceColor.BLACK) {
-                    $faceCanvasArea.addClass("black-face");
-                } else {
-                    $faceCanvasArea.addClass("white-face");
-                }
+                $faceCanvasArea.addClass(this.currentFace_.getFaceColorCssClassName());
 
                 /* キャンバス部分の座標の指定 */
                 let faceCanvasAreaWidth = $faceCanvasArea.width();
