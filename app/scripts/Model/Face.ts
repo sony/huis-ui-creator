@@ -318,10 +318,10 @@ module Garage {
                 for (let image of images) {
                     // Copy resized image referenced from image.path
                     if (image.path != null) {
-                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
-                        let imageFileName = image.path.substr(image.path.lastIndexOf("/") + 1);
-                        image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
+                        let srcImagePath = image.getFullPath();
+                        let imageFileName = Util.PathManager.basename(image.path);
+                        image.path = Util.PathManager.join(remoteId, imageFileName);
+                        let dstImagePath = image.getFullPath();
 
                         if (fs.existsSync(srcImagePath)) {
                             fs.copySync(srcImagePath, dstImagePath);
@@ -329,10 +329,10 @@ module Garage {
                     }
                     // Copy original image referenced from garageExtensions.original
                     if (image.garageExtensions != null && image.garageExtensions.original != null) {
-                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
-                        let imageFileName = image.garageExtensions.original.substr(image.garageExtensions.original.lastIndexOf("/") + 1);
-                        image.garageExtensions.original = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
+                        let srcImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
+                        let imageFileName = Util.PathManager.basename(image.garageExtensions.original);
+                        image.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
+                        let dstImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
 
                         if (fs.existsSync(srcImagePath)) {
                             fs.copySync(srcImagePath, dstImagePath);

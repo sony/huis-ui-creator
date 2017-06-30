@@ -495,7 +495,8 @@ module Garage {
                 * srcRootDirのファイルを dstRootDirにコピーする。
                 * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
                 */
-                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void): CDP.IPromise<Error> {
+                    var df = $.Deferred();
                     this._isCanceled = false;
                     var errorValue: Error = null;
 
@@ -519,23 +520,28 @@ module Garage {
                             }).then(() => {
                                 if (callback) {
                                     callback(null);    // 成功
+                                } else {
+                                    df.resolve();
                                 }
                             }).fail((err) => {
                                 if (callback) {
                                     callback(err);    // 成功
+                                } else {
+                                    df.reject(err);
                                 }
                             });
                     }, 100);
 
-                    return { cancel: this._cancel };
+                    return CDP.makePromise(df);
                 }
 
-
+                // TODO: make public
                 private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
                     let FUNCITON_NAME = TAG + "_copyFiles : ";
                     let df = $.Deferred<Error>();
                     let promise = CDP.makePromise(df);
 
+                    // TODO: remove nop code
                     let files = targetFiles.slice();
 
                     let proc = () => {
@@ -548,6 +554,7 @@ module Garage {
                                 this._checkCancel();
                                 let option: CopyOptions = {
                                     preserveTimestamps: true,
+                                    // TODO: move filter logic out of this method
                                     // ボタンデバイス情報のキャッシュファイルは本体に送らない
                                     filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }

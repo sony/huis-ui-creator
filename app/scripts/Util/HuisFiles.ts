@@ -397,7 +397,7 @@ module Garage {
                 // actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)を考慮して
                 // codeがnullのケースも許容する。
                 let code = action.code;
-                
+
                 if (action.deviceInfo &&
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
@@ -1393,6 +1393,9 @@ module Garage {
                         case REMOTE_IMAGES_DIRECTORY_NAME:
                         case "lost+found":
                             return false;
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
+                            return false;
 
                         default:
                             /* jshint -W032:true */
@@ -1400,6 +1403,7 @@ module Garage {
                         /* jshint -W032:false */
                     }
 
+                    // TODO: replace with search
                     // remoteList に格納されている remoteId と同名のディレクトリーであるかチェック。
                     // 格納されていない remoteId のディレクトリーは削除対象とする。
                     for (let i = 0, l = remoteList.length; i < l; i++) {
@@ -1428,6 +1432,13 @@ module Garage {
                     // ディレクトリーであるかチェック
                     if (!fs.statSync(fullPath).isDirectory()) {
                         return false;
+                    }
+
+                    // 以下のディレクトリーは削除対象外
+                    switch (file) {
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
+                            return false;
                     }
 
                     for (let i = 0, l = remoteList.length; i < l; i++) {

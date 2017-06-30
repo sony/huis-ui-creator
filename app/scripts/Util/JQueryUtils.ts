@@ -64,10 +64,10 @@ module Garage {
             }
 
 
-            static enccodeUriValidInCSS(inputUrl: string): string {
+            static encodeUriValidInCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
-                    console.warn("[JQueryUtils]enccodeUriValidInCSS : inputUrl is null");
+                    console.warn("[JQueryUtils]encodeUriValidInCSS : inputUrl is null");
                     return;
                 }
 

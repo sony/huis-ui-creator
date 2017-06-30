@@ -184,26 +184,25 @@ module Garage {
                 var windowHeight = innerHeight;
             }
 
-            /*
-            * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
-            */
+            /**
+             * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
+             */
             private syncCommonImages(callback?: Function) {
                 let FUNCTION_NAME = TAG + "syncCommonImages : ";
 
-                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
-                let dst = HUIS_REMOTEIMAGES_ROOT;//コピー先
+                let srcRoot = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                let srcWhite = Util.PathManager.join(srcRoot, Util.Dirs.WHITE_DIR);
 
-                //copyしてcallbackを実行
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                let syncProgress = syncTask.copyFilesSimply(src, dst, (err) => {
-                    if (err) {
-                        this.showDialogNotConnectWithHuis(err);
-                    } else if (callback) {//同期成功。 
-                        callback();
-                    }
-                });
+                syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
+                    .then((err: Error) => {
+                        if (err == null) {
+                            callback();
+                        } else {
+                            this.showDialogNotConnectWithHuis(err);
+                        }
+                    });
             }
-
 
             /**
              * ストレージロックのチェック
@@ -439,7 +438,7 @@ module Garage {
                 let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
                 let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
 
-                let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
+                syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         this.showDialogNotConnectWithHuis(err);
                     } else {//同期成功。
