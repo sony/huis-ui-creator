@@ -21,10 +21,10 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        const HORIZONTAL_LINE_IMAGE_PATH = "divider_pickup_custom.png";
+        const HORIZONTAL_LINE_IMAGE_PATH: string = "divider_pickup_custom.png";
 
-        const MODULE_SEPARATOR_LABEL_FONT_SIZE = 18;
-        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT = "normal";
+        const MODULE_SEPARATOR_LABEL_FONT_SIZE: number = 18;
+        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT: string = "normal";
 
         export class ModuleSeparator extends Backbone.Model {
 
@@ -83,11 +83,10 @@ module Garage {
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                let horizontalLineSrcPath = HORIZONTAL_LINE_IMAGE_PATH;
 
                 var horizontalLineImage = new Model.ImageItem({
                     area: horizontalLineArea,
-                    path: horizontalLineSrcPath
+                    path: HORIZONTAL_LINE_IMAGE_PATH
                 });
 
                 return horizontalLineImage;

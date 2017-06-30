@@ -195,12 +195,12 @@ module Garage {
 
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
-                    .then(() => {
-                        // for old(<=4.1.0) HUIS support.
-                        //   - old HUIS look for white common image directly under remoteimages dir
-                        return syncTask.copyFilesSimply(srcWhite, HUIS_REMOTEIMAGES_ROOT);
-                    }).then(() => {
-                        callback();
+                    .then((err: Error) => {
+                        if (err == null) {
+                            callback();
+                        } else {
+                            this.showDialogNotConnectWithHuis(err);
+                        }
                     });
             }
 

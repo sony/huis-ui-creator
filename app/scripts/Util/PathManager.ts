@@ -26,15 +26,6 @@ module Garage {
 
         export class PathManager {
 
-            static getCommonImageRoot(): string {
-                let colorSpecificDir = (Util.MiscUtil.isSettingColorBlack) ? "black" : "";
-                return PathManager.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, colorSpecificDir));
-            }
-
-            static getFullCustomImageRoot(): string {
-                return HUIS_REMOTEIMAGES_ROOT;
-            }
-
             private static _isRemoteDir(argPath): boolean {
                 return argPath.match(/^\d{4}\//) != null;
             }
