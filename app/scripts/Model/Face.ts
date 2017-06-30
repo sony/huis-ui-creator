@@ -318,10 +318,10 @@ module Garage {
                 for (let image of images) {
                     // Copy resized image referenced from image.path
                     if (image.path != null) {
-                        let srcImagePath = Util.PathManager.resolveImagePath(image.path);
+                        let srcImagePath = image.getFullPath();
                         let imageFileName = Util.PathManager.basename(image.path);
                         image.path = Util.PathManager.join(remoteId, imageFileName);
-                        let dstImagePath = Util.PathManager.resolveImagePath(image.path);
+                        let dstImagePath = image.getFullPath();
 
                         if (fs.existsSync(srcImagePath)) {
                             fs.copySync(srcImagePath, dstImagePath);

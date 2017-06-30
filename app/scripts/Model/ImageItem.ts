@@ -172,6 +172,14 @@ module Garage {
                 return convertedImage;
             }
 
+            /**
+             * このItemに設定された画像のfullpathを取得する
+             * @return {string} 設定された画像のfullpath
+             */
+            getFullPath(): string {
+                return Util.PathManager.resolveImagePath(this.path);
+            }
+
             /*
              * @return {boolen} 背景画像だった場合true, 違う場合falseを返す。
              */
