@@ -122,6 +122,32 @@
             }
 
             #face-canvas {
+                // black style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_BLACK} {
+                    .item {
+                        &:hover {
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_BLACK;
+                        }
+
+                        &.selected {
+                            border-color: $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+                        }
+                    }
+                }
+                // white style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_WHITE} {
+                    .item {
+                        &:hover {
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_WHITE;
+                        }
+
+                        &.selected {
+                            border-color: $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+                        }
+                    }
+                }
 
                 #face-pages-area {
                     transform: scale(0.5);
@@ -137,15 +163,10 @@
                     border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
                     margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
 
-                    &:hover {
-                        background-color: $COLOR_CANVAS_ITEM_HOVER;
-                    }
-
                     &.selected {
-                        border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                        border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid;
                         margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
-                        background-color: $COLOR_CANVAS_SELECTED_ITEM_BACKGROUND;
                     }
 
                     &.disabled {
