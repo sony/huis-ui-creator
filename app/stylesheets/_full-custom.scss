@@ -96,7 +96,7 @@
             width: $SIZE_CANVAS_AREA_WIDTH;
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
-            //ボタン情報表示用 ツールチップ 非表示
+            //ボタン情報表示用 ツールチップ 表示
             #canvas-tooltip {
                 overflow: initial;
                 text-shadow: none;
@@ -1118,6 +1118,22 @@
             }
         }
 
+        #face-pallet.#{$FACE_COLOR_BLACK} {
+            .face-master-separator {
+                color: $COLOR_WHITE_TEXT;
+                background-color: $COLOR_HUIS_BG_BLACK;
+                border-color: $COLOR_SEPARATOR_BLACK;
+            }
+        }
+
+        #face-pallet.#{$FACE_COLOR_WHITE} {
+            .face-master-separator {
+                color: $COLOR_PALLET_SEPARATOR_TEXT;
+                background-color: $COLOR_HUIS_BG_WHITE;
+                border-color: $COLOR_SEPARATOR_WHITE;
+            }
+        }
+
         #face-pallet {
             position: absolute;
             width: $SIZE_FACE_IN_PALLET_WIDTH;
@@ -1141,7 +1157,6 @@
                     margin-top: $SIZE_PALLET_SEPARATOR_MARGIN_TOP;
                     width: 100%;
                     height: $SIZE_PALLET_SEPARATOR_HEGHT;
-                    background-color: $COLOR_PALLET_SEPARATOR_BACKGROUND;
 
                     .separate-text {
                         padding-top: $SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
@@ -1155,7 +1170,6 @@
                             display: block;
                             margin-top: $SIZE_PALLET_SEPARATOR_SPAN_MARGIN_TOP;
                             text-shadow: none;
-                            color: $COLOR_PALLET_SEPARATOR_TEXT;
                             text-align: center;
                             font-size: $FONT_SIZE_PALLET_SEPARATOR;
                             font-family: $FONT_FAMILY_LIGHT;
