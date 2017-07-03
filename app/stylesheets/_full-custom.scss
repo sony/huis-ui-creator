@@ -164,7 +164,8 @@
                     margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
 
                     &.selected {
-                        border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid;
+                        border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
+                        border-style:  solid;
                         margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
                     }
