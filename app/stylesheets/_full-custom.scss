@@ -1146,6 +1146,12 @@
                 background-color: $COLOR_HUIS_BG_BLACK;
                 border-color: $COLOR_SEPARATOR_BLACK;
             }
+
+            .item {
+                &:hover {
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_BLACK;
+                }
+            }
         }
 
         #face-pallet.#{$FACE_COLOR_WHITE} {
@@ -1153,6 +1159,12 @@
                 color: $COLOR_TEXT_MAIN;
                 background-color: $COLOR_HUIS_BG_WHITE;
                 border-color: $COLOR_SEPARATOR_WHITE;
+            }
+
+            .item {
+                &:hover {
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_WHITE;
+                }
             }
         }
 
@@ -1213,7 +1225,6 @@
                     border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
 
                     &:hover {
-                        background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
                         border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
                     }
                 }
