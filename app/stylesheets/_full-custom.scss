@@ -15,6 +15,8 @@
 */
 @import "variables/variable";
 
+// TODO: split into files
+
 #page-full-custom {
     #main {
         position: relative;
@@ -125,12 +127,15 @@
                 // black style rule for canvas
                 #face-pages-area.#{$FACE_COLOR_BLACK} {
                     .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_BLACK;
+
                         &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
                             background-color: $COLOR_BUTTON_EDIT_HOVER_BLACK;
                         }
 
                         &.selected {
-                            border-color: $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
                             background-color: $COLOR_BUTTON_SELECTED_BLACK;
                         }
                     }
@@ -138,12 +143,15 @@
                 // white style rule for canvas
                 #face-pages-area.#{$FACE_COLOR_WHITE} {
                     .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_WHITE;
+
                         &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
                             background-color: $COLOR_BUTTON_EDIT_HOVER_WHITE;
                         }
 
                         &.selected {
-                            border-color: $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
                             background-color: $COLOR_BUTTON_SELECTED_WHITE;
                         }
                     }
@@ -160,7 +168,8 @@
 
                 .item {
                     cursor: move;
-                    border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
+                    border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS;
+                    border-style: solid;
                     margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
 
                     &.selected {
@@ -1148,7 +1157,10 @@
             }
 
             .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_BLACK;
+
                 &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
                     background-color: $COLOR_BUTTON_MATERIAL_HOVER_BLACK;
                 }
             }
@@ -1162,7 +1174,10 @@
             }
 
             .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_WHITE;
+
                 &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
                     background-color: $COLOR_BUTTON_MATERIAL_HOVER_WHITE;
                 }
             }
@@ -1211,21 +1226,18 @@
                     }
                 }
 
-
-                .button-item {
-                    border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
-                }
-
                 .face-page {
                     padding-top: $SIZE_FACE_PAGE_AREA_PADDING_TOP;
                     padding-bottom: $SIZE_FACE_PAGE_AREA_PADDING_BOTTOM;
                 }
 
                 .item {
-                    border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+                    border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                    border-style: solid;
 
                     &:hover {
-                        border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
+                        border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                        border-style: solid;
                     }
                 }
             }
