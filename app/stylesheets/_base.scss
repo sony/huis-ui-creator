@@ -98,6 +98,36 @@ body {
         background: $COLOR_TRANSPARENT;
     }
 
+    .#{$FACE_COLOR_BLACK} #face-canvas, #face-pallet.#{$FACE_COLOR_BLACK}{
+            //スクロールバーのクリック可能エリア
+            ::-webkit-scrollbar-thumb {
+                background-color: $COLOR_SCROLL_NORMAL_BLACK;
+
+                &:hover {
+                    background-color: $COLOR_SCROLL_HOVER_BLACK;
+                }
+
+                &:active {
+                    background-color: $COLOR_SCROLL_PRESSED_BLACK;
+                }
+            }
+    }
+
+    .#{$FACE_COLOR_WHITE} #face-canvas, #face-pallet.#{$FACE_COLOR_WHITE}{
+            //スクロールバーのクリック可能エリア
+            ::-webkit-scrollbar-thumb {
+                background-color: $COLOR_SCROLL_NORMAL_WHITE;
+
+                &:hover {
+                    background-color: $COLOR_SCROLL_HOVER_WHITE;
+                }
+
+                &:active {
+                    background-color: $COLOR_SCROLL_PRESSED_WHITE;
+                }
+            }
+    }
+
     #face-canvas, #face-pallet, #face-list {
         ::-webkit-scrollbar {
             &:vertical {
