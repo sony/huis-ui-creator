@@ -39,6 +39,33 @@
     padding: $SIZE_CANVAS_INNER_PADDING_TOP $SIZE_CANVAS_INNER_PADDING_LEFT 0 $SIZE_CANVAS_INNER_PADDING_RIGHT;
 }
 
+// black style rule for face name area
+.#{$FACE_COLOR_BLACK} #face-name-area #input-face-name {
+    color: white;
+
+    &:hover {
+        background-color: $COLOR_INPUT_TITLE_FOCUS_BLACK;
+    }
+
+    &:focus {
+        outline: none;
+        background-color: $COLOR_INPUT_TITLE_FOCUS_BLACK;
+    }
+}
+
+// white style rule for face name area
+.#{$FACE_COLOR_WHITE} #face-name-area #input-face-name {
+    &:hover {
+        background-color: $COLOR_INPUT_TITLE_FOCUS_WHITE;
+    }
+
+    &:focus {
+        outline: none;
+        background-color: $COLOR_INPUT_TITLE_FOCUS_WHITE;
+    }
+}
+
+// common style rule for face name area
 #face-name-area {
     position: relative;
     width: $SIZE_FACE_NAME_AREA_WIDTH;
@@ -53,28 +80,17 @@
         text-align: center;
         font-size: $FONT_SIZE_CANVAS_NAME_AREA;
         font-family: $FONT_WEIGHT_BUTTON_ITEM;
-
-        &:hover {
-            background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
-            //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_HOVER_TYPE2;
-        }
-
-        &:focus {
-            outline: none;
-            background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
-            //border-bottom : $SIZE_FORM_BORDER_THICKNESS solid $COLOR_FORM_BORDER_FOCUS_TYPE2;
-        }
     }
 }
 
 
 .#{$FACE_COLOR_BLACK} #face-pages-area {
-    background-color: $COLOR_BLACK;
+    background-color: $COLOR_HUIS_BG_BLACK;
 }
 
 
 .#{$FACE_COLOR_WHITE} #face-pages-area {
-    background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
+    background-color: $COLOR_HUIS_BG_WHITE;
 }
 
 #face-pages-area {
