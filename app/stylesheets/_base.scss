@@ -318,6 +318,32 @@ body {
             margin-top: $SIZE_POPUP_ARROW_MINUS_MARGIN;
             margin-bottom: $SIZE_POPUP_ARROW_MINUS_MARGIN_BOTTOM;
         }
+
+        .#{$BLACK_RC_FRAME} .ui-btn {
+            color: $COLOR_WHITE_TEXT;
+            background-color: $COLOR_COMMON_BUTTON_NORMAL_BLACK;
+
+            &:hover {
+                background-color: $COLOR_COMMON_BUTTON_HOVER_BLACK;
+            }
+
+            &:active {
+                background-color: $COLOR_ACCENT_BLACK;
+            }
+        }
+
+        .#{$WHITE_RC_FRAME} .ui-btn {
+            color: $COLOR_BUTTON_TEXT;
+            background-color: $COLOR_COMMON_BUTTON_NORMAL_WHITE;
+
+            &:hover {
+                background-color: $COLOR_COMMON_BUTTON_HOVER_WHITE;
+            }
+
+            &:active {
+                background-color: $COLOR_ACCENT_WHITE;
+            }
+        }
         //共通のテキストボタン
         .ui-btn {
             font-family: $FONT_FAMILY_TEXT_BUTTON;
@@ -327,14 +353,11 @@ body {
             border: none;
             height: $SIZE_BUTTON_HEIGHT;
             font-size: $FONT_SIZE_TEXT_BUTTON;
-            color: $COLOR_BUTTON_TEXT;
-            background-color: $COLOR_BUTTON_NORMAL;
             box-shadow: none;
             border-radius: 0;
 
             &:hover {
                 text-shadow: none;
-                background-color: $COLOR_BUTTON_HOVER;
                 font-family: $FONT_FAMILY_TEXT_BUTTON;
                 color: $COLOR_BUTTON_TEXT;
                 border: none;
@@ -342,7 +365,6 @@ body {
 
             &:active {
                 text-shadow: none;
-                background-color: $COLOR_BUTTON_PRESED;
                 font-family: $FONT_FAMILY_TEXT_BUTTON;
                 color: $COLOR_BUTTON_TEXT;
                 box-shadow: none;
