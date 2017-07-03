@@ -1225,6 +1225,19 @@
             margin-bottom: $SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
         }
     }
+
+    #face-dummy-area.#{$FACE_COLOR_BLACK} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+        }
+    }
+
+    #face-dummy-area.#{$FACE_COLOR_WHITE} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+        }
+    }
+
     // ドラッグ中アイテムのダミー表示
     #face-dummy-area {
         position: absolute;
@@ -1232,9 +1245,6 @@
         transform-origin: left top;
         z-index: 101;
 
-        .item {
-            background-color: $COLOR_DUMMY_ITEM_BACKGROUND;
-        }
 
         .item-resizer {
             position: absolute;
