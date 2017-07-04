@@ -512,9 +512,9 @@ module Garage {
                     return;
                 }
 
-                let pullldownText = this.getTextInRemoteIdOf(order);
+                let pulldownText = this.getTextInRemoteIdOf(order);
 
-                switch (pullldownText) {
+                switch (pulldownText) {
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV"):
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC"):
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT"):

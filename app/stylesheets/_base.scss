@@ -453,9 +453,9 @@ body {
         //共通のプルダウンメニュー
         .ui-select {
             -webkit-appearance: none;
-            margin-top: $SIZE_PULL_DOWM_MARGIN_TOP;
+            margin-top: $SIZE_PULL_DOWN_MARGIN_TOP;
             margin-bottom: 0;
-            height: $SIZE_PULL_DOWM_HEIGHT_MAIN;
+            height: $SIZE_PULL_DOWN_HEIGHT_MAIN;
 
             .ui-btn-icon-right::after, .ui-btn-icon-left::after {
                 visibility: hidden;
@@ -465,10 +465,10 @@ body {
                 text-shadow: none;
                 display: flex;
                 align-items: center;
-                padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
-                padding-left: $SIZE_PULL_DOWM_PADDING_LFFT;
-                font-family: $FONT_FAMILY_PULL_DOWM_MENU;
-                font-size: $FONT_SIZE_PULL_DOWM_MENU;
+                padding-right: $SIZE_PULL_DOWN_PADDING_RIGHT;
+                padding-left: $SIZE_PULL_DOWN_PADDING_LFFT;
+                font-family: $FONT_FAMILY_PULL_DOWN_MENU;
+                font-size: $FONT_SIZE_PULL_DOWN_MENU;
 
                 span {
                     text-overflow: ellipsis;
@@ -481,16 +481,16 @@ body {
                     color: $COLOR_PROPERTY_AREA_EDIT_PULL_DOWN_DEFAULT_TEXT;
                 }
 
-                background: $COLOR_PULL_DOWM_BACKGROUMD;
-                background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_DOWM;
+                background: $COLOR_PULL_DOWN_BACKGROUMD;
+                background-image: $PATH_IMG_PULL_DOWN_MENU_ICON_DOWN;
                 background-repeat: no-repeat;
                 background-position: right top;
                 box-sizing: border-box;
-                border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+                border: $SIZE_PULL_DOWN_BORDER_THICKNESS solid $COLOR_PULL_DOWN_BORDER_NOMERL;
 
                 &:hover {
                     box-sizing: border-box;
-                    border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_HOVER;
+                    border: $SIZE_PULL_DOWN_BORDER_THICKNESS solid $COLOR_PULL_DOWN_BORDER_HOVER;
                 }
             }
 
@@ -498,52 +498,52 @@ body {
             .ui-btn:focus {
                 -webkit-appearance: none;
                 padding-left: $SIZE_PULL_DOWN_FOCUS_PADDING_LEFT;
-                padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
+                padding-right: $SIZE_PULL_DOWN_PADDING_RIGHT;
                 background-position: right $SIZE_PULL_DOWN_IMG_POSITION_X_FOCUS top $SIZE_PULL_DOWN_IMG_POSITION_Y_FOCUS;
                 box-sizing: border-box;
-                //background-image: $PATH_IMG_PULL_DOWM_MENU_ICON_UP;
+                //background-image: $PATH_IMG_PULL_DOWN_MENU_ICON_UP;
                 outline: none;
-                border: $SIZE_PULL_DOWM_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
+                border: $SIZE_PULL_DOWN_BORDER_THICKNESS_FOCUS solid $COLOR_PULL_DOWN_BORDER_FOCUS;
             }
         }
         //pull down menuの選択肢
         .ui-selectmenu {
-            margin-top: $SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
-            margin-bottom: $SIZE_PULL_DOWM_MARGIN_MAIN_AND_SUB;
+            margin-top: $SIZE_PULL_DOWN_MARGIN_MAIN_AND_SUB;
+            margin-bottom: $SIZE_PULL_DOWN_MARGIN_MAIN_AND_SUB;
             min-width: 50px;
-            max-height: $SIZE_PULL_DOWM_MAX_HEIGHT;
-            width: $SIZE_PULL_DOWM_DEFAULT_WIDTH;
+            max-height: $SIZE_PULL_DOWN_MAX_HEIGHT;
+            width: $SIZE_PULL_DOWN_DEFAULT_WIDTH;
             overflow-y: overlay;
             box-shadow: none;
             -webkit-box-shadow: none;
             -moz-box-shadow: none;
             box-shadow: none;
-            border: $SIZE_PULL_DOWM_BORDER_THICKNESS solid $COLOR_PULL_DOWM_BORDER_NOMERL;
+            border: $SIZE_PULL_DOWN_BORDER_THICKNESS solid $COLOR_PULL_DOWN_BORDER_NOMERL;
             background-color: $COLOR_PULL_DOWN_BACKGROUND_NORMAL;
             border-radius: 0;
 
             .ui-selectmenu-list {
-                padding-top: $SIZE_PULL_DOWM_SUB_TOP_PADDING;
-                padding-bottom: $SIZE_PULL_DOWM_SUB_PADDING_BOTTOM;
+                padding-top: $SIZE_PULL_DOWN_SUB_TOP_PADDING;
+                padding-bottom: $SIZE_PULL_DOWN_SUB_PADDING_BOTTOM;
                 //border:1px solid $COLOR_PULL_DOWN_BORDER;
                 outline: none;
 
 
                 li {
-                    height: $SIZE_PULL_DOWM_HEIGHT_SUB;
+                    height: $SIZE_PULL_DOWN_HEIGHT_SUB;
 
                     .ui-btn, ui-btn-active {
                         //縦中央揃え
                         display: flex;
                         align-items: center;
-                        font-size: $FONT_SIZE_PULL_DOWM_MENU;
-                        font-family: $FONT_FAMILY_PULL_DOWM_MENU;
-                        color: $COLOR_PULL_DOWM_TEXT;
+                        font-size: $FONT_SIZE_PULL_DOWN_MENU;
+                        font-family: $FONT_FAMILY_PULL_DOWN_MENU;
+                        color: $COLOR_PULL_DOWN_TEXT;
                         text-shadow: none;
                         background-color: $COLOR_PULL_DOWN_BACKGROUND_NORMAL;
                         border: none;
-                        padding-right: $SIZE_PULL_DOWM_PADDING_RIGHT;
-                        padding-left: $SIZE_PULL_DOWM_PADDING_LFFT;
+                        padding-right: $SIZE_PULL_DOWN_PADDING_RIGHT;
+                        padding-left: $SIZE_PULL_DOWN_PADDING_LFFT;
 
                         &:hover, &:active {
                             background-color: $COLOR_PULL_DOWN_BACKGROUND_HOVER;
