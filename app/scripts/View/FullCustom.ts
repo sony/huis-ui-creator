@@ -378,6 +378,8 @@ module Garage {
                     left: facePalletLeft
                 });
 
+                $('#face-dummy-area').addClass(this.currentFace_.getFaceColorCssClassName());
+
                 // faceList の更新
                 if (this != null) {
                     this._layoutFacesList();
