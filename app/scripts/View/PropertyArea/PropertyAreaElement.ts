@@ -31,6 +31,7 @@ module Garage {
             export namespace Label {
                 export const SIZE: string = "size";
                 export const TEXT: string = "text";
+                export const COLOR: string = "color";
             }
             export namespace Image {
                 export const PATH: string = "path";
@@ -47,6 +48,7 @@ module Garage {
                 export const CHANGE_SIZE: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
                 export const CHANGE_TEXT: string = Events.CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
                 export const UI_CHANGE_SIZE: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.SIZE;
+                export const UI_CHANGE_COLOR: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.COLOR;
                 export const UI_CHANGE_TEXT: string = UI_CHANGE_WITH_COLON + PropertyValues.Label.TEXT;
             }
             export namespace Image {

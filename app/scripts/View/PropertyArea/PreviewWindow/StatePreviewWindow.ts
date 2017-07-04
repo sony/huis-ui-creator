@@ -71,6 +71,10 @@ module Garage {
                 this.trigger(PropertyAreaEvents.Label.UI_CHANGE_SIZE);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
 
+            private _onTextColorPulldownChanged(event: Event) {
+                this.trigger(PropertyAreaEvents.Label.UI_CHANGE_COLOR);//uiChange:colorを親クラスであるPropertyAreaクラスに伝播させる
+            }
+
             private _onTextFieldChanged(event: Event) {
                 this.trigger(PropertyAreaEvents.Label.UI_CHANGE_TEXT);//uiChange:textを親クラスであるPropertyAreaクラスに伝播させる
             }
@@ -128,6 +132,16 @@ module Garage {
             }
 
             /**
+             * @return {string} previewが所持しているtext colorを返す。
+             */
+            getTextColor(): string {
+                let preview = this.preview_;
+                if (preview instanceof TextPreview) {
+                    return preview.getTextColor();
+                }
+            }
+
+            /**
              * @return {number} previewが所持しているtextを返す。ない場合nullを返す。
              */
             getText(): string {
@@ -173,6 +187,7 @@ module Garage {
                     $preview.addClass(ConstValue.TEXT_PREVIEW_DOM_CLASS_NAME);
                 }
                 this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_COLOR, this._onTextColorPulldownChanged);
                 this.listenTo(this.preview_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
             }
 

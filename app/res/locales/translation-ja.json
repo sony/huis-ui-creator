@@ -154,7 +154,9 @@
             "STR_EDIT_PROPERTY_ADD_MACRO_ACTION": "操作を追加",
             "STR_EDIT_PROPERTY_JUMP_NO_DEST": "設定なし",
             "STR_EDIT_PROPERTY_CHANGE_JUMP_DEST": "リモコンをみて選択",
-            "STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE": "このリモコン"
+            "STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE": "このリモコン",
+            "STR_EDIT_PROPERTY_PULLDOWN_FONT_COLOR_BLACK": "黒",
+            "STR_EDIT_PROPERTY_PULLDOWN_FONT_COLOR_WHITE": "白"
         },
         "canvas": {
             "STR_EDIT_CANVAS_NEW_PAGE_BTN": "新規ページ"

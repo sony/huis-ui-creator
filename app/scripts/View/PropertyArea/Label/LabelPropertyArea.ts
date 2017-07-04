@@ -35,6 +35,7 @@ module Garage {
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_COLOR, this._onTextColorPulldownChanged);
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
                 this.listenTo(this.getModel(),
@@ -52,6 +53,11 @@ module Garage {
             private _onTextSizePulldownChanged(event: Event) {
                 let changedSize = (<LabelPreviewWindow>this.previewWindow_).getTextSize();
                 this._setMementoCommand(this.getModel(), { "size": this.getModel().size }, { "size": changedSize })
+            }
+
+            private _onTextColorPulldownChanged(event: Event) {
+                let changedColor = (<LabelPreviewWindow>this.previewWindow_).getTextColor();
+                this._setMementoCommand(this.getModel(), { "color": this.getModel().color }, { "color": changedColor })
             }
 
             private _onTextFieldChanged(event: Event) {
