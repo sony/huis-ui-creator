@@ -383,11 +383,14 @@ body {
             border: none;
             height: $SIZE_BUTTON_HEIGHT;
             font-size: $FONT_SIZE_TEXT_BUTTON;
+            color: $COLOR_BUTTON_TEXT;
+            background-color: $COLOR_COMMON_BUTTON_NORMAL_WHITE;
             box-shadow: none;
             border-radius: 0;
 
             &:hover {
                 text-shadow: none;
+                background-color: $COLOR_COMMON_BUTTON_HOVER_WHITE;
                 font-family: $FONT_FAMILY_TEXT_BUTTON;
                 color: $COLOR_BUTTON_TEXT;
                 border: none;
@@ -395,6 +398,7 @@ body {
 
             &:active {
                 text-shadow: none;
+                background-color: $COLOR_ACCENT_WHITE;
                 font-family: $FONT_FAMILY_TEXT_BUTTON;
                 color: $COLOR_BUTTON_TEXT;
                 box-shadow: none;
