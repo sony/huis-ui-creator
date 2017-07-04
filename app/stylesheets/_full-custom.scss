@@ -263,7 +263,7 @@
             width: $SIZE_PROPERTY_AREA_INNNER_WIDTH;
             margin-left: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
             margin-right: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWN;
             margin-bottom: 0;
             text-shadow: none;
             font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
@@ -521,8 +521,8 @@
                 position: relative;
 
                 .custom-select {
-                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
-                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_RIGHT;
                     width: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_WIDTH;
                 }
 
@@ -761,7 +761,7 @@
             }
 
             .text-size-pulldown {
-                width: $SIZE_PROPERTY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
+                width: $SIZE_PROPERTY_AREA_PULL_DOWN_TEXT_SIZE_WIDTH;
             }
 
             input.priperty-value {
