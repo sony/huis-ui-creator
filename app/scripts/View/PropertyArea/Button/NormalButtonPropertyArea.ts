@@ -735,7 +735,7 @@ module Garage {
             }
 
             /**
-             * アクション設定用のpullldownMenuをレンダリングする
+             * アクション設定用のpulldownMenuをレンダリングする
              * @param order{number} 上から何番目の信号か
              * @param stateid{number} 
              * @param inputAction? {string} プルダウンの初期値 
@@ -798,7 +798,7 @@ module Garage {
             }
 
             /**
-             * アクション設定用のpullldownMenuをgetする
+             * アクション設定用のpulldownMenuをgetする
              * @param order{number} 
              */
             private getInputAction(order: number) {
