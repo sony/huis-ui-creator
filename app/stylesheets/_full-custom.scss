@@ -160,6 +160,10 @@
                 #face-pages-area {
                     transform: scale(0.5);
                     transform-origin: left top;
+
+                    .item.button-item.overlayed {
+                        border-color: $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
+                    }
                 }
 
                 #face-canvas-inner {
@@ -186,10 +190,6 @@
                     &.background {
                         cursor: default;
                     }
-                }
-
-                .button-item.overlayed {
-                    border-color: $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
                 }
 
                 .item-resizer {
