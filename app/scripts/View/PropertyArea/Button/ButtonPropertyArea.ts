@@ -69,6 +69,7 @@ module Garage {
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_COLOR, this._onTextColorPulldownChanged);
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
@@ -121,6 +122,16 @@ module Garage {
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
                 targetState.getDefaultLabel().size = changedSize;
+
+                this._setStateMementoCommand(targetStates);
+            }
+
+            private _onTextColorPulldownChanged(event: Event) {
+                let changedColor = (<StatePreviewWindow>this.previewWindow_).getTextColor();
+
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().color = changedColor;
 
                 this._setStateMementoCommand(targetStates);
             }
