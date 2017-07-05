@@ -352,12 +352,14 @@ module Garage {
                 /* 詳細編集部分 */
                 //詳細編集エリアのY座標
                 let PROPERTY_AREA_MARGIN_RIGHT = 100;
-                let detailWidth = $("#face-item-detail-area").outerWidth();
+                let $detailArea = $("#face-item-detail-area");
+                let detailWidth = $detailArea.outerWidth();
 
                 let detailLeft = faceCanvasAreaLeft - (PROPERTY_AREA_MARGIN_RIGHT + detailWidth);
-                $("#face-item-detail-area").css({
+                $detailArea.css({
                     left: detailLeft + "px",
                 });
+                $detailArea.addClass(this.currentFace_.getFaceColorCssClassName());
 
                 //パレットエリアのY座標
                 let PALLET_AREA_MARGIN_LRFT = 44;

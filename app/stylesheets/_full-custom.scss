@@ -174,7 +174,7 @@
 
                     &.selected {
                         border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
-                        border-style:  solid;
+                        border-style: solid;
                         margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
                     }
@@ -256,6 +256,20 @@
 
         #face-item-detail-area {
             overflow-x: hidden;
+        }
+
+        #face-item-detail-area.#{$FACE_COLOR_BLACK} {
+            #preview.image-preview {
+                // TODO: fix color
+                background-color: gray;
+            }
+        }
+
+        #face-item-detail-area.#{$FACE_COLOR_WHITE} {
+            #preview.image-preview {
+                // TODO: fix color
+                background-color: white;
+            }
         }
 
         #face-item-detail {
