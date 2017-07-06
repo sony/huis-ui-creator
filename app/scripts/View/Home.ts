@@ -283,11 +283,12 @@ module Garage {
                 if (!this._checkCanCreateNewRemote()) {
                     return;
                 }
-                face = face.copy(huisFiles.createNewRemoteId());
 
+                face = face.clone();
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();
                 }
+                face.moveToNewRemoteId(huisFiles.createNewRemoteId());
 
                 let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
                 huisFiles.updateFace(face, buttonDeviceInfoCache)

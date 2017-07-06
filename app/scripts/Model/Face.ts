@@ -295,17 +295,15 @@ module Garage {
             }
 
             /**
-             * このFaceを複製した上で、引数で与えられたremoteIdを持つ新たなFaceを作成する。
+             * このFaceのremoteIdを引数で与えられたremoteIdに変更する。
+             * 含まれる画像は全て新しいremoteIdの画像ディレクトリ以下にコピーされる。
              *
              * @param {string} dstRemoteId 新しいFaceのremoteId
-             * @return {Model.Face} 新しくコピーされたFace
              */
-            copy(dstRemoteId: string): Model.Face {
-                let newFace: Model.Face = this.clone();
-                let images = newFace.searchImages();
-                newFace._copyImage(images, dstRemoteId);
-                newFace.setWholeRemoteId(dstRemoteId);
-                return newFace;
+            moveToNewRemoteId(dstRemoteId: string) {
+                let images = this.searchImages();
+                this._copyImage(images, dstRemoteId);
+                this.setWholeRemoteId(dstRemoteId);
             }
 
             /**
