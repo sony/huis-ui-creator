@@ -45,7 +45,7 @@
                         <p class="remote-title-text">{{name}}</p>
                         <div class="edit-lock-icon"></div>
                     </div>
-                    <section class="face-container {{category}}" data-remoteid="{{remoteId}}"></section>
+                    <section class="face-container {{category}} {{faceColor}}" data-remoteid="{{remoteId}}"></section>
                 </div>
             </li>
             {{/faceList}}
@@ -53,7 +53,7 @@
         {{!選択ダイアログ用}}
         <script type="text/template" id="face-list-selector-template">
             {{#faceList}}
-            <li class="face" data-remoteid="{{remoteId}}">
+            <li class="face {{faceColor}}" data-remoteid="{{remoteId}}">
                 <p class="title">{{name}}</p>
                 <section class="face-selector" data-remoteid="{{remoteId}}">
                     <div class="face-page-selector"></div>

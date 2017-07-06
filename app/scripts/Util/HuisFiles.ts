@@ -28,6 +28,7 @@ module Garage {
         interface IPlainFace {
             name: string;
             category: string;
+            color: string;
             modules: any[];
         }
 
@@ -45,6 +46,10 @@ module Garage {
 
             /** 信号名表示 */
             label: string;
+        }
+
+        namespace constValue {
+            export const SHARED_INFO_FILE_NAME: string = "sharedinfo.ini";
         }
 
         /**
@@ -185,7 +190,7 @@ module Garage {
                 let remoteId = this.createNewRemoteId();
                 let module = new Model.Module();
                 module.setInfo(remoteId, 0);
-                return new Model.Face(remoteId, "New Remote", "fullcustom", [module]);
+                return new Model.Face(remoteId, "New Remote", "fullcustom", Model.FaceColor.SETTING, [module]);
             }
 
             /*
@@ -196,7 +201,7 @@ module Garage {
             * @return {Model.Face} 一時的に生成したFaceModel
             */
             createTmpFace(remoteId: string, faceName: string, modules: Model.Module[]): Model.Face {
-                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, modules);
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, Model.FaceColor.SETTING, modules);
                 return tmpFace;
             }
 
@@ -392,7 +397,7 @@ module Garage {
                 // actionにcodeが入っていない場合(マクロの信号選択途中で、信号が未選択の状態など)を考慮して
                 // codeがnullのケースも許容する。
                 let code = action.code;
-                
+
                 if (action.deviceInfo &&
                     action.deviceInfo.functionCodeHash != null) {
                     let functionCodeHash = action.deviceInfo.functionCodeHash;
@@ -1048,7 +1053,7 @@ module Garage {
                     if (target.face.remoteId == tmpRemoteId) {
                         // 編集中のリモコン
                         containsTmpRemote = true;
-                        result.push(this.createTmpRemoteInfo(tmpRemoteId, modules, target.face.category, target.mastarFace));
+                        result.push(this.createTmpRemoteInfo(tmpRemoteId, modules, target.face.category, target.face.color, target.mastarFace));
 
                     } else {
                         result.push(target);
@@ -1058,12 +1063,13 @@ module Garage {
 
                 // 新規作成中の場合はリストの先頭に追加
                 if (!containsTmpRemote) {
-                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, modules));
+                    result.unshift(this.createTmpRemoteInfo(tmpRemoteId, modules, DEVICE_TYPE_FULL_CUSTOM, Model.FaceColor.SETTING));
                 }
 
                 return result;
             }
 
+            // TODO: delete
             /**
              * 一時的なのリモコン情報を生成
              *
@@ -1073,10 +1079,10 @@ module Garage {
              * @param masterFace {Model.Face}
              * @return {IRemoteInfo}
              */
-            private createTmpRemoteInfo(remoteId: string, modules: Model.Module[], category: string = "", masterFace?: Model.Face): IRemoteInfo {
+            private createTmpRemoteInfo(remoteId: string, modules: Model.Module[], category: string = "", color: string, masterFace?: Model.Face): IRemoteInfo {
 
                 let faceName = $.i18n.t('edit.property.STR_EDIT_PROPERTY_PULLDOWN_CURRENT_REMOTE');//faceNameを使用せず固定
-                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, category, modules)
+                let tmpFace: Model.Face = new Model.Face(remoteId, faceName, category, color, modules)
 
                 let tmpInfo: IRemoteInfo = {
                     remoteId: remoteId,
@@ -1270,8 +1276,6 @@ module Garage {
                 let promise = CDP.makePromise(df);
 
                 let remoteId = inputFace.remoteId;
-                let faceName = inputFace.name;
-                let deviceType = inputFace.category;
                 let modules = inputFace.modules;
 
                 var moduleCount = modules.length;
@@ -1299,8 +1303,9 @@ module Garage {
 
                     // face ファイルの更新
                     var face: IPlainFace = {
-                        name: faceName,
-                        category: deviceType,
+                        name: inputFace.name,
+                        category: inputFace.category,
+                        color: inputFace.color,
                         modules: moduleNames
                     };
 
@@ -1388,6 +1393,9 @@ module Garage {
                         case REMOTE_IMAGES_DIRECTORY_NAME:
                         case "lost+found":
                             return false;
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
+                            return false;
 
                         default:
                             /* jshint -W032:true */
@@ -1395,6 +1403,7 @@ module Garage {
                         /* jshint -W032:false */
                     }
 
+                    // TODO: replace with search
                     // remoteList に格納されている remoteId と同名のディレクトリーであるかチェック。
                     // 格納されていない remoteId のディレクトリーは削除対象とする。
                     for (let i = 0, l = remoteList.length; i < l; i++) {
@@ -1423,6 +1432,13 @@ module Garage {
                     // ディレクトリーであるかチェック
                     if (!fs.statSync(fullPath).isDirectory()) {
                         return false;
+                    }
+
+                    // 以下のディレクトリーは削除対象外
+                    switch (file) {
+                        case Dirs.BLACK_DIR:
+                        case Dirs.WHITE_DIR:
+                            return false;
                     }
 
                     for (let i = 0, l = remoteList.length; i < l; i++) {
@@ -1548,6 +1564,27 @@ module Garage {
                 return faces;
             }
 
+            loadSharedInfo(): Model.SharedInfo {
+                const sharedInfoFilePath = path.join(HUIS_ROOT_PATH, constValue.SHARED_INFO_FILE_NAME);
+                let sharedInfo: ISharedInfo = this._parseIniFile(sharedInfoFilePath);
+                if (sharedInfo != null) {
+                    return new Model.SharedInfo(sharedInfo);
+                } else {
+                    console.warn(TAGS.HuisFiles + "failed to parse sharedinfo.ini, connected HUIS may be old");
+                    return null;
+                }
+            }
+
+            private _parseIniFile(path): any {
+                var nodeIni = require("node-ini");
+                try {
+                    return nodeIni.parseSync(path);
+                } catch (e) {
+                    console.warn(TAGS.HuisFiles + "failed to parse ini file: file_path=" + path);
+                    return;
+                }
+            }
+
             /**
              * remotelist.json から remoteList を取得する
              */
@@ -1557,9 +1594,9 @@ module Garage {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
                     return null;
                 }
+
                 // remotelist.ini を node-ini で parse
-                var nodeIni = require("node-ini");
-                var remoteListIni = nodeIni.parseSync(remoteListIniPath);
+                var remoteListIni = this._parseIniFile(remoteListIniPath);
                 if (!remoteListIni) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() [parseError] remotelist.ini");
                     return null;
@@ -1702,7 +1739,7 @@ module Garage {
                     return undefined;
                 }
 
-                var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category);
+                var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category, plainFace.color);
 
                 let heightSum: number = 0;
 

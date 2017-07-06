@@ -28,6 +28,11 @@ module Garage {
         var TAG: string = "[Garage.View.FullCustom] ";
         var HUIS_FILES_DIRECTORY = "app/res/samples/materials";
 
+        export namespace FrameColorCssClass {
+            export const BLACK_RC_FRAME: string = "black-rc-frame";
+            export const WHITE_RC_FRAME: string = "white-rc-frame";
+        }
+
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -110,13 +115,6 @@ module Garage {
                     this.templateFullCustomFile_ = Framework.toUrl("/templates/full-custom.html");
                     this.templateItemDetailFile_ = Framework.toUrl("/templates/item-detail.html");
 
-                    this._pageLayout();
-                    this._listupFaces();
-
-                    //書き出し待ち の画像リストを初期化する。
-                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
-                    huisFiles.initWatingResizeImages();
-
                     var remoteId = this._getUrlQueryParameter("remoteId");
                     if (remoteId != null) {
                         this.currentFace_ = huisFiles.getFace(remoteId);
@@ -124,6 +122,14 @@ module Garage {
                         this.newRemote_ = true;
                         this.currentFace_ = huisFiles.createNewFace();
                     }
+
+                    this._pageLayout();
+                    this._listupFaces();
+
+                    //書き出し待ち の画像リストを初期化する。
+                    //(エクスポートの仕方によっては、前に編集した画面の書き出し待ちリストが残る可能性がある。)
+                    huisFiles.initWatingResizeImages();
+
                     this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
                     this.faceRenderer_canvas_.render();
                     this._setGridSize();
@@ -327,8 +333,17 @@ module Garage {
                     height: mainHeight + "px"
                 });
 
+                // TODO: move to View.Canvas
+                let $faceCanvasArea = $("#face-canvas-area");
+                if (sharedInfo.modelColor === Model.ModelColor.BLACK) {
+                    $faceCanvasArea.addClass(FrameColorCssClass.BLACK_RC_FRAME);
+                } else {
+                    $faceCanvasArea.addClass(FrameColorCssClass.WHITE_RC_FRAME);
+                }
+                $faceCanvasArea.addClass(this.currentFace_.getFaceColorCssClassName());
+
                 /* キャンバス部分の座標の指定 */
-                let faceCanvasAreaWidth = $("#face-canvas-area").width();
+                let faceCanvasAreaWidth = $faceCanvasArea.width();
                 let faceCanvasAreaLeft = (windowWidth / 2) - (faceCanvasAreaWidth / 2);
                 $("#face-canvas-area").css({
                     left: faceCanvasAreaLeft + "px"
@@ -337,12 +352,14 @@ module Garage {
                 /* 詳細編集部分 */
                 //詳細編集エリアのY座標
                 let PROPERTY_AREA_MARGIN_RIGHT = 100;
-                let detailWidth = $("#face-item-detail-area").outerWidth();
+                let $detailArea = $("#face-item-detail-area");
+                let detailWidth = $detailArea.outerWidth();
 
                 let detailLeft = faceCanvasAreaLeft - (PROPERTY_AREA_MARGIN_RIGHT + detailWidth);
-                $("#face-item-detail-area").css({
+                $detailArea.css({
                     left: detailLeft + "px",
                 });
+                $detailArea.addClass(this.currentFace_.getFaceColorCssClassName());
 
                 //パレットエリアのY座標
                 let PALLET_AREA_MARGIN_LRFT = 44;
@@ -362,6 +379,8 @@ module Garage {
                 $facePallet.css({
                     left: facePalletLeft
                 });
+
+                $('#face-dummy-area').addClass(this.currentFace_.getFaceColorCssClassName());
 
                 // faceList の更新
                 if (this != null) {
@@ -603,6 +622,8 @@ module Garage {
                     face = huisFiles.getFace(remoteId);
                     $facePallet.removeClass("common-parts");
                 }
+
+                $facePallet.addClass(face.getFaceColorCssClassName());
 
                 this.faceRenderer_pallet_ = new FaceRenderer({
                     el: $facePallet,
@@ -2225,13 +2246,13 @@ module Garage {
                 });
                 dialog.show().css("color", "white");
 
-                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, modules);
+                let inputFace: Model.Face = new Model.Face(remoteId, faceName, DEVICE_TYPE_FULL_CUSTOM, this.currentFace_.color, modules);
 
                 huisFiles.updateFace(inputFace, this.buttonDeviceInfoCache)
                     .always(() => {
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
-                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, null, (err) => {
+                            syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_CREATE_NEW_REMOTE, null, (err) => {
                                 if (err) {
                                     // [TODO] エラー値のハンドリング
                                     electronDialog.showMessageBox({
@@ -2436,9 +2457,9 @@ module Garage {
 
                         case "color":
                             // 16階調グレースケールを RGB 変換して CSS に設定
-                            var resolvedColor = targetModel["resolvedColor"];
-                            if (resolvedColor) {
-                                $target.css("color", resolvedColor);
+                            let color = targetModel["color"];
+                            if (color) {
+                                $target.css("color", color);
                             }
                             break;
 
@@ -2674,6 +2695,7 @@ module Garage {
                             let label = targetState.label[0];
                             let text = (label && label.text) ? label.text : "";
                             let size = (label && label.sizeForRender) ? label.sizeForRender : 0;
+                            let color = (label && label.color) ? label.color : Model.FontColor.DEFAULT;
                             $labelElement.text(text);
                             $labelElement.css({
                                 left: "0",
@@ -2681,7 +2703,7 @@ module Garage {
                                 width: buttonAreaW + "px",
                                 height: buttonAreaH + "px",
                                 lineHeight: buttonAreaH + "px",
-                                color: "rgb(0,0,0)",
+                                color: color,
                                 fontSize: size + "pt"
                             });
                         }
@@ -2706,7 +2728,7 @@ module Garage {
                                 height: buttonAreaH + "px",
                             });
                             let inputUrl: string = null;
-                            inputUrl = JQUtils.enccodeUriValidInCSS(value);
+                            inputUrl = JQUtils.encodeUriValidInCSS(value);
 
                             if (inputUrl == null) {
                                 inputUrl = "none";
@@ -3650,7 +3672,11 @@ module Garage {
             private _setGridSize() {
                 var $facePages = $("#face-canvas").find(".face-page");
                 this.gridSize_ = DEFAULT_GRID;
-                $facePages.css("background-image", "url(../res/images/img_huis_remote_area.png)");
+                if (this.currentFace_.color === Model.FaceColor.BLACK) {
+                    $facePages.css("background-image", "url(../res/images/img_huis_remote_area_black.png)");
+                } else {
+                    $facePages.css("background-image", "url(../res/images/img_huis_remote_area_white.png)");
+                }
             }
 
             /**

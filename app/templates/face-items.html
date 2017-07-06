@@ -49,7 +49,7 @@
                 <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
                 {{/image}}
                 {{#label}}
-                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}}">{{text}}</div>
+                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}};color:{{color}};">{{text}}</div>
                 {{/label}}
                 {{^label}}
                 <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>
@@ -59,13 +59,13 @@
         </div>
     </script>
     <script type="text/template" id="template-label-item">
-        <div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{sizeForRender}}pt;color:{{resolvedColor}};">
+        <div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{sizeForRender}}pt;color:{{color}};">
             <div class="label-value">{{text}}</div>
         </div>
     </script>
     <script type="text/template" id="template-module-separator">
         <div class="module-separator" data-cid="{{cid}}">
-            <div class="separator-name">{{text}}</div>
+            <div class="separator-name" style="color:{{color}}">{{text}}</div>
         </div>
     </script>
     <script type="text-template" id="template-image-item">

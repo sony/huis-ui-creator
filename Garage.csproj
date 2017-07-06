@@ -303,6 +303,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\SharedInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Face.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Item.ts" />
     <TypeScriptCompile Include="app\scripts\app.ts" />
@@ -326,6 +327,7 @@
     <TypeScriptCompile Include="app\scripts\Util\JQueryUtils.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ExportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\PathManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\PhnConfigFile.ts" />
     <TypeScriptCompile Include="app\scripts\Util\SelectRemotePageDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\StorageLock.ts" />

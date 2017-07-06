@@ -152,6 +152,7 @@ module Garage {
                 this.$el.append($(this.buttonItemTemplate_(model)));
             }
 
+            // TODO: review
             /**
              * model の調整。
              * button の active な state を設定する。
@@ -182,40 +183,6 @@ module Garage {
                                 state["active"] = true;
                             } else {
                                 state["active"] = false;
-                            }
-                        }
-                    }
-
-                    // state 内の画像パスを Garage 用に変換する。
-                    for (let i = 0, l = states.length; i < l; i++) {
-                        var state = states[i];
-                        if (state.image && this.materialsRootPath_) {
-                            if (_.isArray(state.image)) {
-                                /* jshint loopfunc: true */
-                                state.image.forEach((img, index) => {
-                                    let imagePath = img.path;
-                                    // 画像パスを Garage 内のパスに変更する。
-                                    let resolvedPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", imagePath)).replace(/\\/g, "/");
-                                    img.resolvedPath = resolvedPath;
-
-                                    let resizeOriginal = img.resizeOriginal;
-                                    if (!resizeOriginal) {
-                                        resizeOriginal = imagePath;
-                                        img.resizeOriginal = resizeOriginal;
-                                    }
-                                    let resizeResolvedOriginalPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", resizeOriginal)).replace(/\\/g, "/");
-                                    img.resizeResolvedOriginalPath = resizeResolvedOriginalPath;
-                                });
-                                /* jshint loopfunc: false */
-                            } else {
-                                // 配列ではなく、一つのオブジェクトとして image が格納されていた場合の対応
-                                let img: Model.ImageItem = <any>state.image;
-                                let imagePath = img.path;
-                                // 画像パスを Garage 内のパスに変更する。
-                                if (imagePath) {
-                                    let resolevedPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", imagePath)).replace(/\\/g, "/");
-                                    img.resolvedPath = resolevedPath;
-                                }
                             }
                         }
                     }

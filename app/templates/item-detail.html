@@ -53,15 +53,26 @@
         <div class="title-edit-label"><div id="icon-title-edit-label" class="inline"></div><div id="text-title-edit-label" class="inline" data-i18n="edit.property.STR_EDIT_PROPERTY_LABEL_EDIT_TEXT_LABEL">ラベルを編集</div></div>
         <input id="text-field" class="property-value property-text-value text-field-type2" data-property="text" type="text" value="{{text}}" />
         <div id="text-size-pulldown"></div>
+        <div id="text-color-pulldown"></div>
     </script>
 
-    <!--textsize pullldown-->
-    <script type="text/template" id="template-text-size-pullldown">
+    <!--textsize pulldown-->
+    <script type="text/template" id="template-text-size-pulldown">
         <div class="custom-select text-size-pulldown">
             <select id="select-text-size" class="property-value property-text-size" data-property="size" type="range" data-native-menu="false">
                 {{#sizeValues}}
                 <option value="{{.}}">{{.}}px</option>
                 {{/sizeValues}}
+            </select>
+        </div>
+    </script>
+
+    <!--textcolor pulldown-->
+    <script type="text/template" id="template-text-color-pulldown">
+        <div class="custom-select text-color-pulldown">
+            <select id="select-text-color" class="property-value property-text-color" data- property="color" type="range" data-native-menu="false">
+                <option value="black" data-i18n="edit.property.STR_EDIT_PROPERTY_PULLDOWN_FONT_COLOR_BLACK">黒</option>
+                <option value="white" data-i18n="edit.property.STR_EDIT_PROPERTY_PULLDOWN_FONT_COLOR_WHITE">白</option>
             </select>
         </div>
     </script>

@@ -45,6 +45,7 @@ module Garage {
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
             protected availableRemotelist: IRemoteInfo[];
 
+            // TODO: replace with Model.Face
             /**
              * 編集中リモコンのremote_id
              */
@@ -68,6 +69,7 @@ module Garage {
 
                 //labelPreviewWindowsが持つ、previewのUIが変更された用のイベントをバインド
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_SIZE, this._onTextSizePulldownChanged);
+                this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_COLOR, this._onTextColorPulldownChanged);
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Label.UI_CHANGE_TEXT, this._onTextFieldChanged);
 
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
@@ -120,6 +122,16 @@ module Garage {
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
                 let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
                 targetState.getDefaultLabel().size = changedSize;
+
+                this._setStateMementoCommand(targetStates);
+            }
+
+            private _onTextColorPulldownChanged(event: Event) {
+                let changedColor = (<StatePreviewWindow>this.previewWindow_).getTextColor();
+
+                let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
+                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
+                targetState.getDefaultLabel().color = changedColor;
 
                 this._setStateMementoCommand(targetStates);
             }
@@ -511,9 +523,9 @@ module Garage {
                     return;
                 }
 
-                let pullldownText = this.getTextInRemoteIdOf(order);
+                let pulldownText = this.getTextInRemoteIdOf(order);
 
-                switch (pullldownText) {
+                switch (pulldownText) {
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_TV"):
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_AC"):
                     case $.i18n.t("remote.STR_UNKNOWN_REMOTE_LIGHT"):
@@ -1510,7 +1522,8 @@ module Garage {
                     text: ConstValue.DEFAULT_TEXT,
                     size: ConstValue.DEFAULT_TEXT_SIZE,
                     font_weight: ConstValue.BUTTON_FONT_WEIGHT,
-                    area: defaultLabelArea
+                    area: defaultLabelArea,
+                    color: Model.FontColor.SETTING
                 })
                 let tmpLabels: Model.LabelItem[] = [];
                 tmpLabels.push(tmpLabel);

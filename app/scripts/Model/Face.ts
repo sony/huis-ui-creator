@@ -22,9 +22,21 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
-        export class Face extends Backbone.Model {
+        // Change of FaceColor affects FaceColorCssClass and $FACE_COLOR_BLACK/WHITE in _classname.css
+        export namespace FaceColor {
+            export const WHITE: string = "white";
+            export const BLACK: string = "black";
 
-            constructor(remoteId: string, name: string, category: string, modules?: Model.Module[], attributes?: any, options?: any) {
+            // SETTING is replaced with other face color according to SettingColor
+            export const SETTING: string = "setting";
+
+            export const FULL_CUSTOM_DEFAULT: string = WHITE;
+            export const NOT_FULL_CUSTOM_DFEFAULT: string = SETTING;
+        }
+
+        export class Face extends Backbone.Model implements IFace {
+
+            constructor(remoteId: string, name: string, category: string, color: string, modules?: Model.Module[], attributes?: any, options?: any) {
                 super(attributes, options);
 
                 this.modules = [];
@@ -35,6 +47,14 @@ module Garage {
                 this.remoteId = remoteId;
                 this.name = name;
                 this.category = category;
+
+                if (color != null) {
+                    this.color = color;
+                } else if (category === DEVICE_TYPE_FULL_CUSTOM) {
+                    this.color = FaceColor.FULL_CUSTOM_DEFAULT;
+                } else {
+                    this.color = FaceColor.NOT_FULL_CUSTOM_DFEFAULT;
+                }
             }
 
             private _createEmptyModule(remoteId: string, pageIndex: number): Model.Module {
@@ -275,17 +295,15 @@ module Garage {
             }
 
             /**
-             * このFaceを複製した上で、引数で与えられたremoteIdを持つ新たなFaceを作成する。
+             * このFaceのremoteIdを引数で与えられたremoteIdに変更する。
+             * 含まれる画像は全て新しいremoteIdの画像ディレクトリ以下にコピーされる。
              *
              * @param {string} dstRemoteId 新しいFaceのremoteId
-             * @return {Model.Face} 新しくコピーされたFace
              */
-            copy(dstRemoteId: string): Model.Face {
-                let newFace: Model.Face = this.clone();
-                let images = newFace.searchImages();
-                newFace._copyImage(images, dstRemoteId);
-                newFace.setWholeRemoteId(dstRemoteId);
-                return newFace;
+            moveToNewRemoteId(dstRemoteId: string) {
+                let images = this.searchImages();
+                this._copyImage(images, dstRemoteId);
+                this.setWholeRemoteId(dstRemoteId);
             }
 
             /**
@@ -298,10 +316,10 @@ module Garage {
                 for (let image of images) {
                     // Copy resized image referenced from image.path
                     if (image.path != null) {
-                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
-                        let imageFileName = image.path.substr(image.path.lastIndexOf("/") + 1);
-                        image.path = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.path).replace(/\\/g, "/");
+                        let srcImagePath = image.getFullPath();
+                        let imageFileName = Util.PathManager.basename(image.path);
+                        image.path = Util.PathManager.join(remoteId, imageFileName);
+                        let dstImagePath = image.getFullPath();
 
                         if (fs.existsSync(srcImagePath)) {
                             fs.copySync(srcImagePath, dstImagePath);
@@ -309,10 +327,10 @@ module Garage {
                     }
                     // Copy original image referenced from garageExtensions.original
                     if (image.garageExtensions != null && image.garageExtensions.original != null) {
-                        let srcImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
-                        let imageFileName = image.garageExtensions.original.substr(image.garageExtensions.original.lastIndexOf("/") + 1);
-                        image.garageExtensions.original = path.join(remoteId, imageFileName).replace(/\\/g, "/");
-                        let dstImagePath = path.join(HUIS_REMOTEIMAGES_ROOT, image.garageExtensions.original).replace(/\\/g, "/");
+                        let srcImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
+                        let imageFileName = Util.PathManager.basename(image.garageExtensions.original);
+                        image.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
+                        let dstImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
 
                         if (fs.existsSync(srcImagePath)) {
                             fs.copySync(srcImagePath, dstImagePath);
@@ -424,6 +442,15 @@ module Garage {
                 }
             }
 
+            // TODO: move this method to View
+            getFaceColorCssClassName(): string {
+                if (this.color === FaceColor.BLACK) {
+                    return View.FaceColorCssClass.BLACK_FACE;
+                } else {
+                    return View.FaceColorCssClass.WHITE_FACE;
+                }
+            }
+
             get remoteId() {
                 return this.get("remoteId");
             }
@@ -454,6 +481,28 @@ module Garage {
 
             set modules(val) {
                 this.set("modules", val);
+            }
+
+            get color(): string {
+                return this.get("color");
+            }
+
+            private _getSettingColor() {
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    return FaceColor.BLACK;
+                } else if (sharedInfo.settingColor === SettingColor.WHITE) {
+                    return FaceColor.WHITE;
+                }
+
+                console.warn(TAG + " Unexpected setting color, set face color WHITE");
+                return FaceColor.WHITE;
+            }
+
+            set color(val: string) {
+                if (val === FaceColor.SETTING) {
+                    val = this._getSettingColor();
+                }
+                this.set("color", val);
             }
 
             /**

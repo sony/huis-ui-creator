@@ -15,6 +15,8 @@
 */
 @import "variables/variable";
 
+// TODO: split into files
+
 #page-full-custom {
     #main {
         position: relative;
@@ -74,14 +76,29 @@
     #face-edit-area {
         position: absolute;
         //background-color: #88ff88;
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_WHITE_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_WHITE_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_BLACK_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_BLACK_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
+
         #face-canvas-area {
-            background-image: $PATH_IMG_CANVAS_AREA;
             background-color: none;
             position: absolute;
             width: $SIZE_CANVAS_AREA_WIDTH;
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
-            //ボタン情報表示用 ツールチップ 非表示
+            //ボタン情報表示用 ツールチップ 表示
             #canvas-tooltip {
                 overflow: initial;
                 text-shadow: none;
@@ -107,10 +124,46 @@
             }
 
             #face-canvas {
+                // black style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_BLACK} {
+                    .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_BLACK;
+
+                        &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_BLACK;
+                        }
+
+                        &.selected {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+                        }
+                    }
+                }
+                // white style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_WHITE} {
+                    .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_WHITE;
+
+                        &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_WHITE;
+                        }
+
+                        &.selected {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+                        }
+                    }
+                }
 
                 #face-pages-area {
                     transform: scale(0.5);
                     transform-origin: left top;
+
+                    .item.button-item.overlayed {
+                        border-color: $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
+                    }
                 }
 
                 #face-canvas-inner {
@@ -119,18 +172,15 @@
 
                 .item {
                     cursor: move;
-                    border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
+                    border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS;
+                    border-style: solid;
                     margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
 
-                    &:hover {
-                        background-color: $COLOR_CANVAS_ITEM_HOVER;
-                    }
-
                     &.selected {
-                        border: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
+                        border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
+                        border-style: solid;
                         margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
-                        background-color: $COLOR_CANVAS_SELECTED_ITEM_BACKGROUND;
                     }
 
                     &.disabled {
@@ -140,10 +190,6 @@
                     &.background {
                         cursor: default;
                     }
-                }
-
-                .button-item.overlayed {
-                    border-color: $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
                 }
 
                 .item-resizer {
@@ -212,12 +258,26 @@
             overflow-x: hidden;
         }
 
+        #face-item-detail-area.#{$FACE_COLOR_BLACK} {
+            #preview.image-preview {
+                // TODO: fix color
+                background-color: gray;
+            }
+        }
+
+        #face-item-detail-area.#{$FACE_COLOR_WHITE} {
+            #preview.image-preview {
+                // TODO: fix color
+                background-color: white;
+            }
+        }
+
         #face-item-detail {
             position: relative;
             width: $SIZE_PROPERTY_AREA_INNNER_WIDTH;
             margin-left: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
             margin-right: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWM;
+            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWN;
             margin-bottom: 0;
             text-shadow: none;
             font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
@@ -475,8 +535,8 @@
                 position: relative;
 
                 .custom-select {
-                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
-                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
+                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_RIGHT;
                     width: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_WIDTH;
                 }
 
@@ -715,7 +775,7 @@
             }
 
             .text-size-pulldown {
-                width: $SIZE_PROPERTY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
+                width: $SIZE_PROPERTY_AREA_PULL_DOWN_TEXT_SIZE_WIDTH;
             }
 
             input.priperty-value {
@@ -850,7 +910,9 @@
                     }
 
                     #text-size-pulldown,
-                    .text-size-pulldown {
+                    .text-size-pulldown,
+                    #text-color-pulldown,
+                    .text-color-pulldown {
                         margin: 0 auto;
                         width: $SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
                     }
@@ -1103,6 +1165,40 @@
             }
         }
 
+        #face-pallet.#{$FACE_COLOR_BLACK} {
+            .face-master-separator {
+                color: $COLOR_WHITE_TEXT;
+                background-color: $COLOR_HUIS_BG_BLACK;
+                border-color: $COLOR_SEPARATOR_BLACK;
+            }
+
+            .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_BLACK;
+
+                &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_BLACK;
+                }
+            }
+        }
+
+        #face-pallet.#{$FACE_COLOR_WHITE} {
+            .face-master-separator {
+                color: $COLOR_TEXT_MAIN;
+                background-color: $COLOR_HUIS_BG_WHITE;
+                border-color: $COLOR_SEPARATOR_WHITE;
+            }
+
+            .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_WHITE;
+
+                &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_WHITE;
+                }
+            }
+        }
+
         #face-pallet {
             position: absolute;
             width: $SIZE_FACE_IN_PALLET_WIDTH;
@@ -1121,13 +1217,11 @@
                 padding-left: $SIZE_FACE_PAGE_AREA_PADDING_LEFT;
                 padding-right: $SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
                 padding-top: $SIZE_FACE_PAGES_AREA_PADDING_TOP;
-                background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
 
                 .face-master-separator {
                     margin-top: $SIZE_PALLET_SEPARATOR_MARGIN_TOP;
                     width: 100%;
                     height: $SIZE_PALLET_SEPARATOR_HEGHT;
-                    background-color: $COLOR_PALLET_SEPARATOR_BACKGROUND;
 
                     .separate-text {
                         padding-top: $SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
@@ -1141,17 +1235,11 @@
                             display: block;
                             margin-top: $SIZE_PALLET_SEPARATOR_SPAN_MARGIN_TOP;
                             text-shadow: none;
-                            color: $COLOR_PALLET_SEPARATOR_TEXT;
                             text-align: center;
                             font-size: $FONT_SIZE_PALLET_SEPARATOR;
                             font-family: $FONT_FAMILY_LIGHT;
                         }
                     }
-                }
-
-
-                .button-item {
-                    border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
                 }
 
                 .face-page {
@@ -1160,11 +1248,12 @@
                 }
 
                 .item {
-                    border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+                    border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                    border-style: solid;
 
                     &:hover {
-                        background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
-                        border: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
+                        border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                        border-style: solid;
                     }
                 }
             }
@@ -1175,6 +1264,19 @@
             margin-bottom: $SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
         }
     }
+
+    #face-dummy-area.#{$FACE_COLOR_BLACK} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+        }
+    }
+
+    #face-dummy-area.#{$FACE_COLOR_WHITE} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+        }
+    }
+
     // ドラッグ中アイテムのダミー表示
     #face-dummy-area {
         position: absolute;
@@ -1182,9 +1284,6 @@
         transform-origin: left top;
         z-index: 101;
 
-        .item {
-            background-color: $COLOR_DUMMY_ITEM_BACKGROUND;
-        }
 
         .item-resizer {
             position: absolute;

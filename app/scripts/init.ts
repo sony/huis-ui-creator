@@ -177,10 +177,6 @@ module Garage {
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
 
-        //接続しているHUISリモコンのバージョンを取得
-        //初期値。splashスクリーンで値をいれる。
-        RC_VERSION = null;
-
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
@@ -363,13 +359,6 @@ module Garage {
                     }
                 }
                 isHUISConnected = true; // HUISが接続されている
-
-                //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                //BZ版の場合、読み込むファイルが異なる
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
-                if (Util.MiscUtil.isBz()) {
-                    RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
-                }
 
                 callback(); // 次の処理へ
 

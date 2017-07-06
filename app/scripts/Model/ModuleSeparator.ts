@@ -21,16 +21,22 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        const HORIZONTAL_LINE_IMAGE_PATH: string = HUIS_REMOTEIMAGES_ROOT + "/divider_pickup_custom.png";
+        const HORIZONTAL_LINE_IMAGE_PATH: string = "divider_pickup_custom.png";
 
-        const MODULE_SEPARATOR_LABEL_FONT_SIZE = 18;
-        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT = "normal";
+        const MODULE_SEPARATOR_LABEL_FONT_SIZE: number = 18;
+        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT: string = "normal";
 
         export class ModuleSeparator extends Backbone.Model {
 
             constructor(text: string, attributes?: any) {
                 super(attributes, null);
                 this.text = text;
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    this.color = SettingColor.WHITE;
+                } else {
+                    this.color = SettingColor.BLACK;
+                }
+
             }
 
             /*
@@ -47,8 +53,8 @@ module Garage {
                 module.label.push(label);
 
                 let image = this.itemizeHorizontalLine(module.remoteId);
-                this._copyImageFile(image, Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl(HORIZONTAL_LINE_IMAGE_PATH), true), image.resolvedPath);
-                image.path = module.remoteId + "/" + path.basename(Model.OffscreenEditor.getEncodedPath(path.basename(image.resolvedPath)));
+                let dstPath = Util.PathManager.join(module.remoteId, HORIZONTAL_LINE_IMAGE_PATH);
+                this._copyImageFile(image, Util.PathManager.resolveImagePath(HORIZONTAL_LINE_IMAGE_PATH), Util.PathManager.resolveImagePath(dstPath));
 
                 if (module.image == null) {
                     module.image = [];
@@ -77,11 +83,10 @@ module Garage {
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                let horizontalLineSrcPath = path.basename(HORIZONTAL_LINE_IMAGE_PATH);
 
                 var horizontalLineImage = new Model.ImageItem({
                     area: horizontalLineArea,
-                    path: horizontalLineSrcPath
+                    path: HORIZONTAL_LINE_IMAGE_PATH
                 });
 
                 return horizontalLineImage;
@@ -97,7 +102,8 @@ module Garage {
                         h: DEFAULT_GRID
                     },
                     font_weight: MODULE_SEPARATOR_LABEL_FONT_WEIGHT,
-                    text: this.text
+                    text: this.text,
+                    color: Model.FontColor.SETTING
                 }
                 let newLabel = new Model.LabelItem(iLabel);
 
@@ -115,12 +121,19 @@ module Garage {
                 this.set("text", val);
             }
 
+            get color(): string {
+                return this.get("color");
+            }
+
+            set color(val: string) {
+                this.set("color", val);
+            }
 
             /**
              * 変更可能なプロパティーの一覧
              */
             get properties(): string[] {
-                return ["text"];
+                return ["text", "color"];
             }
 
             /**

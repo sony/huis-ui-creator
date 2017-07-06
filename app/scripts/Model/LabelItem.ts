@@ -21,6 +21,16 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
+        // When add color definition, modify _isValidColor method
+        export namespace FontColor {
+            export const BLACK: string = "black";
+            export const WHITE: string = "white";
+            export const DEFAULT: string = BLACK;
+
+            // SETTING is replaced with other color according to SettingColor
+            export const SETTING: string = "setting";
+        }
+
         export class LabelItem extends Item {
 
             constructor(iLabel: ILabel) {
@@ -28,6 +38,19 @@ module Garage {
                 super(iLabel, null);
                 // clone customized objects
                 this.area = $.extend(true, {}, iLabel.area);
+
+                // Support for old FullCustom remote, color value was number
+                if (!this._isValidColor(this.color)) {
+                    console.warn(TAG + " font color is invalid, set black font color");
+                    this.color = FontColor.DEFAULT;
+                }
+            }
+
+            private _isValidColor(val: string): boolean {
+                return val === FontColor.BLACK
+                    || val === FontColor.WHITE
+                    || val === FontColor.DEFAULT
+                    || val === FontColor.SETTING;
             }
 
             /**
@@ -59,11 +82,9 @@ module Garage {
 
                 let convertedLabel: ILabel = {
                     area: this.area,
-                    text: this.text
+                    text: this.text,
+                    color: this.color
                 };
-                if (this.color !== undefined) {
-                    convertedLabel.color = this.color;
-                }
                 if (this.font !== undefined) {
                     convertedLabel.font = this.font;
                 }
@@ -127,8 +148,21 @@ module Garage {
                 this.set("version", val);
             }
 
-            get color(): number {
-                return this.get("color");
+            get color(): string {
+                let color: string = this.get("color");
+                return (color !== FontColor.SETTING) ? color : this._getSettingColor();
+            }
+
+            set color(val: string) {
+                if (this._isValidColor(val)) {
+                    this.set("color", val);
+                } else {
+                    console.error(TAG + " invalid color is passed to color setter, no-op");
+                }
+            }
+
+            private _getSettingColor(): string {
+                return (sharedInfo.settingColor === SettingColor.WHITE) ? FontColor.BLACK : FontColor.WHITE;
             }
 
             get font_weight(): FontWeight {
@@ -137,14 +171,6 @@ module Garage {
 
             set font_weight(val: FontWeight) {
                 this.set("font_weight", val);
-            }
-
-            set color(val: number) {
-                this.set("color", val);
-            }
-
-            get resolvedColor(): string {
-                return this._getResolvedColor(this.get("color"));
             }
 
             get font(): string {
@@ -199,7 +225,6 @@ module Garage {
                     "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
                     "text": "",
                     "color": 0,
-                    "resolvedColor": "rgb(0,0,0)",
                     "font": "",
                     "size": 30,
                     "font_weight": FontWeight.FONT_BOLD,
@@ -207,25 +232,6 @@ module Garage {
 
                 return defaultAttr;
             }
-
-            /**
-             * 16階調のグレースケールを RGB 変換する
-             */
-            private _getResolvedColor(colorNumber: number): string {
-                // 0 - 15 の整数に丸める
-                if (colorNumber < 0) {
-                    colorNumber = 0;
-                } else if (15 < colorNumber) {
-                    colorNumber = 15;
-                }
-                colorNumber = Math.round(colorNumber);
-
-                // 0-15 の数字を rgb 表記のグレースケールに変換する
-                var resolvedColor: string = "rgb(" + (colorNumber * 17) + "," + (colorNumber * 17) + "," + (colorNumber * 17) + ")";
-
-                return resolvedColor;
-            }
-
         }
     }
 }

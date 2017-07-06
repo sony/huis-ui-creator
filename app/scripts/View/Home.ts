@@ -208,7 +208,7 @@ module Garage {
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
                 var faces = huisFiles.getFilteredFacesByCategories({});
-                var faceList: { remoteId: string, name: string, category: string }[] = [];
+                var faceList: { remoteId: string, name: string, category: string ,faceColor: string}[] = [];
                 faces.forEach((face: Model.Face) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
@@ -222,7 +222,8 @@ module Garage {
                     faceList.push({
                         remoteId: face.remoteId,
                         name: faceName,
-                        category: faceCategory
+                        category: faceCategory,
+                        faceColor: face.getFaceColorCssClassName()
                     });
 
                 });
@@ -282,18 +283,19 @@ module Garage {
                 if (!this._checkCanCreateNewRemote()) {
                     return;
                 }
-                face = face.copy(huisFiles.createNewRemoteId());
 
+                face = face.clone();
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();
                 }
+                face.moveToNewRemoteId(huisFiles.createNewRemoteId());
 
                 let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
                 huisFiles.updateFace(face, buttonDeviceInfoCache)
                     .always(() => {
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
-                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
+                            syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();

@@ -111,7 +111,7 @@ module Garage {
                 }
 
                 console.log(TAG + "before editImage src: " + imageSrc);
-                let loadPath = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
+                let loadPath = Util.JQueryUtils.encodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
 
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
