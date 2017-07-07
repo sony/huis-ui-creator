@@ -160,6 +160,8 @@ module Garage {
                     };
                 }
 
+                this.copyImageToRemoteDir(remoteId);
+
                 let convertedImage: IImage = {
                     area: this.area,
                     path: this.path,
@@ -170,6 +172,59 @@ module Garage {
                 };
 
                 return convertedImage;
+            }
+
+            private _copyResizedImageToRemoteDir(remoteId: string) {
+
+                if (this.path == null) {
+                    return;
+                }
+
+                if (Util.PathManager.isRemoteDir(this.path, remoteId)) {
+                    // If already on specfied remote dir, nop
+                    return;
+                }
+
+                let srcImagePath = this.getFullPath();
+                let imageFileName = Util.PathManager.basename(this.path);
+                this.path = Util.PathManager.join(remoteId, imageFileName);
+                let dstImagePath = this.getFullPath();
+
+                if (fs.existsSync(srcImagePath)) {
+                    fs.copySync(srcImagePath, dstImagePath);
+                }
+            }
+
+            private _copyOriginalImageToRemoteDir(remoteId: string) {
+
+                if (this.garageExtensions == null || this.garageExtensions.original == null) {
+                    return;
+                }
+
+                if (Util.PathManager.isRemoteDir(this.garageExtensions.original, remoteId)) {
+                    // If already on specfied remote dir, nop
+                    return;
+                }
+
+                let srcImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original);
+                let imageFileName = Util.PathManager.basename(this.garageExtensions.original);
+                this.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
+                let dstImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original);
+
+                if (fs.existsSync(srcImagePath)) {
+                    fs.copySync(srcImagePath, dstImagePath);
+                }
+            }
+
+            /**
+             * Imageをリモコン画像ディレクトリ(remoteimages/0000/ など)にコピーする。
+             * 同時に、このImageItemの参照もコピー先に変更する。
+             *
+             * @param {string] remoteId 移動先の画像ディレクトリのremoteId。
+             */
+            copyImageToRemoteDir(remoteId: string) {
+                this._copyResizedImageToRemoteDir(remoteId);
+                this._copyOriginalImageToRemoteDir(remoteId);
             }
 
             /**

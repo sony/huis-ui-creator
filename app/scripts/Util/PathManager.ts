@@ -26,13 +26,14 @@ module Garage {
 
         export class PathManager {
 
-            private static _isRemoteDir(argPath): boolean {
-                return argPath.match(/^\d{4}\//) != null;
+            static isRemoteDir(argPath: string, remoteId?: string): boolean {
+                let regExp = (remoteId != null) ? new RegExp(remoteId + "\/") : /^\d{4}\//;
+                return argPath.match(regExp) != null;
             }
 
             static resolveImagePath(argPath: string): string {
 
-                if (!PathManager._isRemoteDir(argPath)) {
+                if (!PathManager.isRemoteDir(argPath)) {
                     let colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
                     argPath = PathManager.join(colorSpecificDir, argPath);
                 }

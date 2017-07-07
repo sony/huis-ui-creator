@@ -314,28 +314,7 @@ module Garage {
              */
             private _copyImage(images: Model.ImageItem[], remoteId: string) {
                 for (let image of images) {
-                    // Copy resized image referenced from image.path
-                    if (image.path != null) {
-                        let srcImagePath = image.getFullPath();
-                        let imageFileName = Util.PathManager.basename(image.path);
-                        image.path = Util.PathManager.join(remoteId, imageFileName);
-                        let dstImagePath = image.getFullPath();
-
-                        if (fs.existsSync(srcImagePath)) {
-                            fs.copySync(srcImagePath, dstImagePath);
-                        }
-                    }
-                    // Copy original image referenced from garageExtensions.original
-                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
-                        let srcImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
-                        let imageFileName = Util.PathManager.basename(image.garageExtensions.original);
-                        image.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
-                        let dstImagePath = Util.PathManager.resolveImagePath(image.garageExtensions.original);
-
-                        if (fs.existsSync(srcImagePath)) {
-                            fs.copySync(srcImagePath, dstImagePath);
-                        }
-                    }
+                    image.copyImageToRemoteDir(remoteId);
                 }
             }
 
