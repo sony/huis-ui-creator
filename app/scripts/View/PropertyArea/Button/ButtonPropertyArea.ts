@@ -1512,10 +1512,10 @@ module Garage {
 
                 let buttonArea = this.getModel().area;
                 let defaultLabelArea: IArea = {
-                    x: buttonArea.x,
-                    y: buttonArea.y,
-                    w: 0,
-                    h: 0
+                    x: 0,
+                    y: 0,
+                    w: buttonArea.w,
+                    h: buttonArea.h
                 }
 
                 let tmpLabel: Model.LabelItem = new Model.LabelItem({
