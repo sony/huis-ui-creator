@@ -260,15 +260,13 @@
 
         #face-item-detail-area.#{$FACE_COLOR_BLACK} {
             #preview.image-preview {
-                // TODO: fix color
-                background-color: gray;
+                background-color: $COLOR_IMAGE_BACKGROUND_BLACK;
             }
         }
 
         #face-item-detail-area.#{$FACE_COLOR_WHITE} {
             #preview.image-preview {
-                // TODO: fix color
-                background-color: white;
+                background-color: $COLOR_IMAGE_BACKGROUND_WHITE;
             }
         }
 
