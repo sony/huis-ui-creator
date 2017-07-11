@@ -354,16 +354,27 @@ body {
             background-color: $COLOR_COMMON_BUTTON_NORMAL_BLACK;
 
             &:hover {
+                color: $COLOR_WHITE_TEXT;
                 background-color: $COLOR_COMMON_BUTTON_HOVER_BLACK;
             }
 
             &:active {
+                color: $COLOR_WHITE_TEXT;
                 background-color: $COLOR_ACCENT_BLACK;
+            }
+
+            &.disabled {
+                &:hover {
+                    background-color: $COLOR_COMMON_BUTTON_NORMAL_BLACK;
+                }
+
+                &:active {
+                    background-color: $COLOR_COMMON_BUTTON_NORMAL_BLACK;
+                }
             }
         }
 
         .#{$WHITE_RC_FRAME} .ui-btn {
-            color: $COLOR_BUTTON_TEXT;
             background-color: $COLOR_COMMON_BUTTON_NORMAL_WHITE;
 
             &:hover {
