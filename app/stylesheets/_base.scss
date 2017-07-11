@@ -364,9 +364,6 @@ body {
             }
 
             &.disabled {
-                opacity: 0.2;
-                cursor: default;
-
                 &:hover {
                     background-color: $COLOR_COMMON_BUTTON_NORMAL_BLACK;
                 }
