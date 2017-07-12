@@ -618,12 +618,13 @@ declare module Garage {
     var DEVICE_TYPE_STB: string;
     var DEVICE_TYPE_FAN: string;
     var DEVICE_TYPE_AIR_CLEANER: string;
-    var DEVICE_TYPE_CUSOM: string;
+    var DEVICE_TYPE_CUSTOM: string;
     var DEVICE_TYPE_FULL_CUSTOM: string;
     var DEVICE_TYPE_BT: string;
     var DEVICE_TYPE_SPECIAL: string;
     /** デバイスタイプ 学習リモコン */
     var DEVICE_TYPE_LEARNED: string;
+    var DEVICE_TYPE_AUTO_LAYOUT: string;
 
     var FACE_TYPE_FULL_CUSTOM: string;
     var FACE_TYPE_NOT_FULL_CUSTOM: string;
@@ -638,54 +639,54 @@ declare module Garage {
      * PalletAreaで表示されないデバイスタイプ
      */
     var NON_SUPPORT_FACE_CATEGORY: string[];
-    /*
-    * Macroで利用できあいデバイスタイプ
-    */
+    /**
+     * Macroで利用できないデバイスタイプ
+     */
     var NON_SUPPORT_DEVICE_TYPE_IN_MACRO: string[];
-    /*
-    * CanvasAreaのグリッドサイズ
-    */
+    /**
+     * CanvasAreaのグリッドサイズ
+     */
     var GRID_AREA_WIDTH: number;
     var GRID_AREA_HEIGHT: number;
     var BIAS_X_DEFAULT_GRID_LEFT: number  //デフォルトグリッドの際は左にあるマージン
     var BIAS_X_DEFAULT_GRID_RIGHT: number;//デフォルトグリッドの際は左にあるマージン    
     var DEFAULT_GRID: number; //デフォルトのグリッドサイズ
 
-    /*
-    * Windowの最小幅・高さ
-    */
+    /**
+     * Windowの最小幅・高さ
+     */
     var WINDOW_MIN_WIDTH: number;
     var WINDOW_MIN_HEIGHT: number;
-    /*
-    * リモコンの背景の大きさ
-    */
+    /**
+     * リモコンの背景の大きさ
+     */
     var REMOTE_BACKGROUND_WIDTH: number;
     var REMOTE_BACKGROUND_HEIGHT: number;
-    /*
-    * 設定できる画像の容量の最大値[byte]
-    */
+    /**
+     * 設定できる画像の容量の最大値[byte]
+     */
     var MAX_IMAGE_FILESIZE: number;
-    /*
-    * EDIT画面で、マウスを動かせる範囲。
-    * Windowの端から何ピクセルか
-    */
+    /**
+     * EDIT画面で、マウスを動かせる範囲。
+     * Windowの端から何ピクセルか
+     */
     var MARGIN_MOUSEMOVALBE_TOP: number;
     var MARGIN_MOUSEMOVABLE_LEFT: number;
     var MARGIN_MOUSEMOVABLE_RIGHT: number;
     var MARGIN_MOUSEMOVALBE_BOTTOM: number;
-    /*
+    /**
      * ステートの内容を変更する際の特殊 ID
      */
     var TARGET_ALL_STATE: number;
-    /*
+    /**
      * ダブルクリックの待ち受け時間
      */
     var DOUBLE_CLICK_TIME_MS: number;
-    /*
+    /**
      * マクロに登録できる信号の最大数
      */
     var MAX_NUM_MACRO_SIGNAL: number;
-    /*
+    /**
      * 設定できるアクションリスト
      */
     var ACTION_INPUTS: IStringKeyValue[];
@@ -709,43 +710,43 @@ declare module Garage {
     var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
     var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
 
-    /*
-    * マクロボタンの順番交換アニメの長さ[ms]
-    */
+    /**
+     * マクロボタンの順番交換アニメの長さ[ms]
+     */
     var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
-    /*
-    * 信号を削除する際のアニメの長さ[ms]
-    */
+    /**
+     * 信号を削除する際のアニメの長さ[ms]
+     */
     var DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER: number;
-    /*
+    /**
      * 信号を追加する際のアニメの長さ[ms]
      */
     var DURATION_ANIMATION_ADD_SIGNAL_CONTAINER: number;
-    /*
-    * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
-    */
+    /**
+     * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
+     */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
-    /*
-    * インポートエクスポートがつかえるようになるHUIS本体のバージョン
-    */
+    /**
+     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
+     */
     var HUIS_RC_VERSION_REQUIRED: string;
-    /*
-   * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
-   */
+    /**
+     * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
+     */
     var HUIS_RC_VERSION_REQUIRED_FOR_DIALOG: string;
-    /*
+    /**
      * インポート・エクスポート する際に仕様する拡張子
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
-    /*
+    /**
      * インポート・エクスポート する際に仕様する拡張子（BtoB版）
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B
-    /*
+    /**
      * インポート・エクスポート用拡張子の日本語の説明
      */
     var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
-    /*
+    /**
      * リモコンが見つからない場合を表す定数
      */
     var UNKNOWN_REMOTE: string;
