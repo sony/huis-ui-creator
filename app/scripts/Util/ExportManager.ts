@@ -32,7 +32,7 @@ module Garage {
              * @param masterFace{Model} エクスポート対象のリモコンのMasterFaceのfaceモデル。いっしょにエクスポートする場合に入力。
              */
             constructor(face: Model.Face, masterFace: Model.Face = null) {
-                this.filePathBeforeCompressionFile = path.join(GARAGE_FILES_ROOT, "export").replace(/\\/g, "/");
+                this.filePathBeforeCompressionFile = Util.PathManager.join(GARAGE_FILES_ROOT, "export");
                 this.targetFace = face;
                 this.targetMasterFace = masterFace;
             }
@@ -195,20 +195,20 @@ module Garage {
                     fs.mkdirSync(this.filePathBeforeCompressionFile);
                 }
 
-                let targetRemoteIdFolderPath = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId()).replace(/\\/g, "/");
+                let targetRemoteIdFolderPath = Util.PathManager.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId());
                 if (!fs.existsSync(targetRemoteIdFolderPath)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(targetRemoteIdFolderPath);
                 }
 
-                let targetRemoteIdRemoteimagesFolderPath = path.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
+                let targetRemoteIdRemoteimagesFolderPath = Util.PathManager.join(targetRemoteIdFolderPath, REMOTE_IMAGES_DIRECTORY_NAME);
                 if (!fs.existsSync(targetRemoteIdRemoteimagesFolderPath)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(targetRemoteIdRemoteimagesFolderPath);
                 }
 
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                let src: string = path.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId()).replace(/\\/g, "/");
+                let src: string = Util.PathManager.join(HUIS_REMOTEIMAGES_ROOT, this.getTargetRemoteId());
                 //コピー先のファイルパス : HuisFiles以下のremoteImages
-                let dst: string = path.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRECTORY_NAME, this.getTargetRemoteId()).replace(/\\/g, "/");
+                let dst: string = Util.PathManager.join(this.filePathBeforeCompressionFile, this.getTargetRemoteId(), REMOTE_IMAGES_DIRECTORY_NAME, this.getTargetRemoteId());
 
                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(dst);

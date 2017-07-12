@@ -249,7 +249,8 @@ module Garage {
             "garage.util.jqutils",
             "garage.util.zipmanager",
             "garage.util.itemclipboard",
-            "garage.util.phnconfigfile"],
+            "garage.util.phnconfigfile",
+            "garage.util.pathmanager"],
             () => {
                 initPath();
                 try {
@@ -295,9 +296,9 @@ module Garage {
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         if (Util.MiscUtil.isWindows()) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
+            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
         } else if (Util.MiscUtil.isDarwin()) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
+            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
         } else {
             console.error("Error: unsupported platform");
         }
@@ -306,9 +307,9 @@ module Garage {
         }
 
         // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
+        HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFiles");
         if (Util.MiscUtil.isBz()) {
-            HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFilesBz").replace(/\\/g, "/");
+            HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFilesBz");
         }
 
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
@@ -318,7 +319,7 @@ module Garage {
 
         // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
         REMOTE_IMAGES_DIRECTORY_NAME = "remoteimages";
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
+        HUIS_REMOTEIMAGES_ROOT = Util.PathManager.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME);
         if (!fs.existsSync(HUIS_REMOTEIMAGES_ROOT)) {
             fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
         }

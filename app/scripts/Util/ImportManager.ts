@@ -37,7 +37,7 @@ module Garage {
             *コンストラクター
             */
             constructor() {
-                this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
+                this.filePathDecompressionFile = Util.PathManager.join(GARAGE_FILES_ROOT, "import");
                 this.hasAirconditioner = false;
                 this.hasBluetooth = false;
                 this.needDisplayCautionDialog = false;
@@ -88,7 +88,7 @@ module Garage {
 
                             }).then(() => {
                                 //展開されたフォルダのファイルパス
-                                let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");
+                                let dirPath = this.filePathDecompressionFile;
 
                                 //展開されたリモコンのremoteIdを取得
                                 let decompressedRemoteId = this.getDecompressedRemoteId(dirPath);
@@ -255,7 +255,7 @@ module Garage {
                 }
 
                 //読み込み対象のファイルの.faceファイルのパス
-                let facePath = path.join(dirPath, decompressedRemoteId, fileName).replace(/\\/g, "/");
+                let facePath = Util.PathManager.join(dirPath, decompressedRemoteId, fileName);
 
                 //対象のデータをModel.Faceとして読み込み
                 return huisFiles._parseFace(facePath, decompressedRemoteId, dirPath);
@@ -290,7 +290,7 @@ module Garage {
                     }
 
                     //コピー先のファイルパスを作成
-                    let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
+                    let outputDirectoryPath: string = Util.PathManager.join(HUIS_FILES_ROOT, newRemoteId);
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(outputDirectoryPath);
                     }
@@ -373,9 +373,9 @@ module Garage {
                 //画像をコピー
                 //コピー元のファイルパス ：展開されたリモコン のremoteImages
                 let oldRemoteId: string = decompressRemoteId;
-                let src: string = path.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
+                let src: string = Util.PathManager.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId);
                 //コピー先のファイルパス : HuisFiles以下のremoteImages
-                let dst: string = path.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId).replace(/\\/g, "/");
+                let dst: string = Util.PathManager.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId);
                 if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
                     fs.mkdirSync(dst);
                 }

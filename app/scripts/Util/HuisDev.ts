@@ -56,7 +56,7 @@ module Garage {
 
                         var len = names.length;
                         for (var i = 0; i < len; i++) {
-                            var filePath = path.join(dir, names[i]).replace(/\\/g, "/");
+                            var filePath = Util.PathManager.join(dir, names[i]);
                             if (fs.lstatSync(filePath).isDirectory()) {
                                 dirs.push(filePath);
                             }
@@ -109,7 +109,7 @@ module Garage {
                             let names = fs.readdirSync(dir);
 
                             for (let i = 0, l = names.length; i < l; i++) {
-                                let filePath = path.join(dir, names[i]).replace(/\\/g, "/");
+                                let filePath = Util.PathManager.join(dir, names[i]);
                                 if (fs.lstatSync(filePath).isDirectory()) {
                                     dirs.push(filePath);
                                 }
@@ -255,7 +255,7 @@ module Garage {
 
 
             function getAbsPath(rootDir: string, relPath: string): string {
-                return path.join(rootDir, relPath).replace(/\\/g, "/");
+                return Util.PathManager.join(rootDir, relPath);
             }
 
             /**
@@ -387,7 +387,7 @@ module Garage {
                 // @param targetDirectoryPath{string} 削除するフォルダ
                 // @param callback{(err: Error)=>void} 削除後に実行するコールバック
                 public deleteDirectory(targetDirectoryPath: string, callback?: (err: Error) => void) {
-                    let emptyDirectory = path.join(GARAGE_FILES_ROOT, "empty").replace(/\\/g, "/");
+                    let emptyDirectory = Util.PathManager.join(GARAGE_FILES_ROOT, "empty");
                     if (!fs.existsSync(emptyDirectory)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(emptyDirectory);
                     }

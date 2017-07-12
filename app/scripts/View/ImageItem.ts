@@ -145,7 +145,7 @@ module Garage {
                 if (!image.resolvedPath && this.materialsRootPath_) {
                     let imagePath = image.path;
                     if (imagePath) {
-                        imagePath = path.resolve(path.join(this.materialsRootPath_, this.remoteId_, "images", imagePath)).replace(/\\/g, "/");
+                        imagePath = Util.PathManager.joinAndResolve(this.materialsRootPath_, this.remoteId_, "images", imagePath);
                         image.resolvedPath = imagePath;
                     }
                 }

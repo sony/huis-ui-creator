@@ -66,6 +66,7 @@ module Config {
             "garage.util.informationdialog": "scripts/Util/InformationDialog",
             "garage.util.itemclipboard": "scripts/Util/ItemClipboard",
             "garage.util.phnconfigfile": "scripts/Util/PhnConfigFile",
+            "garage.util.pathmanager": "scripts/Util/PathManager",
             "garage.model.offscreeneditor": "scripts/Model/OffscreenEditor",
             "garage.view.fullcustomcommand": "scripts/View/FullCustomCommand",
             "garage.view.exportmanager": "scripts/View/ExportManager",
