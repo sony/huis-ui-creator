@@ -624,6 +624,7 @@ declare module Garage {
     var DEVICE_TYPE_SPECIAL: string;
     /** デバイスタイプ 学習リモコン */
     var DEVICE_TYPE_LEARNED: string;
+    var DEVICE_TYPE_AUTO_LAYOUT: string;
 
     var FACE_TYPE_FULL_CUSTOM: string;
     var FACE_TYPE_NOT_FULL_CUSTOM: string;
