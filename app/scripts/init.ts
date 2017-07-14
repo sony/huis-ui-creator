@@ -285,8 +285,8 @@ module Garage {
 
     var initPath = () => {
 
-        HUIS_RC_VERSION_REQUIRED = "4.0.3";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
+        HUIS_RC_VERSION_REQUIRED = "4.1.1";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.2.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
         //BZ版と通常版で、必要バージョンを分ける。
         if (Util.MiscUtil.isBz()) {
             HUIS_RC_VERSION_REQUIRED = "8.0.0";
