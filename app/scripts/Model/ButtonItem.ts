@@ -45,11 +45,11 @@ module Garage {
                     if (attributes.materialsRootPath) {
                         this.materialsRootPath_ = attributes.materialsRootPath;
                         if (this.remoteId) {
-                            this.resolvedImagePathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                            this.resolvedImagePathDirectory_ = Util.PathManager.joinAndResolve(attributes.materialsRootPath, "remoteimages");
                         }
                         if (attributes.srcRemoteId) {
                             // 画像のコピー元のディレクトリー
-                            this.resolvedCopySrcImagePathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                            this.resolvedCopySrcImagePathDirectory_ = Util.PathManager.joinAndResolve(attributes.materialsRootPath, "remoteimages");
                         }
                         if (attributes.state) {
                             this.state = attributes.state;

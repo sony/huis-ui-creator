@@ -22,7 +22,7 @@ module Garage {
         var TAG: string = "[Garage.Util.InformationDialog]";
 
         namespace ConstValue {
-            export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
+            export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = Util.PathManager.join(GARAGE_FILES_ROOT, "last_notified_version.txt");
             export const FILE_NAME_DATE: string = "date.txt";
             export const FILE_NAME_IMAGE: string = "image.png";
             export const FILE_NAME_NOTE: string = "note.txt";
@@ -78,7 +78,7 @@ module Garage {
                     var pathToNotes: string = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
                     // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
                     if (Util.MiscUtil.isWindows()) {
-                        pathToNotes = path.join(pathToNotes, ConstValue.DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
+                        pathToNotes = Util.PathManager.join(pathToNotes, ConstValue.DIR_NAME_WINDOWS + "/");
                     } else if (Util.MiscUtil.isDarwin()) {
                         pathToNotes = path.join(pathToNotes, ConstValue.DIR_NAME_MAC + "/");
                     } else {

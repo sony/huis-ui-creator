@@ -110,10 +110,10 @@ module Garage {
 
                 let newDirPath = HUIS_REMOTEIMAGES_ROOT;
                 if (outputDirPath != null) {
-                    newDirPath = path.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME).replace(/\\/g, "/");
+                    newDirPath = Util.PathManager.join(outputDirPath, remoteId, REMOTE_IMAGES_DIRECTORY_NAME);
                 }
 
-                newFileFullPath = path.join(newDirPath, remoteId, newFileName).replace(/\\/g, "/");
+                newFileFullPath = Util.PathManager.join(newDirPath, remoteId, newFileName);
 
                 // editImage 内でパスが補正されることがあるので、補正後のパスをあらかじめ取得。
                 // 補正は拡張子の付け替え。

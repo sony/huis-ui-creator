@@ -28,8 +28,8 @@ module Garage {
 
             constructor() {
                 let keysDir = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/keys"));
-                this.lockFile = path.join(keysDir, StorageLock.LockFileName).replace(/\\/g, "/");
-                this.unlockFile = path.join(keysDir, StorageLock.UnlockFileName).replace(/\\/g, "/");
+                this.lockFile = Util.PathManager.join(keysDir, StorageLock.LockFileName);
+                this.unlockFile = Util.PathManager.join(keysDir, StorageLock.UnlockFileName);
             }
 
 
@@ -84,7 +84,7 @@ module Garage {
              */
             private existCheckFiles(): boolean {
                 for (let file of StorageLock.CheckFiles) {
-                    let filePath = path.join(HUIS_ROOT_PATH, file).replace(/\\/g, "/");
+                    let filePath = Util.PathManager.join(HUIS_ROOT_PATH, file);
 
                     try {
                         if (!fs.existsSync(filePath)) {
@@ -108,7 +108,7 @@ module Garage {
              * @return {boolean}
              */
             private existLockFile(): boolean {
-                let lockFileOnHuis = path.join(HUIS_FILES_ROOT, StorageLock.LockFileName).replace(/\\/g, "/");
+                let lockFileOnHuis = Util.PathManager.join(HUIS_FILES_ROOT, StorageLock.LockFileName);
 
                 try {
                     if (fs.existsSync(lockFileOnHuis)) {
@@ -160,7 +160,7 @@ module Garage {
              * @return {boolean} アンロックファイル生成の成否
              */
             private createUnlockFile(): boolean {
-                let dst = path.join(HUIS_ROOT_PATH, StorageLock.UnlockFileName).replace(/\\/g, "/");
+                let dst = Util.PathManager.join(HUIS_ROOT_PATH, StorageLock.UnlockFileName);
 
                 try {
                     if (!fs.existsSync(this.unlockFile)) {
@@ -184,7 +184,7 @@ module Garage {
              * @return {boolean} ロックファイル生成の成否
              */
             private createLockFile(): boolean {
-                let dst = path.join(HUIS_FILES_ROOT, StorageLock.LockFileName).replace(/\\/g, "/");
+                let dst = Util.PathManager.join(HUIS_FILES_ROOT, StorageLock.LockFileName);
 
                 try {
                     if (!fs.existsSync(this.lockFile)) {

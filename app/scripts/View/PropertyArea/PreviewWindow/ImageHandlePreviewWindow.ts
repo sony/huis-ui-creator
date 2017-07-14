@@ -93,7 +93,7 @@ module Garage {
              * @return {string} HUIS本体で使われていない画像が格納されるディレクトリの相対パス(remoteImagesより先)を返す。
              */
             getNotDefaultImageDirRelativePath(): string {
-                return path.join(this.editingRemoteId_).replace(/\\/g, "/");
+                return this.editingRemoteId_;
             }
 
 
@@ -169,7 +169,7 @@ module Garage {
 
                 let imageName = path.basename(imageFilePath);
                 let dirPath = this.getNotDefaultImageDirFullPath();
-                let outputImagePath = path.join(dirPath, imageName).replace(/\\/g, "/");
+                let outputImagePath = Util.PathManager.join(dirPath, imageName);
 
                 //TODO: move const variables difinition from init.ts to more specific place
                 let params = this.isBackgroundImage_ ? IMAGE_EDIT_PAGE_BACKGROUND_PARAMS : IMAGE_EDIT_PARAMS;

@@ -290,7 +290,7 @@ module Garage {
             }
 
             private _isExistAppVersionBtoB() {
-                let app_version_btob_path = path.join(HUIS_ROOT_PATH, "appversionBtoB").replace(/\\/g, "/");
+                let app_version_btob_path = Util.PathManager.join(HUIS_ROOT_PATH, "appversionBtoB");
                 return fs.existsSync(app_version_btob_path);
             }
 

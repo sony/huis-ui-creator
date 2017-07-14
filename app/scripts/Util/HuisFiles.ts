@@ -2105,7 +2105,7 @@ module Garage {
              * face が参照している module 内で使用されていない画像を削除する
              */
             private _removeUnnecessaryImages(face: Model.Face) {
-                let remoteImageDirectory = path.resolve(path.join(HUIS_REMOTEIMAGES_ROOT, face.remoteId)).replace(/\\/g, "/");
+                let remoteImageDirectory = Util.PathManager.joinAndResolve(HUIS_REMOTEIMAGES_ROOT, face.remoteId);
                 if (!fs.existsSync(remoteImageDirectory)) {
                     return;
                 }
