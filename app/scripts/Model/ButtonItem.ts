@@ -267,14 +267,6 @@ module Garage {
                 this.set("name", val);
             }
 
-            get version(): string {
-                return this.get("version");
-            }
-
-            set version(val: string) {
-                this.set("version", val);
-            }
-
             get interval(): number {
                 return this.get("interval");
             }

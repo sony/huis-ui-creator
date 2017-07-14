@@ -244,117 +244,61 @@ module Garage {
             }
 
             /*
-             * Model.ButtonItem, Model.LabelItem, Model.ImageItemからバージョン情報を抽出する。
-             * @param buttons ? : Model.ButtonItem[]
-             * @param imagess ? : Model.ImageItem[]
-             * @param labels ? : Model.LabelItem[]
-             * return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
-             */
-            private getVersions(buttons?: Model.ButtonItem[], images?: Model.ImageItem[], labels?: Model.LabelItem[]): Model.VersionString[] {
-                let FUNCTION_NAME: string = TAG + " : getVersions : ";
-                if (!buttons && !images && !labels) {
-                    console.warn(FUNCTION_NAME + "no inputs");
-                    return;
-                }
-                let result: Model.VersionString[] = [];
-
-                if (buttons) {
-                    for (let i = 0; i < buttons.length; i++) {
-                        if (buttons[i].version) {
-                            result.push(new Model.VersionString(buttons[i].version));
-                        }
-                    }
-                }
-
-                if (images) {
-                    for (let i = 0; i < images.length; i++) {
-                        if (images[i].version) {
-                            result.push(new Model.VersionString(images[i].version));
-                        }
-                    }
-                }
-
-                if (labels) {
-                    for (let i = 0; i < labels.length; i++) {
-                        if (labels[i].version) {
-                            result.push(new Model.VersionString(labels[i].version));
-                        }
-                    }
-                }
-
-
-                return result;
-            }
-
-            /*
-            * ２つのバージョン情報から、より番号が若い方を返す。
-            * @param version1 :string 比較対象のバージョン情報１ 
-            * @param version2 :string 比較対象のバージョン情報２
-            * return より番号が若い方のバージョン情報 : string
+            * 2つのバージョン情報から、より新しい方を返す。
+            * @param {VersionString} version1 比較対象のバージョン情報1
+            * @param {VersionString} version2 比較対象のバージョン情報2
+            * @return {VersionString} より新しい方のバージョン情報
             */
-            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getOlderVersion : ";
+            private getLaterVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
+                let FUNCTION_NAME: string = TAG + " : getLaterVersion : ";
 
-                if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
-                    return null;
-                }
-
-                if (version1 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version2) {
-                        return version2;
-                    }
-                    return null;
-                }
-
-                if (version2 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version1) {
-                        return version1;
-                    }
-                    return null;
-                }
-
-                if (version1.isOlderThan(version2)) {
-                    return version1;
-                } else {
+                // 片方がNULLの場合、　もう片方を返す。
+                if (version1 == null) {
                     return version2;
                 }
+                if (version2 == null) {
+                    return version1;
+                }
+
+                return (version1.isOlderThan(version2)) ? version2 : version1;
             }
 
             /*
-             * 入力された　最も古いバージョン情報値:string を返す
-             * @param versions : string[]
-             * return :string 最古のボタンバージョン
+             * モジュール内に含まれるItemの最も新しいバージョン情報を返す
+             * @return {string} 最も新しいバージョン
              */
-            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getOldestVersionOf : ";
+            private getLatestVersionOf(): Model.VersionString {
+                let FUNCTION_NAME: string = TAG + " : getLatestVersionOf : ";
 
-                if (versions == undefined) {
-                    console.warn(FUNCTION_NAME + "versions is undefined");
-                    return;
+                let latestVersion: Model.VersionString = null;
+
+                let items: Model.Item[] = [];
+                items = items.concat(this.button);
+                items = items.concat(this.image);
+                items = items.concat(this.label);
+
+                for (let item of items) {
+                    if (item.version != null) {
+                        let itemVersion = new VersionString(item.version);
+                        latestVersion = this.getLaterVersionOf(latestVersion, itemVersion);
+                    }
                 }
 
-                let oldestVersion: Model.VersionString = null;
-
-                for (let i = 0; i < versions.length; i++) {
-                    oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
-                }
-
-                return oldestVersion;
+                return latestVersion;
             }
 
             /*
-             * moduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
-             * @return oldestVersionString : string module内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
+             * moduleの構成要素(button,label,image)のバージョンから、最も新しいバージョンを返す。
+             * @return {string} module内のもっとも新しいバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
              */
             public getModuleVersion(): string {
                 let FUNCTION_NAME: string = TAG + " : getModuleVersion : ";
 
-                let versions: Model.VersionString[] = this.getVersions(this.button, this.image, this.label);
-                let oldestVersion: Model.VersionString = this.getOldestVersionOf(versions);
+                let latestVersion: Model.VersionString = this.getLatestVersionOf();
 
-                if (oldestVersion != null) {
-                    let oldestVersionString: string = oldestVersion.getVersionString();
-                    return oldestVersionString;
+                if (latestVersion != null) {
+                    let latestVersionString: string = latestVersion.getVersionString();
+                    return latestVersionString;
                 } else {
                     return null;
                 }
