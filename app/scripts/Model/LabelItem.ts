@@ -140,14 +140,6 @@ module Garage {
                 this.set("text", val);
             }
 
-            get version(): string {
-                return this.get("version");
-            }
-
-            set version(val: string) {
-                this.set("version", val);
-            }
-
             get color(): string {
                 let color: string = this.get("color");
                 return (color !== FontColor.SETTING) ? color : this._getSettingColor();
