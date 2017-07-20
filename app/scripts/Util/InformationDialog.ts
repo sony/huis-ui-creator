@@ -86,7 +86,7 @@ module Garage {
                 contentsDirs.reverse(); // 新しいnoteから表示させるために反転させる
 
                 // ダイアログにnoteを追加させていく
-                contentsDirs.forEach(function (dirName) {
+                for (let dirName of contentsDirs) {
                     let articlePath = PathManager.join(versionDirFullPath, dirName);
                     informationList.push({
                         dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
@@ -94,7 +94,7 @@ module Garage {
                         date: fs.readFileSync(PathManager.join(articlePath, ConstValue.FILE_NAME_DATE), "utf8"),
                         text: fs.readFileSync(PathManager.join(articlePath, ConstValue.FILE_NAME_NOTE), "utf8")
                     });
-                });
+                }
 
                 return informationList;
             }
