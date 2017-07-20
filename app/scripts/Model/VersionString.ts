@@ -101,7 +101,7 @@ module Garage {
              * @return {boolean} counterPartより古いVersionの場合はtrue、同じか新しいVersionのときはfalse
              */
             public isOlderThan(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum) => {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
                     return selfVersionNum < counterVersionNum;
                 })
             }
@@ -113,7 +113,7 @@ module Garage {
              * @return {boolean} counterPartより新しいVersionの場合はtrue、同じか古いVersionのときはfalse
              */
             public isNewerThan(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum) => {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
                     return selfVersionNum > counterVersionNum;
                 })
             }
@@ -125,7 +125,7 @@ module Garage {
              * @return {boolean} counterPartと同じVersionの場合はtrue、それ以外はfalse
              */
             public isSame(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum) => {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
                     return selfVersionNum === counterVersionNum;
                 })
             }
