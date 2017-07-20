@@ -183,10 +183,7 @@ module Garage {
 
                 //お知らせダイアログを表示
                 var informationDialog = new Util.InformationDialog();
-                if (informationDialog.shouldNotify()) {
-                    informationDialog.notify();
-                }
-
+                informationDialog.notifyIfNecessary();
             }
 
             /**
