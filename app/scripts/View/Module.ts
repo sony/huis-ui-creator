@@ -556,6 +556,7 @@ module Garage {
                 // 新しい model を追加する
 
                 var newImage = image.clone();
+                newImage.area.y += offsetY;
 
                 // 画像の path を出力先の remoteId のディレクトリーになるように指定
                 newImage.path = image.path;
