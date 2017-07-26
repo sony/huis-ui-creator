@@ -132,6 +132,12 @@ module Garage {
 
                     this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
                     this.faceRenderer_canvas_.render();
+
+                    // [TODO] Canvas 内の page scroll
+                    $("#face-canvas-area").find("#face-pages-area").scroll((event: JQueryEventObject) => {
+                        this.onCanvasPageScrolled(event);
+                    });
+
                     this._setGridSize();
 
                     // ページ数が最大の場合はページ追加ボタンを無効化する
@@ -400,11 +406,6 @@ module Garage {
                         type: "canvas",
                         materialsRootPath: HUIS_FILES_DIRECTORY
                     }
-                });
-
-                // [TODO] Canvas 内の page scroll
-                $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
-                    this.onCanvasPageScrolled(event);
                 });
 
                 this.currentTargetPageIndex_ = 0;
