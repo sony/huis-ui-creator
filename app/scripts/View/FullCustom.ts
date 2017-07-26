@@ -132,6 +132,12 @@ module Garage {
 
                     this.faceRenderer_canvas_ = this._createCanvas(this.currentFace_);
                     this.faceRenderer_canvas_.render();
+
+                    // [TODO] Canvas 内の page scroll
+                    $("#face-canvas-area").find("#face-pages-area").scroll((event: JQueryEventObject) => {
+                        this.onCanvasPageScrolled(event);
+                    });
+
                     this._setGridSize();
 
                     // ページ数が最大の場合はページ追加ボタンを無効化する
@@ -400,11 +406,6 @@ module Garage {
                         type: "canvas",
                         materialsRootPath: HUIS_FILES_DIRECTORY
                     }
-                });
-
-                // [TODO] Canvas 内の page scroll
-                $faceCanvasArea.find("#face-pages-area").scroll((event: JQueryEventObject) => {
-                    this.onCanvasPageScrolled(event);
                 });
 
                 this.currentTargetPageIndex_ = 0;
@@ -1708,23 +1709,17 @@ module Garage {
              * キャンバス内のスクロールイベントのハンドリング
              */
             private onCanvasPageScrolled(event: Event) {
-                var $target: JQuery = $(event.currentTarget);
-                var scrollTop: number = $target.scrollTop();
 
+                var $target: JQuery = $(event.currentTarget);
                 var $children = $target.children();
 
                 var scaledFaceHeight = HUIS_FACE_PAGE_HEIGHT / 2;
-                var checked = false;
-                $children.each((index, elem) => {
-                    if (checked) {
-                        return;
-                    }
 
+                $children.each((index, elem) => {
                     var $elem = $(elem);
                     let position = $elem.position();
                     if (-(scaledFaceHeight / 2) <= position.top && position.top < (scaledFaceHeight / 2)) {
-                        this.currentTargetPageIndex_ = parseInt(JQUtils.data($elem, "pageIndex"), 10); //$elem.data("page-index");
-                        $("#page-index").text((this.currentTargetPageIndex_ + 1) + "");
+                        this.currentTargetPageIndex_ = parseInt(JQUtils.data($elem, "pageIndex"), 10);
                     }
                 });
             }
@@ -1736,10 +1731,6 @@ module Garage {
                 var $target: JQuery = $(event.currentTarget);
                 var scrollTop: number = $target.scrollTop();
                 this.displayGradationInPalletArea(scrollTop, $target);
-
-                var $children = $target.children();
-                var scaledFaceHeight = HUIS_FACE_PAGE_HEIGHT / 2;
-
             }
 
 
