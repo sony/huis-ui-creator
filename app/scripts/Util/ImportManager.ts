@@ -639,27 +639,27 @@ module Garage {
              * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
             private convertImagesFilePath(images: Model.ImageItem[], newRemoteId: string): Model.ImageItem[] {
-                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+                let FUNCTION_NAME: string = TAG + "convertImagesFilePath : ";
 
-                if (images == null || images.length == 0) {
+                if (images == null) {
                     console.warn(FUNCTION_NAME + "images is invalid");
-                    return;
+                    return [];
                 }
 
                 if (newRemoteId == null) {
                     console.warn(FUNCTION_NAME + "newRemoteId is invalid");
-                    return;
+                    return [];
                 }
 
                 let result: Model.ImageItem[] = $.extend(true, [], images);
 
-                for (let i = 0; i < result.length; i++) {
-                    result[i].path = this.converFilePath(result[i].path, newRemoteId);
-                    let extensions = result[i].garageExtensions;
+                for (let image of result) {
+                    image.path = this.convertFilePath(image.path, newRemoteId);
+                    let extensions = image.garageExtensions;
                     if (extensions != null) {
-                        extensions.original = this.converFilePath(extensions.original, newRemoteId);
-                        extensions.resolvedOriginalPath = this.converFilePath(extensions.resolvedOriginalPath, newRemoteId);
-                        result[i].garageExtensions = extensions;
+                        extensions.original = this.convertFilePath(extensions.original, newRemoteId);
+                        extensions.resolvedOriginalPath = this.convertFilePath(extensions.resolvedOriginalPath, newRemoteId);
+                        image.garageExtensions = extensions;
                     }
                 }
 
@@ -677,22 +677,23 @@ module Garage {
             private convertButtonsFilePath(buttons: Model.ButtonItem[], newRemoteId: string): Model.ButtonItem[] {
                 let FUNCTION_NAME: string = TAG + "convertButtonFilePath : ";
 
-                if (buttons == null || buttons.length == 0) {
+                if (buttons == null) {
                     console.warn(FUNCTION_NAME + "buttons is invalid");
-                    return;
+                    return [];
                 }
 
                 if (newRemoteId == null) {
                     console.warn(FUNCTION_NAME + "newRemoteId is invalid");
-                    return;
+                    return [];
                 }
 
 
                 let result: Model.ButtonItem[] = $.extend(true, [], buttons);
-                for (let i = 0; i < result.length; i++) {
-                    if (result[i].state != null && result[i].state.length > 0) {
-                        for (let j = 0; j < result[i].state.length; j++) {
-                            result[i].state[j].image = this.convertImagesFilePath(result[i].state[j].image, newRemoteId);
+
+                for (let button of result) {
+                    if (button.state != null && button.state.length > 0) {
+                        for (let state of button.state) {
+                            state.image = this.convertImagesFilePath(state.image, newRemoteId);
                         }
                     }
                 }
@@ -700,14 +701,14 @@ module Garage {
                 return result;
             }
 
-            /*
+            /**
              * pathを新しいremoteIdのものに変更する。親のフォルダの名前を古いremoteIdから新しいremoteIdにする。
              * @param inputPath{string} もともとのパス
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
              * @return {string} 変更後のpath.失敗したとき、nullを返す。変換する親のフォルダがないときそのまま返す。
              */
-            private converFilePath(inputPath: string, newRemoteId: string): string {
-                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+            private convertFilePath(inputPath: string, newRemoteId: string): string {
+                let FUNCTION_NAME: string = TAG + "convertFilePath : ";
 
                 if (inputPath == null) {
                     console.warn(FUNCTION_NAME + "inputPath is invalid");
