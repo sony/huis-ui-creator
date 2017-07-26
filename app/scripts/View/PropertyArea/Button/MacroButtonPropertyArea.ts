@@ -43,6 +43,8 @@ module Garage {
 
         export class MacroButtonPropertyArea extends ButtonPropertyArea {
 
+            private isMacroOrderChanging = false;
+
             //DOMのプルダウンの値ををベースにModelを更新する。
             //DOMを生成・変更 ＞＞ DOMの値をModelに反映 ＞＞ Modelの内容でDOMを再生成の流れでViewを管理する。
 
@@ -75,6 +77,11 @@ module Garage {
             //並び替え上ボタンが押されたときに呼ばれる
             private onMoveUpOrderButtonClick(event: Event) {
                 let FUNCTION_NAME = TAG + "onMoveUpOrderButtonClick : ";
+
+                if (this.isMacroOrderChanging) {
+                    return;
+                }
+                this.isMacroOrderChanging = true;
 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
@@ -139,6 +146,7 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
+                        this.isMacroOrderChanging = false;
                     }, duration);
                 }
             }
@@ -146,6 +154,11 @@ module Garage {
             //並び替え下ボタンが押されたときに呼ばれる
             private onMoveDownOrderButtonClick(event: Event) {
                 let FUNCTION_NAME = TAG + "onMoveDownOrderButtonClick : ";
+
+                if (this.isMacroOrderChanging) {
+                    return;
+                }
+                this.isMacroOrderChanging = true;
 
                 //ボタンが所属する信号の順番を取得
                 let $target = $(event.currentTarget);
@@ -207,7 +220,7 @@ module Garage {
                         //情報を更新し、再描画
                         this.updateModel();
                         this.renderSignalContainers();
-
+                        this.isMacroOrderChanging = false;
                     }, duration);
                 }
             }
