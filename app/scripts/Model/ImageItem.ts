@@ -163,8 +163,8 @@ module Garage {
                 let specifiedColor;
                 if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
                     specifiedColor = Model.SettingColor.WHITE;
+                    this.copyImageToRemoteDir(remoteId, specifiedColor);
                 }
-                this.copyImageToRemoteDir(remoteId, specifiedColor);
 
                 let convertedImage: IImage = {
                     area: this.area,

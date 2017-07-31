@@ -1282,9 +1282,11 @@ module Garage {
                 let iModules: IModule[] = [];
                 var moduleNames: string[] = [];
 
-                let images: Model.ImageItem[] = inputFace.searchImages();
-                for (let image of images) {
-                    image.reserveResizeImageFile(remoteId, outputDirPath);
+                if (inputFace.category === DEVICE_TYPE_FULL_CUSTOM) {
+                    let images: Model.ImageItem[] = inputFace.searchImages();
+                    for (let image of images) {
+                        image.reserveResizeImageFile(remoteId, outputDirPath);
+                    }
                 }
 
                 // サイズ変更を行った画像を一括でリサイズする

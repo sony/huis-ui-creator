@@ -218,42 +218,42 @@ module Garage {
 
                     //画像をコピー
                     let syncTask = new Util.HuisDev.FileSyncTask();
-                    syncTask.copyFilesSimply(src, dst, () => {
 
-                        let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId());
-                        // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
+                    let cache = new Util.ButtonDeviceInfoCache(this.filePathBeforeCompressionFile, this.getTargetRemoteId());
+                    // moduleが必要なのでキャンバスのレンダリング後にキャッシュ読み込み
 
-                        //現在のfaceを書き出す。
-                        huisFiles.updateFace(
-                            this.targetFace,
-                            cache,
-                            true,
-                            this.filePathBeforeCompressionFile).then(() => {
-                                //キャッシュファイルをコピー
-                                this.copyCache(targetRemoteIdFolderPath);
+                    //現在のfaceを書き出す。
+                    huisFiles.updateFace(
+                        this.targetFace,
+                        cache,
+                        true,
+                        this.filePathBeforeCompressionFile).then(() => {
+                            //キャッシュファイルをコピー
+                            this.copyCache(targetRemoteIdFolderPath);
 
-                                //masterFaceがある場合、内容をコピー
-                                if (this.targetMasterFace != null) {
-                                    return huisFiles.updateFace(
-                                        this.targetMasterFace,
-                                        cache,
-                                        true,
-                                        this.filePathBeforeCompressionFile,
-                                        true);
-                                } else {
-                                    console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
-                                    df.resolve();
-                                }
-
-                            }).done(() => {
-                                console.log("succeeded to updateFace with fullcustom: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                            //masterFaceがある場合、内容をコピー
+                            if (this.targetMasterFace != null) {
+                                return huisFiles.updateFace(
+                                    this.targetMasterFace,
+                                    cache,
+                                    true,
+                                    this.filePathBeforeCompressionFile,
+                                    true);
+                            } else {
+                                console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
                                 df.resolve();
-                            }).fail(() => {
-                                console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
-                                df.reject();
-                            });
+                            }
 
-                    });
+                        }).done(() => {
+                            console.log("succeeded to updateFace with fullcustom: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                            syncTask.copyFilesSimply(src, dst, () => {
+                                df.resolve();
+                            });
+                        }).fail(() => {
+                            console.log("failed to updateFace: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
+                            df.reject();
+                        });
+
                 } catch (err) {
                     console.error(FUNCTION_NAME + err);
                     df.reject();

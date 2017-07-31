@@ -719,22 +719,15 @@ module Garage {
                 }
 
                 let basename = path.basename(inputPath);
-                let extname = path.extname(inputPath);
                 let dirname = path.dirname(inputPath);
 
-                let result: string = null;
-                //親のフォルダがない場合、そのまま返す。
-                // 親のフォルダがない場合、dirnameが"."となる
-                if (dirname == null || dirname == ".") {
-                    result = inputPath;
-                } else if (dirname != null) {//親のフォルダがある場合、親フォルダ名をnewRemoteIdに
+                let result: string = inputPath;
+                if (PathManager.isRemoteDir(inputPath)) {
                     result = newRemoteId + "/" + basename;
                 }
 
                 return result;
-
             }
-
         }
     }
 }
