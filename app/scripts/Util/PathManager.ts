@@ -38,7 +38,6 @@ module Garage {
                     let colorSpecificDir;
                     if (color == null) {
                         colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
-
                     } else {
                         // For old exported remote support
                         colorSpecificDir = (color === Model.SettingColor.BLACK) ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
