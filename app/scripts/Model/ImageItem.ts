@@ -160,7 +160,7 @@ module Garage {
                     };
                 }
 
-                let specifiedColor;
+                let specifiedColor: string = undefined;
                 if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
                     specifiedColor = Model.SettingColor.WHITE;
                 }
