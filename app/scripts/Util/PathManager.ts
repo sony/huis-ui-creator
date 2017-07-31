@@ -31,10 +31,17 @@ module Garage {
                 return argPath.match(regExp) != null;
             }
 
-            static resolveImagePath(argPath: string): string {
+            static resolveImagePath(argPath: string, color?: string): string {
 
                 if (!PathManager.isRemoteDir(argPath)) {
-                    let colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+
+                    let colorSpecificDir;
+                    if (color == null) {
+                        colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+                    } else {
+                        // For old exported remote support
+                        colorSpecificDir = (color === Model.SettingColor.BLACK) ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+                    }
                     argPath = PathManager.join(colorSpecificDir, argPath);
                 }
                 return PathManager.joinAndResolve(HUIS_REMOTEIMAGES_ROOT, argPath);

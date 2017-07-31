@@ -146,7 +146,7 @@ module Garage {
              * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
              * @return {IImage} 変換されたデータ
              */
-            convertToHuisData(remoteId: string, outputDirPath?: string): IImage {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string): IImage {
 
                 if (this.garageExtensions != null) {
                     if (!this.garageExtensions.original) {
@@ -160,7 +160,11 @@ module Garage {
                     };
                 }
 
-                this.copyImageToRemoteDir(remoteId);
+                let specifiedColor: string = undefined;
+                if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
+                    specifiedColor = Model.SettingColor.WHITE;
+                }
+                this.copyImageToRemoteDir(remoteId, specifiedColor);
 
                 let convertedImage: IImage = {
                     area: this.area,
@@ -174,7 +178,7 @@ module Garage {
                 return convertedImage;
             }
 
-            private _copyResizedImageToRemoteDir(remoteId: string) {
+            private _copyResizedImageToRemoteDir(remoteId: string, color?: string) {
 
                 if (this.path == null) {
                     return;
@@ -185,17 +189,17 @@ module Garage {
                     return;
                 }
 
-                let srcImagePath = this.getFullPath();
+                let srcImagePath = Util.PathManager.resolveImagePath(this.path, color);
                 let imageFileName = Util.PathManager.basename(this.path);
                 this.path = Util.PathManager.join(remoteId, imageFileName);
-                let dstImagePath = this.getFullPath();
+                let dstImagePath = Util.PathManager.resolveImagePath(this.path);
 
                 if (fs.existsSync(srcImagePath)) {
                     fs.copySync(srcImagePath, dstImagePath);
                 }
             }
 
-            private _copyOriginalImageToRemoteDir(remoteId: string) {
+            private _copyOriginalImageToRemoteDir(remoteId: string, color: string) {
 
                 if (this.garageExtensions == null || this.garageExtensions.original == null) {
                     return;
@@ -206,7 +210,7 @@ module Garage {
                     return;
                 }
 
-                let srcImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original);
+                let srcImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original, color);
                 let imageFileName = Util.PathManager.basename(this.garageExtensions.original);
                 this.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
                 let dstImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original);
@@ -222,9 +226,9 @@ module Garage {
              *
              * @param {string] remoteId 移動先の画像ディレクトリのremoteId。
              */
-            copyImageToRemoteDir(remoteId: string) {
-                this._copyResizedImageToRemoteDir(remoteId);
-                this._copyOriginalImageToRemoteDir(remoteId);
+            copyImageToRemoteDir(remoteId: string, color?: string) {
+                this._copyResizedImageToRemoteDir(remoteId, color);
+                this._copyOriginalImageToRemoteDir(remoteId, color);
             }
 
             /**
