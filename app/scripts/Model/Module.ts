@@ -152,7 +152,7 @@ module Garage {
              * @return {IModule} 変換されたデータ
              */
             // TODO: remove remoteId from arguments
-            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath: string): IModule {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath: string, isToImportExport: boolean): IModule {
                 var module: IModule = {
                     area: this.area,
                 };
@@ -168,14 +168,14 @@ module Garage {
                 module.button = [];
                 if (this.button) {
                     for (let button of this.button) {
-                        module.button.push(button.convertToHuisData(remoteId, face, outputDirPath));
+                        module.button.push(button.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
                     }
                 }
 
                 module.image = [];
                 if (this.image) {
                     for (let image of this.image) {
-                        module.image.push(image.convertToHuisData(remoteId, face, outputDirPath));
+                        module.image.push(image.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
                     }
                 }
 

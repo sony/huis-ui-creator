@@ -230,11 +230,11 @@ module Garage {
              * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
              * @return {IButton} 変換されたデータ
              */
-            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string): IButton {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IButton {
 
                 let convertedStates = [];
                 for (let state of this.state) {
-                    convertedStates.push(state.convertToHuisData(remoteId, face, outputDirPath));
+                    convertedStates.push(state.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
                 }
 
                 let convertedButton: IButton = {

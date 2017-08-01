@@ -102,7 +102,7 @@ module Garage {
              * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
              * @return {IState} 変換されたデータ
              */
-            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string): IState {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IState {
 
                 let convertedState: IState = {
                     id: this.stateId
@@ -111,7 +111,7 @@ module Garage {
                 if (this.image) {
                     convertedState.image = [];
                     for (let image of this.image) {
-                        convertedState.image.push(image.convertToHuisData(remoteId, face, outputDirPath));
+                        convertedState.image.push(image.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
                     }
                 }
                 if (this.label) {

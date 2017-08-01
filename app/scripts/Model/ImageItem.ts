@@ -146,7 +146,7 @@ module Garage {
              * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
              * @return {IImage} 変換されたデータ
              */
-            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string): IImage {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IImage {
 
                 if (this.garageExtensions != null) {
                     if (!this.garageExtensions.original) {
@@ -162,9 +162,14 @@ module Garage {
 
                 let specifiedColor: string = undefined;
                 if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
-                    specifiedColor = Model.SettingColor.WHITE;
+                    if (isToImportExport) {
+                        // support for fullcustom remote exported by old UI-Creator(Ver.3 or older)
+                        // it has external image reference,
+                        // so copy white existing button image to remote specific dir
+                        specifiedColor = Model.SettingColor.WHITE;
+                    }
+                    this.copyImageToRemoteDir(remoteId, specifiedColor);
                 }
-                this.copyImageToRemoteDir(remoteId, specifiedColor);
 
                 let convertedImage: IImage = {
                     area: this.area,

@@ -527,10 +527,10 @@ module Garage {
                     return false;
                 }
 
-                for (let i = 0; i < targetModules.length; i++) {
+                for (let module of targetModules) {
 
                     //ターゲットのボタンがないとき、次のmoduleをチェック。
-                    let targetButtons: Model.ButtonItem[] = targetModules[i].button;
+                    let targetButtons: Model.ButtonItem[] = module.button;
                     if (targetButtons == null || targetButtons.length == 0) {
                         continue;
                     }
@@ -541,23 +541,24 @@ module Garage {
                         return true;
                     }
 
-                    for (let j = 0; j < targetButtons.length; j++) {
+                    for (let button of targetButtons) {
 
                         //ターゲットのステートがないとき、次のボタンをチェック
-                        let targetStates: Model.ButtonState[] = targetButtons[j].state;
+                        let targetStates: Model.ButtonState[] = button.state;
                         if (targetStates == null || targetStates.length == 0) {
                             continue;
                         }
-                        for (let k = 0; k < targetStates.length; k++) {
+
+                        for (let state of targetStates) {
 
                             //ターゲットのアクションがないとき、次のステートをチェック
-                            let targetActions = targetStates[k].action;
+                            let targetActions = state.action;
                             if (targetActions == null || targetActions.length == 0) {
                                 continue;
                             }
-                            for (let l = 0; l < targetActions.length; l++) {
+                            for (let action of targetActions) {
 
-                                let targetAction = targetActions[l];
+                                let targetAction = action;
                                 if (targetAction != null) {
                                     //入力したカテゴリと一致するdevice_typeがあるときtrueを返す。
                                     if (targetAction.code_db != null
@@ -572,14 +573,11 @@ module Garage {
                                         return true;
                                     }
 
-                                }//end if
-
-
-
-                            }//end for(l)
-                        }//end for(k)
-                    }//end for(j)
-                }//end for(i)
+                                }
+                            }
+                        }
+                    }
+                }
 
                 return false;
             }
@@ -721,22 +719,15 @@ module Garage {
                 }
 
                 let basename = path.basename(inputPath);
-                let extname = path.extname(inputPath);
                 let dirname = path.dirname(inputPath);
 
-                let result: string = null;
-                //親のフォルダがない場合、そのまま返す。
-                // 親のフォルダがない場合、dirnameが"."となる
-                if (dirname == null || dirname == ".") {
-                    result = inputPath;
-                } else if (dirname != null) {//親のフォルダがある場合、親フォルダ名をnewRemoteIdに
+                let result: string = inputPath;
+                if (PathManager.isRemoteDir(inputPath)) {
                     result = newRemoteId + "/" + basename;
                 }
 
                 return result;
-
             }
-
         }
     }
 }
