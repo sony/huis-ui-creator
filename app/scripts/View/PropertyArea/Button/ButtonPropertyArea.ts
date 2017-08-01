@@ -74,6 +74,9 @@ module Garage {
 
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_TEXT_BUTTON, this._onChangeToTextBtn);
                 this.listenTo(this.previewWindow_, PropertyAreaEvents.Button.UI_CHANGE_EDIT_IMAGE_BUTTON, this._onChangeToImageBtn);
+
+                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_IMAGE, this.render);
+                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_LABEL, this.render);
             }
 
 
@@ -99,6 +102,7 @@ module Garage {
                 this._setDefaultImageToState(targetState, changedImageFileRelativePath);
 
                 this._setStateMementoCommand(targetStates);
+                this.getModel().trigger(PropertyAreaEvents.Button.CHANGE_IMAGE);
             }
 
             private _setDefaultImageToState(state: Model.ButtonState, path: string) {
@@ -152,6 +156,7 @@ module Garage {
                 this._initLabelItem(targetState);
 
                 this._setStateMementoCommand(targetStates);
+                this.getModel().trigger(PropertyAreaEvents.Button.CHANGE_LABEL);
             }
 
             events() {

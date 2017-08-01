@@ -58,6 +58,8 @@ module Garage {
             }
             export namespace Button {
                 export const CHANGE_STATE: string = Events.CHANGE_WITH_COLON + PropertyValues.Button.STATE;
+                export const CHANGE_IMAGE: string = Events.CHANGE_WITH_COLON + "image"; // triggered manually
+                export const CHANGE_LABEL: string = Events.CHANGE_WITH_COLON + "label"; // triggered manually
                 export const UI_CHANGE_EDIT_TEXT_BUTTON: string = UI_CHANGE_WITH_COLON + "editTextBtn";
                 export const UI_CHANGE_EDIT_IMAGE_BUTTON: string = UI_CHANGE_WITH_COLON + "editImageBtn";
             }

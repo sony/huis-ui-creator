@@ -32,6 +32,7 @@ module Garage {
             constructor(button: Model.ButtonItem, commandManager: CommandManager) {
                 super(button, ConstValue.TEMPLATE_DOM_ID, commandManager);
                 this.previewWindow_ = new AcStatePreviewWindow(button, button.getDefaultState().stateId);
+                // AC button doesn't listenTo CHANGE_IMAGE or CHANGE_LABEL event because user can't customize AC button
             }
 
             events() {
