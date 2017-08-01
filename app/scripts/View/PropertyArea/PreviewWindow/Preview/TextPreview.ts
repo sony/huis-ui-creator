@@ -32,7 +32,7 @@ module Garage {
             export const SIZE_PULLDOWN_CONTAINER_DOM_ID: string = "#text-size-pulldown";
             export const SIZE_PULLDOWN_SELECT_DOM_ID: string = "#select-text-size";
             export const TEMPLATE_SIZE_PULLDOWN_DOM_ID: string = "#template-text-size-pulldown";
-            export const SIZE_PULLLDOWN_VALUES: number[] = [
+            export const SIZE_PULLDOWN_VALUES: number[] = [
                 12, 14, 16, 18, 20, 23, 28, 30, 32, 36,
                 40, 44, 48, 54, 60, 72, 80, 88, 96
             ];
@@ -90,7 +90,7 @@ module Garage {
                 //render size pulldown
                 let templateTextSizePulldown = CDP.Tools.Template.getJST(ConstValue.TEMPLATE_SIZE_PULLDOWN_DOM_ID, this._getTemplateFilePath());
                 let dataSizePulldownRender = {
-                    sizeValues: ConstValue.SIZE_PULLLDOWN_VALUES
+                    sizeValues: ConstValue.SIZE_PULLDOWN_VALUES
                 }
                 this.$el.find(ConstValue.SIZE_PULLDOWN_CONTAINER_DOM_ID).append(templateTextSizePulldown(dataSizePulldownRender));
 

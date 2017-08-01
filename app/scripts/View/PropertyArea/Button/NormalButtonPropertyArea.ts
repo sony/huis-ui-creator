@@ -124,17 +124,17 @@ module Garage {
                     "click #add-signal-btn": "onPlusBtnClick",
                     "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
-                    "change .function-input": "onFunctionPulllDownListChanged",
+                    "change .function-input": "onFunctionPullDownListChanged",
                     "click .delete-signal": "onDeleteButtonClick",
-                    "change select": "onAnyPulllDownChanged",
+                    "change select": "onAnyPullDownChanged",
                     "mouseenter .signal-container-element": "onHoverInSignalContainer",
                     "mouseleave .signal-container-element": "onHoverOutSignalContainer"
                 };
             }
 
             //プルダウンのいずれかが変更されたときに呼ばれる
-            private onAnyPulllDownChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
+            private onAnyPullDownChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onAnyPullDownChanged";
             }
 
             //deleteボタンが押されたときに呼ばれる
@@ -263,8 +263,8 @@ module Garage {
 
 
             //機能選択用のプルダウンが変更されたときに呼び出される
-            private onFunctionPulllDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
+            private onFunctionPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onFunctionPullDownListChanged";
                 this.updateModel(this.getModel().getDefaultStateId());
 
                 let $target = $(event.currentTarget);
@@ -690,7 +690,7 @@ module Garage {
 
                 this.renderSignalContainerBase(order);
                 //action設定用のpulldownをレンダリング
-                this.renderActionPulllDownOf(order, stateId, inputAction);
+                this.renderActionPullDownOf(order, stateId, inputAction);
                 //remoteId設定用のpulldownをレンダリング
                 this.renderRemoteIdOf(order, remoteId, stateId, unknownRcType);
             }
@@ -740,8 +740,8 @@ module Garage {
              * @param stateid{number} 
              * @param inputAction? {string} プルダウンの初期値 
              */
-            private renderActionPulllDownOf(order: number, stateId: number, inputAction?: string) {
-                let FUNCTION_NAME: string = TAG + "renderActionPulllDownOf : ";
+            private renderActionPullDownOf(order: number, stateId: number, inputAction?: string) {
+                let FUNCTION_NAME: string = TAG + "renderActionPullDownOf : ";
 
                 if (!this.isValidOrder(order)) {
                     console.warn(FUNCTION_NAME + "order is invalid");
@@ -889,27 +889,27 @@ module Garage {
                     //それぞれのプルダウンが存在し、利用不能な値が代入されている場合、false;
 
                     //action
-                    let $actionPulllDown = $target.find("select.action-input");
-                    if ($actionPulllDown.length != 0) {
-                        let value = $actionPulllDown.val();
+                    let $actionPullDown = $target.find("select.action-input");
+                    if ($actionPullDown.length != 0) {
+                        let value = $actionPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
 
                     //remoteId
-                    let $remoteIdlPulllDown = $target.find("select.remote-input");
-                    if ($remoteIdlPulllDown.length != 0) {
-                        let value = $remoteIdlPulllDown.val();
+                    let $remoteIdlPullDown = $target.find("select.remote-input");
+                    if ($remoteIdlPullDown.length != 0) {
+                        let value = $remoteIdlPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value) && !this.isUnknownRemoteTypeInPulldownOf) {
                             return false;
                         }
                     }
 
                     //function
-                    let $functionlPulllDown = $target.find("select.function-input");
-                    if ($functionlPulllDown.length != 0) {
-                        let value = $functionlPulllDown.val();
+                    let $functionlPullDown = $target.find("select.function-input");
+                    if ($functionlPullDown.length != 0) {
+                        let value = $functionlPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }

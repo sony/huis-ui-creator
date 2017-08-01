@@ -64,8 +64,8 @@ module Garage {
                     "change .interval-input": "onIntervalPullDownListChanged",
                     "change .action-input": "onActionPullDownListChanged",
                     "change .remote-input": "onRemotePullDownListChanged",
-                    "change .function-input": "onFunctionPulllDownListChanged",
-                    "change select": "onAnyPulllDownChanged",
+                    "change .function-input": "onFunctionPullDownListChanged",
+                    "change select": "onAnyPullDownChanged",
                     "click .delete-signal": "onDeleteButtonClick",
                     "click .sort-up-btn": "onMoveUpOrderButtonClick",
                     "click .sort-down-btn": "onMoveDownOrderButtonClick",
@@ -246,8 +246,8 @@ module Garage {
             }
 
             //プルダウンのいずれかが変更されたときに呼ばれる
-            private onAnyPulllDownChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onAnyPulllDownChanged";
+            private onAnyPullDownChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onAnyPullDownChanged";
                 this.controlPlusButtonEnable();
             }
 
@@ -299,8 +299,8 @@ module Garage {
             }
 
             //機能選択用のプルダウンが変更されたときに呼び出される
-            private onFunctionPulllDownListChanged(event: Event) {
-                let FUNCTION_NAME = TAG + "onFunctionPulllDownListChanged";
+            private onFunctionPullDownListChanged(event: Event) {
+                let FUNCTION_NAME = TAG + "onFunctionPullDownListChanged";
                 this.updateModel();
 
                 let $target = $(event.currentTarget);
@@ -868,27 +868,27 @@ module Garage {
                     //それぞれのプルダウンが存在し、利用不能な値が代入されている場合、false;
 
                     //interval
-                    let $intervalPulllDown = $target.find("select.interval-input");
-                    if ($intervalPulllDown.length != 0) {
-                        let value = $intervalPulllDown.val();
+                    let $intervalPullDown = $target.find("select.interval-input");
+                    if ($intervalPullDown.length != 0) {
+                        let value = $intervalPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
 
                     //remoteId
-                    let $remoteIdlPulllDown = $target.find("select.remote-input");
-                    if ($remoteIdlPulllDown.length != 0) {
-                        let value = $remoteIdlPulllDown.val();
+                    let $remoteIdlPullDown = $target.find("select.remote-input");
+                    if ($remoteIdlPullDown.length != 0) {
+                        let value = $remoteIdlPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
                     }
 
                     //function
-                    let $functionlPulllDown = $target.find("select.function-input");
-                    if ($functionlPulllDown.length != 0) {
-                        let value = $functionlPulllDown.val();
+                    let $functionlPullDown = $target.find("select.function-input");
+                    if ($functionlPullDown.length != 0) {
+                        let value = $functionlPullDown.val();
                         if (!Util.JQueryUtils.isValidValue(value)) {
                             return false;
                         }
@@ -1075,8 +1075,8 @@ module Garage {
 
                 //対象orderのintervalPullDown用コンテナの子供を削除する
                 let $targetSignalContainer: JQuery = this.$el.find(".signal-container-element[data-signal-order=\"" + order + "\"]");
-                let $targetIntervalPulllDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
-                $targetIntervalPulllDownContainer.children().hide();
+                let $targetIntervalPullDownContainer: JQuery = $targetSignalContainer.find("#signal-interval-container");
+                $targetIntervalPullDownContainer.children().hide();
             }
 
             /*
