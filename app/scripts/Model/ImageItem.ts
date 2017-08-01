@@ -146,7 +146,7 @@ module Garage {
              * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
              * @return {IImage} 変換されたデータ
              */
-            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string): IImage {
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IImage {
 
                 if (this.garageExtensions != null) {
                     if (!this.garageExtensions.original) {
@@ -161,7 +161,7 @@ module Garage {
                 }
 
                 let specifiedColor;
-                if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
+                if (isToImportExport && face.category === DEVICE_TYPE_FULL_CUSTOM) {
                     specifiedColor = Model.SettingColor.WHITE;
                     this.copyImageToRemoteDir(remoteId, specifiedColor);
                 }

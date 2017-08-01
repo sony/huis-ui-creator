@@ -1298,7 +1298,7 @@ module Garage {
 
                     // module ファイルの更新
                     for (let i = 0; i < moduleCount; i++) {
-                        let moduleInfo = this._updateModule(remoteId, inputFace, modules[i], outputDirPath);
+                        let moduleInfo = this._updateModule(remoteId, inputFace, modules[i], outputDirPath, isToImportExport);
                         iModules.push(moduleInfo.module);
                         moduleNames.push(moduleInfo.name);
                     }
@@ -1509,11 +1509,11 @@ module Garage {
              * 返却される module は、HUIS ファイルに書き込むためにノーマライズされたもの。
              * @param outputDirPath? {string} faceファイルの出力先のディレクトリを指定したい場合入力する。
              */
-            private _updateModule(remoteId: string, face: Model.Face, module: Model.Module, outputDirPath?: string): { module: IModule, name: string } {
+            private _updateModule(remoteId: string, face: Model.Face, module: Model.Module, outputDirPath?: string, isToImportExport?: boolean): { module: IModule, name: string } {
                 // Model.Module に格納されているデータから、.module ファイルに必要なものを抽出する
 
 
-                let iModule = module.convertToHuisData(remoteId, face, outputDirPath);
+                let iModule = module.convertToHuisData(remoteId, face, outputDirPath, isToImportExport);
 
                 var moduleFilePath = path.join(this.huisFilesRoot_, remoteId, "modules", module.name + ".module");
 
