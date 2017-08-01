@@ -241,7 +241,10 @@ module Garage {
                                     true);
                             } else {
                                 console.log("succeeded to updateFace with face: " + this.getTargetRemoteId() + ", " + this.targetFace.name);
-                                df.resolve();
+                                let dfUpdateFace = $.Deferred<void>();
+                                let promiseUpdateFace = CDP.makePromise(dfUpdateFace);
+                                dfUpdateFace.resolve();
+                                return promiseUpdateFace;
                             }
 
                         }).done(() => {
