@@ -1283,10 +1283,16 @@ module Garage {
                 var moduleNames: string[] = [];
 
                 if (inputFace.category === DEVICE_TYPE_FULL_CUSTOM) {
+                    // if images of not-fullcustom remote is stored(resized) in remote specific dir,
+                    // images color don't change according to UI setting color
                     let images: Model.ImageItem[] = inputFace.searchImages();
                     for (let image of images) {
                         image.reserveResizeImageFile(remoteId, outputDirPath);
                     }
+                } else {
+                    // remote not created by UI-Creator must not have color property
+                    // otherwise, face color is not changed according to UI setting color
+                    inputFace.color = undefined;
                 }
 
                 // サイズ変更を行った画像を一括でリサイズする

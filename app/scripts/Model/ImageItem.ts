@@ -161,8 +161,13 @@ module Garage {
                 }
 
                 let specifiedColor;
-                if (isToImportExport && face.category === DEVICE_TYPE_FULL_CUSTOM) {
-                    specifiedColor = Model.SettingColor.WHITE;
+                if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
+                    if (isToImportExport) {
+                        // support for fullcustom remote exported by old UI-Creator(Ver.3 or older)
+                        // it has external image reference,
+                        // so copy white existing button image to remote specific dir
+                        specifiedColor = Model.SettingColor.WHITE;
+                    }
                     this.copyImageToRemoteDir(remoteId, specifiedColor);
                 }
 
