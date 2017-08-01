@@ -160,7 +160,7 @@ module Garage {
                     };
                 }
 
-                let specifiedColor;
+                let specifiedColor: string = undefined;
                 if (face.category === DEVICE_TYPE_FULL_CUSTOM) {
                     if (isToImportExport) {
                         // support for fullcustom remote exported by old UI-Creator(Ver.3 or older)
