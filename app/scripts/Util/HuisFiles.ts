@@ -511,9 +511,8 @@ module Garage {
                     }
 
                     let face = this.getFace(remoteId);
-                    let deviceType = face.category;
                     //サポート外のdeviceTypeだった場合、次のremoteIdへ
-                    if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(deviceType) != -1) {
+                    if (face == null || NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(face.category) != -1) {
                         continue;
                     }
 
