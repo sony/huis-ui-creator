@@ -510,6 +510,13 @@ module Garage {
                         continue;
                     }
 
+                    let face = this.getFace(remoteId);
+                    let deviceType = face.category;
+                    //サポート外のdeviceTypeだった場合、次のremoteIdへ
+                    if (NON_SUPPORT_DEVICE_TYPE_IN_EDIT.indexOf(deviceType) != -1) {
+                        continue;
+                    }
+
                     if (codeDb) {
                         //brandを取得
                         if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
