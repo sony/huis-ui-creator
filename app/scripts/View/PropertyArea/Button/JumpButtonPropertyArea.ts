@@ -39,7 +39,6 @@ module Garage {
                 this.modules = modules;
 
                 this.availableRemotelist = huisFiles.getSupportedRemoteInfoInJump(editingRemoteId, faceName, modules);
-                this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_STATE, this.render);
             }
 
 
