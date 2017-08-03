@@ -162,6 +162,7 @@ module Garage {
                     module = {
                         version: versionString,
                         area: this.area,
+                        group: this.group
                     };
                 }
 
