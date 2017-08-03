@@ -322,6 +322,11 @@ module Garage {
                     return remoteId;
                 }
 
+                remoteId = this.getRemoteIdByButtonDeviceInfo(action.deviceInfo);
+                if (remoteId != null) {
+                    return remoteId;
+                }
+
                 remoteId = this.getRemoteIdByCodeDbElementsInAction(action);
                 if (remoteId != null) {
                     return remoteId;
@@ -489,6 +494,72 @@ module Garage {
                 }
 
                 return this.getRemoteIdByCodeDbElements(brand, deviceType, codeset);
+            }
+
+            /*
+-            * deviceInfoの情報から、remoteIdを特定して取得する
+-            * @param inputDeviceInfo{IButtonDecviceInfo}
+-            * @return {string} remoteId 見つからない場合、nullを返す。
+-            */
+            getRemoteIdByButtonDeviceInfo(inputDeviceInfo: IButtonDeviceInfo): string {
+                let FUNCTION_NAME = TAGS.HuisFiles + "getRemoteIdByButtonDeviceInfo : ";
+
+                if (inputDeviceInfo == null) {
+                    return null;
+                }
+
+                // remoteNameを取得
+                if (inputDeviceInfo.remoteName == null) {
+                    return null;
+                }
+                let remoteName = inputDeviceInfo.remoteName;
+
+                //bluetooth_dataがある場合、別の判定基準を設ける。
+                if (inputDeviceInfo.bluetooth_data != null &&
+                    inputDeviceInfo.bluetooth_data.bluetooth_device != null) {
+                    return null;
+                }
+
+                if (inputDeviceInfo.code_db == null) {
+                    console.warn(FUNCTION_NAME + "inputDeviceInfo.code_db is null");
+                    return;
+                }
+                let codeDb = inputDeviceInfo.code_db;
+
+                //brandを取得
+                if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
+                    return null;
+                }
+                let brand = codeDb.brand;
+
+                //deviceTypeを取得
+                if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
+                    return null;
+                }
+                let deviceType = codeDb.device_type;
+
+                //codesetを取得
+                if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
+                    return null;
+                }
+                let codeset = codeDb.db_codeset;
+
+                //ブランド、デバイスタイプ、コードセットが同一の場合、同じリモコンだと判定する。
+                for (let i = 0, l = this.remoteInfos_.length; i < l; i++) {
+                    let targetRemoteId = this.remoteInfos_[i].remoteId;
+                    let targetRemoteName = this.remoteInfos_[i].face.name;
+                    let codeDb = this.getMasterCodeDb(targetRemoteId);
+                    if (codeDb) {
+                        if (codeDb.brand === brand &&
+                            codeDb.device_type === deviceType &&
+                            codeDb.db_codeset === codeset &&
+                            remoteName == targetRemoteName) {
+                            return targetRemoteId;
+                        }
+                    }
+                }
+
+                return null;
             }
 
             /**

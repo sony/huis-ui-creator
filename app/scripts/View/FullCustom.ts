@@ -936,7 +936,7 @@ module Garage {
                 let codeDb = huisFiles.getMasterCodeDb(remoteId);
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
-                let remoteName = this.currentFace_.name;
+                let remoteName: string = huisFiles.getFace(remoteId).name;
 
                 let deviceInfo: IButtonDeviceInfo = {
                     id: "",
