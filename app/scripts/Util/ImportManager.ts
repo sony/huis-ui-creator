@@ -462,10 +462,15 @@ module Garage {
                     //module内のremoteIdを更新
                     convertedFace.modules[i].remoteId = newRemoteId;
 
-                    //module名を変更。先頭のremoteIdのみ新しいremoteIdと入れ替える。
-                    let newModuleName: string = oldFace.modules[i].name;
-                    newModuleName = newRemoteId + "_" + newModuleName.substr(newModuleName.indexOf("_") + 1);
-                    convertedFace.modules[i].name = newModuleName;
+                    // pickup remote may have same module name with different remoteId,
+                    // so leave name as it is in case of name confliction
+                    //     e.g. "0000_guide_power.module" and "0001_guide_power.module"
+                    if (convertedFace.category !== DEVICE_TYPE_CUSTOM) {
+                        //module名を変更。先頭のremoteIdのみ新しいremoteIdと入れ替える。
+                        let newModuleName: string = oldFace.modules[i].name;
+                        newModuleName = newRemoteId + "_" + newModuleName.substr(newModuleName.indexOf("_") + 1);
+                        convertedFace.modules[i].name = newModuleName;
+                    }
 
                     //module内のbuttonのimageのfilePathを変更。
                     convertedFace.modules[i].button = this.convertButtonsFilePath(convertedFace.modules[i].button, newRemoteId);
