@@ -528,19 +528,19 @@ module Garage {
 
                 //brandを取得
                 if (codeDb.brand == null || codeDb.brand == "" || codeDb.brand == " ") {
-                    return;
+                    return null;
                 }
                 let brand = codeDb.brand;
 
                 //deviceTypeを取得
                 if (codeDb.device_type == null || codeDb.device_type == "" || codeDb.device_type == " ") {
-                    return;
+                    return null;
                 }
                 let deviceType = codeDb.device_type;
 
                 //codesetを取得
                 if (codeDb.db_codeset == null || codeDb.db_codeset == "" || codeDb.db_codeset == " ") {
-                    return;
+                    return null;
                 }
                 let codeset = codeDb.db_codeset;
 
@@ -558,6 +558,8 @@ module Garage {
                         }
                     }
                 }
+
+                return null;
             }
 
             /**
