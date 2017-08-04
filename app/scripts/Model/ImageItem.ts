@@ -88,7 +88,7 @@ module Garage {
                 return newImage;
             }
 
-            reserveResizeImageFile(remoteId: string, outputDirPath?: string) {
+            reserveResizeImageFile(remoteId: string, outputDirPath?: string, color?: string) {
 
                 let convertedImage: IImage;
 
@@ -99,7 +99,7 @@ module Garage {
                 let originalPath = this.garageExtensions.original;
                 let resolvedOriginalPath = this.garageExtensions.resolvedOriginalPath;
                 if (!resolvedOriginalPath) {
-                    resolvedOriginalPath = Util.PathManager.resolveImagePath(originalPath);
+                    resolvedOriginalPath = Util.PathManager.resolveImagePath(originalPath, color);
                     this.garageExtensions.resolvedOriginalPath = resolvedOriginalPath;
                 }
                 let parsedPath = path.parse(resolvedOriginalPath);
