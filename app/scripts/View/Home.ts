@@ -281,7 +281,7 @@ module Garage {
                     return;
                 }
 
-                let dialogProps = DIALOG_PROPS_COPY_AND_EDIT_REMOTE;
+                let dialogProps: DialogProps = DIALOG_PROPS_COPY_AND_EDIT_REMOTE;
                 let dialog = new CDP.UI.Dialog(dialogProps.id, {
                     src: CDP.Framework.toUrl("/templates/dialogs.html"),
                     title: dialogProps.options.title,
