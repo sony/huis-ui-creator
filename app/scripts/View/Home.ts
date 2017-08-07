@@ -281,6 +281,13 @@ module Garage {
                     return;
                 }
 
+                let dialogProps: DialogProps = DIALOG_PROPS_COPY_AND_EDIT_REMOTE;
+                let dialog = new CDP.UI.Dialog(dialogProps.id, {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: dialogProps.options.title,
+                });
+                dialog.show();
+
                 face = face.clone();
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();
