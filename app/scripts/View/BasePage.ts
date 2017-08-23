@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 
@@ -31,54 +30,14 @@ module Garage {
 
         let TAG_BASE: string = "[Garage.View.BasePage] ";
 
-        /**
-         * @class StyleBuilderDefault
-         * @brief スタイル変更時に使用する既定の構造体オブジェクト
-         */
-        class StyleBuilderDefault implements UI.Toast.StyleBuilder {
-
-            //! class attribute に設定する文字列を取得
-            getClass(): string {
-                return "ui-loader ui-overlay-shadow ui-corner-all ui-body-b";
-            }
-
-            //! style attribute に設定する JSON オブジェクトを取得
-            getStyle(): any {
-                let style = {
-                    "display": "block",
-                    "opacity": 1
-                };
-                return style;
-            }
-
-            //! オフセットの基準位置を取得
-            getOffsetPoint(): number {
-                //! @enum オフセットの基準
-                enum OffsetX {
-                    LEFT = 0x0001,
-                    RIGHT = 0x0002,
-                    CENTER = 0x0004,
-                }
-
-                //! @enum オフセットの基準
-                enum OffsetY {
-                    TOP = 0x0010,
-                    BOTTOM = 0x0020,
-                    CENTER = 0x0040,
-                }
-
-                return OffsetX.CENTER | OffsetY.TOP;
-            }
-
-            //! X 座標のオフセット値を取得
-            getOffsetX(): number {
-                return 0;
-            }
-
-            //! Y 座標のオフセット値を取得
-            getOffsetY(): number {
-                return 87;
-            }
+        //This namespace NOT include some events using in property area, please check PropertyAreaEvents.
+        export namespace Events {
+            export const DIVIDER: string = " ";
+            export const CLICK: string = "click";
+            export const CLICK_WITH_DIVIDER: string = CLICK + DIVIDER;
+            export const CHANGE: string = "change";
+            export const CHANGE_WITH_DIVIDER: string = Events.CHANGE + DIVIDER;
+            export const CHANGE_WITH_COLON: string = CHANGE + ":";
         }
 
         /**
@@ -96,7 +55,7 @@ module Garage {
 
                 //完了時のダイアログのアイコンのパス
                 var PATH_IMG_DIALOG_DONE_ICON = 'url("../res/images/icon_done.png")';
-                let dialogMessageStr :string= "dialog.message.";
+                let dialogMessageStr: string = "dialog.message.";
 
                 // 同期 (HUIS -> PC) ダイアログのパラメーター 完了
                 DIALOG_PROPS_CREATE_NEW_REMOTE = {
@@ -187,10 +146,58 @@ module Garage {
 
             events(): any {  // 共通のイベント
                 return {
-                    // プルダウンメニューのリスト
+                    "click .custom-select": "onSelectClicked",
+                    "mousedown [id$='-listbox']": "onSelectMenuMouseDown",
                     "vclick #command-about-this": "_onCommandAboutThis",
                     "vclick #command-visit-help": "_onCommandVisitHelp",
                 };
+            }
+
+            /**
+             * 詳細編集エリア内の select メニューがクリックされたときに呼び出される。
+             * selectで表示されるプルダウンの位置を調節する。
+             */
+            private onSelectClicked(event: Event) {
+                var $target = $(event.currentTarget);
+                var selectId = $target.find("select").attr("id");
+                var $selectMenu = $("#" + selectId + "-listbox");
+
+                var targetWidth = $target.width();
+                var targeHeight = $target.height();
+                var popupMenuWidth = $selectMenu.outerWidth(true);
+                var popupMenuHeight = $selectMenu.outerHeight(true);
+
+                var popupMenuY = $target.offset().top + targeHeight;//popup menuの出現位置は、selectの真下。
+
+                $selectMenu.outerWidth(Math.max(popupMenuWidth, targetWidth));
+
+                var options: PopupOptions = {
+                    x: 0,
+                    y: 0,
+                    tolerance: popupMenuY + ",0,0," + $target.offset().left,
+                    corners: false
+                };
+
+                if ((popupMenuY + popupMenuHeight) > innerHeight) { //popup menguがはみ出すとき
+                    popupMenuY = innerHeight - $target.offset().top;
+
+                    options = {
+                        x: 0,
+                        y: 0,
+                        tolerance: "0,0," + popupMenuY + "," + $target.offset().left,
+                        corners: false
+                    };
+                }
+
+                $selectMenu.popup(options);
+            }
+
+            /**
+             * select メニュー上で mousedown されたときに呼び出される。これがないと、プルダウン内のスクロールバーの挙動がおかしくなります。
+             * @param event {Event} mousedownイベント
+             */
+            private onSelectMenuMouseDown(event: Event) {
+                event.preventDefault();
             }
 
             // ドロップダウンメニューから起動される共通の関数
@@ -199,7 +206,7 @@ module Garage {
                 var props: DialogProps = null;
                 var text: string = "";
 
-                let licensesFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/licenses.txt"));
+                let licensesFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/licenses.txt"));
                 try {
                     text = fs.readFileSync(licensesFilePath, 'utf8');
                 } catch (err) {
@@ -217,7 +224,7 @@ module Garage {
 
 
                 //エレクトロンのラインセンス情報を記載したファイルパス
-                let pathElectronLicensesFile = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
+                let pathElectronLicensesFile = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
                 //licenses.txt上の リンクを有効なパスに更新する。
                 $("#link-electron-licenses-file").attr("href", pathElectronLicensesFile);
 
@@ -276,11 +283,10 @@ module Garage {
             }
 
             /*
-             * プルダウンメニュー対応
+             * ヘッダー上のオプション用プルダウンメニューを、表示位置を修正して表示する。
+             * @param {JQuery} $popup 表示するプルダウンメニュー ポップアップのJQuery要素
              */
-
-            private _onOptionPullDownMenuClick() {
-                var $overflow = this.$page.find("#option-pulldown-menu-popup"); // ポップアップのjQuery DOMを取得
+            protected showOptionPullDownMenu($popup: JQuery) {
                 var $button1 = this.$page.find("#option-pulldown-menu");
                 var $header = this.$page.find("header");
 
@@ -293,92 +299,11 @@ module Garage {
 
                 console.log("options.x options.y : " + options.x + ", " + options.y);
 
-                $overflow.popup(options).popup("open").on("vclick", () => {
-                    $overflow.popup("close");
+                $popup.popup(options).popup("open").on("vclick", () => {
+                    $popup.popup("close");
                 });
-
-                $overflow.i18n();
-
-
-                return;
+                $popup.i18n();
             }
-
-
-            /*
-             * Garageのデザインで、Toastを標示する。
-             */
-            protected showGarageToast(message: string) {
-                var FUNCTION_NAME ="BasePage.ts : showGarageToast : ";
-                if (_.isUndefined(message)) {
-                    console.log(FUNCTION_NAME + "message is undefined");
-                }
-
-                var style : UI.Toast.StyleBuilderDefault = new StyleBuilderDefault();
-                UI.Toast.show(message, 1500, style);
-            }
-
-            /*
-            * 禁則文字が入力された場合、含まれた禁則文字の文字列を返す。
-            */
-            protected getInhibitionWords(inputKey: string):string[] {
-                let FUNCTION_NAME = "BasePage.ts : isInhibitionWord : "
-
-                let result: string[] = [];
-                let BLACK_LIST_INPUT_KEY: string[] =
-                    [    '/' ,
-                        ":" ,
-                        ";" ,
-                        "*" ,
-                        "?" ,
-                        "<" ,
-                        ">",
-                        '"',
-                        "|",
-                        '\\' ];
-
-                for (let i = 0; i < BLACK_LIST_INPUT_KEY.length; i++){
-                    if (inputKey.indexOf(BLACK_LIST_INPUT_KEY[i]) != -1) {
-                         result.push(BLACK_LIST_INPUT_KEY[i]);
-                    }
-                }
-
-                if (result.length === 0) {
-                    return null;
-                }
-
-                return result;
-
-            }
-
-
-            /*
-            * 禁則文字が入力された場合、トーストを出力し、禁則文字をぬいた文字列を返す。。
-            */
-            protected getRemovedInhibitionWords(inputValue: string): string{
-                //入力した文字に禁則文字が含まれていた場合、トーストで表示。文字内容も削除。
-                let inhibitWords: string[] = this.getInhibitionWords(inputValue);
-                let resultString: string = inputValue;
-                if (inhibitWords != null) {
-                    let outputString: string = "";
-                    for (let i = 0; i < inhibitWords.length; i++) {
-                        if (i > 0) {
-                            outputString += ", "
-                        }
-                        outputString += inhibitWords[i] + " ";
-
-                        //GegExp(正規表現)を利用するために、頭に\\をつける。
-                        inhibitWords[i] = "\\" + inhibitWords[i];
-                         
-                        var regExp = new RegExp(inhibitWords[i], "g");
-                        resultString = resultString.replace(regExp, "");
-                    }
-                    outputString += $.i18n.t("toast.STR_TOAST_INPUT_INHIBITION_WORD");
-                    this.showGarageToast(outputString);
-                }
-                
-                return resultString;
-            }
-
 
             /*
             * 横にセンタリング処理をする.
@@ -387,7 +312,7 @@ module Garage {
             * @param targetScale :number $targetがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
             * @param baseScale :number $baseがCSS Transformでスケールされている場合,スケール値を入力( ex 0.5
             */
-            protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale? :number, baseScale? : number) {
+            protected layoutTargetOnCenterOfBase($target: JQuery, $base: JQuery, targetScale?: number, baseScale?: number) {
                 let FUNCTION_NAME = TAG_BASE + " :layoutTargetOnCenterOfBase: ";
 
                 if ($target == undefined) {
@@ -439,7 +364,7 @@ module Garage {
                 }
 
                 let targetLeft = $target.offset().left;
-                
+
                 let baseTop = $base.offset().top;
                 let baseHeight = $base.outerHeight(true);
                 if (baseScale) {
@@ -460,7 +385,7 @@ module Garage {
 
                 let $popups = $("section[data-role='popup']");
                 //$popups.popup("close");
-                
+
                 if ($popups) {
                     $popups.each((index: number, elem: Element) => {
                         $(elem).popup("close");
@@ -479,7 +404,7 @@ module Garage {
             /*
             * 
             */
-            protected isMousePositionOn($target : JQuery, mousePosition : IPosition):boolean {
+            protected isMousePositionOn($target: JQuery, mousePosition: IPosition): boolean {
                 let FUNCTION_NAME = TAG_BASE + " : isMousePositionOn : ";
 
                 if ($target == undefined) {
@@ -501,7 +426,7 @@ module Garage {
                 let mouseY = mousePosition.y;
 
                 if (mouseX >= targetX && mouseX <= targetX + targetW) {
-                    if (mouseY >= targetY && mouseY <= targetY+targetH){
+                    if (mouseY >= targetY && mouseY <= targetY + targetH) {
                         return true;
                     }
                 }
@@ -568,7 +493,7 @@ module Garage {
              * ImageItemから、CSSを描画に必要なパスを取得する。
              * @param model{Model.ImageItem} CSSに表示したい画像モデル
              */
-            protected getValidPathOfImageItemForCSS(model:ItemModel) :string {
+            protected getValidPathOfImageItemForCSS(model: ItemModel): string {
                 let FUNCTION_NAME = TAG_BASE + "getValidPathOfImageItemForCSS : ";
 
                 if (model == null) {
@@ -584,8 +509,8 @@ module Garage {
              * ImageItemから、CSSを描画に必要なパスを取得する。
              * @param model{Model.ImageItem} CSSに表示したい画像モデル
              */
-            protected getValidPathOfIGImageForCSS(model: IGImage): string {
-                let FUNCTION_NAME = TAG_BASE + "getValidPathOfIGImageForCSS : ";
+            protected getValidPathOfImageForCSS(model: Model.ImageItem): string {
+                let FUNCTION_NAME = TAG_BASE + "getValidPathOfModel.ImageItemForCSS : ";
 
                 if (model == null) {
                     console.warn(FUNCTION_NAME + "model is null");
@@ -641,12 +566,11 @@ module Garage {
 
             /*
              * リモコンをエクスポートする
-             * @param remoteId{string} エクスポートするリモコンのID
-             * @param faceName{string}:リモコン名
-             * @param gmodules{IGModules[]} :書き出すリモコンにあるModule
+             * @param face {Model.Face} エクスポートするリモコンのfaceモデル
+             * @param masterFace{Model.Face}: エクスポートするリモコンのmasterFace用のモデル。いっしょにエクスポートする場合に入力。
              */
-            protected exportRemote(remoteId: string, faceName: string, gmodules: Model.Module[]) {
-                let exportManager: Util.ExportManager = new Util.ExportManager(remoteId, faceName, gmodules);
+            protected exportRemote(face: Model.Face, masterFace: Model.Face = null) {
+                let exportManager: Util.ExportManager = new Util.ExportManager(face, masterFace);
                 exportManager.exec();
             }
 
@@ -667,7 +591,7 @@ module Garage {
                             callback();
                         }
                     });
-                    
+
                 }
 
             }
@@ -682,9 +606,7 @@ module Garage {
                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                     title: PRODUCT_NAME,
                 });
-
             }
-           
 
         }
     }

@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
@@ -26,13 +25,12 @@ module Garage {
 
         export class Module extends Backbone.View<Model.Module> {
 
-            // private modules_: IGModule[];
             private remoteId_: string;
             private materialsRootPath_: string;
 
-            private buttonViews_: ButtonItem[];
-            private labelViews_: LabelItem[];
-            private imageViews_: ImageItem[];
+            private buttonViews_: View.ButtonItem[];
+            private labelViews_: View.LabelItem[];
+            private imageViews_: View.ImageItem[];
 
             private faceAreaTemplate_: Tools.JST;
             private moduleContainerTemplate_: Tools.JST;
@@ -58,7 +56,7 @@ module Garage {
             }
 
             initialize(options?: Backbone.ViewOptions<Model.Module>) {
-                var modulesData: IGModule[] = [];
+                var modulesData: Model.Module[] = [];
                 if (options && options.attributes) {
                     if (options.attributes["modules"]) {
                         modulesData = options.attributes["modules"];
@@ -77,9 +75,9 @@ module Garage {
                 this.$facePages_ = [];
                 var modules: Model.Module[] = [];
                 for (var i = 0, l = modulesData.length; i < l; i++) {
-                    
+
                     let moduleModel: Model.Module = new Model.Module();
-                    moduleModel.setInfoFromGModule(modulesData[i]);
+                    moduleModel.setInfoFromModule(modulesData[i]);
                     this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
 
@@ -168,7 +166,7 @@ module Garage {
                 var pageCount = 0;
                 for (let i = 0; i < moduleCount; i++) {
                     let moduleModel = this.collection.at(i);
-                    // collection 内の model の pageIndex のうち、最大のものを page 数とする
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
                     if (pageCount < moduleModel.pageIndex + 1) {
                         pageCount = moduleModel.pageIndex + 1;
                     }
@@ -179,16 +177,12 @@ module Garage {
 
             /**
              * モジュール (ページ) を追加する。
-             * 
+             * ページ数の上限に達しているかどうかは呼び出しもとが判断しておく。
+             *
              * @return {boolean} true: 成功, false: 失敗
              */
-            addPage(options?: any): boolean {
+            addPage(): boolean {
                 var pageCount = this.collection.length;
-                // page 数の上限に達している場合は、追加できない
-                if (MAX_PAGE_CONT <= pageCount) {
-                    console.warn(TAG + "addPage()  Page count is max.");
-                    return false;
-                }
 
                 // Module model の生成
                 var newPageModuleModel = new Model.Module();
@@ -232,15 +226,6 @@ module Garage {
 
                 this.$facePages_.splice(pageIndex, 1);
 
-                //this.collection.each((moduleModel) => {
-                //    if (moduleModel.pageIndex === pageIndex) {
-                //        // 指定した pageIndex の module を削除する
-                //        this.deleteModule(moduleModel.cid);
-                //    } else if (pageIndex < moduleModel.pageIndex) {
-                //        // 削除対象の pageIndex を超えている場合は、pageIndex をデクリメントする
-                //        moduleModel.pageIndex--;
-                //    }
-                //});
                 console.log(TAG + "deletePage() - after");
                 console.log(this.collection);
 
@@ -369,7 +354,7 @@ module Garage {
 
                 var buttonView = this.buttonViews_[moduleIndex];
                 if (!buttonView) {
-                    buttonView = new ButtonItem({
+                    buttonView = new View.ButtonItem({
                         attributes: {
                             materialsRootPath: this.materialsRootPath_,
                             remoteId: module.remoteId
@@ -472,9 +457,9 @@ module Garage {
 
                 var imageView = this.imageViews_[moduleIndex];
                 if (!imageView) {
-                    imageView = new ImageItem({
+                    imageView = new View.ImageItem({
                         attributes: {
-                            materialsRootPath: this.materialsRootPath_,
+                            materialsRootPath: HUIS_FILES_ROOT,
                             remoteId: module.remoteId
                         }
                     });
@@ -487,10 +472,7 @@ module Garage {
                 var srcImagePath: string;
                 // image が string の場合は、image をパスとして扱い、ImageItem を新規作成する
                 if (_.isString(image)) {
-                    newImage = new Model.ImageItem({
-                        materialsRootPath: this.materialsRootPath_,
-                        remoteId: module.remoteId
-                    });
+                    let newPath;
 
                     // area はページ背景のものを使用する
                     newArea = {
@@ -499,12 +481,19 @@ module Garage {
                         w: HUIS_PAGE_BACKGROUND_AREA.w,
                         h: HUIS_PAGE_BACKGROUND_AREA.h
                     };
-                    newImage.area = newArea;
+
                     if (0 < image.length) {
                         srcImagePath = image;
-                        newImage.path = module.remoteId + "/" + path.basename(image);
+                        newPath = module.remoteId + "/" + path.basename(image);
+                    } else {
+                        newPath = "";
                     }
-                    newImage.pageBackground = true;
+
+                    newImage = new Model.ImageItem({
+                        area: newArea,
+                        path: newPath,
+                    });
+
                 } else { // image が文字列でない場合は、model として情報をコピーする
                     newImage = image.clone(this.materialsRootPath_, module.remoteId, offsetY);
 
@@ -514,7 +503,7 @@ module Garage {
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {
@@ -555,7 +544,7 @@ module Garage {
 
                 var imageView = this.imageViews_[moduleIndex];
                 if (!imageView) {
-                    imageView = new ImageItem({
+                    imageView = new View.ImageItem({
                         attributes: {
                             materialsRootPath: this.materialsRootPath_,
                             remoteId: module.remoteId
@@ -565,16 +554,9 @@ module Garage {
                 }
 
                 // 新しい model を追加する
-                var newImage = new Model.ImageItem({
-                    materialsRootPath: this.materialsRootPath_,
-                    remoteId: module.remoteId
-                });
 
-                var newArea: IArea;
-                // image が string の場合は、image をパスとして扱う
-                newArea = $.extend(true, {}, image.area);
-                newArea.y += offsetY;
-                newImage.area = newArea;
+                var newImage = image.clone();
+                newImage.area.y += offsetY;
 
                 // 画像の path を出力先の remoteId のディレクトリーになるように指定
                 newImage.path = image.path;
@@ -582,18 +564,10 @@ module Garage {
                 newImage.resizeOriginal = image.resizeOriginal;
 
 
-                //バージョン情報をもっている場合、引き継ぐ
-                if (image.version != null) {
-                    newImage.version = image.version;
-                }
-
-                //最後に書き出されるようにするため、resizedはtrueにする。
-                newImage.resized = true;
-
                 // 所属する module の要素を取得し、View に set する
                 var $module = this.$el.find("[data-cid='" + moduleId + "']");
                 imageView.setElement($module);
-                if (newImage.pageBackground) {
+                if (newImage.isBackgroundImage) {
                     // 背景の場合、先頭に追加する
                     imageView.collection.add(newImage, { at: 0 });
                 } else {
@@ -659,12 +633,11 @@ module Garage {
                     console.log(TAG + "module not found");
                     return null;
                 }
-                //var module = this.modules_[moduleIndex];
                 var moduleModel = this.collection.at(moduleIndex);
 
                 var labelView = this.labelViews_[moduleIndex];
                 if (!labelView) {
-                    labelView = new LabelItem({
+                    labelView = new View.LabelItem({
                     });
                     this.labelViews_[moduleIndex] = labelView;
                 }
@@ -706,13 +679,13 @@ module Garage {
              * Module View がもつすべての module を取得する。
              *
              * @param areaFilter {Function} moduleのareaによるフィルタ。未指定の場合は全てを取得。
-             * @return {IGModule[]} Module View がもつ module の配列
+             * @return {Model.Module[]} Module View がもつ module の配列
              */
             getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 let isValidArea = areaFilter ? areaFilter : function (area) { return true; };
 
                 var modules: Model.Module[] = $.extend(true, [], this.collection.models);
-                modules.forEach((module: IGModule, index: number) => {
+                modules.forEach((module: Model.Module, index: number) => {
                     let buttonView = this.buttonViews_[index],
                         imageView = this.imageViews_[index],
                         labelView = this.labelViews_[index];
@@ -741,9 +714,9 @@ module Garage {
              * 指定した id の module を取得する。
              * 
              * @param moduleId {string} 取得したい module の ID
-             * @return {IGModule} moduleId と合致する module。見つからない場合は、null
+             * @return {Model.Module} moduleId と合致する module。見つからない場合は、null
              */
-            getModule(moduleId: string): IGModule {
+            getModule(moduleId: string): Model.Module {
                 var moduleIndex = this._getModuleIndex(moduleId);
                 if (moduleIndex < 0) {
                     console.log(TAG + "module not found");
@@ -755,19 +728,19 @@ module Garage {
                     return null;
                 }
 
-                var gmodule: IGModule = $.extend(true, {}, moduleModel);
-                return gmodule;
+                var module: Model.Module = $.extend(true, {}, moduleModel);
+                return module;
             }
 
 
-            private generateViews(gmodule: Model.Module) {
+            private generateViews(module: Model.Module) {
                 // モジュール内に button があったら、ButtonItem View を生成
-                if (gmodule.button) {
-                    this.buttonViews_.push(new ButtonItem({
+                if (module.button) {
+                    this.buttonViews_.push(new View.ButtonItem({
                         attributes: {
-                            buttons: gmodule.button,
+                            buttons: module.button,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: gmodule.remoteId
+                            remoteId: module.remoteId
                         }
                     }));
                 } else {
@@ -775,10 +748,10 @@ module Garage {
                 }
 
                 // モジュール内に label があったら、LabelItem View を生成
-                if (gmodule.label) {
-                    this.labelViews_.push(new LabelItem({
+                if (module.label) {
+                    this.labelViews_.push(new View.LabelItem({
                         attributes: {
-                            labels: gmodule.label,
+                            labels: module.label,
                             materialsRootPath: this.materialsRootPath_
                         }
                     }));
@@ -787,20 +760,20 @@ module Garage {
                 }
 
                 // モジュール内に image があったら、ImageItem View を生成
-                if (gmodule.image) {
-                    this.imageViews_.push(new ImageItem({
+                if (module.image) {
+                    this.imageViews_.push(new View.ImageItem({
                         attributes: {
-                            images: gmodule.image,
+                            images: module.image,
                             materialsRootPath: this.materialsRootPath_,
-                            remoteId: gmodule.remoteId
+                            remoteId: module.remoteId
                         }
                     }));
                 } else {
                     this.imageViews_.push(null);
-                }                                
+                }
             }
 
-            addModuleInNewFacePages(inputModules: IGModule[]) {
+            addModuleInNewFacePages(inputModules: Model.Module[]) {
                 let FUNCTION_NAME = TAG + "addModules : ";
 
                 if (inputModules == null) {
@@ -817,24 +790,24 @@ module Garage {
 
                     //ページカウントは、すでに記述されているページに追加する
                     let moduleModel: Model.Module = new Model.Module();
-                    moduleModel.setInfoFromGModule(inputModules[i]);
+                    moduleModel.setInfoFromModule(inputModules[i]);
                     this.generateViews(moduleModel);
                     moduleModel.on(Module.PAGE_INDEX_CHANGED, this._pageIndexChanged.bind(this));
                     modulesModels.push(moduleModel);
                 }
 
                 (<any>this.collection).addModules(modulesModels, HUIS_FACE_PAGE_HEIGHT);
-                
-                
+
+
             }
 
 
             /**
              * モジュールが有効かどうか検査する
-             * @param item {IGModule} 検査対象モジュール
+             * @param item {Model.Module} 検査対象モジュール
              * @return {boolean} 有効なモジュールの場合はtrue、そうでない場合はfalse
              */
-            private isValidModule(item: IGModule): boolean {
+            private isValidModule(item: Model.Module): boolean {
                 if (item.button) {
                     // ボタンが有る場合はボタン全てを検査
                     return this.isValidButtons(item.button);
@@ -847,10 +820,10 @@ module Garage {
 
             /**
              * ボタンリストが有効かどうか検査する
-             * @param buttons {IGButton[]} 検査対象ボタンリスト
+             * @param buttons {Model.ButtonItem[]} 検査対象ボタンリスト
              * @return {boolean} ボタンリストが有効な場合はtrue、そうでない場合はfalse
              */
-            private isValidButtons(buttons: IGButton[]): boolean {
+            private isValidButtons(buttons: Model.ButtonItem[]): boolean {
                 for (let button of buttons) {
                     if (this.isValidButton(button)) {
                         return true;
@@ -864,10 +837,10 @@ module Garage {
 
             /**
              * ボタンが有効かどうか検査する
-             * @param button {IGButton} 検査対象ボタン
+             * @param button {Model.ButtonItem} 検査対象ボタン
              * @return {boolean} ボタンが有効な場合はtrue、そうでない場合はfalse
              */
-            private isValidButton(button: IGButton): boolean {
+            private isValidButton(button: Model.ButtonItem): boolean {
                 if (!button.state) return false;
 
                 for (let state of button.state) {
@@ -904,7 +877,9 @@ module Garage {
             }
 
             private _renderSeparator(moduleName: string, $targetModuleContainer: JQuery) {
-
+                if (moduleName == null || $targetModuleContainer == null) {
+                    return;
+                }
                 let moduleSeparator = new ModuleSeparator(moduleName);
                 moduleSeparator.setElement($targetModuleContainer);
                 moduleSeparator.render();
@@ -988,6 +963,7 @@ module Garage {
                 let $targetPage = $targetModule.parent();
                 JQUtils.data($targetPage, "pageIndex", pageIndex);
             }
+
         }
     }
 }

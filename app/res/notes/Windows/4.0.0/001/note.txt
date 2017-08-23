@@ -1,0 +1,1 @@
+﻿HUIS Remote Controllerの色設定に応じて表示色を変更する機能を追加しました。

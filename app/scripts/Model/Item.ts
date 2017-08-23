@@ -51,6 +51,15 @@ module Garage {
             set area(val: IArea) {
                 this.set("area", val);
             }
+
+            get version(): string {
+                return this.get("version");
+            }
+
+            set version(val: string) {
+                this.set("version", val);
+            }
+
         }
     }
 }

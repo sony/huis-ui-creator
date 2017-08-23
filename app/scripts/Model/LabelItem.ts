@@ -21,28 +21,47 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        export class LabelItem extends Item implements IGLabel {
+        // When add color definition, modify _isValidColor method
+        export namespace FontColor {
+            export const BLACK: string = "black";
+            export const WHITE: string = "white";
+            export const DEFAULT: string = BLACK;
 
-            constructor(attributes?: any) {
-                super(attributes, null);
+            // SETTING is replaced with other color according to SettingColor
+            export const SETTING: string = "setting";
+        }
+
+        export class LabelItem extends Item {
+
+            constructor(iLabel: ILabel) {
+                // attributes contained in iLabel is set in super constructor
+                super(iLabel, null);
+                // clone customized objects
+                this.area = $.extend(true, {}, iLabel.area);
+
+                // Support for old FullCustom remote, color value was number
+                if (!this._isValidColor(this.color)) {
+                    console.warn(TAG + " font color is invalid, set black font color");
+                    this.color = FontColor.DEFAULT;
+                }
+            }
+
+            private _isValidColor(val: string): boolean {
+                return val === FontColor.BLACK
+                    || val === FontColor.WHITE
+                    || val === FontColor.DEFAULT
+                    || val === FontColor.SETTING;
             }
 
             /**
              * LabelItemの複製を生成
              *
              * @param offsetY {number} 
-             * @return {LabelItem}
+             * @return {Model.LabelItem}
              */
-            public clone(offsetY: number = 0): LabelItem {
-                let newLabel = new Model.LabelItem();
-                let newArea: IArea = $.extend(true, {}, this.area);
-                newArea.y += offsetY;
-                newLabel.area = newArea;
-                newLabel.text = this.text;
-                newLabel.color = this.color;
-                newLabel.font = this.font;
-                newLabel.size = this.size;
-                newLabel.font_weight = this.font_weight;
+            public clone(offsetY: number = 0): Model.LabelItem {
+                let newLabel = new Model.LabelItem(this);
+                newLabel.area.y += offsetY;
 
                 //バージョン情報がある場合、コピーする
                 if (this.version) {
@@ -50,6 +69,64 @@ module Garage {
                 }
 
                 return newLabel;
+            }
+
+            /**
+             * Model.LabelItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このLabelItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {ILabel} 変換されたデータ
+             */
+            convertToHuisData(): ILabel {
+
+                let convertedLabel: ILabel = {
+                    area: this.area,
+                    text: this.text,
+                    color: this.color
+                };
+                if (this.font !== undefined) {
+                    convertedLabel.font = this.font;
+                }
+                if (this.size !== undefined) {
+                    convertedLabel.size = this.size;
+                }
+                if (this.font_weight !== undefined) {
+                    convertedLabel.font_weight = this.font_weight;
+                }
+
+                return convertedLabel;
+            }
+
+            private _isBold(): boolean {
+                return this.font_weight === FontWeight.FONT_BOLD;
+            }
+
+            /**
+             * HUISで表示される時の表示に近づけるために、
+             * UI-Creator表示用の補正されたフォントサイズを取得する。
+             *
+             * @param {number} textsize 表示するテキストサイズ
+             * @return {number} Garage上で表示する補正後のテキストサイズ
+             */
+            private _getResizedTextSize(): number {
+
+                let FUNCTION_NAME = "[Model.LabelItem]" + " : _getResizedTextSize :";
+
+                const BOLD_TEXT_RESIZE_RATIO: number = 0.758;
+                const REGULAR_TEXT_RESIZE_RATIO: number = 0.758;
+                const MIN_TEXT_SIZE: number = 12;
+                const GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC: number = 0.001;
+                const GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC: number = 0.001;
+
+                if (this.size == null) {
+                    console.error(FUNCTION_NAME + "size is null");
+                    this.size = this.defaults().size;
+                }
+
+                let ratio = this._isBold() ? BOLD_TEXT_RESIZE_RATIO : REGULAR_TEXT_RESIZE_RATIO;
+
+                return this.size * (ratio - (this.size - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
             }
 
             /**
@@ -63,16 +140,21 @@ module Garage {
                 this.set("text", val);
             }
 
-            get version(): string {
-                return this.get("version");
+            get color(): string {
+                let color: string = this.get("color");
+                return (color !== FontColor.SETTING) ? color : this._getSettingColor();
             }
 
-            set version(val: string) {
-                this.set("version", val);
+            set color(val: string) {
+                if (this._isValidColor(val)) {
+                    this.set("color", val);
+                } else {
+                    console.error(TAG + " invalid color is passed to color setter, no-op");
+                }
             }
 
-            get color(): number {
-                return this.get("color");
+            private _getSettingColor(): string {
+                return (sharedInfo.settingColor === SettingColor.WHITE) ? FontColor.BLACK : FontColor.WHITE;
             }
 
             get font_weight(): FontWeight {
@@ -81,14 +163,6 @@ module Garage {
 
             set font_weight(val: FontWeight) {
                 this.set("font_weight", val);
-            }
-
-            set color(val: number) {
-                this.set("color", val);
-            }
-
-            get resolvedColor(): string {
-                return this._getResolvedColor(this.get("color"));
             }
 
             get font(): string {
@@ -111,11 +185,17 @@ module Garage {
                 }
             }
 
+            // font-size for render is smaller than actual font-size to get close to appearance on HUIS
+            // This property is referenced in templates/face-items.html
+            get sizeForRender(): number {
+                return this._getResizedTextSize();
+            }
+
             /**
              * 変更可能なプロパティーの一覧
              */
-            get properties(): string[]{
-                return ["enabled", "area", "text", "color", "font", "size","font_weight"];
+            get properties(): string[] {
+                return ["enabled", "area", "text", "color", "font", "size", "font_weight"];
             }
 
             /**
@@ -129,40 +209,21 @@ module Garage {
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
+            // TODO: review default attrs
             defaults() {
 
-                var label: IGLabel = {
+                var defaultAttr = {
                     "enabled": true,
                     "area": { "x": 0, "y": 0, "w": 60, "h": 20 },
                     "text": "",
                     "color": 0,
-                    "resolvedColor": "rgb(0,0,0)",
                     "font": "",
                     "size": 30,
-                    "font_weight" : FontWeight.FONT_BOLD,
+                    "font_weight": FontWeight.FONT_BOLD,
                 };
 
-                return label;
+                return defaultAttr;
             }
-
-            /**
-             * 16階調のグレースケールを RGB 変換する
-             */
-            private _getResolvedColor(colorNumber: number): string {
-                // 0 - 15 の整数に丸める
-                if (colorNumber < 0) {
-                    colorNumber = 0;
-                } else if (15 < colorNumber) {
-                    colorNumber = 15;
-                }
-                colorNumber = Math.round(colorNumber);
-
-                // 0-15 の数字を rgb 表記のグレースケールに変換する
-                var resolvedColor: string = "rgb(" + (colorNumber * 17) + "," + (colorNumber * 17) + "," + (colorNumber * 17) + ")";
-
-                return resolvedColor;
-            }
-
         }
     }
 }

@@ -110,33 +110,34 @@ module Garage {
                     return promise;
                 }
 
-
-                var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer;
-                if (params.resize) {
-                    renderer = PIXI.autoDetectRenderer(params.resize.width, params.resize.height, { transparent: true });
-                } else {
-                    renderer = PIXI.autoDetectRenderer(800, 600, { transparent: true });
-                }
-
                 console.log(TAG + "before editImage src: " + imageSrc);
-                let loadPath  = Util.JQueryUtils.enccodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
+                let loadPath = Util.JQueryUtils.encodeUriValidInCSS(imageSrc.replace(/\\/g, "/"));
 
-                
                 // 画像のロード
                 OffscreenEditor.loadTexture(loadPath)
                     .done((texture: PIXI.Texture) => {
-                        let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
 
+                        //textureから、画像のデータを取得する。
+                        let imageWidth: number = 800;
+                        let imageHeight: number = 600;
+                        if (params.resize != null) {
+                            imageWidth = params.resize.width;
+                            imageHeight = params.resize.height;
+                        }
+                        var renderer: PIXI.WebGLRenderer | PIXI.CanvasRenderer =
+                            PIXI.autoDetectRenderer(imageWidth, imageHeight, { transparent: true });
+                        let imageDataUrl = OffscreenEditor.getDataUrlOfEditedImage(texture, params, renderer);
+                        //画像データを取得したら、不要なrendererは削除する。
                         renderer.destroy(true);
 
                         // 出力先のパスが指定されている場合は、ファイル出力を行う
                         if (dstPath) {
 
+                            let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
 
-                            let facePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
                             //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
                             //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
-                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1){
+                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1) {
                                 dstPath = this.getEncodedPath(dstPath);
                             }
 
@@ -165,7 +166,6 @@ module Garage {
                     })
                     .fail(() => {
                         console.error(FUNCTION_NAME + "error occur in loadTexture");
-                        renderer.destroy(true);
                         df.reject();
                     });
 
@@ -211,7 +211,11 @@ module Garage {
                 let dirname = path.dirname(dstPath);
 
                 const hash = node_crypt.createHash('sha1');
-                hash.update(basename);
+
+                let date = new Date();
+                let unixTimestamp = date.getTime();
+                //同名でも、違う名前にするため、時間もハッシュ化の引数にいれる。
+                hash.update(basename + unixTimestamp);
                 basename = hash.digest('hex');
                 console.log("SHA1 basename = " + basename);
                 dstPath = dirname + '/' + basename + extname;
@@ -239,9 +243,9 @@ module Garage {
                         if (pixiCache) {
                             pixiCache.destroy(true);
                         }
+                        PIXI.Texture.removeTextureFromCache(src);
 
                         let texture = PIXI.Texture.fromImage(src);
-
                         if (texture.baseTexture && texture.baseTexture.hasLoaded) {
                             df.resolve(texture);
                         } else {
@@ -307,10 +311,10 @@ module Garage {
                 }
                 let scaleX = 0 < texture.width ? resize.width / texture.width : 1,
                     scaleY = 0 < texture.height ? resize.height / texture.height : 1;
-                let resizeMode = resize.mode ? resize.mode : "contain";
+                let resizeMode = resize.mode ? resize.mode : ImageResizeMode.DEFAULT;
 
                 switch (resizeMode) {
-                    case "contain":
+                    case ImageResizeMode.CONTAIN:
                         {
                             // scale は X, Y の小さい方を採用する
                             let scale = scaleX < scaleY ? scaleX : scaleY;
@@ -330,7 +334,7 @@ module Garage {
                             }
                         }
                         break;
-                    case "cover":
+                    case ImageResizeMode.COVER:
                         {
                             // scale は X, Y の小さい方を採用する
                             let scale = scaleX < scaleY ? scaleY : scaleX;

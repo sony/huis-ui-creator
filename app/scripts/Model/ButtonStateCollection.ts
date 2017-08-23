@@ -24,6 +24,14 @@ module Garage {
 
         export class ButtonStateCollection extends Backbone.Collection<ButtonState> {
             model = ButtonState;
+
+            clone(): ButtonStateCollection {
+                let result: ButtonStateCollection = new ButtonStateCollection();
+                for (let state of this.models){
+                    result.add(state.clone());
+                }
+                return result;
+            }
         }
     }
 }

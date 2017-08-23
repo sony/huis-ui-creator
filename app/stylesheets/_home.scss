@@ -13,40 +13,38 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-
-
 @import "variables/variable";
 
 #page-home {
     text-shadow: none;
-    overflow-y:hidden;
+    overflow-y: hidden;
     background-color: $COLOR_HOME_BACKGROUND;
-   
 
-    .ui-header{
-        #sync-pc-to-huis{
-            background-image:$PATH_IMG_SYNC_BTN_NORMAL;
-            margin-top:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP;
-            margin-left:$SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT;
-            height:$SIZE_HOME_HEADER_SYNC_BTN_HEIGHT;
-            width:$SIZE_HOME_HEADER_SYNC_BTN_WIDTH;
-            top:0;
-            padding:0;
-            box-shadow:none;
-            border:none;
-            background-color:transparent;
 
-            &:hover{
-                background-image:$PATH_IMG_SYNC_BTN_HOVER;
+    .ui-header {
+        #sync-pc-to-huis {
+            background-image: $PATH_IMG_SYNC_BTN_NORMAL;
+            margin-top: $SIZE_HOME_HEADER_SYNC_BTN_MARGIN_TOP;
+            margin-left: $SIZE_HOME_HEADER_SYNC_BTN_MARGIN_LEFT;
+            height: $SIZE_HOME_HEADER_SYNC_BTN_HEIGHT;
+            width: $SIZE_HOME_HEADER_SYNC_BTN_WIDTH;
+            top: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            background-color: transparent;
+
+            &:hover {
+                background-image: $PATH_IMG_SYNC_BTN_HOVER;
             }
 
-            &:active{
-                background-image:$PATH_IMG_SYNC_BTN_ACTIVE;
+            &:active {
+                background-image: $PATH_IMG_SYNC_BTN_ACTIVE;
             }
         }
     }
 
-   
+
 
     #face-list-container {
         overflow-x: overlay;
@@ -55,10 +53,9 @@
         box-sizing: border-box;
 
         #face-list {
-            position:relative;
+            position: relative;
             //height: 400px; // tentative
             overflow-y: hidden;
-           
             //box-shadow: 0 0 20px #222;
             z-index: 1;
             padding: 0;
@@ -67,11 +64,11 @@
             #face-list-footer {
                 position: absolute;
                 bottom: 0;
-                width:100%;
-                height:$SIZE_HOME_FOOTOR_HEIGHT;
+                width: 100%;
+                height: $SIZE_HOME_FOOTOR_HEIGHT;
                 background: $COLOR_HOME_FOOTOR_BACKGROUND;
                 z-index: 1;
-            }    
+            }
 
             .face.#{$FACE_TYPE_FULL_CUSTOM} {
                 .edit-lock-icon {
@@ -98,8 +95,8 @@
             .face {
                 list-style-type: none;
                 float: left;
-                margin-left:$SIZE_HOME_REMOTE_MARGIN_LEFT;
-                margin-right:$SIZE_HOME_REMOTE_MARGIN_RIGHT;
+                margin-left: $SIZE_HOME_REMOTE_MARGIN_LEFT;
+                margin-right: $SIZE_HOME_REMOTE_MARGIN_RIGHT;
                 overflow: hidden;
                 width: $SIZE_HOME_REMOTE_WIDTH;
 
@@ -108,7 +105,7 @@
                     margin-bottom: $SIZE_HOME_TITLE_MARGIN_BOTTOM;
                     text-align: center;
                     color: $COLOR_TEXT_MAIN;
-                    font-size:$FONT_HOME_REMOTE_TITLE;
+                    font-size: $FONT_HOME_REMOTE_TITLE;
                     font-family: $FONT_FAMILY_HOME_REMOTE_TITLE;
                     line-height: $FONT_LINE_HEIGHT_HOME_REMOTE_TITLE;
                 }
@@ -131,19 +128,19 @@
                 }
 
                 #face-pages-area {
-                    width:inherit;
+                    width: inherit;
                     font-family: $FONT_FAMILY_NORMAL;
-                    overflow-y : hidden;
+                    overflow-y: hidden;
                 }
 
-                .face-page{
-                    margin-top:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
-                    margin-right:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
-                    margin-left:$SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
-                    padding-bottom:$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
+                .face-page {
+                    margin-top: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_TOP;
+                    margin-right: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_RIGHT;
+                    margin-left: $SIZE_HOME_REMOTE_FACE_PAGE_MARGIN_LEFT;
+                    padding-bottom: $SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
 
-                    .button-item{
-                        border:none;
+                    .button-item {
+                        border: none;
                     }
                 }
 
@@ -154,25 +151,24 @@
         }
 
         .face-container {
-            width:$SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
-            transform : scale(0.5);
-            transform-origin : left top;
+            width: $SIZE_HOME_REMOTE_FACE_CONTAINER_WIDTH;
+            transform: scale(0.5);
+            transform-origin: left top;
             box-sizing: border-box;
-            background-color:$COLOR_HOME_REMOTE_BACKGROUND;
-            border : $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
+            background-color: $COLOR_HOME_REMOTE_BACKGROUND;
+            border: $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
             cursor: pointer;
         }
 
         .face-container#create-new-remote {
             height: $SIZE_FACE_PAGE_HEIGHT+$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP+$SIZE_HOME_REMOTE_FACE_PAGE_PADDING_BOTTOM;
-            background-image: $PATH_IMG_PROPATY_AREA_ADD_BUTTON_BIG;
+            background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_BIG;
             background-size: $SIZE_HOME_CREATE_REMOTE_BTN_SCALED;
             background-position: center;
             background-repeat: no-repeat;
             background-color: $COLOR_HOME_NEW_BTN_BACKGROUND;
-            border-color:$COLOR_HOME_NEW_BTN_BORDER;
+            border-color: $COLOR_HOME_NEW_BTN_BORDER;
         }
-
     }
 
     #face-history {
@@ -182,9 +178,9 @@
         overflow-y: hidden;
         background-color: rgb(151,152,157);
         box-shadow: 0 12px 24px -12px black inset;
-        z-index:0;
+        z-index: 0;
 
-        h3{
+        h3 {
             margin: 0;
             padding: 10px;
             font-family: $FONT_FAMILY_NORMAL;

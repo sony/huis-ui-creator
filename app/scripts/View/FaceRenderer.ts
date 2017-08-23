@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
@@ -23,18 +22,27 @@ module Garage {
 
         var TAG = "[Garage.View.FaceRenderer] ";
 
+        namespace faceConstValue {
+            export const PAGE_NUM_MAX = 5;
+        }
+
+        // Change of FaceColorCssClass affects $FACE_COLOR_BLACK/WHITE in _classname.css
+        export namespace FaceColorCssClass {
+            const SUFFIX: string = "-face";
+            export const BLACK_FACE = Model.FaceColor.BLACK + SUFFIX;
+            export const WHITE_FACE = Model.FaceColor.WHITE + SUFFIX;
+        }
+
+        // TODO: split this class into View.Canvs and View.Pallet class
+
         export class FaceRenderer extends Backbone.View<any> {
 
 
             private face_: Model.Face;
             private moduleView_: Module;
             private type_: string;
-            private $facePlane_ : JQuery; //描画のベースとなるfacePagesArea
+            private $facePlane_: JQuery; //描画のベースとなるfacePagesArea
 
-            //private template_: Tools.JST;
-            /**
-             * constructor
-             */
             constructor(options?: Backbone.ViewOptions<any>) {
                 super(options);
             }
@@ -49,10 +57,7 @@ module Garage {
                 this.face_ = options.attributes["face"];
                 // face が未指定の場合は新規作成
                 if (!this.face_) {
-                    let remoteId = options.attributes["remoteId"] ? options.attributes["remoteId"] : "9998";
-                    let gmodule = new Model.Module();
-                    gmodule.setInfo(remoteId, 0);
-                    this.face_ = new Model.Face(remoteId, "New Remote", "fullcustom", [gmodule]);
+                    console.error(TAG + " initialize: face is null");
                 }
                 this.$facePlane_ = null;
                 this.type_ = options.attributes["type"];
@@ -73,10 +78,10 @@ module Garage {
                 return this;
             }
 
-            /*
-            * すでに描画されているFaceに追加で描画する
-            */
-            addFace(inputFace: IGFace) {
+            /**
+             * すでに描画されているFaceに追加で描画する
+             */
+            addFace(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFace : ";
                 switch (this.type_) {
                     case "canvas":
@@ -90,12 +95,12 @@ module Garage {
             }
 
 
-            /*
-            * すでに描画されているFaceに追加で描画する。Canvas以外用。
-            */
-            private addFaceAsPlain(inputFace: IGFace) {
+            /**
+             * すでに描画されているFaceに追加で描画する。Canvas以外用。
+             */
+            private addFaceAsPlain(inputFace: Model.Face) {
                 let FUNCTION_NAME = TAG + "addFaceAsPlain : ";
-               
+
                 if (this.$facePlane_ == null) {
                     var templateFile = CDP.Framework.toUrl("/templates/face-items.html");
                     var template: Tools.JST = Tools.Template.getJST("#template-face-plain", templateFile);
@@ -104,7 +109,7 @@ module Garage {
 
                 this.moduleView_.addModuleInNewFacePages(inputFace.modules);
 
-           
+
                 this.$el.append(this.$facePlane_);
 
             }
@@ -120,11 +125,25 @@ module Garage {
             }
 
             /**
+             * ページ数が上限かどうか確認する
+             *
+             * @return {boolean} true: 上限に達している, false: 上限に達していない
+             */
+            isPageNumMax(): boolean {
+                let pageCount = this.getPageCount();
+                return faceConstValue.PAGE_NUM_MAX <= pageCount;
+            }
+
+            /**
              * モジュール (ページ) を追加する。
              * 
              * @return {boolean} true: 成功, false: 失敗
              */
             addPage(): boolean {
+                if (this.isPageNumMax()) {
+                    return false;
+                }
+
                 let result = this.moduleView_.addPage();
 
                 // ページ数を更新
@@ -294,7 +313,7 @@ module Garage {
              * Module View がもつすべての module を取得する。
              * 
              * @param areaFilter module の area によるフィルタ
-             * @return {IGModule[]} Module View がもつ module の配列
+             * @return {Model.Module[]} Module View がもつ module の配列
              */
             getModules(areaFilter?: (area) => boolean): Model.Module[] {
                 return this.moduleView_.getModules(areaFilter);
@@ -304,9 +323,9 @@ module Garage {
              * 指定された ID の module を取得する。
              * 
              * @param moduleId {string} [in] 取得する module の ID
-             * @return {IGModule} 指定された ID の module
+             * @return {Model.Module} 指定された ID の module
              */
-            getModule(moduleId: string): IGModule {
+            getModule(moduleId: string): Model.Module {
                 return this.moduleView_.getModule(moduleId);
             }
 
@@ -321,16 +340,18 @@ module Garage {
                     name: this.face_.name
                 }));
                 var $facePagesArea = $faceCanvas.find("#face-pages-area");
+                $facePagesArea.addClass(this.face_.getFaceColorCssClassName());
+                $facePagesArea.addClass(sharedInfo.settingColor);
 
-                this.moduleView_ = new Module(
+                this.moduleView_ = new View.Module(
                     this.face_, {
-                    el: $facePagesArea,
-                    attributes: {
-                        remoteId: this.face_.remoteId,
-                        modules: this.face_.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+                        el: $facePagesArea,
+                        attributes: {
+                            remoteId: this.face_.remoteId,
+                            modules: this.face_.modules,
+                            materialsRootPath: HUIS_FILES_ROOT
+                        }
+                    });
                 this.moduleView_.render();
 
                 let pageCount = this.getPageCount();
@@ -350,15 +371,15 @@ module Garage {
 
                 this.$facePlane_ = $(template());
 
-                this.moduleView_ = new Module(
+                this.moduleView_ = new View.Module(
                     this.face_, {
-                    el: this.$facePlane_,
-                    attributes: {
-                        remoteId: this.face_.remoteId,
-                        modules: this.face_.modules,
-                        materialsRootPath: HUIS_FILES_ROOT
-                    }
-                });
+                        el: this.$facePlane_,
+                        attributes: {
+                            remoteId: this.face_.remoteId,
+                            modules: this.face_.modules,
+                            materialsRootPath: HUIS_FILES_ROOT
+                        }
+                    });
                 this.moduleView_.render();
 
                 this.$el.append(this.$facePlane_);

@@ -22,25 +22,29 @@ module Garage {
         let TAG = "[ImportManager]";
         import IPromise = CDP.IPromise;
 
+        namespace importManagerConstValue {
+            export const ALL_DEVICE: string = "all";
+        }
+
         export class ImportManager {
 
             private filePathDecompressionFile: string; //一時的な作業フォルダのパス
             private hasBluetooth: boolean; //bluetoothのボタンを持っているか否か
             private hasAirconditioner: boolean;//Air conditionerのボタンを持っているか否か
+            private needDisplayCautionDialog: boolean; // 注意ダイアログを表示するかどうか
 
             /*
             *コンストラクター
             */
             constructor() {
-
-                this.filePathDecompressionFile = path.join(GARAGE_FILES_ROOT, "import").replace(/\\/g, "/");
-                this.hasAirconditioner = null;
-                this.hasBluetooth = null;
-
+                this.filePathDecompressionFile = Util.PathManager.join(GARAGE_FILES_ROOT, "import");
+                this.hasAirconditioner = false;
+                this.hasBluetooth = false;
+                this.needDisplayCautionDialog = false;
             }
 
 
-        
+
 
             /*
             * インポートを実行する
@@ -49,11 +53,19 @@ module Garage {
             exec(callback?: Function) {
                 let FUNCTION_NAME = TAG + "exec : ";
 
-                //インポートするリモコンファイルを選択するダイアログを表示する。
                 let options: Util.ElectronOpenFileDialogOptions = {
                     title: PRODUCT_NAME,
-                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE] }]
+                    filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
                 };
+                // ビジネス仕向けの場合、通常用もビジネス用も両方の拡張を読み込める
+                if (Util.MiscUtil.isBz()) {
+                    options = {
+                        title: PRODUCT_NAME,
+                        filters: [{ name: DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, extensions: [EXTENSION_HUIS_IMPORT_EXPORT_REMOTE, EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B] }]
+                    };
+                }
+
+                //インポートするリモコンファイルを選択するダイアログを表示する。
                 electronDialog.showOpenFileDialog(
                     options,
                     (files) => {
@@ -76,7 +88,7 @@ module Garage {
 
                             }).then(() => {
                                 //展開されたフォルダのファイルパス
-                                let dirPath = path.join(this.filePathDecompressionFile).replace(/\\/g, "/");;
+                                let dirPath = this.filePathDecompressionFile;
 
                                 //展開されたリモコンのremoteIdを取得
                                 let decompressedRemoteId = this.getDecompressedRemoteId(dirPath);
@@ -125,7 +137,7 @@ module Garage {
                             })
 
 
-                    } );
+                    });
             }
 
             /**
@@ -182,7 +194,7 @@ module Garage {
                 if (HUIS_ROOT_PATH) {
                     let syncTask = new Util.HuisDev.FileSyncTask();
                     syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, false, null, null, (err) => {
-                        
+
                         if (err) {
 
                             this.showErrorDialog(err, $.i18n.t("dialog.message.STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR"), FUNCTION_NAME);
@@ -204,7 +216,7 @@ module Garage {
              * functionName {string} エラーが発生したfunction名
              */
             private showErrorDialog(err: Error, errMsg: string, functionName: string) {
-                
+
 
                 console.error(functionName + err);
                 electronDialog.showMessageBox({
@@ -220,14 +232,20 @@ module Garage {
             /*
              * 展開されたインポートファイルから、face情報を読み取る。
              * @param  dirPath{string} .faceファイルが格納されているフォルダのパス。
+             * @param  fileName {string} .faceファイルの名前
              * @param  decompressedRemoteId{string} 展開されたリモコンのremoteId
-             * @return {IGFace} インポートされたリモコンのface情報
+             * @return {Model.Face} インポートされたリモコンのface情報
              */
-            private readDecompressedFile(dirPath:string, decompressedRemoteId:string): IGFace {
+            private readDecompressedFile(dirPath: string, fileName: string, decompressedRemoteId: string): Model.Face {
                 let FUNCTION_NAME = TAG + "readDecompressionFile : ";
 
                 if (dirPath == null) {
                     console.warn(FUNCTION_NAME + "dir is invalid");
+                    return;
+                }
+
+                if (fileName == null) {
+                    console.warn(FUNCTION_NAME + "faceFileName is invalid");
                     return;
                 }
 
@@ -237,9 +255,9 @@ module Garage {
                 }
 
                 //読み込み対象のファイルの.faceファイルのパス
-                let facePath = path.join(dirPath, decompressedRemoteId, decompressedRemoteId + ".face").replace(/\\/g, "/");
+                let facePath = Util.PathManager.join(dirPath, decompressedRemoteId, fileName);
 
-                //対象のデータをIGFaceとして読み込み
+                //対象のデータをModel.Faceとして読み込み
                 return huisFiles._parseFace(facePath, decompressedRemoteId, dirPath);
             }
 
@@ -251,7 +269,7 @@ module Garage {
              * @param newRemoteId{string} 書き出し時のremoteId
              * @return キャッシュファイルがないときnullを変えす。
              */
-            private copyCache(dirPath:string, newRemoteId: string, oldRemoteId:string) {
+            private copyCache(dirPath: string, newRemoteId: string, oldRemoteId: string) {
                 let FUNCITON_NAME = TAG + "copyCache : ";
 
                 if (newRemoteId == null) {
@@ -272,20 +290,20 @@ module Garage {
                     }
 
                     //コピー先のファイルパスを作成
-                    let outputDirectoryPath: string = path.join(HUIS_FILES_ROOT, newRemoteId).replace(/\\/g, "/");
+                    let outputDirectoryPath: string = Util.PathManager.join(HUIS_FILES_ROOT, newRemoteId);
                     if (!fs.existsSync(outputDirectoryPath)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(outputDirectoryPath);
                     }
                     let outputFilePath: string = path.join(outputDirectoryPath, newRemoteId + "_buttondeviceinfo.cache");
 
-                    
+
 
                     fs.copySync(cacheReadFilePath, outputFilePath);
                 } catch (err) {
                     console.error(FUNCITON_NAME + "error occur : " + err);
                     return null;
                 }
-                
+
             }
 
 
@@ -312,7 +330,7 @@ module Garage {
              * @param dirPathDecompressedFile{string} 展開されたフォルダ名のパス
              * @return {string} 展開されたリモコンのremoteIdを返す。みつからない場合nullを返す。
              */
-            private getDecompressedRemoteId(dirPathDecompressedFile : string): string {
+            private getDecompressedRemoteId(dirPathDecompressedFile: string): string {
                 let FUNCTION_NAME = TAG + "getDecompressedRemoteId : ";
 
                 let remoteId = null;
@@ -342,7 +360,7 @@ module Garage {
              * @param dirPath {string} 展開されたフォルダのパス
              * @param decompressRemoteId {string} 展開されたリモコンのremoteId
              */
-            private convertByNewRemoteIdInfo(dirPath: string, decompressRemoteId:string): IPromise<void> {
+            private convertByNewRemoteIdInfo(dirPath: string, decompressRemoteId: string): IPromise<void> {
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
@@ -352,16 +370,90 @@ module Garage {
                 //このとき、huisFilesの管理するリストにも、登録されてるので注意。途中で失敗した場合、削除する必要がある。
                 let newRemoteId = huisFiles.createNewRemoteId();
 
+                //画像をコピー
+                //コピー元のファイルパス ：展開されたリモコン のremoteImages
+                let oldRemoteId: string = decompressRemoteId;
+                let src: string = Util.PathManager.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId);
+                //コピー先のファイルパス : HuisFiles以下のremoteImages
+                let dst: string = Util.PathManager.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId);
+                if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
+                    fs.mkdirSync(dst);
+                }
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                try {
+                    //画像のコピーの実行
+                    syncTask.copyFilesSimply(src, dst, () => {
 
-                let face: IGFace = this.readDecompressedFile(dirPath, decompressRemoteId);
-                let convertedFace: IGFace = $.extend(true, {}, face);
+                        //キャッシュファイルをコピー
+                        this.copyCache(dirPath, newRemoteId, decompressRemoteId);
+
+                        let faceFileName = decompressRemoteId + ".face";
+                        let face: Model.Face = this.readDecompressedFile(dirPath, faceFileName, decompressRemoteId);
+
+                        let masterFacefileName = "master_" + decompressRemoteId + ".face";
+                        let masterFace: Model.Face = this.readDecompressedFile(dirPath, masterFacefileName, decompressRemoteId);
+
+                        //faceを変換してコピー
+                        this.convertAndOutputFace(face, newRemoteId)
+                            .then(() => {
+
+                                //masterFaceがある場合、masterFaceもコピー
+                                if (masterFace != null) {
+                                    return this.convertAndOutputFace(masterFace, newRemoteId, true);
+                                } else {
+                                    df.resolve();
+                                }
+
+                            }).done(() => {
+                                df.resolve();
+                            }).fail((err) => {
+                                df.reject(err);
+                            });
+
+                    });
+                } catch (err) {
+                    console.error(FUNCTION_NAME + err);
+                    df.reject(err, ImportManager.createRemoteFileErrorMessage());
+                }
+
+
+                return promise;
+
+            }
+
+
+            /*
+             * 入力されたfaceモデルをインポート後に適した形に変換・書き出しする。
+             * @param face{Model.Face} インポートするリモコンのFace
+             * @param newRemoteId {string} インポート後のリモートID
+             * @param isMaster{boolean} マスターFaceか否か分別する。入力がない場合、false
+             */
+            private convertAndOutputFace(oldFace: Model.Face, newRemoteId: string, isMaster: boolean = false): IPromise<void> {
+
+                let FUNCTION_NAME = TAG + "convertAndOutputFace : ";
+
+                if (oldFace == null) {
+                    console.error(FUNCTION_NAME + "oldFace is null.");
+                    return;
+                }
+
+                if (newRemoteId == null) {
+                    console.error(FUNCTION_NAME + "newRemoteId is null.");
+                    return;
+                }
+
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                let convertedFace: Model.Face = $.extend(true, {}, oldFace);
 
                 //face名を変更
                 convertedFace.remoteId = newRemoteId;
 
-                if (!convertedFace.modules) {
-                    console.error("modules not found. remoteId: " + decompressRemoteId);
-                    df.reject("modules not found. remoteId: " + decompressRemoteId, ImportManager.createRemoteFileErrorMessage());
+
+                if (convertedFace.modules == null) {
+                    console.error("modules not found. remoteId: " + oldFace.remoteId);
+                    df.reject("modules not found. remoteId: " + oldFace.remoteId, ImportManager.createRemoteFileErrorMessage());
                     return promise;
                 }
                 //module内の情報を更新
@@ -370,14 +462,15 @@ module Garage {
                     //module内のremoteIdを更新
                     convertedFace.modules[i].remoteId = newRemoteId;
 
-                    //module名を変更。
-                    let newModuleName: string = null;
-                    let moduleNameSeparate: string[] = face.modules[i].name.split("_");
-                    let oldRemoteId: string = moduleNameSeparate[0];
-                    let stringPage: string = moduleNameSeparate[1];
-                    let pageNum: string = moduleNameSeparate[2];
-                    newModuleName = newRemoteId + "_" + stringPage + "_" + pageNum;
-                    convertedFace.modules[i].name = newModuleName;
+                    // pickup remote may have same module name with different remoteId,
+                    // so leave name as it is in case of name confliction
+                    //     e.g. "0000_guide_power.module" and "0001_guide_power.module"
+                    if (convertedFace.category !== DEVICE_TYPE_CUSTOM) {
+                        //module名を変更。先頭のremoteIdのみ新しいremoteIdと入れ替える。
+                        let newModuleName: string = oldFace.modules[i].name;
+                        newModuleName = newRemoteId + "_" + newModuleName.substr(newModuleName.indexOf("_") + 1);
+                        convertedFace.modules[i].name = newModuleName;
+                    }
 
                     //module内のbuttonのimageのfilePathを変更。
                     convertedFace.modules[i].button = this.convertButtonsFilePath(convertedFace.modules[i].button, newRemoteId);
@@ -387,52 +480,40 @@ module Garage {
 
                 }
 
+                //諸注意ダイアログが必要かどうか
+                this.needDisplayCautionDialog = this.isIncludeSpecificCategoryButton(oldFace, importManagerConstValue.ALL_DEVICE);
+
                 //インポートしたリモコンが注意が必要なカテゴリーを持っているかチェック
-                this.hasBluetooth = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_BT);
-                this.hasAirconditioner = this.isIncludeSpecificCategoryButton(face, DEVICE_TYPE_AC);
+                this.hasBluetooth = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_BT);
+                this.hasAirconditioner = this.isIncludeSpecificCategoryButton(oldFace, DEVICE_TYPE_AC);
 
-                //コピー元のファイルパス ：展開されたリモコン のremoteImages
-                let oldRemoteId: string = decompressRemoteId;
-                let src: string = path.join(dirPath, oldRemoteId, "remoteimages", oldRemoteId).replace(/\\/g, "/");
-                //コピー先のファイルパス : HuisFiles以下のremoteImages
-                let dst: string = path.join(HUIS_REMOTEIMAGES_ROOT, newRemoteId).replace(/\\/g, "/");
-                if (!fs.existsSync(dst)) {// 存在しない場合フォルダを作成。
-                    fs.mkdirSync(dst);
-                }
+                try {
+                    huisFiles.updateFace(
+                        convertedFace,
+                        null,
+                        true,
+                        null,
+                        isMaster).then(() => {
+                            df.resolve();
+                        }).fail((err) => {
+                            df.reject(err);
+                        });
 
-                //キャッシュファイルをコピー
-                this.copyCache(dirPath, newRemoteId, decompressRemoteId);
-
-                //画像をコピー
-                let syncTask = new Util.HuisDev.FileSyncTask();
-                try{
-                    syncTask.copyFilesSimply(src, dst, () => {
-                        huisFiles.updateFace(convertedFace.remoteId, convertedFace.name, convertedFace.modules, null, true)
-                            .then(() => {
-                                df.resolve();
-                            }).fail((err) => {
-                                df.reject(err);
-                            });
-                       
-                    });
                 } catch (err) {
                     console.error(FUNCTION_NAME + err);
                     df.reject(err, ImportManager.createRemoteFileErrorMessage());
                 }
-                
 
                 return promise;
-
             }
 
-
             /*
-            * Face中にエアコンの入力したカテゴリーボタンがあるときかチェックする
-            * @param inputModule {IGFace} チェック対象
-            * @param category{string} チェックしたい対象カテゴリー
-            * @return {boolean} カテゴリを含んでいるときtrue 含んでいないとき、false;
+            * Face中に入力したカテゴリーボタンがあるかチェックする
+            * @param face {Model.Face} チェック対象
+            * @param category {string} チェックしたい対象カテゴリー
+            * @return {boolean} カテゴリを含んでいるときtrue, 含んでいないときfalse
             */
-            private isIncludeSpecificCategoryButton(face: IGFace, category : string): boolean{
+            private isIncludeSpecificCategoryButton(face: Model.Face, category: string): boolean {
                 let FUNCTION_NAME = TAG + "isIncludeAircondition : ";
 
                 if (face == null) {
@@ -446,35 +527,43 @@ module Garage {
                 }
 
                 //モジュールがひとつもないとき含んでいないとみなす。
-                let targetModules: IGModule[] = face.modules;
+                let targetModules: Model.Module[] = face.modules;
                 if (targetModules == null || targetModules.length == 0) {
                     return false;
                 }
 
-                for (let i = 0; i < targetModules.length; i++){
+                for (let module of targetModules) {
 
                     //ターゲットのボタンがないとき、次のmoduleをチェック。
-                    let targetButtons: IGButton[] = targetModules[i].button;
+                    let targetButtons: Model.ButtonItem[] = module.button;
                     if (targetButtons == null || targetButtons.length == 0) {
                         continue;
                     }
-                    for (let j = 0; j < targetButtons.length; j++){
+
+                    // 全カテゴリが対象で、ボタンがある場合は含んでいるとみなす
+                    if (category == importManagerConstValue.ALL_DEVICE
+                        && targetButtons.length != 0) {
+                        return true;
+                    }
+
+                    for (let button of targetButtons) {
 
                         //ターゲットのステートがないとき、次のボタンをチェック
-                        let targetStates:IGState[] = targetButtons[j].state;
+                        let targetStates: Model.ButtonState[] = button.state;
                         if (targetStates == null || targetStates.length == 0) {
                             continue;
                         }
-                        for (let k = 0; k < targetStates.length; k++){
+
+                        for (let state of targetStates) {
 
                             //ターゲットのアクションがないとき、次のステートをチェック
-                            let targetActions = targetStates[k].action;
+                            let targetActions = state.action;
                             if (targetActions == null || targetActions.length == 0) {
                                 continue;
                             }
-                            for (let l = 0; l < targetActions.length; l++){
+                            for (let action of targetActions) {
 
-                                let targetAction = targetActions[l];
+                                let targetAction = action;
                                 if (targetAction != null) {
                                     //入力したカテゴリと一致するdevice_typeがあるときtrueを返す。
                                     if (targetAction.code_db != null
@@ -489,14 +578,11 @@ module Garage {
                                         return true;
                                     }
 
-                                }//end if
-
-                                
-
-                            }//end for(l)
-                        }//end for(k)
-                    }//end for(j)
-                }//end for(i)
+                                }
+                            }
+                        }
+                    }
+                }
 
                 return false;
             }
@@ -507,6 +593,11 @@ module Garage {
             */
             private showCautionDialog() {
                 let FUNCTION_NAME = TAG + "showCautionDialog :";
+
+                // ダイアログを表示する必要がない場合は表示しない
+                if (!this.needDisplayCautionDialog) {
+                    return;
+                }
 
                 ///チェックすべき項目がない場合、エラーを表示
                 if (this.hasAirconditioner == null) {
@@ -534,44 +625,44 @@ module Garage {
                 }
 
 
-                    electronDialog.showMessageBox({
-                        type: "info",
-                        message: dialogMessage,
-                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                        title: PRODUCT_NAME,
-                    });
+                electronDialog.showMessageBox({
+                    type: "info",
+                    message: dialogMessage,
+                    buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME,
+                });
             }
 
 
 
             /*
-             * IGImage内のpathをを新しいremoteIdのものに変更する。
-             * @param gimages{IGImage[]} pathを変更する対象
+             * Model.ImageItem内のpathをを新しいremoteIdのものに変更する。
+             * @param images{Model.ImageItem[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
-             * @return {IGImages[]} pathを変更した後のIGImages
+             * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertImagesFilePath(gimages : IGImage[], newRemoteId : string):IGImage[]{
-                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+            private convertImagesFilePath(images: Model.ImageItem[], newRemoteId: string): Model.ImageItem[] {
+                let FUNCTION_NAME: string = TAG + "convertImagesFilePath : ";
 
-                if (gimages == null || gimages.length == 0) {
-                    console.warn(FUNCTION_NAME + "gimages is invalid");
-                    return;
+                if (images == null) {
+                    console.warn(FUNCTION_NAME + "images is invalid");
+                    return [];
                 }
 
                 if (newRemoteId == null) {
                     console.warn(FUNCTION_NAME + "newRemoteId is invalid");
-                    return;
+                    return [];
                 }
 
-                let result: IGImage[] = $.extend(true, [], gimages);;
+                let result: Model.ImageItem[] = $.extend(true, [], images);
 
-                for (let i = 0; i < result.length; i++){
-                    result[i].path = this.converFilePath(result[i].path, newRemoteId);
-                    let extensions = result[i].garageExtensions;
+                for (let image of result) {
+                    image.path = this.convertFilePath(image.path, newRemoteId);
+                    let extensions = image.garageExtensions;
                     if (extensions != null) {
-                        extensions.original = this.converFilePath(extensions.original, newRemoteId);;
-                        extensions.resolvedOriginalPath = this.converFilePath(extensions.resolvedOriginalPath, newRemoteId);
-                        result[i].garageExtensions = extensions;
+                        extensions.original = this.convertFilePath(extensions.original, newRemoteId);
+                        extensions.resolvedOriginalPath = this.convertFilePath(extensions.resolvedOriginalPath, newRemoteId);
+                        image.garageExtensions = extensions;
                     }
                 }
 
@@ -581,47 +672,48 @@ module Garage {
 
 
             /*
-             * IGButton内のIGImageのpathを新しいremoteIdのものに変更する。
-             * @param gbuttons{IGButton[]} pathを変更する対象
+             * Model.ButtonItem内のModel.ImageItemのpathを新しいremoteIdのものに変更する。
+             * @param buttons{Model.ButtonItem[]} pathを変更する対象
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
-             * @return {IGImages[]} pathを変更した後のIGImages
+             * @return {Model.ImageItems[]} pathを変更した後のModel.ImageItems
              */
-            private convertButtonsFilePath(gbuttons: IGButton[], newRemoteId: string): IGButton[] {
+            private convertButtonsFilePath(buttons: Model.ButtonItem[], newRemoteId: string): Model.ButtonItem[] {
                 let FUNCTION_NAME: string = TAG + "convertButtonFilePath : ";
 
-                if (gbuttons == null || gbuttons.length == 0) {
-                    console.warn(FUNCTION_NAME + "gbuttons is invalid");
-                    return;
+                if (buttons == null) {
+                    console.warn(FUNCTION_NAME + "buttons is invalid");
+                    return [];
                 }
 
                 if (newRemoteId == null) {
                     console.warn(FUNCTION_NAME + "newRemoteId is invalid");
-                    return;
+                    return [];
                 }
 
 
-                let result: IGButton[] = $.extend(true, [], gbuttons);
-                for (let i = 0; i < result.length; i++){
-                    if (result[i].state != null && result[i].state.length >  0){
-                        for (let j = 0; j < result[i].state.length; j++) {
-                            result[i].state[j].image = this.convertImagesFilePath(result[i].state[j].image, newRemoteId);
+                let result: Model.ButtonItem[] = $.extend(true, [], buttons);
+
+                for (let button of result) {
+                    if (button.state != null && button.state.length > 0) {
+                        for (let state of button.state) {
+                            state.image = this.convertImagesFilePath(state.image, newRemoteId);
                         }
                     }
                 }
-                
+
                 return result;
             }
 
-            /*
+            /**
              * pathを新しいremoteIdのものに変更する。親のフォルダの名前を古いremoteIdから新しいremoteIdにする。
              * @param inputPath{string} もともとのパス
              * @param newRemoteId{string} 変更後のpathに入力するremoteId
              * @return {string} 変更後のpath.失敗したとき、nullを返す。変換する親のフォルダがないときそのまま返す。
              */
-            private converFilePath(inputPath: string, newRemoteId: string): string{
-                let FUNCTION_NAME: string = TAG + "convertImageFilePath : ";
+            private convertFilePath(inputPath: string, newRemoteId: string): string {
+                let FUNCTION_NAME: string = TAG + "convertFilePath : ";
 
-                if (inputPath == null ) {
+                if (inputPath == null) {
                     console.warn(FUNCTION_NAME + "inputPath is invalid");
                     return null;
                 }
@@ -632,22 +724,15 @@ module Garage {
                 }
 
                 let basename = path.basename(inputPath);
-                let extname = path.extname(inputPath);
                 let dirname = path.dirname(inputPath);
 
-                let result: string = null;
-                //親のフォルダがない場合、そのまま返す。
-                // 親のフォルダがない場合、dirnameが"."となる
-                if (dirname == null || dirname == ".") {
-                    result = inputPath;
-                } else if (dirname != null) {//親のフォルダがある場合、親フォルダ名をnewRemoteIdに
+                let result: string = inputPath;
+                if (PathManager.isRemoteDir(inputPath)) {
                     result = newRemoteId + "/" + basename;
                 }
 
-                return result ;
-
+                return result;
             }
-
         }
     }
-} 
+}

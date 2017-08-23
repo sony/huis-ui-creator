@@ -15,5 +15,11 @@
 */
 
 
-$FACE_TYPE_FULL_CUSTOM : "fullcustom";
-$FACE_TYPE_NOT_FULL_CUSTOM : "not-" + $FACE_TYPE_FULL_CUSTOM;
+$FACE_TYPE_FULL_CUSTOM: "fullcustom";
+$FACE_TYPE_NOT_FULL_CUSTOM: "not-" + $FACE_TYPE_FULL_CUSTOM;
+
+$FACE_COLOR_BLACK: "black-face";
+$FACE_COLOR_WHITE: "white-face";
+
+$BLACK_RC_FRAME: "black-rc-frame";
+$WHITE_RC_FRAME: "white-rc-frame";
