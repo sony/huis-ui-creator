@@ -14,73 +14,93 @@
     limitations under the License.
 */
 
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL: url("../res/images/btn_arrow_left_normal.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL: url("../res/images/btn_arrow_right_normal.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_HOVER: url("../res/images/btn_arrow_left_hover.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_HOVER: url("../res/images/btn_arrow_right_hover.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_ACTIVE: url("../res/images/btn_arrow_left_pressed.png");
+$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE: url("../res/images/btn_arrow_right_pressed.png");
+$PATH_IMG_FACE_ITEM_LIST_EDIT_LOCK_ICON: url("../res/images/icon_edit_lock.png");
+$PATH_IMG_WHITE_FRAME_WHITE_FACE_CANVAS_AREA: url("../res/images/img_huis_tpl_white_on_white.png");
+$PATH_IMG_WHITE_FRAME_BLACK_FACE_CANVAS_AREA: url("../res/images/img_huis_tpl_black_on_white.png");
+$PATH_IMG_BLACK_FRAME_WHITE_FACE_CANVAS_AREA: url("../res/images/img_huis_tpl_white_on_black.png");
+$PATH_IMG_BLACK_FRAME_BLACK_FACE_CANVAS_AREA: url("../res/images/img_huis_tpl_black_on_black.png");
+$PATH_IMG_WHITE_CANVAS_FACE_PAGE: url("../res/images/img_huis_remote_area_white.png");
+$PATH_IMG_BLACK_CANVAS_FACE_PAGE: url("../res/images/img_huis_remote_area_black.png");
+$PATH_IMG_CREATE_NEW_REMOTE_NORMAL: url("../res/images/btn_new_normal.png");
+$PATH_IMG_CREATE_NEW_REMOTE_HOVER: url("../res/images/btn_new_hover.png");
+$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE: url("../res/images/btn_new_pressed.png");
+$PATH_IMG_SYNC_BTN_NORMAL: url("../res/images/btn_sync_normal.png");
+$PATH_IMG_SYNC_BTN_HOVER: url("../res/images/btn_sync_hover.png");
+$PATH_IMG_SYNC_BTN_ACTIVE: url("../res/images/btn_sync_pressed.png");
+$PATH_IMG_OPTION_MENU_BTN_NORMAL: url("../res/images/btn_option_normal.png");
+$PATH_IMG_OPTION_MENU_BTN_HOVER: url("../res/images/btn_option_hover.png");
+$PATH_IMG_OPTION_MENU_BTN_ACTIVE: url("../res/images/btn_option_pressed.png");
+$PATH_IMG_SAVE_BTN_NORMAL: url("../res/images/btn_done_normal.png");
+$PATH_IMG_SAVE_BTN_HOVER: url("../res/images/btn_done_hover.png");
+$PATH_IMG_SAVE_BTN_ACTIVE: url("../res/images/btn_done_pressed.png");
+$PATH_IMG_BACK_BTN_NORMAL: url("../res/images/btn_back_normal.png");
+$PATH_IMG_BACK_BTN_HOVER: url("../res/images/btn_back_hover.png");
+$PATH_IMG_BACK_BTN_ACTIVE: url("../res/images/btn_back_pressed.png");
+$PATH_IMG_SPLASH_HUIS_LOGO: url("../res/images/huis_ui_creator_logo.png");
+$PATH_IMG_SPLASH_SPINNER: url("../res/images/icon_sync_green.png");
+$PATH_IMG_PULL_DOWN_MENU_ICON_DOWN: url("../res/images/pulldownmenu_down_icon.png");
+$PATH_IMG_PULL_DOWN_MENU_ICON_UP: url("../res/images/pulldownmenu_up_icon.png");
+$PATH_IMG_DIALOG_SPINNER: url("../res/images/icon_sync_white.png");
+$PATH_IMG_DIALOG_SPINNER_LOAD: url("../res/images/icon_sync_white.png");
+$PATH_IMG_HOME_INTRODUCTION_REMOTES: url("../res/images/img_no_controller.png");
+$PATH_IMG_HOME_INTRODUCTION_VECTOR: url("../res/images/img_arrow.png");
+$PATH_IMG_DIALOG_DONE_ICON: url("../res/images/icon_done.png");
 
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL : url("../res/images/btn_arrow_left_normal.png");
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL : url("../res/images/btn_arrow_right_normal.png");
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_HOVER : url("../res/images/btn_arrow_left_hover.png");
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_HOVER : url("../res/images/btn_arrow_right_hover.png");
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_ACTIVE : url("../res/images/btn_arrow_left_pressed.png");
-$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE : url("../res/images/btn_arrow_right_pressed.png");
-$PATH_IMG_FACE_ITEM_LIST_EDIT_LOCK_ICON : url("../res/images/icon_edit_lock.png");
-$PATH_IMG_CANVAS_AREA : url("../res/images/img_huis_tpl.png");
-$PATH_IMG_CANVAS_FACE_PAGE : url("../res/images/img_huis_remote_area.png");
-$PATH_IMG_CREATE_NEW_REMOTE_NORMAL:url("../res/images/btn_new_normal.png");
-$PATH_IMG_CREATE_NEW_REMOTE_HOVER:url("../res/images/btn_new_hover.png");
-$PATH_IMG_CREATE_NEW_REMOTE_ACTIVE:url("../res/images/btn_new_pressed.png");
-$PATH_IMG_SYNC_BTN_NORMAL:url("../res/images/btn_sync_normal.png");
-$PATH_IMG_SYNC_BTN_HOVER:url("../res/images/btn_sync_hover.png");
-$PATH_IMG_SYNC_BTN_ACTIVE:url("../res/images/btn_sync_pressed.png");
-$PATH_IMG_OPTION_MENU_BTN_NORMAL:url("../res/images/btn_option_normal.png");
-$PATH_IMG_OPTION_MENU_BTN_HOVER:url("../res/images/btn_option_hover.png");
-$PATH_IMG_OPTION_MENU_BTN_ACTIVE:url("../res/images/btn_option_pressed.png");
-$PATH_IMG_SAVE_BTN_NORMAL:url("../res/images/btn_done_normal.png");
-$PATH_IMG_SAVE_BTN_HOVER:url("../res/images/btn_done_hover.png");
-$PATH_IMG_SAVE_BTN_ACTIVE:url("../res/images/btn_done_pressed.png");
-$PATH_IMG_BACK_BTN_NORMAL:url("../res/images/btn_back_normal.png");
-$PATH_IMG_BACK_BTN_HOVER:url("../res/images/btn_back_hover.png");
-$PATH_IMG_BACK_BTN_ACTIVE:url("../res/images/btn_back_pressed.png");
-$PATH_IMG_SPLASH_HUIS_LOGO:url("../res/images/huis_ui_creator_logo.png");
-$PATH_IMG_SPLASH_SPINNER:url("../res/images/icon_sync_green.png");
-$PATH_IMG_PULL_DOWM_MENU_ICON_DOWM:url("../res/images/pulldowmmenu_dowm_icon.png");
-$PATH_IMG_PULL_DOWM_MENU_ICON_UP:url("../res/images/pulldowmmenu_up_icon.png");
-$PATH_IMG_DIALOG_SPINNER:url("../res/images/icon_sync_white.png");
-$PATH_IMG_HOME_INTRODUCTION_REMOTES:url("../res/images/img_no_controller.png");
-$PATH_IMG_HOME_INTRODUCTION_VECTOR:url("../res/images/img_arrow.png");
-$PATH_IMG_DIALOG_DONE_ICON :url("../res/images/icon_done.png");
-
-//propaty area
-$PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL :url("../res/images/button_edit_button_normal.png");
-$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE :url("../res/images/button_edit_button_hover.png");
-$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON :url("../res/images/button_edit_image_normal.png");
-$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER :url("../res/images/button_edit_image_pressed.png");
-$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON :url("../res/images/button_edit_text_normal.png");
-$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER :url("../res/images/button_edit_text_pressed.png");
-$PATH_IMG_POPUP_ARROW : url("../res/images/icon_guide_arrow_gray.png");
-$PATH_IMG_TITLE_EDIT_LABEL_ICON : url("../res/images/button_edit_text_normal.png");
-$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL : url("../res/images/button_delete_image_normal.png");
-$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER : url("../res/images/button_delete_image_hover.png");
+//property area
+$PATH_IMG_PROPERTY_AREA_EDIT_IMG_NORMAL: url("../res/images/button_edit_button_normal.png");
+$PATH_IMG_PROPERTY_AREA_EDIT_IMG_ACTIVE: url("../res/images/button_edit_button_hover.png");
+$PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON: url("../res/images/button_edit_image_normal.png");
+$PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER: url("../res/images/button_edit_image_pressed.png");
+$PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON: url("../res/images/button_edit_text_normal.png");
+$PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER: url("../res/images/button_edit_text_pressed.png");
+$PATH_IMG_POPUP_ARROW: url("../res/images/icon_guide_arrow_gray.png");
+$PATH_IMG_TITLE_EDIT_LABEL_ICON: url("../res/images/button_edit_text_normal.png");
+$PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL: url("../res/images/button_delete_image_normal.png");
+$PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_HOVER: url("../res/images/button_delete_image_hover.png");
 
 //macro about
-$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL : url("../res/images/btn_help_normal.png");
-$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER : url("../res/images/btn_help_hover.png");
+$PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_NORMAL: url("../res/images/btn_help_normal.png");
+$PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_HOVER: url("../res/images/btn_help_hover.png");
 
 //macro sort up
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL : url("../res/images/btn_arrow_up_normal.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER : url("../res/images/btn_arrow_up_hover.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_ACTIVE : url("../res/images/btn_arrow_up_pressed.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_NORMAL: url("../res/images/btn_arrow_up_normal.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_HOVER: url("../res/images/btn_arrow_up_hover.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_ACTIVE: url("../res/images/btn_arrow_up_pressed.png");
 
 //macro sort down
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL : url("../res/images/btn_arrow_down_normal.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_HOVER : url("../res/images/btn_arrow_down_hover.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_ACTIVE : url("../res/images/btn_arrow_down_pressed.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_NORMAL: url("../res/images/btn_arrow_down_normal.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_HOVER: url("../res/images/btn_arrow_down_hover.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_ACTIVE: url("../res/images/btn_arrow_down_pressed.png");
 
 //signal delete
-$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL : url("../res/images/btn_delete_normal.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER : url("../res/images/btn_delete_hover.png");
-$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_ACTIVE : url("../res/images/btn_delete_pressed.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_NORMAL: url("../res/images/btn_delete_normal.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_HOVER: url("../res/images/btn_delete_hover.png");
+$PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_ACTIVE: url("../res/images/btn_delete_pressed.png");
 
 //add btn 2
-$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL : url("../res/images/btn_add_normal.png");
-$PATH_IMG_PROPATY_AREA_ADD_BUTTON_HOVER : url("../res/images/btn_add_hover.png");
-$PATH_IMG_PROPATY_AREA_ADD_BUTTON_ACTIVE : url("../res/images/btn_add_pressed.png");
-$PATH_IMG_PROPATY_AREA_ADD_BUTTON_BIG : url("../res/images/btn_add_big.png");
+$PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL: url("../res/images/btn_add_normal.png");
+$PATH_IMG_PROPERTY_AREA_ADD_BUTTON_HOVER: url("../res/images/btn_add_hover.png");
+$PATH_IMG_PROPERTY_AREA_ADD_BUTTON_ACTIVE: url("../res/images/btn_add_pressed.png");
+$PATH_IMG_PROPERTY_AREA_ADD_BUTTON_BIG: url("../res/images/btn_add_big.png");
+
+//radio box
+$PATH_IMG_RADIO_BOX_NORMAL: url("../res/images/radio_box_normal.png");
+$PATH_IMG_RADIO_BOX_HOVER: url("../res/images/radio_box_hover.png");
+$PATH_IMG_RADIO_BOX_ACTIVE: url("../res/images/radio_box_pressed.png");
+$PATH_IMG_RADIO_BOX_CHECKED_NORMAL: url("../res/images/radio_box_checked_normal.png");
+$PATH_IMG_RADIO_BOX_CHECKED_HOVER: url("../res/images/radio_box_checked_hover.png");
+$PATH_IMG_RADIO_BOX_CHECKED_PRESSED: url("../res/images/radio_box_checked_pressed.png");
+
+//check box
+$PATH_IMG_CHECK_BOX_NORMAL: url("../res/images/check_box_normal.png");
+$PATH_IMG_CHECK_BOX_HOVER: url("../res/images/check_box_hover.png");
+$PATH_IMG_CHECK_BOX_ACTIVE: url("../res/images/check_box_pressed.png");
+$PATH_IMG_CHECK_BOX_CHECKED_NORMAL: url("../res/images/check_box_checked_normal.png");
+$PATH_IMG_CHECK_BOX_CHECKED_HOVER: url("../res/images/check_box_checked_hover.png");
+$PATH_IMG_CHECK_BOX_CHECKED_PRESSED: url("../res/images/check_box_checked_pressed.png");

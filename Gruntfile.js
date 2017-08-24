@@ -25,10 +25,10 @@ module.exports = function (grunt) {
 
     var targetPlatform = grunt.option("platform");
     if (targetPlatform === "darwin") {
-	grunt.log.writeln("Target platform is darwin, so exclude usb_dev");
-	var pkgFileName = 'package_darwin.json'
+        grunt.log.writeln("Target platform is darwin, so exclude usb_dev");
+        var pkgFileName = 'package_darwin.json'
     } else {
-	var pkgFileName = 'package_win.json'
+        var pkgFileName = 'package_win.json'
     }
 
     // Project configuration.

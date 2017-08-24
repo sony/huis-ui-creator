@@ -30,11 +30,11 @@ module Garage {
             const SPINNER_ID_SELECTER = "#common-dialog-center-spinner";
             const SPINNER_DIALOG_CLASS_SELECTER = ".spinner-dialog";
 
-            if (process.platform == PLATFORM_WIN32) {
+            if (Util.MiscUtil.isWindows()) {
                 var usb_dev = require("usb_dev");
             }
 
-            interface IDiffInfo    {
+            interface IDiffInfo {
                 diff: string[];
                 dir1Extra: string[];
                 dir2Extra: string[];
@@ -56,7 +56,7 @@ module Garage {
 
                         var len = names.length;
                         for (var i = 0; i < len; i++) {
-                            var filePath = path.join(dir, names[i]).replace(/\\/g, "/");
+                            var filePath = Util.PathManager.join(dir, names[i]);
                             if (fs.lstatSync(filePath).isDirectory()) {
                                 dirs.push(filePath);
                             }
@@ -109,7 +109,7 @@ module Garage {
                             let names = fs.readdirSync(dir);
 
                             for (let i = 0, l = names.length; i < l; i++) {
-                                let filePath = path.join(dir, names[i]).replace(/\\/g, "/");
+                                let filePath = Util.PathManager.join(dir, names[i]);
                                 if (fs.lstatSync(filePath).isDirectory()) {
                                     dirs.push(filePath);
                                 }
@@ -159,7 +159,7 @@ module Garage {
 
                         var dir1Stat = fs.lstatSync(getAbsPath(dir1, temp[i]));
                         var dir2Stat = fs.lstatSync(getAbsPath(dir2, temp[i]));
-                      
+
                         if (!dir1Stat && !dir2Stat) {
                             continue; // TODO エラー処理が必要
                         }
@@ -255,7 +255,7 @@ module Garage {
 
 
             function getAbsPath(rootDir: string, relPath: string): string {
-                return path.join(rootDir, relPath).replace(/\\/g, "/");
+                return Util.PathManager.join(rootDir, relPath);
             }
 
             /**
@@ -316,7 +316,7 @@ module Garage {
                 exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
                     var dialog: Dialog = null;
                     this._isCanceled = false;
-                    var errorValue: Error= null; 
+                    var errorValue: Error = null;
                     if (useDialog) {
                         if (dialogProps) {
                             let options = dialogProps.options;
@@ -387,7 +387,7 @@ module Garage {
                 // @param targetDirectoryPath{string} 削除するフォルダ
                 // @param callback{(err: Error)=>void} 削除後に実行するコールバック
                 public deleteDirectory(targetDirectoryPath: string, callback?: (err: Error) => void) {
-                    let emptyDirectory = path.join(GARAGE_FILES_ROOT, "empty").replace(/\\/g, "/");
+                    let emptyDirectory = Util.PathManager.join(GARAGE_FILES_ROOT, "empty");
                     if (!fs.existsSync(emptyDirectory)) {// 存在しない場合フォルダを作成。
                         fs.mkdirSync(emptyDirectory);
                     }
@@ -437,7 +437,7 @@ module Garage {
                             callback(err);
                         });
 
-              
+
                 }
 
 
@@ -458,46 +458,47 @@ module Garage {
                     }
 
                     this._compDirs(srcRootDir, destRootDir, syncFileFilter)  // Directory間の差分を取得
-                    .then((diffInfo: IDiffInfo)    => {
-                        // TODO: ディスクの容量チェック
+                        .then((diffInfo: IDiffInfo) => {
+                            // TODO: ディスクの容量チェック
 
-                        var df = $.Deferred();
-                        // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
-                        var copyTargetFiles = diffInfo.diff;
-                        copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
-                        this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
-                            .then(() => {
-                                df.resolve(diffInfo.dir2Extra);
-                            })
-                            .fail((err) => {
-                                df.reject(err);
-                            });
-                        return CDP.makePromise(df);
-                    }).then((removeTargetFiles: string[]) => {
-                        var    df = $.Deferred();
-                        // destRootDirの余分なファイルやディレクトリを削除
-                        this._removeFiles(destRootDir, removeTargetFiles)
-                            .done(() => {
-                                callback(null);    // 成功
-                                df.resolve();
-                            })
-                            .fail((err) => {
-                                df.reject(err);
-                            });
+                            var df = $.Deferred();
+                            // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
+                            var copyTargetFiles = diffInfo.diff;
+                            copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
+                            this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
+                                .then(() => {
+                                    df.resolve(diffInfo.dir2Extra);
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
+                            return CDP.makePromise(df);
+                        }).then((removeTargetFiles: string[]) => {
+                            var df = $.Deferred();
+                            // destRootDirの余分なファイルやディレクトリを削除
+                            this._removeFiles(destRootDir, removeTargetFiles)
+                                .done(() => {
+                                    callback(null);    // 成功
+                                    df.resolve();
+                                })
+                                .fail((err) => {
+                                    df.reject(err);
+                                });
                             df.resolve();
-                        return CDP.makePromise(df);
-                    }).fail((err) => {
-                        callback(err);
-                    });
+                            return CDP.makePromise(df);
+                        }).fail((err) => {
+                            callback(err);
+                        });
                 }
 
                 /*
                 * srcRootDirのファイルを dstRootDirにコピーする。
                 * execと異なり、dialogを表示したり、srcRootDirにない画像を削除しない。
                 */
-                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void) {
+                copyFilesSimply(srcRootDir: string, dstRootDir: string, callback?: (err: Error) => void): CDP.IPromise<Error> {
+                    var df = $.Deferred();
                     this._isCanceled = false;
-                    var errorValue: Error = null; 
+                    var errorValue: Error = null;
 
                     setTimeout(() => {
                         this._compDirs(srcRootDir, dstRootDir)  // Directory間の差分を取得
@@ -519,23 +520,28 @@ module Garage {
                             }).then(() => {
                                 if (callback) {
                                     callback(null);    // 成功
+                                } else {
+                                    df.resolve();
                                 }
                             }).fail((err) => {
                                 if (callback) {
                                     callback(err);    // 成功
+                                } else {
+                                    df.reject(err);
                                 }
                             });
                     }, 100);
 
-                    return { cancel: this._cancel };
+                    return CDP.makePromise(df);
                 }
 
-
+                // TODO: make public
                 private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
                     let FUNCITON_NAME = TAG + "_copyFiles : ";
                     let df = $.Deferred<Error>();
                     let promise = CDP.makePromise(df);
 
+                    // TODO: remove nop code
                     let files = targetFiles.slice();
 
                     let proc = () => {
@@ -548,6 +554,7 @@ module Garage {
                                 this._checkCancel();
                                 let option: CopyOptions = {
                                     preserveTimestamps: true,
+                                    // TODO: move filter logic out of this method
                                     // ボタンデバイス情報のキャッシュファイルは本体に送らない
                                     filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }
@@ -788,7 +795,7 @@ module Garage {
              */
             export function getHuisRootPath(vendorId: number, productId: number): string {
                 let rootPath = null;
-                if (process.platform === PLATFORM_WIN32) {
+                if (Util.MiscUtil.isWindows()) {
                     rootPath = usb_dev.getPath(vendorId, productId);
                     if (rootPath === "") {
                         return null;

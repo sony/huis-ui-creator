@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="include/interfaces.d.ts" />
 
 // Electron patch scope.
@@ -52,20 +51,10 @@ module Garage {
         node_crypt = Remote.require('crypto');
 
         //このアプリのバージョン :　MajorVersion.MinorVersion.BuildNumber.Reversion
-        
-        APP_VERSION = "";
-        
 
-        PLATFORM_WIN32 = "win32";
-        PLATFORM_DARWIN = "darwin";
+        APP_VERSION = "";
 
         DURATION_DIALOG_CLOSE = 3000;
-
-        RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON = 0.758;
-        RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL = 0.758;
-        MIN_TEXT_SIZE = 12;
-        GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC = 0.001;
-        GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC = 0.001;
 
         HUIS_FACE_PAGE_WIDTH = 480;
         HUIS_FACE_PAGE_HEIGHT = 812;
@@ -87,18 +76,20 @@ module Garage {
         DEVICE_TYPE_STB = "Set top box";
         DEVICE_TYPE_FAN = "Fan";
         DEVICE_TYPE_AIR_CLEANER = "Air cleaner";
-        DEVICE_TYPE_CUSOM = "Custom";
+        DEVICE_TYPE_CUSTOM = "Custom";
         DEVICE_TYPE_FULL_CUSTOM = "fullcustom";
         DEVICE_TYPE_BT = "Bluetooth";
         DEVICE_TYPE_SPECIAL = "special";
         DEVICE_TYPE_LEARNED = "Device";
+        DEVICE_TYPE_AUTO_LAYOUT = "Recommend";
+        DEVICE_TYPE_COMMON = "Common";
 
         FACE_TYPE_FULL_CUSTOM = DEVICE_TYPE_FULL_CUSTOM;
         FACE_TYPE_NOT_FULL_CUSTOM = "not-" + FACE_TYPE_FULL_CUSTOM;
 
-        NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM];
-        NON_SUPPORT_FACE_CATEGORY = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL];
-        NON_SUPPORT_DEVICE_TYPE_IN_MACRO = [DEVICE_TYPE_CUSOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL];
+        NON_SUPPORT_DEVICE_TYPE_IN_EDIT = [DEVICE_TYPE_CUSTOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_AUTO_LAYOUT];
+        NON_SUPPORT_FACE_CATEGORY = [DEVICE_TYPE_CUSTOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL, DEVICE_TYPE_AUTO_LAYOUT];
+        NON_SUPPORT_DEVICE_TYPE_IN_MACRO = [DEVICE_TYPE_CUSTOM, DEVICE_TYPE_FULL_CUSTOM, DEVICE_TYPE_SPECIAL, DEVICE_TYPE_AUTO_LAYOUT];
 
         GRID_AREA_WIDTH = 464;
         GRID_AREA_HEIGHT = 812;
@@ -119,10 +110,8 @@ module Garage {
         DOUBLE_CLICK_TIME_MS = 500;
 
         MAX_NUM_MACRO_SIGNAL = 63;
-        DEFAULT_INTERVAL_MACRO = 400;
 
-        FUNC_ID_LEN = 4;
-        FUNC_NUM_DELIMITER  = '#';
+        FUNC_NUM_DELIMITER = '#';
         FUNC_CODE_RELEARNED = '#';
 
         UNKNOWN_REMOTE = "unknown";
@@ -148,7 +137,7 @@ module Garage {
 
         ACTION_INPUT_TAP_VALUE = "touch";
         ACTION_INPUT_LONG_PRESS_VALUE = "long_press";
-        ACTION_INPUT_FLICK_UP_VALUE =  "flick_up";
+        ACTION_INPUT_FLICK_UP_VALUE = "flick_up";
         ACTION_INPUT_FLICK_RIGHT_VALUE = "flick_right";
         ACTION_INPUT_FLICK_LEFT_VALUE = "flick_left";
         ACTION_INPUT_FLICK_DOWN_VALUE = "flick_down";
@@ -158,7 +147,7 @@ module Garage {
         ACTION_INPUT_SWIPE_DOWN_VALUE = "swipe_down";
 
         ACTION_INPUTS = [];
-        ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value : ACTION_INPUT_TAP_VALUE});
+        ACTION_INPUTS.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_LONG_PRESS_KEY, value: ACTION_INPUT_LONG_PRESS_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
         ACTION_INPUTS.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
@@ -174,45 +163,26 @@ module Garage {
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
         ACTION_INPUTS_MACRO.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
 
+        //ジャンプのときに選べるアクション
+        ACTION_INPUTS_JUMP = [];
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_TAP_KEY, value: ACTION_INPUT_TAP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_LONG_PRESS_KEY_SINGLE, value: ACTION_INPUT_LONG_PRESS_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_UP_KEY, value: ACTION_INPUT_FLICK_UP_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_RIGHT_KEY, value: ACTION_INPUT_FLICK_RIGHT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_LEFT_KEY, value: ACTION_INPUT_FLICK_LEFT_VALUE });
+        ACTION_INPUTS_JUMP.push({ key: ACTION_INPUT_FLICK_DOWN_KEY, value: ACTION_INPUT_FLICK_DOWN_VALUE });
+
+
         DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER = 500;
         DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_ADD_SIGNAL_CONTAINER = 500;
         DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS = 1000;
 
-        //接続しているHUISリモコンのバージョンを取得
-        //初期値。splashスクリーンで値をいれる。
-        RC_VERSION = null;
-
-        HUIS_RC_VERSION_REQUIRED = "4.0.3";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.1.0";//この値がダイアログで表示される。sqa用に実際にチェックする値とは別に値を用意。
         //インポート・エクスポート用の拡張子
         EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "hsrc";
+        EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B = "hsrcb";
+
         DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE = "リモコンファイル";
-
-        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (process.platform == PLATFORM_WIN32) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage").replace(/\\/g, "/");
-        } else if (process.platform == PLATFORM_DARWIN) {
-            GARAGE_FILES_ROOT = path.join(app.getPath("appData"), "Garage");
-        } else {
-            console.error("Error: unsupported platform");
-        }
-
-        DIR_NAME_WINDOWS = "Windows";
-        DIR_NAME_MAC = "Mac";
-
-        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles)
-        HUIS_FILES_ROOT = path.join(GARAGE_FILES_ROOT, "HuisFiles").replace(/\\/g, "/");
-        if (!fs.existsSync(HUIS_FILES_ROOT)) {
-            fs.mkdirSync(HUIS_FILES_ROOT);
-        }
-        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
-            fs.mkdirSync(GARAGE_FILES_ROOT);
-        }
-        REMOTE_IMAGES_DIRRECOTORY_NAME = "remoteimages";
-        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
-        HUIS_REMOTEIMAGES_ROOT = path.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRRECOTORY_NAME).replace(/\\/g, "/");
-        MIN_HEIGHT_PREVIEW = 156;//プレビューの最小の高さ
 
         REMOTE_BACKGROUND_WIDTH = 540;
         REMOTE_BACKGROUND_HEIGHT = 870;
@@ -246,7 +216,7 @@ module Garage {
             imageType: "image/png"
         };
 
-        HELP_SITE_URL = "http://huis.jp/extended-feature.html";
+        HELP_SITE_URL = "http://huis.jp/remote-controller/ui-creator/";
 
         //if (fs.existsSync("debug")) {
         //    DEBUG_MODE = true;
@@ -274,19 +244,19 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
-            "garage.util.huisdev",
+            "garage.util.selectremotepagedialog",
             "garage.util.miscutil",
-            "garage.util.garagefiles",
+            "garage.util.huisdev",
             "garage.util.jqutils",
             "garage.util.zipmanager",
-            "garage.util.informationdialog",
-            "garage.util.itemclipboard"],
+            "garage.util.itemclipboard",
+            "garage.util.phnconfigfile",
+            "garage.util.pathmanager"],
             () => {
+                initPath();
                 try {
                     electronDialog = new Util.ElectronDialog();
                     huisFiles = new Util.HuisFiles();
-                    garageFiles = new Util.GarageFiles();
-                    miscUtil = new Util.MiscUtil();
                 } catch (e) {
                     console.error("init.ts loadUtils failed. " + e);
                 }
@@ -297,11 +267,10 @@ module Garage {
                 //load trouble, retry
                 requirejs(err.requireModules,
                     () => {
+                        initPath();
                         try {
                             electronDialog = new Util.ElectronDialog();
                             huisFiles = new Util.HuisFiles();
-                            garageFiles = new Util.GarageFiles();
-                            miscUtil = new Util.MiscUtil();
                         } catch (e) {
                             console.error("init.ts loadUtils failed. " + e);
                         }
@@ -311,18 +280,60 @@ module Garage {
                         console.error("retry failed..." + err);
                     }
 
-                ); 
+                );
             }
         );
     };
+
+    var initPath = () => {
+
+        HUIS_RC_VERSION_REQUIRED = "4.1.1";
+        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.2.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
+        //BZ版と通常版で、必要バージョンを分ける。
+        if (Util.MiscUtil.isBz()) {
+            HUIS_RC_VERSION_REQUIRED = "8.0.0";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";
+        }
+
+        // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
+        if (Util.MiscUtil.isWindows()) {
+            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
+        } else if (Util.MiscUtil.isDarwin()) {
+            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
+        } else {
+            console.error("Error: unsupported platform");
+        }
+        if (!fs.existsSync(GARAGE_FILES_ROOT)) {
+            fs.mkdirSync(GARAGE_FILES_ROOT);
+        }
+
+        // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
+        HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFiles");
+        if (Util.MiscUtil.isBz()) {
+            HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFilesBz");
+        }
+
+        if (!fs.existsSync(HUIS_FILES_ROOT)) {
+            fs.mkdirSync(HUIS_FILES_ROOT);
+        }
+
+
+        // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
+        REMOTE_IMAGES_DIRECTORY_NAME = "remoteimages";
+        HUIS_REMOTEIMAGES_ROOT = Util.PathManager.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME);
+        if (!fs.existsSync(HUIS_REMOTEIMAGES_ROOT)) {
+            fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
+        }
+
+    }
 
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (process.platform == PLATFORM_WIN32) {
+            if (Util.MiscUtil.isWindows()) {
                 HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (process.platform == PLATFORM_DARWIN) {
+            } else if (Util.MiscUtil.isDarwin()) {
                 HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
             } else {
                 console.error("Error: unsupported platform");
@@ -333,7 +344,7 @@ module Garage {
                 while (dirs == null) {
                     try {
                         dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
-                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった
+                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
@@ -341,7 +352,7 @@ module Garage {
                                 message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
                                 buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                                 title: PRODUCT_NAME,
-                                cancelId:0,
+                                cancelId: 0,
                             });
 
                         if (response !== 0) {
@@ -350,9 +361,6 @@ module Garage {
                     }
                 }
                 isHUISConnected = true; // HUISが接続されている
-
-                //接続しているHUISリモコンのバージョンが書き込まれているファイルのパスを入力
-                RC_VERSION_FILE_NAME = path.join(HUIS_ROOT_PATH, "appversion").replace(/\\/g, "/");
 
                 callback(); // 次の処理へ
 
@@ -364,7 +372,7 @@ module Garage {
                         message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
-                        cancelId:0,
+                        cancelId: 0,
                     });
 
                 if (response !== 0) {

@@ -22,10 +22,20 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.Module] ";
 
-        export class Module extends Backbone.Model implements IGModule {
+        export class Module extends Backbone.Model {
 
+            // TODO: change constructor
             constructor(attributes?: any) {
                 super(attributes, null);
+                if (this.button == null) {
+                    this.button = [];
+                }
+                if (this.image == null) {
+                    this.image = [];
+                }
+                if (this.label == null) {
+                    this.label = [];
+                }
             }
 
             /*
@@ -57,8 +67,8 @@ module Garage {
             private isActionInvalid(action: IAction) {
                 return (action.code == null
                     && (action.code_db == null
-                    || (action.code_db.brand === " " || action.code_db.brand === "")
-                && (action.code_db.db_codeset === " " || action.code_db.db_codeset === "")
+                        || (action.code_db.brand === " " || action.code_db.brand === "")
+                        && (action.code_db.db_codeset === " " || action.code_db.db_codeset === "")
                         && action.code_db.function !== "none")
                     && action.bluetooth_data == null);
             }
@@ -66,7 +76,8 @@ module Garage {
             /**
              * 有効なactionを1つも持っていない場合にtrueを返す。
              */
-            public isButtonInvalid(button: IGButton): boolean {
+            // TODO: move this method to Model.ButtonItem
+            public isButtonInvalid(button: Model.ButtonItem): boolean {
                 for (let state of button.state) {
                     for (let action of state.action) {
                         if (!this.isActionInvalid(action)) {
@@ -75,6 +86,27 @@ module Garage {
                     }
                 }
                 return true;
+            }
+
+            clone() {
+                let cloneModule: Model.Module = $.extend(true, {}, this);
+
+                cloneModule.button = [];
+                for (let button of this.button) {
+                    cloneModule.button.push(button.clone());
+                }
+
+                cloneModule.image = [];
+                for (let image of this.image) {
+                    cloneModule.image.push(image.clone());
+                }
+
+                cloneModule.label = [];
+                for (let label of this.label) {
+                    cloneModule.label.push(label.clone());
+                }
+
+                return cloneModule;
             }
 
             /*
@@ -112,170 +144,162 @@ module Garage {
                 this.area.h += module.area.h;
             }
 
+            /**
+             * Model.ModuleをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このmoduleが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IModule} 変換されたデータ
+             */
+            // TODO: remove remoteId from arguments
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath: string, isToImportExport: boolean): IModule {
+                var module: IModule = {
+                    area: this.area,
+                };
+
+                let versionString: string = this.getModuleVersion();
+                if (versionString != null) {
+                    module = {
+                        version: versionString,
+                        area: this.area,
+                        group: this.group
+                    };
+                }
+
+                module.button = [];
+                if (this.button) {
+                    for (let button of this.button) {
+                        module.button.push(button.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
+                    }
+                }
+
+                module.image = [];
+                if (this.image) {
+                    for (let image of this.image) {
+                        module.image.push(image.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
+                    }
+                }
+
+                module.label = [];
+                if (this.label) {
+                    for (let label of this.label) {
+                        module.label.push(label.convertToHuisData());
+                    }
+                }
+                return module;
+            }
+
             /*
              * 各メンバ変数を設定する。offsetYとpageIndexは0で初期化される。
-             * @param gmodule ? : IModule リモコンファイルから読み出して得られた情報をまとめたオブジェクト
+             * @param imodule ? : IModule リモコンファイルから読み出して得られた情報をまとめたオブジェクト
              * @param remoteId ? : このモジュールを含むリモコンのID
              * @param moduleName ? : モジュールの定義ファイル名
              */
             public setInfoFromIModule(imodule: IModule, remoteId: string, pageIndex: number, moduleName: string) {
 
-                let gmodule: IGModule = {
+                // TODO: change constructor
+                let module = new Model.Module({
                     offsetY: this.offsetY,
                     remoteId: remoteId,
                     name: moduleName,
                     area: imodule.area,
                     pageIndex: pageIndex,
                     group: imodule.group,
-                }
+                });
 
                 if (imodule.button) {
                     // [TODO] button.state.image.garage_extensions 対応
-                    gmodule.button = this._buttons2gbuttons(imodule.button);
-                    this.setVersionInfoToIGButton(imodule, gmodule.button);
+                    module.button = this._iButtons2ButtomItems(imodule.button, remoteId);
+                    this.setVersionInfoToButtonItems(imodule, module.button);
                 }
                 if (imodule.image) {
-                    gmodule.image = this._images2gimages(imodule.image);
-                    this.setVersionInfoToIGImage(imodule, gmodule.image);
+                    module.image = this._iImages2ImageItems(imodule.image, remoteId);
+                    this.setVersionInfoToImageItems(imodule, module.image);
                 }
                 if (imodule.label) {
-                    gmodule.label = $.extend(true, [], imodule.label);
-                    this.setVersionInfoToIGLabel(imodule, gmodule.label);
+                    module.label = [];
+                    for (let label of imodule.label) {
+                        module.label.push(new Model.LabelItem(label));
+                    }
+                    this.setVersionInfoToLabel(imodule, module.label);
                 }
-
-                this.setInfoFromGModule(gmodule);
+                this.setInfoFromModule(module);
             }
 
+            // TODO: Replace this method with creating new object
             /*
              * 各メンバ変数を設定する。
-             * @param gmodule ? : IGModule 必要なパラメータをまとめたオブジェクト。
+             * @param {Model.Module} module 必要なパラメータをまとめたオブジェクト。
              */
-            public setInfoFromGModule(gmodule: IGModule) {
-                this.button = gmodule.button;
-                this.image = gmodule.image;
-                this.label = gmodule.label;
-                this.remoteId = gmodule.remoteId;
-                this.name = gmodule.name;
-                this.area = $.extend(true, {}, gmodule.area);
-                this.offsetY = gmodule.offsetY;
-                this.pageIndex = gmodule.pageIndex;
-                this.version = gmodule.version;
-                this.group = gmodule.group;
+            public setInfoFromModule(module: Model.Module) {
+                this.button = module.button;
+                this.image = module.image;
+                this.label = module.label;
+                this.remoteId = module.remoteId;
+                this.name = module.name;
+                this.area = $.extend(true, {}, module.area);
+                this.offsetY = module.offsetY;
+                this.pageIndex = module.pageIndex;
+                this.version = module.version;
+                this.group = module.group;
             }
 
             /*
-             * IGButton, IGLabel, IGImageからバージョン情報を抽出する。
-             * @param buttons ? : IGButtons
-             * @param imagess ? : IGImages
-             * @param labels ? : IGLabels
-             * return 入力オブジェクトから集めたのバージョン情報の配列 : string[]
-             */
-            private getVersions(buttons?: IGButton[], images?: IGImage[], labels?: IGLabel[]): Model.VersionString[] {
-                let FUNCTION_NAME: string = TAG + " : getVersions : ";
-                if (!buttons && !images && !labels) {
-                    console.warn(FUNCTION_NAME + "no inputs");
-                    return;
-                }
-                let result: Model.VersionString[] = [];
-
-                if (buttons) {
-                    for (let i = 0; i < buttons.length; i++) {
-                        if (buttons[i].version) {
-                            result.push(new Model.VersionString(buttons[i].version));
-                        }
-                    }
-                }
-
-                if (images) {
-                    for (let i = 0; i < images.length; i++) {
-                        if (images[i].version) {
-                            result.push(new Model.VersionString(images[i].version));
-                        }
-                    }
-                }
-
-                if (labels) {
-                    for (let i = 0; i < labels.length; i++) {
-                        if (labels[i].version) {
-                            result.push(new Model.VersionString(labels[i].version));
-                        }
-                    }
-                }
-
-
-                return result;
-            }
-
-            /*
-            * ２つのバージョン情報から、より番号が若い方を返す。
-            * @param version1 :string 比較対象のバージョン情報１ 
-            * @param version2 :string 比較対象のバージョン情報２
-            * return より番号が若い方のバージョン情報 : string
+            * 2つのバージョン情報から、より新しい方を返す。
+            * @param {VersionString} version1 比較対象のバージョン情報1
+            * @param {VersionString} version2 比較対象のバージョン情報2
+            * @return {VersionString} より新しい方のバージョン情報
             */
-            private getOlderVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getOlderVersion : ";
+            private getLaterVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
+                let FUNCTION_NAME: string = TAG + " : getLaterVersion : ";
 
-                if (version1 == null && version2 == null) {//両方ともNULLの場合、NULLを返す。
-                    return null;
-                }
-
-                if (version1 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version2) {
-                        return version2;
-                    }
-                    return null;
-                }
-
-                if (version2 == null) {//片方がNULLの場合、　もう片方を返す。
-                    if (version1) {
-                        return version1;
-                    }
-                    return null;
-                }
-
-                if (version1.isOlderThan(version2)) {
-                    return version1;
-                } else {
+                // 片方がNULLの場合、　もう片方を返す。
+                if (version1 == null) {
                     return version2;
                 }
+                if (version2 == null) {
+                    return version1;
+                }
+
+                return (version1.isOlderThan(version2)) ? version2 : version1;
             }
 
             /*
-             * 入力された　最も古いバージョン情報値:string を返す
-             * @param versions : string[]
-             * return :string 最古のボタンバージョン
+             * モジュール内に含まれるItemの最も新しいバージョン情報を返す
+             * @return {string} 最も新しいバージョン
              */
-            private getOldestVersionOf(versions: Model.VersionString[]): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getOldestVersionOfGButton : ";
+            private getLatestVersionOf(): Model.VersionString {
+                let FUNCTION_NAME: string = TAG + " : getLatestVersionOf : ";
 
-                if (versions == undefined) {
-                    console.warn(FUNCTION_NAME + "versions is undefined");
-                    return;
+                let latestVersion: Model.VersionString = null;
+
+                let items: Model.Item[] = [];
+                items = items.concat(this.button);
+                items = items.concat(this.image);
+                items = items.concat(this.label);
+
+                for (let item of items) {
+                    if (item.version != null) {
+                        let itemVersion = new VersionString(item.version);
+                        latestVersion = this.getLaterVersionOf(latestVersion, itemVersion);
+                    }
                 }
 
-                let oldestVersion: Model.VersionString = null;
-
-                for (let i = 0; i < versions.length; i++) {
-                    oldestVersion = this.getOlderVersionOf(oldestVersion, versions[i]);
-                }
-
-                return oldestVersion;
+                return latestVersion;
             }
 
             /*
-             * gmoduleの構成要素(button,label,image)のバージョンから、最も古いバージョンを返す。
-             * @param gModule : IGModule バージョン情報を内在した構成要素をもつGarageないで使われていたモジュール
-             * @return oldestVersionString : string gModule内のもっとも古いバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
+             * moduleの構成要素(button,label,image)のバージョンから、最も新しいバージョンを返す。
+             * @return {string} module内のもっとも新しいバージョン情報。１つもバージョン情報を持ってない場合、nullを返す。
              */
             public getModuleVersion(): string {
                 let FUNCTION_NAME: string = TAG + " : getModuleVersion : ";
 
-                let versions: Model.VersionString[] = this.getVersions(this.button, this.image, this.label);
-                let oldestVersion: Model.VersionString = this.getOldestVersionOf(versions);
+                let latestVersion: Model.VersionString = this.getLatestVersionOf();
 
-                if (oldestVersion != null) {
-                    let oldestVersionString: string = oldestVersion.getVersionString();
-                    return oldestVersionString;
+                if (latestVersion != null) {
+                    let latestVersionString: string = latestVersion.getVersionString();
+                    return latestVersionString;
                 } else {
                     return null;
                 }
@@ -285,18 +309,18 @@ module Garage {
             /*
              * モジュールにバージョン情報がある場合、Imageにその情報を引き継がせる
              * @param module :IModule 参照元のモジュール
-             * @param gImages :IGImage[] 代入先のモジュール
+             * @param images :Model.ImageItem[] 代入先のモジュール
              */
-            private setVersionInfoToIGImage(iModule: IModule, gImages: IGImage[]) {
-                let FUNCTION_NAME = TAG + " : setVersionInfoToIGIMage : ";
+            private setVersionInfoToImageItems(iModule: IModule, images: Model.ImageItem[]) {
+                let FUNCTION_NAME = TAG + " : setVersionInfoToModel.ImageItem : ";
 
                 if (iModule == null) {
                     console.warn(FUNCTION_NAME + "iModule is null");
                     return;
                 }
 
-                if (gImages == null) {
-                    console.warn(FUNCTION_NAME + "gImages is null");
+                if (images == null) {
+                    console.warn(FUNCTION_NAME + "images is null");
                     return;
                 }
 
@@ -304,26 +328,26 @@ module Garage {
                     return;//バージョン情報が存在しない場合、なにもしない。
                 }
 
-                for (let i = 0; i < gImages.length; i++) {
-                    gImages[i].version = iModule.version;
+                for (let i = 0; i < images.length; i++) {
+                    images[i].version = iModule.version;
                 }
             }
 
             /*
              * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
              * @param module :IModule 参照元のモジュール
-             * @param gButtons :IGButton[] 代入先のモジュール
+             * @param buttons :Model.ButtonItem[] 代入先のモジュール
              */
-            private setVersionInfoToIGButton(iModule: IModule, gButtons: IGButton[]) {
-                let FUNCTION_NAME = TAG + " : setVersionInfoToIGButton : ";
+            private setVersionInfoToButtonItems(iModule: IModule, buttons: Model.ButtonItem[]) {
+                let FUNCTION_NAME = TAG + " : setVersionInfoToButtonItems : ";
 
                 if (iModule == null) {
                     console.warn(FUNCTION_NAME + "iModule is null");
                     return;
                 }
 
-                if (gButtons == null) {
-                    console.warn(FUNCTION_NAME + "gButtons is null");
+                if (buttons == null) {
+                    console.warn(FUNCTION_NAME + "buttons is null");
                     return;
                 }
 
@@ -331,27 +355,26 @@ module Garage {
                     return;//バージョン情報が存在しない場合、なにもしない。
                 }
 
-                for (let i = 0; i < gButtons.length; i++) {
-                    gButtons[i].version = iModule.version;
+                for (let i = 0; i < buttons.length; i++) {
+                    buttons[i].version = iModule.version;
                 }
             }
-
 
             /*
              * モジュールにバージョン情報がある場合、Buttonにその情報を引き継がせる
              * @param module :IModule 参照元のモジュール
-             * @param gLabel :IGLabel[] 代入先のモジュール
+             * @param label :Model.LabelItem[] 代入先のモジュール
              */
-            private setVersionInfoToIGLabel(iModule: IModule, gLabel: IGLabel[]) {
-                let FUNCTION_NAME = TAG + " : setVersionInfoToIGLabel : ";
+            private setVersionInfoToLabel(iModule: IModule, label: Model.LabelItem[]) {
+                let FUNCTION_NAME = TAG + " : setVersionInfoToModel.LabelItem : ";
 
                 if (iModule == null) {
                     console.warn(FUNCTION_NAME + "iModule is null");
                     return;
                 }
 
-                if (gLabel == null) {
-                    console.warn(FUNCTION_NAME + "gLabel is null");
+                if (label == null) {
+                    console.warn(FUNCTION_NAME + "label is null");
                     return;
                 }
 
@@ -359,108 +382,111 @@ module Garage {
                     return;//バージョン情報が存在しない場合、なにもしない。
                 }
 
-                for (let i = 0; i < gLabel.length; i++) {
-                    gLabel[i].version = iModule.version;
+                for (let i = 0; i < label.length; i++) {
+                    label[i].version = iModule.version;
                 }
             }
 
             /**
-             * IImage を IGImage に変換する。主に garage_extensions を garageExtensions に付け替え。
+             * IImage を Model.ImageItem に変換する。主に garage_extensions を garageExtensions に付け替え。
              * 
-             * @param images {IImage[]} [in] IGImage[] に変換する IImage[]
-             * @return {IGImage[]} 変換された IGImage[]
+             * @param images {IImage[]} [in] Model.ImageItem[] に変換する IImage[]
+             * @return {Model.ImageItem[]} 変換された Model.ImageItem[]
              */
-            private _images2gimages(images: IImage[]): IGImage[] {
-                let gimages: IGImage[] = $.extend(true, [], images);
-                gimages.forEach((image) => {
-                    let garage_extensions: IGarageImageExtensions = image["garage_extensions"];
-                    if (garage_extensions) {
-                        image.garageExtensions = {
-                            original: garage_extensions.original,
-                            resolvedOriginalPath: "",
-                            resizeMode: garage_extensions.resize_mode
-                        };
-                        delete image["garage_extensions"];
-                    }
-                });
+            private _iImages2ImageItems(iImages: IImage[], remoteId: string): Model.ImageItem[] {
 
-                return gimages;
+                let images: Model.ImageItem[] = [];
+                // TODO: Replace this method with creating new object
+                for (let iImage of iImages) {
+                    let imageItem = new Model.ImageItem(iImage);
+                    images.push(imageItem);
+                }
+
+                return images;
             }
 
             /**
-             * IState[] を IGState[] に変換する。
+             * IState[] を Model.ButtonState[] に変換する。
              * 
-             * @param buttons {IState[]} IGState[] に変換する IState[]
-             * @return {IGState[]} 変換された IGState[]
+             * @param buttons {IState[]} Model.ButtonState[] に変換する IState[]
+             * @return {Model.ButtonState[]} 変換された Model.ButtonState[]
              */
-            private _states2gstates(states: IState[]): IGState[] {
-                let gstates: IGState[] = [];
-                states.forEach((state) => {
-                    let gstate: IGState = {};
-                    if (!_.isUndefined(state.id)) {
-                        gstate.id = state.id;
+            private _iState2ButtonStates(iStates: IState[], remoteId: string): Model.ButtonState[] {
+                let states: Model.ButtonState[] = [];
+                for (let iState of iStates) {
+                    // TODO: Replace this method with creating new object
+                    let state = new Model.ButtonState();
+                    if (!_.isUndefined(iState.id)) {
+                        state.stateId = iState.id;
                     }
-                    if (state.image) {
-                        gstate.image = this._images2gimages(state.image);
+                    if (iState.image) {
+                        state.image = this._iImages2ImageItems(iState.image, remoteId);
                     }
-                    if (state.label) {
-                        gstate.label = $.extend(true, [], state.label);
+                    state.label = [];
+                    if (iState.label) {
+                        for (let label of iState.label) {
+                            state.label.push(new Model.LabelItem(label));
+                        }
                     }
-                    if (state.action) {
-                        gstate.action = $.extend(true, [], state.action);
+                    if (iState.action) {
+                        state.action = $.extend(true, [], iState.action);
                     }
-                    if (state.translate) {
-                        gstate.translate = $.extend(true, [], state.translate);
+                    if (iState.translate) {
+                        state.translate = $.extend(true, [], iState.translate);
                     }
-                    if (!_.isUndefined(state.active)) {
-                        gstate.active = state.active;
+                    if (!_.isUndefined(iState.active)) {
+                        state.active = iState.active;
                     }
-                    gstates.push(gstate);
-                });
+                    states.push(state);
+                }
 
-                return gstates;
+                return states;
             }
 
             /**
-              * IButton[] を IGButton[] に変換する。
+              * IButton[] を Model.ButtonItem[] に変換する。
               * 
-              * @param buttons {IButton[]} IGButton[] に変換する IButton[]
-              * @return {IGButton[]} 変換された IGButton[]
+              * @param {IButton[]} buttons Model.ButtonItem[] に変換する IButton[]
+              * @return {Model.ButtonItem[]} 変換された Model.ButtonItem[]
               */
-            private _buttons2gbuttons(buttons: IButton[]): IGButton[] {
-                let gbuttons: IGButton[] = [];
-                buttons.forEach((button) => {
-                    let gstates: IGState[] = this._states2gstates(button.state);
-                    let gbutton: IGButton = {
-                        area: $.extend(true, {}, button.area),
-                        state: gstates,
+            private _iButtons2ButtomItems(iButtons: IButton[], remoteId: string): Model.ButtonItem[] {
+                let buttons: Model.ButtonItem[] = [];
+                iButtons.forEach((iButton) => {
+                    // TODO: Replace this method with creating new object
+                    let states: Model.ButtonState[] = this._iState2ButtonStates(iButton.state, remoteId);
+                    let button = new Model.ButtonItem({
+                        materialsRootPath: HUIS_FILES_ROOT,
+                        remoteId: remoteId,
+                        area: $.extend(true, {}, iButton.area),
+                        state: states,
                         currentStateId: undefined
-                    };
-                    if (button.default) {
-                        gbutton.default = button.default;
+                    });
+                    if (iButton.default) {
+                        button.default = iButton.default;
                     }
-                    if (button.name) {
-                        gbutton.name = button.name;
+                    if (iButton.name) {
+                        button.name = iButton.name;
                     }
-                    gbuttons.push(gbutton);
+                    buttons.push(button);
                 });
 
-                return gbuttons;
+                return buttons;
             }
-
-
 
             /**
              * getters and setters
              */
             get area(): IArea { return this.get("area"); }
             set area(val: IArea) { this.set("area", val); }
-            get button(): IGButton[] { return this.get("button"); }
-            set button(val: IGButton[]) { this.set("button", val); }
-            get label(): IGLabel[] { return this.get("label"); }
-            set label(val: IGLabel[]) { this.set("label", val); }
-            get image(): IGImage[] { return this.get("image"); }
-            set image(val: IGImage[]) { this.set("image", val); }
+            // TODO: change name, button to buttons
+            get button(): Model.ButtonItem[] { return this.get("button"); }
+            set button(val: Model.ButtonItem[]) { this.set("button", val); }
+            // TODO: change name, label to labels
+            get label(): Model.LabelItem[] { return this.get("label"); }
+            set label(val: Model.LabelItem[]) { this.set("label", val); }
+            // TODO: change name, image to images
+            get image(): Model.ImageItem[] { return this.get("image"); }
+            set image(val: Model.ImageItem[]) { this.set("image", val); }
             get offsetY(): number { return this.get("offsetY"); }
             set offsetY(val: number) { this.set("offsetY", val); }
             get pageIndex(): number { return this.get("pageIndex"); }

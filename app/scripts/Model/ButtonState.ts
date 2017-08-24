@@ -21,11 +21,14 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonState] ";
 
-        export class ButtonState extends Backbone.Model implements IGState {
+        namespace ConstValue {
+            export const DEFAULT_IMAGE_INDEX: number = 0;
+            export const DEFAULT_LABEL_INDEX: number = 0;
+        }
+
+        export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
             private labelCollection_: Backbone.Collection<LabelItem>;
-            private remoteId_: string;
-            private materialsRootPath_: string;
 
             defaults() {
                 // Please write default parameters' value
@@ -33,17 +36,157 @@ module Garage {
                 };
             }
 
+            // TODO: JSDoc comment
+            // TODO: Change attribute of constructor
             constructor(attributes?: any) {
                 super();
                 this.imageCollection_ = new ImageItemsCollection();
                 this.labelCollection_ = new LabelItemsCollection();
                 super(attributes, null);
-                if (attributes) {
-                    if (attributes.materialsRootPath && attributes.remoteId) {
-                        this.materialsRootPath_ = attributes.materialsRootPath;
-                        this.remoteId_ = attributes.remoteId;
+            }
+
+            clone() {
+                // TODO: change constructor
+                let cloneState = new Model.ButtonState({
+                    stateId: this.stateId
+                });
+                cloneState.active = this.active;
+
+                if (this.action) {
+                    if (_.isArray(this.action)) {
+                        cloneState.action = $.extend(true, [], this.action);
+                    } else {
+                        cloneState.action = [$.extend(true, {}, this.action)];
                     }
                 }
+
+                if (this.translate) {
+                    if (_.isArray(this.translate)) {
+                        cloneState.translate = $.extend(true, [], this.translate);
+                    } else {
+                        cloneState.translate = [$.extend(true, {}, this.translate)];
+                    }
+                }
+
+                cloneState.image = [];
+                for (let image of this.image) {
+                    cloneState.image.push(image.clone());
+                }
+
+                cloneState.label = [];
+                for (let label of this.label) {
+                    cloneState.label.push(label.clone());
+                }
+
+                return cloneState;
+            }
+
+            /**
+             * @return {boolean} 有効なModel.ImageItemを持っている場合、trueを返す。
+             */
+            hasValidImage(): boolean {
+                return this.imageCollection_.models.length > 0;
+            }
+
+            /**
+             * @return {boolean} 有効なModel.LabelItemを持っている場合、trueを返す。
+             */
+            hasValidLabel(): boolean {
+                return this.labelCollection_.models.length > 0;
+            }
+
+            /**
+             * Model.ButtonStateをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonStateが所属するremoteId
+             * @param {string} ourputDirPath faceファイルの出力先のディレクトリ
+             * @return {IState} 変換されたデータ
+             */
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IState {
+
+                let convertedState: IState = {
+                    id: this.stateId
+                };
+
+                if (this.image) {
+                    convertedState.image = [];
+                    for (let image of this.image) {
+                        convertedState.image.push(image.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
+                    }
+                }
+                if (this.label) {
+                    convertedState.label = [];
+                    for (let label of this.label) {
+                        convertedState.label.push(label.convertToHuisData());
+                    }
+                }
+                if (this.action) {
+                    convertedState.action = this._normalizeButtonStateActions(this.action);
+                }
+
+                if (this.translate) {
+                    convertedState.translate = [];
+                    this.translate.forEach((translate: IStateTranslate) => {
+                        convertedState.translate.push({
+                            input: translate.input,
+                            next: translate.next
+                        });
+                    });
+                }
+
+                return convertedState;
+            }
+
+            // TODO: Move this method to action class
+            /**
+             * button.state.action データから module 化に不要なものを間引く
+             */
+            private _normalizeButtonStateActions(actions: IAction[]): IAction[] {
+                var normalizedActions: IAction[] = [];
+
+                actions.forEach((action: IAction) => {
+                    let normalizedAction: IAction = {
+                        input: (action.input) ? action.input : "none"
+                    };
+                    if (action.code) {
+                        normalizedAction.code = action.code;
+                    }
+                    if (action.code_db) {
+                        normalizedAction.code_db = {
+                            function: (action.code_db.function) ? Util.HuisFiles.getPlainFunctionKey(action.code_db.function) : "none",
+                            brand: action.code_db.brand,
+                            device_type: action.code_db.device_type,
+                            db_codeset: action.code_db.db_codeset
+                        };
+                        if (!_.isUndefined(action.code_db.db_device_id)) {
+                            normalizedAction.code_db.db_device_id = action.code_db.db_device_id;
+                        }
+                        if (!_.isUndefined(action.code_db.model_number)) {
+                            normalizedAction.code_db.model_number = action.code_db.model_number;
+                        }
+                        if (!_.isUndefined(action.bluetooth_data)) {
+                            normalizedAction.bluetooth_data = action.bluetooth_data;
+                        }
+                        if (!_.isUndefined(action.jump)) {
+                            normalizedAction.jump = action.jump;
+                        }
+
+                    } else {
+                        normalizedAction.code_db = {
+                            function: "none",
+                            brand: " ",
+                            device_type: " ",
+                            db_codeset: " "
+                        }
+                    }
+                    if (!_.isUndefined(action.interval)) {
+                        normalizedAction.interval = action.interval;
+                    }
+
+                    normalizedActions.push(normalizedAction);
+                });
+
+                return normalizedActions;
             }
 
             get stateId(): number {
@@ -61,7 +204,6 @@ module Garage {
             set area(val: IArea) {
                 this.set("area", val);
                 // state 内の model の area 更新
-                // [TODO] areaRatio を考慮すべきだが、暫定的に親要素と同じサイズ
                 this.imageCollection_.forEach((imageModel) => {
                     imageModel.area = {
                         x: 0,
@@ -72,102 +214,26 @@ module Garage {
                 });
             }
 
-            get image(): IGImage[]{
-                let images: IGImage[] = [];
-                let imageModels = this.imageCollection_.models;
-                if (imageModels && 0 < imageModels.length) {
-                    imageModels.forEach((imageModel) => {
-                        let image: IGImage = {
-                            area: $.extend(true, {}, imageModel.area),
-                            path: imageModel.path
-                        };
-                        if (imageModel.resolvedPath) {
-                            image.resolvedPath = imageModel.resolvedPath;
-                        }
-                        if (imageModel.resolvedPathCSS) {
-                            image.resolvedPathCSS = imageModel.resolvedPathCSS;
-                        }
-                        if (imageModel.garageExtensions) {
-                            image.garageExtensions = $.extend(true, {}, imageModel.garageExtensions);
-                        }
-                        if (imageModel.resizeMode) {
-                            image.resizeMode = imageModel.resizeMode;
-                        }
-                        if (imageModel.resizeOriginal) {
-                            image.resizeOriginal = imageModel.resizeOriginal;
-                        }
-                        if (imageModel.resizeResolvedOriginalPath) {
-                            image.resizeResolvedOriginalPath = imageModel.resizeResolvedOriginalPath;
-                        }
-                        if (imageModel.resizeResolvedOriginalPathCSS) {
-                            image.resizeResolvedOriginalPathCSS = imageModel.resizeResolvedOriginalPathCSS;
-                        }
-                        if (imageModel.areaRatio) {
-                            image.areaRatio = $.extend(true, {}, imageModel.areaRatio);
-                        }
-                        image.resized = imageModel.resized;
-
-                        images.push(image);
-                    });
-                    return images;
-                }
-                return null;
-                //return this.get("image");
+            // TODO: change name, image to images
+            get image(): Model.ImageItem[] {
+                return this.imageCollection_.models;
             }
 
-            set image(val: IGImage[]) {
-                let imageModels: ImageItem[] = [];
-
-                val.forEach((image) => {
-                    let imageModel = new ImageItem({
-                        materialsRootPath: this.materialsRootPath_,
-                        remoteId: this.remoteId_
-                    });
-                    imageModel.area = $.extend(true, {}, image.area);
-                    // [TODO] 将来的に areaRatio から area を算出するつもりだが、暫定的に親要素と同じ大きさとする
-                    if (this.area) {
-                        imageModel.area = {
-                            x: 0,
-                            y: 0,
-                            w: this.area.w,
-                            h: this.area.h
-                        };
-                    }
-                    imageModel.path = image.path;
-                    if (image.garageExtensions) {
-                        imageModel.garageExtensions = $.extend(true, {}, image.garageExtensions);
-                    }
-                    // image.resizeOriginal が明示的に指定されている場合は、上書きする
-                    if (image.resizeOriginal) {
-                        imageModel.resizeOriginal = image.resizeOriginal;
-                    }
-                    // model に resizeOriginal が指定されていない場合は、path をオリジナルとして指定する
-                    if (!imageModel.resizeOriginal) {
-                        imageModel.resizeOriginal = image.path;
-                    }
-                    if (image.resizeMode) {
-                        imageModel.resizeMode = image.resizeMode;
-                    }
-                    imageModel.resized = true;
-                    if (image.areaRatio) {
-                        imageModel.areaRatio = $.extend(true, {}, image.areaRatio);
-                    }
-
-                    imageModels.push(imageModel);
-                });
-                this.imageCollection_.reset(imageModels);
-                //this.set("image", val);
+            set image(val: Model.ImageItem[]) {
+                this.imageCollection_.reset(val);
             }
 
-            get label(): IGLabel[]{
+            // TODO: change name, label to labels
+            get label(): Model.LabelItem[] {
                 return this.get("label");
             }
 
-            set label(val: IGLabel[]) {
+            set label(val: Model.LabelItem[]) {
                 this.set("label", val);
             }
 
-            get action(): IAction[]{
+            // TODO: change name, action to actions
+            get action(): IAction[] {
                 return this.get("action");
             }
 
@@ -190,6 +256,39 @@ module Garage {
             set active(val: boolean) {
                 this.set("active", val);
             }
+
+            getDefaultImage(): Model.ImageItem {
+                return this.imageCollection_.models[ConstValue.DEFAULT_IMAGE_INDEX];
+            }
+
+            setDefaultImage(image: Model.ImageItem) {
+                this.imageCollection_.models[ConstValue.DEFAULT_IMAGE_INDEX] = image;
+            }
+
+            getDefaultLabel(): Model.LabelItem {
+                return this.label[ConstValue.DEFAULT_LABEL_INDEX];
+            }
+
+            setDefaultLabel(label: Model.LabelItem) {
+                this.label[ConstValue.DEFAULT_LABEL_INDEX] = label;
+            }
+
+            /**
+             * actionに特定のアクションが含まれるか判定する
+             * @param actiionType{string} アクション含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
+             */
+            isIncludeSpecificActionType(actionType: string): boolean {
+                for (let action of this.action) {
+                    if (!action.input) continue;
+
+                    if (action.input == actionType) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
         }
     }
 }

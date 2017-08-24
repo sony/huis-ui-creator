@@ -14,7 +14,6 @@
     limitations under the License.
 -->
 
-
 <article>
     <script type="text/template" id="template-face-canvas">
         <section id="face-canvas">
@@ -29,32 +28,28 @@
             </section>
         </section>
     </script>
-
     <script type="text/template" id="template-face-plain">
         <section id="face-pages-area"></section>
     </script>
-
     <script type="text/template" id="template-face-page">
         <section class="face-page" data-page-index="{{index}}" style="width:{{width}}px; height:{{height}}px;"></section>
     </script>
-
     <script type="text/template" id="template-module-container">
         <section class="module-container" data-module-index="{{index}}" data-module-page-index="{{pageIndex}}" data-module-offset-y="{{offsetY}}" data-cid="{{cid}}" style="width:{{width}}px; height:{{height}}px;"></section>
     </script>
-
     <script type="text/template" id="template-button-item">
         <div class="button-item item  tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}">
             {{#state}}
-            <div class="button-state{{#active}} active{{/active}}" data-state-id="{{id}}">
+            <div class="button-state{{#active}} active{{/active}}" data-state-id="{{stateId}}">
                 {{#image}}
                 <!--<img class="image" src="{{resolvedPath}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}}" />-->
-                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}}></div>
+                <div class="state-image{{#resizeMode}} image-{{resizeMode}}{{/resizeMode}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;{{/area}} {{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}"></div>
                 {{/image}}
                 {{^image}}
                 <div class="state-image" style="left:0;top:0;width:0;height:0;background-image:url();"></div>
                 {{/image}}
                 {{#label}}
-                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{size}}pt{{/size}}" {{#areaRatio}} data-ratio-x="{{x}}" data-ratio-y="{{y}}" data-ratio-w="{{w}}" data-ratio-h="{{h}}" {{/areaRatio}} {{^areaRatio}} data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1" {{/areaRatio}}>{{text}}</div>
+                <div class="state-label" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#size}} font-size:{{sizeForRender}}pt{{/size}};color:{{color}};">{{text}}</div>
                 {{/label}}
                 {{^label}}
                 <div class="state-label" data-ratio-x="0" data-ratio-y="0" data-ratio-w="1" data-ratio-h="1"></div>
@@ -63,32 +58,26 @@
             {{/state}}
         </div>
     </script>
-
     <script type="text/template" id="template-label-item">
-        <div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{size}}pt;color:{{resolvedColor}};">
+        <div class="label-item item tooltip" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}font-size:{{sizeForRender}}pt;color:{{color}};">
             <div class="label-value">{{text}}</div>
         </div>
     </script>
-
     <script type="text/template" id="template-module-separator">
         <div class="module-separator" data-cid="{{cid}}">
-            <div class="separator-name">{{text}}</div>
+            <div class="separator-name" style="color:{{color}}">{{text}}</div>
         </div>
     </script>
-
     <script type="text-template" id="template-image-item">
-        <div class="image-item item{{#pageBackground}} background{{/pageBackground}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}">
+        <div class="image-item item{{#isBackgroundImage}} background{{/isBackgroundImage}}" data-cid="{{cid}}" style="{{#area}}left:{{x}}px;top:{{y}}px;width:{{w}}px;height:{{h}}px;line-height:{{h}}px;{{/area}}{{#resizeResolvedOriginalPathCSS}} background-image:url('{{resizeResolvedOriginalPathCSS}}');{{/resizeResolvedOriginalPathCSS}}{{^garageExtensions}}{{#resolvedPathCSS}} background-image:url('{{resolvedPathCSS}}');{{/resolvedPathCSS}}{{/garageExtensions}}">
         </div>
     </script>
-
     <script type="text-template" id="template-separator-face-and-master">
         <div class="face-master-separator">
-            <div class ="separate-text">
+            <div class="separate-text">
                 <div class="border-line"></div>
-                <span data-i18n="edit.pallet.STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS">★ALL BUTTONS</span>
+                <span data-i18n="edit.pallet.STR_EDIT_PALLET_SEPARATOR_ALL_BUTTONS">ALL BUTTONS</span>
             </div>
         </div>
     </script>
-
-
 </article>

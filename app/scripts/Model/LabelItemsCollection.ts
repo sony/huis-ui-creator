@@ -32,7 +32,7 @@ module Garage {
             }
 
             //! destroy ハンドラ。
-            private onDestroy(item: LabelItem) {
+            private onDestroy(item: Model.LabelItem) {
                 console.log(TAG + "onDestroy()");
             }
         }

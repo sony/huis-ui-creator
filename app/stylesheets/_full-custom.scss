@@ -13,9 +13,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 */
-
-
 @import "variables/variable";
+
+// TODO: split into files
 
 #page-full-custom {
     #main {
@@ -23,52 +23,52 @@
         overflow: overlay;
     }
 
-    .fade-in{
+    .fade-in {
         transition-duration: 0.2s;
-        opacity:1;
+        opacity: 1;
     }
 
-     .ui-header{
-        #button-edit-done{
-            background-image:$PATH_IMG_SAVE_BTN_NORMAL;
-            margin-top:$SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_TOP;
-            margin-left:$SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_LEFT;
-            height:$SIZE_EDIT_HEADER_SAVE_BTN_HEIGHT;
-            width:$SIZE_EDIT_HEADER_SAVE_BTN_WIDTH;
-            top:0;
-            padding:0;
-            box-shadow:none;
-            border:none;
-            background-color:transparent;
+    .ui-header {
+        #button-edit-done {
+            background-image: $PATH_IMG_SAVE_BTN_NORMAL;
+            margin-top: $SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_TOP;
+            margin-left: $SIZE_EDIT_HEADER_SAVE_BTN_MARGIN_LEFT;
+            height: $SIZE_EDIT_HEADER_SAVE_BTN_HEIGHT;
+            width: $SIZE_EDIT_HEADER_SAVE_BTN_WIDTH;
+            top: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            background-color: transparent;
 
-            &:hover{
-                background-image:$PATH_IMG_SAVE_BTN_HOVER;
+            &:hover {
+                background-image: $PATH_IMG_SAVE_BTN_HOVER;
             }
 
-            &:active{
-                background-image:$PATH_IMG_SAVE_BTN_ACTIVE;
+            &:active {
+                background-image: $PATH_IMG_SAVE_BTN_ACTIVE;
             }
         }
 
-         #button-edit-back{
-            background-image:$PATH_IMG_BACK_BTN_NORMAL;
-            margin-top:$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_TOP;
-            margin-left:$SIZE_EDIT_HEADER_BACK_BTN_MARGIN_LEFT;
-            height:$SIZE_EDIT_HEADER_BACK_BTN_HEIGHT;
-            width:$SIZE_EDIT_HEADER_BACK_BTN_WIDTH;
-            top:0;
-            left:0;
-            padding:0;
-            box-shadow:none;
-            border:none;
-            background-color:transparent;
+        #button-edit-back {
+            background-image: $PATH_IMG_BACK_BTN_NORMAL;
+            margin-top: $SIZE_EDIT_HEADER_BACK_BTN_MARGIN_TOP;
+            margin-left: $SIZE_EDIT_HEADER_BACK_BTN_MARGIN_LEFT;
+            height: $SIZE_EDIT_HEADER_BACK_BTN_HEIGHT;
+            width: $SIZE_EDIT_HEADER_BACK_BTN_WIDTH;
+            top: 0;
+            left: 0;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            background-color: transparent;
 
-            &:hover{
-                background-image:$PATH_IMG_BACK_BTN_HOVER;
+            &:hover {
+                background-image: $PATH_IMG_BACK_BTN_HOVER;
             }
 
-            &:active{
-                background-image:$PATH_IMG_BACK_BTN_ACTIVE;
+            &:active {
+                background-image: $PATH_IMG_BACK_BTN_ACTIVE;
             }
         }
     }
@@ -76,71 +76,113 @@
     #face-edit-area {
         position: absolute;
         //background-color: #88ff88;
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_WHITE_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$WHITE_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_WHITE_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_WHITE} {
+            background-image: $PATH_IMG_BLACK_FRAME_WHITE_FACE_CANVAS_AREA;
+        }
+
+        #face-canvas-area.#{$BLACK_RC_FRAME}.#{$FACE_COLOR_BLACK} {
+            background-image: $PATH_IMG_BLACK_FRAME_BLACK_FACE_CANVAS_AREA;
+        }
 
         #face-canvas-area {
-            background-image : $PATH_IMG_CANVAS_AREA;
-            background-color :none;
+            background-color: none;
             position: absolute;
             width: $SIZE_CANVAS_AREA_WIDTH;
             height: $SIZE_CANVAS_AREA_HEIGHT;
             top: $SIZE_CANVAS_AREA_MARGIN_TOP;
-
-            //ボタン情報表示用 ツールチップ 非表示
-            #canvas-tooltip{                        
-                overflow:initial;
-                text-shadow:none;
-                    
-                visibility:visible;
+            //ボタン情報表示用 ツールチップ 表示
+            #canvas-tooltip {
+                overflow: initial;
+                text-shadow: none;
+                visibility: visible;
                 display: flex;
                 align-items: center;
-                position: fixed; 
-
+                position: fixed;
                 margin-top: $SIZE_TOOLTIP_MAGIN_TOP;
-                height:$SIZE_TOOLTIP_HEIGHT;
-                width:initial;
+                height: $SIZE_TOOLTIP_HEIGHT;
+                width: initial;
                 font-size: $FONT_SIZE_SSS;
-                font-family:$FONT_FAMILY_TOOL_TIP;
+                font-family: $FONT_FAMILY_TOOL_TIP;
                 color: $COLOR_TOOLTIP_TEXT;
                 background-color: $COLOR_TOOLTIP_BACKGROUND;
-                border : $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
+                border: $SIZE_TOOLTIP_BORDER_THICKNESS solid $COLOR_BLACK;
                 padding: 0 $SIZE_TOOLTIP_PADDING_SIDE;
-                box-shadow:$COLOR_TOOLTIP_SHADOW;
-                z-index:100;                
+                box-shadow: $COLOR_TOOLTIP_SHADOW;
+                z-index: 100;
             }
-
-
             //ボタン情報表示用 ツールチップ 非表示
-            #canvas-tooltip.disable{
-                    display :none;
+            #canvas-tooltip.disable {
+                display: none;
             }
 
             #face-canvas {
-                
-                #face-pages-area{
+                // black style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_BLACK} {
+                    .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_BLACK;
+
+                        &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_BLACK;
+                        }
+
+                        &.selected {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+                        }
+                    }
+                }
+                // white style rule for canvas
+                #face-pages-area.#{$FACE_COLOR_WHITE} {
+                    .item {
+                        border-color: $COLOR_BUTTON_EDIT_BORDER_WHITE;
+
+                        &:hover {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                            background-color: $COLOR_BUTTON_EDIT_HOVER_WHITE;
+                        }
+
+                        &.selected {
+                            border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+                        }
+                    }
+                }
+
+                #face-pages-area {
                     transform: scale(0.5);
                     transform-origin: left top;
+
+                    .item.button-item.overlayed {
+                        border-color: $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
+                    }
                 }
-               
-                #face-canvas-inner{
-                    height:$SIZE_CANVAS_INNER_HEIGHT;
+
+                #face-canvas-inner {
+                    height: $SIZE_CANVAS_INNER_HEIGHT;
                 }
 
                 .item {
                     cursor: move;
-                    border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS solid $COLOR_CANVAS_ITEM_BORDER;
-                    margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
-
-                    &:hover{
-                        background-color:$COLOR_CANVAS_ITEM_HOVER;
-                    }
+                    border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS;
+                    border-style: solid;
+                    margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS;
 
                     &.selected {
-                        border :$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED solid $SIZE_CANVAS_ITEM_BORDER_SELECTED;
-                        margin:-$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
+                        border-width: $SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
+                        border-style: solid;
+                        margin: -$SIZE_CANVAS_ITEM_BORDER_THICKNESS_SELECTED;
                         z-index: 100;
-                        background-color:$COLOR_CANVAS_SELECTED_ITEM_BACKGROUND;
                     }
-                    
+
                     &.disabled {
                         display: none;
                     }
@@ -148,60 +190,55 @@
                     &.background {
                         cursor: default;
                     }
-
-                }
-
-                .button-item.overlayed{
-                    border-color : $COLOR_CANVAS_ITEM_BORDER_OVERLAYED;
                 }
 
                 .item-resizer {
                     position: absolute;
-                    box-sizing:border-box;
+                    box-sizing: border-box;
                     width: $SIZE_CANVAS_ITEM_RESIZER_WIDTH;
                     height: $SIZE_CANVAS_ITEM_RESIZER_HEIGHT;
                     border: $SIZE_CANVAS_ITEM_RESIZER_THICKNESS solid $COLOR_LIGHT_GREEN;
-
                     background-color: $SIZE_CANVAS_ITEM_BACKGROUND;
 
                     &.left-top {
-                        cursor:nw-resize;
+                        cursor: nw-resize;
                     }
+
                     &.right-top {
-                        cursor:ne-resize;
+                        cursor: ne-resize;
                     }
+
                     &.right-bottom {
                         cursor: se-resize;
                     }
+
                     &.left-bottom {
                         cursor: sw-resize;
                     }
                 }
 
-                .face-page{
-                    margin-left:$SIZE_CANVAS_FACE_PAGE_MARGIN_LEFT;
-                    margin-top:$SIZE_CANVAS_FACE_PAGE_MARGIN_TOP;
-                    margin-bottom:$SIZE_CANVAS_FACE_PAGE_MARGIN_BOTTOM;
-                    border:none;       
+                .face-page {
+                    margin-left: $SIZE_CANVAS_FACE_PAGE_MARGIN_LEFT;
+                    margin-top: $SIZE_CANVAS_FACE_PAGE_MARGIN_TOP;
+                    margin-bottom: $SIZE_CANVAS_FACE_PAGE_MARGIN_BOTTOM;
+                    border: none;
                     //グリッドの表示位置がずれて、一番下のグリッドが見えなくなるためずらす。
-                    padding-bottom:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_BOTTOM;
-                    padding-top:$SIZE_FACE_PAGE_ADJUST_GRID_PADDING_TOP;
-                    background-position-y:$SIZE_FACE_PAGE_ADJUST_GRID_Y;
-          
+                    padding-bottom: $SIZE_FACE_PAGE_ADJUST_GRID_PADDING_BOTTOM;
+                    padding-top: $SIZE_FACE_PAGE_ADJUST_GRID_PADDING_TOP;
+                    background-position-y: $SIZE_FACE_PAGE_ADJUST_GRID_Y;
                 }
 
-                
-                .image-item.background{
-                    border :none;
 
-                    &:hover{
-                        background:none;
-                        background-position:center;
+                .image-item.background {
+                    border: none;
+
+                    &:hover {
+                        background: none;
+                        background-position: center;
                         background-repeat: no-repeat;
                         background-size: contain;
                     }
                 }
-                
             }
         }
 
@@ -209,500 +246,534 @@
             overflow: auto;
             //visibility: hidden;
             position: relative;
-            width: $SIZE_PROPATY_AREA_WIDTH;
-            height: $SIZE_PROPATY_AREA_HEIGHT;
-            top: $SIZE_PROPATY_AREA_MARGIN_TOP;
-            background-color: $COLOR_PROPATY_AREA_BACKGROUND;
-            border : $SIZE_PROPATY_AREA_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_BORDER;
-            box-sizing:border-box;
+            width: $SIZE_PROPERTY_AREA_WIDTH;
+            height: $SIZE_PROPERTY_AREA_HEIGHT;
+            top: $SIZE_PROPERTY_AREA_MARGIN_TOP;
+            background-color: $COLOR_PROPERTY_AREA_BACKGROUND;
+            border: $SIZE_PROPERTY_AREA_BORDER_THICKNESS solid $COLOR_PROPERTY_AREA_BORDER;
+            box-sizing: border-box;
         }
 
-        #face-item-detail-area{
-            overflow-x:hidden;
+        #face-item-detail-area {
+            overflow-x: hidden;
         }
+
+        #face-item-detail-area.#{$FACE_COLOR_BLACK} {
+            #preview.image-preview {
+                background-color: $COLOR_IMAGE_BACKGROUND_BLACK;
+            }
+        }
+
+        #face-item-detail-area.#{$FACE_COLOR_WHITE} {
+            #preview.image-preview {
+                background-color: $COLOR_IMAGE_BACKGROUND_WHITE;
+            }
+        }
+
         #face-item-detail {
             position: relative;
-            width:$SIZE_PROPATY_AREA_INNNER_WIDTH;
-            margin-left:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-right:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_SIDE;
-            margin-top:$SIZE_PROPATY_ITEM_DETAIL_MARGIN_TOP_DOWM;
-            margin-bottom:0;
+            width: $SIZE_PROPERTY_AREA_INNNER_WIDTH;
+            margin-left: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-right: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_SIDE;
+            margin-top: $SIZE_PROPERTY_ITEM_DETAIL_MARGIN_TOP_DOWN;
+            margin-bottom: 0;
             text-shadow: none;
-            font-size: $FONT_SIZE_PROPATY_MAIN_TEXT;
-            color: $COLOR_PROPATY_AREA_TEXT;
+            font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
+            color: $COLOR_PROPERTY_AREA_TEXT;
 
-            .header{
-                display:flex;
+            .header {
+                display: flex;
 
-                #about-macro{
-                    height : $SIZE_PROPERTY_AREA_MACRO_ABOUT_HEIGHT;
-                    width : $SIZE_PROPERTY_AREA_MACRO_ABOUT_WIDTH;
+                #about-macro {
+                    height: $SIZE_PROPERTY_AREA_MACRO_ABOUT_HEIGHT;
+                    width: $SIZE_PROPERTY_AREA_MACRO_ABOUT_WIDTH;
                     margin-top: $SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_TOP;
-                    margin-left:auto;
+                    margin-left: auto;
                     //margin-right:$SIZE_PROPERTY_AREA_MACRO_ABOUT_MARGIN_RIGHT;
-                    background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_NORMAL;
-                    background-position:center;
+                    background-image: $PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_NORMAL;
+                    background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    display: inline-block;           // インライン要素化
-
+                    display: inline-block; // インライン要素化
                     // ツールチップ部分を隠す
-                    .popup{
+                    .popup {
                         display: none;
                     }
-                    
-                    &:hover{
-                         background-image:$PATH_IMG_PROPATY_AREA_MACRO_ABOUT_HOVER;
+
+                    &:hover {
+                        background-image: $PATH_IMG_PROPERTY_AREA_MACRO_ABOUT_HOVER;
                         position: relative;
-                        
-
                         //マウスオーバー時にツールチップを表示
-                        .popup{
-                            display:block;
-                            top:30px;
-                            position:absolute;
-                            right:0;
-                            z-index:100;
-                            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
-                            
+                        .popup {
+                            display: block;
+                            top: 30px;
+                            position: absolute;
+                            right: 0;
+                            z-index: 100;
+                            width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_WIDTH;
 
-                            .component{
-                                position:relative;
-                                #popup-arrow{
-                                    margin-left:auto;
-                                    margin-right:$SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
+
+                            .component {
+                                position: relative;
+
+                                #popup-arrow {
+                                    margin-left: auto;
+                                    margin-right: $SIZE_PROPERTY_AREA_MACOR_ABOUT_POPUP_MARGIN_RIGHT;
                                 }
 
-                                p{
-                                    margin:0;
-                                    position:absolute;
-                                    z-index:-1;
-                                    padding:$SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
-                                    background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-                                    border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
-                                    box-sizing:border-box;
-                                    display: block;      // ボックス要素にする
-                                    color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-                                    font-family:$FONT_FAMILY_PROPATY_POPUP;
-                                    font-size:$FONT_SIZE_PROPATY_POPUP;
+                                p {
+                                    margin: 0;
+                                    position: absolute;
+                                    z-index: -1;
+                                    padding: $SIZE_PROPERTY_AREA_MACRO_ABOUT_POPUP_PADDING;
+                                    background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+                                    border: 1px solid $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BORDER;
+                                    box-sizing: border-box;
+                                    display: block; // ボックス要素にする
+                                    color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT;
+                                    font-family: $FONT_FAMILY_PROPERTY_POPUP;
+                                    font-size: $FONT_SIZE_PROPERTY_POPUP;
                                 }
                             }
                         }
                     }
                 }
             }
-            
 
-        .add-btn-container{
-            margin-top:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_CONTAINER_MARING_TOP;
-            display:flex;
 
-            
+            .add-btn-container {
+                margin-top: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_CONTAINER_MARING_TOP;
+                display: flex;
 
-                #add-signal-btn{
-                    display:inline-flex;
-                    height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
-                    margin : 0 auto;
 
-                    .btn-image{
-                        margin-right:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
-                        background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
-                        background-position:center;
+
+                #add-signal-btn {
+                    display: inline-flex;
+                    height: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
+                    margin: 0 auto;
+
+                    .btn-image {
+                        margin-right: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_RIGHT;
+                        background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
+                        background-position: center;
                         background-repeat: no-repeat;
                         background-size: contain;
-                        height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
-                        width:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_WIDTH;
-                    }
-          
-                    span{
-                        line-height:$SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_LINE_HEIGHT;
-                        color:$COLOR_BUTTON2_NORMAL;
-                        font-family:$FONT_FAMILY_TEXT_BUTTON;
-                        font-size:$FONT_SIZE_TEXT_BUTTON;
-                        margin-right : $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_LEFT;
+                        height: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_HEIGHT;
+                        width: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_WIDTH;
                     }
 
-                    &:hover{
-                        .btn-image{
-                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_HOVER;
-                        }
-                        span{
-                            color:$COLOR_BUTTON2_HOVER;
-                        }
+                    span {
+                        line-height: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_LINE_HEIGHT;
+                        color: $COLOR_BUTTON2_NORMAL;
+                        font-family: $FONT_FAMILY_TEXT_BUTTON;
+                        font-size: $FONT_SIZE_TEXT_BUTTON;
+                        margin-right: $SIZE_PROPERTY_AREA_MACRO_ADD_SIGNAL_BUTTON_MARGIN_LEFT;
                     }
 
-                    &:active{
-                        .btn-image{
-                            background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_ACTIVE;
+                    &:hover {
+                        .btn-image {
+                            background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_HOVER;
                         }
-                        span{
-                            color:$COLOR_BUTTON2_PRESED;
+
+                        span {
+                            color: $COLOR_BUTTON2_HOVER;
                         }
                     }
 
+                    &:active {
+                        .btn-image {
+                            background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_ACTIVE;
+                        }
 
-                    &.gone{
-                      display:none;  
+                        span {
+                            color: $COLOR_BUTTON2_PRESED;
+                        }
                     }
 
-                    &.disabled{
-                        opacity:0.2;
-                        &:hover{
-                            .btn-image{
-                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+
+                    &.gone {
+                        display: none;
+                    }
+
+                    &.disabled {
+                        opacity: 0.2;
+
+                        &:hover {
+                            .btn-image {
+                                background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
                             }
-                            span{
-                                color:$COLOR_BUTTON2_NORMAL;
+
+                            span {
+                                color: $COLOR_BUTTON2_NORMAL;
                             }
                         }
 
-                        &:active{
-                            .btn-image{
-                                background-image:$PATH_IMG_PROPATY_AREA_ADD_BUTTON_NORMAL;
+                        &:active {
+                            .btn-image {
+                                background-image: $PATH_IMG_PROPERTY_AREA_ADD_BUTTON_NORMAL;
                             }
-                            span{
-                                color:$COLOR_BUTTON2_NORMAL;
+
+                            span {
+                                color: $COLOR_BUTTON2_NORMAL;
                             }
-                        }   
-
-            }
-
-                }
-        }
-        
-
-        #signals-container{
-            padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
-        }
-
-        .signals{
-            position:relative;
-        }
-
-        //最上段のプルダウンのかたまりは、ボーダーなし。
-        #signal-container-element-0{
-            .separate-line{
-               display:none; 
-            }
-        }
-                        
-        //プルダウンの左側に出現するdot線
-        .dot-line{
-            background-image: linear-gradient(to bottom, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_WIDTH, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_HEIGHT, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_MARING);
-            background-size: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_HEIGHT;
-            background-position: top;
-            background-repeat: repeat-y;
-            width:$SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH;
-            height:100%;
-            top:0;
-            left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_MARGIN_LEFT;
-            position:absolute;      
-        }
-        
-
-        //普通の信号時の、previewとプルダウンの間のマージン
-        .property-state-action{
-            margin-top:$SIZE_PROPATY_AREA_ACTION_CONTAINER_MARGIN_TOP;
-        }
-
-        //マクロボタンのpreviewとアクション設定pulldownとの間のマージン
-        .button-macro-action-container-element{
-            margin-top:$SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
-        }
-
-        //マクロの信号セット用プルダウンセット
-        #macro-container{
-            .signal-container-element{
- 
-                padding-top:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
-                padding-bottom:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
-
-                .separate-line{
-                    margin-left : $SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
-                    width:$SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
+                        }
+                    }
                 }
             }
-        }
 
-        //信号セット用プルダウンセット
-        .signal-container-element{
 
-            //信号を追加時のアニメーション
-               &.before-add-animation{
-                   opacity:0;
-                   margin-top : $SIZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_HEIGHT_WHEN_ADD;
-               }
-
-           
-            .separate-line{
-                position:absolute;
-                width:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
-                top:0;
-                border-top:$SiZE_PROPATY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPATY_AREA_MACRO_BORDER;
+            #signals-container {
+                padding-top: $SIZE_PROPERTY_AREA_MACRO_SIGNALS_CONTAINER_PADDING_TOP;
             }
 
-                box-sizing:border-box;   
-                padding-top:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_TOP;
-                padding-bottom:$SIZE_PROPATY_AREA_SIGNAL_CONTAINER_PADDING_BOTTOM;
-                position:relative;
+            .signals {
+                position: relative;
+            }
+            //最上段のプルダウンのかたまりは、ボーダーなし。
+            #signal-container-element-0 {
+                .separate-line {
+                    display: none;
+                }
+            }
+            //プルダウンの左側に出現するdot線
+            .dot-line {
+                background-image: linear-gradient(to bottom, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE, $COLOR_PROPERTY_AREA_MACRO_ORDER_DOTTED_LINE $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_WIDTH, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_HEIGHT, transparent $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_DOT_MARING);
+                background-size: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_HEIGHT;
+                background-position: top;
+                background-repeat: repeat-y;
+                width: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_UNITE_WIDTH;
+                height: 100%;
+                top: 0;
+                left: $SIZE_PROPERTY_AREA_MACRO_DOT_LINE_MARGIN_LEFT;
+                position: absolute;
+            }
+            //普通の信号時の、previewとプルダウンの間のマージン
+            .property-state-action {
+                margin-top: $SIZE_PROPERTY_AREA_ACTION_CONTAINER_MARGIN_TOP;
+            }
+            //マクロボタンのpreviewとアクション設定pulldownとの間のマージン
+            .button-macro-action-container-element {
+                margin-top: $SIZE_PROPERTY_AREA_MACRO_ACTION_CONTAINER_MARGIN_TOP;
+            }
 
-                .custom-select{
-                    margin-left : $SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_LEFT;
-                    margin-right:$SIZE_PROPATY_AREA_MACRO_PULL_DOWM_MARGIN_RIGHT;
-                    width:$SIZE_PROPATY_ARAE_MACRO_PULL_DOWN_WIDTH;   
+            .button-jump-action-container-element {
+                //ジャンプボタンのpreviewとアクション設定pulldownとの間のマージン
+                margin-top: $SIZE_PROPERTY_AREA_JUMP_ACTION_CONTAINER_MARGIN_TOP;
+
+                &.button-jump-label-dest-container {
+                    height: $SIZE_PROPERTY_AREA_JUMP_DEST_CONTAINER_HEIGHT;
                 }
 
-                .order-indicator-container{
-                    position:absolute;
-                    height:100%;
-                    margin-left:$SIEE_PROPERTY_AREA_MACRO_SIGNAL_INDICATOR_MARGN_LEFT;
+                #button-state-label-dest {
+                    display: inline;
+                    vertical-align: middle;
+                }
 
-                    .dot-container{
-                        z-index:3;
-                        margin-right:$SIZE_PROPERTY_AREA_MACRO_DOT_MARGIN_RIGHT;
-                        background-color:$COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
-                        width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
-                        height:$SIZE_PROPERTY_AREA_MACRO_DOT_CONTAINER_HEIGHT;
-                        display:flex;
-                        .order-indicator-dot{
-                            display:flex;
-                            align-self:center;
-                            width:$SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
-                            height:$SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
-                            border-radius:$SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
-                            background-color:$COLOR_PROPATY_AREA_MACRO_ORDER_DOT;
-                        }
+                #button-change-jump-dest {
+                    display: inline;
+                    vertical-align: middle;
+                    margin-left: $SIZE_PROPERTY_AREA_JUMP_CHANGE_DEST_BUTTON_MARGIN_LEFT;
+                    cursor: pointer;
+                    color: $COLOR_PROPERTY_AREA_JUMP_CHANGE_DEST_BUTTON_COLOR;
+                    text-decoration: underline;
+                    font-size: $FONT_SIZE_PROPERTY_BUTTON_CHANGE_JUMP_DEST;
+                }
+            }
 
+            .property-state-action-jump {
+                & > div:first-child {
+                    .ui-select {
+                        margin-top: $SIZE_PROPERTY_AREA_JUMP_FIRST_SELECT_MARGIN_TOP;
                     }
+                }
+            }
+            //マクロの信号セット用プルダウンセット
+            #macro-container {
+                .signal-container-element {
+                    padding-top: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_TOP;
+                    padding-bottom: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_PADDING_BOTTOM;
 
+                    .separate-line {
+                        margin-left: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_BORDER_MARGIN_LEFT;
+                        width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_WIDTH;
+                    }
+                }
+            }
+
+            .jump-container {
+                #signal-remote-container .custom-select {
+                    margin: 0;
+                    width: 100%;
+                }
+
+                #signal-page-container .custom-select {
+                    margin: 0;
+                    width: 100%;
+                }
+            }
+            //信号セット用プルダウンセット
+            .signal-container-element {
+                //信号を追加時のアニメーション
+                &.before-add-animation {
+                    opacity: 0;
+                    margin-top: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_HEIGHT_WHEN_ADD;
+                }
+
+
+                .separate-line {
+                    position: absolute;
+                    width: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_BORDER_WIDTH;
+                    top: 0;
+                    border-top: $SiZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_BORDER_THICKNESS solid $COLOR_PROPERTY_AREA_MACRO_BORDER;
+                }
+
+                box-sizing: border-box;
+                padding-top: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_PADDING_TOP;
+                padding-bottom: $SIZE_PROPERTY_AREA_SIGNAL_CONTAINER_PADDING_BOTTOM;
+                position: relative;
+
+                .custom-select {
+                    margin-left: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_MARGIN_RIGHT;
+                    width: $SIZE_PROPERTY_AREA_MACRO_PULL_DOWN_WIDTH;
+                }
+
+                .order-indicator-container {
+                    position: absolute;
+                    height: 100%;
+                    margin-left: $SIEE_PROPERTY_AREA_MACRO_SIGNAL_INDICATOR_MARGN_LEFT;
+
+                    .dot-container {
+                        z-index: 3;
+                        margin-right: $SIZE_PROPERTY_AREA_MACRO_DOT_MARGIN_RIGHT;
+                        background-color: $COLOR_PROPERTY_AREA_MACRO_ORDER_BACKGROUND;
+                        width: $SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                        height: $SIZE_PROPERTY_AREA_MACRO_DOT_CONTAINER_HEIGHT;
+                        display: flex;
+
+                        .order-indicator-dot {
+                            display: flex;
+                            align-self: center;
+                            width: $SIZE_PROPERTY_AREA_MACRO_DOT_WIDTH;
+                            height: $SIZE_PROPERTY_AREA_MACRO_DOT_HEIGHT;
+                            border-radius: $SIZE_PROPERTY_AREA_MACRO_DOT_RADIUS;
+                            background-color: $COLOR_PROPERTY_AREA_MACRO_ORDER_DOT;
+                        }
+                    }
                     //縦中央揃え
-                    display:flex;
+                    display: flex;
                     justify-content: center;
-                    align-items:center;
-
+                    align-items: center;
                     //マクロの信号順番
-                    .order-indicator-number{
-                        text-align:center;
-                        width : $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
-                        font-family:$FONT_FAMILY_PROPATY_MAIN_TEXT;
-                        font-size:$FONT_SIZE_PROPATY_MAIN_TEXT
+                    .order-indicator-number {
+                        text-align: center;
+                        width: $SIZE_PROPERTY_AREA_MACRO_INDICATOR_WIDTH;
+                        font-family: $FONT_FAMILY_PROPERTY_MAIN_TEXT;
+                        font-size: $FONT_SIZE_PROPERTY_MAIN_TEXT;
                     }
                 }
-                
-
                 //信号deleteボタン用のarea
-                .delete-signal-area{
-                    z-index : 2;//pulldownより前に
-                    height:100%;
-                    width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
-                    transition-duration : 0.2s;
-                    position : absolute;
-                    right : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
-                    top : 0px;
-                    display:flex;
+                .delete-signal-area {
+                    z-index: 2; //pulldownより前に
+                    height: 100%;
+                    width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_DELETE_AREA_WIDTH;
+                    transition-duration: 0.2s;
+                    position: absolute;
+                    right: $SIZE_PROPERTY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                    top: 0px;
+                    display: flex;
 
-                        .delete-signal{
-                            background-position:center;
-                            background-repeat: no-repeat;
-                            background-size: contain;
-                            transition: 0.2s;
-                            opacity:0;
-                            margin-left:auto;
-                            margin-right:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
-                            align-self:center;
-                            background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_NORMAL;
-                            width:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
-                            height:$SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
+                    .delete-signal {
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: contain;
+                        transition: 0.2s;
+                        opacity: 0;
+                        margin-left: auto;
+                        margin-right: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_MARGIN_RIGHT;
+                        align-self: center;
+                        background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_NORMAL;
+                        width: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_WIDTH;
+                        height: $SIZE_PROPERTY_AREA_MACRO_DELETE_BUTTON_HEIGHT;
 
-                            &:hover{
-                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_HOVER;
-                            }
-                            
-                            &:active{
-                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_DELETE_ACTIVE;
-                           }
+                        &:hover {
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_HOVER;
                         }
 
-                        //エリアをhoverして、表示
-                        &.show{
-                            .delete-signal{
-                                opacity:1.0;
-                            }
+                        &:active {
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_DELETE_ACTIVE;
                         }
-
-                     }
-
-
-                //一番上のソートボタンは非表示
-                #sort-button-area-0{
-                    .sort-up-btn{
-                        display:none;
+                    }
+                    //エリアをhoverして、表示
+                    &.show {
+                        .delete-signal {
+                            opacity: 1.0;
                         }
-                    .sort-down-btn{
-                        margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP_ORDER_0;
-                        }
+                    }
                 }
+                //一番上のソートボタンは非表示
+                #sort-button-area-0 {
+                    .sort-up-btn {
+                        display: none;
+                    }
 
-                
+                    .sort-down-btn {
+                        margin-top: $SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP_ORDER_0;
+                    }
+                }
                 //一番下のソート上ぼおたんは非表示{
                 .sort-button-area.last-order {
-                     .sort-up-btn{
-                         margin-bottom:$SIZE_PROPERTY_AREAMACRO_SORT_UP_BUTTON_MARGIN_BOTTOM_LAST_ORDER;
-                        }
-                    .sort-down-btn{
-                        display:none;
-                        }
+                    .sort-up-btn {
+                        margin-bottom: $SIZE_PROPERTY_AREAMACRO_SORT_UP_BUTTON_MARGIN_BOTTOM_LAST_ORDER;
+                    }
+
+                    .sort-down-btn {
+                        display: none;
+                    }
                 }
-
                 //マクロの信号並び替えボタンエリア
-                .sort-button-area{
-                        z-index : 2;//pulldownより前に
-                        height:100%;
-                        width:$SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
-                        position : absolute;
-                        left : $SIZE_PROPATY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
-                        top : 0px;
-                        display:flex;
+                .sort-button-area {
+                    z-index: 2; //pulldownより前に
+                    height: 100%;
+                    width: $SIZE_PROPERTY_AREA_MACRO_SIGNAL_CONTAINER_SORT_BTN_AREA_WIDTH;
+                    position: absolute;
+                    left: $SIZE_PROPERTY_AREA_SORT_DELETE_BUTTON_AREA_MINUS_MARGIN;
+                    top: 0px;
+                    display: flex;
 
-                        .sort-btns{
+                    .sort-btns {
+                        position: relative;
+                        align-self: center;
+                        margin-left: auto;
 
-                            position:relative;
-                            align-self:center;
-                            margin-left: auto;
-                            .sort-up-btn{
-                                
-                                margin-right : auto;
-                                transition: 0.3s;
-                                opacity:0;
-                                left:0;
-                                top:0;
-                                background-position:center;
-                                background-repeat: no-repeat;
-                                background-size: contain;
-                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_NORMAL;
-                                width:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
-                                height:$SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
-                            
-                                &:hover{
-                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_HOVER;
-                                }
-                                    
-                                &:active{
-                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_UP_ACTIVE;
-                                }
+                        .sort-up-btn {
+                            margin-right: auto;
+                            transition: 0.3s;
+                            opacity: 0;
+                            left: 0;
+                            top: 0;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_NORMAL;
+                            width: $SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_WIDTH;
+                            height: $SIZE_PROPERTY_AREA_MACRO_SORT_UP_BUTTON_HEIGHT;
 
+                            &:hover {
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_HOVER;
                             }
 
-
-                            .sort-down-btn{
-                                margin-right : auto;
-                                transition: 0.3s;
-                                opacity:0;
-                                left:0;
-                                bottom:0;
-                                background-position:center;
-                                background-repeat: no-repeat;
-                                background-size: contain;
-                                background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_NORMAL;
-                                width:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
-                                height:$SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
-                                margin-top:$SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
-
-                                &:hover{
-                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_HOVER;
-                                } 
-                                
-                                &:active{
-                                    background-image:$PATH_IMG_PROPATY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
-                                }
-                            }
-                        }
-                        
-                        &.show{
-                             .sort-up-btn{
-                                opacity:1.0;
-                            }
-
-                            .sort-down-btn{
-                                opacity:1.0;
+                            &:active {
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_UP_ACTIVE;
                             }
                         }
 
+
+                        .sort-down-btn {
+                            margin-right: auto;
+                            transition: 0.3s;
+                            opacity: 0;
+                            left: 0;
+                            bottom: 0;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            background-size: contain;
+                            background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_NORMAL;
+                            width: $SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_WIDTH;
+                            height: $SIZE_PROPERTY_AREA_MACRO_SORT_DOWN_BUTTON_HEIGHT;
+                            margin-top: $SIZE_PROPERTY_AREAMACRO_SORT_DOWN_BUTTON_MARGIN_TOP;
+
+                            &:hover {
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_HOVER;
+                            }
+
+                            &:active {
+                                background-image: $PATH_IMG_PROPERTY_AREA_SIGNAL_SORT_DOWN_ACTIVE;
+                            }
+                        }
                     }
 
-                 }
-                
-            
+                    &.show {
+                        .sort-up-btn {
+                            opacity: 1.0;
+                        }
+
+                        .sort-down-btn {
+                            opacity: 1.0;
+                        }
+                    }
+                }
+            }
 
 
 
-            .one-line-label{
-                line-height:$TEXT_HEIGHT_DEFAULT;
-                margin-bottom:$SIZE_PROPATY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
+
+
+            .one-line-label {
+                line-height: $TEXT_HEIGHT_DEFAULT;
+                margin-bottom: $SIZE_PROPERTY_AREA_ONE_LINE_LABEL_MARGIN_BOTTOM;
                 display: flex;
-                font-family:$FONT_WEIGHT_PROPATY_X_Y_W_H;
+                font-family: $FONT_WEIGHT_PROPERTY_X_Y_W_H;
             }
 
-            .label-button-state{
-                width : $SIZE_PROPATY_AREA_LAYOUT_LABEL_WIDTH;
+            .label-button-state {
+                width: $SIZE_PROPERTY_AREA_LAYOUT_LABEL_WIDTH;
             }
 
-            .info-button-state{
-                margin-left:$SIZE_PROPATY_AREA_LAYOUT_INFO_MARING_LEFT;
-                width : $SIZE_PROPATY_AREA_LAYOUT_INFO_WIDTH;
+            .info-button-state {
+                margin-left: $SIZE_PROPERTY_AREA_LAYOUT_INFO_MARING_LEFT;
+                width: $SIZE_PROPERTY_AREA_LAYOUT_INFO_WIDTH;
             }
 
 
-            #face-item-detail-title{
-                padding-bottom:$SIZE_PROPATY_AREA_TITLE_PADDING_BOTTOM;
-                line-height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
-                font-size:$FONT_SIZE_PROPATY_H3;
+            #face-item-detail-title {
+                padding-bottom: $SIZE_PROPERTY_AREA_TITLE_PADDING_BOTTOM;
+                line-height: $SIZE_PROPERTY_AREA_TITEL_LINE_HEIHGT;
+                font-size: $FONT_SIZE_PROPERTY_H3;
                 font-family: $FONT_FAMILY_NORMAL;
-                height:$SIZE_PROPATY_AREA_TITEL_LINE_HEIHGT;
-                margin:0;
+                height: $SIZE_PROPERTY_AREA_TITEL_LINE_HEIHGT;
+                margin: 0;
 
-                .button-info-brand-and-type{
-                    display:inline-flex;
-                    align-items:baseline;
-                    text-shadow:none;
-                    padding-left:$SIZE_PROPATY_AREA_SUBTITLE_PADDING_LEFT;
-                    font-size: $FONT_SIZE_PROPATY_BUTTON_INFO;
+                .button-info-brand-and-type {
+                    display: inline-flex;
+                    align-items: baseline;
+                    text-shadow: none;
+                    padding-left: $SIZE_PROPERTY_AREA_SUBTITLE_PADDING_LEFT;
+                    font-size: $FONT_SIZE_PROPERTY_BUTTON_INFO;
                     font-family: $FONT_FAMILY_NORMAL;
-                    color:$COLOR_PROPATY_AREA_SUBTITLE;
-                    margin:0;
-                    
+                    color: $COLOR_PROPERTY_AREA_SUBTITLE;
+                    margin: 0;
 
-                    .slash{
-                        text-align:center;
-                        width:$SIZE_PROPATY_AREA_SUBTITLE_SLASH_WIDTH;
+
+                    .slash {
+                        text-align: center;
+                        width: $SIZE_PROPERTY_AREA_SUBTITLE_SLASH_WIDTH;
                     }
 
-                    .brand_name{
+                    .brand_name {
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
-                        max-width:$SIZE_PROPATY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
+                        max-width: $SIZE_PROPERTY_AREA_SUBTITLE_BRAND_MAX_WIDTH;
                     }
-
                 }
-                
             }
 
-            h4{
-                font-size:$FONT_SIZE_PROPATY_H4;
-                font-family:$FONT_FAMILY_PROPATY_H3;
+            h4 {
+                font-size: $FONT_SIZE_PROPERTY_H4;
+                font-family: $FONT_FAMILY_PROPERTY_H3;
             }
 
-            .state-action-input, 
+            .state-action-input,
             .state-action-function,
             .property-state-text-value,
-            .property-text-value{
-                max-width : $SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
-                width:$SIZE_PROPATY_AREA_INPUT_MAX_WIDTH;
+            .property-text-value {
+                max-width: $SIZE_PROPERTY_AREA_INPUT_MAX_WIDTH;
+                width: $SIZE_PROPERTY_AREA_INPUT_MAX_WIDTH;
             }
 
-            .text-size-pulldown{
-                width:$SIZE_PROPATY_AREA_PULL_DOWM_TEXT_SIZE_WIDTH;
+            .text-size-pulldown {
+                width: $SIZE_PROPERTY_AREA_PULL_DOWN_TEXT_SIZE_WIDTH;
             }
 
             input.priperty-value {
@@ -714,20 +785,20 @@
                 width: calc(100% - 70px);
             }
 
-            #delete-background-image {
-                width : $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
-                margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
+            #delete-btn {
+                width: $SIZE_PROPERTY_AREA_DELETE_BTN_WIDTH;
+                margin-left: $SIZE_PROPERTY_AREA_DELETE_BTN_MARGIN_LEFT;
             }
 
             h4 {
-                margin:0;
-                font-size: $FONT_SIZE_PROPATY_H4;
+                margin: 0;
+                font-size: $FONT_SIZE_PROPERTY_H4;
             }
 
             h5 {
-                font-size: $FONT_SIZE_PROPATY_H5;
+                font-size: $FONT_SIZE_PROPERTY_H5;
                 font-family: $FONT_FAMILY_LIGHT;
-                margin:0;
+                margin: 0;
             }
 
             hr {
@@ -743,130 +814,127 @@
                 font-family: $FONT_FAMILY_BOLD;
                 width: 80px;
             }
-
             /*
             input.property-value {
                 width: calc(100% - 20px);
             }*/
-
+            #image-preview-window,
+            #background-image-preview-window,
             #property-image-preview,
+            #label-preview-window,
+            #state-preview-window,
+            #ac-state-preview-window,
             .property-state-image-preview {
-                box-sizing:border-box;
-                position:relative;
-                background-position:center;
+                box-sizing: border-box;
+                position: relative;
+                background-position: center;
                 background-repeat: no-repeat;
                 background-size: contain;
-                width:$SIZE_PROPATY_AREA_PREVIEW_WIDTH;
-                min-height: $SIZE_PROPATY_AREA_PREVIEW_HEIGHT_MIN;
-                border : $SIZE_PROPATY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPATY_PREVIEW_BORDER;
-            
+                width: $SIZE_PROPERTY_AREA_PREVIEW_WIDTH;
+                height: $SIZE_PROPERTY_AREA_PREVIEW_HEIGHT;
+                border: $SIZE_PROPERTY_AREA_PREVIEW_BORDER_THICKNESS solid $COLOR_PROPERTY_PREVIEW_BORDER;
                 //画像編集ボタン
                 #edit-image-or-text,
                 #edit-image-background,
-                #edit-image-non-button-image{
-                    position:absolute;
-                    z-index:1;
-                    bottom:0;
-                    right:0;
-                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_WIDTH;
-                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_BTN_HEIGHT;
-                    background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_NORMAL;
-                    background-position:center;
+                #edit-image-non-button-image,
+                #edit-btn {
+                    position: absolute;
+                    z-index: 1;
+                    bottom: 0;
+                    right: 0;
+                    width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_BTN_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_BTN_HEIGHT;
+                    background-image: $PATH_IMG_PROPERTY_AREA_EDIT_IMG_NORMAL;
+                    background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
 
-                    &:hover, &:active{
-                        background-image:$PATH_IMG_PROPATY_AREA_EDIT_IMG_ACTIVE;
+                    &:hover, &:active {
+                        background-image: $PATH_IMG_PROPERTY_AREA_EDIT_IMG_ACTIVE;
                     }
                 }
-
                 //背景画像削除ボタン
-                #delete-background-image{
-                    position:absolute;
-                    z-index:1;
-                    top:0;
-                    right:0;
-                    background-position:center;
+                #delete-btn {
+                    position: absolute;
+                    z-index: 1;
+                    top: 0;
+                    right: 0;
+                    background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
-                    width:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
-                    height:$SIZE_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
+                    background-image: $PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_NOMAL;
+                    width: $SIZE_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_BTN_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_BTN_HEIGHT;
 
-                    &:hover, &:active{
-                        background-image:$PATH_IMG_PROPATY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
+                    &:hover, &:active {
+                        background-image: $PATH_IMG_PROPERTY_AREA_DELETE_BACKGROUND_IMAGE_HOVER;
                     }
                 }
 
+                #preview.image-preview,
+                #image-container {
+                    box-sizing: border-box;
+                    position: relative;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                    width: $SIZE_PROPERTY_AREA_IMAGE_PREVIEW_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_PREVIEW_IMAGE_PRVIEW_HEIGHT;
+                }
                 //テキストエリア
-                .text-field-in-preview{
-                    margin-top:$SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
+                #preview.text-preview,
+                .text-field-in-preview {
+                    margin-top: $SIZE_TEXT_FIELD_IN_PREVIEW_MARGIN_TOP;
 
-                    .title-edit-label{
-                        height:$SIZE_TITLE_EDIT_LABEL_HEIGHT;
+                    .title-edit-label {
+                        height: $SIZE_TITLE_EDIT_LABEL_HEIGHT;
                         display: flex;
                         align-items: center;
-                        justify-content:center;
+                        justify-content: center;
 
-                        #icon-title-edit-label{
-                            background-position:center;
+                        #icon-title-edit-label {
+                            background-position: center;
                             background-repeat: no-repeat;
                             background-size: contain;
-                            background-image:$PATH_IMG_TITLE_EDIT_LABEL_ICON;
-                            width:$SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
-                            height:$SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
+                            background-image: $PATH_IMG_TITLE_EDIT_LABEL_ICON;
+                            width: $SIZE_TITLE_EDIT_LABEL_ICON_WIDTH;
+                            height: $SIZE_TITLE_EDIT_LABEL_ICON_HEIGHT;
                         }
 
-                        .text-title-edit-label{
-                            font-family:$FONT_SIZE_PROPATY_TITLE_EDIT_LABEL;
-                            font-size:$FONT_FAMILY_PROPATY_TITLE_EDIT_LABEL;
-                            
-                        }    
+                        .text-title-edit-label {
+                            font-family: $FONT_SIZE_PROPERTY_TITLE_EDIT_LABEL;
+                            font-size: $FONT_FAMILY_PROPERTY_TITLE_EDIT_LABEL;
+                        }
                     }
 
-                    .text-size-pulldown{
-                            margin:0 auto;
-                            width:$SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
+                    #text-size-pulldown,
+                    .text-size-pulldown,
+                    #text-color-pulldown,
+                    .text-color-pulldown {
+                        margin: 0 auto;
+                        width: $SIZE_TITLE_EDIT_LABEL_PULLDOWN_WIDTH;
                     }
 
                     .property-text-value,
-                    .property-state-text-value{
-                        display:flex;
-                        margin : 0 auto;
-                        width : $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
+                    .property-state-text-value {
+                        display: flex;
+                        margin: 0 auto;
+                        width: $SIZE_EDIT_LABEL_TEXT_FIELD_WIDTH;
                     }
                 }
             }
 
-            .property-state-image{
-                margin-top:$SIZE_PROPATY_AREA_STATE_IMAGE_MARGIN_TOP;
+            #background-image-preview-window.background {
+                height: $SIZE_PROPERTY_AREA_BACKGROUND_PREVIEW_HEIGHT;
+
+                #image-container {
+                    height: $SIZE_PROPERTY_AREA_BACKGROUND_PREVIEW_INNER_HEIGHT;
+                }
             }
 
-            /*.property-value {
-                min-width: 20px;
-                &.middle {
-                    width: calc(100% - 100px);
-                    min-width: 130px;
-                }
-
-                &.small {
-                    width: 80px;
-                }
-            }*/
-
-            /*#property-image-preview,
-            .property-state-image-preview {
-                .property-value {
-                        position:relative;
-                        background-position:center;
-                        background-repeat: no-repeat;
-                        background-size: contain;
-                        width:160px;
-                        height: 160px;
-                        left: calc((100% - 160px) /2);
-                        box-shadow: 0 0 10px rgba(128, 255, 128, 0.8);
-                }
-            }*/
+            .property-state-image {
+                margin-top: $SIZE_PROPERTY_AREA_STATE_IMAGE_MARGIN_TOP;
+            }
 
             #states-container {
                 > div {
@@ -875,13 +943,13 @@
             }
 
             input.refer-state-image, #refer-image {
-                    width: $SIZE_PROPATY_AREA_REFER_IMAGE_WIDTH;
+                width: $SIZE_PROPERTY_AREA_REFER_IMAGE_WIDTH;
             }
 
             .state-container {
                 .delete-state-image {
-                    width : $SIZE_PROPATY_AREA_DELETE_BTN_WIDTH;
-                    margin-left: $SIZE_PROPATY_AREA_DELETE_BTN_MARGIN_LEFT;
+                    width: $SIZE_PROPERTY_AREA_DELETE_BTN_WIDTH;
+                    margin-left: $SIZE_PROPERTY_AREA_DELETE_BTN_MARGIN_LEFT;
                 }
 
                 .property-title, .property-value, label {
@@ -890,114 +958,106 @@
             }
         }
     }
-
     //画像編集ボタンのpopup
-        #edit-image-popup{
-        position:relative;
-        box-shadow:none;
-        text-shadow:none;
-        background-color:$COLOR_TRANSPARENT;
-        border:none;
-        
+    #edit-image-popup,
+    #edit-popup {
+        position: relative;
+        box-shadow: none;
+        text-shadow: none;
+        background-color: $COLOR_TRANSPARENT;
+        border: none;
 
-        #popup-arrow{
-            margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
-            margin-right:auto;
+
+        #popup-arrow {
+            margin-left: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_ARROW_MARING_LEFT;
+            margin-right: auto;
         }
 
-        .popup-list{
-            width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_WIDTH;
-            padding-top:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
-            padding-bottom:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
-            color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT;
-            font-family:$FONT_FAMILY_PROPATY_POPUP;
-            font-size:$FONT_SIZE_PROPATY_POPUP;
-            background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
-            border : 1px solid $COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_BORDER;
-            box-sizing:border-box;
-            position:absolute;
-            z-index:-1;
-
-            
+        .popup-list {
+            width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_WIDTH;
+            padding-top: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_PADDING_TOP;
+            padding-bottom: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_PADDING_BOTTOM;
+            color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT;
+            font-family: $FONT_FAMILY_PROPERTY_POPUP;
+            font-size: $FONT_SIZE_PROPERTY_POPUP;
+            background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BACKGROUND;
+            border: 1px solid $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_BORDER;
+            box-sizing: border-box;
+            position: absolute;
+            z-index: -1;
 
 
-            .popup-menu-item-text-black{
+
+
+            .popup-menu-item-text-black {
                 display: flex;
                 align-items: center;
-                height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
+                height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ITEM_HEIGHT;
 
-                &:hover, &:active{
-                background-color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
-                color:$COLOR_PROPATY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
-                    #popup-icon-image-image-button{
-                        background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
+                &:hover, &:active {
+                    background-color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_ITEM_BACKGROUND_HOVER;
+                    color: $COLOR_PROPERTY_AREA_EDIT_IMAGE_POPUP_TEXT_HOVER;
+
+                    #popup-icon-image-image-button {
+                        background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON_HOVER;
                     }
 
-                    #popup-icon-image-text-button{
-                        background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;    
+                    #popup-icon-image-text-button {
+                        background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON_HOVER;
                     }
                 }
 
-                #popup-icon-image-image-button, #popup-icon-image-text-button{
-                    background-position:center;
+                #popup-icon-image-image-button, #popup-icon-image-text-button {
+                    background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    margin-left:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
-                    margin-right:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
-                    width:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
-                    height:$SIZE_PROPATY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
+                    margin-left: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_LEFT;
+                    margin-right: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_PADDING_RIGHT;
+                    width: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_WIDTH;
+                    height: $SIZE_PROPERTY_AREA_EDIT_IMAGE_POPUP_ICON_HEIGHT;
                 }
 
-                #popup-icon-image-image-button{
-                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_IMAGE_BUTTON;
+                #popup-icon-image-image-button {
+                    background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_IMAGE_BUTTON;
                 }
 
-                #popup-icon-image-text-button{
-                    background-image:$PATH_IMG_PROPATY_AREA_POPUP_ICON_TEXT_BUTTON;
+                #popup-icon-image-text-button {
+                    background-image: $PATH_IMG_PROPERTY_AREA_POPUP_ICON_TEXT_BUTTON;
                 }
-
-
-
-
             }
         }
     }
 
     #face-pallet-area {
         position: absolute;
-
-        width : $SIZE_PALLET_AREA_WIDTH;
-        height : $SIZE_PALLET_AREA_HEIGHT;
-        margin-top : $SIZE_PALEET_AREA_MARGIN_TOP;
+        width: $SIZE_PALLET_AREA_WIDTH;
+        height: $SIZE_PALLET_AREA_HEIGHT;
+        margin-top: $SIZE_PALEET_AREA_MARGIN_TOP;
         //background-color: #8888ff;
-
-
-
-        #pallet-area-gradation-top{
-            visibility:hidden;
-            position:absolute;
-            top:0;
-            width:$SIZE_FACE_PALLET_GRADATION_TOP_WIDTH;
-            height:$SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
-            background:$COLOR_PALLET_GRADATION_TOP;
-            z-index:1;
+        #pallet-area-gradation-top {
+            visibility: hidden;
+            position: absolute;
+            top: 0;
+            width: $SIZE_FACE_PALLET_GRADATION_TOP_WIDTH;
+            height: $SIZE_FACE_PALLET_GRADATION_TOP_HEIGHT;
+            background: $COLOR_PALLET_GRADATION_TOP;
+            z-index: 1;
         }
 
-        #pallet-area-gradation-bottom{
-            visibility:visible;
-            position:absolute;
-            bottom:0;
-            width:$SIZE_FACE_PALLET_GRADATION_BOTTOM_WIDTH;
-            height:$SIZE_FACE_PALLET_GRADATION_BOTTOM_HEIGHT;
-            background:$COLOR_PALLET_GRADATION_BOTTOM;
-            z-index:1;
+        #pallet-area-gradation-bottom {
+            visibility: visible;
+            position: absolute;
+            bottom: 0;
+            width: $SIZE_FACE_PALLET_GRADATION_BOTTOM_WIDTH;
+            height: $SIZE_FACE_PALLET_GRADATION_BOTTOM_HEIGHT;
+            background: $COLOR_PALLET_GRADATION_BOTTOM;
+            z-index: 1;
         }
 
         #face-item-list-container {
- 
             position: relative;
             overflow: hidden;
-            width:$SIZE_FACE_ITEM_LIST_CONTAINER_WIDTH;
+            width: $SIZE_FACE_ITEM_LIST_CONTAINER_WIDTH;
             height: $SIZE_FACE_ITEM_LIST_CONTAINER_HEIGHT;
             line-height: $SIZE_FACE_ITEM_LIST_LINE_HEIGHT;
             background-color: $COLOR_FACE_ITEM_LIST_BACKGROUND;
@@ -1005,7 +1065,7 @@
             #face-item-list {
                 height: 100%;
                 transition: transform 0.2s 0s ease-in-out;
-                transition-duration : 0.2s;
+                transition-duration: 0.2s;
                 transform: translateX(16px);
 
 
@@ -1014,17 +1074,15 @@
                     position: absolute;
                     height: $SIZE_FACE_ITEM_LIST_ITEM_HEIGHT;
                     padding-left: $SIZE_FACE_ITEM_LIST_ITEM_PADDING_LEFT;
-                    padding-right:$SIZE_FACE_ITEM_LIST_ITEM_PADDING_RIGHT;
-                    margin-top:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_TOP;
-                    margin-left:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_LEFT;
-                    margin-right:$SIZE_FACE_ITEM_LIST_ITEM_MARGIN_RIGHT;
-            
+                    padding-right: $SIZE_FACE_ITEM_LIST_ITEM_PADDING_RIGHT;
+                    margin-top: $SIZE_FACE_ITEM_LIST_ITEM_MARGIN_TOP;
+                    margin-left: $SIZE_FACE_ITEM_LIST_ITEM_MARGIN_LEFT;
+                    margin-right: $SIZE_FACE_ITEM_LIST_ITEM_MARGIN_RIGHT;
                     color: $COLOR_FACE_ITEM_LIST_TEXT_NORMAL;
-                    font-size:$FONT_SIZE_FACE_ITEM_LIST_ITEM;
+                    font-size: $FONT_SIZE_FACE_ITEM_LIST_ITEM;
                     font-family: $FONT_FAMILY_FACE_ITEM_LIST_ITEM;
-
-                    max-width: $SIZE_PROPATY_AREA_FACE_ITEM_MAX_WIDTH;
-                    text-align:center;
+                    max-width: $SIZE_PROPERTY_AREA_FACE_ITEM_MAX_WIDTH;
+                    text-align: center;
                     vertical-align: middle;
                     //text-shadow: -1px -1px 1px rgba(255,255,255,0.7), 1px 1px 1px rgba(255,255,255,0.7), -1px 1px rgba(255,255,255,0.7), 1px -1px 2px rgba(255,255,255,0.7);
                     overflow: hidden;
@@ -1033,10 +1091,10 @@
                     cursor: pointer;
                     text-shadow: none;
 
-                    
+
                     &:hover {
-                        background-color:$COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
-                        border-radius : $SIZE_FACE_ITEM_LIST_ITEM_RADIUS_HOVER;
+                        background-color: $COLOR_FACE_ITEM_LIST_TEXT_BACKGROUND_HOVER;
+                        border-radius: $SIZE_FACE_ITEM_LIST_ITEM_RADIUS_HOVER;
                     }
 
                     &.active {
@@ -1046,8 +1104,8 @@
             }
 
             #face-item-list-scroll-left {
-                background-image : $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL;
-                left:0;
+                background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_NORMAL;
+                left: 0;
 
                 &:hover {
                     background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_LEFT_HOVER;
@@ -1059,8 +1117,8 @@
             }
 
             #face-item-list-scroll-right {
-                background-image :$PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL;
-                right:0;
+                background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_NORMAL;
+                right: 0;
 
                 &:hover {
                     background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_HOVER;
@@ -1069,31 +1127,29 @@
                 &:active {
                     background-image: $PATH_IMG_FACE_ITEM_LIST_SCROLL_RIGHT_ACTIVE;
                 }
-
             }
 
             #face-item-list-scroll-margin-right,
-            #face-item-list-scroll-margin-left
-             {
-                background-color : $COLOR_FACE_ITEM_LIST_SCROLL_MARGIN;
+            #face-item-list-scroll-margin-left {
+                background-color: $COLOR_FACE_ITEM_LIST_SCROLL_MARGIN;
                 position: absolute;
-                top:0;
+                top: 0;
                 width: $SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_WIDTH;
                 height: $SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_HEIGHT;
             }
 
-            #face-item-list-scroll-margin-right{
-                right : $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
+            #face-item-list-scroll-margin-right {
+                right: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
             }
 
-            #face-item-list-scroll-margin-left{
-                left    :$SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_LEFT;
+            #face-item-list-scroll-margin-left {
+                left: $SIZE_FACE_ITEM_LIST_SCROLL_MARGIN_LEFT;
             }
 
             #face-item-list-scroll-left,
             #face-item-list-scroll-right {
                 position: absolute;
-                top:0;
+                top: 0;
                 width: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_WIDTH;
                 height: $SIZE_FACE_ITEM_LIST_SCROLL_LEFT_HEIGHT;
                 background-color: $COLOR_FACE_ITEM_LIST_SCROLL_BUTTON;
@@ -1104,7 +1160,40 @@
                     background-image: none;
                     cursor: default;
                 }
+            }
+        }
 
+        #face-pallet.#{$FACE_COLOR_BLACK} {
+            .face-master-separator {
+                color: $COLOR_WHITE_TEXT;
+                background-color: $COLOR_HUIS_BG_BLACK;
+                border-color: $COLOR_SEPARATOR_BLACK;
+            }
+
+            .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_BLACK;
+
+                &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_BLACK;
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_BLACK;
+                }
+            }
+        }
+
+        #face-pallet.#{$FACE_COLOR_WHITE} {
+            .face-master-separator {
+                color: $COLOR_TEXT_MAIN;
+                background-color: $COLOR_HUIS_BG_WHITE;
+                border-color: $COLOR_SEPARATOR_WHITE;
+            }
+
+            .item {
+                border-color: $COLOR_BUTTON_MATERIAL_BORDER_WHITE;
+
+                &:hover {
+                    border-color: $COLOR_BUTTON_BORDER_HOVER_WHITE;
+                    background-color: $COLOR_BUTTON_MATERIAL_HOVER_WHITE;
+                }
             }
         }
 
@@ -1112,77 +1201,78 @@
             position: absolute;
             width: $SIZE_FACE_IN_PALLET_WIDTH;
             height: $SIZE_FACE_IN_PALLET_HEIGHT;
-            margin-top:$SIZE_FACE_IN_PALLET_MARING_TOP;
-            margin-right:$SIZE_FACE_IN_PALLET_MARING_RIGHT;
-            margin-left:$SIZE_FACE_IN_PALLET_MARING_LEFT;
-            margin-bottom:$SIZE_FACE_IN_PALLET_MARING_BOTTOM;
-            border : $SIZE_PALLET_BORDER solid $COLOR_PALLET_BORDER;
+            margin-top: $SIZE_FACE_IN_PALLET_MARING_TOP;
+            margin-right: $SIZE_FACE_IN_PALLET_MARING_RIGHT;
+            margin-left: $SIZE_FACE_IN_PALLET_MARING_LEFT;
+            margin-bottom: $SIZE_FACE_IN_PALLET_MARING_BOTTOM;
+            border: $SIZE_PALLET_BORDER solid $COLOR_PALLET_BORDER;
 
             #face-pages-area {
                 transform: scale(0.5);
                 transform-origin: left top;
-                width : $SIZE_FACE_PAGE_AREA_WIDTH;
-                max-height : $SIZE_FACE_PAGE_AREA_HEIGHT;
-                padding-left:$SIZE_FACE_PAGE_AREA_PADDING_LEFT;
-                padding-right:$SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
-                padding-top:$SIZE_FACE_PAGES_AREA_PADDING_TOP;
-                background-color: $COLOR_FACE_PAGES_AREA_BACKGROUND;
-                
-                .face-master-separator {
-                    margin-top : $SIZE_PALLET_SEPARATOR_MARGIN_TOP;
-                    width:100%;
-                    height:$SIZE_PALLET_SEPARATOR_HEGHT;
-                    background-color : $COLOR_PALLET_SEPARATOR_BACKGROUND;
-                    
-                    .separate-text{
-                        padding-top:$SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
+                width: $SIZE_FACE_PAGE_AREA_WIDTH;
+                max-height: $SIZE_FACE_PAGE_AREA_HEIGHT;
+                padding-left: $SIZE_FACE_PAGE_AREA_PADDING_LEFT;
+                padding-right: $SIZE_FACE_PAGE_AREA_PADDING_RIGHT;
+                padding-top: $SIZE_FACE_PAGES_AREA_PADDING_TOP;
 
-                        .border-line{
-                            border-top : $SIZE_PALLET_SEPARATOR_BORDER_THICKNESS solid $COLOR_PALLET_SEPARATOR_BORDER;
-                            align-self:center;                
+                .face-master-separator {
+                    margin-top: $SIZE_PALLET_SEPARATOR_MARGIN_TOP;
+                    width: 100%;
+                    height: $SIZE_PALLET_SEPARATOR_HEGHT;
+
+                    .separate-text {
+                        padding-top: $SIZE_PALLET_SEPARATOR_TEXT_PADDING_TOP;
+
+                        .border-line {
+                            border-top: $SIZE_PALLET_SEPARATOR_BORDER_THICKNESS solid $COLOR_PALLET_SEPARATOR_BORDER;
+                            align-self: center;
                         }
 
-                        span{
-                            display:block;
-                            margin-top : $SIZE_PALLET_SEPARATOR_SPAN_MARGIN_TOP;
-                            text-shadow:none;
-                            color : $COLOR_PALLET_SEPARATOR_TEXT;
-                            text-align:center;
+                        span {
+                            display: block;
+                            margin-top: $SIZE_PALLET_SEPARATOR_SPAN_MARGIN_TOP;
+                            text-shadow: none;
+                            text-align: center;
                             font-size: $FONT_SIZE_PALLET_SEPARATOR;
-                            font-family:$FONT_FAMILY_LIGHT;
+                            font-family: $FONT_FAMILY_LIGHT;
                         }
                     }
-
                 }
 
-
-                .button-item{
-                        border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
-                }
-
-                .face-page{
-                    padding-top:$SIZE_FACE_PAGE_AREA_PADDING_TOP;
-                    padding-bottom:$SIZE_FACE_PAGE_AREA_PADDING_BOTTOM;
+                .face-page {
+                    padding-top: $SIZE_FACE_PAGE_AREA_PADDING_TOP;
+                    padding-bottom: $SIZE_FACE_PAGE_AREA_PADDING_BOTTOM;
                 }
 
                 .item {
-                    
-                    border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_NORMAL;
+                    border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                    border-style: solid;
 
                     &:hover {
-                        background-color: $COLOR_FACE_PAGES_AREA_ITEM_BACKGROUND_HOVER;
-                        border :$SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS solid $COLOR_FACE_PAGES_AREA_ITEM_BORDER_HOVER;
+                        border-width: $SIZE_FACE_PAGES_AREA_ITEM_BOADER_THICKNESS;
+                        border-style: solid;
                     }
                 }
             }
         }
-
         //Commonのアイテム
-        .common-parts .item{
-                    position:relative;
-                    margin-bottom:$SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
+        .common-parts .item {
+            position: relative;
+            margin-bottom: $SIZE_PALLET_COMMON_ITEM_MARGIN_BOTTOM;
         }
+    }
 
+    #face-dummy-area.#{$FACE_COLOR_BLACK} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_BLACK;
+        }
+    }
+
+    #face-dummy-area.#{$FACE_COLOR_WHITE} {
+        .item {
+            background-color: $COLOR_BUTTON_SELECTED_WHITE;
+        }
     }
 
     // ドラッグ中アイテムのダミー表示
@@ -1191,40 +1281,43 @@
         transform: scale(0.5);
         transform-origin: left top;
         z-index: 101;
-        
-        .item {
-            background-color:$COLOR_DUMMY_ITEM_BACKGROUND;
-        }
+
 
         .item-resizer {
             position: absolute;
-            box-sizing:border-box;
+            box-sizing: border-box;
             width: $SIZE_CANVAS_ITEM_RESIZER_WIDTH;
             height: $SIZE_CANVAS_ITEM_RESIZER_HEIGHT;
             border: $SIZE_CANVAS_ITEM_RESIZER_THICKNESS solid $COLOR_LIGHT_GREEN;
-
             background-color: $SIZE_CANVAS_ITEM_BACKGROUND;
 
             &.left-top {
-                cursor:nw-resize;
+                cursor: nw-resize;
             }
+
             &.right-top {
-                cursor:ne-resize;
+                cursor: ne-resize;
             }
+
             &.right-bottom {
                 cursor: se-resize;
             }
+
             &.left-bottom {
                 cursor: sw-resize;
             }
-         }     
+        }
+    }
+    //移動中のアイテムとそのダミーのリサイザーは非表示
+    .item.moving-item {
+        .item-resizer {
+            display: none;
+        }
     }
 
-     //移動中のアイテムとそのダミーのリサイザーは非表示
-        .item.moving-item{
-            .item-resizer {
-                display : none;
-            }
+    ul[id*="select-signal-page-input-"] {
+        li.ui-state-disabled {
+            display: none;
         }
-
+    }
 }

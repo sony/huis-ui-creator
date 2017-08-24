@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
 
 /* tslint:disable:max-line-length no-string-literal */
@@ -31,9 +30,11 @@ module Garage {
             private remoteId_: string;
             private buttonItemTemplate_: Tools.JST;
 
+            // TODO: change comment
             /**
              * constructor
              */
+            // TODO: change arguments of constructor
             constructor(options?: Backbone.ViewOptions<Model.ButtonItem>) {
                 super();
                 if (options.attributes) {
@@ -46,7 +47,7 @@ module Garage {
 
                     let unknownTypeButtons = options.attributes["buttons"];
                     if (unknownTypeButtons) {
-                        let buttons: IGButton[] = [];
+                        let buttons: Model.ButtonItem[] = [];
                         if (_.isArray(unknownTypeButtons)) {
                             buttons = unknownTypeButtons;
                         } else {
@@ -54,24 +55,22 @@ module Garage {
                         }
                         let buttonModels: Model.ButtonItem[] = [];
                         for (let i = 0, l = buttons.length; i < l; i++) {
-                            let buttonData: IGButton = buttons[i];
+                            let buttonData: Model.ButtonItem = buttons[i];
                             var buttonModel: Model.ButtonItem = new Model.ButtonItem({
                                 remoteId: this.remoteId_,
                                 materialsRootPath: this.materialsRootPath_
                             });
 
-                            if (buttonData.name){
+                            if (buttonData.name) {
                                 buttonModel.name = buttonData.name;
                             }
 
                             if (buttonData.version) {
                                 buttonModel.version = buttonData.version;
                             }
-                            
-                            //buttonModel.set("area", buttonData.area);
+
                             buttonModel.area = buttonData.area;
                             var states = buttonData.state;
-                            //buttonModel.set("state", states);
                             buttonModel.state = states;
                             if (buttonData.default) {
                                 buttonModel.set("default", buttonData.default);
@@ -101,14 +100,14 @@ module Garage {
                 };
             }
 
-            render(): ButtonItem {
+            render(): View.ButtonItem {
                 this.collection.each((model: Model.ButtonItem) => {
                     this._modifyModel(model);
                     let filtered_state = null;
                     let filtered_action = null;
                     if (_.isArray(model.state)) {
                         // 全actionが無効なstate
-                        filtered_state = model.state.filter((s: IGState, index: number, array: IGState[]) => {
+                        filtered_state = model.state.filter((s: Model.ButtonState, index: number, array: Model.ButtonState[]) => {
                             // 無効なaction
                             filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
                                 //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
@@ -125,14 +124,7 @@ module Garage {
                         }
                     }
 
-                    //表示用のmodelはラベルの大きさを実際より小さくする。
-                    let modelForDisplay: Model.ButtonItem= jQuery.extend(true, {}, model);
-                    for (let i = 0; i < modelForDisplay.state.length; i++){
-                        for (let j = 0; j < modelForDisplay.state[i].label.length; j++){
-                            modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size);
-                        }
-                    }
-                    this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
+                    this.$el.append($(this.buttonItemTemplate_(model)));
                 });
                 return this;
             }
@@ -140,14 +132,14 @@ module Garage {
             /**
              * ButtonItem View がもつすべての ButtonItem を返す。
              * 
-             * @return {IGButton[]} ButtonItem View がもつ ButtonItem
+             * @return {Model.ButtonItem[]} ButtonItem View がもつ ButtonItem
              */
-            getButtons(): IGButton[] {
+            getButtons(): Model.ButtonItem[] {
                 // enabled でない model を間引く 
                 var buttonModels = this.collection.models.filter((model) => {
                     return model.enabled;
                 });
-                var buttons: IGButton[] = $.extend(true, [], buttonModels);
+                var buttons: Model.ButtonItem[] = $.extend(true, [], buttonModels);
 
                 return buttons;
             }
@@ -157,16 +149,10 @@ module Garage {
              */
             private _renderNewModel(model: Model.ButtonItem) {
                 this._modifyModel(model);
-                //表示用のmodelはラベルの大きさを実際より小さくする。
-                let modelForDisplay: Model.ButtonItem = jQuery.extend(true, {}, model);
-                for (let i = 0; i < modelForDisplay.state.length; i++) {
-                    for (let j = 0; j < modelForDisplay.state[i].label.length; j++) {
-                        modelForDisplay.state[i].label[j].size = JQUtils.getOffsetTextButtonSize(modelForDisplay.state[i].label[j].size); 
-                    }
-                }
-                this.$el.append($(this.buttonItemTemplate_(modelForDisplay)));
+                this.$el.append($(this.buttonItemTemplate_(model)));
             }
 
+            // TODO: review
             /**
              * model の調整。
              * button の active な state を設定する。
@@ -190,47 +176,13 @@ module Garage {
                         // 該当する state が見つからなかったら、先頭の state を active にする。
                         for (let i = statesCount - 1; 0 <= i; i--) {
                             let state = states[i];
-                            if (state.id === currentStateId) {
+                            if (state.stateId === currentStateId) {
                                 state["active"] = true;
                                 foundCurrentStateId = true;
                             } else if (i === 0 && !foundCurrentStateId) {
                                 state["active"] = true;
                             } else {
                                 state["active"] = false;
-                            }
-                        }
-                    }
-
-                    // state 内の画像パスを Garage 用に変換する。
-                    for (let i = 0, l = states.length; i < l; i++) {
-                        var state = states[i];
-                        if (state.image && this.materialsRootPath_) {
-                            if (_.isArray(state.image)) {
-                                /* jshint loopfunc: true */
-                                state.image.forEach((img, index) => {
-                                    let imagePath = img.path;
-                                    // 画像パスを Garage 内のパスに変更する。
-                                    let resolvedPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", imagePath)).replace(/\\/g, "/");
-                                    img.resolvedPath = resolvedPath;
-
-                                    let resizeOriginal = img.resizeOriginal;
-                                    if (!resizeOriginal) {
-                                        resizeOriginal = imagePath;
-                                        img.resizeOriginal = resizeOriginal;
-                                    }
-                                    let resizeResolvedOriginalPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", resizeOriginal)).replace(/\\/g, "/");
-                                    img.resizeResolvedOriginalPath = resizeResolvedOriginalPath;
-                                });
-                                /* jshint loopfunc: false */
-                            } else {
-                                // 配列ではなく、一つのオブジェクトとして image が格納されていた場合の対応
-                                let img: IGImage = <any>state.image;
-                                let imagePath = img.path;
-                                // 画像パスを Garage 内のパスに変更する。
-                                if (imagePath) {
-                                    let resolevedPath = path.resolve(path.join(this.materialsRootPath_, "remoteimages", imagePath)).replace(/\\/g, "/");
-                                    img.resolvedPath = resolevedPath;
-                                }
                             }
                         }
                     }

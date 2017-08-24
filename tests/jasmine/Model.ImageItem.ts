@@ -2,26 +2,25 @@
 /// <reference path="../../app/scripts/Model/ImageItem.ts" />
 
 module Garage {
-	export module Test {
-		describe("Model.ImageItem",() => {
-			var imageItem: Model.ImageItem = null;
+    export module Test {
+        describe("Model.ImageItem", () => {
+            var imageItem: Model.ImageItem = null;
 
-			// Called before each test case
-			beforeEach(() => {
-				imageItem = new Model.ImageItem();
-			});
+            // Called before each test case
+            beforeEach(() => {
+            });
 
-			// Called after each test case
-			afterEach(() => {
-				imageItem = null;
-			});
+            // Called after each test case
+            afterEach(() => {
+                imageItem = null;
+            });
 
-			////////////////////
-			// test cases
-			it("can be instantiated",() => {
-				expect(imageItem).not.toBeNull();
-			});
+            ////////////////////
+            // test cases
+            it("can be instantiated", () => {
+                expect(imageItem).not.toBeNull();
+            });
 
-		});
-	}
+        });
+    }
 }

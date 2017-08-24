@@ -38,7 +38,7 @@ class FaceCategory extends EnumBase<string> {
     static Unknown = new FaceCategory(0, "unknown");
 }
 
-class FontWeight{
+class FontWeight {
     public static FONT_BOLD: string = "bold";
     public static FONT_NORMAL: string = "normal";
 

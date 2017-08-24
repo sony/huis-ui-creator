@@ -56,7 +56,7 @@ module Garage {
                 }
                 this.minor = minor;
 
-              
+
                 //build を代入
                 if (build != null && !JQUtils.isNaN(build)) {
                     this.build = build;
@@ -73,60 +73,66 @@ module Garage {
 
             }
 
+            private _compare(counterPart: VersionString,
+                compareFunc: (selfVersionNum: number, counterVersionNum: number) => boolean): boolean {
 
-            /*
-            * 入力の ModelVersionより古いバージョンのとき、trueを返す。同じ場合はfalse
-            * @param counterPart : ModuleVersion 　比較対象のModelVersion
-            * @return　counterPartより古いバージョンの場合：true, 新しいバージョンのときfalse。同じバージョンのとき,false;
-            */
-            public isOlderThan(counterPart: VersionString) {
-
-                let FUNCTION_NAME = TAG + ": isOlderThan() : ";
+                let FUNCTION_NAME = TAG + ": _compare() : ";
 
                 if (!counterPart) {
                     console.warn(FUNCTION_NAME + "counterPart is undefined");
-                    return;
+                    return false;
                 }
 
-                //majorバージョンが同じとき、minorバージョンで比べる。
-                if (this.major === counterPart.getMajor()) {
-
-                    if (this.minor === counterPart.getMinor()) {
-
-                        //majorバージョンも、minorバージョンも同じとき、ビルド番号を比べる。
-                        if (this.build != null && counterPart.getBuild() != null) {
-
-                            if (this.build < counterPart.getBuild()) {//buildNumber値が少ない　＝＝　古い
-                                return true;
-                            } else {
-                                return false;
-                            }
-
-                        } else {
-                            //ビルド番号がないとき、同じバージョンと扱う。
-                            return false;//同じバージョンのときはfalse 
-                        }
-
-                    }else if (this.minor < counterPart.getMinor()) {//minorVersion値が少ない　＝＝　古い
-                        return true;
-                    } else {
-                        return false;
-                    }
-
-                } else {   
-                    //majorバージョンで比べる。
-                    if (this.major < counterPart.getMajor()) {//majorVersion値が少ない　＝＝　古い
-                        return true;
-                    } else {
-                        return false;
-                    }
-
+                if (this.major !== counterPart.getMajor()) {
+                    return compareFunc(this.major, counterPart.getMajor());
                 }
+
+                if (this.minor !== counterPart.getMinor()) {
+                    return compareFunc(this.minor, counterPart.getMinor());
+                }
+
+                return compareFunc(this.build, counterPart.getBuild());
             }
 
-            /*
-            * X.Yの形で、ModuleVersionの値を返す　ex) 1.2
-            */
+            /**
+             * 引数として与えられたVersionより自身が古いVersionかどうかを判定する。
+             * otherInfoの比較は行わない事に注意。
+             * @param {ModuleVersion} counterPart 比較対象のVersion
+             * @return {boolean} counterPartより古いVersionの場合はtrue、同じか新しいVersionのときはfalse
+             */
+            public isOlderThan(counterPart: VersionString): boolean {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                    return selfVersionNum < counterVersionNum;
+                })
+            }
+
+            /**
+             * 引数として与えられたVersionより自身が新しいVersionかどうかを判定する。
+             * otherInfoの比較は行わない事に注意。
+             * @param {ModuleVersion} counterPart 比較対象のVersion
+             * @return {boolean} counterPartより新しいVersionの場合はtrue、同じか古いVersionのときはfalse
+             */
+            public isNewerThan(counterPart: VersionString): boolean {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                    return selfVersionNum > counterVersionNum;
+                })
+            }
+
+            /**
+             * 引数として与えられたVersionが自身が同じかどうかを判定する。
+             * otherInfoの比較は行わない事に注意。
+             * @param {ModuleVersion} counterPart 比較対象のVersion
+             * @return {boolean} counterPartと同じVersionの場合はtrue、それ以外はfalse
+             */
+            public isSame(counterPart: VersionString): boolean {
+                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                    return selfVersionNum === counterVersionNum;
+                })
+            }
+
+            /**
+             * X.Yの形で、ModuleVersionの値を返す　ex) 1.2
+             */
             public getVersionString(): string {
                 let FUNCTION_NAME = TAG + ": getVersionString : ";
 
@@ -142,7 +148,7 @@ module Garage {
 
                 if (this.build != null) {
                     return this.major + "." + this.minor + "." + this.build;
-                }else{
+                } else {
                     return this.major + "." + this.minor;
                 }
 

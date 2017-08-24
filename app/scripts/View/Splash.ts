@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 /// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
@@ -32,7 +31,7 @@ module Garage {
          * @class Splash
          * @brief Splash screen class
          */
-        class Splash extends BasePage {          
+        class Splash extends BasePage {
             /**
              * construnctor
              */
@@ -45,7 +44,7 @@ module Garage {
 
             //! page initialization event
             onInitialize(event: JQueryEventObject): void {
-               super.onInitialize(event);
+                super.onInitialize(event);
             }
 
             //! page show event
@@ -61,8 +60,9 @@ module Garage {
                             buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
                             title: PRODUCT_NAME,
                         }
-                        if (process.platform == PLATFORM_DARWIN) {
-                            electronDialog.showDisconnectedMessageBox(messageBoxOptions,
+
+                        if (Util.MiscUtil.isDarwin()) {
+                            electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
                                 (response) => {
                                     console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
                                     isHUISConnected = false;
@@ -77,15 +77,13 @@ module Garage {
                     }
                 })();
 
-
                 //現状アプリのバージョン情報を代入。
-
                 let targetVersionFilePath = null;
                 // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-                if (process.platform == PLATFORM_WIN32) {
-                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
-                } else if (process.platform == PLATFORM_DARWIN) {
-                    targetVersionFilePath = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
+                if (Util.MiscUtil.isWindows()) {
+                    targetVersionFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/windows/version.txt"));
+                } else if (Util.MiscUtil.isDarwin()) {
+                    targetVersionFilePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/version/mac/version.txt"));
                 } else {
                     console.error("Error: unsupported platform");
                 }
@@ -98,14 +96,33 @@ module Garage {
                     console.error(err);
                 }
 
+                //ビジネス仕向けの場合、ストレージロックの解除判定をする。
+                if (Util.MiscUtil.isBz()) {
+                    this.checkStorageLock().then(() => {
+                        this._MoveHomeBeforeSync();
+                    });
+                } else {
+                    this._MoveHomeBeforeSync();
+                }
+            }
 
+
+            /*
+             * 同期処理後、ホームへ移動する。
+             */
+            private _MoveHomeBeforeSync() {
+
+                sharedInfo = huisFiles.loadSharedInfo();
+
+                //本体のバージョン確認。
                 this.checkRcVersionFromDevice();
 
                 this.syncWithHUIS(() => {
                     Framework.Router.navigate("#home");
                 }); // 同期が完了したらHomeに遷移する
             }
-            
+
+
             //! page before hide event
             onPageBeforeHide(event: JQueryEventObject, data?: Framework.HideEventData) {
                 $(window).off("resize", this._pageLayout);
@@ -167,61 +184,210 @@ module Garage {
                 var windowHeight = innerHeight;
             }
 
-            /*
-            * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
-            */
+            /**
+             * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
+             */
             private syncCommonImages(callback?: Function) {
                 let FUNCTION_NAME = TAG + "syncCommonImages : ";
 
-                let src = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
-                let dst = HUIS_REMOTEIMAGES_ROOT;//コピー先
+                let srcRoot = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                let srcWhite = Util.PathManager.join(srcRoot, Util.Dirs.WHITE_DIR);
 
-                //copyしてcallbackを実行
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                let syncProgress = syncTask.copyFilesSimply(src, dst, (err) => {
-                    if (err) {
-                        this.showDialogNotConnectWithHuis(err);
-                    } else if (callback) {//同期成功。 
-                        callback();
+                syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
+                    .then((err: Error) => {
+                        if (err == null) {
+                            callback();
+                        } else {
+                            this.showDialogNotConnectWithHuis(err);
+                        }
+                    });
+            }
+
+            /**
+             * ストレージロックのチェック
+             */
+            private checkStorageLock(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                storageLock = new Util.StorageLock();
+
+                // ダイアログ表示中もスピナーを回転させるための setTimeout
+                setTimeout(() => {
+                    if (storageLock.isLocked()) {
+                        // ロックされていますメッセージダイアログ
+                        let res = this.showStorageUnlockDialog();
+                        if (res === 0) {
+                            // 「解除」選択時
+                            let result = storageLock.unlock();
+                            if (result) {
+                                // 解除しました再起動してくださいダイアログ
+                                this.showPleaseRestartDialog();
+
+                            } else {
+                                // 解除失敗ダイアログ
+                                this.showFailedToUnlockDialog();
+
+                            }
+                        }
+                        app.exit(0);
+
+                    } else {
+                        // ロックされていない場合はすぐ返す
+                        df.resolve();
                     }
-                });
+                }, 100);
+
+                return promise;
+            }
+
+            /**
+             * ストレージロックを解除するかどうかのダイアログを表示
+             *
+             * @return {number} ダイアログの入力
+             */
+            private showStorageUnlockDialog(): number {
+                return electronDialog.showMessageBox(
+                    {
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_STORAGE_LOCKED"),
+                        buttons: [
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_STORAGE_UNLOCK"),
+                            $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")
+                        ],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
             }
 
 
-            /*
-            * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
-            */
-            private checkRcVersionFromDevice(callback?: Function) {
-                let FUNCTION_NAME = TAG + "checkRcVersionFromDevice : ";
-                try {
-                    RC_VERSION = fs.readFileSync(RC_VERSION_FILE_NAME, 'utf8');
-                } catch (err) {
-                    console.error(FUNCTION_NAME + "erro occur : " + err);
+            /**
+             * ロック解除後の再起動を促すダイアログを表示
+             */
+            private showPleaseRestartDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+
+            /**
+             * ロック解除失敗のダイアログを表示
+             */
+            private showFailedToUnlockDialog() {
+                electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    });
+            }
+
+            private _isExistAppVersionBtoB() {
+                let app_version_btob_path = Util.PathManager.join(HUIS_ROOT_PATH, "appversionBtoB");
+                return fs.existsSync(app_version_btob_path);
+            }
+
+            private __checkVersion() {
+                let rcVersion: Model.VersionString = new Model.VersionString(sharedInfo.version);
+                let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
+
+                let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
+                let requiredGarageVersion = new Model.VersionString(sharedInfo.requiredGarageVersion);
+
+
+                if (rcVersion.isOlderThan(requiredRcVersion)) {
+                    this.showHuisRcVersionIsOldDialog();
+                } else if (garageVersion.isOlderThan(requiredGarageVersion)) {
+                    this.showGarageVersionIsOldDialog();
+                }
+            }
+
+            private _checkVersionForBz() {
+                if (sharedInfo == null) {
+                    console.warn("deviceInfo is not found, HUIS may be old.");
+                    console.warn("old version is not supported by BtoB UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
                 }
 
-                let rcVersion: Model.VersionString = new Model.VersionString(RC_VERSION);
+                if (!sharedInfo.isBtoB) {
+                    console.warn("BtoC HUIS is not supported by BtoB UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
+                }
 
-                //このバージョンのGarageに必要になるHUISのバージョン
-                let rcVersionAvailableImportExport = new Model.VersionString(HUIS_RC_VERSION_REQUIRED);
+                this.__checkVersion();
+            }
 
-                //HUIS RCとバージョン不一致の判定
-                if (RC_VERSION != null) {
-                    console.log(FUNCTION_NAME + "RC version is " + RC_VERSION);
+            private _checkVersion() {
+                if (this._isExistAppVersionBtoB()) {
+                    console.warn("BtoB HUIS is not supported by BtoC UI-Creator");
+                    this.showHuisRcVersonIsNotSupported();
+                }
 
-                    //HUIS RCはimportを使えないバージョンのときダイアログを出す。
-                    if (rcVersion.isOlderThan(rcVersionAvailableImportExport)) {
-                        this.showHuisRcVersionIsOldDialog();
-                    }
-                } else {//RC_VERSIONがない場合もダイアログを表示。
+                if (sharedInfo == null) {
+                    console.warn("deviceInfo is not found, HUIS may be old.");
                     this.showHuisRcVersionIsOldDialog();
                 }
 
+                this.__checkVersion();
             }
 
+            /**
+             * app versionを接続しているHUISから取得する。そして、HUISのバージョンが古いとダイアログをだす。
+             */
+            private checkRcVersionFromDevice(callback?: Function) {
+                if (Util.MiscUtil.isBz()) {
+                    this._checkVersionForBz();
+                } else {
+                    this._checkVersion();
+                }
+            }
 
-            /*
-            * HUIS本体のバージョンが古い場合のダイアログを表示
-            */
+            /**
+             * 接続されたHUISのバージョンがサポート外である場合のDialogを表示
+             */
+            private showHuisRcVersonIsNotSupported() {
+
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ERROR_HUIS_VERSION_IS_NOT_SUPPORTED"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
+
+            /**
+             * UI-Creatorのバージョンが古い場合のダイアログを表示
+             */
+            private showGarageVersionIsOldDialog() {
+
+                //ダイアログを表示
+                let response = electronDialog.showMessageBox(
+                    {
+                        type: "error",
+                        message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_1") +
+                        $.i18n.t("hp.update.app.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_2") +
+                        sharedInfo.requiredGarageVersion + $.i18n.t("dialog.message.STR_DIALOG_ERROR_GARAGE_VERSION_IS_OLD_3"),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                    }
+                );
+                app.exit(0);
+            }
+
+            /**
+             * HUIS本体のバージョンが古い場合のダイアログを表示
+             */
             private showHuisRcVersionIsOldDialog() {
 
                 //ダイアログを表示
@@ -272,14 +438,14 @@ module Garage {
                 let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
                 let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
 
-                let syncProgress = syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
+                syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
                     if (err) {
                         this.showDialogNotConnectWithHuis(err);
                     } else {//同期成功。
                         // 同期後に改めて、HUIS ファイルの parse を行う
                         huisFiles.init(HUIS_FILES_ROOT);
                         console.log("Complete!!!");
-                       
+
                         this.syncCommonImages(callback);
                     }
                 });
@@ -306,4 +472,4 @@ module Garage {
         var View = new Splash();
 
     }
-} 
+}

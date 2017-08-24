@@ -27,16 +27,16 @@ module Garage {
          * @class ButtonItemsCollection
          * @brief ButtonItem のコレクションオブジェクト
          */
-        export class ButtonItemsCollection extends Backbone.Collection<ButtonItem> {
+        export class ButtonItemsCollection extends Backbone.Collection<Model.ButtonItem> {
             // Backbone.Collection に対象の Model の型を与える
             model = ButtonItem;
 
-            constructor(models?: ButtonItem[]) {
+            constructor(models?: Model.ButtonItem[]) {
                 super(models);
             }
 
             //! destroy ハンドラ。
-            private onDestroy(item: ButtonItem) {
+            private onDestroy(item: Model.ButtonItem) {
                 console.log(TAG + "onDestroy()");
             }
         }

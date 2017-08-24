@@ -14,7 +14,6 @@
     limitations under the License.
 */
 
-
 module Garage {
     export module Util {
 
@@ -22,37 +21,92 @@ module Garage {
 
         var TAG: string = "[Garage.Util.InformationDialog]";
 
-        var LAST_NOTIFIED_VERSION_TEXT_PATH: string = path.join(GARAGE_FILES_ROOT, "last_notified_version.txt").replace(/\\/g, "/");
-        var FILE_NAME_DATE  = "date.txt";
-        var FILE_NAME_IMAGE = "image.png";
-        var FILE_NAME_NOTE  = "note.txt";
+        namespace ConstValue {
+            export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = Util.PathManager.join(GARAGE_FILES_ROOT, "last_notified_version.txt");
+            export const FILE_NAME_DATE: string = "date.txt";
+            export const FILE_NAME_IMAGE: string = "image.png";
+            export const FILE_NAME_NOTE: string = "note.txt";
+            export const DIR_NAME_WINDOWS: string = "Windows";
+            export const DIR_NAME_MAC: string = "Mac";
+        }
 
+        interface InformationList {
+            dirName: string;
+            date: string;
+            imagePath: string;
+            text: string;
+        }
 
-  
         /**
          * @class Notifier
 		 * @brief ui-creatorアップデート後の初回起動時かどうかの判定を行い、お知らせダイアログを表示するクラス
 		 */
         export class InformationDialog {
 
+            private lastNotifiedVersion_: Model.VersionString;
+
+            private _readLastNotifiedVersion() {
+                let FUNCTION_NAME: string = TAG + " : _readLastNotifiedVersion : ";
+
+                if (fs.existsSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
+                    this.lastNotifiedVersion_ = new Model.VersionString(fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString());
+                } else {
+                    // first launch after installation
+                    console.warn(FUNCTION_NAME + ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
+                    this.lastNotifiedVersion_ = new Model.VersionString("0.0.0");
+                }
+            }
+
             /**
              * ui-creatorアップデート後の初回起動時かどうかの判定を行う関数
              */
-            public shouldNotify() {
+            private shouldNotify() {
                 let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
 
+                let currentVersion = new Model.VersionString(APP_VERSION);
+
                 try {
-                    let preVersion: string = APP_VERSION;
-                    let lastNotifiedVersion: string;
-                    if (fs.existsSync(LAST_NOTIFIED_VERSION_TEXT_PATH)) {
-                        lastNotifiedVersion = fs.readFileSync(LAST_NOTIFIED_VERSION_TEXT_PATH).toString();
-                    } else {
-                        console.log(FUNCTION_NAME + LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
-                    }
-                    if (preVersion === lastNotifiedVersion) return false;
-                    else return true;
+                    return currentVersion.isNewerThan(this.lastNotifiedVersion_);
+
                 } catch (err) {
                     console.error(FUNCTION_NAME + err);
+                }
+            }
+
+            private createInfoListFromVersionDir(versionDirFullPath: string): InformationList[] {
+
+                var informationList: InformationList[] = [];
+                var contentsDirs: string[] = fs.readdirSync(versionDirFullPath); // noteの情報が入っているディレクトリのパス群
+
+                //もしコンテンツがない場合、なにも表示しない
+                if (!this.isExistValidContents(contentsDirs)) {
+                    return;
+                }
+
+                contentsDirs.reverse(); // 新しいnoteから表示させるために反転させる
+
+                // ダイアログにnoteを追加させていく
+                for (let dirName of contentsDirs) {
+                    let articlePath = PathManager.join(versionDirFullPath, dirName);
+                    informationList.push({
+                        dirName: dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
+                        imagePath: PathManager.join(articlePath, ConstValue.FILE_NAME_IMAGE),
+                        date: fs.readFileSync(PathManager.join(articlePath, ConstValue.FILE_NAME_DATE), "utf8"),
+                        text: fs.readFileSync(PathManager.join(articlePath, ConstValue.FILE_NAME_NOTE), "utf8")
+                    });
+                }
+
+                return informationList;
+            }
+
+            /**
+             * 最後にお知らせDialogを表示したVersionからの機能差分をユーザに通知する。
+             * 差分が無ければ特に何も行わない。
+             */
+            notifyIfNecessary() {
+                this._readLastNotifiedVersion();
+                if (this.shouldNotify()) {
+                    this.notify();
                 }
             }
 
@@ -62,47 +116,39 @@ module Garage {
              * お知らせを追加する場合は/app/res/notes/のディレクトリにフォルダを追加し、
              * 追加したディレクトリ内に date.txt, image.png, note.txt の３つのファイルを追加してください。
              * テキストファイルはutf-8で保存してください。shift-JISだと文字化けします。
-		     */
-            public notify() {
+             */
+            private notify() {
                 let FUNCTION_NAME: string = TAG + " : Notify : ";
+
+                var informationList: InformationList[] = [];
+                var dialog: Dialog = null;
 
                 try {
 
-                    var dialog: Dialog = null;
                     var props: DialogProps = null;
-                    var informationList: { dirName: string, date: string, imagePath: string, text: string }[] = [];
-
 
                     //お知らせダイアログにだすコンテンツがあるフォルダを指定
-                    var pathToNotes: string = miscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
+                    var pathToNotes: string = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/notes/"));
                     // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-                    if (process.platform == PLATFORM_WIN32) {
-                        pathToNotes = path.join(pathToNotes, DIR_NAME_WINDOWS + "/").replace(/\\/g, "/");
-                    } else if (process.platform == PLATFORM_DARWIN) {
-                        pathToNotes = path.join(pathToNotes, DIR_NAME_MAC + "/");
+                    if (Util.MiscUtil.isWindows()) {
+                        pathToNotes = Util.PathManager.join(pathToNotes, ConstValue.DIR_NAME_WINDOWS + "/");
+                    } else if (Util.MiscUtil.isDarwin()) {
+                        pathToNotes = path.join(pathToNotes, ConstValue.DIR_NAME_MAC + "/");
                     } else {
                         console.error("Error: unsupported platform");
                     }
 
                     var contentsDirs: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
-
-                    //もしコンテンツがない場合、なにも表示しない
-                    if (!this.isExistValidContents(contentsDirs)) {
-                        return;
-                    }
+                    contentsDirs = contentsDirs.filter((path) => {
+                        let infoVersionString = new Model.VersionString(path);
+                        return infoVersionString.isNewerThan(this.lastNotifiedVersion_);
+                    });
 
                     contentsDirs.reverse(); // 新しいnoteから表示させるために反転させる
 
-                    // ダイアログにnoteを追加させていく
-                    contentsDirs.forEach(function (dirName) {
-                        let path = pathToNotes + dirName + "/";
-                        informationList.push({
-                            dirName   : dirName, // 現状は利用していないプロパティ（特に表示したいお知らせがある場合はdirNameを利用してjQueryで操作）
-                            imagePath : (path + FILE_NAME_IMAGE),
-                            date      : fs.readFileSync(path + FILE_NAME_DATE, "utf8"),
-                            text      : fs.readFileSync(path + FILE_NAME_NOTE, "utf8")
-                        });
-                    });
+                    for (let dir of contentsDirs) {
+                        informationList = informationList.concat(this.createInfoListFromVersionDir(PathManager.join(pathToNotes, dir)));
+                    }
 
                     dialog = new CDP.UI.Dialog("#common-dialog-information", {
                         src: CDP.Framework.toUrl("/templates/dialogs.html"),
@@ -114,21 +160,19 @@ module Garage {
                     dialog.show();
 
                     //お知らせダイアログを出すか否か判定するファイルを書き出す。
-                    fs.outputFile(LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
-                    
+                    fs.outputFile(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
+
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }
             }
 
-
-    
-            /*
-            * お知らせダイアログに表示するコンテンツが存在するか判定する。
-            * @param {string[]} お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
-            * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
-            */
-            private isExistValidContents(contentsDirs: string[]):boolean {
+            /**
+             * お知らせダイアログに表示するコンテンツが存在するか判定する。
+             * @param {string[]} contentsDirs お知らせダイアログのコンテンツが存在するフォルダに存在するファイル/フォルダ名の配列
+             * @return {boolean} 000, 001, のように XXX(Xは整数) のフォルダが場合true, ひとつも存在しない場合false
+             */
+            private isExistValidContents(contentsDirs: string[]): boolean {
                 let FUNCTION_NAME: string = TAG + " : isExistValidContents : ";
 
                 //対象のパスにひとつもファイルもフォルダもない場合false;
@@ -150,4 +194,4 @@ module Garage {
 
         }
     }
-} 
+}
