@@ -21,7 +21,13 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.ButtonItem] ";
 
-        export class ButtonItem extends Model.Item implements IGButton {
+        namespace ConstValue {
+            //デフォルトとして利用されるステートのstateCollection_.models[]の配列インデックス
+            //defaultがない場合に利用される。
+            export const DEFAULT_STATE_INDEX: number = 0;
+        }
+
+        export class ButtonItem extends Model.Item {
 
             remoteId: string;
             private stateCollection_: ButtonStateCollection;
@@ -39,11 +45,14 @@ module Garage {
                     if (attributes.materialsRootPath) {
                         this.materialsRootPath_ = attributes.materialsRootPath;
                         if (this.remoteId) {
-                            this.resolvedImagePathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                            this.resolvedImagePathDirectory_ = Util.PathManager.joinAndResolve(attributes.materialsRootPath, "remoteimages");
                         }
                         if (attributes.srcRemoteId) {
                             // 画像のコピー元のディレクトリー
-                            this.resolvedCopySrcImagePathDirectory_ = path.resolve(path.join(attributes.materialsRootPath, "remoteimages")).replace(/\\/g, "/");
+                            this.resolvedCopySrcImagePathDirectory_ = Util.PathManager.joinAndResolve(attributes.materialsRootPath, "remoteimages");
+                        }
+                        if (attributes.state) {
+                            this.state = attributes.state;
                         }
                     }
                 }
@@ -54,9 +63,9 @@ module Garage {
              *
              * @param dstRemoteId {string}
              * @param offsetY {number}
-             * @return {ButtonItem}
+             * @return {Model.ButtonItem}
              */
-            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): ButtonItem {
+            public clone(dstRemoteId: string = this.remoteId, offsetY: number = 0): Model.ButtonItem {
                 var newButton = new Model.ButtonItem({
                     materialsRootPath: this.materialsRootPath_,
                     remoteId: dstRemoteId,
@@ -84,52 +93,11 @@ module Garage {
                     newButton.currentStateId = this.currentStateId;
                 }
 
+                newButton.state = [];
                 // button.state のコピー
-                var srcStates = this.state;
-                var newStates: IGState[] = [];
-
-                srcStates.forEach((srcState) => {
-                    let newState: IGState = {
-                        id: srcState.id
-                    };
-                    newState.active = srcState.active;
-
-                    if (srcState.action) {
-                        if (_.isArray(srcState.action)) {
-                            newState.action = $.extend(true, [], srcState.action);
-                        } else {
-                            newState.action = [$.extend(true, {}, srcState.action)];
-                        }
-                    }
-
-                    if (srcState.translate) {
-                        if (_.isArray(srcState.translate)) {
-                            newState.translate = $.extend(true, [], srcState.translate);
-                        } else {
-                            newState.translate = [$.extend(true, {}, srcState.translate)];
-                        }
-                    }
-
-                    if (srcState.image) {
-                        if (_.isArray(srcState.image)) {
-                            newState.image = $.extend(true, [], srcState.image);
-                        } else {
-                            newState.image = [$.extend(true, {}, srcState.image)];
-                        }
-                    }
-
-                    if (srcState.label) {
-                        if (_.isArray(srcState.label)) {
-                            newState.label = $.extend(true, [], srcState.label);
-                        } else {
-                            newState.label = [$.extend(true, {}, srcState.label)];
-                        }
-                    }
-
-                    newStates.push(newState);
-                });
-
-                newButton.state = newStates;
+                for (let state of this.state) {
+                    newButton.state.push(state.clone());
+                }
 
                 return newButton;
             }
@@ -138,12 +106,43 @@ module Garage {
              * Model の initialize
              */
             initialize(attribute?, options?) {
-                //console.log("Model.ButtonItem initialize");
+            }
+
+            /**
+             * @return {Model.ButtonState[]} 所持しているstateの配列のディープコピーを返す。
+             */
+            cloneStates(): Model.ButtonState[] {
+                return this.stateCollection_.clone().models;
             }
 
             public isAirconButton() {
                 let airconButtonNamePrefix = "STR_REMOTE_BTN_AIRCON";
                 return (this.name.indexOf(airconButtonNamePrefix) == 0);
+            }
+
+            /**
+             * @return {boolean} マクロボタンの場合、trueを返す。
+             */
+            isMacroButton(): boolean {
+                let FUNCTION_NAME = TAG + "isMacroButton : ";
+                if (this.getDefaultState().action[0].interval !== undefined) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            /**
+             * @return {boolean} ジャンプボタンの場合trueを返す。
+             */
+            isJumpButton(): boolean {
+                let FUNCTION_NAME = TAG + "isJumpButton : ";
+                try {
+                    if (this.state[0].action[0].jump !== undefined) {
+                        return true;
+                    }
+                } catch (e) { }
+                return false;
             }
 
             get area(): IArea {
@@ -163,6 +162,95 @@ module Garage {
                 }
             }
 
+            /**
+             * @return {Model.ButtonState} デフォルトで表示するStateを取得する。存在しない場合、nullを返す。
+             */
+            getDefaultState(): Model.ButtonState {
+                let FUNCTION_NAME = TAG + " getDefaultState() : ";
+
+                if (this.default !== null) {
+                    return this.getStateByStateId(this.default);
+                }
+
+                //デフォルトとして設定されているステートIDのステートがない場合、配列番号を指定。
+                return this.stateCollection_.models[ConstValue.DEFAULT_STATE_INDEX];
+            }
+
+            /**
+             * @param {number} stateId 取得したいModel.ButtonStateのStateId
+             * @return {Model.ButtonState} 発見できない場合、nullを返す。
+             */
+            getStateByStateId(stateId: number): Model.ButtonState {
+
+                for (let targetState of this.stateCollection_.models) {
+                    if (targetState.stateId == stateId) {
+                        return targetState;
+                    }
+                }
+
+                return null;
+            }
+
+            /**
+             * @param {number} stateId 配列インデックスを取得したいModel.ButtonStateのstateId
+             * @return {number} 入力に対応したModel.ButtonState[]の配列インデックス
+             */
+            getStateIndexByStateId(stateId: number): number {
+                let targetStates = this.stateCollection_.models;
+                for (let i = 0; targetStates.length > i; i++) {
+                    let targetState = targetStates[i];
+                    if (targetState.stateId == stateId) {
+                        return i;
+                    }
+                }
+            }
+
+            /**
+             * @return {number} ボタンに設定されているデフォルトのstateIdを取得
+             */
+            getDefaultStateId(): number {
+                //デフォルトとして設定されているステートIDのステートがない場合、getDefautState()で取得するstateのstateIdで代用。
+                if (this.default == null) {
+                    return this.getDefaultState().stateId;
+                }
+                return this.default;
+            }
+
+            /**
+             * @return defaultとして利用されるStateのState配列上のインデックス
+             */
+            getDefaultStateIndex(): number {
+                return this.getStateIndexByStateId(this.getDefaultStateId());
+            }
+
+            /**
+             * Model.ButtonItemをHUIS出力用のデータ形式に変換する。
+             *
+             * @param {string} remoteId このButtonItemが所属するremoteId
+             * @param {string} ourputDirPath? faceファイルの出力先のディレクトリ
+             * @return {IButton} 変換されたデータ
+             */
+            convertToHuisData(remoteId: string, face: Model.Face, outputDirPath?: string, isToImportExport?: boolean): IButton {
+
+                let convertedStates = [];
+                for (let state of this.state) {
+                    convertedStates.push(state.convertToHuisData(remoteId, face, outputDirPath, isToImportExport));
+                }
+
+                let convertedButton: IButton = {
+                    area: this.area,
+                    state: convertedStates
+                };
+                if (this.default != null) {
+                    convertedButton.default = this.default;
+                }
+                if (this.name != null) {
+                    convertedButton.name = this.name;
+                }
+
+                return convertedButton;
+            }
+
             get default(): number {
                 return this.get("default");
             }
@@ -179,15 +267,7 @@ module Garage {
                 this.set("name", val);
             }
 
-            get version(): string {
-                return this.get("version");
-            }
-
-            set version(val: string) {
-                this.set("version", val);
-            }
-
-            get interval(): number{
+            get interval(): number {
                 return this.get("interval");
             }
 
@@ -203,59 +283,28 @@ module Garage {
                 this.set("currentStateId", val);
             }
 
-            get state(): IGState[] {
-                if (this.stateCollection_ && 0 < this.stateCollection_.length) {
-                    let statesData: IGState[] = [];
-                    this.stateCollection_.forEach((stateModel, index) => {
-                        let stateData: IGState = {
-                            id: stateModel.stateId
-                        };
-                        if (stateModel.active !== undefined) {
-                            stateData.active = stateModel.active;
-                        }
-                        if (stateModel.image) {
-                            stateData.image = stateModel.image;
-                        }
-                        if (stateModel.label) {
-                            stateData.label = stateModel.label;
-                        }
-                        if (stateModel.action) {
-                            stateData.action = stateModel.action;
-                        }
-                        if (stateModel.translate) {
-                            stateData.translate = stateModel.translate;
-                        }
-
-                        statesData.push(stateData);
-                    });
-
-                    return statesData;
+            // TODO: change name, state to states
+            get state(): Model.ButtonState[] {
+                if (this.stateCollection_ != null && this.stateCollection_.models != null) {
+                    return this.get("state");
                 }
-                return null;
             }
 
-            set state(val: IGState[]) {
+            set state(val: Model.ButtonState[]) {
                 // stateCollection の初期化 / リセット
                 if (!this.stateCollection_) {
                     this.stateCollection_ = new ButtonStateCollection();
                 } else {
                     this.stateCollection_.reset();
                 }
+                // TODO: delete following
                 // stateData を model 化して stateCollection に追加する
                 if (_.isArray(val)) {
-                    val.forEach((stateData: IGState, index: number) => {
-                        //let stateModel: ButtonState = new ButtonState({
-                        //    stateId: stateData.id,
-                        //    active: stateData.active,
-                        //    action: $.extend(true, [], stateData.action),
-                        //    translate: $.extend(true, [], stateData.translate),
-                        //    image: $.extend(true, [],  stateData.image),
-                        //    label: $.extend(true, [], stateData.label)
-                        //});
+                    val.forEach((stateData: Model.ButtonState, index: number) => {
                         let stateModel: ButtonState = new ButtonState({
                             materialsRootPath: this.materialsRootPath_, remoteId: this.remoteId
                         });
-                        stateModel.stateId = stateData.id;
+                        stateModel.stateId = stateData.stateId;
                         stateModel.active = stateData.active;
                         stateModel.action = $.extend(true, [], stateData.action);
                         stateModel.translate = $.extend(true, [], stateData.translate);
@@ -279,7 +328,7 @@ module Garage {
                 for (let i = 0, l = this.stateCollection_.length; i < l; i++) {
                     let stateModel = this.stateCollection_.at(i);
                     if (stateModel && stateModel.action && stateModel.action.length) {
-                        for (let targetAction of stateModel.action){
+                        for (let targetAction of stateModel.action) {
                             if (targetAction && targetAction.code_db && !targetAction.deviceInfo) {
                                 // 機器情報が設定されていない場合はactionに設定されている情報をコピー
                                 targetAction.deviceInfo = {
@@ -290,20 +339,22 @@ module Garage {
                                 };
                             }
                         }
-                        
+
                     }
                 }
                 this._setStateItemsArea(this.area);
+                this.set("state", this.stateCollection_.models);
             }
 
 
             /**
              * 変更可能なプロパティーの一覧
              */
-            get properties(): string[]{
-                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name","version", "interval"];
+            get properties(): string[] {
+                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name", "version", "interval"];
             }
 
+            // TODO: delete
             /**
              * アイテムの種類
              */
@@ -311,14 +362,15 @@ module Garage {
                 return "button";
             }
 
+            // TODO: review default attrs
             /**
              * モデルの初期値を返す。
              * new でオブジェクトを生成したとき、まずこの値が attributes に格納される。
              */
             defaults() {
-                let states: IGState[] = [];
+                let states: Model.ButtonState[] = [];
 
-                let button: IGButton = {
+                let button: any = {
                     "enabled": true,
                     area: {
                         x: 0,
@@ -329,13 +381,15 @@ module Garage {
                     default: 0,
                     currentStateId: 0,
                     state: states,
-                    name:"button",
+                    name: "button",
                 };
 
                 return button;
             }
 
 
+            // TODO: destroy and validate methods are copy-and-pasted, need review
+            // http://tnakamura.hatenablog.com/entry/2013/02/07/135119
 
             /**
              * destroy をオーバーライド。
@@ -368,26 +422,36 @@ module Garage {
                     return;
                 }
                 var stateModel: ButtonState = new ButtonState({
-                        stateId: state.id,
-                        active: state.active,
-                        action: state.action,
-                        translate: state.translate,
-                        image: state.image,
-                        label: state.label
+                    stateId: state.id,
+                    active: state.active,
+                    action: state.action,
+                    translate: state.translate,
+                    image: state.image,
+                    label: state.label
                 });
                 this.stateCollection_.add(stateModel);
+            }
+
+            /**
+             * @return {boolean} タッチパット用のボタンだった場合trueを返す。
+             */
+            isTouchPatButton(): boolean {
+                return this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_UP_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_LEFT_VALUE) ||
+                    this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_DOWN_VALUE);
             }
 
             /**
              * コピー元の画像ディレクトリーが存在していたら、
              * state.image に指定されている画像を module ディレクトリーにコピーする。
              */
-            private _copyImageFile(images: IGImage[]): void {
+            private _copyImageFile(images: Model.ImageItem[]): void {
                 if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
                     return;
                 }
 
-                images.forEach((image: IGImage) => {
+                images.forEach((image: Model.ImageItem) => {
                     let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
                     let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
                     if (!fs.existsSync(resolvedCopySrcImagePath)) {
@@ -409,7 +473,7 @@ module Garage {
                     return;
                 }
 
-                states.forEach((state: IGState) => {
+                states.forEach((state: Model.ButtonState) => {
                     if (state.image) {
                         this._setStateImageItemArea(state.image, buttonArea);
                     }
@@ -422,125 +486,60 @@ module Garage {
             /**
              * state 内の画像アイテムの area の設定
              */
-            private _setStateImageItemArea(images: IGImage[], buttonArea: IArea) {
-                if (!images || !this.initialArea_) {
+            private _setStateImageItemArea(images: Model.ImageItem[], buttonArea: IArea) {
+                if (!images) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
-                images.forEach((image: IGImage) => {
-                    if (!image.areaRatio) {
-                        let imageArea = image.area;
-                        image.areaRatio = {
-                            x: 0 < initialArea.w ? imageArea.x / initialArea.w : 1,
-                            y: 0 < initialArea.h ? imageArea.y / initialArea.h : 1,
-                            w: 0 < initialArea.w ? imageArea.w / initialArea.w : 1,
-                            h: 0 < initialArea.h ? imageArea.h / initialArea.h : 1
-                        };
-                    } else {
-                        image.area = {
-                            x: buttonArea.x * image.areaRatio.x,
-                            y: buttonArea.y * image.areaRatio.y,
-                            w: buttonArea.w * image.areaRatio.w,
-                            h: buttonArea.h * image.areaRatio.h
-                        };
-                    }
+                images.forEach((image: Model.ImageItem) => {
+                    image.area = {
+                        x: 0,
+                        y: 0,
+                        w: buttonArea.w,
+                        h: buttonArea.h
+                    };
                 });
             }
 
             /**
              * state 内のラベルアイテムの area の設定
              */
-            private _setStateLabelItemArea(labels: IGLabel[], buttonArea: IArea) {
-                if (!labels || !this.initialArea_) {
+            private _setStateLabelItemArea(labels: Model.LabelItem[], buttonArea: IArea) {
+                if (!labels) {
                     return;
                 }
 
-                var initialArea = this.initialArea_;
-                labels.forEach((label: IGLabel) => {
-                    if (!label.areaRatio) {
-                        let labelArea = label.area;
-                        label.areaRatio = {
-                            x: 0 < initialArea.w ? labelArea.x / initialArea.w : 1,
-                            y: 0 < initialArea.h ? labelArea.y / initialArea.h : 1,
-                            w: 0 < initialArea.w ? labelArea.w / initialArea.w : 1,
-                            h: 0 < initialArea.h ? labelArea.h / initialArea.h : 1
-                        };
-                    } else {
-                        label.area = {
-                            x: buttonArea.x * label.areaRatio.x,
-                            y: buttonArea.y * label.areaRatio.y,
-                            w: buttonArea.w * label.areaRatio.w,
-                            h: buttonArea.h * label.areaRatio.h
-                        };
-                    }
+                labels.forEach((label: Model.LabelItem) => {
+                    label.area = {
+                        x: 0,
+                        y: 0,
+                        w: buttonArea.w,
+                        h: buttonArea.h
+                    };
                 });
             }
 
             /**
-             * state 内のアイテムに areaRatio を付加する
+             * ボタンのactionに、特定のアクションが含まれるか判定する
+             * @param actiionType{string} buttonに含まれているか確かめたいアクションタイプ
+             * @return {boolean} 特定のアクションがひとつでも含まれる場合true,ひとつも含まれない場合false.エラーが発生した場合 undefinedを返す。
              */
-            private _setAreaRatioToStateItems(): void {
-                var states = this.state;
-                if (!states) {
+            private _isIncludeSpecificActionType(actionType: string): boolean {
+                let FUNCTION_NAME: string = TAG + "isIncludeSpecificActionType : ";
+
+                if (!Util.JQueryUtils.isValidValue(actionType)) {
+                    console.warn(FUNCTION_NAME + "actionType is invalid");
                     return;
                 }
 
-                states.forEach((state: IGState) => {
-                    if (state.image) {
-                        this._setAreaRatioToStateImageItems(state.image);
+                for (let state of this.state) {
+                    if (state.isIncludeSpecificActionType(actionType)) {
+                        return true;
                     }
-                    if (state.label) {
-                        this._setAreaRatioToStateLabelItems(state.label);
-                    }
-                });
-
-                this.state = states;
-            }
-
-            /**
-             * state 内の画像アイテムに areaRatio を付加する
-             */
-            private _setAreaRatioToStateImageItems(images: IGImage[]) {
-                if (!this.initialArea_) {
-                    return;
                 }
-
-                var buttonArea = this.initialArea_;
-                images.forEach((image: IGImage) => {
-                    if (!image.areaRatio) {
-                        let imageArea = image.area;
-                        image.areaRatio = {
-                            x: 0 < buttonArea.x ? imageArea.x / buttonArea.x : 1,
-                            y: 0 < buttonArea.y ? imageArea.y / buttonArea.y : 1,
-                            w: 0 < buttonArea.w ? imageArea.w / buttonArea.w : 1,
-                            h: 0 < buttonArea.h ? imageArea.h / buttonArea.h : 1
-                        };
-                    }
-                });
+                return false;
             }
 
-            /**
-             * state 内のラベルアイテムに areaRatio を付加する
-             */
-            private _setAreaRatioToStateLabelItems(labels: IGLabel[]) {
-                if (!this.initialArea_) {
-                    return;
-                }
-
-                var buttonArea = this.initialArea_;
-                labels.forEach((label: IGLabel) => {
-                    if (!label.areaRatio) {
-                        let labelArea = label.area;
-                        label.areaRatio = {
-                            x: 0 < buttonArea.x ? labelArea.x / buttonArea.x : 1,
-                            y: 0 < buttonArea.y ? labelArea.y / buttonArea.y : 1,
-                            w: 0 < buttonArea.w ? labelArea.w / buttonArea.w : 1,
-                            h: 0 < buttonArea.h ? labelArea.h / buttonArea.h : 1
-                        };
-                    }
-                });
-            }
         }
     }
 }

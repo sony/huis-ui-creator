@@ -23,7 +23,7 @@ module Garage {
         }
 
         export class JQueryUtils {
-            static TAG = "JQueryUtils";
+
 
             /**
              * jQuery オブジェクトで選択された DOM の data 属性を取得する。
@@ -64,28 +64,14 @@ module Garage {
             }
 
 
-            static enccodeUriValidInCSS(inputUrl: string): string {
+            static encodeUriValidInCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
-                    console.warn("[JQueryUtils]enccodeUriValidInCSS : inputUrl is null");
+                    console.warn("[JQueryUtils]encodeUriValidInCSS : inputUrl is null");
                     return;
                 }
 
                 return this.encodeUriValidInWindowsAndCSS(inputUrl);
-                /*
-                //ダミーの変数、マック対応時に動的に入手
-                let isWindows = true;
-                let isMac = false;
-
-                if (isWindows) {
-                    return this.encodeUriValidInWindowsAndCSS(inputUrl);
-                }
-                
-                else if (isMac) {
-                    return this.encodeUriValidInMacAndCSS(inputUrl);
-                }
-                */
-
             }
 
             /*
@@ -96,7 +82,7 @@ module Garage {
             static encodeUriValidInWindowsAndCSS(inputUrl: string): string {
 
                 if (inputUrl == null) {
-                    console.warn( "[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
+                    console.warn("[JQueryUtils]encodeUriValidInWindows : inputUrl is null");
                     return;
                 }
 
@@ -184,44 +170,106 @@ module Garage {
                 return tmpUrl;
             }
 
-            /*
-            * テキストボタンの表示を、HUISで表示されたときと合わせるための補正値
-            * @param textsize{number} 表示するテキストサイズ
-            * @return Garage上で表示する補正後のテキストサイズ
-            */
-            static getOffsetTextButtonSize(textsize: number): number {
-                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextSize :";
-
-                if (textsize == null) {
-                    console.error(FUNCTION_NAME + "textsize is null");
-                    return 0;
-                }
-
-                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_BUTTON - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_BUTTON_SIZE_OFFSET_FUNC);
-            }
-
-            /*
-            * テキストラベルの表示を、HUISで表示されたときと合わせるための補正値
-            * @param textsize{number} 表示するテキストサイズ
-            * @return Garage上で表示する補正後のテキストサイズ
-            */
-            static getOffsetTextLabelSize(textsize: number): number {
-                let FUNCTION_NAME = "[JQueryUtils]" + " : getOffsetTextLabelSize :";
-
-                if (textsize == null) {
-                    console.error(FUNCTION_NAME + "textsize is null");
-                    return 0;
-                }
-
-                return textsize * (RATIO_TEXT_SIZE_HUIS_GARAGE_LABEL - (textsize - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
-            }
-
-
             //NaNか判定 Number.isNaNが使えないので代用
             static isNaN(v): boolean {
                 return v !== v;
             }
 
+
+            /**
+             * margin-topのpx値をnumberとして取得
+             * px以外の単位には未対応
+             *
+             * @param $elem {JQuery} 検査対象エレメント
+             * @return {number} margin-topの値
+             */
+            static getMarginTopPx($elem: JQuery): number {
+                let marginTop = $elem.css('margin-top');
+                let pxIndex = marginTop.indexOf('px');
+
+                return (pxIndex < 0) ? Number(marginTop) : Number(marginTop.substring(0, pxIndex));
+
+            }
+
+
+            /**
+             * transform の scale値をnumberとして取得
+             * x-scaleのみを取得し、y-scaleとの検証は行わない
+             *
+             * @param $elem {JQuery} 検査対象エレメント
+             * @return {number} transform の scale値
+             */
+            static getScale($elem: JQuery): number {
+                let scaleText = $elem.css('transform');
+                let matrix = scaleText.match(/[^matrix\(].+[^\)]/);
+
+                if (matrix.length < 0) {
+                    return 1;
+                } else {
+                    let values = matrix[0].split(',');
+
+                    if (values.length < 6) {
+                        return 1;
+                    } else {
+                        return Number(values[0]);
+                    }
+                }
+            }
+
+
+            /**
+             * 値が有効か判定する。
+             * @return {boolen} nullでも、"none"でも、""でも、NaNでもない場合、trueを返す。
+             */
+            static isValidValue(value): boolean {
+                if (value == null) {
+                    return false;
+                } else if (value == "none") {
+                    return false;
+                } else if (value === "") {
+                    return false;
+                } else if (Util.JQueryUtils.isNaN(value)) {
+                    return false;
+                }
+                return true;
+            }
+
+
+            /**
+             * JQuery要素が有効か判定する
+             * @param $target{JQuery}判定対象
+             * @return {boolean} 有効な場合、true
+             */
+            static isValidJQueryElement($target: JQuery): boolean {
+                if ($target == null || $target.length == 0) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            /**
+             * テキストエリアにフォーカスを移し、カーソルを末尾に移動する。
+             * @param {JQuery} $target テキストエリアのJQuery
+             */
+            static setFocusAndMoveCursorToEnd($target: JQuery) {
+                var FUNCTION_NAME = "setFocusAndMoveCursorToEnd";
+
+                if (_.isUndefined($target)) {
+                    console.log(FUNCTION_NAME + ": $target is Undefined");
+                    return;
+                }
+
+                if ($target.attr('type') !== "text") {
+                    console.log(FUNCTION_NAME + ": $target is not input[text]");
+                    return;
+                }
+
+                var remoteName: string = $target.val();
+                $target.val("");
+                $target.focus();
+                $target.val(remoteName);
+            }
 
 
         }

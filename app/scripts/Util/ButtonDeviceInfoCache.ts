@@ -31,9 +31,9 @@ module Garage {
             }
 
             /**
-             * キャッシュファイルを読み込み、渡されたIGModuleに設定
+             * キャッシュファイルを読み込み、渡されたmoduleに設定
              */
-            load(gmodules: IGModule[]) {
+            load(modules: Model.Module[]) {
 
                 if (!fs.existsSync(this.filePath)) {
                     console.log("buttondeviceinfo.cache not found: " + this.filePath);
@@ -48,21 +48,21 @@ module Garage {
                     return;
                 }
 
-                for (let gmodule of gmodules) {
-                    if (!gmodule.button) continue;
+                for (let module of modules) {
+                    if (!module.button) continue;
 
-                    for (let gbutton of gmodule.button) {
-                        if (!gbutton.area || !gbutton.state) continue;
+                    for (let button of module.button) {
+                        if (!button.area || !button.state) continue;
 
-                        for (let stateIndex = 0; stateIndex < gbutton.state.length; stateIndex++) {
-                            if (!gbutton.state[stateIndex].action) continue;
+                        for (let stateIndex = 0; stateIndex < button.state.length; stateIndex++) {
+                            if (!button.state[stateIndex].action) continue;
 
-                            for (let actionIndex = 0; actionIndex < gbutton.state[stateIndex].action.length; actionIndex++) {
-                                let cache = this.find(buttonDeviceInfoCache, gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
+                            for (let actionIndex = 0; actionIndex < button.state[stateIndex].action.length; actionIndex++) {
+                                let cache = this.find(buttonDeviceInfoCache, module.pageIndex, button.area.x, button.area.y, stateIndex, actionIndex);
 
                                 if (cache) {
                                     // 参照を直接更新
-                                    gbutton.state[stateIndex].action[actionIndex].deviceInfo = cache;
+                                    button.state[stateIndex].action[actionIndex].deviceInfo = cache;
                                 }
                             }
                         }
@@ -73,13 +73,13 @@ module Garage {
 
             /**
              * 全てのモジュールに対してHuisFilesから検索したDeviceInfoを設定する
-             * @param gmodules {IGModule[]} 対象とするモジュールオブジェクト
+             * @param modules {Model.Module[]} 対象とするモジュールオブジェクト
              */
-            static injectAllDeviceInfoFromHuisFiles(gmodules: IGModule[]) {
-                for (let gmodule of gmodules) {
-                    if (!gmodule.button) continue;
+            static injectAllDeviceInfoFromHuisFiles(modules: Model.Module[]) {
+                for (let module of modules) {
+                    if (!module.button) continue;
 
-                    for (let button of gmodule.button) {
+                    for (let button of module.button) {
                         if (!button.state) continue;
 
                         for (let stateIndex = 0; stateIndex < button.state.length; stateIndex++) {
@@ -91,9 +91,9 @@ module Garage {
                                 if (tmpAction.deviceInfo && tmpAction.deviceInfo.functions) continue;
 
                                 let deviceInfo = ButtonDeviceInfoCache.createDeviceInfo(
-                                    gmodule.pageIndex,
-                                    gmodule.area.x,
-                                    gmodule.area.y,
+                                    module.pageIndex,
+                                    module.area.x,
+                                    module.area.y,
                                     stateIndex,
                                     actionIndex,
                                     tmpAction);
@@ -164,12 +164,12 @@ module Garage {
                     return null;
                 }
 
-                let id               = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
-                let face             = huisFiles.getFace(remoteId);
-                let functions        = huisFiles.getMasterFunctions(remoteId);
-                let codeDb           = huisFiles.getMasterCodeDb(remoteId);
+                let id = ButtonDeviceInfoCache.createId(page, buttonAreaX, buttonAreaY, stateIndex, actionIndex);
+                let face = huisFiles.getFace(remoteId);
+                let functions = huisFiles.getMasterFunctions(remoteId);
+                let codeDb = huisFiles.getMasterCodeDb(remoteId);
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
-                let bluetoothData    = huisFiles.getMasterBluetoothData(remoteId);
+                let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
 
                 if (face == null ||
                     functions == null ||
@@ -177,42 +177,42 @@ module Garage {
                     // functionCodeHash, bluetoothDataは必須ではない
                     return null;
                 }
-                    
+
                 return {
-                    id              : id,
-                    remoteName      : face.name,
-                    functions       : functions,
-                    code_db         : codeDb,
+                    id: id,
+                    remoteName: face.name,
+                    functions: functions,
+                    code_db: codeDb,
                     functionCodeHash: functionCodeHash,
-                    bluetooth_data  : bluetoothData
+                    bluetooth_data: bluetoothData
                 };
             }
 
-
+            // TODO: JSDoc comment
             /**
-             * 渡されたIGModule内のボタン情報をキャッシュファイルに出力
+             * 渡されたModel.Module内のボタン情報をキャッシュファイルに出力
              */
-            save(gmodules: IGModule[]) {
+            save(modules: Model.Module[]) {
                 let newList: IButtonDeviceInfo[] = [];
 
-                for (let gmodule of gmodules) {
-                    if (!gmodule.button) continue;
+                for (let module of modules) {
+                    if (!module.button) continue;
 
-                    for (let gbutton of gmodule.button) {
-                        if (!gbutton.state) continue;
+                    for (let button of module.button) {
+                        if (!button.state) continue;
 
-                        for (let stateIndex = 0; stateIndex < gbutton.state.length; stateIndex++) {
-                            if (!gbutton.state[stateIndex].action) continue;
+                        for (let stateIndex = 0; stateIndex < button.state.length; stateIndex++) {
+                            if (!button.state[stateIndex].action) continue;
 
-                            for (let actionIndex = 0; actionIndex < gbutton.state[stateIndex].action.length; actionIndex++) {
-                                let targetDeviceInfo = gbutton.state[stateIndex].action[actionIndex].deviceInfo;
+                            for (let actionIndex = 0; actionIndex < button.state[stateIndex].action.length; actionIndex++) {
+                                let targetDeviceInfo = button.state[stateIndex].action[actionIndex].deviceInfo;
                                 if (!targetDeviceInfo) continue;
 
                                 if (targetDeviceInfo.code_db.function != null &&
                                     targetDeviceInfo.code_db.function.length > 0) {
                                     targetDeviceInfo.code_db.function = HuisFiles.getPlainFunctionKey(targetDeviceInfo.code_db.function);
                                 }
-                                targetDeviceInfo.id = ButtonDeviceInfoCache.createId(gmodule.pageIndex, gbutton.area.x, gbutton.area.y, stateIndex, actionIndex);
+                                targetDeviceInfo.id = ButtonDeviceInfoCache.createId(module.pageIndex, button.area.x, button.area.y, stateIndex, actionIndex);
                                 newList.push(targetDeviceInfo);
                             }
                         }

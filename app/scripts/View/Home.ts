@@ -17,6 +17,7 @@
 /// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
+/// <reference path="PhnConfig.ts" />
 
 module Garage {
     export module View {
@@ -79,7 +80,7 @@ module Garage {
 
             //! events binding
             events(): any {
-                var events:any = {};
+                var events: any = {};
                 events = super.events();
                 events["click #create-new-remote"] = "_onCreateNewRemote";
                 events["click #sync-pc-to-huis"] = "_onSyncPcToHuisClick";
@@ -88,6 +89,7 @@ module Garage {
                 events["contextmenu"] = "_onContextMenu";
                 events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
                 events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
+                events["click #command-set-properties"] = "onOptionSetPropertiesClick";
                 return events;
             }
 
@@ -104,12 +106,41 @@ module Garage {
                 console.log("onClickNotFullCustomFace");
                 let $clickedFace = $(event.currentTarget);
                 let remoteId = $clickedFace.data("remoteid");
-                this.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
+                Util.MiscUtil.showGarageToast($.i18n.t("toast.STR_TOAST_CANT_EDIT"));
+            }
+
+            /*
+             * ヘッダー上のオプションメニューボタンが押された際のイベントハンドリング
+             */
+            private _onOptionPullDownMenuClick(event: Event) {
+
+                //表示するメニューのJQuery要素
+                let $popup: JQuery = this.$page.find("#option-pulldown-menu-popup");
+                //ビジネス仕向けの場合、表示するメニューを出しわける
+                if (Util.MiscUtil.isBz()) {
+                    $popup = this.$page.find("#option-pulldown-menu-popup-bz");
+                }
+
+                this.showOptionPullDownMenu($popup);
             }
 
             render(): Home {
                 this._renderFaceList();
+                $('body').trigger('create');
                 return this;
+            }
+
+
+            /**
+             * オプションの「詳細設定」を押した際の処理
+             *
+             * @param event {Event} クリックイベント
+             */
+            private onOptionSetPropertiesClick(event: Event) {
+                let conf = new PhnConfig({ el: $('body'), model: new Model.PhnConfig(huisFiles.phnConfig, !storageLock.isReadyToLock()) });
+                conf.$el.i18n();
+                conf.updateHomeDestLabel();
+                return;
             }
 
             /*
@@ -122,9 +153,11 @@ module Garage {
                     huisFiles.init(HUIS_FILES_ROOT);
                     this._calculateFaceListWidth();
                     this._renderFaceList();
+
+                    // インポート後は、インポートしたリモコンを表示するために一番左に移動する
+                    this._moveWindowLeft();
                 });
             }
-
 
             /**
              * Home 画面の初期化
@@ -150,10 +183,15 @@ module Garage {
 
                 //お知らせダイアログを表示
                 var informationDialog = new Util.InformationDialog();
-                if (informationDialog.shouldNotify()) {
-                    informationDialog.notify();
-                }
-                
+                informationDialog.notifyIfNecessary();
+            }
+
+            /**
+              * 画面を左端に移動させる
+              */
+            private _moveWindowLeft() {
+                let $faceListContainer = $("#face-list-container");
+                $faceListContainer.animate({ scrollLeft: 0 }, "normal");
             }
 
             /**
@@ -167,11 +205,11 @@ module Garage {
                 // HuisFiles から フルカスタムの face を取得。
                 // face は新しいものから表示するため、取得した facelist を逆順にする→HuisFiles.tsで追加位置を末尾にしたのでreverse()が不要に
                 var faces = huisFiles.getFilteredFacesByCategories({});
-                var faceList: { remoteId: string, name: string, category: string }[] = [];
-                faces.forEach((face: IGFace) => {
+                var faceList: { remoteId: string, name: string, category: string ,faceColor: string}[] = [];
+                faces.forEach((face: Model.Face) => {
 
                     //faceName がスペースでのみ構成されているとき、無視されるので表示上、全角スペースにする。
-                    let tmpFaceName: string =face.name;
+                    let tmpFaceName: string = face.name;
                     var regExp = new RegExp(" ", "g");
                     tmpFaceName = tmpFaceName.replace(regExp, "");
 
@@ -181,7 +219,8 @@ module Garage {
                     faceList.push({
                         remoteId: face.remoteId,
                         name: faceName,
-                        category: faceCategory
+                        category: faceCategory,
+                        faceColor: face.getFaceColorCssClassName()
                     });
 
                 });
@@ -194,7 +233,7 @@ module Garage {
                     this._renderFace($(elems[i]));
                 }
                 this._calculateFaceListWidth();
-              
+
 
                 //テキストのローカライズ
                 $("#page-home").i18n();
@@ -207,7 +246,7 @@ module Garage {
                 if (!remoteId) {
                     return;
                 }
-                var face: IGFace = huisFiles.getFace(remoteId);
+                var face: Model.Face = huisFiles.getFace(remoteId);
                 var faceRenderer: FaceRenderer = new FaceRenderer({
                     el: $face.find(".face-container"),
                     attributes: {
@@ -216,48 +255,13 @@ module Garage {
                     }
                 });
                 faceRenderer.render();
-
-                //// シングルクリックしたら「選択状態」になる
-                //$face.find(".face-container").on("click", (event) => {
-                //    let $clickedFace = $(event.currentTarget);
-                //    this.selectedRemoteId = $clickedFace.data("remoteid");
-                //    this._fringeFaceList();
-                //});
             }
 
             /**
-            * this.selectedRemoteIdで選択されているRemoteに縁をつけ、選択中であることを示す
-            */
-            //private _fringeFaceList() {
-            //    var templateFile = Framework.toUrl("/templates/home.html");
-            //    var faceItemTemplate = Tools.Template.getJST("#face-list-template", templateFile);
-            //    var $faceList = $("#face-list");
-
-            //    var elems: any = $faceList.children();
-            //    for (let i = 0, l = elems.length; i < l; i++) {
-            //        var remoteId = $(elems[i]).attr("data-remoteId");
-            //        if (remoteId === this.selectedRemoteId) {
-            //            $(elems[i]).find(".face-container").css("border", "10px solid rgb(10,10,10)"); // 縁をつける(仮)
-            //        } else {
-            //            $(elems[i]).find(".face-container").css("border", "1px solid rgb(221,221,221)");
-            //        }
-            //    }
-            //}
-
-           /**
-             * faceのcloneを作成する。型情報はコピーされない事に注意。
-             *
-             * @param face {IGFace} コピーしたいface。
-             */
-            private _cloneFace(face: IGFace) {
-                return $.extend(true, {}, face);
-            }
-
-           /**
-             * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
-             *
-             * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
-             */
+              * 引数で与えたremoteIdを持つリモコンの編集画面に移動する。
+              *
+              * @param remoteId {string} 0埋め4桁の数字文字列。省略した場合は、新規リモコン作成画面に入る。
+              */
             private _enterFullCustom(remoteId?: string) {
                 let urlQueryParameter: string = "";
                 if (remoteId != null) {
@@ -266,33 +270,42 @@ module Garage {
                 Framework.Router.navigate("#full-custom" + urlQueryParameter);
             }
 
-           /**
-             * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
-             *
-             * @param face {IGFace} コピーを作成するリモコンのface。
-             */
+            /**
+              * 引数で与えられたfaceのコピーを作成し、その後その編集画面に入る。
+              *
+              * @param face {Model.Face} コピーを作成するリモコンのface。
+              */
             private _copyAndEditRemote(face: Model.Face) {
 
                 if (!this._checkCanCreateNewRemote()) {
                     return;
                 }
-                face = this._cloneFace(face);
-                face.setWholeRemoteId(huisFiles.createNewRemoteId());
 
+                let dialogProps: DialogProps = DIALOG_PROPS_COPY_AND_EDIT_REMOTE;
+                let dialog = new CDP.UI.Dialog(dialogProps.id, {
+                    src: CDP.Framework.toUrl("/templates/dialogs.html"),
+                    title: dialogProps.options.title,
+                });
+                dialog.show();
+
+                face = face.clone();
                 if (face.category != DEVICE_TYPE_FULL_CUSTOM) {
                     face.convertToFullCustomFace();
                 }
+                face.moveToNewRemoteId(huisFiles.createNewRemoteId());
 
                 let buttonDeviceInfoCache = new Util.ButtonDeviceInfoCache(HUIS_FILES_ROOT, face.remoteId);
-                huisFiles.updateFace(face.remoteId, face.name, face.modules, buttonDeviceInfoCache)
+                huisFiles.updateFace(face, buttonDeviceInfoCache)
                     .always(() => {
-                        garageFiles.addEditedFaceToHistory("dev" /* deviceId は暫定 */, face.remoteId);
                         if (HUIS_ROOT_PATH) {
                             let syncTask = new Util.HuisDev.FileSyncTask();
-                            let syncProgress = syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
+                            syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_COPY_AND_EDIT_REMOTE, () => {
                                 huisFiles.init(HUIS_FILES_ROOT);
                                 this._calculateFaceListWidth();
                                 this._renderFaceList();
+
+                                // 新規作成したリモコンを表示するために一番左に移動する
+                                this._moveWindowLeft();
                             }, (err) => {
                                 if (err) {
                                     // [TODO] エラー値のハンドリング
@@ -314,11 +327,11 @@ module Garage {
                     });
             }
 
-           /**
-             * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
-             *
-             * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
-             */
+            /**
+              * 新規にリモコンが作成できるかどうを確認し、必要であればエラーダイアログを出力する。
+              *
+              * @return {boolean} 新規にリモコンが作成できるかどうかを返す。
+              */
             private _checkCanCreateNewRemote(): boolean {
                 let canCreateResult = huisFiles.canCreateNewRemote();
                 if (canCreateResult == 0) {
@@ -354,10 +367,10 @@ module Garage {
             }
 
 
-            
+
 
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
-                
+
                 if (!noWarn) {
                     //もう使われてない？
                     let response = electronDialog.showMessageBox({
@@ -367,7 +380,7 @@ module Garage {
                         + "HUIS 内のコンテンツが上書きされますので、ご注意ください。",
                         buttons: ["yes", "no"],
                         title: PRODUCT_NAME,
-                        cancelId:1,
+                        cancelId: 1,
                     });
                     if (response !== 0) {
                         huisFiles.updateRemoteList(); // HUIS更新せずにRemoteList更新
@@ -378,14 +391,14 @@ module Garage {
                 huisFiles.removeFace(this.remoteIdToDelete);
                 huisFiles.updateRemoteList();
                 huisFiles.init(HUIS_FILES_ROOT);
-                
+
                 if (HUIS_ROOT_PATH) {
                     let syncTask = new Util.HuisDev.FileSyncTask();
                     syncTask.exec(HUIS_FILES_ROOT, HUIS_ROOT_PATH, true, DIALOG_PROPS_DELTE_REMOTE, () => {
                         $(".face[data-remoteid=" + this.remoteIdToDelete + "]").remove();
                         this._calculateFaceListWidth();
                         this._renderFaceList();
-                  }, (err) => {
+                    }, (err) => {
                         if (err) {
                             // [TODO] エラー値のハンドリング
                             electronDialog.showMessageBox({
@@ -416,7 +429,8 @@ module Garage {
 
                         let remoteId = $face.data("remoteid");
 
-                        //対象がフルカスタムリモコンのときのみ表示
+                        // 対象がフルカスタムリモコンのときのみ表示
+                        // 編集画面へ移動機能をコンテキストメニューに表示
                         if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
                             this.contextMenu_.append(new MenuItem({
                                 label: $.i18n.t("context_menu.STR_CONTEXT_EDIT_REMOTE"),
@@ -426,6 +440,7 @@ module Garage {
                             }));
                         }
 
+                        // コピー機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_COPY_AND_EDIT_REMOTE"),
                             click: () => {
@@ -434,6 +449,7 @@ module Garage {
                             }
                         }));
 
+                        //削除機能をコンテキストメニューに表示
                         this.contextMenu_.append(new MenuItem({
                             label: $.i18n.t("context_menu.STR_CONTEXT_DELETE_REMOTE"),
                             click: () => {
@@ -442,32 +458,33 @@ module Garage {
                                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DELETE_REMOTE"),
                                     buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_DELETE"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
                                     title: PRODUCT_NAME,
-                                    cancelId:1,
+                                    cancelId: 1,
                                 });
                                 if (response === 0) {
-                                    //this._removeFace(remoteId);
-                                    //this._renderFaceList();
                                     this._onSyncPcToHuisClick(true); // true で警告なし
-                               }
+                                }
                             }
                         }));
 
-                        //対象がフルカスタムリモコンのときのみ表示
-                        if ($face.hasClass(FACE_TYPE_FULL_CUSTOM)) {
-                            this.contextMenu_.append(new MenuItem({
-                                label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
-                                click: () => {
-                                    let face: IGFace = huisFiles.getFace(remoteId);
+                        //エキスポート機能をコンテキストメニューに表示。
+                        this.contextMenu_.append(new MenuItem({
+                            label: $.i18n.t("context_menu.STR_CONTEXT_EXPORT_REMOTE"),
+                            click: () => {
+                                let face: Model.Face = huisFiles.getFace(remoteId);
 
-                                    this.exportRemote(remoteId, face.name, face.modules); // true で警告なし
-                                }
-                            }));
-                        }
-                        
+                                //masterFaceを取得。
+                                let isMaster: boolean = true;
+                                let masterFace: Model.Face = huisFiles.getFace(remoteId, isMaster);
+
+                                this.exportRemote(face, masterFace); // true で警告なし
+                            }
+                        }));
+
+
                     }
 
                 }
-                
+
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
                     this.contextMenu_.append(new MenuItem({
                         label: $.i18n.t("context_menu.STR_CONTEXT_VALIDATE_ELEMENTS"),
@@ -480,7 +497,7 @@ module Garage {
                 if (this.contextMenu_.items.length != 0) {
                     this.contextMenu_.popup(this.currentWindow_);
                 }
-                
+
             }
 
             private _pageLayout() {
@@ -492,13 +509,10 @@ module Garage {
                     this.closeAllPopups();
                 }
 
-                //var faceHistoryListContainerHeight = 200; // tentative
                 var faceHistoryListContainerHeight = 0; // ヒストリー表示がなくなったので、暫定的にサイズ 0
                 var scrollHeight = windowHeight - $(window).outerHeight(true);
                 var faceListContainerHeight = innerHeight - $("#face-list-container").offset().top - faceHistoryListContainerHeight - scrollHeight;
-                //if (faceListContainerHeight < 200) {s
-                //    faceListContainerHeight = 200;
-                //}
+
                 $("#face-list").css("height", faceListContainerHeight + "px");
                 $("#home-introductions").css("height", faceListContainerHeight + "px");
             }
@@ -516,28 +530,6 @@ module Garage {
                 $faceList.width(listWidth);
             }
 
-            //private _onKeyDown(event: JQueryEventObject) {
-            //    console.log("_onKeyDown : " + event.keyCode);
-
-            //    switch (event.keyCode) {
-            //        case 8: // BS
-            //        case 46: // DEL
-            //            if (this.selectedRemoteId) {
-            //                var response = electronDialog.showMessageBox({
-            //                    type: "info",
-            //                    message: "リモコンを削除すると元に戻せません。削除しますか？",
-            //                    buttons: ["yes", "no"]
-            //                });
-            //                if (response === 0) {
-            //                    this._removeFace(this.selectedRemoteId);
-            //                    this._renderFaceList();
-            //                }
-            //            }
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
         }
 
         var View = new Home();

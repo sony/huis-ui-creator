@@ -22,9 +22,21 @@ module Garage {
 
         const TAG: string = "[Garage.Model.Face] ";
 
-        export class Face extends Backbone.Model implements IGFace {
+        // Change of FaceColor affects FaceColorCssClass and $FACE_COLOR_BLACK/WHITE in _classname.css
+        export namespace FaceColor {
+            export const WHITE: string = "white";
+            export const BLACK: string = "black";
 
-            constructor(remoteId: string, name: string, category: string, modules?: Model.Module[], attributes?: any, options?: any) {
+            // SETTING is replaced with other face color according to SettingColor
+            export const SETTING: string = "setting";
+
+            export const FULL_CUSTOM_DEFAULT: string = WHITE;
+            export const NOT_FULL_CUSTOM_DFEFAULT: string = SETTING;
+        }
+
+        export class Face extends Backbone.Model implements IFace {
+
+            constructor(remoteId: string, name: string, category: string, color: string, modules?: Model.Module[], attributes?: any, options?: any) {
                 super(attributes, options);
 
                 this.modules = [];
@@ -35,6 +47,14 @@ module Garage {
                 this.remoteId = remoteId;
                 this.name = name;
                 this.category = category;
+
+                if (color != null) {
+                    this.color = color;
+                } else if (category === DEVICE_TYPE_FULL_CUSTOM) {
+                    this.color = FaceColor.FULL_CUSTOM_DEFAULT;
+                } else {
+                    this.color = FaceColor.NOT_FULL_CUSTOM_DFEFAULT;
+                }
             }
 
             private _createEmptyModule(remoteId: string, pageIndex: number): Model.Module {
@@ -95,6 +115,117 @@ module Garage {
                 return resultCodes;
             }
 
+            /**
+             * face内に存在する信号名を取得
+             * @return {string[]} 信号名を表す文字列の配列
+             */
+            getFunctions(): string[] {
+                let functionCodeHash: IStringStringHash = {};
+                let faceModules = this.modules;
+
+                var getFunctions_modules = function (modules: IModule[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(modules)) {
+                        return;
+                    }
+
+                    modules.forEach((module: IModule) => {
+                        let buttons = module.button;
+                        getFunctions_buttons(buttons, functionCodeHash);
+                    });
+
+                };
+
+                var getFunctions_buttons = function (buttons: IButton[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(buttons)) {
+                        return;
+                    }
+
+                    buttons.forEach((button: IButton) => {
+                        let states = button.state;
+                        getFunctions_states(states, functionCodeHash);
+                    });
+                };
+
+                var getFunctions_states = function (states: IState[], functionCodeHash: IStringStringHash) {
+                    if (!_.isArray(states)) {
+                        return;
+                    }
+
+                    states.forEach((state: IState) => {
+                        let actions = state.action;
+                        getFunctions_actions(actions, functionCodeHash);
+                    });
+                };
+
+                var getFunctions_actions = function (actions: IAction[], functionCodeHash: IStringStringHash) {
+                    let FUNCTION_NAME = TAG + ": getFunctions_actions : ";
+
+                    if (!_.isArray(actions)) {
+                        return;
+                    }
+
+                    actions.forEach((action: IAction) => {
+                        let code_db = action.code_db;
+                        let code = action.code;
+                        if (code_db && code_db.function) {
+
+                            if (code != null && code != undefined && code != " ") {
+                                //学習によって登録された用 codeがある場合
+                                functionCodeHash[code_db.function] = action.code;
+                            } else if (code_db.db_codeset != " " || code_db.brand != " " || action.bluetooth_data) {
+                                //プリセット用 db_codeset と brand が空白文字で。
+                                functionCodeHash[code_db.function] = "";
+                            } else {
+                                //db_codeset と brand もなく codeも空の場合. 学習して登録で、 学習されなかったボタンたちはここにはいる。
+                            }
+                        } else {
+                            console.warn(FUNCTION_NAME + "invalid code_db / codedb.function action : " + action);
+                        }
+                    });
+                };
+
+                // module にあるすべてのボタンの機能を取得する
+                getFunctions_modules(faceModules, functionCodeHash);
+
+                return Object.keys(functionCodeHash);
+            }
+
+            /**
+             * face に記述されている最初の code_db を取得する。
+             * 取得した code_db は、機器の「ブランド」、「種類」等の情報のために使用されることを想定している。
+             *
+             * @return {ICodeDB} faceに記述されている最初の code_db。見つからない場合は null。
+             */
+            getCodeDb(): ICodeDB {
+                var modules = this.modules;
+                for (let i = 0, ml = modules.length; i < ml; i++) {
+                    var buttons = modules[i].button;
+                    if (!buttons) {
+                        continue;
+                    }
+                    for (let j = 0, bl = buttons.length; j < bl; j++) {
+                        var states = buttons[j].state;
+                        if (!states) {
+                            continue;
+                        }
+                        for (let k = 0, sl = states.length; k < sl; k++) {
+                            var actions = states[k].action;
+                            if (!actions) {
+                                continue;
+                            }
+                            for (let l = 0, al = actions.length; l < al; l++) {
+                                var codeDb = actions[l].code_db;
+                                if (codeDb) {
+                                    return $.extend(true, {}, codeDb);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+
             /*
              * このFaceをfullcustomで生成されるModuleと同様のフォーマットのFaceに変換する。
              */
@@ -108,7 +239,7 @@ module Garage {
                 for (let elem of this.modules) {
                     let isCrossPage = module.area.h + elem.area.h > HUIS_FACE_PAGE_HEIGHT;
                     if (isCrossPage) {
-                        convertedModules.push( this._finalizeModule(module) );
+                        convertedModules.push(this._finalizeModule(module));
                         pageIndex++;
                         module = this._createEmptyModule(this.remoteId, pageIndex);
                     }
@@ -119,9 +250,10 @@ module Garage {
                     module.merge(elem);
                     prevElem = elem;
                 }
-                convertedModules.push( this._finalizeModule(module) );
+                convertedModules.push(this._finalizeModule(module));
 
                 this.modules = convertedModules;
+                this.category = DEVICE_TYPE_FULL_CUSTOM;
                 return this;
             }
 
@@ -162,14 +294,139 @@ module Garage {
                 return false;
             }
 
-            /*
+            /**
+             * このFaceのremoteIdを引数で与えられたremoteIdに変更する。
+             * 含まれる画像は全て新しいremoteIdの画像ディレクトリ以下にコピーされる。
+             *
+             * @param {string} dstRemoteId 新しいFaceのremoteId
+             */
+            moveToNewRemoteId(dstRemoteId: string) {
+                let images = this.searchImages();
+                this._copyImage(images, dstRemoteId);
+                this.setWholeRemoteId(dstRemoteId);
+            }
+
+            /**
+             * 引数で与えられたImageを、引数で与えられたremoteIdの画像ディレクトリ(例：HuisFiles/remoteimages/0000)にコピーする。
+             *
+             * @param {Model.ImageItem[]} images 変更対象のImage。
+             * @param {string} remoteId 変更先となる画像ディレクトリのremoteId。
+             */
+            private _copyImage(images: Model.ImageItem[], remoteId: string) {
+                for (let image of images) {
+                    image.copyImageToRemoteDir(remoteId);
+                }
+            }
+
+            /**
+             * このFaceに含まれるImageを全て検索する。
+             * 具体的には、Moduleに含まれるImage、Button.Stateに含まれるImageを全て検索する。
+             *
+             * @return {Model.ImageItem[]} 検索されたImage。
+             */
+            searchImages(): Model.ImageItem[] {
+                let images: Model.ImageItem[] = [];
+                for (let module of this.modules) {
+                    if (module.image != null) {
+                        images = images.concat(module.image);
+                    }
+                    if (module.button == null) {
+                        continue;
+                    }
+                    for (let button of module.button) {
+                        for (let state of button.state) {
+                            if (state.image != null) {
+                                images = images.concat(state.image);
+                            }
+                        }
+                    }
+                }
+                return images;
+            }
+
+            /**
+             * faceが使用している画像パスをすべて取得する
+             * @return {string[]} 画像パスの配列
+             */
+            getAllImagePaths(): string[] {
+                let results: string[] = [];
+                for (let image of this.searchImages()) {
+                    results = results.concat(image.path.replace(/\\/g, "/"));
+                    if (image.garageExtensions != null && image.garageExtensions.original != null) {
+                        results = results.concat(image.garageExtensions.original.replace(/\\/g, "/"));
+                    }
+                }
+                return results;
+            }
+
+            /**
+             * faceのcloneを作成する。型情報はコピーされない事に注意。
+             *
+             * @return {Model.Face} コピーされたface。
+             */
+            clone(): Model.Face {
+                // copy properties
+                let cloneFace: Model.Face = $.extend(true, {}, this);
+
+                // clone customized objects (not deep copied by extend)
+                cloneFace.modules = [];
+                for (let module of this.modules) {
+                    cloneFace.modules.push(module.clone());
+                }
+
+                return cloneFace;
+            }
+
+            /**
+             * このFaceの総ページ数を返す
+             * @return {number} Faceの総ページ数。
+             */
+            getTotalPageNum(): number {
+                let FUNCTION_NAME = TAG + "TotalPageNum : ";
+
+                if (this.modules == null || this.modules.length == null) {
+                    console.warn(FUNCTION_NAME + "modules in this face (" + name + "is null");
+                    return undefined;
+                }
+
+                //フルカスタムリモコンの場合、Faceが保持しているモジュール数を総ページ数とする。
+                //フルカスタムリモコンにおいては、1ページ1モジュールというルールがあるため。
+                if (this.category == DEVICE_TYPE_FULL_CUSTOM) {
+                    return this.modules.length
+                }
+
+                //それ以外の場合、moduleのpageIndexの最大値を返す。
+                var pageCount: number = 0;
+                for (let module of this.modules) {
+                    // collection 内の model の pageIndex のうち、最大のものをページ数とする
+                    if (pageCount < module.pageIndex + 1) {
+                        pageCount = module.pageIndex + 1;
+                    }
+                }
+                return pageCount;
+
+            }
+
+            /**
              * このFace、及び含まれるModuleにremoteIdをセットする。
+             * その際に、Moduleのnameに含まれるremoteIdも更新する。
+             *
              * @param val: string 設定するremoteId
              */
-            public setWholeRemoteId(val: string) {
+            private setWholeRemoteId(val: string) {
                 this.remoteId = val;
                 for (let elem of this.modules) {
                     elem.remoteId = val;
+                    elem.name = elem.name.replace(/\d{4}/, val);
+                }
+            }
+
+            // TODO: move this method to View
+            getFaceColorCssClassName(): string {
+                if (this.color === FaceColor.BLACK) {
+                    return View.FaceColorCssClass.BLACK_FACE;
+                } else {
+                    return View.FaceColorCssClass.WHITE_FACE;
                 }
             }
 
@@ -203,6 +460,28 @@ module Garage {
 
             set modules(val) {
                 this.set("modules", val);
+            }
+
+            get color(): string {
+                return this.get("color");
+            }
+
+            private _getSettingColor() {
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    return FaceColor.BLACK;
+                } else if (sharedInfo.settingColor === SettingColor.WHITE) {
+                    return FaceColor.WHITE;
+                }
+
+                console.warn(TAG + " Unexpected setting color, set face color WHITE");
+                return FaceColor.WHITE;
+            }
+
+            set color(val: string) {
+                if (val === FaceColor.SETTING) {
+                    val = this._getSettingColor();
+                }
+                this.set("color", val);
             }
 
             /**

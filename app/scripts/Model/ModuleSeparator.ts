@@ -21,16 +21,22 @@ module Garage {
     export module Model {
         var TAG = "[Garage.Model.LabelItem] ";
 
-        const HORIZONTAL_LINE_IMAGE_PATH: string = "/res/images/divider_pickup_custom.png";
+        const HORIZONTAL_LINE_IMAGE_PATH: string = "divider_pickup_custom.png";
 
-        const MODULE_SEPARATOR_LABEL_FONT_SIZE = 18;
-        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT = "normal";
+        const MODULE_SEPARATOR_LABEL_FONT_SIZE: number = 18;
+        const MODULE_SEPARATOR_LABEL_FONT_WEIGHT: string = "normal";
 
         export class ModuleSeparator extends Backbone.Model {
 
             constructor(text: string, attributes?: any) {
                 super(attributes, null);
                 this.text = text;
+                if (sharedInfo.settingColor === SettingColor.BLACK) {
+                    this.color = SettingColor.WHITE;
+                } else {
+                    this.color = SettingColor.BLACK;
+                }
+
             }
 
             /*
@@ -47,9 +53,8 @@ module Garage {
                 module.label.push(label);
 
                 let image = this.itemizeHorizontalLine(module.remoteId);
-                let miscUtil = new Garage.Util.MiscUtil();
-                this._copyImageFile(image, miscUtil.getAppropriatePath(CDP.Framework.toUrl(HORIZONTAL_LINE_IMAGE_PATH), true), image.resolvedPath);
-                image.path = module.remoteId + "/" + path.basename(Model.OffscreenEditor.getEncodedPath(path.basename(image.resolvedPath)));
+                let dstPath = Util.PathManager.join(module.remoteId, HORIZONTAL_LINE_IMAGE_PATH);
+                this._copyImageFile(image, Util.PathManager.resolveImagePath(HORIZONTAL_LINE_IMAGE_PATH), Util.PathManager.resolveImagePath(dstPath));
 
                 if (module.image == null) {
                     module.image = [];
@@ -63,7 +68,7 @@ module Garage {
              * コピー後、imageItemにコピー先のpathを設定する。
              */
             private _copyImageFile(imageItem: Model.ImageItem, srcPath: string, dstPath: string) {
-                if(path && fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
+                if (path && fs.existsSync(srcPath) && !fs.existsSync(dstPath)) {
                     Model.OffscreenEditor.editImage(srcPath, IMAGE_EDIT_PARAMS, dstPath).done((editedImage) => {
                         imageItem.path = editedImage.path;
                     });
@@ -72,38 +77,35 @@ module Garage {
 
             private itemizeHorizontalLine(remoteId: string): Model.ImageItem {
 
-                // 新しい model を追加する
-                var horizontalLineImage = new Model.ImageItem({
-                    materialsRootPath: HUIS_FILES_ROOT,
-                    remoteId: remoteId
-                });
-
-                var newArea: IArea;
-                var srcImagePath: string;
-                newArea = {
+                let horizontalLineArea = {
                     x: BIAS_X_DEFAULT_GRID_LEFT,
                     y: 0,
                     w: GRID_AREA_WIDTH,
                     h: DEFAULT_GRID
                 };
-                horizontalLineImage.area = newArea;
-                horizontalLineImage.path = remoteId + "/" + path.basename(HORIZONTAL_LINE_IMAGE_PATH);
+
+                var horizontalLineImage = new Model.ImageItem({
+                    area: horizontalLineArea,
+                    path: HORIZONTAL_LINE_IMAGE_PATH
+                });
 
                 return horizontalLineImage;
             }
 
             private itemizeLabel(): Model.LabelItem {
-                let newLabel = new Model.LabelItem();
-                let $moduleSeparator = $(".module-separator");
-                newLabel.size = MODULE_SEPARATOR_LABEL_FONT_SIZE;
-                newLabel.font_weight = MODULE_SEPARATOR_LABEL_FONT_WEIGHT;
-
-                newLabel.area.x = BIAS_X_DEFAULT_GRID_LEFT;
-                newLabel.area.y = 0;
-                newLabel.area.w = GRID_AREA_WIDTH;
-                newLabel.area.h = DEFAULT_GRID;
-
-                newLabel.text = this.text;
+                let iLabel = {
+                    size: MODULE_SEPARATOR_LABEL_FONT_SIZE,
+                    area: {
+                        x: BIAS_X_DEFAULT_GRID_LEFT,
+                        y: 0,
+                        w: GRID_AREA_WIDTH,
+                        h: DEFAULT_GRID
+                    },
+                    font_weight: MODULE_SEPARATOR_LABEL_FONT_WEIGHT,
+                    text: this.text,
+                    color: Model.FontColor.SETTING
+                }
+                let newLabel = new Model.LabelItem(iLabel);
 
                 return newLabel;
             }
@@ -119,12 +121,19 @@ module Garage {
                 this.set("text", val);
             }
 
+            get color(): string {
+                return this.get("color");
+            }
+
+            set color(val: string) {
+                this.set("color", val);
+            }
 
             /**
              * 変更可能なプロパティーの一覧
              */
             get properties(): string[] {
-                return ["text"];
+                return ["text", "color"];
             }
 
             /**

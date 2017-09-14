@@ -24,18 +24,35 @@
 /// <reference path="../Util/HuisFiles.ts" />
 /// <reference path="../Util/HuisDev.ts" />
 /// <reference path="../Util/MiscUtil.ts" />
-/// <reference path="../Util/GarageFiles.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
+/// <reference path="../Util/SelectRemotePageDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Util/ZipManager.ts" />
+/// <reference path="../Util/StorageLock.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
+/// <reference path="../Model/SharedInfo.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
 /// <reference path="../Util/ItemClipboard.ts" />
+/// <reference path="../Util/PhnConfigFile.ts" />
+
+/**
+ * @interface IPhnConfig
+ * @brief 
+ */
+interface IPhnConfig {
+    home_id: string;
+    scene_no: number;
+    enable_vertical_remote_page_swipe: boolean;
+    enable_horizontal_remote_page_swipe: boolean;
+    display_remote_arrow: boolean;
+    display_setting_button: boolean;
+    display_add_button: boolean;
+}
 
 /**
  * @interface IArea
@@ -60,27 +77,17 @@ interface IArea {
     h: number;
 }
 
-/**
- * @interface IGAreaRatio
- * @brief 親の Area に対しての子要素の Area の比率。button の state の image や label での使用を想定。
- */
-interface IGAreaRatio {
-    /**
-     * 親の Area に対しての x の比率
-     */
-    x: number;
-    /**
-     * 親の Area に対しての y の比率
-     */
-    y: number;
-    /**
-     * 親の Area に対しての w の比率
-     */
-    w: number;
-    /**
-     * 親の Area に対しての h の比率
-     */
-    h: number;
+interface ISharedInfo {
+    system: {
+        version: string;
+        win_required_version: string;
+        mac_required_version: string;
+        is_btob: boolean;
+    },
+    color: {
+        model_color: string;
+        setting_color: string;
+    }
 }
 
 /**
@@ -106,6 +113,10 @@ interface IAction {
      * Bluetooth通信用の情報
      */
     bluetooth_data?: IBluetoothData;
+    /**
+     * 任意リモコンページへの遷移機能情報
+     */
+    jump?: IJump;
     /**
      * ボタンがひも付けられている機器の情報
      */
@@ -184,6 +195,20 @@ interface IBluetoothDevice {
 }
 
 /**
+ * @interface IJump
+ */
+interface IJump {
+    /**
+     * 遷移先リモコンのremote_id
+     */
+    remote_id: string;
+    /**
+     * 遷移先のシーンNo.
+     */
+    scene_no: number;
+}
+
+/**
  * @interface IStateTranslate
  * @brief HUIS の module ファイルにおける button.state.translate にあたる
  */
@@ -196,22 +221,6 @@ interface IStateTranslate {
      * next state's state.id
      */
     next: number;
-}
-
-
-/**
- * @interface IGState
- * @brief IState に対して Garage で使用する情報を付加し、image や label を IGXxx に変換したもの
- */
-interface IGState {
-    id?: number;
-    image?: IGImage[];
-    label?: IGLabel[];
-    action?: IAction[];
-    translate?: IStateTranslate[];
-    active?: boolean; /* アクティブな状態かどうか */
-    stateId?: number;
-    [x: string]: any;
 }
 
 /**
@@ -243,23 +252,6 @@ interface IState {
      * state が有効であるか
      */
     active?: boolean;
-}
-
-/**
- * @interface IGState
- * @brief IButton に対して Garage で使用する情報を付加し、state を IGState[] に変換したもの
- */
-interface IGButton {
-    version?: string;
-    area: IArea;
-    default?: number;
-    state: IGState[];
-    name?: string;
-    /**
-     * 現在の state.id
-     */
-    currentStateId: number;
-    [x: string]: any;
 }
 
 /**
@@ -316,29 +308,6 @@ interface IStringKeyValue {
 }
 
 /**
- * @interface IGLabel
- * @brief ILabel に対して Garage で使用する情報を付加したもの
- */
-interface IGLabel {
-    version?: string;
-    area?: IArea;
-    text: string;
-    color?: number;
-    font?: string;
-    size?: number;
-    font_weight?: FontWeight;//normal | bold
-    /**
-     * 親要素の area に対してのこのアイテムの area の比率
-     */
-    areaRatio?: IGAreaRatio;
-    /**
-     * 16階調のグレイスケールを rgb() 表記したものが格納される
-     */
-    resolvedColor?: string;
-    [x: string]: any;
-}
-
-/**
  * @interface ILabel
  * @brief HUIS の module ファイルにおける label にあたる
  */
@@ -352,9 +321,9 @@ interface ILabel {
      */
     text: string;
     /**
-     * テキストの色 (16階調グレイスケール)
+     * テキストの色 (black, white, setting)
      */
-    color?: number;
+    color: string;
     /**
      * テキストのフォント
      */
@@ -396,55 +365,13 @@ interface IGarageImageExtensions {
 }
 
 /**
- * @interface IGImage
- * @brief IImage に Garage で使用する情報を付加したもの
- */
-interface IGImage {
-    version?: string;
-    area?: IArea;
-    path: string;
-    resolvedPath?: string; //<!image.path を絶対パスに変換したもの
-    resolvedPathCSS?: string;//CSSで表示できる状態のパス
-    garageExtensions?: IGGarageImageExtensions;
-    areaRatio?: IGAreaRatio;
-    pageBackground?: boolean;
-    resized?: boolean; //<!リサイズが行われたかどうか
-    resizeMode?: string;
-    resizeOriginal?: string;
-    resizeResolvedOriginalPath?: string;
-    resizeResolvedOriginalPathCSS?: string;//CSSで表示できる状態のパス
-    [x: string]: any;
-}
-
-/**
  * @interface IImage
  * @brief HUIS の module ファイルにおける image にあたる
  */
 interface IImage {
-    area?: IArea;
-    path?: string;
-    garage_extensions?: IGarageImageExtensions;
-}
-
-interface IGOutput {
-    Module: IModule[];
-}
-
-/**
- * @interface IGModule
- * @brief IModule に対して Garage で使用する情報を付加したもの
- */
-interface IGModule {
-    version?: string;
     area: IArea;
-    button?: IGButton[];
-    label?: IGLabel[];
-    image?: IGImage[];
-    offsetY: number; //!< ページ内のモジュールの y 座標
-    pageIndex: number; //!< ページ番号 (最初のページが 0
-    remoteId: string; //!< モジュールが属する face の ID
-    name: string; //!< モジュールの名前
-    group?: IGroup;
+    path: string;
+    garage_extensions?: IGarageImageExtensions;
 }
 
 /**
@@ -470,30 +397,14 @@ interface IGroup {
 }
 
 /**
- * @interface IGFace
- * @brief IFace に対して Garage で使用する情報を付加したもの
- */
-interface IGFace extends IFace {
-    remoteId: string;
-}
-
-/**
+ * HUIS の face ファイルの内容
  * @interface IFace
- * @breif HUIS の face ファイルの内容にあたる
  */
 interface IFace {
-    /**
-     * face の名前
-     */
     name: string;
-    /**
-     * face のカテゴリー
-     */
     category: string;
-    /**
-     * face が参照する module (module ファイルを展開したもの)
-     */
-    modules: Garage.Model.Module[];
+    modules: IModule[];
+    color: string;
 }
 
 /**
@@ -556,52 +467,27 @@ interface IRemoteInfo {
     mastarFace?: Garage.Model.Face;
 }
 
-//declare const enum EFaceCategory {
-//    TV,
-//    AirConditioner,
-//    Light,
-//    BDDVDRecoder,
-//    BDDBDPlayer,
-//    Audio,
-//    Projector,
-//    SetTopBox,
-//    Fan,
-//    AirCleaner,
-//    PickUp,
-//    FullCustom,
-//    Unknown
-//}
-
 declare module Garage {
     /*
     * HUIS UI CREATOR のバージョン
     */
     var APP_VERSION: string;
-    /*
-     * 接続しているHUIS REMOTE CONTROLLER のバージョン
-     */
-    var RC_VERSION: string;
-    /*
-     * 接続しているHUIS REMOTE CONTROLLERのバージョン情報が書いてあるファイルの名称
-     */
-    var RC_VERSION_FILE_NAME: string;
     /**
      * Util.ElectronDialog のインスタンス
      */
     var electronDialog: Util.ElectronDialog;
     /**
+     * Util.StorageLock のインスタンス
+     */
+    var storageLock: Util.StorageLock;
+    /**
+     * Model.SharedInfo のインスタンス
+     */
+    var sharedInfo: Model.SharedInfo;
+    /**
      * Util.HuisFiles のインスタンス
      */
     var huisFiles: Util.HuisFiles;
-    /**
-     * Util.GarageFiles のインスタンス
-     */
-    var garageFiles: Util.GarageFiles;
-    /**
-     * Util.MiscUtilのインスタンス
-     */
-    var miscUtil: Util.MiscUtil;
-
     /**
      * face のページの横サイズ
      */
@@ -629,7 +515,7 @@ declare module Garage {
     /**
      * ローカル上の HUIS ファイルディレクトリー内にある画像用ディレクトリ名
      */
-    var REMOTE_IMAGES_DIRRECOTORY_NAME: string;
+    var REMOTE_IMAGES_DIRECTORY_NAME: string;
     /**
      * HUIS の VID
      */
@@ -703,10 +589,6 @@ declare module Garage {
      */
     var PRODUCT_NAME: string;
 
-    /*
-    * EDITの詳細編集エリア プレビューの高さの最小
-    */
-    var MIN_HEIGHT_PREVIEW: number;
     /**
     * Garageで表示するテキストの表示上の減衰率
     * Garageの30pxとHUISでの30pxでは見た目の大きさが大きく異なる。
@@ -736,15 +618,17 @@ declare module Garage {
     var DEVICE_TYPE_STB: string;
     var DEVICE_TYPE_FAN: string;
     var DEVICE_TYPE_AIR_CLEANER: string;
-    var DEVICE_TYPE_CUSOM: string;
+    var DEVICE_TYPE_CUSTOM: string;
     var DEVICE_TYPE_FULL_CUSTOM: string;
     var DEVICE_TYPE_BT: string;
     var DEVICE_TYPE_SPECIAL: string;
     /** デバイスタイプ 学習リモコン */
     var DEVICE_TYPE_LEARNED: string;
+    var DEVICE_TYPE_AUTO_LAYOUT: string;
 
     var FACE_TYPE_FULL_CUSTOM: string;
     var FACE_TYPE_NOT_FULL_CUSTOM: string;
+    var DEVICE_TYPE_COMMON: string;// macroやjumpボタン用。本来の意味でのdeviceTypeでない。
 
     /**
     * DetailAreaの機能に表示されないデバイスタイプ
@@ -755,62 +639,59 @@ declare module Garage {
      * PalletAreaで表示されないデバイスタイプ
      */
     var NON_SUPPORT_FACE_CATEGORY: string[];
-    /*
-    * Macroで利用できあいデバイスタイプ
-    */
+    /**
+     * Macroで利用できないデバイスタイプ
+     */
     var NON_SUPPORT_DEVICE_TYPE_IN_MACRO: string[];
-    /*
-    * CanvasAreaのグリッドサイズ
-    */
+    /**
+     * CanvasAreaのグリッドサイズ
+     */
     var GRID_AREA_WIDTH: number;
     var GRID_AREA_HEIGHT: number;
     var BIAS_X_DEFAULT_GRID_LEFT: number  //デフォルトグリッドの際は左にあるマージン
     var BIAS_X_DEFAULT_GRID_RIGHT: number;//デフォルトグリッドの際は左にあるマージン    
     var DEFAULT_GRID: number; //デフォルトのグリッドサイズ
 
-    /*
-    * Windowの最小幅・高さ
-    */
+    /**
+     * Windowの最小幅・高さ
+     */
     var WINDOW_MIN_WIDTH: number;
     var WINDOW_MIN_HEIGHT: number;
-    /*
-    * リモコンの背景の大きさ
-    */
+    /**
+     * リモコンの背景の大きさ
+     */
     var REMOTE_BACKGROUND_WIDTH: number;
     var REMOTE_BACKGROUND_HEIGHT: number;
-    /*
-    * 設定できる画像の容量の最大値[byte]
-    */
+    /**
+     * 設定できる画像の容量の最大値[byte]
+     */
     var MAX_IMAGE_FILESIZE: number;
-    /*
-    * EDIT画面で、マウスを動かせる範囲。
-    * Windowの端から何ピクセルか
-    */
+    /**
+     * EDIT画面で、マウスを動かせる範囲。
+     * Windowの端から何ピクセルか
+     */
     var MARGIN_MOUSEMOVALBE_TOP: number;
     var MARGIN_MOUSEMOVABLE_LEFT: number;
     var MARGIN_MOUSEMOVABLE_RIGHT: number;
     var MARGIN_MOUSEMOVALBE_BOTTOM: number;
-    /*
+    /**
      * ステートの内容を変更する際の特殊 ID
      */
     var TARGET_ALL_STATE: number;
-    /*
+    /**
      * ダブルクリックの待ち受け時間
      */
     var DOUBLE_CLICK_TIME_MS: number;
-    /*
+    /**
      * マクロに登録できる信号の最大数
      */
     var MAX_NUM_MACRO_SIGNAL: number;
-    /*
-     * マクロを設定する際のデフォルトInverval秒数[ms]
-     */
-    var DEFAULT_INTERVAL_MACRO: number;
-    /*
+    /**
      * 設定できるアクションリスト
      */
     var ACTION_INPUTS: IStringKeyValue[];
     var ACTION_INPUTS_MACRO: IStringKeyValue[]; //macro用
+    var ACTION_INPUTS_JUMP: IStringKeyValue[]; //jump用
     var ACTION_INPUT_TAP_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY: string;
     var ACTION_INPUT_LONG_PRESS_KEY_SINGLE: string;
@@ -829,39 +710,43 @@ declare module Garage {
     var ACTION_INPUT_SWIPE_LEFT_VALUE: string;
     var ACTION_INPUT_SWIPE_DOWN_VALUE: string;
 
-    /*
-    * マクロボタンの順番交換アニメの長さ[ms]
-    */
+    /**
+     * マクロボタンの順番交換アニメの長さ[ms]
+     */
     var DURATION_ANIMATION_EXCHANGE_MACRO_SIGNAL_ORDER: number;
-    /*
-    * 信号を削除する際のアニメの長さ[ms]
-    */
+    /**
+     * 信号を削除する際のアニメの長さ[ms]
+     */
     var DURATION_ANIMATION_DELTE_SIGNAL_CONTAINER: number;
-    /*
+    /**
      * 信号を追加する際のアニメの長さ[ms]
      */
     var DURATION_ANIMATION_ADD_SIGNAL_CONTAINER: number;
-    /*
-    * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
-    */
+    /**
+     * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
+     */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
-    /*
-    * インポートエクスポートがつかえるようになるHUIS本体のバージョン
-    */
+    /**
+     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
+     */
     var HUIS_RC_VERSION_REQUIRED: string;
-    /*
-   * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
-   */
+    /**
+     * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
+     */
     var HUIS_RC_VERSION_REQUIRED_FOR_DIALOG: string;
-    /*
+    /**
      * インポート・エクスポート する際に仕様する拡張子
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
-    /*
+    /**
+     * インポート・エクスポート する際に仕様する拡張子（BtoB版）
+     */
+    var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE_B2B
+    /**
      * インポート・エクスポート用拡張子の日本語の説明
      */
     var DESCRIPTION_EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;
-    /*
+    /**
      * リモコンが見つからない場合を表す定数
      */
     var UNKNOWN_REMOTE: string;
@@ -875,23 +760,12 @@ declare module Garage {
     var UNKNOWN_REMOTE_STB: string;
     var UNKNOWN_REMOTE_FAN: string;
     var UNKNOWN_REMOTE_BT: string;
-    /** 信号名に付与されるIDの文字長 */
-    var FUNC_ID_LEN: number;
 
     /** 信号名と連番を分ける区切り文字 */
-    var FUNC_NUM_DELIMITER: string ;
+    var FUNC_NUM_DELIMITER: string;
 
     /** 信号がフルカスタムで再学習されたことを示すコード */
     var FUNC_CODE_RELEARNED: string;
-
-    var PLATFORM_WIN32;
-    var PLATFORM_DARWIN;
-
-    /** MacとWindowsで参照するフォルダが変わる場合の、フォルダ名 */
-    var DIR_NAME_WINDOWS;
-    var DIR_NAME_MAC;
-
-
 }
 
 

@@ -2,26 +2,25 @@
 /// <reference path="../../app/scripts/Model/LabelItem.ts" />
 
 module Garage {
-	export module Test {
-		describe("Model.LabelItem",() => {
-			var labelItem: Model.LabelItem = null;
+    export module Test {
+        describe("Model.LabelItem", () => {
+            var labelItem: Model.LabelItem = null;
 
-			// Called before each test case
-			beforeEach(() => {
-				labelItem = new Model.LabelItem();
-			});
+            // Called before each test case
+            beforeEach(() => {
+            });
 
-			// Called after each test case
-			afterEach(() => {
-				labelItem = null;
-			});
+            // Called after each test case
+            afterEach(() => {
+                labelItem = null;
+            });
 
-			////////////////////
-			// test cases
-			it("can be instantiated",() => {
-				expect(labelItem).not.toBeNull();
-			});
+            ////////////////////
+            // test cases
+            it("can be instantiated", () => {
+                expect(labelItem).not.toBeNull();
+            });
 
-		});
-	}
+        });
+    }
 }

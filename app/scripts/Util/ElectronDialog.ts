@@ -73,6 +73,7 @@ module Garage {
         export class ElectronDialog {
             private _dialogOwner;
             private _dialog;
+            private _enabled = true;
             constructor() {
                 this._resetElectronDialog();
             }
@@ -84,6 +85,9 @@ module Garage {
              * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
              */
             showOpenFileDialog(options?: ElectronOpenFileDialogOptions, callback?: (fileNames: string[]) => void): void {
+                if (!this._enabled) {
+                    return;
+                }
                 this._resetElectronDialog();
                 if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
                     if (this._dialog) {
@@ -103,6 +107,9 @@ module Garage {
              * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
              */
             showSaveFileDialog(options?: ElectronSaveFileDialogOptions, callback?: (fileName: string) => void): void {
+                if (!this._enabled) {
+                    return;
+                }
                 this._resetElectronDialog();
                 if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
                     if (this._dialog) {
@@ -120,8 +127,13 @@ module Garage {
              * 
              * @param options {ElectronSaveFileDialogOptions} ファイル保存ダイアログのオプション
              * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
+             * @return {number} クリックされたボタンのindex。
+             *     callbackが指定されている時、もしくはDialogがDisableされている時にはundefinedを返す。
              */
             showMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+                if (!this._enabled) {
+                    return undefined;
+                }
                 //debugger;
                 this._resetElectronDialog();
                 if (!this._dialogOwner) { // Focusがこのアプリ以外にある場合→第1引数なしで呼び出し
@@ -133,25 +145,34 @@ module Garage {
                         }
                     }
                 } else { // Focusがこのアプリにある場合→第1引数つきで呼び出し
-                    if (this._dialog) { 
+                    if (this._dialog) {
                         if (callback) {
                             return this._dialog.showMessageBox(this._dialogOwner, options, callback);
                         } else {
                             return this._dialog.showMessageBox(this._dialogOwner, options);
                         }
                     }
-                } 
+                }
             }
 
             /**
-             * HUISと切断された際のメッセージダイアログを開く。
-             * このメソッドは通常のメッセージ表示の際には使わない事。
+             * Darwin環境において、HUISと切断された際のメッセージダイアログを開く。
+             * このメソッドはそれ以外のメッセージ表示の際には使わない事。
+             *
+             * Darwin環境におけるElectronのダイアログは以下の点でWindows環境と異なる。
+             * そのWorkaroundとして本メソッドは存在する。
+             * ・非同期Dialogの表示中に同期Dialogを表示しようとした場合、非同期ダイアログのコールバックが呼ばれない
+             * ・非同期Dialogの表示中に非同期Dialogを表示しようとした場合、2回目以降の呼び出しが正常に処理されない
+             * そのため、Splashクラスにおける切断検知関数中で、非同期ダイアログの表示中にも本メソッドを表示されるまで繰り返し呼ぶことで
+             * 切断ダイアログを表示させる事にしている。（そして切断ダイアログ表示中に更に呼び出された切断ダイアログは、無視される。）
+             * 例えば、リモコンファイルのImport中にHUISが切断された場合などに本Workaroundが有効に働く。
              *
              * @param options {ElectronMessageDialogOptions} ファイル保存ダイアログのオプション
              * @param callback {Function} ダイアログを開いた後に呼び出されるコールバック関数
              */
-            showDisconnectedMessageBox(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
-                //debugger;
+            showDisconnectedMessageBoxForDarwin(options?: ElectronMessageBoxOptions, callback?: (response: any) => void): number {
+                this._disableDialog();
+                // This method does NOT check enabled, because this method is called repeatedly when other dialog is displayed.
                 this._resetElectronDialog();
                 if (this._dialog) {
                     if (callback) {
@@ -172,6 +193,10 @@ module Garage {
                 if (!this._dialog) {
                     this._dialog = Remote.dialog; // Remote.Dialogだとクラスを返すので正しく動作しない。
                 }
+            }
+
+            private _disableDialog() {
+                this._enabled = false;
             }
         }
     }
