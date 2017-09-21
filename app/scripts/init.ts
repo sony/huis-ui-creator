@@ -342,9 +342,9 @@ module Garage {
             if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
                 let dirs = null;
                 while (dirs == null) {
-                    try {
-                        dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
-                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった {
+                    if (fs.existsSync(HUIS_ROOT_PATH)) {
+                        dirs = true;
+                    } else {
                         console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
                         let response = electronDialog.showMessageBox(
                             {
