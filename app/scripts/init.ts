@@ -365,22 +365,28 @@ module Garage {
                 callback(); // 次の処理へ
 
             } else {
-                // HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
-                let response = electronDialog.showMessageBox(
-                    {
-                        type: "info",
-                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
-                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                        title: PRODUCT_NAME,
-                        cancelId: 0,
-                    });
-
-                if (response !== 0) {
-                    app.exit(0);
-                }
+                showReconnectSuggetDialog();
             }
         }
     };
+
+    /**
+     * HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
+     */
+    function showReconnectSuggetDialog() {
+        let response = electronDialog.showMessageBox(
+            {
+                type: "info",
+                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                title: PRODUCT_NAME,
+                cancelId: 0,
+            });
+
+        if (response !== 0) {
+            app.exit(0);
+        }
+    }
 
     setup(() => {
         requirejs(["cdp.framework.jqm"], () => {
