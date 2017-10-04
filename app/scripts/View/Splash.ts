@@ -296,6 +296,12 @@ module Garage {
 
             private __checkVersion() {
                 let rcVersion: Model.VersionString = new Model.VersionString(sharedInfo.version);
+
+                if (!rcVersion.isValid()) {
+                    console.warn("HUIS version is invalid");
+                    this.showHuisRcVersonIsNotSupported();
+                    return;
+                }
                 let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
 
                 let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
@@ -314,6 +320,7 @@ module Garage {
                     console.warn("deviceInfo is not found, HUIS may be old.");
                     console.warn("old version is not supported by BtoB UI-Creator");
                     this.showHuisRcVersonIsNotSupported();
+                    return;
                 }
 
                 if (!sharedInfo.isBtoB) {
