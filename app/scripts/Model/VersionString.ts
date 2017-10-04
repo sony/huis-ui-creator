@@ -22,6 +22,9 @@ module Garage {
         import JQUtils = Util.JQueryUtils;
         var TAG = "[Garage.Model.VersionString] ";
 
+        /**
+         * TODO: DeviceVersionString と AppVersionString に分離する
+         */
         export class VersionString {
             private major: number;
             private minor: number;
@@ -37,40 +40,15 @@ module Garage {
                 }
 
                 let separateString: string[] = stringVersion.split(".");
-                let major: number = parseInt(separateString[0]);
-                let minor: number = parseInt(separateString[1]);
-                let build: number = parseInt(separateString[2]);
-                let otherInfo: string = separateString[3];
 
+                this.major = parseInt(separateString[0]);
+                this.minor = parseInt(separateString[1]);
+                this.build = parseInt(separateString[2]);
+                this.otherinfo = separateString[3];
 
-                if (JQUtils.isNaN(major) || major == null) {
-                    console.warn(FUNCTION_NAME + "major is invalid");
-                    return;
+                if (!this.isValid()) {
+                    console.warn("Version is invalid");
                 }
-                this.major = major;
-
-                //minorを代入
-                if (JQUtils.isNaN(minor) || minor == null) {
-                    console.warn(FUNCTION_NAME + "minor is invalid");
-                    return;
-                }
-                this.minor = minor;
-
-
-                //build を代入
-                if (build != null && !JQUtils.isNaN(build)) {
-                    this.build = build;
-                } else {
-                    this.build = null;
-                }
-
-                //otherInfoを代入
-                if (otherInfo != null) {
-                    this.otherinfo = otherInfo;
-                } else {
-                    this.otherinfo = null;
-                }
-
             }
 
             private _compare(counterPart: VersionString,
@@ -166,7 +144,28 @@ module Garage {
                 return this.build;
             }
 
+            public isValid(): boolean {
+                if (!this.isValidVersionElement(this.major)) {
+                    console.warn(TAG + ": major is invalid");
+                    return false;
+                }
 
+                if (!this.isValidVersionElement(this.minor)) {
+                    console.warn(TAG + ":minor is invalid");
+                    return  false;
+                }
+
+                if (!this.isValidVersionElement(this.build)) {
+                    console.warn(TAG + ":build is invalid");
+                    return false;
+                }
+
+                return true;
+            }
+
+            private isValidVersionElement(versionElement: number): boolean {
+                return !(JQUtils.isNaN(versionElement) || versionElement == null);
+            }
         }
     }
 }
