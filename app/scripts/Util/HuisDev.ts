@@ -794,14 +794,18 @@ module Garage {
              * @return {string} vendorId, productId となるデバイするのルートパスを返す。見つからない場合は null
              */
             export function getHuisRootPath(vendorId: number, productId: number): string {
-                let rootPath = null;
                 if (Util.MiscUtil.isWindows()) {
-                    rootPath = usb_dev.getPath(vendorId, productId);
+                    const rootPath: string = usb_dev.getPath(vendorId, productId);
                     if (rootPath === "") {
                         return null;
                     }
+                    return rootPath;
+                } else if (Util.MiscUtil.isDarwin()) {
+                    return "/Volumes/HUIS-100RC";
                 }
-                return rootPath;
+
+                console.error("Error: unsupported platform");
+                return null;
             }
         }
     }

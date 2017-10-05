@@ -336,13 +336,7 @@ module Garage {
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (Util.MiscUtil.isWindows()) {
-                HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (Util.MiscUtil.isDarwin()) {
-                HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
-            } else {
-                console.error("Error: unsupported platform");
-            }
+            HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
             if (!HUIS_ROOT_PATH) {
                 // HUISデバイスが接続されていない
                 showConnectSuggetDialog();
