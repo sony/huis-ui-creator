@@ -295,16 +295,22 @@ module Garage {
             }
 
             private __checkVersion() {
-                let rcVersion: Model.VersionString = new Model.VersionString(sharedInfo.version);
-                let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
+                let rcVersion: Model.Version.HuisVersionString = new Model.Version.HuisVersionString(sharedInfo.version);
+                if (!rcVersion.isValid()) {
+                    console.warn("HUIS version is invalid");
+                    this.showHuisRcVersonIsNotSupported();
+                    return;
+                }
 
-                let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
-                let requiredGarageVersion = new Model.VersionString(sharedInfo.requiredGarageVersion);
-
-
+                let requiredRcVersion = new Model.Version.HuisVersionString(HUIS_RC_VERSION_REQUIRED)
                 if (rcVersion.isOlderThan(requiredRcVersion)) {
                     this.showHuisRcVersionIsOldDialog();
-                } else if (garageVersion.isOlderThan(requiredGarageVersion)) {
+                    return;
+                }
+
+                let garageVersion: Model.Version.AppVersionString = new Model.Version.AppVersionString(APP_VERSION);
+                let requiredGarageVersion = new Model.Version.AppVersionString(sharedInfo.requiredGarageVersion);
+                if (garageVersion.isOlderThan(requiredGarageVersion)) {
                     this.showGarageVersionIsOldDialog();
                 }
             }
@@ -314,6 +320,7 @@ module Garage {
                     console.warn("deviceInfo is not found, HUIS may be old.");
                     console.warn("old version is not supported by BtoB UI-Creator");
                     this.showHuisRcVersonIsNotSupported();
+                    return;
                 }
 
                 if (!sharedInfo.isBtoB) {

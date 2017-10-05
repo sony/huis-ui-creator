@@ -303,6 +303,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Version\ModuleVersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\SharedInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Face.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Item.ts" />
@@ -315,7 +316,9 @@
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
     <TypeScriptCompile Include="app\scripts\Model\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\PhnConfig.ts" />
-    <TypeScriptCompile Include="app\scripts\Model\VersionString.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Version\AppVersionString.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Version\HuisVersionString.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Version\VersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ButtonDeviceInfoCache.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ElectronDialog.ts" />

@@ -43,17 +43,17 @@ module Garage {
 		 */
         export class InformationDialog {
 
-            private lastNotifiedVersion_: Model.VersionString;
+            private lastNotifiedVersion_: Model.Version.AppVersionString;
 
             private _readLastNotifiedVersion() {
                 let FUNCTION_NAME: string = TAG + " : _readLastNotifiedVersion : ";
 
                 if (fs.existsSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
-                    this.lastNotifiedVersion_ = new Model.VersionString(fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString());
+                    this.lastNotifiedVersion_ = new Model.Version.AppVersionString(fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString());
                 } else {
                     // first launch after installation
                     console.warn(FUNCTION_NAME + ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
-                    this.lastNotifiedVersion_ = new Model.VersionString("0.0.0");
+                    this.lastNotifiedVersion_ = new Model.Version.AppVersionString("0.0.0");
                 }
             }
 
@@ -63,7 +63,7 @@ module Garage {
             private shouldNotify() {
                 let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
 
-                let currentVersion = new Model.VersionString(APP_VERSION);
+                let currentVersion = new Model.Version.AppVersionString(APP_VERSION);
 
                 try {
                     return currentVersion.isNewerThan(this.lastNotifiedVersion_);
@@ -140,7 +140,7 @@ module Garage {
 
                     var contentsDirs: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
                     contentsDirs = contentsDirs.filter((path) => {
-                        let infoVersionString = new Model.VersionString(path);
+                        let infoVersionString = new Model.Version.AppVersionString(path);
                         return infoVersionString.isNewerThan(this.lastNotifiedVersion_);
                     });
 
