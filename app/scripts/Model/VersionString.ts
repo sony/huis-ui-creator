@@ -41,9 +41,10 @@ module Garage {
 
                 let separateString: string[] = stringVersion.split(".");
 
-                this.major = parseInt(separateString[0]);
-                this.minor = parseInt(separateString[1]);
-                this.build = parseInt(separateString[2]);
+                const radix = Util.MiscUtil.isBz() ? 16 : 10;
+                this.major = parseInt(separateString[0], radix);
+                this.minor = parseInt(separateString[1], radix);
+                this.build = parseInt(separateString[2], radix);
                 this.otherinfo = separateString[3];
 
                 if (!this.isValid()) {
