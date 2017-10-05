@@ -31,6 +31,16 @@ module Garage {
                         return;
                     }
                 }
+
+                /**
+                 * BZ版はバージョンが A.0.0 以上でないと無効なバージョン
+                 */
+                public isValid(): boolean {
+                    if (Util.MiscUtil.isBz() && this.major < 10) {
+                        return false;
+                    }
+                    return super.isValid();
+                }
             }
         }
     }
