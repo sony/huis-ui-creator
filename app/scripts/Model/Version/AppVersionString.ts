@@ -19,7 +19,7 @@
 module Garage {
     export module Model {
         export module Version {
-            export class AppVersionString extends Model.VersionString {
+            export class AppVersionString extends VersionString {
                 private otherinfo: string;
                 private TAG: string = "[Garage.Model.Version.AppVersionString] ";
 

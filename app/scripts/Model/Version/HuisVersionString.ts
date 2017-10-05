@@ -19,7 +19,7 @@
 module Garage {
     export module Model {
         export module Version {
-            export class HuisVersionString extends Model.VersionString {
+            export class HuisVersionString extends VersionString {
                 private TAG: string = "[Garage.Model.Version.HuisVersionString] ";
 
                 constructor(stringVersion: string) {

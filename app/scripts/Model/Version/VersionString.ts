@@ -19,148 +19,123 @@
 
 module Garage {
     export module Model {
-        import JQUtils = Util.JQueryUtils;
-        var TAG = "[Garage.Model.VersionString] ";
+        export module Version {
+            import JQUtils = Util.JQueryUtils;
+            var TAG = "[Garage.Model.VersionString] ";
 
-        /**
-         * TODO: DeviceVersionString と AppVersionString に分離する
-         */
-        export class VersionString {
-            private major: number;
-            private minor: number;
-            private build: number;
+            export class VersionString {
+                protected major: number;
+                protected minor: number;
+                protected build: number;
 
-            constructor(stringVersion: string) {
-                let FUNCTION_NAME = TAG + ": constructor : ";
+                constructor(stringVersion: string) {
+                    let FUNCTION_NAME = TAG + ": constructor : ";
 
-                if (!stringVersion) {
-                    console.warn(FUNCTION_NAME + "stringVersion is undefined");
-                    return;
+                    if (!stringVersion) {
+                        console.warn(FUNCTION_NAME + "stringVersion is undefined");
+                        return;
+                    }
+
+                    let separateString: string[] = stringVersion.split(".");
+
+                    const radix = Util.MiscUtil.isBz() ? 16 : 10;
+                    this.major = parseInt(separateString[0], radix);
+                    this.minor = parseInt(separateString[1], radix);
+                    this.build = parseInt(separateString[2], radix);
+
+                    if (!this.isValid()) {
+                        console.warn(FUNCTION_NAME + "Version is invalid");
+                    }
                 }
 
-                let separateString: string[] = stringVersion.split(".");
+                private _compare(counterPart: VersionString,
+                    compareFunc: (selfVersionNum: number, counterVersionNum: number) => boolean): boolean {
 
-                const radix = Util.MiscUtil.isBz() ? 16 : 10;
-                this.major = parseInt(separateString[0], radix);
-                this.minor = parseInt(separateString[1], radix);
-                this.build = parseInt(separateString[2], radix);
+                    let FUNCTION_NAME = TAG + ": _compare() : ";
 
-                if (!this.isValid()) {
-                    console.warn(FUNCTION_NAME + "Version is invalid");
-                }
-            }
+                    if (!counterPart) {
+                        console.warn(FUNCTION_NAME + "counterPart is undefined");
+                        return false;
+                    }
 
-            private _compare(counterPart: VersionString,
-                compareFunc: (selfVersionNum: number, counterVersionNum: number) => boolean): boolean {
+                    if (this.major !== counterPart.getMajor()) {
+                        return compareFunc(this.major, counterPart.getMajor());
+                    }
 
-                let FUNCTION_NAME = TAG + ": _compare() : ";
+                    if (this.minor !== counterPart.getMinor()) {
+                        return compareFunc(this.minor, counterPart.getMinor());
+                    }
 
-                if (!counterPart) {
-                    console.warn(FUNCTION_NAME + "counterPart is undefined");
-                    return false;
-                }
-
-                if (this.major !== counterPart.getMajor()) {
-                    return compareFunc(this.major, counterPart.getMajor());
+                    return compareFunc(this.build, counterPart.getBuild());
                 }
 
-                if (this.minor !== counterPart.getMinor()) {
-                    return compareFunc(this.minor, counterPart.getMinor());
+                /**
+                 * 引数として与えられたVersionより自身が古いVersionかどうかを判定する。
+                 * @param {ModuleVersion} counterPart 比較対象のVersion
+                 * @return {boolean} counterPartより古いVersionの場合はtrue、同じか新しいVersionのときはfalse
+                 */
+                public isOlderThan(counterPart: VersionString): boolean {
+                    return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                        return selfVersionNum < counterVersionNum;
+                    })
                 }
 
-                return compareFunc(this.build, counterPart.getBuild());
-            }
-
-            /**
-             * 引数として与えられたVersionより自身が古いVersionかどうかを判定する。
-             * @param {ModuleVersion} counterPart 比較対象のVersion
-             * @return {boolean} counterPartより古いVersionの場合はtrue、同じか新しいVersionのときはfalse
-             */
-            public isOlderThan(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
-                    return selfVersionNum < counterVersionNum;
-                })
-            }
-
-            /**
-             * 引数として与えられたVersionより自身が新しいVersionかどうかを判定する。
-             * @param {ModuleVersion} counterPart 比較対象のVersion
-             * @return {boolean} counterPartより新しいVersionの場合はtrue、同じか古いVersionのときはfalse
-             */
-            public isNewerThan(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
-                    return selfVersionNum > counterVersionNum;
-                })
-            }
-
-            /**
-             * 引数として与えられたVersionが自身が同じかどうかを判定する。
-             * @param {ModuleVersion} counterPart 比較対象のVersion
-             * @return {boolean} counterPartと同じVersionの場合はtrue、それ以外はfalse
-             */
-            public isSame(counterPart: VersionString): boolean {
-                return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
-                    return selfVersionNum === counterVersionNum;
-                })
-            }
-
-            /**
-             * X.Yの形で、ModuleVersionの値を返す　ex) 1.2
-             */
-            public getVersionString(): string {
-                let FUNCTION_NAME = TAG + ": getVersionString : ";
-
-                if (this.major == null) {
-                    console.warn(FUNCTION_NAME + "major is null ");
-                    return null;
+                /**
+                 * 引数として与えられたVersionより自身が新しいVersionかどうかを判定する。
+                 * @param {ModuleVersion} counterPart 比較対象のVersion
+                 * @return {boolean} counterPartより新しいVersionの場合はtrue、同じか古いVersionのときはfalse
+                 */
+                public isNewerThan(counterPart: VersionString): boolean {
+                    return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                        return selfVersionNum > counterVersionNum;
+                    })
                 }
 
-                if (this.minor == null) {
-                    console.log(FUNCTION_NAME + "minor is null");
-                    return null;
+                /**
+                 * 引数として与えられたVersionが自身が同じかどうかを判定する。
+                 * @param {ModuleVersion} counterPart 比較対象のVersion
+                 * @return {boolean} counterPartと同じVersionの場合はtrue、それ以外はfalse
+                 */
+                public isSame(counterPart: VersionString): boolean {
+                    return this._compare(counterPart, (selfVersionNum: number, counterVersionNum: number) => {
+                        return selfVersionNum === counterVersionNum;
+                    })
                 }
 
-                if (this.build != null) {
-                    return this.major + "." + this.minor + "." + this.build;
-                } else {
-                    return this.major + "." + this.minor;
+                public getMajor(): number {
+                    return this.major;
                 }
 
-            }
-
-            public getMajor(): number {
-                return this.major;
-            }
-
-            public getMinor(): number {
-                return this.minor;
-            }
-
-            public getBuild(): number {
-                return this.build;
-            }
-
-            public isValid(): boolean {
-                if (!this.isValidVersionElement(this.major)) {
-                    console.warn(TAG + ": major is invalid");
-                    return false;
+                public getMinor(): number {
+                    return this.minor;
                 }
 
-                if (!this.isValidVersionElement(this.minor)) {
-                    console.warn(TAG + ":minor is invalid");
-                    return  false;
+                public getBuild(): number {
+                    return this.build;
                 }
 
-                if (!this.isValidVersionElement(this.build)) {
-                    console.warn(TAG + ":build is invalid");
-                    return false;
+                public isValid(): boolean {
+                    if (!this.isValidVersionElement(this.major)) {
+                        console.warn(TAG + ": major is invalid");
+                        return false;
+                    }
+
+                    if (!this.isValidVersionElement(this.minor)) {
+                        console.warn(TAG + ":minor is invalid");
+                        return false;
+                    }
+
+                    if (!this.isValidVersionElement(this.build)) {
+                        console.warn(TAG + ":build is invalid");
+                        return false;
+                    }
+
+                    return true;
                 }
 
-                return true;
-            }
-
-            private isValidVersionElement(versionElement: number): boolean {
-                return !(JQUtils.isNaN(versionElement) || versionElement == null);
+                private isValidVersionElement(versionElement: number): boolean {
+                    return !(JQUtils.isNaN(versionElement) || versionElement == null);
+                }
             }
         }
     }
