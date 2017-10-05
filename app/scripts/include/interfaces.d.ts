@@ -36,6 +36,7 @@
 /// <reference path="../Model/Version/VersionString.ts" />
 /// <reference path="../Model/Version/AppVersionString.ts" />
 /// <reference path="../Model/Version/HuisVersionString.ts" />
+/// <reference path="../Model/Version/ModuleVersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
