@@ -304,8 +304,8 @@ module Garage {
                 }
                 let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
 
-                let garageVersion: Model.VersionString = new Model.VersionString(APP_VERSION);
-                let requiredGarageVersion = new Model.VersionString(sharedInfo.requiredGarageVersion);
+                let garageVersion: Model.Version.AppVersionString = new Model.Version.AppVersionString(APP_VERSION);
+                let requiredGarageVersion = new Model.Version.AppVersionString(sharedInfo.requiredGarageVersion);
 
 
                 if (rcVersion.isOlderThan(requiredRcVersion)) {

@@ -34,6 +34,7 @@
 /// <reference path="../Model/Module.ts" />
 /// <reference path="../Model/SharedInfo.ts" />
 /// <reference path="../Model/Version/VersionString.ts" />
+/// <reference path="../Model/Version/AppVersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />

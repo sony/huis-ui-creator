@@ -29,7 +29,6 @@ module Garage {
             private major: number;
             private minor: number;
             private build: number;
-            private otherinfo: string;
 
             constructor(stringVersion: string) {
                 let FUNCTION_NAME = TAG + ": constructor : ";
@@ -45,10 +44,9 @@ module Garage {
                 this.major = parseInt(separateString[0], radix);
                 this.minor = parseInt(separateString[1], radix);
                 this.build = parseInt(separateString[2], radix);
-                this.otherinfo = separateString[3];
 
                 if (!this.isValid()) {
-                    console.warn("Version is invalid");
+                    console.warn(FUNCTION_NAME + "Version is invalid");
                 }
             }
 
@@ -75,7 +73,6 @@ module Garage {
 
             /**
              * 引数として与えられたVersionより自身が古いVersionかどうかを判定する。
-             * otherInfoの比較は行わない事に注意。
              * @param {ModuleVersion} counterPart 比較対象のVersion
              * @return {boolean} counterPartより古いVersionの場合はtrue、同じか新しいVersionのときはfalse
              */
@@ -87,7 +84,6 @@ module Garage {
 
             /**
              * 引数として与えられたVersionより自身が新しいVersionかどうかを判定する。
-             * otherInfoの比較は行わない事に注意。
              * @param {ModuleVersion} counterPart 比較対象のVersion
              * @return {boolean} counterPartより新しいVersionの場合はtrue、同じか古いVersionのときはfalse
              */
@@ -99,7 +95,6 @@ module Garage {
 
             /**
              * 引数として与えられたVersionが自身が同じかどうかを判定する。
-             * otherInfoの比較は行わない事に注意。
              * @param {ModuleVersion} counterPart 比較対象のVersion
              * @return {boolean} counterPartと同じVersionの場合はtrue、それ以外はfalse
              */
