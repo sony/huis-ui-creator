@@ -295,18 +295,17 @@ module Garage {
             }
 
             private __checkVersion() {
-                let rcVersion: Model.VersionString = new Model.VersionString(sharedInfo.version);
+                let rcVersion: Model.Version.HuisVersionString = new Model.Version.HuisVersionString(sharedInfo.version);
 
                 if (!rcVersion.isValid()) {
                     console.warn("HUIS version is invalid");
                     this.showHuisRcVersonIsNotSupported();
                     return;
                 }
-                let requiredRcVersion = new Model.VersionString(HUIS_RC_VERSION_REQUIRED)
+                let requiredRcVersion = new Model.Version.HuisVersionString(HUIS_RC_VERSION_REQUIRED)
 
                 let garageVersion: Model.Version.AppVersionString = new Model.Version.AppVersionString(APP_VERSION);
                 let requiredGarageVersion = new Model.Version.AppVersionString(sharedInfo.requiredGarageVersion);
-
 
                 if (rcVersion.isOlderThan(requiredRcVersion)) {
                     this.showHuisRcVersionIsOldDialog();
