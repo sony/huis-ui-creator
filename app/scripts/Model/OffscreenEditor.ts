@@ -91,7 +91,7 @@ module Garage {
             public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
                 let FUNCTION_NAME = TAG + "editImage : ";
                 var df = $.Deferred();
-                var promise = CDP.makePromise(df);
+                var promise: IPromise<IEditImageResults | string> = CDP.makePromise(df);
                 var encodedDstPath = null;
 
                 //変換するファイルが存在するか確認
@@ -233,7 +233,7 @@ module Garage {
             public static loadTexture(src: string): IPromise<PIXI.Texture> {
                 let FUNCTION_NAME = TAG + "loadTexture : ";
                 let df = $.Deferred();
-                let promise = CDP.makePromise(df);
+                let promise: IPromise<PIXI.Texture> = CDP.makePromise(df);
 
                 if (null == src) {
                     df.resolve(PIXI.Texture.EMPTY);
