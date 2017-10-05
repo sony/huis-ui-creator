@@ -532,7 +532,7 @@ module Garage {
                             });
                     }, 100);
 
-                    return CDP.makePromise(df);
+                    return <CDP.IPromise<Error>>CDP.makePromise(df);
                 }
 
                 // TODO: make public
@@ -638,7 +638,7 @@ module Garage {
                     } catch (err) {
                         df.reject(err);
                     }
-                    return CDP.makePromise(df);
+                    return <CDP.IPromise<IDiffInfo>>CDP.makePromise(df);
                 }
 
                 /**
