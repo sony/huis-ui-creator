@@ -37,12 +37,12 @@ module Garage {
          */
         export class SharedInfo {
 
-            private _version;
-            private _modelColor;
-            private _settingColor;
-            private _isBtoB;
-            private _winRequiredVersion;
-            private _macRequiredVersion;
+            private _version: string;
+            private _modelColor: string;
+            private _settingColor: string;
+            private _isBtoB: boolean;
+            private _winRequiredVersion: string;
+            private _macRequiredVersion: string;
 
             constructor(sharedInfo: ISharedInfo) {
                 this._version = sharedInfo.system.version;
@@ -54,19 +54,19 @@ module Garage {
                 this._isBtoB = (sharedInfo.system.is_btob != null);
             }
 
-            get version() {
+            get version(): string {
                 return this._version;
             }
 
-            get modelColor() {
+            get modelColor(): string {
                 return this._modelColor;
             }
 
-            get settingColor() {
+            get settingColor(): string {
                 return this._settingColor;
             }
 
-            get isBtoB() {
+            get isBtoB(): boolean {
                 return this._isBtoB;
             }
 
