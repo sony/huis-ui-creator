@@ -315,7 +315,7 @@
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
     <TypeScriptCompile Include="app\scripts\Model\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\PhnConfig.ts" />
-    <TypeScriptCompile Include="app\scripts\Model\VersionString.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Version\VersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ButtonDeviceInfoCache.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ElectronDialog.ts" />
