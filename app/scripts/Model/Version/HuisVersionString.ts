@@ -24,12 +24,6 @@ module Garage {
 
                 constructor(stringVersion: string) {
                     super(stringVersion);
-
-                    const FUNCTION_NAME: string = this.TAG + ": constructor : ";
-                    if (!stringVersion) {
-                        console.warn(FUNCTION_NAME + "stringVersion is undefined");
-                        return;
-                    }
                 }
 
                 /**

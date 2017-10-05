@@ -26,11 +26,6 @@ module Garage {
                     super(stringVersion);
 
                     // TODO: 長さ２に対応させる
-                    const FUNCTION_NAME: string = this.TAG + ": constructor : ";
-                    if (!stringVersion) {
-                        console.warn(FUNCTION_NAME + "stringVersion is undefined");
-                        return;
-                    }
                 }
 
                 /**
