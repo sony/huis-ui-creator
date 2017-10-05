@@ -795,8 +795,11 @@ module Garage {
              */
             export function getHuisRootPath(vendorId: number, productId: number): string {
                 if (Util.MiscUtil.isWindows()) {
-                    const rootPath:string = usb_dev.getPath(vendorId, productId);
-                    return (rootPath != "") ? rootPath : null;
+                    const rootPath: string = usb_dev.getPath(vendorId, productId);
+                    if (rootPath === "") {
+                        return null;
+                    }
+                    return rootPath;
                 } else if (Util.MiscUtil.isDarwin()) {
                     return "/Volumes/HUIS-100RC";
                 }
