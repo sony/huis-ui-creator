@@ -133,10 +133,6 @@ module Garage {
                 let remoteId = "common";
 
                 let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
-                //ビジネス仕向けか否かで、表示するCommonアイテムを変える。
-                if (Util.MiscUtil.isBz()) {
-                    facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common_bz.face"));
-                }
 
                 console.log("facePath=" + facePath);
 
