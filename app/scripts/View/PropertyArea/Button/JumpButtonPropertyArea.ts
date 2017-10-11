@@ -79,7 +79,7 @@ module Garage {
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
                 this.renderPagesOf(order, this.getModel().getDefaultStateId(), ConstValue.NO_PAGE_SELECT_NUM);
-
+                this.refreshPageSelect(order);
                 this.updateModel();
             }
 
