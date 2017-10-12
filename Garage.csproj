@@ -308,6 +308,7 @@
     <TypeScriptCompile Include="app\scripts\Model\File\PhnConfig.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\SharedInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\RemoteId.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\RemoteIdList.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Version\ModuleVersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Face.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Item.ts" />

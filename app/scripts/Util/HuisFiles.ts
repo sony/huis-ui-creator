@@ -60,7 +60,7 @@ module Garage {
 
             private huisFilesRoot_: string;
             private phnConfig_: IPhnConfig;
-            private remoteList_: Model.RemoteId[];
+            private remoteList_: Model.RemoteIdList;
             private remoteInfos_: IRemoteInfo[];
             private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
             private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
@@ -1254,7 +1254,7 @@ module Garage {
              */
             createNewRemoteId(): string {
                 // remoteId リストをソート
-                var sortedRemoteId: Model.RemoteId[] = $.extend(true, [], this.remoteList_)
+                var sortedRemoteId: Model.RemoteIdList = $.extend(true, [], this.remoteList_)
                     .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
                         return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
                     });
@@ -1638,7 +1638,7 @@ module Garage {
             /**
              * getter
              */
-            get remoteList(): Model.RemoteId[] {
+            get remoteList(): Model.RemoteIdList {
                 return this.remoteList_;
             }
 
@@ -1678,7 +1678,7 @@ module Garage {
             /**
              * remotelist.json から remoteList を取得する
              */
-            private _loadRemoteList(): Model.RemoteId[] {
+            private _loadRemoteList(): Model.RemoteIdList {
                 var remoteListIniPath = path.resolve(path.join(this.huisFilesRoot_, "remotelist.ini"));
                 if (!fs.existsSync(remoteListIniPath)) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
@@ -1713,7 +1713,7 @@ module Garage {
                     return aNum - bNum;
                 });
 
-                var remoteList: Model.RemoteId[] = [];
+                var remoteList: Model.RemoteIdList = [];
                 // prop の数字が小さい順に remoteList に格納
                 for (let i = 0, l = sortedGeneralProps.length; i < l; i++) {
                     let value = general[sortedGeneralProps[i]];
