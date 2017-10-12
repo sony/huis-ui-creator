@@ -32,6 +32,7 @@
 /// <reference path="../Util/StorageLock.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
 /// <reference path="../Model/Module.ts" />
+/// <reference path="../Model/File/PhnConfig.ts" />
 /// <reference path="../Model/File/SharedInfo.ts" />
 /// <reference path="../Model/Version/VersionString.ts" />
 /// <reference path="../Model/Version/AppVersionString.ts" />
