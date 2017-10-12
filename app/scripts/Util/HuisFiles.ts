@@ -60,7 +60,7 @@ module Garage {
 
             private huisFilesRoot_: string;
             private phnConfig_: IPhnConfig;
-            private remoteList_: IRemoteId[];
+            private remoteList_: Model.RemoteId[];
             private remoteInfos_: IRemoteInfo[];
             private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
             private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
@@ -1254,11 +1254,15 @@ module Garage {
              */
             createNewRemoteId(): string {
                 // remoteId リストをソート
-                var sortedRemoteId: IRemoteId[] = $.extend(true, [], this.remoteList_)
-                    .sort(function (val1: IRemoteId, val2: IRemoteId) {
+                var sortedRemoteId: Model.RemoteId[] = $.extend(true, [], this.remoteList_)
+                    .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
                         return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
                     });
-
+                /*
+                let appInfo: Model.AppInfo = new Model.AppInfo();
+                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
+                let newRemoteId: number = parseInt(appInfo.last_remote_id, 10);
+                */
                 var newRemoteId = -1;
                 // remoteId リストに remoteId がひとつしかない場合
                 if (sortedRemoteId.length === 1) {
@@ -1415,7 +1419,7 @@ module Garage {
                     // 含まれていない場合はリストに追加する。
                     // 含まれているかどうかのチェックは、filter メソッドで追加しようとする remoteId である配列を抽出し、
                     // その配列の length が 1以上であるかで行う。
-                    var count = this.remoteList_.filter((val: IRemoteId) => {
+                    var count = this.remoteList_.filter((val: Model.RemoteId) => {
                         return val.remote_id === remoteId;
                     }).length;
 
@@ -1634,7 +1638,7 @@ module Garage {
             /**
              * getter
              */
-            get remoteList(): IRemoteId[] {
+            get remoteList(): Model.RemoteId[] {
                 return this.remoteList_;
             }
 
@@ -1674,7 +1678,7 @@ module Garage {
             /**
              * remotelist.json から remoteList を取得する
              */
-            private _loadRemoteList(): IRemoteId[] {
+            private _loadRemoteList(): Model.RemoteId[] {
                 var remoteListIniPath = path.resolve(path.join(this.huisFilesRoot_, "remotelist.ini"));
                 if (!fs.existsSync(remoteListIniPath)) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
@@ -1709,7 +1713,7 @@ module Garage {
                     return aNum - bNum;
                 });
 
-                var remoteList: IRemoteId[] = [];
+                var remoteList: Model.RemoteId[] = [];
                 // prop の数字が小さい順に remoteList に格納
                 for (let i = 0, l = sortedGeneralProps.length; i < l; i++) {
                     let value = general[sortedGeneralProps[i]];
