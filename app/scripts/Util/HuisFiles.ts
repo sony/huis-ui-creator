@@ -78,7 +78,6 @@ module Garage {
                 }
                 this.huisFilesRoot_ = undefined;
                 this.phnConfig_ = undefined;
-                this.remoteList_ = [];
                 this.remoteInfos_ = [];
                 this.commonRemoteInfo_ = null;
                 this.watingResizeImages_ = [];
@@ -91,7 +90,7 @@ module Garage {
              * @return {boolean} true: 成功 / false: 失敗
              */
             init(huisFilesRoot: string): boolean {
-                this.remoteList_ = [];
+                this.remoteList_ = new Model.RemoteIdList();
                 this.remoteInfos_ = [];
                 this.watingResizeImages_ = [];
 
@@ -1305,9 +1304,7 @@ module Garage {
                     // 4 桁の 0 パディングで返却
                     let newRemoteIdStr = ("000" + newRemoteId).slice(-4);
                     // remoteId リストに追加。HUISの表示都合でリスト末尾に追加(push)→先頭に追加(unshift)に変更('16/7/1)
-                    this.remoteList_.unshift({
-                        remote_id: newRemoteIdStr
-                    });
+                    this.remoteList_.unshift(new Model.RemoteId(newRemoteIdStr));
 
                     return newRemoteIdStr;
                 } else {
@@ -1330,7 +1327,8 @@ module Garage {
                 var removedRemoteListCount = removedRemoteList.length;
                 if (removedRemoteListCount < remoteListCount) {
                     // remoteList の更新
-                    this.remoteList_ = removedRemoteList;
+                    this.remoteList_ = new Model.RemoteIdList();
+                    this.remoteList_.concat(removedRemoteList);
                 }
             }
 
@@ -1424,7 +1422,7 @@ module Garage {
                     }).length;
 
                     if (count <= 0) {
-                        this.remoteList_.push({ remote_id: remoteId });
+                        this.remoteList_.push(new Model.RemoteId(remoteId));
                     }
 
                     try {
@@ -1713,16 +1711,16 @@ module Garage {
                     return aNum - bNum;
                 });
 
-                var remoteList: Model.RemoteIdList = [];
+                var remoteList: Model.RemoteIdList = new Model.RemoteIdList();
                 // prop の数字が小さい順に remoteList に格納
                 for (let i = 0, l = sortedGeneralProps.length; i < l; i++) {
-                    let value = general[sortedGeneralProps[i]];
+                    let value: string = general[sortedGeneralProps[i]];
                     // "end" と遭遇したら終了
                     if (value === "end") {
                         break;
                     }
 
-                    remoteList.push({ remote_id: value });
+                    remoteList.push(new Model.RemoteId(value));
                 }
 
                 return remoteList;
