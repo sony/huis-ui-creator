@@ -1319,17 +1319,7 @@ module Garage {
              * @param remoteId {string} 削除するリモコンの remoteId
              */
             removeFace(remoteId: string): void {
-                var remoteListCount = this.remoteList_.length;
-                // 該当する remoteId をもつものを取り除く
-                var removedRemoteList = this.remoteList_.filter((remote) => {
-                    return remote.remote_id !== remoteId;
-                });
-                var removedRemoteListCount = removedRemoteList.length;
-                if (removedRemoteListCount < remoteListCount) {
-                    // remoteList の更新
-                    this.remoteList_ = new Model.RemoteIdList();
-                    this.remoteList_.concat(removedRemoteList);
-                }
+                this.remoteList_.removeById(remoteId);
             }
 
             /**
