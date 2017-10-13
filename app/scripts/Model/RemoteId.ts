@@ -19,12 +19,14 @@
 module Garage {
     export module Model {
         export class RemoteId implements IRemoteId{
+            private remoteId_: string;
+
             constructor(remote_id: string) {
-                this.remote_id = remote_id;
+                this.remoteId_ = remote_id;
             }
 
             get remote_id(): string {
-                return this.remote_id;
+                return this.remoteId_;
             }
         }
     }
