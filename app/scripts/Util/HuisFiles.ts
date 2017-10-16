@@ -1252,64 +1252,7 @@ module Garage {
              * @return {string} 作成された remoteId。失敗した場合は null。
              */
             createNewRemoteId(): string {
-                // remoteId リストをソート
-                var sortedRemoteId: Model.RemoteIdList = $.extend(true, [], this.remoteList_)
-                    .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
-                        return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
-                    });
-                /*
-                let appInfo: Model.AppInfo = new Model.AppInfo();
-                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
-                let newRemoteId: number = parseInt(appInfo.last_remote_id, 10);
-                */
-                var newRemoteId = -1;
-                // remoteId リストに remoteId がひとつしかない場合
-                if (sortedRemoteId.length === 1) {
-                    let remoteId = parseInt(sortedRemoteId[0].remote_id, 10);
-                    // 0 であれば新しい remoteId は 1 に。
-                    // それ以外なら remoteId は 0 に。
-                    if (0 === remoteId) {
-                        newRemoteId = 1;
-                    } else {
-                        newRemoteId = 0;
-                    }
-                } else if (sortedRemoteId.length > 1) {
-                    // 新しい remoteId として使える数字を探す
-                    let l = sortedRemoteId.length;
-                    for (let i = 0; i < l - 1; i++) {
-                        let remoteId1 = parseInt(sortedRemoteId[i].remote_id, 10);
-                        // remoteList の先頭が 0000 より大きかったら、新しい remoteId を 0 とする
-                        if (i === 0 && 0 !== remoteId1) {
-                            newRemoteId = 0;
-                            break;
-                        }
-                        // 現在の index の remoteId と 次の index の remoteId との差が 2 以上なら、
-                        // 現在の index の remoteId + 1 を新しい remoteId とする
-                        let remoteId2 = parseInt(sortedRemoteId[i + 1].remote_id, 10);
-                        if (2 <= remoteId2 - remoteId1) {
-                            newRemoteId = remoteId1 + 1;
-                            break;
-                        }
-                    }
-                    // 適切な remoteId が見つからず。remoteList の終端に達したら、
-                    // リストの最後の remoteId + 1 を新しい remoteId とする
-                    if (newRemoteId < 0) {
-                        newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
-                    }
-                } else if (sortedRemoteId.length <= 0) {
-                    newRemoteId = 0;
-                }
-
-                if (0 <= newRemoteId) {
-                    // 4 桁の 0 パディングで返却
-                    let newRemoteIdStr = ("000" + newRemoteId).slice(-4);
-                    // remoteId リストに追加。HUISの表示都合でリスト末尾に追加(push)→先頭に追加(unshift)に変更('16/7/1)
-                    this.remoteList_.unshift(new Model.RemoteId(newRemoteIdStr));
-
-                    return newRemoteIdStr;
-                } else {
-                    return null;
-                }
+                return this.remoteList_.createNewRemoteId();
             }
 
             /**
