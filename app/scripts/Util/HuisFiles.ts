@@ -1045,7 +1045,7 @@ module Garage {
              */
             canCreateNewRemote(): number {
                 //現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
-                if (this.remoteList_.length >= MAX_HUIS_FILES) {
+                if (this.remoteList_.length >= Model.ConstValue.MAX_REMOTE_NUM) {
                     return -1;
                 }
 

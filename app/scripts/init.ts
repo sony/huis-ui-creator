@@ -58,7 +58,6 @@ module Garage {
 
         HUIS_FACE_PAGE_WIDTH = 480;
         HUIS_FACE_PAGE_HEIGHT = 812;
-        MAX_HUIS_FILES = 30;
         HUIS_VID = 0x054C;
         HUIS_PID = 0x0B94;
 

@@ -20,6 +20,7 @@ module Garage {
     export module Model {
 
         export namespace ConstValue {
+            export const MAX_REMOTE_NUM = 30;
             export const DEFAULT_NEW_REMOTE_ID: RemoteId = new RemoteId("0000");
         }
 

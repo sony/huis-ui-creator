@@ -507,10 +507,6 @@ declare module Garage {
      */
     var HUIS_FACE_PAGE_HEIGHT: number;
     /**
-     * HUIS が扱える face の最大数
-     */
-    var MAX_HUIS_FILES: number;
-    /**
      * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
      */
     var GARAGE_FILES_ROOT: string;
