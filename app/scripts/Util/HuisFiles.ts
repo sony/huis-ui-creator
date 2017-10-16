@@ -1263,7 +1263,7 @@ module Garage {
              * @param remoteId {string} 削除するリモコンの remoteId
              */
             removeFace(remoteId: string): void {
-                this.remoteList_.removeById(remoteId);
+                this.remoteList_.removeById(new Model.RemoteId(remoteId));
             }
 
             /**
