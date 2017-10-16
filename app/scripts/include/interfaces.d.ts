@@ -81,6 +81,12 @@ interface IArea {
     h: number;
 }
 
+interface IAppInfo {
+    system: {
+        last_remote_id_: string;
+    }
+}
+
 interface ISharedInfo {
     system: {
         version: string;
