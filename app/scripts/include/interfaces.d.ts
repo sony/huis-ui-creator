@@ -83,7 +83,7 @@ interface IArea {
 
 interface IAppInfo {
     system: {
-        last_remote_id_: string;
+        next_remote_id_: string;
     }
 }
 
@@ -506,10 +506,6 @@ declare module Garage {
      * face のページの縦サイズ
      */
     var HUIS_FACE_PAGE_HEIGHT: number;
-    /**
-     * HUIS が扱える face の最大数
-     */
-    var MAX_HUIS_FILES: number;
     /**
      * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
      */

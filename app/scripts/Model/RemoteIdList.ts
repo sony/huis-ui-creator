@@ -20,7 +20,9 @@ module Garage {
     export module Model {
 
         export namespace ConstValue {
-            export const DEFAULT_NEW_REMOTE_ID: RemoteId = new RemoteId("0000");
+            export const MAX_REMOTE_NUM = 30;
+            export const DEFAULT_NEW_REMOTE_ID: RemoteId = new RemoteId("5000");
+            export const MAX_REMOTE_ID: RemoteId = new RemoteId("9999");
         }
 
         /**
@@ -70,16 +72,6 @@ module Garage {
             }
 
             /**
-             * @return {Model.RemtoeIdList} ascending sorted remote id list
-             */
-            private generateSortedList(): Model.RemoteIdList {
-                return $.extend(true, [], this)
-                    .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
-                        return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
-                    });
-            }
-
-            /**
              * find new remote id
              * @return {Model.RemoteId} new remote id
              */
@@ -97,20 +89,36 @@ module Garage {
                     return ConstValue.DEFAULT_NEW_REMOTE_ID;
                 }
 
-                var sortedRemoteId: Model.RemoteIdList = this.generateSortedList();
-                let l = sortedRemoteId.length;
-                for (let i = 0; i < l - 1; i++) {
-                    // 現在の index の remoteId と 次の index の remoteId との差が 2 以上なら、
-                    // 現在の index の remoteId + 1 を新しい remoteId とする
-                    let remoteId1: Model.RemoteId = sortedRemoteId[i];
-                    let remoteId2: Model.RemoteId = sortedRemoteId[i + 1];
-                    if (!remoteId1.isSequential(remoteId2)) {
-                        return remoteId1.nextId();
-                    }
+                let appInfo: AppInfo = new AppInfo();
+                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
+                let nextRemoteId: RemoteId = new RemoteId(appInfo.next_remote_id);
+                return this.nextNewRemoteId(nextRemoteId);
+            }
+
+            /**
+             * @param {RemoteId} next id saved in AppInfo
+             * @return {RemoteId} next new remote id
+             */
+            private nextNewRemoteId(nextRemoteId: RemoteId): RemoteId {
+                if (nextRemoteId.less(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
+                    console.warn("Manage of new RemoteId may be wrong : " + nextRemoteId.remote_id);
+                    return ConstValue.DEFAULT_NEW_REMOTE_ID;
                 }
-                // 適切な remoteId が見つからず。remoteList の終端に達したら、
-                // リストの最後の remoteId + 1 を新しい remoteId とする
-                return sortedRemoteId[l - 1].nextId();
+
+                if (!this.has(nextRemoteId)) {
+                    return nextRemoteId;
+                }
+
+                let newRemoteId: RemoteId = nextRemoteId.equals(ConstValue.MAX_REMOTE_ID)
+                    ? ConstValue.DEFAULT_NEW_REMOTE_ID
+                    : nextRemoteId.nextId();
+                for (let i = 0; i < ConstValue.MAX_REMOTE_NUM; i++) {
+                    if (!this.has(newRemoteId)) {
+                        break;
+                    }
+                    newRemoteId = newRemoteId.nextId();
+                }
+                return newRemoteId;
             }
 
             /**
@@ -125,6 +133,11 @@ module Garage {
             createNewRemoteId(): RemoteId {
                 var newRemoteId: Model.RemoteId = this.findNewGenerateId();
                 this.addRemoteId(newRemoteId);
+
+                let appInfo: AppInfo = new AppInfo();
+                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
+                appInfo.updateLastRemoteId(newRemoteId.nextId());
+
                 return newRemoteId;
             }
 

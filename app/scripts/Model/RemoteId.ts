@@ -29,14 +29,30 @@ module Garage {
                 return this.remoteId_;
             }
 
-            public equals(remoteId: RemoteId) {
+            /**
+             * @return {boolean} this has same remote id with argument
+             */
+            public equals(remoteId: RemoteId): boolean {
                 return this.remote_id == remoteId.remote_id;
+            }
+
+            /**
+             * @return {boolean} this is less than argument
+             */
+            public less(remoteId: RemoteId) {
+                let myInt: number = parseInt(this.remote_id, 10);
+                let yourInt: number = parseInt(remoteId.remote_id, 10);
+                return myInt < yourInt;
             }
 
             /**
              * @return {RemoteId} RemoteId which id is this.remote_id + 1
              */
             public nextId(): RemoteId {
+                if (this.equals(ConstValue.MAX_REMOTE_ID)) {
+                    return ConstValue.DEFAULT_NEW_REMOTE_ID;
+                }
+
                 let myInt = parseInt(this.remote_id, 10);
                 return new RemoteId(RemoteId.paddingId(myInt + 1));
             }

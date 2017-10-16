@@ -21,21 +21,22 @@ module Garage {
 
         export namespace ConstValue {
             export const APP_INFO_FILE_NAME: string = "appinfo.ini";
-
-            // TODO: define RemoteId class and it should have this parameter
-            export const DEFAULT_LAST_REMOTE_ID = "5000";
         }
 
         export class AppInfo extends IniFile {
-            private last_remote_id_: string;
+            private next_remote_id_: string;
 
             constructor() {
                 super();
-                this.last_remote_id_ = ConstValue.DEFAULT_LAST_REMOTE_ID;
+                this.next_remote_id_ = ConstValue.DEFAULT_NEW_REMOTE_ID.remote_id;
             }
 
-            get last_remote_id(): string {
-                return this.last_remote_id_;
+            get next_remote_id(): string {
+                return this.next_remote_id_;
+            }
+
+            set next_remote_id(newLastRemoteId: string) {
+                this.next_remote_id_ = newLastRemoteId;
             }
 
             /**
@@ -56,7 +57,12 @@ module Garage {
                     return;
                 }
 
-                this.last_remote_id_ = appInfo.system.last_remote_id_;
+                this.next_remote_id_ = appInfo.system.next_remote_id_;
+            }
+
+            public updateLastRemoteId(newRemoteId: RemoteId) {
+                this.next_remote_id = newRemoteId.remote_id;
+                this.save();
             }
 
             get section(): string {
