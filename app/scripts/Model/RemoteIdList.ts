@@ -34,7 +34,7 @@ module Garage {
             /**
              * remove element which has same id with an argument
              *
-             * @param {string] idToRemove remove id by this
+             * @param {string} idToRemove remove id by this
              * @return if remove something
              */
             public removeById(idToRemove: string): boolean {
@@ -70,7 +70,7 @@ module Garage {
             }
 
             /**
-             * @return ascending sorted remote id list
+             * @return {Model.RemtoeIdList} ascending sorted remote id list
              */
             private generateSortedList(): Model.RemoteIdList {
                 return $.extend(true, [], this)
@@ -81,7 +81,7 @@ module Garage {
 
             /**
              * find new remote id
-             * @return {Model.RemoteId] new remote id
+             * @return {Model.RemoteId} new remote id
              */
             private findNewGenerateId(): Model.RemoteId {
                 if (this.length <= 0) {
