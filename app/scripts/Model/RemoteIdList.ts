@@ -19,6 +19,10 @@
 module Garage {
     export module Model {
 
+        export namespace ConstValue {
+            export const DEFAULT_NEW_REMOTE_ID: RemoteId = new RemoteId("0000");
+        }
+
         /**
          * no redundant ids
          */
@@ -52,6 +56,64 @@ module Garage {
             }
 
             /**
+             * check if this has target remote id
+             *
+             * @param {RemoteId} targetRemoteId remote id for check
+             * @return return true if this has targetRemoteId
+             */
+            private has(targetRemoteId: RemoteId) {
+                let has = this.some((remoteId: RemoteId) => {
+                    return remoteId.equals(targetRemoteId);
+                });
+
+                return has;
+            }
+
+            /**
+             * @return ascending sorted remote id list
+             */
+            private generateSortedList(): Model.RemoteIdList {
+                return $.extend(true, [], this)
+                    .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
+                        return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
+                    });
+            }
+
+            /**
+             * find new remote id
+             * @return {Model.RemoteId] new remote id
+             */
+            private findNewGenerateId(): Model.RemoteId {
+                if (this.length <= 0) {
+                    return ConstValue.DEFAULT_NEW_REMOTE_ID;
+                } else if (this.length === 1) {
+                    if (this.has(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
+                        return ConstValue.DEFAULT_NEW_REMOTE_ID.nextId();
+                    }
+                    return ConstValue.DEFAULT_NEW_REMOTE_ID;
+                }
+
+                if (!this.has(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
+                    return ConstValue.DEFAULT_NEW_REMOTE_ID;
+                }
+
+                var sortedRemoteId: Model.RemoteIdList = this.generateSortedList();
+                let l = sortedRemoteId.length;
+                for (let i = 0; i < l - 1; i++) {
+                    // 現在の index の remoteId と 次の index の remoteId との差が 2 以上なら、
+                    // 現在の index の remoteId + 1 を新しい remoteId とする
+                    let remoteId1: Model.RemoteId = sortedRemoteId[i];
+                    let remoteId2: Model.RemoteId = sortedRemoteId[i + 1];
+                    if (!remoteId1.isSequential(remoteId2)) {
+                        return remoteId1.nextId();
+                    }
+                }
+                // 適切な remoteId が見つからず。remoteList の終端に達したら、
+                // リストの最後の remoteId + 1 を新しい remoteId とする
+                return sortedRemoteId[l - 1].nextId();
+            }
+
+            /**
              * 新しい remoteId を作成する。
              * 新しい remoteId は remoteList に格納されていないものの中で最小の数字を 4 桁の 0 パディングしたものである。
              * (例: "0012", "0345", "8765" など)
@@ -60,60 +122,17 @@ module Garage {
              * 
              * @return {string} 作成された remoteId。失敗した場合は null。
              */
-            createNewRemoteId(): string {
-                // remoteId リストをソート
-                var sortedRemoteId: Model.RemoteIdList = $.extend(true, [], this)
-                    .sort(function (val1: Model.RemoteId, val2: Model.RemoteId) {
-                        return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
-                    });
-                var newRemoteId = -1;
-                // remoteId リストに remoteId がひとつしかない場合
-                if (sortedRemoteId.length === 1) {
-                    let remoteId = parseInt(sortedRemoteId[0].remote_id, 10);
-                    // 0 であれば新しい remoteId は 1 に。
-                    // それ以外なら remoteId は 0 に。
-                    if (0 === remoteId) {
-                        newRemoteId = 1;
-                    } else {
-                        newRemoteId = 0;
-                    }
-                } else if (sortedRemoteId.length > 1) {
-                    // 新しい remoteId として使える数字を探す
-                    let l = sortedRemoteId.length;
-                    for (let i = 0; i < l - 1; i++) {
-                        let remoteId1 = parseInt(sortedRemoteId[i].remote_id, 10);
-                        // remoteList の先頭が 0000 より大きかったら、新しい remoteId を 0 とする
-                        if (i === 0 && 0 !== remoteId1) {
-                            newRemoteId = 0;
-                            break;
-                        }
-                        // 現在の index の remoteId と 次の index の remoteId との差が 2 以上なら、
-                        // 現在の index の remoteId + 1 を新しい remoteId とする
-                        let remoteId2 = parseInt(sortedRemoteId[i + 1].remote_id, 10);
-                        if (2 <= remoteId2 - remoteId1) {
-                            newRemoteId = remoteId1 + 1;
-                            break;
-                        }
-                    }
-                    // 適切な remoteId が見つからず。remoteList の終端に達したら、
-                    // リストの最後の remoteId + 1 を新しい remoteId とする
-                    if (newRemoteId < 0) {
-                        newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
-                    }
-                } else if (sortedRemoteId.length <= 0) {
-                    newRemoteId = 0;
-                }
+            createNewRemoteId(): RemoteId {
+                var newRemoteId: Model.RemoteId = this.findNewGenerateId();
+                this.addRemoteId(newRemoteId);
+                return newRemoteId;
+            }
 
-                if (0 <= newRemoteId) {
-                    // 4 桁の 0 パディングで返却
-                    let newRemoteIdStr = ("000" + newRemoteId).slice(-4);
-                    // remoteId リストに追加。HUISの表示都合でリスト末尾に追加(push)→先頭に追加(unshift)に変更('16/7/1)
-                    this.unshift(new Model.RemoteId(newRemoteIdStr));
-
-                    return newRemoteIdStr;
-                } else {
-                    return null;
-                }
+            /**
+             * @param {RemoteId} remote id to add
+             */
+            addRemoteId(remoteId: RemoteId) {
+                this.unshift(new Model.RemoteId(remoteId.remote_id));
             }
         }
     }

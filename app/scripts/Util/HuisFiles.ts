@@ -1252,7 +1252,8 @@ module Garage {
              * @return {string} 作成された remoteId。失敗した場合は null。
              */
             createNewRemoteId(): string {
-                return this.remoteList_.createNewRemoteId();
+                let newRemoteId: Model.RemoteId = this.remoteList_.createNewRemoteId();
+                return newRemoteId.remote_id;
             }
 
             /**
