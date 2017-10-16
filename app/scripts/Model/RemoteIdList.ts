@@ -96,12 +96,12 @@ module Garage {
             }
 
             /**
-             * @param {RemoteId] next id saved in AppInfo
+             * @param {RemoteId} next id saved in AppInfo
              * @return {RemoteId} next new remote id
              */
             private nextNewRemoteId(nextRemoteId: RemoteId): RemoteId {
                 if (nextRemoteId.less(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
-                    console.warn("Mange of new RemoteId may be wrong : " + nextRemoteId.remote_id);
+                    console.warn("Manage of new RemoteId may be wrong : " + nextRemoteId.remote_id);
                     return ConstValue.DEFAULT_NEW_REMOTE_ID;
                 }
 
