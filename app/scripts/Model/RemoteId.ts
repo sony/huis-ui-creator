@@ -29,7 +29,10 @@ module Garage {
                 return this.remoteId_;
             }
 
-            public equals(remoteId: RemoteId) {
+            /**
+             * @return {boolean} this has same remote id with argument
+             */
+            public equals(remoteId: RemoteId): boolean {
                 return this.remote_id == remoteId.remote_id;
             }
 
