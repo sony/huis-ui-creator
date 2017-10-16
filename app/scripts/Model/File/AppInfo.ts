@@ -24,19 +24,19 @@ module Garage {
         }
 
         export class AppInfo extends IniFile {
-            private last_remote_id_: string;
+            private next_remote_id_: string;
 
             constructor() {
                 super();
-                this.last_remote_id_ = ConstValue.DEFAULT_NEW_REMOTE_ID.remote_id;
+                this.next_remote_id_ = ConstValue.DEFAULT_NEW_REMOTE_ID.remote_id;
             }
 
-            get last_remote_id(): string {
-                return this.last_remote_id_;
+            get next_remote_id(): string {
+                return this.next_remote_id_;
             }
 
-            set last_remote_id(newLastRemoteId: string) {
-                this.last_remote_id_ = newLastRemoteId;
+            set next_remote_id(newLastRemoteId: string) {
+                this.next_remote_id_ = newLastRemoteId;
             }
 
             /**
@@ -57,11 +57,11 @@ module Garage {
                     return;
                 }
 
-                this.last_remote_id_ = appInfo.system.last_remote_id_;
+                this.next_remote_id_ = appInfo.system.next_remote_id_;
             }
 
             public updateLastRemoteId(newRemoteId: RemoteId) {
-                this.last_remote_id = newRemoteId.remote_id;
+                this.next_remote_id = newRemoteId.remote_id;
                 this.save();
             }
 

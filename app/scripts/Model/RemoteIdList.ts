@@ -91,34 +91,34 @@ module Garage {
 
                 let appInfo: AppInfo = new AppInfo();
                 appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
-                let lastRemoteId: RemoteId = new RemoteId(appInfo.last_remote_id);
-                return this.nextNewRemoteId(lastRemoteId);
+                let nextRemoteId: RemoteId = new RemoteId(appInfo.next_remote_id);
+                return this.nextNewRemoteId(nextRemoteId);
             }
 
             /**
-             * @param {RemoteId] max id of registered remotes
+             * @param {RemoteId] next id saved in AppInfo
              * @return {RemoteId} next new remote id
              */
-            private nextNewRemoteId(lastRemoteId: RemoteId): RemoteId {
-                if (lastRemoteId.less(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
-                    console.warn("Mange of new RemoteId may be wrong : " + lastRemoteId.remote_id);
+            private nextNewRemoteId(nextRemoteId: RemoteId): RemoteId {
+                if (nextRemoteId.less(ConstValue.DEFAULT_NEW_REMOTE_ID)) {
+                    console.warn("Mange of new RemoteId may be wrong : " + nextRemoteId.remote_id);
                     return ConstValue.DEFAULT_NEW_REMOTE_ID;
                 }
 
-                if (!this.has(lastRemoteId)) {
-                    return lastRemoteId;
+                if (!this.has(nextRemoteId)) {
+                    return nextRemoteId;
                 }
 
-                let newLastRemoteId: RemoteId = lastRemoteId.equals(ConstValue.MAX_REMOTE_ID)
+                let newRemoteId: RemoteId = nextRemoteId.equals(ConstValue.MAX_REMOTE_ID)
                     ? ConstValue.DEFAULT_NEW_REMOTE_ID
-                    : lastRemoteId.nextId();
+                    : nextRemoteId.nextId();
                 for (let i = 0; i < ConstValue.MAX_REMOTE_NUM; i++) {
-                    if (!this.has(newLastRemoteId)) {
+                    if (!this.has(newRemoteId)) {
                         break;
                     }
-                    newLastRemoteId = newLastRemoteId.nextId();
+                    newRemoteId = newRemoteId.nextId();
                 }
-                return newLastRemoteId;
+                return newRemoteId;
             }
 
             /**

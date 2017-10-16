@@ -83,7 +83,7 @@ interface IArea {
 
 interface IAppInfo {
     system: {
-        last_remote_id_: string;
+        next_remote_id_: string;
     }
 }
 
