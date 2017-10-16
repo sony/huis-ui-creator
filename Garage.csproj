@@ -219,9 +219,7 @@
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <Content Include="app\res\faces\common\common.face" />
-    <Content Include="app\res\faces\common\common_bz.face" />
     <Content Include="app\res\faces\common\modules\SP_parts.module" />
-    <Content Include="app\res\faces\common\modules\SP_parts_BZ.module" />
     <Content Include="app\res\fonts\bold\SSTJpPro-Bold.otf" />
     <Content Include="app\res\fonts\light\SSTJpPro-Light.otf" />
     <Content Include="app\res\fonts\NotoSansCJKjp-Bold-subset.otf" />

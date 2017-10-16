@@ -118,34 +118,34 @@ module Garage {
                 this.remoteInfos_ = remoteInfos;
 
                 // Common のリモコンを読み込む
-                if (!this.commonRemoteInfo_) {
-                    console.log("setting commonRemoteInfo_");
-                    let remoteId = "common";
-
-                    let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
-                    //ビジネス仕向けか否かで、表示するCommonアイテムを変える。
-                    if (Util.MiscUtil.isBz()) {
-                        facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common_bz.face"));
-                    }
-
-                    console.log("facePath=" + facePath);
-
-                    //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-                    let rootDirectory = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
-                    console.log("rootDirectory=" + rootDirectory);
-
-                    let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
-                    this.commonRemoteInfo_ = {
-                        remoteId: remoteId,
-                        face: commonFace,
-                    };
-                }
+                this.loadCommonFace();
 
                 this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
 
                 return true;
             }
 
+            private loadCommonFace() {
+                if (this.commonRemoteInfo_) {
+                    return;
+                }
+                console.log("setting commonRemoteInfo_");
+                let remoteId = "common";
+
+                let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+
+                console.log("facePath=" + facePath);
+
+                //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
+                let rootDirectory = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
+                console.log("rootDirectory=" + rootDirectory);
+
+                let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
+                this.commonRemoteInfo_ = {
+                    remoteId: remoteId,
+                    face: commonFace,
+                };
+            }
 
             /*
              * watingResizeImages_を初期化する。
