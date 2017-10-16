@@ -34,13 +34,13 @@ module Garage {
             /**
              * remove element which has same id with an argument
              *
-             * @param {string} idToRemove remove id by this
+             * @param {RemoteId} idToRemove remove id by this
              * @return if remove something
              */
-            public removeById(idToRemove: string): boolean {
+            public removeById(idToRemove: Model.RemoteId): boolean {
                 // 該当する remoteId を取り除いたリストを作成
                 var removedRemoteList = this.filter((remote) => {
-                    return remote.remote_id !== idToRemove;
+                    return !remote.equals(idToRemove);
                 });
 
                 if (removedRemoteList.length > this.length) {
