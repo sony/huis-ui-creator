@@ -51,6 +51,7 @@ module Garage {
             public saveAs(file_path: string) {
                 let nodeIni = require("ini");
 
+                console.log(TAG + " save file : " + file_path);
                 fs.writeFileSync(file_path, nodeIni.stringify(this, {section: this.section}));
             }
 
