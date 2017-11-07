@@ -440,6 +440,11 @@ module Garage {
 
                 }
 
+                private isSyncTarget(path: string): boolean {
+                    return path.match(/\.app($|\/)/) == null
+                        && path.match(/\.Trashes/) == null
+                        && path.match(/\.Spotlight/) == null;
+                }
 
                 // destRootDirの中身を、srcRootDirの中身と同期させる関数
                 // TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
@@ -447,9 +452,7 @@ module Garage {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
                     let syncFileFilter = (path: string) => {
-                        if (path.match(/\.app($|\/)/) == null
-                            && path.match(/\.Trashes/) == null
-                            && path.match(/\.Spotlight/) == null) {
+                        if (this.isSyncTarget(path)) {
                             return true;
                         } else {
                             console.log("filtered from sync " + path);
