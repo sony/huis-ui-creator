@@ -106,7 +106,6 @@ module Garage {
                 }
             }
 
-
             /*
              * 同期処理後、ホームへ移動する。
              */
@@ -222,13 +221,9 @@ module Garage {
                             // 「解除」選択時
                             let result = storageLock.unlock();
                             if (result) {
-                                // 解除しました再起動してくださいダイアログ
-                                this.showPleaseRestartDialog();
-
+                                this.showPleaseRestartDialog();  // 解除しました再起動してくださいダイアログ
                             } else {
-                                // 解除失敗ダイアログ
-                                this.showFailedToUnlockDialog();
-
+                                this.showFailedToUnlockDialog();  // 解除失敗ダイアログ
                             }
                         }
                         app.exit(0);
@@ -260,7 +255,6 @@ module Garage {
                     });
             }
 
-
             /**
              * ロック解除後の再起動を促すダイアログを表示
              */
@@ -273,7 +267,6 @@ module Garage {
                         cancelId: 0,
                     });
             }
-
 
             /**
              * ロック解除失敗のダイアログを表示
@@ -458,7 +451,6 @@ module Garage {
                 });
             };
 
-
             private showDialogNotConnectWithHuis(err) {
                 // エラーダイアログの表示
                 // [TODO] エラー内容に応じて表示を変更するべき
@@ -471,12 +463,8 @@ module Garage {
 
                 app.exit(0);
             }
-
-
-
         }
 
         var View = new Splash();
-
     }
 }
