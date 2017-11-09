@@ -308,12 +308,20 @@ module Garage {
                  * 
                  * @param srcRootDir {string} 同期元となるディレクトリーパス
                  * @param destRootDir {string} 同期先となるディレクトリーパス
+                 * @param useDialog {boolean]
                  * @param dialogProps {DialogProps} 同期中に表示するダイアログのパラメーター
+                 * @param actionBeforeCompelte {Fucntion()}
                  * @param callback {Function(err)} 成功または失敗したときに呼び出されるコールバック関数
                  * 
                  * @return {IProgress}
                  */
-                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string,
+                    destRootDir: string,
+                    useDialog: Boolean,
+                    dialogProps?: DialogProps,
+                    actionBeforeComplete?: () => void,
+                    callback?: (err: Error) => void
+                ): IProgress {
                     var dialog: Dialog = null;
                     this._isCanceled = false;
                     var errorValue: Error = null;

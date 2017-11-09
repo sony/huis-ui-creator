@@ -195,10 +195,12 @@ module Garage {
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
                     .then((err: Error) => {
-                        if (err == null) {
-                            callback();
-                        } else {
+                        if (err != null) {
                             this.showDialogNotConnectWithHuis(err);
+                            return;
+                        }
+                        if (callback != null) {
+                            callback();
                         }
                     });
             }
@@ -409,7 +411,6 @@ module Garage {
                     console.warn("HUIS may not be connected.");
                     return;
                 }
-                let needSync: boolean = false; // [TODO]デバッグ用に強制 sync
 
                 try {
                     // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
