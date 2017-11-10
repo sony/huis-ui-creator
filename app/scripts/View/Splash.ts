@@ -187,13 +187,21 @@ module Garage {
              * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
              */
             private syncCommonImages(callback?: Function) {
-                let FUNCTION_NAME = TAG + "syncCommonImages : ";
+                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                this._copy(src, HUIS_REMOTEIMAGES_ROOT, callback);
+            }
 
-                let srcRoot = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
-                let srcWhite = Util.PathManager.join(srcRoot, Util.Dirs.WHITE_DIR);
+            /**
+             * デフォルトのリモコン用画像をremoteImagesにコピーする。
+             */
+            private copyDefaultRemoteImages(callback?: Function) {
+                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/remoteimages")); // default remote images
+                this._copy(src, HUIS_REMOTEIMAGES_ROOT, callback);
+            }
 
+            private _copy(src: string, dest: string, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
+                syncTask.copyFilesSimply(src, dest)
                     .then((err: Error) => {
                         if (err != null) {
                             this.showDialogNotConnectWithHuis(err);
@@ -406,6 +414,24 @@ module Garage {
                 app.exit(0);
             }
 
+            /**
+             * 初起動時やアップデート時のみ同期が必要なファイルを同期する
+             * @return {CDP.IPromise<void>} ファイルコピー
+             */
+            private syncFilesWhenUpdated(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                setTimeout(() => {
+                    this.syncCommonImages();
+                    this.copyDefaultRemoteImages(() => {
+                            df.resolve();
+                        });
+                });
+
+                return promise;
+            }
+
             private syncWithHUIS(callback?: Function) {
                 if (!HUIS_ROOT_PATH) {
                     console.warn("HUIS may not be connected.");
@@ -422,7 +448,14 @@ module Garage {
                         });
                     } else {
                         // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
-                        this.doSync(true, callback);
+                        let versionManager: Util.VersionManager = new Util.VersionManager();
+                        if (versionManager.isInstalledNewly() || versionManager.isUpdated()) {
+                            this.syncFilesWhenUpdated().then(() => {
+                                this.doSync(true, callback);
+                            });
+                        } else {
+                            this.doSync(true, callback);
+                        }
                     }
                 } catch (err) {
                     console.error(err);
@@ -446,8 +479,9 @@ module Garage {
                         // 同期後に改めて、HUIS ファイルの parse を行う
                         huisFiles.init(HUIS_FILES_ROOT);
                         console.log("Complete!!!");
-
-                        this.syncCommonImages(callback);
+                        if (callback != null) {
+                            callback();
+                        }
                     }
                 });
             };
