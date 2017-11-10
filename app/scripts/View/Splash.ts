@@ -439,29 +439,33 @@ module Garage {
                 }
 
                 try {
-                    // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
-                    if (huisFiles.init(HUIS_FILES_ROOT)) {
-                        // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
-                        Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
-                            // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
-                            this.doSync(true, callback);
+                    let versionManager: Util.VersionManager = new Util.VersionManager();
+                    if (versionManager.isInstalledNewly() || versionManager.isUpdated()) {
+                        this.syncFilesWhenUpdated().then(() => {
+                            this._syncWithHuis(callback);
                         });
                     } else {
-                        // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
-                        let versionManager: Util.VersionManager = new Util.VersionManager();
-                        if (versionManager.isInstalledNewly() || versionManager.isUpdated()) {
-                            this.syncFilesWhenUpdated().then(() => {
-                                this.doSync(true, callback);
-                            });
-                        } else {
-                            this.doSync(true, callback);
-                        }
+                        this._syncWithHuis(callback);
                     }
                 } catch (err) {
                     console.error(err);
                     console.error("error occurred in syncWithHUIS");
                 }
             };
+
+            private _syncWithHuis(callback?: Function) {
+                // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
+                if (huisFiles.init(HUIS_FILES_ROOT)) {
+                    // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
+                    Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
+                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
+                        this.doSync(true, callback);
+                    });
+                } else {
+                    // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
+                    this.doSync(true, callback);
+                }
+            }
 
             private doSync(direction: Boolean, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
