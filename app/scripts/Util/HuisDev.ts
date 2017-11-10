@@ -684,7 +684,6 @@ module Garage {
                     let cacheFilteredFileList = this._filterDeviceInfoCache(dstRootDir, files);
                     let defaultRemoteImagesFiltered = this._filterDefaultRemoteImages(cacheFilteredFileList);
                     return defaultRemoteImagesFiltered;
-
                 }
 
                 private _filterDefaultRemoteImages(files: string[]): string[] {
