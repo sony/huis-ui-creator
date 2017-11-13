@@ -458,7 +458,7 @@ module Garage {
                  * デフォルトのRemoteImagesを除去するフィルターを返す
                  * @return {(path: string) => boolean} Default の RemoteImages ファイルを除去するフィルター
                  */
-                private getIgnoreRemoteImagesFilter(): (path: string) => boolean {
+                private getIgnoreDefaultRemoteImagesFilter(): (path: string) => boolean {
                     let filter = (path: string): boolean => {
                         let isNeed: boolean = path.match(/remoteimages\/white/) == null
                             && path.match(/remoteimages\/black/) == null
@@ -490,7 +490,7 @@ module Garage {
                             // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
                             var copyTargetFiles = diffInfo.diff;
                             copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
-                            let filterdTargetFiles: string[] = copyTargetFiles.filter(this.getIgnoreRemoteImagesFilter());
+                            let filterdTargetFiles: string[] = copyTargetFiles.filter(this.getIgnoreDefaultRemoteImagesFilter());
                             this._copyFiles(srcRootDir, destRootDir, filterdTargetFiles)
                                 .then(() => {
                                     df.resolve(diffInfo.dir2Extra);
@@ -687,7 +687,7 @@ module Garage {
                 }
 
                 private _filterDefaultRemoteImages(files: string[]): string[] {
-                    return files.filter(this.getIgnoreRemoteImagesFilter());
+                    return files.filter(this.getIgnoreDefaultRemoteImagesFilter());
                 }
 
                 /**
