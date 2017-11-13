@@ -135,10 +135,14 @@
     <Content Include="app\modules\zip\scripts\zip.js" />
     <Content Include="app\modules\zip\scripts\zip.min.js" />
     <Content Include="app\modules\zip\scripts\_info.txt" />
-    <Content Include="app\res\faces\common\images\btn_image_jump.png" />
-    <Content Include="app\res\faces\common\images\btn_image_label.png" />
-    <Content Include="app\res\faces\common\images\btn_image_macro.png" />
-    <Content Include="app\res\faces\common\images\divider_pickup_custom.png" />
+    <Content Include="app\res\faces\common\images\black\btn_image_jump.png" />
+    <Content Include="app\res\faces\common\images\black\btn_image_label.png" />
+    <Content Include="app\res\faces\common\images\black\btn_image_macro.png" />
+    <Content Include="app\res\faces\common\images\black\divider_pickup_custom.png" />
+    <Content Include="app\res\faces\common\images\white\btn_image_jump.png" />
+    <Content Include="app\res\faces\common\images\white\btn_image_label.png" />
+    <Content Include="app\res\faces\common\images\white\btn_image_macro.png" />
+    <Content Include="app\res\faces\common\images\white\divider_pickup_custom.png" />
     <Content Include="app\res\fonts\LICENSE_OFL.txt" />
     <Content Include="app\res\icons\cdp_blog_logo.png" />
     <Content Include="app\res\icons\grid_08.png" />
@@ -2770,6 +2774,7 @@
     <TypeScriptCompile Include="app\scripts\Util\PhnConfigFile.ts" />
     <TypeScriptCompile Include="app\scripts\Util\SelectRemotePageDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\StorageLock.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\VersionManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />

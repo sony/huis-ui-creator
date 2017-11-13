@@ -308,12 +308,20 @@ module Garage {
                  * 
                  * @param srcRootDir {string} 同期元となるディレクトリーパス
                  * @param destRootDir {string} 同期先となるディレクトリーパス
+                 * @param useDialog {boolean]
                  * @param dialogProps {DialogProps} 同期中に表示するダイアログのパラメーター
+                 * @param actionBeforeCompelte {Fucntion()}
                  * @param callback {Function(err)} 成功または失敗したときに呼び出されるコールバック関数
                  * 
                  * @return {IProgress}
                  */
-                exec(srcRootDir: string, destRootDir: string, useDialog: Boolean, dialogProps?: DialogProps, actionBeforeComplete?: () => void, callback?: (err: Error) => void): IProgress {
+                exec(srcRootDir: string,
+                    destRootDir: string,
+                    useDialog: Boolean,
+                    dialogProps?: DialogProps,
+                    actionBeforeComplete?: () => void,
+                    callback?: (err: Error) => void
+                ): IProgress {
                     var dialog: Dialog = null;
                     this._isCanceled = false;
                     var errorValue: Error = null;
@@ -440,6 +448,25 @@ module Garage {
 
                 }
 
+                private isSyncTarget(path: string): boolean {
+                    return path.match(/\.app($|\/)/) == null
+                        && path.match(/\.Trashes/) == null
+                        && path.match(/\.Spotlight/) == null;
+                }
+
+                /**
+                 * デフォルトのRemoteImagesを除去するフィルターを返す
+                 * @return {(path: string) => boolean} Default の RemoteImages ファイルを除去するフィルター
+                 */
+                private getIgnoreDefaultRemoteImagesFilter(): (path: string) => boolean {
+                    let filter = (path: string): boolean => {
+                        let isNeed: boolean = path.match(/remoteimages\/white/) == null
+                            && path.match(/remoteimages\/black/) == null
+                            && path.match(/remoteimages\/IMG*/) == null;
+                        return isNeed;
+                    };
+                    return filter;
+                }
 
                 // destRootDirの中身を、srcRootDirの中身と同期させる関数
                 // TODO: 作成中にデバイスが抜かれたときなどのケースにおける対応方法は、後で検討予定
@@ -447,9 +474,7 @@ module Garage {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
                     let syncFileFilter = (path: string) => {
-                        if (path.match(/\.app($|\/)/) == null
-                            && path.match(/\.Trashes/) == null
-                            && path.match(/\.Spotlight/) == null) {
+                        if (this.isSyncTarget(path)) {
                             return true;
                         } else {
                             console.log("filtered from sync " + path);
@@ -465,7 +490,8 @@ module Garage {
                             // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
                             var copyTargetFiles = diffInfo.diff;
                             copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
-                            this._copyFiles(srcRootDir, destRootDir, copyTargetFiles)
+                            let filterdTargetFiles: string[] = copyTargetFiles.filter(this.getIgnoreDefaultRemoteImagesFilter());
+                            this._copyFiles(srcRootDir, destRootDir, filterdTargetFiles)
                                 .then(() => {
                                     df.resolve(diffInfo.dir2Extra);
                                 })
@@ -535,8 +561,19 @@ module Garage {
                     return <CDP.IPromise<Error>>CDP.makePromise(df);
                 }
 
-                // TODO: make public
-                private _copyFiles(srcRootDir: string, dstRootDir: string, targetFiles: string[]): CDP.IPromise<Error> {
+
+                /**
+                 * TODO: make public
+                 * src で指定されたディレクトリの targetFiles を dst で指定された先にコピーするメソッド
+                 * @param {string} srcRootDir コピー元のディレクトリパス
+                 * @param {string} dstRootDir コピー先のディレクトリパス
+                 * @param {string[]} targetFiles コピー対象のファイル
+                 */
+                private _copyFiles(
+                    srcRootDir: string,
+                    dstRootDir: string,
+                    targetFiles: string[]
+                ): CDP.IPromise<Error> {
                     let FUNCITON_NAME = TAG + "_copyFiles : ";
                     let df = $.Deferred<Error>();
                     let promise = CDP.makePromise(df);
@@ -559,7 +596,9 @@ module Garage {
                                     filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                                 }
                                 console.log(FUNCITON_NAME + "copy file (" + file + ")");
-                                fs.copySync(getAbsPath(srcRootDir, file), getAbsPath(dstRootDir, file), option);
+                                const srcAbstPath: string = getAbsPath(srcRootDir, file);
+                                const dstAbstPath: string = getAbsPath(dstRootDir, file);
+                                fs.copySync(srcAbstPath, dstAbstPath, option);
                                 setTimeout(proc);
                             } catch (err) {
                                 df.reject(err);
@@ -578,7 +617,7 @@ module Garage {
                     let df = $.Deferred<Error>();
                     let promise = CDP.makePromise(df);
 
-                    let files = this._filterDeviceInfoCache(dstRootDir, targetFiles.slice());
+                    let files = this._filterDeleteCandidates(dstRootDir, targetFiles.slice());
 
                     let proc = () => {
                         let file: string;
@@ -639,6 +678,16 @@ module Garage {
                         df.reject(err);
                     }
                     return <CDP.IPromise<IDiffInfo>>CDP.makePromise(df);
+                }
+
+                private _filterDeleteCandidates(dstRootDir: string, files: string[]): string[] {
+                    let cacheFilteredFileList = this._filterDeviceInfoCache(dstRootDir, files);
+                    let defaultRemoteImagesFiltered = this._filterDefaultRemoteImages(cacheFilteredFileList);
+                    return defaultRemoteImagesFiltered;
+                }
+
+                private _filterDefaultRemoteImages(files: string[]): string[] {
+                    return files.filter(this.getIgnoreDefaultRemoteImagesFilter());
                 }
 
                 /**

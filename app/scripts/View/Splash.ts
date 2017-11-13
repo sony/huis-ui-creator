@@ -106,7 +106,6 @@ module Garage {
                 }
             }
 
-
             /*
              * 同期処理後、ホームへ移動する。
              */
@@ -188,18 +187,28 @@ module Garage {
              * commonリモコン用の画像をremoteImagesにコピーする。ただし、huisFilesは初期化されているものとする。
              */
             private syncCommonImages(callback?: Function) {
-                let FUNCTION_NAME = TAG + "syncCommonImages : ";
+                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
+                this._copy(src, HUIS_REMOTEIMAGES_ROOT, callback);
+            }
 
-                let srcRoot = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/images"));//コピー元：システムファイルのcommonImage
-                let srcWhite = Util.PathManager.join(srcRoot, Util.Dirs.WHITE_DIR);
+            /**
+             * デフォルトのリモコン用画像をremoteImagesにコピーする。
+             */
+            private copyDefaultRemoteImages(callback?: Function) {
+                let src = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/remoteimages")); // default remote images
+                this._copy(src, HUIS_REMOTEIMAGES_ROOT, callback);
+            }
 
+            private _copy(src: string, dest: string, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                syncTask.copyFilesSimply(srcRoot, HUIS_REMOTEIMAGES_ROOT)
+                syncTask.copyFilesSimply(src, dest)
                     .then((err: Error) => {
-                        if (err == null) {
-                            callback();
-                        } else {
+                        if (err != null) {
                             this.showDialogNotConnectWithHuis(err);
+                            return;
+                        }
+                        if (callback != null) {
+                            callback();
                         }
                     });
             }
@@ -222,13 +231,9 @@ module Garage {
                             // 「解除」選択時
                             let result = storageLock.unlock();
                             if (result) {
-                                // 解除しました再起動してくださいダイアログ
-                                this.showPleaseRestartDialog();
-
+                                this.showPleaseRestartDialog();  // 解除しました再起動してくださいダイアログ
                             } else {
-                                // 解除失敗ダイアログ
-                                this.showFailedToUnlockDialog();
-
+                                this.showFailedToUnlockDialog();  // 解除失敗ダイアログ
                             }
                         }
                         app.exit(0);
@@ -260,7 +265,6 @@ module Garage {
                     });
             }
 
-
             /**
              * ロック解除後の再起動を促すダイアログを表示
              */
@@ -273,7 +277,6 @@ module Garage {
                         cancelId: 0,
                     });
             }
-
 
             /**
              * ロック解除失敗のダイアログを表示
@@ -411,30 +414,58 @@ module Garage {
                 app.exit(0);
             }
 
+            /**
+             * 初起動時やアップデート時のみ同期が必要なファイルを同期する
+             * @return {CDP.IPromise<void>} ファイルコピー
+             */
+            private syncFilesWhenUpdated(): CDP.IPromise<void> {
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
+                setTimeout(() => {
+                    this.syncCommonImages();
+                    this.copyDefaultRemoteImages(() => {
+                            df.resolve();
+                        });
+                });
+
+                return promise;
+            }
+
             private syncWithHUIS(callback?: Function) {
                 if (!HUIS_ROOT_PATH) {
                     console.warn("HUIS may not be connected.");
                     return;
                 }
-                let needSync: boolean = false; // [TODO]デバッグ用に強制 sync
 
                 try {
-                    // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
-                    if (huisFiles.init(HUIS_FILES_ROOT)) {
-                        // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
-                        Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
-                            // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
-                            this.doSync(true, callback);
+                    let versionManager: Util.VersionManager = new Util.VersionManager();
+                    if (versionManager.isInstalledNewly() || versionManager.isUpdated()) {
+                        this.syncFilesWhenUpdated().then(() => {
+                            this._syncWithHuis(callback);
                         });
                     } else {
-                        // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
-                        this.doSync(true, callback);
+                        this._syncWithHuis(callback);
                     }
                 } catch (err) {
                     console.error(err);
                     console.error("error occurred in syncWithHUIS");
                 }
             };
+
+            private _syncWithHuis(callback?: Function) {
+                // 既に PC 側に有効な HUIS ファイルが同期済みかチェック
+                if (huisFiles.init(HUIS_FILES_ROOT)) {
+                    // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
+                    Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
+                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
+                        this.doSync(true, callback);
+                    });
+                } else {
+                    // PC 側に HUIS ファイルが保存されていない場合は HUIS -> PC で同期を行う
+                    this.doSync(true, callback);
+                }
+            }
 
             private doSync(direction: Boolean, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
@@ -452,12 +483,12 @@ module Garage {
                         // 同期後に改めて、HUIS ファイルの parse を行う
                         huisFiles.init(HUIS_FILES_ROOT);
                         console.log("Complete!!!");
-
-                        this.syncCommonImages(callback);
+                        if (callback != null) {
+                            callback();
+                        }
                     }
                 });
             };
-
 
             private showDialogNotConnectWithHuis(err) {
                 // エラーダイアログの表示
@@ -471,12 +502,8 @@ module Garage {
 
                 app.exit(0);
             }
-
-
-
         }
 
         var View = new Splash();
-
     }
 }
