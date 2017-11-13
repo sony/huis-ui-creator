@@ -564,7 +564,7 @@ module Garage {
 
                 /**
                  * TODO: make public
-                 * メソッド。
+                 * src で指定されたディレクトリの targetFiles を dst で指定された先にコピーするメソッド
                  * @param {string} srcRootDir コピー元のディレクトリパス
                  * @param {string} dstRootDir コピー先のディレクトリパス
                  * @param {string[]} targetFiles コピー対象のファイル
