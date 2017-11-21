@@ -78,6 +78,12 @@ module Garage {
                 }
 
                 this.renderRemoteIdOf(order, this.getRemoteIdFromPullDownOf(order));
+
+                //jQueryのスタイルをあてる。
+                let $targetSignalContainer = this.getSignalContainerElementOf(order);
+                $targetSignalContainer.i18n();
+                $targetSignalContainer.find('.custom-select').trigger('create');
+
                 this.renderPagesOf(order, this.getModel().getDefaultStateId(), ConstValue.NO_PAGE_SELECT_NUM);
                 this.refreshPageSelect(order);
                 this.updateModel();
