@@ -599,7 +599,6 @@ module Garage {
                         $remoteContainer.find("select").prepend(noneOption);
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
-
                 }
             }
 
@@ -868,7 +867,6 @@ module Garage {
                 } else {
                     return false;
                 }
-
             }
 
             /**
@@ -904,7 +902,6 @@ module Garage {
                     console.warn(FUNCTION_NAME + "order is invalid");
                     return;
                 }
-
 
                 let remoteId: string = this.getRemoteIdFromPullDownOf(order);
                 if (remoteId == null) {
@@ -1055,7 +1052,6 @@ module Garage {
                     } else {
                         self.prop('disabled', true);
                     }
-
                 });
             }
 
@@ -1161,7 +1157,6 @@ module Garage {
             protected animateAddButton(order: number, duration: number, callback?: Function) {
                 let FUNCTINO_NAME = TAG + "animateAddButton : ";
 
-
                 if (!Util.JQueryUtils.isValidValue(order)) {
                     console.warn(FUNCTINO_NAME + "order is invalid");
                     return;
@@ -1182,7 +1177,6 @@ module Garage {
                 this.setAnimationDuration($target, duration / 1000);
                 $target.removeClass("before-add-animation");
 
-
                 setTimeout(
                     () => {
                         $target.find(".delete-signal-area").removeClass("show");
@@ -1198,7 +1192,6 @@ module Garage {
                         if (callback) {
                             callback();
                         }
-
                     }
                     , duration
                 );
@@ -1234,7 +1227,6 @@ module Garage {
 
                         //境界線を非表示
                         $orderOneSignalContainer.find(".separate-line").css("opacity", "0");
-
                     }
                 }
 
@@ -1253,7 +1245,6 @@ module Garage {
                     if (callback) {
                         callback();
                     }
-
                 }, duration);
             }
 
@@ -1562,7 +1553,6 @@ module Garage {
                 let templateActionPulldown: CDP.Tools.JST = CDP.Tools.Template.getJST(ConstValue.TEMPLATE_ACTION_PULLDOWN, this._getTemplateFilePath());
                 this.$el.find(ConstValue.ACTION_PULLDOWN_DOM_ID).append(templateActionPulldown(inputDate));
             }
-
         }
     }
 }
