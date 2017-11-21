@@ -354,7 +354,6 @@ module Garage {
                     return;
                 }
 
-
                 $page.addClass("selected");
                 $face.siblings('.face-selector').children('.face-page-selector').addClass('selected');
 
@@ -367,8 +366,6 @@ module Garage {
                 });
             }
 
-
-
             /**
              * スクロール位置を選択されたリモコンページに合わせる
              *
@@ -379,7 +376,6 @@ module Garage {
                 this.setVerticalScrollPosition($faceListContainer);
                 this.setHorizontalScrollPosition($faceContainer);
             }
-
 
             /**
              * 横スクロール位置を選択されたリモコンページに合わせる

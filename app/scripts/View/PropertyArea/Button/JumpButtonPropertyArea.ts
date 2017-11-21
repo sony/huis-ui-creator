@@ -112,9 +112,6 @@ module Garage {
                 this.showSelectRemotePageDialog();
             }
 
-
-
-
             /**
              * 保持しているモデルの内容で詳細エリアを描画する
              */
@@ -142,9 +139,6 @@ module Garage {
 
                 return this;
             }
-
-
-
 
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// private method
@@ -192,7 +186,6 @@ module Garage {
                 }
             }
 
-
             /**
              * ページジャンプ先を選択するためのリモコンページ選択ダイアログを表示する
              */
@@ -206,7 +199,6 @@ module Garage {
                     this.updateJumpSettings(result);
                 });
             }
-
 
             /**
              * ページジャンプ設定とその表示を更新する
