@@ -600,6 +600,8 @@ module Garage {
                         this.setRemoteIdPullDownOf(order, "none", unknownRcId);
                     }
                 }
+
+                this.triggerCreateRemoteSelect(order);
             }
 
 
@@ -783,10 +785,8 @@ module Garage {
                         functions = $.extend(true, [], [functionName]);
                     }
                 } else {
-
                     //ここでshallow copyしてしまうと、モデルの中の情報まで更新されてしまう。
                     functions = $.extend(true, [], this.getFunctionsOf(order));
-
                 }
 
                 if (functions != null && functions.length != 0) {
@@ -822,6 +822,9 @@ module Garage {
                         $functionlContainer.find("select").prepend(noneOption);
                         this.setFunctionNamePullDownOf(order, "none");
                     }
+
+                    //jQueryのスタイルをあてる。
+                    $target.find('.custom-select').trigger('create');
                 }
             }
 
