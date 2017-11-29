@@ -21,13 +21,14 @@ module Garage {
 
         namespace ConstValue {
             export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = Util.PathManager.join(GARAGE_FILES_ROOT, "last_notified_version.txt");
+            export const LAST_NOTIFIED_BZ_VERSION_TEXT_PATH: string = Util.PathManager.join(GARAGE_FILES_ROOT, "last_notified_bz_version.txt");
         }
 
         export class VersionManager {
 
             private hasLastNotifiedVersionFile(): boolean {
                 try {
-                    fs.statSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH);
+                    fs.statSync(VersionManager.getLastNotifiedVersionVersionFilePath());
                     return true;
                 } catch (err) {
                     return false;
@@ -35,12 +36,13 @@ module Garage {
             }
 
             public getLastNotifiedVersion(): Model.Version.AppVersionString {
-                if (fs.existsSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
-                    return new Model.Version.AppVersionString(fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString());
+                const file_path: string = VersionManager.getLastNotifiedVersionVersionFilePath();
+                if (fs.existsSync(file_path)) {
+                    return new Model.Version.AppVersionString(fs.readFileSync(file_path).toString());
                 }
 
                 // first launch after installation
-                console.warn(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
+                console.warn(file_path + " is not exist.");
                 return new Model.Version.AppVersionString("0.0.0");
             }
 
@@ -66,11 +68,17 @@ module Garage {
 
             public updateLastNotifiedVersionFile() {
                 fs.outputFile(
-                    ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH,
+                    VersionManager.getLastNotifiedVersionVersionFilePath(),
                     APP_VERSION,
                     function (err) {
                         console.log(err);
                     });
+            }
+
+            public static getLastNotifiedVersionVersionFilePath(): string {
+                return Util.MiscUtil.isBz()
+                    ? ConstValue.LAST_NOTIFIED_BZ_VERSION_TEXT_PATH
+                    : ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH;
             }
         }
     }
