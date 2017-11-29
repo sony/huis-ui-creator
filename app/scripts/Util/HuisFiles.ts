@@ -1764,6 +1764,7 @@ module Garage {
                 var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category, plainFace.color);
 
                 let heightSum: number = 0;
+                let pageIndex = 0;
 
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
@@ -1771,8 +1772,10 @@ module Garage {
                     var iModule: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (iModule) {
                         heightSum += iModule.area.h;
-                        let pageIndex = Math.floor((heightSum - 1) / HUIS_FACE_PAGE_HEIGHT);
-
+                        if (heightSum > HUIS_FACE_PAGE_HEIGHT) {
+                            pageIndex++;
+                            heightSum = iModule.area.h;
+                        }
                         let module = new Model.Module();
                         module.setInfoFromIModule(iModule, remoteId, pageIndex, moduleName);
                         face.modules.push(module);
