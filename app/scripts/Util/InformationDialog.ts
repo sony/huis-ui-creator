@@ -22,7 +22,6 @@ module Garage {
         var TAG: string = "[Garage.Util.InformationDialog]";
 
         namespace ConstValue {
-            export const LAST_NOTIFIED_VERSION_TEXT_PATH: string = Util.PathManager.join(GARAGE_FILES_ROOT, "last_notified_version.txt");
             export const FILE_NAME_DATE: string = "date.txt";
             export const FILE_NAME_IMAGE: string = "image.png";
             export const FILE_NAME_NOTE: string = "note.txt";
@@ -43,34 +42,21 @@ module Garage {
 		 */
         export class InformationDialog {
 
-            private lastNotifiedVersion_: Model.VersionString;
+            private lastNotifiedVersion_: Model.Version.AppVersionString;
 
             private _readLastNotifiedVersion() {
                 let FUNCTION_NAME: string = TAG + " : _readLastNotifiedVersion : ";
+                let versionManager: Util.VersionManager = new Util.VersionManager();
 
-                if (fs.existsSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH)) {
-                    this.lastNotifiedVersion_ = new Model.VersionString(fs.readFileSync(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH).toString());
-                } else {
-                    // first launch after installation
-                    console.warn(FUNCTION_NAME + ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH + " is not exist.");
-                    this.lastNotifiedVersion_ = new Model.VersionString("0.0.0");
-                }
+                this.lastNotifiedVersion_ = versionManager.getLastNotifiedVersion();
             }
 
             /**
              * ui-creatorアップデート後の初回起動時かどうかの判定を行う関数
              */
             private shouldNotify() {
-                let FUNCTION_NAME: string = TAG + " : shouldNotify : ";
-
-                let currentVersion = new Model.VersionString(APP_VERSION);
-
-                try {
-                    return currentVersion.isNewerThan(this.lastNotifiedVersion_);
-
-                } catch (err) {
-                    console.error(FUNCTION_NAME + err);
-                }
+                let versionManager: Util.VersionManager = new Util.VersionManager();
+                return versionManager.isUpdated();
             }
 
             private createInfoListFromVersionDir(versionDirFullPath: string): InformationList[] {
@@ -140,7 +126,7 @@ module Garage {
 
                     var contentsDirs: string[] = fs.readdirSync(pathToNotes); // noteの情報が入っているディレクトリのパス群
                     contentsDirs = contentsDirs.filter((path) => {
-                        let infoVersionString = new Model.VersionString(path);
+                        let infoVersionString = new Model.Version.AppVersionString(path);
                         return infoVersionString.isNewerThan(this.lastNotifiedVersion_);
                     });
 
@@ -160,8 +146,8 @@ module Garage {
                     dialog.show();
 
                     //お知らせダイアログを出すか否か判定するファイルを書き出す。
-                    fs.outputFile(ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH, APP_VERSION, function (err) { console.log(err); });
-
+                    let versionManager: Util.VersionManager = new Util.VersionManager();
+                    versionManager.updateLastNotifiedVersionFile();
                 } catch (err) {
                     console.error(FUNCTION_NAME + "information dialog の表示に失敗しました。" + err);
                 }

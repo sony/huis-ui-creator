@@ -428,6 +428,9 @@ module Garage {
                     if (this.remoteIdToDelete) {
 
                         let remoteId = $face.data("remoteid");
+                        if (isFinite(remoteId)) {
+                            remoteId = remoteId.toString(10);
+                        }
 
                         // 対象がフルカスタムリモコンのときのみ表示
                         // 編集画面へ移動機能をコンテキストメニューに表示

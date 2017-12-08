@@ -31,9 +31,13 @@
 /// <reference path="../Util/ZipManager.ts" />
 /// <reference path="../Util/StorageLock.ts" />
 /// <reference path="../Model/OffscreenEditor.ts" />
-/// <reference path="../Model/VersionString.ts" />
 /// <reference path="../Model/Module.ts" />
-/// <reference path="../Model/SharedInfo.ts" />
+/// <reference path="../Model/File/PhnConfig.ts" />
+/// <reference path="../Model/File/SharedInfo.ts" />
+/// <reference path="../Model/Version/VersionString.ts" />
+/// <reference path="../Model/Version/AppVersionString.ts" />
+/// <reference path="../Model/Version/HuisVersionString.ts" />
+/// <reference path="../Model/Version/ModuleVersionString.ts" />
 /// <reference path="../Util/ExportManager.ts" />
 /// <reference path="../Util/ImportManager.ts" />
 /// <reference path="../Util/InformationDialog.ts" />
@@ -75,6 +79,12 @@ interface IArea {
      * 縦の大きさ
      */
     h: number;
+}
+
+interface IAppInfo {
+    system: {
+        next_remote_id_: string;
+    }
 }
 
 interface ISharedInfo {
@@ -496,10 +506,6 @@ declare module Garage {
      * face のページの縦サイズ
      */
     var HUIS_FACE_PAGE_HEIGHT: number;
-    /**
-     * HUIS が扱える face の最大数
-     */
-    var MAX_HUIS_FILES: number;
     /**
      * ローカル上の HUIS UI CREATOR のファイルの置き場所 (%appdata%/Garage/)
      */
