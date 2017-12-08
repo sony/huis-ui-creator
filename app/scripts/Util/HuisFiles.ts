@@ -60,7 +60,7 @@ module Garage {
 
             private huisFilesRoot_: string;
             private phnConfig_: IPhnConfig;
-            private remoteList_: IRemoteId[];
+            private remoteList_: Model.RemoteIdList;
             private remoteInfos_: IRemoteInfo[];
             private commonRemoteInfo_: IRemoteInfo; //! Common (Label や Image 追加用のもの)
             private watingResizeImages_: IWaitingRisizeImage[];//export時、余計な画像を書き出さないために必要
@@ -78,7 +78,6 @@ module Garage {
                 }
                 this.huisFilesRoot_ = undefined;
                 this.phnConfig_ = undefined;
-                this.remoteList_ = [];
                 this.remoteInfos_ = [];
                 this.commonRemoteInfo_ = null;
                 this.watingResizeImages_ = [];
@@ -91,7 +90,7 @@ module Garage {
              * @return {boolean} true: 成功 / false: 失敗
              */
             init(huisFilesRoot: string): boolean {
-                this.remoteList_ = [];
+                this.remoteList_ = new Model.RemoteIdList();
                 this.remoteInfos_ = [];
                 this.watingResizeImages_ = [];
 
@@ -118,34 +117,34 @@ module Garage {
                 this.remoteInfos_ = remoteInfos;
 
                 // Common のリモコンを読み込む
-                if (!this.commonRemoteInfo_) {
-                    console.log("setting commonRemoteInfo_");
-                    let remoteId = "common";
-
-                    let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
-                    //ビジネス仕向けか否かで、表示するCommonアイテムを変える。
-                    if (Util.MiscUtil.isBz()) {
-                        facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common_bz.face"));
-                    }
-
-                    console.log("facePath=" + facePath);
-
-                    //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
-                    let rootDirectory = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
-                    console.log("rootDirectory=" + rootDirectory);
-
-                    let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
-                    this.commonRemoteInfo_ = {
-                        remoteId: remoteId,
-                        face: commonFace,
-                    };
-                }
+                this.loadCommonFace();
 
                 this.phnConfig_ = PhnConfigFile.loadFromFile(this.huisFilesRoot_);
 
                 return true;
             }
 
+            private loadCommonFace() {
+                if (this.commonRemoteInfo_) {
+                    return;
+                }
+                console.log("setting commonRemoteInfo_");
+                let remoteId = "common";
+
+                let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/common.face"));
+
+                console.log("facePath=" + facePath);
+
+                //// file:/// スキームがついていると fs モジュールが正常に動作しないため、file:/// がついていたら外す
+                let rootDirectory = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces"));
+                console.log("rootDirectory=" + rootDirectory);
+
+                let commonFace = this._parseFace(facePath, remoteId, rootDirectory);
+                this.commonRemoteInfo_ = {
+                    remoteId: remoteId,
+                    face: commonFace,
+                };
+            }
 
             /*
              * watingResizeImages_を初期化する。
@@ -1046,7 +1045,7 @@ module Garage {
              */
             canCreateNewRemote(): number {
                 //現在の face の個数が MAX_HUIS_FILES 未満であるかどうかで判定する。
-                if (this.remoteList_.length >= MAX_HUIS_FILES) {
+                if (this.remoteList_.length >= Model.ConstValue.MAX_REMOTE_NUM) {
                     return -1;
                 }
 
@@ -1253,62 +1252,8 @@ module Garage {
              * @return {string} 作成された remoteId。失敗した場合は null。
              */
             createNewRemoteId(): string {
-                // remoteId リストをソート
-                var sortedRemoteId: IRemoteId[] = $.extend(true, [], this.remoteList_)
-                    .sort(function (val1: IRemoteId, val2: IRemoteId) {
-                        return parseInt(val1.remote_id, 10) - parseInt(val2.remote_id, 10);
-                    });
-
-                var newRemoteId = -1;
-                // remoteId リストに remoteId がひとつしかない場合
-                if (sortedRemoteId.length === 1) {
-                    let remoteId = parseInt(sortedRemoteId[0].remote_id, 10);
-                    // 0 であれば新しい remoteId は 1 に。
-                    // それ以外なら remoteId は 0 に。
-                    if (0 === remoteId) {
-                        newRemoteId = 1;
-                    } else {
-                        newRemoteId = 0;
-                    }
-                } else if (sortedRemoteId.length > 1) {
-                    // 新しい remoteId として使える数字を探す
-                    let l = sortedRemoteId.length;
-                    for (let i = 0; i < l - 1; i++) {
-                        let remoteId1 = parseInt(sortedRemoteId[i].remote_id, 10);
-                        // remoteList の先頭が 0000 より大きかったら、新しい remoteId を 0 とする
-                        if (i === 0 && 0 !== remoteId1) {
-                            newRemoteId = 0;
-                            break;
-                        }
-                        // 現在の index の remoteId と 次の index の remoteId との差が 2 以上なら、
-                        // 現在の index の remoteId + 1 を新しい remoteId とする
-                        let remoteId2 = parseInt(sortedRemoteId[i + 1].remote_id, 10);
-                        if (2 <= remoteId2 - remoteId1) {
-                            newRemoteId = remoteId1 + 1;
-                            break;
-                        }
-                    }
-                    // 適切な remoteId が見つからず。remoteList の終端に達したら、
-                    // リストの最後の remoteId + 1 を新しい remoteId とする
-                    if (newRemoteId < 0) {
-                        newRemoteId = parseInt(sortedRemoteId[l - 1].remote_id, 10) + 1;
-                    }
-                } else if (sortedRemoteId.length <= 0) {
-                    newRemoteId = 0;
-                }
-
-                if (0 <= newRemoteId) {
-                    // 4 桁の 0 パディングで返却
-                    let newRemoteIdStr = ("000" + newRemoteId).slice(-4);
-                    // remoteId リストに追加。HUISの表示都合でリスト末尾に追加(push)→先頭に追加(unshift)に変更('16/7/1)
-                    this.remoteList_.unshift({
-                        remote_id: newRemoteIdStr
-                    });
-
-                    return newRemoteIdStr;
-                } else {
-                    return null;
-                }
+                let newRemoteId: Model.RemoteId = this.remoteList_.createNewRemoteId();
+                return newRemoteId.remote_id;
             }
 
             /**
@@ -1318,16 +1263,7 @@ module Garage {
              * @param remoteId {string} 削除するリモコンの remoteId
              */
             removeFace(remoteId: string): void {
-                var remoteListCount = this.remoteList_.length;
-                // 該当する remoteId をもつものを取り除く
-                var removedRemoteList = this.remoteList_.filter((remote) => {
-                    return remote.remote_id !== remoteId;
-                });
-                var removedRemoteListCount = removedRemoteList.length;
-                if (removedRemoteListCount < remoteListCount) {
-                    // remoteList の更新
-                    this.remoteList_ = removedRemoteList;
-                }
+                this.remoteList_.removeById(new Model.RemoteId(remoteId));
             }
 
             /**
@@ -1415,12 +1351,12 @@ module Garage {
                     // 含まれていない場合はリストに追加する。
                     // 含まれているかどうかのチェックは、filter メソッドで追加しようとする remoteId である配列を抽出し、
                     // その配列の length が 1以上であるかで行う。
-                    var count = this.remoteList_.filter((val: IRemoteId) => {
+                    var count = this.remoteList_.filter((val: Model.RemoteId) => {
                         return val.remote_id === remoteId;
                     }).length;
 
                     if (count <= 0) {
-                        this.remoteList_.push({ remote_id: remoteId });
+                        this.remoteList_.push(new Model.RemoteId(remoteId));
                     }
 
                     try {
@@ -1634,7 +1570,7 @@ module Garage {
             /**
              * getter
              */
-            get remoteList(): IRemoteId[] {
+            get remoteList(): Model.RemoteIdList {
                 return this.remoteList_;
             }
 
@@ -1674,7 +1610,7 @@ module Garage {
             /**
              * remotelist.json から remoteList を取得する
              */
-            private _loadRemoteList(): IRemoteId[] {
+            private _loadRemoteList(): Model.RemoteIdList {
                 var remoteListIniPath = path.resolve(path.join(this.huisFilesRoot_, "remotelist.ini"));
                 if (!fs.existsSync(remoteListIniPath)) {
                     console.error(TAGS.HuisFiles + "_loadRemoteList() remotelist.ini is not found.");
@@ -1709,16 +1645,16 @@ module Garage {
                     return aNum - bNum;
                 });
 
-                var remoteList: IRemoteId[] = [];
+                var remoteList: Model.RemoteIdList = new Model.RemoteIdList();
                 // prop の数字が小さい順に remoteList に格納
                 for (let i = 0, l = sortedGeneralProps.length; i < l; i++) {
-                    let value = general[sortedGeneralProps[i]];
+                    let value: string = general[sortedGeneralProps[i]];
                     // "end" と遭遇したら終了
                     if (value === "end") {
                         break;
                     }
 
-                    remoteList.push({ remote_id: value });
+                    remoteList.push(new Model.RemoteId(value));
                 }
 
                 return remoteList;
@@ -1828,6 +1764,7 @@ module Garage {
                 var face: Model.Face = new Model.Face(remoteId, plainFace.name, plainFace.category, plainFace.color);
 
                 let heightSum: number = 0;
+                let pageIndex = 0;
 
                 // モジュール名に対応する .module ファイルから、モジュールの実体を引く
                 for (var i = 0, l = plainFace.modules.length; i < l; i++) {
@@ -1835,8 +1772,10 @@ module Garage {
                     var iModule: IModule = this._parseModule(moduleName, remoteId, rootDirectory);
                     if (iModule) {
                         heightSum += iModule.area.h;
-                        let pageIndex = Math.floor((heightSum - 1) / HUIS_FACE_PAGE_HEIGHT);
-
+                        if (heightSum > HUIS_FACE_PAGE_HEIGHT) {
+                            pageIndex++;
+                            heightSum = iModule.area.h;
+                        }
                         let module = new Model.Module();
                         module.setInfoFromIModule(iModule, remoteId, pageIndex, moduleName);
                         face.modules.push(module);

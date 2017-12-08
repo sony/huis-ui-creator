@@ -250,9 +250,7 @@ module Garage {
             * @param {VersionString} version2 比較対象のバージョン情報2
             * @return {VersionString} より新しい方のバージョン情報
             */
-            private getLaterVersionOf(version1: Model.VersionString, version2: Model.VersionString): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getLaterVersion : ";
-
+            private getLaterVersionOf(version1: Model.Version.ModuleVersionString, version2: Model.Version.ModuleVersionString): Model.Version.ModuleVersionString {
                 // 片方がNULLの場合、　もう片方を返す。
                 if (version1 == null) {
                     return version2;
@@ -268,10 +266,8 @@ module Garage {
              * モジュール内に含まれるItemの最も新しいバージョン情報を返す
              * @return {string} 最も新しいバージョン
              */
-            private getLatestVersionOf(): Model.VersionString {
-                let FUNCTION_NAME: string = TAG + " : getLatestVersionOf : ";
-
-                let latestVersion: Model.VersionString = null;
+            private getLatestVersionOf(): Model.Version.ModuleVersionString {
+                let latestVersion: Model.Version.ModuleVersionString = null;
 
                 let items: Model.Item[] = [];
                 items = items.concat(this.button);
@@ -280,7 +276,7 @@ module Garage {
 
                 for (let item of items) {
                     if (item.version != null) {
-                        let itemVersion = new VersionString(item.version);
+                        let itemVersion = new Model.Version.ModuleVersionString(item.version);
                         latestVersion = this.getLaterVersionOf(latestVersion, itemVersion);
                     }
                 }
@@ -295,7 +291,7 @@ module Garage {
             public getModuleVersion(): string {
                 let FUNCTION_NAME: string = TAG + " : getModuleVersion : ";
 
-                let latestVersion: Model.VersionString = this.getLatestVersionOf();
+                let latestVersion: Model.Version.ModuleVersionString = this.getLatestVersionOf();
 
                 if (latestVersion != null) {
                     let latestVersionString: string = latestVersion.getVersionString();
