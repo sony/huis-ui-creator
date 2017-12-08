@@ -58,7 +58,6 @@ module Garage {
 
         HUIS_FACE_PAGE_WIDTH = 480;
         HUIS_FACE_PAGE_HEIGHT = 812;
-        MAX_HUIS_FILES = 30;
         HUIS_VID = 0x054C;
         HUIS_PID = 0x0B94;
 
@@ -216,7 +215,7 @@ module Garage {
             imageType: "image/png"
         };
 
-        HELP_SITE_URL = "http://huis.jp/remote-controller/ui-creator/";
+        HELP_SITE_URL = "http://rd1.sony.net/help/remote/huis_ui_creator/ja/";
 
         //if (fs.existsSync("debug")) {
         //    DEBUG_MODE = true;
@@ -286,14 +285,7 @@ module Garage {
     };
 
     var initPath = () => {
-
-        HUIS_RC_VERSION_REQUIRED = "4.1.1";
-        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.2.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
-        //BZ版と通常版で、必要バージョンを分ける。
-        if (Util.MiscUtil.isBz()) {
-            HUIS_RC_VERSION_REQUIRED = "8.0.0";
-            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "8.0.0";
-        }
+        initializeRequiredVersion();
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         if (Util.MiscUtil.isWindows()) {
@@ -327,60 +319,81 @@ module Garage {
 
     }
 
+    var initializeRequiredVersion = ()  => {
+        // TODO: 変数の公開範囲が広すぎる。
+        //BZ版と通常版で、必要バージョンを分ける。
+        if (!Util.MiscUtil.isBz()) {
+            HUIS_RC_VERSION_REQUIRED = "4.2.3";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.3.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
+        } else {
+            HUIS_RC_VERSION_REQUIRED = "A.0.0";
+            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "A.0.0";
+        }
+    }
+
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
         HUIS_ROOT_PATH = null;
         while (!HUIS_ROOT_PATH) {
-            if (Util.MiscUtil.isWindows()) {
-                HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            } else if (Util.MiscUtil.isDarwin()) {
-                HUIS_ROOT_PATH = "/Volumes/HUIS-100RC";
-            } else {
-                console.error("Error: unsupported platform");
+            HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+            if (!HUIS_ROOT_PATH) {
+                // HUISデバイスが接続されていない
+                showConnectSuggetDialog();
+                continue;
             }
 
-            if (HUIS_ROOT_PATH) { // HUISデバイスが接続されている
-                let dirs = null;
-                while (dirs == null) {
-                    try {
-                        dirs = fs.readdirSync(HUIS_ROOT_PATH); //HUIS_ROOT_PATHの読み込みにトライ
-                    } catch (e) { // 「パソコンと接続」が押されておらずディレクトリが読めなかった {
-                        console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
-                        let response = electronDialog.showMessageBox(
-                            {
-                                type: "info",
-                                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
-                                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                                title: PRODUCT_NAME,
-                                cancelId: 0,
-                            });
-
-                        if (response !== 0) {
-                            app.exit(0);
-                        }
-                    }
-                }
-                isHUISConnected = true; // HUISが接続されている
-
-                callback(); // 次の処理へ
-
-            } else {
-                // HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
-                let response = electronDialog.showMessageBox(
-                    {
-                        type: "info",
-                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
-                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                        title: PRODUCT_NAME,
-                        cancelId: 0,
-                    });
-
-                if (response !== 0) {
-                    app.exit(0);
-                }
-            }
+            updateHuisConnectionSatus();
+            callback(); // 次の処理へ
         }
     };
+
+    /**
+     * HUISの接続状況を更新する
+     */
+    function updateHuisConnectionSatus() {
+        while (true) {
+            if (fs.existsSync(HUIS_ROOT_PATH)) {
+                break;
+            }
+            console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
+
+            let response: number = showPressButtonToConnectSuggetDialog();
+            const retryResponse: number = 0;
+            if (response !== retryResponse) {
+                app.exit(0);
+            }
+        }
+        isHUISConnected = true; // HUISが接続されている
+    }
+
+    function showPressButtonToConnectSuggetDialog(): number {
+        return electronDialog.showMessageBox(
+            {
+                type: "info",
+                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
+                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                title: PRODUCT_NAME,
+                cancelId: 0,
+            });
+    }
+
+    /**
+     * HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
+     */
+    function showConnectSuggetDialog() {
+        let response = electronDialog.showMessageBox(
+            {
+                type: "info",
+                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
+                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                title: PRODUCT_NAME,
+                cancelId: 0,
+            });
+
+        if (response !== 0) {
+            app.exit(0);
+        }
+    }
 
     setup(() => {
         requirejs(["cdp.framework.jqm"], () => {

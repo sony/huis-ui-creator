@@ -347,27 +347,34 @@ module Garage {
                     return;
                 }
 
-                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + this.selectedSettings.remote_id + '"]');
-                let $page = $face.find('.face-page[data-page-index="' + this.selectedSettings.scene_no + '"]');
+                const remote_id: string = this.selectedSettings.remote_id;
+                let $face = $('#remotelist-dialog-area .face-container[data-remoteid="' + remote_id + '"]');
+                const scene_index: number = this.selectedSettings.scene_no;
+                let $page = $face.find('.face-page[data-page-index="' + scene_index + '"]');
 
                 if ($page.length != 1) {
                     return;
                 }
 
-
                 $page.addClass("selected");
-                $face.siblings('.face-selector').children('.face-page-selector').addClass('selected');
+                let $selector: JQuery = $face.siblings('.face-selector').children('.face-page-selector')
+                $selector.addClass('selected');
 
                 let $list = $('#remotelist-dialog-area #face-list-container');
                 this.setScrollPosition($list, $face);
 
                 // 選択中リモコンページ枠の位置を補正するためにスクロールイベントを呼ぶ
                 setTimeout(() => {
+                    // TODO: set position by html and css
                     $face.scroll();
-                });
+
+                    // adjust position
+                    let face = huisFiles.getFace(remote_id);
+                    let total = face.getTotalPageNum();
+                    let position = (total == scene_index + 1) ? 173 : 0;
+                    $selector.css('top', position);
+                })
             }
-
-
 
             /**
              * スクロール位置を選択されたリモコンページに合わせる
@@ -379,7 +386,6 @@ module Garage {
                 this.setVerticalScrollPosition($faceListContainer);
                 this.setHorizontalScrollPosition($faceContainer);
             }
-
 
             /**
              * 横スクロール位置を選択されたリモコンページに合わせる
