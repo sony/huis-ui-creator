@@ -399,7 +399,7 @@ module Garage {
 
             /**
              * ボタンに状態を追加する
-             * 
+             *
              * @param state {IState} 追加する状態
              */
             addState(state: IState) {
@@ -425,28 +425,6 @@ module Garage {
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_LEFT_VALUE) ||
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_DOWN_VALUE);
-            }
-
-            /**
-             * コピー元の画像ディレクトリーが存在していたら、
-             * state.image に指定されている画像を module ディレクトリーにコピーする。
-             */
-            private _copyImageFile(images: Model.ImageItem[]): void {
-                if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
-                    return;
-                }
-
-                images.forEach((image: Model.ImageItem) => {
-                    let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
-                    let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
-                    if (!fs.existsSync(resolvedCopySrcImagePath)) {
-                        return;
-                    }
-                    // 画像ファイルをコピー
-                    if (!fs.existsSync(resolvedPath)) {
-                        fs.copySync(resolvedCopySrcImagePath, resolvedPath);
-                    }
-                });
             }
 
             /**
@@ -525,6 +503,27 @@ module Garage {
                 return false;
             }
 
+            /**
+             * コピー元の画像ディレクトリーが存在していたら、
+             * state.image に指定されている画像を module ディレクトリーにコピーする。
+             */
+            private _copyImageFile(images: Model.ImageItem[]): void {
+                if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
+                    return;
+                }
+
+                images.forEach((image: Model.ImageItem) => {
+                    let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
+                    let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
+                    if (!fs.existsSync(resolvedCopySrcImagePath)) {
+                        return;
+                    }
+                    // 画像ファイルをコピー
+                    if (!fs.existsSync(resolvedPath)) {
+                        fs.copySync(resolvedCopySrcImagePath, resolvedPath);
+                    }
+                });
+            }
         }
     }
 }

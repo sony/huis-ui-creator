@@ -249,11 +249,6 @@ module Garage {
                 this.renderFunctionsOf(order);
                 this.updateModel(this.getModel().getDefaultStateId());
 
-                //jQueryのスタイルをあてる。
-                let $targetSignalContainer = this.getSignalContainerElementOf(order);
-                $targetSignalContainer.i18n();
-                $targetSignalContainer.find('.custom-select').trigger('create');
-
                 //noneのoptionをもっていたとき,noneの選択肢を消す。
                 if ($target.find(".default-value").length != 0) {
                     this.renderSignals();
