@@ -20,6 +20,12 @@ module Garage {
     export module Util {
 
         export namespace Dirs {
+            // HUIS Files
+            export const GARAGE_FILE_ROOT_DIR: string = "Garage";
+            export const COSUMER_HUIS_DIR: string = "HuisFiles";
+            export const BZ_HUIS_DIR: string = "HuisFilesBz";
+
+            // color
             export const BLACK_DIR: string = "black";
             export const WHITE_DIR: string = "white";
         }
@@ -63,6 +69,18 @@ module Garage {
                 return PathManager.resolve(PathManager.join(...argPaths));
             }
 
+            static getGarageFilesRoot(): string {
+                return Util.PathManager.join(app.getPath("appData"), Dirs.GARAGE_FILE_ROOT_DIR);
+            }
+
+            static getHuisFilesDir(): string {
+                const dest_dir: string = Util.MiscUtil.isBz() ? Dirs.BZ_HUIS_DIR : Dirs.COSUMER_HUIS_DIR;
+                return Util.PathManager.join(GARAGE_FILES_ROOT, dest_dir);
+            }
+
+            static getRemoteImagesRootDir(): string {
+                return Util.PathManager.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME);
+            }
         }
     }
 }
