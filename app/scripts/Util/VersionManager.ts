@@ -83,6 +83,7 @@ module Garage {
 
            /**
              * UI CREATOR の要求する、HUIS本体の最低限のバージョン。
+             * 基本的に、前回アップデートのバージョン + 0.0.1
              */
             public static getHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
@@ -93,6 +94,7 @@ module Garage {
 
             /**
              * ユーザーに表示する、HUIS本体の要求バージョン。評価用に実際にチェックする値とは別に値を用意。
+             * 基本的に、前回アップデートのバージョン + 0.1.0
              */
             public static getDisplayHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
