@@ -90,6 +90,16 @@ module Garage {
                 }
                 return "4.2.3";
             }
+
+            /**
+             * ユーザーに表示する、HUIS本体の要求バージョン。評価用に実際にチェックする値とは別に値を用意。
+             */
+            public static getDisplayHuisRcRequiredVersion(): string {
+                if (Util.MiscUtil.isBz()) {
+                    return "A.0.0";
+                }
+                return "4.3.0";
+            }
         }
     }
 }
