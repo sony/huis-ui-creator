@@ -305,7 +305,7 @@ module Garage {
                     return;
                 }
 
-                let requiredRcVersion = new Model.Version.HuisVersionString(HUIS_RC_VERSION_REQUIRED)
+                let requiredRcVersion = new Model.Version.HuisVersionString(Util.VersionManager.getHuisRcRequiredVersion());
                 if (rcVersion.isOlderThan(requiredRcVersion)) {
                     this.showHuisRcVersionIsOldDialog();
                     return;
