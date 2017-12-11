@@ -733,14 +733,6 @@ declare module Garage {
      */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
     /**
-     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
-     */
-    var HUIS_RC_VERSION_REQUIRED: string;
-    /**
-     * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
-     */
-    var HUIS_RC_VERSION_REQUIRED_FOR_DIALOG: string;
-    /**
      * インポート・エクスポート する際に仕様する拡張子
      */
     var EXTENSION_HUIS_IMPORT_EXPORT_REMOTE: string;

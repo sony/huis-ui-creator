@@ -285,8 +285,6 @@ module Garage {
     };
 
     var initPath = () => {
-        initializeRequiredVersion();
-
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
         GARAGE_FILES_ROOT = Util.PathManager.getGarageFilesRoot();
         if (!fs.existsSync(GARAGE_FILES_ROOT)) {
@@ -306,18 +304,6 @@ module Garage {
             fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
         }
 
-    }
-
-    var initializeRequiredVersion = ()  => {
-        // TODO: 変数の公開範囲が広すぎる。
-        //BZ版と通常版で、必要バージョンを分ける。
-        if (!Util.MiscUtil.isBz()) {
-            HUIS_RC_VERSION_REQUIRED = "4.2.3";
-            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "4.3.0";//この値がダイアログで表示される。評価用に実際にチェックする値とは別に値を用意。
-        } else {
-            HUIS_RC_VERSION_REQUIRED = "A.0.0";
-            HUIS_RC_VERSION_REQUIRED_FOR_DIALOG = "A.0.0";
-        }
     }
 
     // 起動時のチェック

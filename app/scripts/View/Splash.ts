@@ -305,7 +305,7 @@ module Garage {
                     return;
                 }
 
-                let requiredRcVersion = new Model.Version.HuisVersionString(HUIS_RC_VERSION_REQUIRED)
+                let requiredRcVersion = new Model.Version.HuisVersionString(Util.VersionManager.getHuisRcRequiredVersion());
                 if (rcVersion.isOlderThan(requiredRcVersion)) {
                     this.showHuisRcVersionIsOldDialog();
                     return;
@@ -406,7 +406,7 @@ module Garage {
                         type: "error",
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_1") +
                         $.i18n.t("hp.update.rc.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_2") +
-                        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
+                        Util.VersionManager.getDisplayHuisRcRequiredVersion() + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
                     }
