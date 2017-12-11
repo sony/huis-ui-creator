@@ -288,31 +288,20 @@ module Garage {
         initializeRequiredVersion();
 
         // Garage のファイルのルートパス設定 (%APPDATA%\Garage)
-        if (Util.MiscUtil.isWindows()) {
-            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
-        } else if (Util.MiscUtil.isDarwin()) {
-            GARAGE_FILES_ROOT = Util.PathManager.join(app.getPath("appData"), "Garage");
-        } else {
-            console.error("Error: unsupported platform");
-        }
+        GARAGE_FILES_ROOT = Util.PathManager.getGarageFilesRoot();
         if (!fs.existsSync(GARAGE_FILES_ROOT)) {
             fs.mkdirSync(GARAGE_FILES_ROOT);
         }
 
         // HUIS File のルートパス設定 (%APPDATA%\Garage\HuisFiles). BZ版の場合、(%APPDATA%\Garage\HuisFilesBz)
-        HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFiles");
-        if (Util.MiscUtil.isBz()) {
-            HUIS_FILES_ROOT = Util.PathManager.join(GARAGE_FILES_ROOT, "HuisFilesBz");
-        }
-
+        HUIS_FILES_ROOT = Util.PathManager.getHuisFilesDir();
         if (!fs.existsSync(HUIS_FILES_ROOT)) {
             fs.mkdirSync(HUIS_FILES_ROOT);
         }
 
-
         // HUIS File ディレクトリーにある画像ディレクトリーのパス設定 (%APPDATA%\Garage\HuisFiles\remoteimages)
         REMOTE_IMAGES_DIRECTORY_NAME = "remoteimages";
-        HUIS_REMOTEIMAGES_ROOT = Util.PathManager.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME);
+        HUIS_REMOTEIMAGES_ROOT = Util.PathManager.getRemoteImagesRootDir();
         if (!fs.existsSync(HUIS_REMOTEIMAGES_ROOT)) {
             fs.mkdirSync(HUIS_REMOTEIMAGES_ROOT);
         }
