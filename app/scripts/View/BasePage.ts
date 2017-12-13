@@ -142,6 +142,8 @@ module Garage {
                     return false;
                 }, false);
 
+                let connectionChecker: Util.HuisConnectionChecker = new Util.HuisConnectionChecker();
+                connectionChecker.monitorHuisConnection();
             }
 
             events(): any {  // 共通のイベント
