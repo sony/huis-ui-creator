@@ -52,6 +52,8 @@
             "STR_DIALOG_MESSAGE_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nもう一度お試しください。",
             "STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT": "HUIS REMOTE CONTROLLER画面上の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS": "HUIS REMOTE CONTROLLERとUSBケーブルで接続し、その画面上の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_DISCONNECT_WITH_HUIS": "HUIS REMOTE CONTROLLERとの接続が解除されました。編集を続ける場合は、HUIS REMOTE CONTROLLERとUSBケーブルで接続し、その画面上の「パソコンと接続」ボタンをタップしてください。",
+            "STR_DIALOG_MESSAGE_DISCONNECT_WITH_HUIS_DISCARD_EDIT": "HUIS REMOTE CONTROLLERとの接続が解除されました。編集中の情報は破棄されます。再度編集をする場合は、HUIS REMOTE CONTROLLERとUSBケーブルで接続し、その画面上の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_ALERT_END_GARAGE_IN_SYNC": "同期中にアプリを終了すると、データが破損する恐れがあります。\n本当に終了しますか？",
             "STR_DIALOG_INIT_SYNC_WITH_HUIS_ERROR": "同期に失敗しました。\nHUIS REMOTE CONTROLLERがパソコンに接続されていない可能性があります。\nパソコンにUSBケーブルで接続した後、HUIS REMOTE CONTROLLER画面の「パソコンと接続」ボタンをタップしてください。",
             "STR_DIALOG_MESSAGE_WARN_NONSAVE": "リモコンの変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。",

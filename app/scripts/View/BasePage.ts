@@ -142,8 +142,18 @@ module Garage {
                     return false;
                 }, false);
 
-                let connectionChecker: Util.HuisConnectionChecker = new Util.HuisConnectionChecker();
-                connectionChecker.monitorHuisConnection();
+                Util.HuisConnectionChecker.getInstance().setUnconnectDialogType(this.getUncoonectDialogType());
+            }
+
+            /**
+             * get type of UnconnectedDialog.
+             * Basicalluy, show NON_EDIT type dialog.
+             * If Page edits remote, override this method and change type.
+             *
+             * @return {View.Dialog.UnconnectedDialogType} type of dialog when huis dicsonnected
+             */
+            protected getUncoonectDialogType(): View.Dialog.UnconnectedDialogType {
+                return View.Dialog.UnconnectedDialogType.NON_EDIT;
             }
 
             events(): any {  // 共通のイベント

@@ -308,8 +308,10 @@ module Garage {
 
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
-        let connectionChecker: Util.HuisConnectionChecker = new Util.HuisConnectionChecker();
+        let connectionChecker: Util.HuisConnectionChecker = Util.HuisConnectionChecker.getInstance();
+        connectionChecker.setUnconnectDialogType(View.Dialog.UnconnectedDialogType.BOOT);
         connectionChecker.checkConnection(callback);
+        connectionChecker.monitorHuisConnection();
     };
 
     setup(() => {

@@ -19,10 +19,32 @@
 module Garage {
     export module Util {
         import Framework = CDP.Framework;
+
         export class HuisConnectionChecker {
+            static instance: HuisConnectionChecker = null;
+
+            private _type: View.Dialog.UnconnectedDialogType;
+
+            static getInstance(): HuisConnectionChecker {
+                if (HuisConnectionChecker.instance == null) {
+                    HuisConnectionChecker.instance = new HuisConnectionChecker(View.Dialog.UnconnectedDialogType.BOOT);
+                }
+                return HuisConnectionChecker.instance;
+            }
+
+            /**
+             * call from only HuisConnectionChecker.getInstance()
+             */
+            constructor(type: View.Dialog.UnconnectedDialogType) {
+                this._type = type;
+            }
+
+            public setUnconnectDialogType(type: View.Dialog.UnconnectedDialogType) {
+                this._type = type;
+            }
 
             public monitorHuisConnection() {
-                (function loop() {
+                let loop: Function = () => {
                     setTimeout(loop, 5000);
                     if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
                         let messageBoxOptions = {
@@ -42,16 +64,16 @@ module Garage {
                             );
                         } else {
                             isHUISConnected = false;
-                            let connectionChecker: Util.HuisConnectionChecker = new Util.HuisConnectionChecker();
-                            connectionChecker.checkConnection(() => {
+                            this.checkConnection(() => {
                                 Framework.Router.navigate("#splash");
                             });
                         }
                     }
-                })();
+                };
+                loop();
             }
 
-            public checkConnection(callback?: Function) {
+            public checkConnection(callback: Function) {
                 HUIS_ROOT_PATH = null;
                 while (!HUIS_ROOT_PATH) {
                     HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
@@ -69,7 +91,7 @@ module Garage {
               * HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
               */
             private showConnectSuggetDialog() {
-                let dialog: View.Dialog.UnconnectedDialog = new View.Dialog.UnconnectedDialog();
+                let dialog: View.Dialog.UnconnectedDialog = new View.Dialog.UnconnectedDialog(this._type);
                 dialog.show();
             }
 
