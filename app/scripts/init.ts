@@ -311,6 +311,11 @@ module Garage {
         let connectionChecker: Util.HuisConnectionChecker = Util.HuisConnectionChecker.getInstance();
         connectionChecker.setUnconnectDialogType(View.Dialog.UnconnectedDialogType.BOOT);
         connectionChecker.checkConnection(callback);
+        if (Util.MiscUtil.isDarwin() && Util.HuisDev.isConnectedToHuis()) {
+            // in Mac, call callback without UnconnectedDialog
+            // Because of not calling callback in HuisConnectionCheker
+            callback();
+        }
         connectionChecker.monitorHuisConnection();
     };
 

@@ -133,9 +133,8 @@ module Garage {
                 $("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
             }
 
-
             private _closeWarning() {
-                if (isHUISConnected) { // HUISが抜かれてない場合
+                if (Util.HuisDev.isConnectedToHuis()) { // HUISが抜かれてない場合
                     console.log("Do not close");
                     let response = electronDialog.showMessageBox(
                         {
@@ -150,7 +149,6 @@ module Garage {
                         return null;
                     }
                 }
-                isHUISConnected = false;
             }
 
             private _pageLayout() {

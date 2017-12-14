@@ -19,6 +19,8 @@
 module Garage {
     export module View {
         export module Dialog {
+            import Framework = CDP.Framework;
+
             export enum UnconnectedDialogType {
                 BOOT,
                 NON_EDIT,
@@ -46,22 +48,43 @@ module Garage {
 
                 public show() {
                     let text: string = this.getText(this._type);
-                    let response = electronDialog.showMessageBox(
-                        {
-                            type: "info",
-                            message: $.i18n.t(text),
-                            buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                            title: PRODUCT_NAME,
-                            cancelId: 0,
-                        });
-
-                    if (response !== 0) {
-                        this._declined();
+                    let option = {
+                        type: "info",
+                        message: $.i18n.t(text),
+                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
+                        title: PRODUCT_NAME,
+                        cancelId: 0,
+                    };
+                    let response = null;
+                    if (Util.MiscUtil.isDarwin()) {
+                        response = electronDialog.showDisconnectedMessageBoxForDarwin(option,
+                                                                                      (res) => {
+				                                                          this._responseAction(res);
+                                                                                      });
+		    } else {
+                        response = electronDialog.showMessageBox(option);
+                        this._responseAction(response);
                     }
                 }
 
-                private _declined() {
+                private _responseAction(response: number) {
+                    if (response == 0) {
+                        if (Util.MiscUtil.isDarwin()) {
+                            this._retry();
+                        }
+                        return;
+                    }
                     app.exit(0);
+                }
+
+                private _retry() {
+                    HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+                    if (!HUIS_ROOT_PATH) {
+                        let dialog: View.Dialog.UnconnectedDialog = new View.Dialog.UnconnectedDialog(this._type);
+                        dialog.show();
+                    } else {
+                        Framework.Router.navigate("#splash");
+                    }
                 }
             }
         }

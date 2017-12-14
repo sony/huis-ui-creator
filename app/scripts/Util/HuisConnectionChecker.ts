@@ -46,28 +46,10 @@ module Garage {
             public monitorHuisConnection() {
                 let loop: Function = () => {
                     setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
-                        let messageBoxOptions = {
-                            type: "error",
-                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
-                            buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                            title: PRODUCT_NAME,
-                        }
-
-                        if (Util.MiscUtil.isDarwin()) {
-                            electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
-                                (response) => {
-                                    console.log("DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
-                                    isHUISConnected = false;
-                                    app.quit();
-                                }
-                            );
-                        } else {
-                            isHUISConnected = false;
-                            this.checkConnection(() => {
-                                Framework.Router.navigate("#splash");
-                            });
-                        }
+                    if (!this._isConnectedToHuis()) {
+                        this.checkConnection(() => {
+                            Framework.Router.navigate("#splash");
+                        });
                     }
                 };
                 loop();
@@ -75,16 +57,27 @@ module Garage {
 
             public checkConnection(callback: Function) {
                 HUIS_ROOT_PATH = null;
-                while (!HUIS_ROOT_PATH) {
-                    HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-                    if (!HUIS_ROOT_PATH) {
-                        // HUISデバイスが接続されていない
-                        this.showConnectSuggetDialog();
-                        continue;
+                if (Util.MiscUtil.isDarwin()) {
+                    // in Mac, re-call dialog in UnconnectedDialog
+                    // Because of don't stop for dialog input
+                    this._updateConnection();
+                } else {
+                    while (!HUIS_ROOT_PATH) {
+                        this._updateConnection();
                     }
-                    this.updateHuisConnectionSatus();
+                }
+                if ((!Util.MiscUtil.isDarwin()) && this._isConnectedToHuis()) {
+                    // in Mac, go to splash by UnconnectedDialog
                     callback(); // 次の処理へ
                 }
+            }
+
+            private _updateConnection() {
+                HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
+                if (this._isConnectedToHuis()) {
+                    return;
+                }
+                this.showConnectSuggetDialog();
             }
 
             /**
@@ -95,34 +88,8 @@ module Garage {
                 dialog.show();
             }
 
-            /**
-              * HUISの接続状況を更新する
-              */
-            private updateHuisConnectionSatus() {
-                while (true) {
-                    if (fs.existsSync(HUIS_ROOT_PATH)) {
-                        break;
-                    }
-                    console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
-
-                    let response: number = this.showPressButtonToConnectSuggetDialog();
-                    const retryResponse: number = 0;
-                    if (response !== retryResponse) {
-                        app.exit(0);
-                    }
-                }
-                isHUISConnected = true; // HUISが接続されている
-            }
-
-            private showPressButtonToConnectSuggetDialog(): number {
-                return electronDialog.showMessageBox(
-                    {
-                        type: "info",
-                        message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
-                        buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                        title: PRODUCT_NAME,
-                        cancelId: 0,
-                    });
+            private _isConnectedToHuis(): boolean {
+                return fs.existsSync(HUIS_ROOT_PATH);
             }
         }
     }
