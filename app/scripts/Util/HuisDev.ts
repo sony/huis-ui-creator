@@ -850,11 +850,16 @@ module Garage {
                     }
                     return rootPath;
                 } else if (Util.MiscUtil.isDarwin()) {
-                    return "/Volumes/HUIS-100RC";
+                    const path: string = "/Volumes/HUIS-100RC";
+                    return fs.existsSync(path) ? path : null;
                 }
 
                 console.error("Error: unsupported platform");
                 return null;
+            }
+
+            export function isConnectedToHuis(): boolean {
+                return getHuisRootPath(HUIS_VID, HUIS_PID) !== null;
             }
         }
     }

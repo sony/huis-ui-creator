@@ -308,67 +308,16 @@ module Garage {
 
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
-        HUIS_ROOT_PATH = null;
-        while (!HUIS_ROOT_PATH) {
-            HUIS_ROOT_PATH = Util.HuisDev.getHuisRootPath(HUIS_VID, HUIS_PID);
-            if (!HUIS_ROOT_PATH) {
-                // HUISデバイスが接続されていない
-                showConnectSuggetDialog();
-                continue;
-            }
-
-            updateHuisConnectionSatus();
-            callback(); // 次の処理へ
+        let connectionChecker: Util.HuisConnectionChecker = Util.HuisConnectionChecker.getInstance();
+        connectionChecker.setUnconnectDialogType(View.Dialog.UnconnectedDialogType.BOOT);
+        connectionChecker.checkConnection(callback);
+        if (Util.MiscUtil.isDarwin() && Util.HuisDev.isConnectedToHuis()) {
+            // in Mac, call callback without UnconnectedDialog
+            // Because of not calling callback in HuisConnectionCheker
+            callback();
         }
+        connectionChecker.monitorHuisConnection();
     };
-
-    /**
-     * HUISの接続状況を更新する
-     */
-    function updateHuisConnectionSatus() {
-        while (true) {
-            if (fs.existsSync(HUIS_ROOT_PATH)) {
-                break;
-            }
-            console.error("HUIS must change the mode: HUIS_ROOT_PATH=" + HUIS_ROOT_PATH);
-
-            let response: number = showPressButtonToConnectSuggetDialog();
-            const retryResponse: number = 0;
-            if (response !== retryResponse) {
-                app.exit(0);
-            }
-        }
-        isHUISConnected = true; // HUISが接続されている
-    }
-
-    function showPressButtonToConnectSuggetDialog(): number {
-        return electronDialog.showMessageBox(
-            {
-                type: "info",
-                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_CHECK_CONNECT_WITH_HUIS_NOT_SELECT"),
-                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                title: PRODUCT_NAME,
-                cancelId: 0,
-            });
-    }
-
-    /**
-     * HUISデバイスが接続されていない場合は、接続を促すダイアログを出す
-     */
-    function showConnectSuggetDialog() {
-        let response = electronDialog.showMessageBox(
-            {
-                type: "info",
-                message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_NOT_CONNECT_WITH_HUIS"),
-                buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_RETRY"), $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
-                title: PRODUCT_NAME,
-                cancelId: 0,
-            });
-
-        if (response !== 0) {
-            app.exit(0);
-        }
-    }
 
     setup(() => {
         requirejs(["cdp.framework.jqm"], () => {

@@ -587,10 +587,6 @@ declare module Garage {
      */
     var DEBUG_MODE: Boolean;
     /**
-     * HUISが接続されているかどうかのフラグ
-     */
-    var isHUISConnected: Boolean;
-    /**
      * アプリの名称
      */
     var PRODUCT_NAME: string;

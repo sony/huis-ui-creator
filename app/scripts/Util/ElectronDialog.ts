@@ -175,6 +175,7 @@ module Garage {
                 // This method does NOT check enabled, because this method is called repeatedly when other dialog is displayed.
                 this._resetElectronDialog();
                 if (this._dialog) {
+                    this._enabled = true;
                     if (callback) {
                         return this._dialog.showMessageBox(Remote.getCurrentWindow(), options, callback);
                     } else {
@@ -182,6 +183,7 @@ module Garage {
                     }
                 }
             }
+
             /**
              * Electron のダイアログを使用するための初期設定
              */

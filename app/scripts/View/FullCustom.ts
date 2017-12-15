@@ -90,6 +90,15 @@ module Garage {
                 super("/templates/full-custom.html", "page-full-custom", { route: "full-custom" });
             }
 
+            /**
+             * override: BasePage
+             *
+             * @return {View.Dialog.UnconnectedDialogType} type of dialog when huis dicsonnected
+             */
+            protected getUncoonectDialogType(): View.Dialog.UnconnectedDialogType {
+                return Dialog.UnconnectedDialogType.EDIT;
+            }
+
             ///////////////////////////////////////////////////////////////////////
             // Override: UI.PageView
 
