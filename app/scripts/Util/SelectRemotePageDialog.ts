@@ -38,7 +38,6 @@ module Garage {
             /** face-list の scale */
             private faceListScale: number = 0.8;
 
-
             /**
              * コンストラクタ
              *
@@ -113,7 +112,6 @@ module Garage {
                 }
             }
 
-
             /**
              * 編集中リモコンデータを補正する。
              * ただし元のデータがnullだった場合はnullを返す。
@@ -135,7 +133,6 @@ module Garage {
 
                 return face;
             }
-
 
             /**
              * ダイアログを表示する
@@ -164,7 +161,6 @@ module Garage {
                 $dialog.find("#remotelist-button-cancel").click(this.onCancelClicked.bind(this));
             }
 
-
             /**
              * リモコン一覧の読み込み～描画を開始する
              */
@@ -185,7 +181,6 @@ module Garage {
                 this.faceContainerScale = JQueryUtils.getScale($('#remotelist-dialog-area .face-container'));
                 this.faceListScale = JQueryUtils.getScale($('#remotelist-dialog-area #face-list'));
             }
-
 
             /**
              * リモコン一覧を描画
@@ -256,9 +251,7 @@ module Garage {
                     // リモコン数０
                     // ★★★★TODO
                 }
-
             }
-
 
             /**
              * リモコンを描画
@@ -284,7 +277,6 @@ module Garage {
                 faceRenderer.render();
             }
 
-
             /**
              * リモコン一覧の幅を算出しDOMに設定する
              */
@@ -298,14 +290,12 @@ module Garage {
                 $faceList.width(listWidth);
             }
 
-
             /**
              * リモコン一覧読み込み中のスピナー表示を削除
              */
             private removeSpinner() {
                 $('#spinner-container').remove();
             }
-
 
             /**
              * 複数ページを持つリモコンのDOMにクラスを設定し、グラデーション表示用DOMを追加する
@@ -323,7 +313,6 @@ module Garage {
                 });
             }
 
-
             /**
              * グラデーション表示用DOMを追加する
              *
@@ -337,8 +326,6 @@ module Garage {
 
                 SelectRemotePageDialog.controlGradationAreaDisplay($faceContainer);
             }
-
-
 
             /**
              * 初期選択対象のリモコンページを選択状態にする
@@ -426,7 +413,6 @@ module Garage {
                 }
             }
 
-
             /**
              * 縦スクロール位置を選択されたリモコンページに合わせる
              *
@@ -447,7 +433,6 @@ module Garage {
                     $faceContainer.scrollTop(scrollTop);
                 }
             }
-
 
             /**
              * クリックされたリモコンページを選択状態にする
@@ -489,7 +474,6 @@ module Garage {
                 SelectRemotePageDialog.enableSubmitButton();
             }
 
-
             /**
              * クリックされたリモコンページのJQueryオブジェクトを取得
              *
@@ -519,7 +503,6 @@ module Garage {
                 }
             }
 
-
             /**
              * 選択中のリモコン情報表示を現在の状態に合わせて更新
              */
@@ -541,7 +524,6 @@ module Garage {
                     $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + (this.selectedSettings.scene_no + 1));
             }
 
-
             /**
              * OKボタンを有効化する
              */
@@ -551,7 +533,6 @@ module Garage {
                     $button.prop('disabled', false);
                 }
             }
-
 
             /**
              * リモコンページのJQueryオブジェクトからIJump設定を取得する
@@ -571,7 +552,6 @@ module Garage {
                 };
             }
 
-
             /**
              * face-containerスクロールイベント
              *
@@ -582,7 +562,6 @@ module Garage {
                 SelectRemotePageDialog.controlGradationAreaDisplay($faceContainer);
                 this.scrollSelectorArea($faceContainer);
             }
-
 
             /**
              * 対象のスクロール位置を検査しグラデーションの表示/非表示を切り替える
@@ -599,7 +578,6 @@ module Garage {
 
             }
 
-
             /**
              * 選択中リモコンページ枠表示エリアをスクロールに合わせて移動させる
              *
@@ -615,7 +593,6 @@ module Garage {
                 $selector.css('top', this.calcSelectorTop($faceContainer, $selectedPage));
             }
 
-
             /**
              * 選択中リモコンページ枠を表示するべき高さを算出する
              *
@@ -627,7 +604,6 @@ module Garage {
                 return ($facePage.position().top + JQueryUtils.getMarginTopPx($facePage) * (1 - this.faceContainerScale * this.faceListScale)) / this.faceListScale - $faceContainer.scrollTop() * this.faceContainerScale;
             }
 
-
             /**
              * ダイアログ全体のクリックイベント
              *
@@ -637,7 +613,6 @@ module Garage {
                 // ダイアログ内をクリックするだけで閉じてしまうのを防止
                 event.stopPropagation();
             }
-
 
             /**
              * OKボタンのクリックイベント
@@ -651,7 +626,6 @@ module Garage {
                     this.onSubmit(this.selectedSettings);
                 }
             }
-
 
             /**
              * Cancelボタンのクリックイベント
