@@ -14,9 +14,6 @@ module Garage {
             /** 表示するダイアログ */
             private dialog: CDP.UI.Dialog;
 
-            /** タイトル */
-            private title: string;
-
             /** 初期選択するリモコンページ設定 */
             private defaultJumpSettings: IJump;
 
@@ -46,7 +43,6 @@ module Garage {
              * @param tmpFace {Model.Face} 編集中のリモコン設定（編集中のリモコンも一覧表示する場合に使用）
              */
             constructor(title: string, defaultJumpSettings: IJump, tmpFace?: Model.Face) {
-                this.title = title;
                 this.defaultJumpSettings = defaultJumpSettings;
                 this.selectedSettings = this.correctJumpSetting(this.defaultJumpSettings);
 
