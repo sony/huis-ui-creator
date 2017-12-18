@@ -3,6 +3,9 @@
 module Garage {
     export module Util {
 
+        namespace ConstValue {
+            export const BOTTOM_PAGE_FRAME_DEFAULT_POSITION: number = 173;
+        }
 
         export class SelectRemotePageDialog {
 
@@ -371,9 +374,17 @@ module Garage {
                     // adjust position
                     let face = huisFiles.getFace(remote_id);
                     let total = face.getTotalPageNum();
-                    let position = (total == scene_index + 1) ? 173 : 0;
+                    let position = this._calcSelectedFramePosition(scene_index, total);
                     $selector.css('top', position);
                 })
+            }
+
+            private _calcSelectedFramePosition(scene_index: number, scene_num: number):number {
+                if (scene_num == 1) {
+                    return 0;
+                }
+
+                return (scene_num == scene_index + 1) ? ConstValue.BOTTOM_PAGE_FRAME_DEFAULT_POSITION : 0;
             }
 
             /**
