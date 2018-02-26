@@ -81,15 +81,15 @@ module Garage {
                     : ConstValue.LAST_NOTIFIED_VERSION_TEXT_PATH;
             }
 
-           /**
+            /**
              * UI CREATOR の要求する、HUIS本体の最低限のバージョン。
              * 基本的に、前回アップデートのバージョン + 0.0.1
              */
             public static getHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
-                    return "A.0.0";
+                    return "A.0.1";
                 }
-                return "4.2.3";
+                return "4.3.1";
             }
 
             /**
@@ -98,9 +98,9 @@ module Garage {
              */
             public static getDisplayHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
-                    return "A.0.0";
+                    return "A.1.0";
                 }
-                return "4.3.0";
+                return "4.4.0";
             }
         }
     }
