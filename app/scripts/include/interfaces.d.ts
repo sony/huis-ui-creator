@@ -587,10 +587,6 @@ declare module Garage {
      */
     var DEBUG_MODE: Boolean;
     /**
-     * HUISが接続されているかどうかのフラグ
-     */
-    var isHUISConnected: Boolean;
-    /**
      * アプリの名称
      */
     var PRODUCT_NAME: string;
@@ -732,14 +728,6 @@ declare module Garage {
      * ボタン追加時、削除・並び替えボタンを一時表示する期間[ms]
      */
     var DURATION_ANIMATION_SHOW_SIGNAL_CONTAINER_CONTROLL_BUTTONS: number;
-    /**
-     * インポートエクスポートがつかえるようになるHUIS本体のバージョン
-     */
-    var HUIS_RC_VERSION_REQUIRED: string;
-    /**
-     * インポートエクスポートがつかえるようになるHUIS本体のバージョン(エラーダイアログに表示する要。
-     */
-    var HUIS_RC_VERSION_REQUIRED_FOR_DIALOG: string;
     /**
      * インポート・エクスポート する際に仕様する拡張子
      */

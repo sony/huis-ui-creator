@@ -90,6 +90,15 @@ module Garage {
                 super("/templates/full-custom.html", "page-full-custom", { route: "full-custom" });
             }
 
+            /**
+             * override: BasePage
+             *
+             * @return {View.Dialog.UnconnectedDialogType} type of dialog when huis dicsonnected
+             */
+            protected getUncoonectDialogType(): View.Dialog.UnconnectedDialogType {
+                return Dialog.UnconnectedDialogType.EDIT;
+            }
+
             ///////////////////////////////////////////////////////////////////////
             // Override: UI.PageView
 
@@ -280,8 +289,7 @@ module Garage {
             }
 
             /*
-             * オプションメニューの「リモコンをエクスポート」を押したさいの処理
-
+             * オプションメニューの「リモコンをエクスポート」を押した際の処理
              */
             private _onCommandExportRemote(event: Event) {
                 //errorハンドリング
@@ -392,8 +400,6 @@ module Garage {
                 if (this != null) {
                     this._layoutFacesList();
                 }
-
-
             }
 
             private _createCanvas(face: Model.Face): FaceRenderer {
@@ -473,8 +479,8 @@ module Garage {
             }
 
             /*
-            * パレットエリアの初期選択リモコンを設定
-            */
+             * パレットエリアの初期選択リモコンを設定
+             */
             private selectFirstRemtoeInFaceList() {
                 let $faceItems = $(".face-item");
                 if (!$faceItems.hasClass("active")) {
@@ -554,10 +560,9 @@ module Garage {
                 }
             }
 
-
             /**
-           * 左スクロールボタンの非表示判定
-           */
+             * 左スクロールボタンの非表示判定
+             */
             private disableScrollLeftButton() {
                 // face list の左スクロールボタン
                 var faceListWidth = $("#face-item-list-container").width();
@@ -664,7 +669,6 @@ module Garage {
                 this.displayGradationInPalletArea(0, $facePallet.find("#face-pages-area"));
             }
 
-
             /**
              * PalletArea内のitemに、title要素を追加する。
              * 
@@ -677,7 +681,6 @@ module Garage {
                     $element.attr("title", STR_TOOLTIP_IN_PALLET);
                 });
             }
-
 
             /**
              * URL クエリーパラメーターを取得する
@@ -879,7 +882,6 @@ module Garage {
                 return false;
             }
 
-
             /**
              * パレットアイテムのダブルクリック検知用クリック数カウンタを初期化し、カウントを開始する。
              * @param target {JQuery} パレットアイテムのJQueryオブジェクト
@@ -989,8 +991,6 @@ module Garage {
 
                 return this.setItemOnCanvas(item, moduleOffsetY_pallet, position);
             }
-
-
 
             private setItemOnCanvas(item: Model.Item, moduleOffsetY_pallet, position?: IPosition): Model.Item {
                 item = item.clone();
@@ -1232,8 +1232,6 @@ module Garage {
                 }
             }
 
-
-
             private moveCurrentTargetDummy() {
                 if (!this.$currentTargetDummy_) return;
 
@@ -1249,8 +1247,6 @@ module Garage {
                     "border-color": this.$currentTarget_.css("border-color")
                 });
             }
-
-
 
             /**
              * フルカスタム編集画面での mouseup イベントのハンドリング
@@ -1292,7 +1288,6 @@ module Garage {
                     this.onPalletItemDblClick();
                     this.clearPalletItemClickCount(this);
                 }
-
             }
 
             private _moveItemGrid(ungriddedPosition: IPosition) {
@@ -1498,8 +1493,6 @@ module Garage {
                             ;
                     }
 
-
-
                     //グリッドがデフォルトの場合は、左右にBIAS_Xの利用不能エリアがある。
                     if (this.gridSize_ === DEFAULT_GRID) {
                         // グリッドスナップ用に調整
@@ -1551,7 +1544,6 @@ module Garage {
 
                 this._resizeItem(newArea, update);
             }
-
 
             /**
              * グリッドに沿うように座標を変換.
@@ -1733,7 +1725,6 @@ module Garage {
                 this.displayGradationInPalletArea(scrollTop, $target);
             }
 
-
             private displayGradationInPalletArea(scrollTop: number, $target: JQuery) {
 
                 //最上段の場合、グラデーションを非表示に。それ以外は表示
@@ -1830,9 +1821,6 @@ module Garage {
                     //tooltipを非表示にする。
                     this.disableButtonInfoTooltip();
                 }
-
-
-
             }
 
             //tooltipから離れたとき呼び出されるイベントハンドラ
@@ -1856,8 +1844,6 @@ module Garage {
 
                 $tooltip.addClass("disable");
             }
-
-
 
             /*
             * キャンバス内のボタンの情報表示用ToolTipを表示する。
@@ -1971,11 +1957,7 @@ module Garage {
                 //マイナスマージンを設定
                 let tooltipTopMargin: number = +($tooltip.css("margin-top").replace("px", ""));
                 $tooltip.offset({ left: $tooltip.offset().left, top: $tooltip.offset().top + tooltipTopMargin });
-
             }
-
-
-
 
             /*
             * ボタンのファンクションを取得
@@ -2014,7 +1996,6 @@ module Garage {
                     }
                 }
                 return fucntions;
-
             }
 
             /*
@@ -2057,7 +2038,6 @@ module Garage {
                 }
             }
 
-
             /**
             * ボタンの機器情報を取得。
             * ボタンに複数の機器情報が設定されていても、state、actionの最初に設定されているdeviceInfoを返す。
@@ -2095,7 +2075,6 @@ module Garage {
                     return;
                 }
             }
-
 
             /**
              * ジャンプボタンのツールチップに表示する文言を生成。
@@ -2144,7 +2123,6 @@ module Garage {
 
                 return faceLabel + $.i18n.t('dialog.label.STR_DIALOG_LABEL_SELECTED_PAGE') + pageLabel;
             }
-
 
             /*
             * リモコン名のテキストフィールドの値が変わったときに呼び出される
@@ -2283,8 +2261,6 @@ module Garage {
                 return result;
             }
 
-
-
             /*
              * エクスポート・編集終了時の警告ダイアログを表示などのエラー処理をする。
              * @param isForExport {boolean} エクスポート時に使う場合、true, なにも入力がない場合、false
@@ -2293,13 +2269,9 @@ module Garage {
             private _isErrorOccurBeforeSave(isForExport: boolean = false): boolean {
 
                 var options: Util.ElectronMessageBoxOptions = {
-
                 };
 
                 let faceName: string = $("#input-face-name").val();
-
-
-
 
                 //名前がない場合のエラー
                 if (!faceName) {
@@ -2317,7 +2289,6 @@ module Garage {
                     return true;
                 }
 
-
                 //ボタン重なり時のエラー
                 let overlapButtonError = this._overlapButtonsExist();
                 if (overlapButtonError) {
@@ -2329,14 +2300,12 @@ module Garage {
                     return true;
                 }
 
-
                 // Bluetoothデバイスが複数設定されている場合はエラー
                 let multipleBluetoothDevError = this._checkMultipleBluetoothDevicesExist(isForExport);
                 if (multipleBluetoothDevError) {
                     this._showSaveErrorDialog(multipleBluetoothDevError);
                     return true;
                 }
-
             }
 
             /**
@@ -2632,8 +2601,6 @@ module Garage {
                             }
                             break;
                     }
-
-
                 });
 
                 this._overlapButtonsExist();
@@ -2681,7 +2648,6 @@ module Garage {
                     case "text":
                     case "size":
                         {
-
                             let $labelElement = $targetStateElem.find(".state-label");
                             let label = targetState.label[0];
                             let text = (label && label.text) ? label.text : "";
@@ -2730,7 +2696,6 @@ module Garage {
                         break;
                 }
             }
-
 
             /**
              * 現在選択中のアイテムをアイテム用クリップボードに記憶する
@@ -2799,7 +2764,6 @@ module Garage {
                 this._updateItemElementsOnCanvas(updatedItem);
 
                 this._loseTarget();
-
             }
 
             /**
@@ -2877,8 +2841,6 @@ module Garage {
                 } else {
                     return;
                 }
-
-
             }
 
             private _getDraggingItemPosition(mousePosition: IPosition) {
@@ -3127,9 +3089,7 @@ module Garage {
                     return overlapButtons;
                 }
 
-
                 // 後で重なっていないボタンを通常色に戻すボタンを判定するため、重なっているボタンを格納。
-
                 for (let i = 0; i < buttonCount - 1; i++) {
                     if (ignoreCurrentTarget && buttons[i].cid == this.currentItem_.cid) {
                         continue;
@@ -3154,7 +3114,6 @@ module Garage {
                             }
                         }
 
-
                         // 両方のボタンが enabled 状態かつキャンバス内のときのみ判定
                         if (buttons[i].enabled && buttons[j].enabled &&
                             !this.isCompletelyOutOfCanvas(button1Area) && !this.isCompletelyOutOfCanvas(button2Area)) {
@@ -3169,7 +3128,6 @@ module Garage {
                 }
 
                 return overlapButtons;
-
             }
 
             /*
@@ -3205,11 +3163,7 @@ module Garage {
                 for (let j = 0; j < overlapButtons.length; j++) {
                     this.changeButtonFrameColorWarn(overlapButtons[j]);
                 }
-
             }
-
-
-
 
             /*
             * 重なりあったボタンの枠線を警告色に変える
@@ -3250,8 +3204,6 @@ module Garage {
                 }
             }
 
-
-
             /**
              * キャンバス内に重なり合っているボタンがないかをチェックする。
              * 
@@ -3276,8 +3228,6 @@ module Garage {
                     }
 
                     this.changeOverlapButtonsFrame(overlapButtons, buttons);
-
-
                 }
 
                 return result;
@@ -3726,7 +3676,6 @@ module Garage {
                 }
                 var result: string = urlFunctionString.substring(5, urlFunctionString.length - 2)//最初の5文字と　最後の２文字を取り除く。
                 return result;
-
             }
 
             /**
@@ -3808,7 +3757,6 @@ module Garage {
                     return "";
                 }
                 return moduleId;
-
             }
 
             /**
@@ -3897,7 +3845,6 @@ module Garage {
                     });
                 }
             }
-
 
             /**
              * このリモコンを削除する
@@ -4214,10 +4161,8 @@ module Garage {
             private _isTextFieldFocused(): boolean {
                 return $("input[type='text']").is(':focus');
             }
-
         }
 
         var View = new FullCustom();
-
     }
 }

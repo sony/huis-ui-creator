@@ -2762,6 +2762,7 @@
     <TypeScriptCompile Include="app\scripts\Model\OffscreenEditor.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ButtonDeviceInfoCache.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ElectronDialog.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\HuisConnectionChecker.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ImportManager.ts" />
@@ -2777,6 +2778,7 @@
     <TypeScriptCompile Include="app\scripts\Util\VersionManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
+    <TypeScriptCompile Include="app\scripts\View\Dialog\UnconnectedDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
