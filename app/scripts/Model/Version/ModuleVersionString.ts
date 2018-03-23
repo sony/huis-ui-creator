@@ -44,12 +44,7 @@ module Garage {
                         return null;
                     }
 
-                    if (this.build != null) {
-                        return this.major + "." + this.minor + "." + this.build;
-                    } else {
-                        return this.major + "." + this.minor;
-                    }
-
+                    return this.major + "." + this.minor;
                 }
             }
         }

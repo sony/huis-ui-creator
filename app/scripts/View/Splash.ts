@@ -51,31 +51,6 @@ module Garage {
             onPageShow(event: JQueryEventObject, data?: Framework.ShowEventData): void {
                 super.onPageShow(event, data);
                 this._initializeSplashView();
-                (function loop() {
-                    setTimeout(loop, 5000);
-                    if (!fs.existsSync(HUIS_ROOT_PATH) && isHUISConnected) {
-                        let messageBoxOptions = {
-                            type: "error",
-                            message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_ALERT_DISCONNECT"),
-                            buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
-                            title: PRODUCT_NAME,
-                        }
-
-                        if (Util.MiscUtil.isDarwin()) {
-                            electronDialog.showDisconnectedMessageBoxForDarwin(messageBoxOptions,
-                                (response) => {
-                                    console.log(TAG + " DIALOG_MESSAGE_ALERT_DISCONNECT closed, response: " + response);
-                                    isHUISConnected = false;
-                                    app.quit();
-                                }
-                            );
-                        } else {
-                            electronDialog.showMessageBox(messageBoxOptions);
-                            isHUISConnected = false;
-                            app.quit();
-                        }
-                    }
-                })();
 
                 //現状アプリのバージョン情報を代入。
                 let targetVersionFilePath = null;
@@ -158,9 +133,8 @@ module Garage {
                 $("#splash-message").find("p").html($.i18n.t("splash.STR_SPLASH_MESSAGE"));
             }
 
-
             private _closeWarning() {
-                if (isHUISConnected) { // HUISが抜かれてない場合
+                if (Util.HuisDev.isConnectedToHuis()) { // HUISが抜かれてない場合
                     console.log("Do not close");
                     let response = electronDialog.showMessageBox(
                         {
@@ -175,7 +149,6 @@ module Garage {
                         return null;
                     }
                 }
-                isHUISConnected = false;
             }
 
             private _pageLayout() {
@@ -305,7 +278,7 @@ module Garage {
                     return;
                 }
 
-                let requiredRcVersion = new Model.Version.HuisVersionString(HUIS_RC_VERSION_REQUIRED)
+                let requiredRcVersion = new Model.Version.HuisVersionString(Util.VersionManager.getHuisRcRequiredVersion());
                 if (rcVersion.isOlderThan(requiredRcVersion)) {
                     this.showHuisRcVersionIsOldDialog();
                     return;
@@ -406,7 +379,7 @@ module Garage {
                         type: "error",
                         message: $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_1") +
                         $.i18n.t("hp.update.rc.url") + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_2") +
-                        HUIS_RC_VERSION_REQUIRED_FOR_DIALOG + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
+                        Util.VersionManager.getDisplayHuisRcRequiredVersion() + $.i18n.t("dialog.message.STR_DIALOG_ERROR_HUIS_VERSION_IS_OLD_3"),
                         buttons: [$.i18n.t("dialog.button.STR_DIALOG_BUTTON_CLOSE_APP")],
                         title: PRODUCT_NAME,
                     }
@@ -458,7 +431,7 @@ module Garage {
                 if (huisFiles.init(HUIS_FILES_ROOT)) {
                     // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                     Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
-                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
+                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)
                         this.doSync(true, callback);
                     });
                 } else {

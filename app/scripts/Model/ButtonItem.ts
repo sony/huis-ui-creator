@@ -387,11 +387,26 @@ module Garage {
                 return button;
             }
 
-            destroy() {
+
+            // TODO: destroy and validate methods are copy-and-pasted, need review
+            // http://tnakamura.hatenablog.com/entry/2013/02/07/135119
+
+            /**
+             * destroy をオーバーライド。
+             * 本来ならサーバーと通信するがサンプルではデータを永続化しないため、
+             * destroy イベントだけ発生させる。
+             */
+            /*override*/ destroy() {
                 this.trigger("destroy", this);
             }
 
-            validate(attrs: any): string {
+            /**
+             * set メソッドに渡されたデータを検証する。
+             * 何か値を返すと検証エラー扱いになるので、
+             * 不正な値だったときはエラーメッセージなんかを返すといい。
+             */
+            /*override*/ validate(attrs: any): string {
+                // 検証には、underscore の便利メソッドを使っている。
                 if (_.isString(attrs.id) && _.isEmpty(attrs.id)) {
                     return "invalid id.";
                 }
@@ -399,7 +414,7 @@ module Garage {
 
             /**
              * ボタンに状態を追加する
-             *
+             * 
              * @param state {IState} 追加する状態
              */
             addState(state: IState) {
@@ -425,6 +440,28 @@ module Garage {
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_RIGHT_VALUE) ||
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_LEFT_VALUE) ||
                     this._isIncludeSpecificActionType(ACTION_INPUT_SWIPE_DOWN_VALUE);
+            }
+
+            /**
+             * コピー元の画像ディレクトリーが存在していたら、
+             * state.image に指定されている画像を module ディレクトリーにコピーする。
+             */
+            private _copyImageFile(images: Model.ImageItem[]): void {
+                if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
+                    return;
+                }
+
+                images.forEach((image: Model.ImageItem) => {
+                    let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
+                    let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
+                    if (!fs.existsSync(resolvedCopySrcImagePath)) {
+                        return;
+                    }
+                    // 画像ファイルをコピー
+                    if (!fs.existsSync(resolvedPath)) {
+                        fs.copySync(resolvedCopySrcImagePath, resolvedPath);
+                    }
+                });
             }
 
             /**
@@ -503,27 +540,6 @@ module Garage {
                 return false;
             }
 
-            /**
-             * コピー元の画像ディレクトリーが存在していたら、
-             * state.image に指定されている画像を module ディレクトリーにコピーする。
-             */
-            private _copyImageFile(images: Model.ImageItem[]): void {
-                if (!images || !this.resolvedImagePathDirectory_ || !this.resolvedCopySrcImagePathDirectory_) {
-                    return;
-                }
-
-                images.forEach((image: Model.ImageItem) => {
-                    let resolvedPath = path.resolve(this.resolvedImagePathDirectory_, image.path);
-                    let resolvedCopySrcImagePath = path.resolve(this.resolvedCopySrcImagePathDirectory_, image.path);
-                    if (!fs.existsSync(resolvedCopySrcImagePath)) {
-                        return;
-                    }
-                    // 画像ファイルをコピー
-                    if (!fs.existsSync(resolvedPath)) {
-                        fs.copySync(resolvedCopySrcImagePath, resolvedPath);
-                    }
-                });
-            }
         }
     }
 }
