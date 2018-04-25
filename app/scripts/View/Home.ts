@@ -116,9 +116,11 @@ module Garage {
 
                 //表示するメニューのJQuery要素
                 let $popup: JQuery = this.$page.find("#option-pulldown-menu-popup");
+
                 //ビジネス仕向けの場合、表示するメニューを出しわける
-                if (Util.MiscUtil.isBz()) {
-                    $popup = this.$page.find("#option-pulldown-menu-popup-bz");
+                if (!Util.MiscUtil.isBz()) {
+                    let bz_menu: JQuery = $popup.find("#command-set-properties");
+                    bz_menu.hide();
                 }
 
                 this.showOptionPullDownMenu($popup);
