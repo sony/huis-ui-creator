@@ -205,6 +205,7 @@
         "STR_OPTION_MENU_SET_PROPERTIES": "詳細設定",
         "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート",
+        "STR_OPTION_MENU_SETTING_SCREENSAVER":  "スクリーンセーバーの設定",
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
         "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
