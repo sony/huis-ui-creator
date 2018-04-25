@@ -241,8 +241,6 @@ module Garage {
                 $("#page-home").i18n();
             }
 
-
-
             private _renderFace($face: JQuery): void {
                 var remoteId = $face.attr("data-remoteId");
                 if (!remoteId) {
@@ -368,9 +366,6 @@ module Garage {
                 this.centeringTooltip($target);
             }
 
-
-
-
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
 
                 if (!noWarn) {
@@ -484,10 +479,7 @@ module Garage {
                                 this.exportRemote(face, masterFace); // true で警告なし
                             }
                         }));
-
-
                     }
-
                 }
 
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
@@ -506,7 +498,6 @@ module Garage {
             }
 
             private _pageLayout() {
-
                 var windowWidth = innerWidth;
                 var windowHeight = innerHeight;
 
@@ -534,7 +525,6 @@ module Garage {
                 });
                 $faceList.width(listWidth);
             }
-
         }
 
         var View = new Home();
