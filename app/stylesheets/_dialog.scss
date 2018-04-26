@@ -89,7 +89,6 @@ body {
         z-index: 3;
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
-
         #about-dialog-area {
             position: absolute;
             margin: auto;
@@ -99,7 +98,6 @@ body {
             right: 0;
             animation-name: popin;
             animation-duration: 350ms;
-
 
             .common-dialog {
                 height: 550px;
@@ -241,8 +239,6 @@ body {
         }
     }
 
-
-
     #information-dialog-area {
         -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
         box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
@@ -329,8 +325,6 @@ body {
         }
     }
 
-
-
     #remotelist-dialog-area {
         text-shadow: none;
         font-weight: normal;
@@ -380,7 +374,6 @@ body {
                 margin: 0 auto;
                 margin-top: $SIZE_SPLASH_MESSAGE_MARGIN_TOP;
             }
-
 
             #face-list-container {
                 overflow-x: overlay;
@@ -573,6 +566,7 @@ body {
             }
         }
     }
+
     // 詳細設定ダイアログ
     #dialog-config-screen {
         text-shadow: none;
