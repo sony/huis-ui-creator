@@ -2739,6 +2739,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\AppInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\IniFile.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\PhnConfig.ts" />
@@ -2755,7 +2756,6 @@
     <TypeScriptCompile Include="app\scripts\init.ts" />
     <TypeScriptCompile Include="app\scripts\Model\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Position.ts" />
-    <TypeScriptCompile Include="app\scripts\Model\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Version\AppVersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Version\HuisVersionString.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Version\VersionString.ts" />
@@ -2779,6 +2779,7 @@
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\UnconnectedDialog.ts" />
+    <TypeScriptCompile Include="app\scripts\View\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
     <TypeScriptCompile Include="app\scripts\View\FullCustomCommand.ts" />
     <TypeScriptCompile Include="app\scripts\View\Home.ts" />
@@ -2809,7 +2810,6 @@
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\Button\NormalButtonPropertyArea.ts" />
     <TypeScriptCompile Include="app\scripts\View\PropertyArea\PropertyAreaFactory.ts" />
     <TypeScriptCompile Include="app\scripts\View\Splash.ts" />
-    <TypeScriptCompile Include="app\scripts\View\VersionDialog.ts" />
     <TypeScriptCompile Include="tests\jasmine\Model.ButtonItem.ts" />
     <Content Include="tests\jasmine\Model.ButtonItem.js">
       <DependentUpon>Model.ButtonItem.ts</DependentUpon>
