@@ -108,7 +108,7 @@
             "STR_DIALOG_BUTTON_SAVE": "保存",
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
             "STR_DIALOG_BUTTON_DELETE": "削除",
-            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST": "変更する",
+            "STR_DIALOG_BUTTON_CHANGE": "変更する",
             "STR_DIALOG_BUTTON_STORAGE_UNLOCK": "解除",
             "STR_DIALOG_BUTTON_SET_DEFAULT": "デフォルトに戻す"
         },
