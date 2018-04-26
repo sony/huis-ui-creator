@@ -90,6 +90,7 @@ module Garage {
                 events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
                 events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
                 events["click #command-set-properties"] = "onOptionSetPropertiesClick";
+                events["click #command-setting-screensabver"] = "onOptionSetScreenSaverClick";
                 return events;
             }
 
@@ -143,6 +144,15 @@ module Garage {
                 conf.$el.i18n();
                 conf.updateHomeDestLabel();
                 return;
+            }
+
+            /**
+             * オプションの「スクリーンセーバーの設定」を押した際の処理
+             *
+             * @param event {Event} クリックイベント
+             */
+            private onOptionSetScreenSaverClick(event: Event) {
+                var screensaver_dialog: ScreensaverDialog = new ScreensaverDialog({ el: $('body') });
             }
 
             /*

@@ -40,6 +40,7 @@
     "dialog": {
         "title": {
             "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択",
+            "STR_DIALOG_TITLE_SCREENSAVER_SETTINGS": "スクリーンセーバーの設定",
             "STR_DIALOG_TITLE_SET_PROPERTIES": "詳細設定"
         },
         "message": {

@@ -25,6 +25,45 @@ body {
         background-color: $COLOR_DIALOG_MASK;
     }
 
+    .ui-btn {
+        font-family: $FONT_FAMILY_TEXT_BUTTON;
+        text-shadow: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        height: $SIZE_BUTTON_HEIGHT;
+        font-size: $FONT_SIZE_TEXT_BUTTON;
+        color: $COLOR_BUTTON_TEXT;
+        background-color: $COLOR_BUTTON_NORMAL;
+        box-shadow: none;
+        border-radius: 0;
+        width: 154px;
+        height: 32px;
+
+        &:hover {
+            text-shadow: none;
+            background-color: $COLOR_BUTTON_HOVER;
+            font-family: $FONT_FAMILY_TEXT_BUTTON;
+            color: $COLOR_BUTTON_TEXT;
+            border: none;
+        }
+
+        &:active {
+            text-shadow: none;
+            background-color: $COLOR_BUTTON_PRESED;
+            font-family: $FONT_FAMILY_TEXT_BUTTON;
+            color: $COLOR_BUTTON_TEXT;
+            box-shadow: none;
+            border: none;
+        }
+
+        &:focus {
+            text-shadow: none;
+            box-shadow: none;
+            border: none;
+        }
+    }
+
     .common-dialog {
         text-shadow: none;
         font-family: $FONT_WEIGHT_DIALOG_TEXT;
