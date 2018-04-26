@@ -2739,6 +2739,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Dialog\ScreensaverDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\AppInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\IniFile.ts" />
