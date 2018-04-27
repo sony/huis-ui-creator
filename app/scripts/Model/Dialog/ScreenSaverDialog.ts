@@ -22,14 +22,14 @@ module Garage {
         var TAG = "[Garage.Model.VersionDialog] ";
 
         export class ScreensaverDialog extends Backbone.Model {
-            private _image_path: string;
+            private _imagePath: string;
 
-            get image_path(): string {
-                return this._image_path;
+            get imagePath(): string {
+                return this._imagePath;
             }
 
-            set image_path(path: string) {
-                this._image_path = path;
+            set imagePath(path: string) {
+                this._imagePath = path;
             }
         }
     }
