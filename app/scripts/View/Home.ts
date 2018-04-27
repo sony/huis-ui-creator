@@ -152,7 +152,9 @@ module Garage {
              * @param event {Event} クリックイベント
              */
             private onOptionSetScreenSaverClick(event: Event) {
-                var screensaver_dialog: ScreensaverDialog = new ScreensaverDialog({ el: $('body') });
+                let screensaverDialogModel = new Model.ScreensaverDialog();
+                screensaverDialogModel.loadHuisDevData();
+                var screensaver_dialog: ScreensaverDialog = new ScreensaverDialog({ el: $('body'), model: screensaverDialogModel });
             }
 
             /*

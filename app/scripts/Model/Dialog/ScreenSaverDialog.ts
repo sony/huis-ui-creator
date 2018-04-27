@@ -31,6 +31,10 @@ module Garage {
             set imagePath(path: string) {
                 this._imagePath = path;
             }
+
+            loadHuisDevData(): void {
+                console.log("TODO: load screensaver setting");
+            }
         }
     }
 }
