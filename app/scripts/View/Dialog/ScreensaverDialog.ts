@@ -40,11 +40,8 @@ module Garage {
                 let templateFile = CDP.Framework.toUrl("/templates/dialogs.html");
                 let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
 
-                let text = "test";
-
                 let $dialog = $(jst({
-                    title: $.i18n.t("dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS"),
-                    message: text,
+                    title: $.i18n.t("dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS")
                 }));
 
 
