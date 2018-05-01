@@ -64,6 +64,11 @@ body {
         }
     }
 
+    .separator {
+        margin: 0 auto; //中央揃え
+        border-bottom: $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
+    }
+
     .submit-area {
         height: $SIZE_BUTTON_HEIGHT;
         padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
