@@ -64,6 +64,33 @@ body {
         }
     }
 
+     .submit-area {
+         height: $SIZE_BUTTON_HEIGHT;
+         padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
+         padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+         padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
+         display: flex;
+         justify-content: flex-end;
+
+         #remotelist-label-selected-conainer {
+             color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
+             font-size: $FONT_SIZE_DIALOG_SELECTED;
+             line-height: $SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
+             text-align: right;
+             margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
+         }
+
+         .ui-btn {
+             width: $SIZE_DIALOG_BUTTON_WIDTH;
+             font-weight: normal;
+             text-shadow: none;
+         }
+
+         #remotelist-button-ok {
+             margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
+         }
+     }
+
     .common-dialog {
         text-shadow: none;
         font-family: $FONT_WEIGHT_DIALOG_TEXT;
@@ -574,33 +601,6 @@ body {
                     background-color: $COLOR_HOME_REMOTE_BACKGROUND;
                     border: $SIZE_HOME_REMOTE_BORDER_THICKNESS solid $COLOR_HOME_REMOTE_BORDER;
                     cursor: pointer;
-                }
-            }
-
-            .submit-area {
-                height: $SIZE_BUTTON_HEIGHT;
-                padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
-                padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
-                padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
-                display: flex;
-                justify-content: flex-end;
-
-                #remotelist-label-selected-conainer {
-                    color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
-                    font-size: $FONT_SIZE_DIALOG_SELECTED;
-                    line-height: $SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
-                    text-align: right;
-                    margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
-                }
-
-                .ui-btn {
-                    width: $SIZE_DIALOG_BUTTON_WIDTH;
-                    font-weight: normal;
-                    text-shadow: none;
-                }
-
-                #remotelist-button-ok {
-                    margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
                 }
             }
         }
