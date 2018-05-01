@@ -37,17 +37,6 @@ module Garage {
             }
 
             render(): ScreensaverDialog {
-                /*
-                let templateFile = CDP.Framework.toUrl("/templates/dialogs.html");
-                let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
-
-                let $dialog = $(jst({
-                    title: $.i18n.t("app.name") + $.i18n.t("about.STR_ABOUT_TITLE"),
-                    message: "test",
-                }));
-                this.$el.append($dialog);
-                */
-
                 let templateFile = CDP.Framework.toUrl("/templates/dialogs.html");
                 let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
 
@@ -60,8 +49,6 @@ module Garage {
 
 
                 this.$el.append($dialog);
-
-                // this.$el.children('#about-dialog-back').trigger('create');
                 return this;
             }
 
