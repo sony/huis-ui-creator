@@ -19,15 +19,16 @@
 module Garage {
     export module View {
         export class ScreensaverDialog extends Backbone.View<Model.ScreensaverDialog> {
+
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
             }
 
             events(): any {
                 return {
-                    "click #dialog-about-button-ok": "saveClose",
-                    "click #dialog-about-button-cancel": "close",
-                    "click #dialog-config-button-change": "changeImage",
+                    "click #dialog-button-ok": "saveClose",
+                    "click #dialog-button-cancel": "close",
+                    "click #dialog-button-change": "changeImage",
                     "click #dialog-button-default": "setDefaultImage"
                 };
             }
@@ -43,7 +44,6 @@ module Garage {
                 let $dialog = $(jst({
                     title: $.i18n.t("dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS")
                 }));
-
 
                 this.$el.append($dialog);
                 return this;

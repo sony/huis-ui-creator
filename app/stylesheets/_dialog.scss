@@ -776,19 +776,10 @@ body {
         z-index: 3;
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
-        #about-dialog-area {
-            position: absolute;
-            margin: auto;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            animation-name: popin;
-            animation-duration: 350ms;
+        .dialog-area {
+            width: 600px;
+        }
 
-            .common-dialog {
-                height: 550px;
-            }
         }
     }
 }
