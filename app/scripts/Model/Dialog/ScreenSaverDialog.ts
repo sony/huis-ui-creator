@@ -19,19 +19,33 @@
 
 module Garage {
     export module Model {
-        var TAG = "[Garage.Model.VersionDialog] ";
+        export namespace ConstValue {
+            export const DEFAULT_IMAGE_PATH: string = "./app/res/images/default_screensaver.png";
+        }
 
         export class ScreensaverDialog extends Backbone.Model {
-            private _imagePath: string;
+            /**
+             * imagePath はデフォルト画像のパスを初期値として与えておく
+             * @param {any} attributes
+             * @param {any} options
+             */
+            constructor(attributes?: any, options?: any) {
+                super(attributes, options);
+                this.imagePath = Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
+            }
 
             get imagePath(): string {
-                return this._imagePath;
+                return this.get("imagePath");
             }
 
             set imagePath(path: string) {
-                this._imagePath = path;
+                // change イベント発火のため、attribute で管理する
+                this.set({ "imagePath": path });
             }
 
+            /**
+             * HUIS本体が持っている画像データの情報を取得する
+             */
             loadHuisDevData(): void {
                 console.log("TODO: load screensaver setting");
             }

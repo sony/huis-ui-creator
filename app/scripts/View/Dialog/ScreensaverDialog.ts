@@ -34,6 +34,7 @@ module Garage {
             }
 
             initialize() {
+                this.listenTo(this.model, "change:imagePath", this.updatePreview);
                 this.render();
             }
 
@@ -42,11 +43,20 @@ module Garage {
                 let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
 
                 let $dialog = $(jst({
-                    title: $.i18n.t("dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS")
+                    title: $.i18n.t("dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS"),
+                    imagePath: this.model.imagePath
                 }));
 
                 this.$el.append($dialog);
                 return this;
+            }
+
+            /**
+             * プレビュー画像を更新する
+             */
+            private updatePreview() {
+                let $image: JQuery = this.$el.find("#preview");
+                $image.attr("src", this.model.imagePath);
             }
 
             /**

@@ -779,7 +779,20 @@ body {
         .dialog-area {
             width: 600px;
         }
+        
+        .preview-area {
+            width: 270px;
+            height: 480px;
+            margin: 10px auto;
+            background-color: $COLOR_BLACK;
+        }
 
+        .preview {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
         }
     }
 }

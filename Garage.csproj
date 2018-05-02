@@ -185,6 +185,7 @@
     <Content Include="app\res\images\button_edit_text_hover.png" />
     <Content Include="app\res\images\button_edit_text_normal.png" />
     <Content Include="app\res\images\button_edit_text_pressed.png" />
+    <Content Include="app\res\images\default_screensaver.png" />
     <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
     <Content Include="app\res\images\icon_guide_arrow_gray.png" />
