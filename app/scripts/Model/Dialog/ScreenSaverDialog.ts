@@ -21,6 +21,10 @@ module Garage {
     export module Model {
         export namespace ConstValue {
             export const DEFAULT_IMAGE_PATH: string = "./app/res/images/default_screensaver.png";
+            export const SCREENSAVER_DIR_NAME: string = "screensaver";
+            export const SCREENSAVER_IMAGE_FILE_NAME_PREFIX: string = "SS";
+            export const SCREENSAVER_IMAGE_FILE_NAME_SUFFIX: string = ".png";
+            export const SCREENSAVER_IMAGE_FILE_NAME: string = SCREENSAVER_IMAGE_FILE_NAME_PREFIX + "0000" + SCREENSAVER_IMAGE_FILE_NAME_SUFFIX;
         }
 
         export class ScreensaverDialog extends Backbone.Model {
@@ -43,11 +47,32 @@ module Garage {
                 this.set({ "imagePath": path });
             }
 
+            private getDirPath(): string {
+                return Util.PathManager.getHuisFilesDir() + "/" + ConstValue.SCREENSAVER_DIR_NAME;
+            }
+
+            private getImagePath(): string {
+                return this.getDirPath() + "/" + ConstValue.SCREENSAVER_IMAGE_FILE_NAME;
+            }
+
+            private prepareDir() {
+                let dirPath = this.getDirPath();
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdir(dirPath);
+                }
+            }
+
             /**
              * HUIS本体が持っている画像データの情報を取得する
              */
             loadHuisDevData(): void {
-                console.log("TODO: load screensaver setting");
+                this.prepareDir();
+                let targetFilePath: string = this.getImagePath();
+                if (!fs.existsSync(targetFilePath)) {
+                    console.log("no screensaver image : " + targetFilePath);
+                    return;
+                }
+                this.imagePath = targetFilePath;
             }
         }
     }

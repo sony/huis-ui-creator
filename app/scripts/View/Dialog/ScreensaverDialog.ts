@@ -35,6 +35,7 @@ module Garage {
 
             initialize() {
                 this.listenTo(this.model, "change:imagePath", this.updatePreview);
+                this.model.loadHuisDevData();
                 this.render();
             }
 
