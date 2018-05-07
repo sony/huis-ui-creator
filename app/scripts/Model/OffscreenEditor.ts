@@ -87,7 +87,6 @@ module Garage {
              */
             public static editImage(imageSrc: string, params: IImageEditParams): IPromise<string>;
 
-            // public methods:
             public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
                 let FUNCTION_NAME = TAG + "editImage : ";
                 var df = $.Deferred();
