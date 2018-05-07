@@ -25,6 +25,15 @@ module Garage {
             export const SCREENSAVER_IMAGE_FILE_NAME_PREFIX: string = "SS";
             export const SCREENSAVER_IMAGE_FILE_NAME_SUFFIX: string = ".png";
             export const SCREENSAVER_IMAGE_FILE_NAME: string = SCREENSAVER_IMAGE_FILE_NAME_PREFIX + "0000" + SCREENSAVER_IMAGE_FILE_NAME_SUFFIX;
+
+            export const SCREENSAVER_WIDTH: number = 540;
+            export const SCREENSAVER_HEIGHT: number = 960;
+            export const SCREENSAVER_EDIT_IMAGE_PARAMS: IImageEditParams = {
+                resize: {
+                    width: SCREENSAVER_WIDTH,
+                    height: SCREENSAVER_HEIGHT
+                }
+            };
         }
 
         export class ScreensaverDialog extends Backbone.Model {
@@ -73,6 +82,30 @@ module Garage {
                     return;
                 }
                 this.imagePath = targetFilePath;
+            }
+
+            /**
+             * 設定された画像を保存する。
+             * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
+             */
+            saveImage() {
+                let imageFilePath: string = this.imagePath;
+                let outputImagePath = this.getImagePath();
+
+                Model.OffscreenEditor.editImage(imageFilePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
+                    .done((editedImage) => {
+                        editedImage.path;
+                    }).fail((err) => {
+                        console.error("editImage calling failed : err : " + err);
+                    });
+            }
+
+            static isScreenSaverImage(dstPath: string): boolean {
+                let regexp: RegExp = new RegExp(Model.ConstValue.SCREENSAVER_IMAGE_FILE_NAME);
+                if (dstPath.match(regexp)) {
+                    return true;
+                }
+                return false;
             }
         }
     }
