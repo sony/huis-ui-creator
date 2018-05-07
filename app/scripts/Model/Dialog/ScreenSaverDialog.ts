@@ -88,16 +88,25 @@ module Garage {
              * 設定された画像を保存する。
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
-            saveImage() {
+            saveImage(): CDP.IPromise<void> {
                 let imageFilePath: string = this.imagePath;
                 let outputImagePath = this.getImagePath();
 
+                let df = $.Deferred<void>();
+                let promise = CDP.makePromise(df);
+
                 Model.OffscreenEditor.editImage(imageFilePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
                     .done((editedImage) => {
-                        editedImage.path;
+                        let dstPath: string = HUIS_ROOT_PATH + "/" + ConstValue.SCREENSAVER_DIR_NAME;
+                        let syncTask = new Util.HuisDev.FileSyncTask();
+                        syncTask.exec(this.getDirPath(), dstPath, false, null, null, () => {
+                            df.resolve();
+                        });
                     }).fail((err) => {
                         console.error("editImage calling failed : err : " + err);
                     });
+
+                return promise;
             }
 
             static isScreenSaverImage(dstPath: string): boolean {
