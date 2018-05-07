@@ -84,6 +84,22 @@ module Garage {
                 this.imagePath = targetFilePath;
             }
 
+            private getDefaultImagePath(): string {
+                return Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
+            }
+
+            private isDefault(): boolean {
+                return this.imagePath == this.getDefaultImagePath();
+            }
+
+            /**
+             * デフォルトの画像を設定する
+             */
+            setDefault(): void {
+                this.imagePath = this.getDefaultImagePath();
+                fs.removeSync(this.getImagePath());
+            }
+
             /**
              * 設定された画像を保存する。
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
@@ -95,18 +111,29 @@ module Garage {
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
-                Model.OffscreenEditor.editImage(imageFilePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
-                    .done((editedImage) => {
-                        let dstPath: string = HUIS_ROOT_PATH + "/" + ConstValue.SCREENSAVER_DIR_NAME;
-                        let syncTask = new Util.HuisDev.FileSyncTask();
-                        syncTask.exec(this.getDirPath(), dstPath, false, null, null, () => {
-                            df.resolve();
+                if (!this.isDefault()) {
+                    Model.OffscreenEditor.editImage(imageFilePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
+                        .done((editedImage) => {
+                            this.syncToHuis(df);
+                        }).fail((err) => {
+                            console.error("editImage calling failed : err : " + err);
                         });
-                    }).fail((err) => {
-                        console.error("editImage calling failed : err : " + err);
+                } else {
+                    // don't save image in HuisFiles when default not to copy file to HuisDevice
+                    setTimeout(() => {
+                        this.syncToHuis(df);
                     });
+                }
 
                 return promise;
+            }
+
+            private syncToHuis(df: JQueryDeferred<void>) {
+                let dstPath: string = HUIS_ROOT_PATH + "/" + ConstValue.SCREENSAVER_DIR_NAME;
+                let syncTask = new Util.HuisDev.FileSyncTask();
+                syncTask.exec(this.getDirPath(), dstPath, false, null, null, () => {
+                    df.resolve();
+                });
             }
 
             static isScreenSaverImage(dstPath: string): boolean {

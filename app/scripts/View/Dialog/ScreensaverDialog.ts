@@ -76,7 +76,7 @@ module Garage {
              */
             private setDefaultImage(event: Event): void {
                 console.log("set default image to screensaver");
-                // TODO: set default image
+                this.model.setDefault();
             }
 
             private _closeDialog() {
