@@ -130,6 +130,10 @@ module Garage {
 
             private syncToHuis(df: JQueryDeferred<void>) {
                 let dstPath: string = HUIS_ROOT_PATH + "/" + ConstValue.SCREENSAVER_DIR_NAME;
+                if (!fs.existsSync(dstPath)) {
+                    console.log("no " + dstPath + " dir, mkdir");
+                    fs.mkdir(dstPath);
+                }
                 let syncTask = new Util.HuisDev.FileSyncTask();
                 syncTask.exec(this.getDirPath(), dstPath, false, null, null, () => {
                     df.resolve();
