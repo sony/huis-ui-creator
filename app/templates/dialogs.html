@@ -298,8 +298,12 @@
                     <h3 class="title" data-i18n="dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS">スクリーンセーバーの設定</h3>
                 </header>
                 <div class="separator"></div>
-                <div id="preview_area" class="preview-area">
-                    <img id="preview" class="preview" src="{{imagePath}}" />
+                <div class="preview-button-area">
+                    <button id="image-button" class="image-button">
+                        <div class="preview-area">
+                            <img id="preview" class="preview" src="{{imagePath}}" />
+                        </div>
+                    </button>
                 </div>
                 <div>
                     <button id="dialog-button-change" class="ui-btn" data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE">変更する</button>

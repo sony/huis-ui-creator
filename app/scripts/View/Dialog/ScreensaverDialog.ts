@@ -29,6 +29,7 @@ module Garage {
                     "click #dialog-button-ok": "saveClose",
                     "click #dialog-button-cancel": "close",
                     "click #dialog-button-change": "changeImage",
+                    "click #image-button": "changeImage",
                     "click #dialog-button-default": "setDefaultImage"
                 };
             }

@@ -780,11 +780,23 @@ body {
             width: 600px;
         }
         
-        .preview-area {
-            width: 270px;
-            height: 480px;
+        .image-button {
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .preview-button-area {
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH + $SCREENSAVER_PREVIEW_FRAME * 2;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT + $SCREENSAVER_PREVIEW_FRAME;
             margin: 10px auto;
             background-color: $COLOR_BLACK;
+        }
+
+        .preview-area {
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT;
+            margin: 0;
+            padding: 0;
         }
 
         .preview {
