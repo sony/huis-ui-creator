@@ -40,6 +40,25 @@ module Garage {
                 this.render();
             }
 
+            private setHuisBackgroundImagePath() {
+                let $huisBackground: JQuery = this.$el.find("#huis-background");
+
+                if (sharedInfo.isWhiteModel()) {
+                    if (sharedInfo.isWhiteSetting()) {
+                        $huisBackground.addClass("white_on_white");
+                        return;
+                    }
+                    $huisBackground.addClass("black_on_white");
+                    return;
+                }
+
+                if (sharedInfo.isWhiteSetting()) {
+                    $huisBackground.addClass("white_on_black");
+                    return;
+                }
+                $huisBackground.addClass("black_on_black");
+            }
+
             render(): ScreensaverDialog {
                 let templateFile = CDP.Framework.toUrl("/templates/dialogs.html");
                 let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
@@ -50,6 +69,7 @@ module Garage {
                 }));
 
                 this.$el.append($dialog);
+                this.setHuisBackgroundImagePath();
                 return this;
             }
 

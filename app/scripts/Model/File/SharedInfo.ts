@@ -62,8 +62,24 @@ module Garage {
                 return this._modelColor;
             }
 
+            /**
+             * 白モデルかどうか確認する
+             * @return {boolean} 白モデルのときtrueを返す
+             */
+            isWhiteModel(): boolean {
+                return this.modelColor === Model.ModelColor.WHITE;
+            }
+
             get settingColor(): string {
                 return this._settingColor;
+            }
+
+            /**
+             * UIが白設定どうか確認する
+             * @return {boolean} 白モデルのときtrueを返す
+             */
+            isWhiteSetting(): boolean {
+                return this.settingColor === Model.SettingColor.WHITE;
             }
 
             get isBtoB(): boolean {

@@ -780,6 +780,23 @@ body {
             width: 600px;
         }
         
+        .huis-background {
+            width: 252.8px;
+            height: 464px;
+            margin: 10px auto;
+            padding: 8px 0 0 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .white_on_white {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_WHITE_ON_WHITE;}
+        
+        .black_on_white {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_BLACK_ON_WHITE;}
+        
+        .white_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_WHITE_ON_BLACK;}
+        
+        .black_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_BLACK_ON_BLACK;}
+
         .image-button {
             padding: 0;
             cursor: pointer;
@@ -789,7 +806,6 @@ body {
             width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH + $SCREENSAVER_PREVIEW_FRAME * 2;
             height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT + $SCREENSAVER_PREVIEW_FRAME;
             margin: 10px auto;
-            background-color: $COLOR_BLACK;
         }
 
         .preview-area {
