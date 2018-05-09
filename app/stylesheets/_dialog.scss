@@ -65,8 +65,11 @@ body {
     }
 
     .separator {
-        margin: 0 auto; //中央揃え
-        border-bottom: $SIZE_DETAIL_PROPERTY_HEADER_BORDER_THICKNESS solid $COLOR_DETAIL_PROPERTY_HEADER_BORDER;
+        border-top-style: solid;
+        border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
+        border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
+        margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+        margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
     }
 
     .submit-area {
@@ -76,22 +79,8 @@ body {
         padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
         display: flex;
         justify-content: flex-end;
-
-        #remotelist-label-selected-conainer {
-            color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
-            font-size: $FONT_SIZE_DIALOG_SELECTED;
-            line-height: $SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
-            text-align: right;
-            margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
-        }
-
-        .ui-btn {
-            width: $SIZE_DIALOG_BUTTON_WIDTH;
-            font-weight: normal;
-            text-shadow: none;
-        }
-
-        #remotelist-button-ok {
+        
+        .button-ok {
             margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
         }
     }
@@ -644,6 +633,26 @@ body {
                     cursor: pointer;
                 }
             }
+
+            .submit-area {
+                #remotelist-label-selected-conainer {
+                    color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
+                    font-size: $FONT_SIZE_DIALOG_SELECTED;
+                    line-height: $SIZE_DIALOG_SUBMIT_TEXT_LINE_HEIGHT;
+                    text-align: right;
+                    margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
+                }
+                
+                .ui-btn {
+                    width: $SIZE_DIALOG_BUTTON_WIDTH;
+                    font-weight: normal;
+                    text-shadow: none;
+                }
+                
+                #remotelist-button-ok {
+                    margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
+                }
+            }
         }
     }
 
@@ -821,6 +830,14 @@ body {
             max-width: 100%;
             max-height: 100%;
             margin: auto;
+        }
+
+        .edit-btn {
+            margin: 4px 0 0 auto;
+        }
+
+        .submit-area {
+            padding-right: 0;
         }
     }
 }
