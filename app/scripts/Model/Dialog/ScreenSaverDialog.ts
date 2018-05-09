@@ -31,7 +31,10 @@ module Garage {
             export const SCREENSAVER_EDIT_IMAGE_PARAMS: IImageEditParams = {
                 resize: {
                     width: SCREENSAVER_WIDTH,
-                    height: SCREENSAVER_HEIGHT
+                    height: SCREENSAVER_HEIGHT,
+                    mode: "contain",
+                    padding: true,
+                    force: true
                 }
             };
         }
