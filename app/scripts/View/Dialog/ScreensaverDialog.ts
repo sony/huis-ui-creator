@@ -19,9 +19,19 @@
 module Garage {
     export module View {
         export class ScreensaverDialog extends Backbone.View<Model.ScreensaverDialog> {
+            private _changed: boolean;
 
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
+                this._changed = false;
+            }
+
+            get changed(): boolean {
+                return this._changed;
+            }
+
+            set changed(value: boolean) {
+                this._changed = value;
             }
 
             events(): any {
@@ -89,6 +99,9 @@ module Garage {
                 let imageFileSelector: Util.ImageFileSelector = new Util.ImageFileSelector();
                 imageFileSelector.showImageSelectDialog().done((imageFilePath: string) => {
                     this.model.imagePath = imageFilePath;
+                    if (imageFilePath != null) {
+                        this.changed = true;
+                    }
                 });
             }
 
@@ -97,6 +110,9 @@ module Garage {
              */
             private setDefaultImage(event: Event): void {
                 console.log("set default image to screensaver");
+                if (!this.model.isDefault()) {
+                    this.changed = true;
+                }
                 this.model.setDefault();
             }
 

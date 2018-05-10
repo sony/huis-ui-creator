@@ -91,7 +91,12 @@ module Garage {
                 return Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
             }
 
-            private isDefault(): boolean {
+            /**
+             * デフォルト画像が設定されているか確認する
+             *
+             * @return {boolean} デフォルト画像のとき true
+             */
+            isDefault(): boolean {
                 return this.imagePath == this.getDefaultImagePath();
             }
 
