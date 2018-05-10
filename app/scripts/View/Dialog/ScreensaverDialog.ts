@@ -37,7 +37,7 @@ module Garage {
             events(): any {
                 return {
                     "click #dialog-button-ok": "saveClose",
-                    "click #dialog-button-cancel": "close",
+                    "click #dialog-button-cancel": "cancelClicked",
                     "click #dialog-button-change": "changeImage",
                     "click #image-button": "changeImage",
                     "click #dialog-button-default": "setDefaultImage"
@@ -116,6 +116,34 @@ module Garage {
                 this.model.setDefault();
             }
 
+            /**
+             * 画像を変更したのに保存せずキャンセルしようとする場合には
+             * 保存を促すダイアログを表示する
+             */
+            showCancelWarning() {
+                var response = electronDialog.showMessageBox({
+                    type: "warning",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SCREENSAVER_CHANGE_CANCEL"),
+                    buttons: [
+                        $.i18n.t("dialog.button.STR_DIALOG_BUTTON_SAVE"),
+                        $.i18n.t("dialog.button.STR_DIALOG_BUTTON_NOT_SAVE"),
+                        $.i18n.t("dialog.button.STR_DIALOG_BUTTON_CANCEL")],
+                    title: PRODUCT_NAME,
+                    cancelId: 2,
+                });
+                switch (response) {
+                    case 0:
+                        this._saveClose();
+                        break;
+                    case 1:
+                        this._closeDialog();
+                        break;
+                    case 2:
+                    default:
+                        // do nothing
+                }
+            }
+
             private _closeDialog() {
                 this.undelegateEvents();
 
@@ -123,13 +151,21 @@ module Garage {
                 dom.remove();
             }
 
-            saveClose(event: Event) {
+            private _saveClose() {
                 console.log("update screensaver image : " + this.model.imagePath);
                 this.model.saveImage();
                 this._closeDialog();
             }
 
-            close(event: Event) {
+            saveClose(event: Event) {
+                this._saveClose();
+            }
+
+            cancelClicked(event: Event) {
+                if (this.changed) {
+                    this.showCancelWarning();
+                    return;
+                }
                 console.log("no update screensaver setting");
                 this._closeDialog();
             }
