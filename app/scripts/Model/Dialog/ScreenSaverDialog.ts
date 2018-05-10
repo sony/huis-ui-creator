@@ -50,6 +50,11 @@ module Garage {
                 this.imagePath = Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
             }
 
+            /**
+             * 現在設定中の画像パスを取得する。
+             * ユーザー指定直後は指定したそのもののパスが入る。
+             * @return {string} 現在設定中の画像パス
+             */
             get imagePath(): string {
                 return this.get("imagePath");
             }
@@ -149,6 +154,11 @@ module Garage {
                 return promise;
             }
 
+            /**
+             * HUISに現在のお気に入り待受画面のファイルを同期(コピー)する
+             *
+             * @param {JQueryDeferred<void>} promise用のdeffered
+             */
             private syncToHuis(df: JQueryDeferred<void>) {
                 let dstPath: string = HUIS_ROOT_PATH + "/" + ConstValue.SCREENSAVER_DIR_NAME;
                 if (!fs.existsSync(dstPath)) {
@@ -161,6 +171,10 @@ module Garage {
                 });
             }
 
+            /**
+             * @param {string} dstPath
+             * @return {boolean} 引数がお気に入り待受画面の画像パスならtrue
+             */
             static isScreenSaverImage(dstPath: string): boolean {
                 let regexp: RegExp = new RegExp(Model.ConstValue.SCREENSAVER_IMAGE_FILE_NAME);
                 if (dstPath.match(regexp)) {
