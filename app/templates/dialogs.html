@@ -234,7 +234,7 @@
                                 <div class="one-line input-element">
                                     <input type="radio" name="radio-home-dest" id="dialog-config-radio-jump-as-home" value="jump" {{^checkHomeAsHomeRadio}} checked="checked" {{/checkHomeAsHomeRadio}} />
                                     <label for="dialog-config-radio-jump-as-home" data-i18n="dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM">カスタム：</label>
-                                    <button id="dialog-config-button-change-home-dest" {{#checkHomeAsHomeRadio}} disabled {{/checkHomeAsHomeRadio}} data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE_HOME_DEST">変更する</button>
+                                    <button id="dialog-config-button-change-home-dest" {{#checkHomeAsHomeRadio}} disabled {{/checkHomeAsHomeRadio}} data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE">変更する</button>
                                 </div>
                             </div>
                         </fieldset>
@@ -288,5 +288,34 @@
                 </div>
             </div>
         </section>
+    </script>
+
+    <!-- Screensaver setting dialog -->
+    <script type="text/template" id="screensaver-setting-dialog">
+        <div id="screensaver-dialog-area" data-role="popup" data-corners="false" data-theme="none" data-overlay-theme="b" class="ui-page-theme-b">
+            <div class="dialog-area">
+                <header>
+                    <h3 class="title" data-i18n="dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS">お気に入り待受画面の設定</h3>
+                </header>
+                <div class="separator"></div>
+                <div id="huis-background" class="huis-background"><!-- style="background-image: url({{huisBackground}})"-->
+                    <div class="preview-button-area">
+                        <button id="image-button" class="image-button">
+                            <div class="preview-area">
+                                <img id="preview" class="preview" src="{{imagePath}}" />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <button id="dialog-button-change" class="ui-btn edit-btn" data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE">変更する</button>
+                    <button id="dialog-button-default" class="ui-btn edit-btn" data-i18n="dialog.button.STR_DIALOG_BUTTON_SET_DEFAULT">デフォルトに戻す</button>
+                </div>
+                <div class="submit-area">
+                    <button id="dialog-button-ok" class="ui-btn button-ok">OK</button>
+                    <button id="dialog-button-cancel" class="ui-btn button-cancel">キャンセル</button>
+                </div>
+            </div>
+        </div>
     </script>
 </article>

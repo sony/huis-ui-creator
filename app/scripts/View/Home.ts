@@ -90,6 +90,7 @@ module Garage {
                 events["click .face-container." + FACE_TYPE_FULL_CUSTOM] = "onClickFullCustomFace";
                 events["click .face-container." + FACE_TYPE_NOT_FULL_CUSTOM] = "onClickNotFullCustomFace";
                 events["click #command-set-properties"] = "onOptionSetPropertiesClick";
+                events["click #command-setting-screensabver"] = "onOptionSetScreenSaverClick";
                 return events;
             }
 
@@ -143,6 +144,17 @@ module Garage {
                 conf.$el.i18n();
                 conf.updateHomeDestLabel();
                 return;
+            }
+
+            /**
+             * オプションの「お気に入り待受画面の設定」を押した際の処理
+             *
+             * @param event {Event} クリックイベント
+             */
+            private onOptionSetScreenSaverClick(event: Event) {
+                let screensaverDialogModel = new Model.ScreensaverDialog();
+                screensaverDialogModel.loadHuisDevData();
+                var screensaver_dialog: ScreensaverDialog = new ScreensaverDialog({ el: $('body'), model: screensaverDialogModel });
             }
 
             /*
@@ -240,8 +252,6 @@ module Garage {
                 //テキストのローカライズ
                 $("#page-home").i18n();
             }
-
-
 
             private _renderFace($face: JQuery): void {
                 var remoteId = $face.attr("data-remoteId");
@@ -368,9 +378,6 @@ module Garage {
                 this.centeringTooltip($target);
             }
 
-
-
-
             private _onSyncPcToHuisClick(noWarn?: Boolean) {
 
                 if (!noWarn) {
@@ -484,10 +491,7 @@ module Garage {
                                 this.exportRemote(face, masterFace); // true で警告なし
                             }
                         }));
-
-
                     }
-
                 }
 
                 if (DEBUG_MODE) { // 要素を検証、はデバッグモード時のみコンテキストメニューに表示される
@@ -506,7 +510,6 @@ module Garage {
             }
 
             private _pageLayout() {
-
                 var windowWidth = innerWidth;
                 var windowHeight = innerHeight;
 
@@ -534,7 +537,6 @@ module Garage {
                 });
                 $faceList.width(listWidth);
             }
-
         }
 
         var View = new Home();

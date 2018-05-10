@@ -185,6 +185,7 @@
     <Content Include="app\res\images\button_edit_text_hover.png" />
     <Content Include="app\res\images\button_edit_text_normal.png" />
     <Content Include="app\res\images\button_edit_text_pressed.png" />
+    <Content Include="app\res\images\default_screensaver.png" />
     <Content Include="app\res\images\huis_ui_creator_logo.png" />
     <Content Include="app\res\images\icon_done.png" />
     <Content Include="app\res\images\icon_guide_arrow_gray.png" />
@@ -199,10 +200,17 @@
     <Content Include="app\res\images\img_huis_remote_area.png" />
     <Content Include="app\res\images\img_huis_tpl.png" />
     <Content Include="app\res\images\img_no_controller.png" />
+    <Content Include="app\res\images\img_huis_tpl_black_on_black.png" />
+    <Content Include="app\res\images\img_huis_tpl_black_on_white.png" />
+    <Content Include="app\res\images\img_huis_tpl_white_on_black.png" />
     <Content Include="app\res\images\mask_bottom_32.png" />
     <Content Include="app\res\images\mask_top_32.png" />
     <Content Include="app\res\images\pulldowmmenu_dowm_icon.png" />
     <Content Include="app\res\images\pulldowmmenu_up_icon.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_black_on_black.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_black_on_white.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_white_on_black.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_white_on_white.png" />
     <Content Include="app\res\license\license-link.html" />
     <Content Include="app\res\license\LICENSES.chromium.html" />
     <Content Include="app\res\license\licenses.txt" />
@@ -2739,6 +2747,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\modules\include\zip.js.d.ts" />
+    <TypeScriptCompile Include="app\scripts\Model\Dialog\ScreensaverDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\AppInfo.ts" />
     <TypeScriptCompile Include="app\scripts\Model\File\IniFile.ts" />
@@ -2765,6 +2774,7 @@
     <TypeScriptCompile Include="app\scripts\Util\HuisConnectionChecker.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisDev.ts" />
     <TypeScriptCompile Include="app\scripts\Util\HuisFiles.ts" />
+    <TypeScriptCompile Include="app\scripts\Util\ImageFileSelector.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ImportManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\InformationDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ItemClipboard.ts" />
@@ -2778,6 +2788,7 @@
     <TypeScriptCompile Include="app\scripts\Util\VersionManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
+    <TypeScriptCompile Include="app\scripts\View\Dialog\ScreensaverDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\UnconnectedDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
