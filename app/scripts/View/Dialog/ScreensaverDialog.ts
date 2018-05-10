@@ -23,7 +23,7 @@ module Garage {
 
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
-                this.changed_ = false;
+                this.changed = false;
             }
 
             get changed(): boolean {
