@@ -200,10 +200,17 @@
     <Content Include="app\res\images\img_huis_remote_area.png" />
     <Content Include="app\res\images\img_huis_tpl.png" />
     <Content Include="app\res\images\img_no_controller.png" />
+    <Content Include="app\res\images\img_huis_tpl_black_on_black.png" />
+    <Content Include="app\res\images\img_huis_tpl_black_on_white.png" />
+    <Content Include="app\res\images\img_huis_tpl_white_on_black.png" />
     <Content Include="app\res\images\mask_bottom_32.png" />
     <Content Include="app\res\images\mask_top_32.png" />
     <Content Include="app\res\images\pulldowmmenu_dowm_icon.png" />
     <Content Include="app\res\images\pulldowmmenu_up_icon.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_black_on_black.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_black_on_white.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_white_on_black.png" />
+    <Content Include="app\res\images\screensaver\img_huis_tpl_white_on_white.png" />
     <Content Include="app\res\license\license-link.html" />
     <Content Include="app\res\license\LICENSES.chromium.html" />
     <Content Include="app\res\license\licenses.txt" />
