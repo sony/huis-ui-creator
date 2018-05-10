@@ -121,7 +121,6 @@ module Garage {
              */
             setDefault(): void {
                 this.imagePath = this.getDefaultImagePath();
-                fs.removeSync(this.getWorkingImagePath());
             }
 
             /**
@@ -147,6 +146,7 @@ module Garage {
                 } else {
                     // don't save image in HuisFiles when default not to copy file to HuisDevice
                     setTimeout(() => {
+                        fs.removeSync(this.getWorkingImagePath());
                         this.syncToHuis(df);
                     });
                 }
