@@ -117,6 +117,19 @@ module Garage {
             }
 
             /**
+             * 変更後を保存する場合には、変更した旨を伝えるダイアログを表示する
+             */
+            showImageChangedMessage() {
+                var response = electronDialog.showMessageBox({
+                    type: "info",
+                    message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SCREENSAVER_CHANGED_CONFIRMATION"),
+                    buttons: [
+                        $.i18n.t("dialog.button.STR_DIALOG_BUTTON_OK")],
+                    title: PRODUCT_NAME
+                });
+            }
+
+            /**
              * 画像を変更したのに保存せずキャンセルしようとする場合には
              * 保存を促すダイアログを表示する
              */
@@ -154,6 +167,9 @@ module Garage {
             private _saveClose() {
                 console.log("update screensaver image : " + this.model.imagePath);
                 this.model.saveImage();
+                if (this.changed) {
+                    this.showImageChangedMessage();
+                }
                 this._closeDialog();
             }
 
