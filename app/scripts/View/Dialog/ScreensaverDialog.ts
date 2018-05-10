@@ -50,6 +50,9 @@ module Garage {
                 this.render();
             }
 
+            /**
+             * 背景となるHUISの画像を、モデルカラーと色設定から選択する
+             */
             private setHuisBackgroundImagePath() {
                 let $huisBackground: JQuery = this.$el.find("#huis-background");
 
@@ -157,6 +160,9 @@ module Garage {
                 }
             }
 
+            /**
+             * ダイアログクローズに伴う処理
+             */
             private _closeDialog() {
                 this.undelegateEvents();
 
@@ -164,6 +170,9 @@ module Garage {
                 dom.remove();
             }
 
+            /**
+             * 変更があった場合は画像を保存し、ダイアログで通知する。
+             */
             private _saveClose() {
                 console.log("update screensaver image : " + this.model.imagePath);
                 this.model.saveImage();
@@ -173,10 +182,18 @@ module Garage {
                 this._closeDialog();
             }
 
+            /**
+             * @param {Event} event
+             */
             private saveClose(event: Event) {
                 this._saveClose();
             }
 
+            /**
+             * 変更があった場合は保存するか確認するダイアログを表示する。
+             *
+             * @param {Event} event
+             */
             private cancelClicked(event: Event) {
                 if (this.changed) {
                     this.showCancelWarning();
