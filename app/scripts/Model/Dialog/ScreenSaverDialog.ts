@@ -59,16 +59,27 @@ module Garage {
                 this.set({ "imagePath": path });
             }
 
-            private getDirPath(): string {
+            /**
+             * @return {string} アプリ作業用フォルダの画像を保持するディレクトリのパス
+             */
+            private getWorkingDirPath(): string {
                 return Util.PathManager.getHuisFilesDir() + "/" + ConstValue.SCREENSAVER_DIR_NAME;
             }
 
-            private getImagePath(): string {
-                return this.getDirPath() + "/" + ConstValue.SCREENSAVER_IMAGE_FILE_NAME;
+            /**
+             * アプリ作業用フォルダの画像パスを取得する。
+             * 画像名は変更してしまうので、固定されている。
+             * @return {string} アプリ作業用フォルダの画像パス
+             */
+            private getWorkingImagePath(): string {
+                return this.getWorkingDirPath() + "/" + ConstValue.SCREENSAVER_IMAGE_FILE_NAME;
             }
 
+            /**
+             * お気に入り待受画面用のフォルダが存在しない場合作成する
+             */
             private prepareDir() {
-                let dirPath = this.getDirPath();
+                let dirPath = this.getWorkingDirPath();
                 if (!fs.existsSync(dirPath)) {
                     fs.mkdir(dirPath);
                 }
@@ -79,7 +90,7 @@ module Garage {
              */
             loadHuisDevData(): void {
                 this.prepareDir();
-                let targetFilePath: string = this.getImagePath();
+                let targetFilePath: string = this.getWorkingImagePath();
                 if (!fs.existsSync(targetFilePath)) {
                     console.log("no screensaver image : " + targetFilePath);
                     return;
@@ -105,16 +116,18 @@ module Garage {
              */
             setDefault(): void {
                 this.imagePath = this.getDefaultImagePath();
-                fs.removeSync(this.getImagePath());
+                fs.removeSync(this.getWorkingImagePath());
             }
 
             /**
              * 設定された画像を保存する。
+             * まずアプリ作業用フォルダに保存したあと、HUIS本体に同期する。
+             *
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
             saveImage(): CDP.IPromise<void> {
                 let imageFilePath: string = this.imagePath;
-                let outputImagePath = this.getImagePath();
+                let outputImagePath = this.getWorkingImagePath();
 
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
@@ -143,7 +156,7 @@ module Garage {
                     fs.mkdir(dstPath);
                 }
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                syncTask.exec(this.getDirPath(), dstPath, false, null, null, () => {
+                syncTask.exec(this.getWorkingDirPath(), dstPath, false, null, null, () => {
                     df.resolve();
                 });
             }
