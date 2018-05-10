@@ -130,14 +130,13 @@ module Garage {
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
             saveImage(): CDP.IPromise<void> {
-                let imageFilePath: string = this.imagePath;
-                let outputImagePath = this.getWorkingImagePath();
-
                 let df = $.Deferred<void>();
                 let promise = CDP.makePromise(df);
 
+                let outputImagePath = this.getWorkingImagePath();
+
                 if (!this.isDefault()) {
-                    Model.OffscreenEditor.editImage(imageFilePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
+                    Model.OffscreenEditor.editImage(this.imagePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
                         .done((editedImage) => {
                             this.syncToHuis(df);
                         }).fail((err) => {
@@ -146,7 +145,7 @@ module Garage {
                 } else {
                     // don't save image in HuisFiles when default not to copy file to HuisDevice
                     setTimeout(() => {
-                        fs.removeSync(this.getWorkingImagePath());
+                        fs.removeSync(outputImagePath);
                         this.syncToHuis(df);
                     });
                 }
