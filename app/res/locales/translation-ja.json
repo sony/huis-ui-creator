@@ -40,7 +40,7 @@
     "dialog": {
         "title": {
             "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択",
-            "STR_DIALOG_TITLE_SCREENSAVER_SETTINGS": "スクリーンセーバーの設定",
+            "STR_DIALOG_TITLE_SCREENSAVER_SETTINGS": "お気に入り待受画面の設定",
             "STR_DIALOG_TITLE_SET_PROPERTIES": "詳細設定"
         },
         "message": {
@@ -206,7 +206,7 @@
         "STR_OPTION_MENU_SET_PROPERTIES": "詳細設定",
         "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート",
-        "STR_OPTION_MENU_SETTING_SCREENSAVER":  "スクリーンセーバーの設定",
+        "STR_OPTION_MENU_SETTING_SCREENSAVER":  "お気に入り待受画面の設定",
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
         "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
