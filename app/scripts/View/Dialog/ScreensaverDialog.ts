@@ -95,7 +95,7 @@ module Garage {
              * Modelの画像パスを変更する。
              * 実際にファイルを保存するのはOKボタン押下時のみ。
              */
-            changeImage(): void {
+            private changeImage(): void {
                 let imageFileSelector: Util.ImageFileSelector = new Util.ImageFileSelector();
                 imageFileSelector.showImageSelectDialog().done((imageFilePath: string) => {
                     this.model.imagePath = imageFilePath;
@@ -119,7 +119,7 @@ module Garage {
             /**
              * 変更後を保存する場合には、変更した旨を伝えるダイアログを表示する
              */
-            showImageChangedMessage() {
+            private showImageChangedMessage() {
                 var response = electronDialog.showMessageBox({
                     type: "info",
                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SCREENSAVER_CHANGED_CONFIRMATION"),
@@ -133,7 +133,7 @@ module Garage {
              * 画像を変更したのに保存せずキャンセルしようとする場合には
              * 保存を促すダイアログを表示する
              */
-            showCancelWarning() {
+            private showCancelWarning() {
                 var response = electronDialog.showMessageBox({
                     type: "warning",
                     message: $.i18n.t("dialog.message.STR_DIALOG_MESSAGE_SCREENSAVER_CHANGE_CANCEL"),
@@ -173,11 +173,11 @@ module Garage {
                 this._closeDialog();
             }
 
-            saveClose(event: Event) {
+            private saveClose(event: Event) {
                 this._saveClose();
             }
 
-            cancelClicked(event: Event) {
+            private cancelClicked(event: Event) {
                 if (this.changed) {
                     this.showCancelWarning();
                     return;
