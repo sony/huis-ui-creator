@@ -19,19 +19,19 @@
 module Garage {
     export module View {
         export class ScreensaverDialog extends Backbone.View<Model.ScreensaverDialog> {
-            private _changed: boolean;
+            private changed_: boolean;
 
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
-                this._changed = false;
+                this.changed_ = false;
             }
 
             get changed(): boolean {
-                return this._changed;
+                return this.changed_;
             }
 
             set changed(value: boolean) {
-                this._changed = value;
+                this.changed_ = value;
             }
 
             events(): any {
