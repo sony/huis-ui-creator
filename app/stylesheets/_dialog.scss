@@ -790,8 +790,8 @@ body {
         }
         
         .huis-background {
-            width: 252.8px;
-            height: 464px;
+            width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
             margin: 10px auto;
             padding: 8px 0 0 0;
             background-size: contain;
