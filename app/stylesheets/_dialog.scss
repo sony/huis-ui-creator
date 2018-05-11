@@ -29,7 +29,7 @@ body {
         border-top-style: solid;
         border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
         border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
-        margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+        margin-left: 0;
         margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
     }
 
@@ -72,13 +72,18 @@ body {
         h3.title {
                 margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
                 margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
-                margin-left: $SIZE_DIALOG_TITLE_MARGIN_LEFT;
+                margin-left: 0;
                 color: $COLOR_TEXT_MAIN;
                 font-size: $SIZE_DIALOG_TITLE_FONT;
                 font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
                 line-height: $TEXT_HEIGHT_DEFAULT;
                 font-weight: normal;
                 text-shadow: none;
+        }
+
+        .description-text {
+            color: $COLOR_DIALOG_DESCRIPTION;
+            font-size: $FONT_SIZE_S;
         }
 
         .ui-btn {
@@ -786,9 +791,13 @@ body {
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
         .dialog-area {
-            width: 600px;
+            width: 700px;
         }
         
+        .description-text {
+            margin-top: 16px;
+        }
+
         .huis-background {
             width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
             height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
