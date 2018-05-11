@@ -244,6 +244,9 @@
     <Content Include="app\res\notes\Windows\6.0.0\000\date.txt" />
     <Content Include="app\res\notes\Windows\6.0.0\000\image.png" />
     <Content Include="app\res\notes\Windows\6.0.0\000\note.txt" />
+    <Content Include="app\res\notes\Windows\7.0.0\000\date.txt" />
+    <Content Include="app\res\notes\Windows\7.0.0\000\note.txt" />
+    <Content Include="app\res\notes\Windows\7.0.0\000\image.png" />
     <Content Include="app\res\remoteimages\black\autolayout\IMG_1LINE_1BTNSEARCH.png" />
     <Content Include="app\res\remoteimages\black\autolayout\IMG_1LINE_1BTN_BACK.png" />
     <Content Include="app\res\remoteimages\black\autolayout\IMG_1LINE_1BTN_BIG_POWER.png" />
