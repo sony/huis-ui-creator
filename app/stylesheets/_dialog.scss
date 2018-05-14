@@ -820,11 +820,13 @@ body {
         .image-button {
             padding: 0;
             cursor: pointer;
+            background: none;
+            border: 0;
         }
 
         .preview-button-area {
-            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH + $SCREENSAVER_PREVIEW_FRAME * 2;
-            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT + $SCREENSAVER_PREVIEW_FRAME;
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT;
             margin: 10px auto;
         }
 
