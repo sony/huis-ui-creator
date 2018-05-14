@@ -29,7 +29,7 @@ body {
         border-top-style: solid;
         border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
         border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
-        margin-left: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_LEFT;
+        margin-left: 0;
         margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
     }
 
@@ -64,21 +64,24 @@ body {
         border-radius: 0;
         height: $SIZE_ABOUT_DIALOG_HEIGHT;
         border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
-        padding-top: $SIZE_ABOUT_DIALOG_MARGIN_TOP;
-        padding-bottom: $SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-        padding-right: $SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-        padding-left: $SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+        padding: $SIZE_DIALOG_AREA_MARGIN;
 
         h3.title {
                 margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
                 margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
-                margin-left: $SIZE_DIALOG_TITLE_MARGIN_LEFT;
+                margin-left: 0;
                 color: $COLOR_TEXT_MAIN;
                 font-size: $SIZE_DIALOG_TITLE_FONT;
                 font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
                 line-height: $TEXT_HEIGHT_DEFAULT;
                 font-weight: normal;
                 text-shadow: none;
+        }
+
+        .description-text {
+            color: $COLOR_DIALOG_DESCRIPTION;
+            font-size: $FONT_SIZE_S;
+            margin: $SIZE_DIALOG_DESCRIPTION_TEXT_MARGIN;
         }
 
         .ui-btn {
@@ -785,15 +788,23 @@ body {
         z-index: 3;
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
-        .dialog-area {
-            width: 600px;
+        .separator {
+            width: 100%;
         }
-        
+
+        .dialog-area {
+            width: 700px;
+        }
+
+        .edit-area {
+            height: 400px;
+        }
+
         .huis-background {
-            width: 252.8px;
-            height: 464px;
+            width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
             margin: 10px auto;
-            padding: 8px 0 0 0;
+            padding: 5px 0 0 0;
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -809,11 +820,13 @@ body {
         .image-button {
             padding: 0;
             cursor: pointer;
+            background: none;
+            border: 0;
         }
 
         .preview-button-area {
-            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH + $SCREENSAVER_PREVIEW_FRAME * 2;
-            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT + $SCREENSAVER_PREVIEW_FRAME;
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT;
             margin: 10px auto;
         }
 
@@ -838,16 +851,27 @@ body {
             position: absolute;
         }
 
+        .edit-btn-area {
+            top: -103px;
+            position:relative;
+        }
+
         .edit-btn {
-            margin: 4px 0 0 auto;
+            margin-left: auto;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+        }
+
+        #dialog-button-default {
+            margin-top: $SIZE_DIALOG_BUTTON_VERTICAL_MARGIN;
         }
 
         .submit-area {
-            padding-right: 0;
+            margin-top: $SIZE_DIALOG_SUBMIT_AREA_MARGIN_TOP;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+            padding: 0;
             
             .button-ok {
                 margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
-
             }
         }
     }
