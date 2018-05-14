@@ -64,10 +64,7 @@ body {
         border-radius: 0;
         height: $SIZE_ABOUT_DIALOG_HEIGHT;
         border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
-        padding-top: $SIZE_ABOUT_DIALOG_MARGIN_TOP;
-        padding-bottom: $SIZE_ABOUT_DIALOG_MARGIN_BOTTOM;
-        padding-right: $SIZE_ABOUT_DIALOG_MARGIN_RIGHT;
-        padding-left: $SIZE_ABOUT_DIALOG_MARGIN_LEFT;
+        padding: $SIZE_DIALOG_AREA_MARGIN;
 
         h3.title {
                 margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
@@ -84,6 +81,7 @@ body {
         .description-text {
             color: $COLOR_DIALOG_DESCRIPTION;
             font-size: $FONT_SIZE_S;
+            margin: $SIZE_DIALOG_DESCRIPTION_TEXT_MARGIN;
         }
 
         .ui-btn {
@@ -790,12 +788,16 @@ body {
         z-index: 3;
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
+        .separator {
+            width: 100%;
+        }
+
         .dialog-area {
             width: 700px;
         }
-        
-        .description-text {
-            margin-top: 16px;
+
+        .edit-area {
+            height: 400px;
         }
 
         .huis-background {
@@ -847,16 +849,27 @@ body {
             position: absolute;
         }
 
+        .edit-btn-area {
+            top: -103px;
+            position:relative;
+        }
+
         .edit-btn {
-            margin: 4px 0 0 auto;
+            margin-left: auto;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+        }
+
+        #dialog-button-default {
+            margin-top: $SIZE_DIALOG_BUTTON_VERTICAL_MARGIN;
         }
 
         .submit-area {
-            padding-right: 0;
+            margin-top: $SIZE_DIALOG_SUBMIT_AREA_MARGIN_TOP;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+            padding: 0;
             
             .button-ok {
                 margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
-
             }
         }
     }
