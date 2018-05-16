@@ -180,6 +180,19 @@ module Garage {
                 return normalizedActions;
             }
 
+            /**
+             * @return {boolean} テキストのフォントウェイトがNormal設定のときtrueを返す。テキストがないときはfalseを返す。
+             */
+            isNormalText(): boolean {
+                let la: LabelItem[] = this.label;
+                for (let l of la) {
+                    if (l.isNormal()) {
+                        return true;
+                    }
+                };
+                return false;
+            }
+
             get stateId(): number {
                 return this.get("stateId");
             }

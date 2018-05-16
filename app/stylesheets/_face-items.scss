@@ -167,6 +167,10 @@
     font-family: $FONT_WEIGHT_LABEL_ITEM;
 }
 
+.font-weight-normal-important {
+    font-family: $FONT_WEIGHT_LABEL_ITEM !important;
+}
+
 .font-weight-bold {
     font-family: $FONT_WEIGHT_BUTTON_ITEM;
 }

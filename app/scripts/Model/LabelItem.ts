@@ -102,6 +102,10 @@ module Garage {
                 return this.font_weight === FontWeight.FONT_BOLD;
             }
 
+            isNormal(): boolean {
+                return this.font_weight === FontWeight.FONT_NORMAL;
+            }
+
             /**
              * HUISで表示される時の表示に近づけるために、
              * UI-Creator表示用の補正されたフォントサイズを取得する。
