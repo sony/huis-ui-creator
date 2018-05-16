@@ -46,6 +46,7 @@ module Garage {
 
             initialize() {
                 this.listenTo(this.model, "change:imagePath", this.updatePreview);
+                this.listenTo(Model.HuisConnectionChecker.instance, Model.ConstValue.HUIS_DISCONNECT_TRIGGER, this._closeDialog);
                 this.model.loadHuisDevData();
                 this.render();
             }
