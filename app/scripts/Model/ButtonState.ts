@@ -28,7 +28,6 @@ module Garage {
 
         export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
-            private labelCollection_: Backbone.Collection<LabelItem>;
 
             defaults() {
                 // Please write default parameters' value
@@ -41,7 +40,6 @@ module Garage {
             constructor(attributes?: any) {
                 super();
                 this.imageCollection_ = new ImageItemsCollection();
-                this.labelCollection_ = new LabelItemsCollection();
                 super(attributes, null);
             }
 
@@ -86,13 +84,6 @@ module Garage {
              */
             hasValidImage(): boolean {
                 return this.imageCollection_.models.length > 0;
-            }
-
-            /**
-             * @return {boolean} 有効なModel.LabelItemを持っている場合、trueを返す。
-             */
-            hasValidLabel(): boolean {
-                return this.labelCollection_.models.length > 0;
             }
 
             /**
@@ -288,7 +279,6 @@ module Garage {
                 }
                 return false;
             }
-
         }
     }
 }
