@@ -20,7 +20,7 @@
 module Garage {
     export module Model {
         export namespace ConstValue {
-            export const DEFAULT_IMAGE_PATH: string = "./app/res/images/default_screensaver.png";
+            export const DEFAULT_IMAGE_PATH: string = "./app/res/images/screensaver/default_screensaver.png";
             export const SCREENSAVER_DIR_NAME: string = "favoritescreen";
             export const SCREENSAVER_IMAGE_FILE_NAME_PREFIX: string = "FS";
             export const SCREENSAVER_IMAGE_FILE_NAME_SUFFIX: string = ".png";
