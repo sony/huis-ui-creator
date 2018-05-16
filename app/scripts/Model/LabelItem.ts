@@ -98,8 +98,12 @@ module Garage {
                 return convertedLabel;
             }
 
-            private _isBold(): boolean {
+            isBold(): boolean {
                 return this.font_weight === FontWeight.FONT_BOLD;
+            }
+
+            isNormal(): boolean {
+                return this.font_weight === FontWeight.FONT_NORMAL;
             }
 
             /**
@@ -124,7 +128,7 @@ module Garage {
                     this.size = this.defaults().size;
                 }
 
-                let ratio = this._isBold() ? BOLD_TEXT_RESIZE_RATIO : REGULAR_TEXT_RESIZE_RATIO;
+                let ratio = this.isBold() ? BOLD_TEXT_RESIZE_RATIO : REGULAR_TEXT_RESIZE_RATIO;
 
                 return this.size * (ratio - (this.size - MIN_TEXT_SIZE) * GAIN_TEXT_LABEL_SIZE_OFFSET_FUNC);
             }

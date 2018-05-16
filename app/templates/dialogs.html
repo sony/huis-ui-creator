@@ -298,16 +298,23 @@
                     <h3 class="title" data-i18n="dialog.title.STR_DIALOG_TITLE_SCREENSAVER_SETTINGS">お気に入り待受画面の設定</h3>
                 </header>
                 <div class="separator"></div>
-                <div id="huis-background" class="huis-background"><!-- style="background-image: url({{huisBackground}})"-->
-                    <div class="preview-button-area">
-                        <button id="image-button" class="image-button">
-                            <div class="preview-area">
-                                <img id="preview" class="preview" src="{{imagePath}}" />
-                            </div>
-                        </button>
-                    </div>
+                <div class="description-text">
+                    画面のサイズは960px × 540px (16:9)です。<br>
+                    比率の違う画像は、サイズを合わせて中心に表示されます。
                 </div>
-                <div>
+                <div class="edit-area">
+                    <div id="huis-background" class="huis-background">
+                        <div class="preview-button-area">
+                            <button id="image-button" class="image-button">
+                                <div class="preview-area">
+                                    <img id="preview" class="preview" src="{{imagePath}}" />
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="huis-over" class="huis-over"></div>
+                </div>
+                <div class="edit-btn-area">
                     <button id="dialog-button-change" class="ui-btn edit-btn" data-i18n="dialog.button.STR_DIALOG_BUTTON_CHANGE">変更する</button>
                     <button id="dialog-button-default" class="ui-btn edit-btn" data-i18n="dialog.button.STR_DIALOG_BUTTON_SET_DEFAULT">デフォルトに戻す</button>
                 </div>
