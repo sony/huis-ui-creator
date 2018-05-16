@@ -28,7 +28,6 @@ module Garage {
 
         export class ButtonState extends Backbone.Model {
             private imageCollection_: Backbone.Collection<ImageItem>;
-            private labelCollection_: Backbone.Collection<LabelItem>;
 
             defaults() {
                 // Please write default parameters' value
@@ -41,7 +40,6 @@ module Garage {
             constructor(attributes?: any) {
                 super();
                 this.imageCollection_ = new ImageItemsCollection();
-                this.labelCollection_ = new LabelItemsCollection();
                 super(attributes, null);
             }
 
@@ -86,13 +84,6 @@ module Garage {
              */
             hasValidImage(): boolean {
                 return this.imageCollection_.models.length > 0;
-            }
-
-            /**
-             * @return {boolean} 有効なModel.LabelItemを持っている場合、trueを返す。
-             */
-            hasValidLabel(): boolean {
-                return this.labelCollection_.models.length > 0;
             }
 
             /**
@@ -187,6 +178,19 @@ module Garage {
                 });
 
                 return normalizedActions;
+            }
+
+            /**
+             * @return {boolean} テキストのフォントウェイトがNormal設定のときtrueを返す。テキストがないときはfalseを返す。
+             */
+            isNormalText(): boolean {
+                let la: LabelItem[] = this.label;
+                for (let l of la) {
+                    if (l.isNormal()) {
+                        return true;
+                    }
+                };
+                return false;
             }
 
             get stateId(): number {
@@ -288,7 +292,6 @@ module Garage {
                 }
                 return false;
             }
-
         }
     }
 }

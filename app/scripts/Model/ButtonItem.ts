@@ -443,6 +443,13 @@ module Garage {
             }
 
             /**
+             * @return {boolean} テキストのフォントウェイトがnormal設定のときtrueを返す。テキストがないときはfalseを返す。
+             */
+            isNormalText(): boolean {
+                return this.stateCollection_.at(this.currentStateId).isNormalText();
+            }
+
+            /**
              * コピー元の画像ディレクトリーが存在していたら、
              * state.image に指定されている画像を module ディレクトリーにコピーする。
              */
@@ -539,7 +546,6 @@ module Garage {
                 }
                 return false;
             }
-
         }
     }
 }
