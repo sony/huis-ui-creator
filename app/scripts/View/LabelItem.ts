@@ -76,7 +76,7 @@ module Garage {
                     
                     if (item.isBold()) {
                         let $element = this.$el.children().last();
-                        $element.addClass("font-weight-bold");
+                        $element.addClass(FontWeight.FONT_BOLD_CLASS);
                     }
                 });
                 return this;
