@@ -37,6 +37,7 @@ module Garage {
 
             initialize() {
                 this.render();
+                this.listenTo(Model.HuisConnectionChecker.instance, Model.ConstValue.HUIS_DISCONNECT_TRIGGER, this._close);
             }
 
             render(): VersionDialog {
@@ -64,11 +65,15 @@ module Garage {
                 return this;
             }
 
-            close(event: Event) {
+            private _close() {
                 this.undelegateEvents();
 
                 let dom = this.$el.find('#about-dialog-back');
                 dom.remove();
+            }
+
+            close(event: Event) {
+                this._close();
             }
 
             openLink(event: Event) {
