@@ -20,6 +20,10 @@ module Garage {
     export module Model {
         import Framework = CDP.Framework;
 
+        export namespace ConstValue {
+            export const HUIS_DISCONNECT_TRIGGER: string = "huisDisconnected";
+        };
+
         export class HuisConnectionChecker extends Backbone.Model{
             static instance: HuisConnectionChecker = null;
 
@@ -78,6 +82,8 @@ module Garage {
                 if (this._isConnectedToHuis()) {
                     return;
                 }
+
+                this.trigger(ConstValue.HUIS_DISCONNECT_TRIGGER);
                 this.showConnectSuggetDialog();
             }
 
