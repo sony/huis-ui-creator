@@ -51,6 +51,14 @@ module Garage {
             }
 
             /**
+             * HUISのモデルカラーや色設定から、ダイアログ上のHUIS画像のパスを設定する
+             */
+            private setHuisImage() {
+                this.setHuisBackgroundImagePath();
+                this.setHuisOverImagePath();
+            }
+
+            /**
              * 背景となるHUISの画像を、モデルカラーと色設定から選択する
              */
             private setHuisBackgroundImagePath() {
@@ -72,6 +80,19 @@ module Garage {
                 $huisBackground.addClass("black_on_black");
             }
 
+            /**
+             * 角丸実現のためのHUISの画像を、モデルカラーから選択する
+             */
+            private setHuisOverImagePath() {
+                let $huisOverImage: JQuery = this.$el.find("#huis-over");
+
+                if (sharedInfo.isWhiteModel()) {
+                    $huisOverImage.addClass("over_white");
+                    return;
+                }
+                $huisOverImage.addClass("over_black");
+            }
+
             render(): ScreensaverDialog {
                 let templateFile = CDP.Framework.toUrl("/templates/dialogs.html");
                 let jst = CDP.Tools.Template.getJST("#screensaver-setting-dialog", templateFile);
@@ -82,7 +103,7 @@ module Garage {
                 }));
 
                 this.$el.append($dialog);
-                this.setHuisBackgroundImagePath();
+                this.setHuisImage();
                 return this;
             }
 

@@ -804,7 +804,7 @@ body {
             width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
             height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
             margin: 10px auto;
-            padding: 5px 0 0 0;
+            padding: 6px 0 0 0;
             background-size: contain;
             background-repeat: no-repeat;
         }
@@ -816,6 +816,20 @@ body {
         .white_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_WHITE_ON_BLACK;}
         
         .black_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_BLACK_ON_BLACK;}
+
+        .huis-over {
+            width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
+            position: relative;
+            top: -406px;
+            margin: 10px auto;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .over_white {background-image: $PATH_IMG_SCREENSAVER_OVER_HUIS_WHITE;}
+        
+        .over_black {background-image: $PATH_IMG_SCREENSAVER_OVER_HUIS_BLACK;}
 
         .image-button {
             padding: 0;
@@ -852,7 +866,8 @@ body {
         }
 
         .edit-btn-area {
-            top: -103px;
+            top: -96px;
+            height: 0;
             position:relative;
         }
 
