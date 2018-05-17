@@ -2804,13 +2804,13 @@
     <TypeScriptCompile Include="app\scripts\Util\MiscUtil.ts" />
     <TypeScriptCompile Include="app\scripts\Util\PathManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\PhnConfigFile.ts" />
-    <TypeScriptCompile Include="app\scripts\Util\SelectRemotePageDialog.ts" />
     <TypeScriptCompile Include="app\scripts\Util\StorageLock.ts" />
     <TypeScriptCompile Include="app\scripts\Util\VersionManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\BaseDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\ScreensaverDialog.ts" />
+    <TypeScriptCompile Include="app\scripts\View\Dialog\SelectRemotePageDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\UnconnectedDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\VersionDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\ModuleSeparator.ts" />
