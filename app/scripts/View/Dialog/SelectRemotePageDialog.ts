@@ -553,10 +553,13 @@ module Garage {
              * @return {IJump}
              */
             private static getRemotePageByFacePageJQuery($page: JQuery): IJump {
-                let page = $page.data("page-index");
+                let page: number = $page.data("page-index");
 
                 let $faceContainer = $page.parents(".face-container");
-                let remoteId = $faceContainer.data("remoteid");
+
+                // if no cast, over 1000 remoteId become number, not string.
+                // ex) 5000, not "5000"
+                let remoteId: string = String($faceContainer.data("remoteid"));
 
                 return {
                     remote_id: remoteId,
