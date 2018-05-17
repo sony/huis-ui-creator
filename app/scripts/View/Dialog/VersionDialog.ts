@@ -18,14 +18,16 @@
 
 module Garage {
     export module View {
-
-
         var TAG: string = "[Garage.View.VersionDialog] ";
 
-        export class VersionDialog extends Backbone.View<Model.VersionDialog> {
+        export class VersionDialog extends BaseDialog<Model.VersionDialog> {
 
             constructor(options?: Backbone.ViewOptions<Model.VersionDialog>) {
                 super(options);
+            }
+
+            getCloseTarget(): string {
+                return '#about-dialog-back';
             }
 
             events(): any {
@@ -36,8 +38,8 @@ module Garage {
             }
 
             initialize() {
+                super.initialize();
                 this.render();
-                this.listenTo(Model.HuisConnectionChecker.instance, Model.ConstValue.HUIS_DISCONNECT_TRIGGER, this._close);
             }
 
             render(): VersionDialog {
@@ -57,23 +59,15 @@ module Garage {
                     message: text,
                 }));
 
-
                 this.$el.append($dialog);
 
                 this.$el.children('#about-dialog-back').trigger('create');
 
                 return this;
             }
-
-            private _close() {
-                this.undelegateEvents();
-
-                let dom = this.$el.find('#about-dialog-back');
-                dom.remove();
-            }
-
+            
             close(event: Event) {
-                this._close();
+                this.closeDialog();
             }
 
             openLink(event: Event) {
@@ -88,7 +82,5 @@ module Garage {
                 event.preventDefault();
             }
         }
-
-
     }
 }
