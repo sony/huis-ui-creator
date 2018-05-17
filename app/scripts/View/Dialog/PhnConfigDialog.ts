@@ -1,4 +1,20 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
+/// <reference path="../../include/interfaces.d.ts" />
 
 module Garage {
     export module View {
@@ -6,14 +22,14 @@ module Garage {
         import JQUtils = Util.JQueryUtils;
         var TAG = "[Garage.View.PhnConfig] ";
 
-        export class PhnConfig extends Backbone.View<Model.PhnConfig> {
+        export class PhnConfig extends BaseDialog<Model.PhnConfig> {
 
-
-            /**
-             * constructor
-             */
             constructor(options?: Backbone.ViewOptions<Model.PhnConfig>) {
                 super(options);
+            }
+
+            getCloseTarget(): string {
+                return '#dialog-config-screen';
             }
 
             events(): any {
@@ -35,6 +51,7 @@ module Garage {
             }
 
             initialize() {
+                super.initialize();
                 this.render();
             }
 
@@ -59,7 +76,6 @@ module Garage {
 
                 data['allowAccessToStorage'] = this.model.allowAccessToStorage;
 
-
                 let $dialog = $(jst(data));
 
                 this.$el.append($dialog);
@@ -69,8 +85,6 @@ module Garage {
 
                 return this;
             }
-
-
 
             /**
              * 「本体ホームボタン押下時にホーム画面を表示する」チェックボックスが変更された場合の処理
@@ -85,7 +99,6 @@ module Garage {
 
                 this.enableSubmitButton();
             }
-
 
             /**
              * 「本体ホームボタン押下時にリモコン画面を表示する」チェックボックスが変更された場合の処理
@@ -105,7 +118,6 @@ module Garage {
                 }
             }
 
-
             /**
              * ホームボタンの跳び先変更ボタンの有効化/無効化
              *
@@ -115,7 +127,6 @@ module Garage {
                 $('#dialog-config-button-change-home-dest').prop('disabled', !enable);
             }
 
-
             /**
              * ホームボタンの跳び先変更ボタン押下時処理
              *
@@ -123,9 +134,7 @@ module Garage {
              */
             private onClickChangeHomeDestButton(event: Event) {
                 this.showSelectDestDialog();
-
             }
-
 
             /**
              * 跳び先選択ダイアログを表示
@@ -151,7 +160,6 @@ module Garage {
                 );
             }
 
-
             /**
              * ホームボタン跳び先設定ラジオボタンの選択状態を更新
              */
@@ -169,7 +177,6 @@ module Garage {
                 radio.checkboxradio('refresh');
             }
 
-
             /**
              * ホームボタン跳び先設定を変更
              *
@@ -181,7 +188,6 @@ module Garage {
 
                 this.updateHomeDestLabel();
             }
-
 
             /**
              * モデル情報からホームボタンの跳び先情報として表示する文字列を生成
@@ -216,7 +222,6 @@ module Garage {
                     pageNum + $.i18n.t('dialog.input.STR_DIALOG_PROPERTY_INPUT_RADIO_CUSTOM_PAGE_SEPARATOR') + total;
             }
 
-
             /**
              * ホームボタン跳び先表示ラベルの文字列を変更
              */
@@ -229,7 +234,6 @@ module Garage {
                 $('label[for="dialog-config-radio-jump-as-home"]').text(text);
             }
 
-
             /**
              * ホームボタン設定ラジオボタンの状態に合わせてモデル情報を更新
              */
@@ -239,7 +243,6 @@ module Garage {
                     this.model.setDefaultHomeDest();
                 }
             }
-
 
             /**
              * 「ホーム画面の設定ボタンを非表示」チェックボックス変更時の処理
@@ -255,7 +258,6 @@ module Garage {
                 this.enableSubmitButton();
             }
 
-
             /**
              * 「ホーム画面の設定ボタンを非表示」チェックボックスをモデル状態に合わせて更新
              */
@@ -264,7 +266,6 @@ module Garage {
                     .prop('checked', !this.model.displaySettingButton)
                     .checkboxradio('refresh');
             }
-
 
             /**
              * 「ホーム画面の追加ボタンを非表示」チェックボックス変更時の処理
@@ -279,7 +280,6 @@ module Garage {
 
                 this.enableSubmitButton();
             }
-
 
             /**
              *「ホーム画面の追加ボタンを非表示」チェックボックスをモデル状態に合わせて更新
@@ -304,7 +304,6 @@ module Garage {
                 this.enableSubmitButton();
             }
 
-
             /**
              *「ヘッダーの左右移動ボタンを非表示」チェックボックスをモデル状態に合わせて更新
              */
@@ -313,7 +312,6 @@ module Garage {
                     .prop('checked', !this.model.displayRemoteArrow)
                     .checkboxradio('refresh');
             }
-
 
             /**
              * 「スワイプによる移動を無効化」チェックボックス変更時の処理
@@ -330,8 +328,6 @@ module Garage {
                 this.enableSubmitButton();
             }
 
-
-
             /**
              *「スワイプによる移動を無効化」チェックボックスをモデル状態に合わせて更新
              */
@@ -340,7 +336,6 @@ module Garage {
                     .prop('checked', !this.model.enableHorizontalRemotePageSwipe)
                     .checkboxradio('refresh');
             }
-
 
             /**
              * 「ストレージへのアクセスをブロック」チェックボックス変更時の処理
@@ -352,9 +347,7 @@ module Garage {
                 this.model.allowAccessToStorage = !val;
 
                 this.enableSubmitButton();
-
             }
-
 
             /**
              *「ストレージへのアクセスをブロック」チェックボックスをモデル状態に合わせて更新
@@ -364,7 +357,6 @@ module Garage {
                     .prop('checked', !this.model.allowAccessToStorage)
                     .checkboxradio('refresh');
             }
-
 
             /**
              * 「デフォルトに戻す」ボタン押下時処理
@@ -385,8 +377,6 @@ module Garage {
                 this.enableSubmitButton();
             }
 
-
-
             /**
              * OKボタン押下時処理
              *
@@ -402,10 +392,8 @@ module Garage {
                 // 設定保存
                 this.updatePhnConfigFile();
 
-                this.removeConfigDialog();
-
+                this.closeDialog();
             }
-
 
             /**
              * キャンセルボタン押下時処理
@@ -413,9 +401,8 @@ module Garage {
              * @param event {Event} clickイベント
              */
             private onClickCancelButton(event: Event) {
-                this.removeConfigDialog();
+                this.closeDialog();
             }
-
 
             /**
              * OKボタンを有効化
@@ -423,16 +410,6 @@ module Garage {
             private enableSubmitButton() {
                 this.$el.find('#dialog-config-button-submit').prop('disabled', false);
             }
-
-
-            /**
-             * 詳細設定ダイアログのDomを削除
-             */
-            private removeConfigDialog() {
-                this.undelegateEvents();
-                this.$el.children('#dialog-config-screen').remove();
-            }
-
 
             /**
              * ストレージロックファイルをモデルに合わせて更新
@@ -444,7 +421,6 @@ module Garage {
                     storageLock.readyToLock();
                 }
             }
-
 
             /**
              * 詳細設定をファイルに出力
@@ -465,7 +441,6 @@ module Garage {
                         dialog.close();
                     });
             }
-
 
             /**
              * 保存処理中を表すスピナーを停止し処理完了表示に変更する
@@ -488,9 +463,6 @@ module Garage {
 
                 return promise;
             }
-
-
         }
-
     }
 }

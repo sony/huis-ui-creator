@@ -18,12 +18,16 @@
 
 module Garage {
     export module View {
-        export class ScreensaverDialog extends Backbone.View<Model.ScreensaverDialog> {
+        export class ScreensaverDialog extends BaseDialog<Model.ScreensaverDialog> {
             private changed_: boolean;
 
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
                 this.changed = false;
+            }
+
+            getCloseTarget(): string {
+                return '#screensaver-dialog-area';
             }
 
             get changed(): boolean {
@@ -45,6 +49,7 @@ module Garage {
             }
 
             initialize() {
+                super.initialize();
                 this.listenTo(this.model, "change:imagePath", this.updatePreview);
                 this.model.loadHuisDevData();
                 this.render();
@@ -173,22 +178,12 @@ module Garage {
                         this._saveClose();
                         break;
                     case 1:
-                        this._closeDialog();
+                        this.closeDialog();
                         break;
                     case 2:
                     default:
                         // do nothing
                 }
-            }
-
-            /**
-             * ダイアログクローズに伴う処理
-             */
-            private _closeDialog() {
-                this.undelegateEvents();
-
-                let dom = this.$el.find('#screensaver-dialog-area');
-                dom.remove();
             }
 
             /**
@@ -200,7 +195,7 @@ module Garage {
                 if (this.changed) {
                     this.showImageChangedMessage();
                 }
-                this._closeDialog();
+                this.closeDialog();
             }
 
             /**
@@ -221,7 +216,7 @@ module Garage {
                     return;
                 }
                 console.log("no update screensaver setting");
-                this._closeDialog();
+                this.closeDialog();
             }
         }
     }
