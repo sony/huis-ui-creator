@@ -2809,6 +2809,7 @@
     <TypeScriptCompile Include="app\scripts\Util\VersionManager.ts" />
     <TypeScriptCompile Include="app\scripts\Util\ZipManager.ts" />
     <TypeScriptCompile Include="app\scripts\View\BasePage.ts" />
+    <TypeScriptCompile Include="app\scripts\View\Dialog\BaseDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\ScreensaverDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\UnconnectedDialog.ts" />
     <TypeScriptCompile Include="app\scripts\View\Dialog\VersionDialog.ts" />
