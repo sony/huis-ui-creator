@@ -28,6 +28,7 @@ module Garage {
 
             /**
              * ダイアログを閉じる際に削除するdom要素を指定する
+             * @return {string} ダイアログを閉じる際に削除するdom要素
              */
             abstract getCloseTarget(): string;
 
