@@ -1,4 +1,19 @@
-﻿/// <reference path="../include/interfaces.d.ts" />
+﻿/*
+    Copyright 2016 Sony Corporation
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+/// <reference path="../../include/interfaces.d.ts" />
 
 module Garage {
     export module View {
@@ -6,10 +21,14 @@ module Garage {
         import JQUtils = Util.JQueryUtils;
         var TAG = "[Garage.View.PhnConfig] ";
 
-        export class PhnConfig extends Backbone.View<Model.PhnConfig> {
+        export class PhnConfig extends BaseDialog<Model.PhnConfig> {
 
             constructor(options?: Backbone.ViewOptions<Model.PhnConfig>) {
                 super(options);
+            }
+
+            getCloseTarget(): string {
+                return '#dialog-config-screen';
             }
 
             events(): any {
@@ -31,6 +50,7 @@ module Garage {
             }
 
             initialize() {
+                super.initialize();
                 this.render();
             }
 
@@ -371,8 +391,7 @@ module Garage {
                 // 設定保存
                 this.updatePhnConfigFile();
 
-                this.removeConfigDialog();
-
+                this.closeDialog();
             }
 
             /**
@@ -381,7 +400,7 @@ module Garage {
              * @param event {Event} clickイベント
              */
             private onClickCancelButton(event: Event) {
-                this.removeConfigDialog();
+                this.closeDialog();
             }
 
             /**
@@ -390,16 +409,6 @@ module Garage {
             private enableSubmitButton() {
                 this.$el.find('#dialog-config-button-submit').prop('disabled', false);
             }
-
-
-            /**
-             * 詳細設定ダイアログのDomを削除
-             */
-            private removeConfigDialog() {
-                this.undelegateEvents();
-                this.$el.children('#dialog-config-screen').remove();
-            }
-
 
             /**
              * ストレージロックファイルをモデルに合わせて更新

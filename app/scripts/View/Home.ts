@@ -17,7 +17,7 @@
 /// <reference path="../include/interfaces.d.ts" />
 /// <reference path="../../modules/include/jquery.d.ts" />
 /// <reference path="BasePage.ts" />
-/// <reference path="PhnConfig.ts" />
+/// <reference path="Dialog/PhnConfig.ts" />
 
 module Garage {
     export module View {
