@@ -12,22 +12,33 @@ if not "%1"=="ia32" (
     )
 )
 
+set MODE=""
+if "%2"=="skip" (
+    set MODE="skip"
+)
+
 set TAG=[cmd]
 set ARCH=%1
-echo %TAG% call npm install
-call npm install
 
-echo %TAG% cd node_modules/usb_dev
-cd node_modules/usb_dev
+rem environment build
+if not %MODE%=="skip" (
+    echo %TAG% call npm install
+    call npm install
 
-echo %TAG% set HOME=~/.electron-gyp
-set HOME=~/.electron-gyp
+    echo %TAG% cd node_modules/usb_dev
+    cd node_modules/usb_dev
 
-echo %TAG% call node-gyp rebuild --target=1.4.10 --arch=%ARCH% --dist-url=https://atom.io/download/atom-shell
-call node-gyp rebuild --target=1.4.10 --arch=%ARCH% --dist-url=https://atom.io/download/atom-shell
+    echo %TAG% set HOME=~/.electron-gyp
+    set HOME=~/.electron-gyp
 
-echo %TAG% cd ../../
-cd ../../
+    echo %TAG% call node-gyp rebuild --target=1.4.10 --arch=%ARCH% --dist-url=https://atom.io/download/atom-shell
+    call node-gyp rebuild --target=1.4.10 --arch=%ARCH% --dist-url=https://atom.io/download/atom-shell
+
+    echo %TAG% cd ../../
+    cd ../../
+) else (
+    echo skip environment build
+)
 
 echo %TAG% call grunt build
 call grunt build
