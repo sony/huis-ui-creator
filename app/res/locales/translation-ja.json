@@ -1270,6 +1270,9 @@
             "STR_REMOTE_BTN_AV_MEMORY_3": "AV メモリー 3",
             "STR_REMOTE_BTN_AUTO_IRIS": "オートアイリス",
             "STR_REMOTE_BTN_WIND_DIRECTION": "風向",
+            "STR_REMOTE_BTN_UNEXT": "U-NEXT",
+            "STR_REMOTE_BTN_ABEMATV": "AbemaTV",
+            "STR_REMOTE_BTN_APPLICATION": "アプリ",
 
             "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)"
         }
