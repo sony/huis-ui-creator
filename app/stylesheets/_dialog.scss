@@ -863,6 +863,13 @@ body {
             left: 0;
             bottom: 0;
             position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .default-image {
+            background-image: url("../res/images/screensaver/default_screensaver.png");
         }
 
         .edit-btn-area {

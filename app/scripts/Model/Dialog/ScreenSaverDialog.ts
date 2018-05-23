@@ -20,7 +20,7 @@
 module Garage {
     export module Model {
         export namespace ConstValue {
-            export const DEFAULT_IMAGE_PATH: string = "./app/res/images/screensaver/default_screensaver.png";
+            export const DEFAULT_IMAGE_PATH: string = "../res/images/screensaver/default_screensaver.png";
             export const SCREENSAVER_DIR_NAME: string = "favoritescreen";
             export const SCREENSAVER_IMAGE_FILE_NAME_PREFIX: string = "FS";
             export const SCREENSAVER_IMAGE_FILE_NAME_SUFFIX: string = ".png";
@@ -62,6 +62,14 @@ module Garage {
             set imagePath(path: string) {
                 // change イベント発火のため、attribute で管理する
                 this.set({ "imagePath": path });
+            }
+
+            /**
+             * HTMLのurlに渡す際に、"\"を"\\"に変更する必要がある。
+             * 画像パスの"\"を"\\"に変換するためのメソッド。
+             */
+            getEncodedImagePath(): string {
+                return this.imagePath.replace(/\\/g, "\\\\");
             }
 
             /**
