@@ -32,6 +32,24 @@ module Garage {
                 }
                 return result;
             }
+
+            /**
+             * stateId から ButtonState を取得する。
+             * stateId は順番とは一致しないため、一致するIDを検索して検出する。
+             * 例) エアコンの温度は温度でID管理しているので、21度のときのIDは21だが、
+             *     Collectionのサイズは21もない。
+             *
+             * @param {number} stateId あるかどうか確認したい state の id
+             * @return {ButtonState} 引数と一致する id を持つ state。ない場合は null。
+             */
+            getStateById(stateId: number): ButtonState {
+                for (let state of this.models) {
+                    if (state.isSameId(stateId)) {
+                        return state;
+                    }
+                }
+                throw new Error(TAG + "invalid id : " + stateId);
+            }
         }
     }
 }

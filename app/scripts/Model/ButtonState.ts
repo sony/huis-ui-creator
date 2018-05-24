@@ -292,6 +292,10 @@ module Garage {
                 }
                 return false;
             }
+
+            isSameId(id: number): boolean {
+                return id == this.stateId;
+            }
         }
     }
 }

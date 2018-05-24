@@ -446,7 +446,13 @@ module Garage {
              * @return {boolean} テキストのフォントウェイトがnormal設定のときtrueを返す。テキストがないときはfalseを返す。
              */
             isNormalText(): boolean {
-                return this.stateCollection_.at(this.currentStateId).isNormalText();
+                try {
+                    let state: ButtonState = this.stateCollection_.getStateById(this.currentStateId);
+                    return state.isNormalText();
+                } catch (err) {
+                    console.log(err);
+                    return false; // button default font weight is bold, so return false
+                }
             }
 
             /**
