@@ -124,7 +124,7 @@ module Garage {
                     $image.addClass(defaultImageClass);
                 } else {
                     let avoidCache: string = "?" + String(ScreensaverDialog.indexToAvoidCache++); // avoid cache problem which a picture don't change
-                    $image.attr("style", "background-image:url(" + this.model.getEncodedImagePath() + avoidCache + ")");
+                    $image.attr("style", "background-image:url(\"" + this.model.getEncodedImagePath() + avoidCache + "\")");
                     $image.removeClass(defaultImageClass);
                 }
             }
