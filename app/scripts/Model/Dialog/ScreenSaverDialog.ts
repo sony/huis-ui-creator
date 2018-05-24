@@ -35,7 +35,8 @@ module Garage {
                     mode: "contain",
                     padding: true,
                     force: true
-                }
+                },
+                grayscale: 1.0
             };
         }
 
