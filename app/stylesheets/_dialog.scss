@@ -25,6 +25,14 @@ body {
         background-color: $COLOR_DIALOG_MASK;
     }
 
+    .gray {
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+
     .separator {
         border-top-style: solid;
         border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
