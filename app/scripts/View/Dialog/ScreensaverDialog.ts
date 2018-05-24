@@ -20,6 +20,7 @@ module Garage {
     export module View {
         export class ScreensaverDialog extends BaseDialog<Model.ScreensaverDialog> {
             private changed_: boolean;
+            static indexToAvoidCache: number = 0;
 
             constructor(options?: Backbone.ViewOptions<Model.ScreensaverDialog>) {
                 super(options);
@@ -122,7 +123,8 @@ module Garage {
                     $image.attr("style", ""); // remove background-image style
                     $image.addClass(defaultImageClass);
                 } else {
-                    $image.attr("style", "background-image:url(" + this.model.getEncodedImagePath() + ")");
+                    let avoidCache: string = "?" + String(ScreensaverDialog.indexToAvoidCache++); // avoid cache problem which a picture don't change
+                    $image.attr("style", "background-image:url(" + this.model.getEncodedImagePath() + avoidCache + ")");
                     $image.removeClass(defaultImageClass);
                 }
             }
