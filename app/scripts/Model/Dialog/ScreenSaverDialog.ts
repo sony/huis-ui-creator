@@ -66,11 +66,14 @@ module Garage {
             }
 
             /**
-             * HTMLのurlに渡す際に、"\"を"\\"に変更する必要がある。
-             * 画像パスの"\"を"\\"に変換するためのメソッド。
+             * HTMLのurlに渡す際に、一部文字を変更する必要がある。
+             * 画像パスの"\"を"\\"に、"#"を"%23"に
+             * 変換するためのメソッド。
              */
             getEncodedImagePath(): string {
-                return this.imagePath.replace(/\\/g, "\\\\");
+                let encodedUri: string = this.imagePath.replace(/\\/g, "\\\\").replace(/\#/g, "%23");
+                console.log("encoded : " + encodedUri);
+                return encodedUri;
             }
 
             /**
