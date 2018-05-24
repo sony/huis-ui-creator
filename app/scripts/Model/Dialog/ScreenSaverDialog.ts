@@ -71,7 +71,7 @@ module Garage {
              * 変換するためのメソッド。
              */
             getEncodedImagePath(): string {
-                let encodedUri: string = this.imagePath.replace(/\\/g, "\\\\").replace(/\#/g, "%23");
+                let encodedUri: string = this.imagePath.replace(/\\/g, "\\\\").replace(/\#/g, "%23").replace(/\"/g, "%22");
                 console.log("encoded : " + encodedUri);
                 return encodedUri;
             }
