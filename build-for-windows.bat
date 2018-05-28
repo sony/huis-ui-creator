@@ -12,6 +12,11 @@ if not "%1"=="ia32" (
     )
 )
 
+set APP_NAME=HUIS UI CREATOR
+echo %TAG% set APP_NAME=%APP_NAME%
+set APP_VERSION=7.0.0
+echo %TAG% set APP_VERSION=%APP_VERSION%
+
 set MODE=""
 if "%2"=="skip" (
     set MODE="skip"
@@ -52,13 +57,12 @@ xcopy /S /Y node_modules www\node_modules\
 
 echo %TAG% cd www
 cd www
-echo %TAG% rd /s /q "HUIS UI CREATOR-win32-%ARCH%"
-rd /s /q "HUIS UI CREATOR-win32-%ARCH%"
-echo %TAG% set APP_NAME="HUIS UI CREATOR"
-set APP_NAME="HUIS UI CREATOR"
+echo %TAG% rd /s /q "%APP_NAME%-win32-%ARCH%"
+rd /s /q "%APP_NAME%-win32-%ARCH%"
 
-echo %TAG% electron-packager . %APP_NAME% --platform=win32 --arch=%ARCH% --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$" --no-tmpdir
-call electron-packager . %APP_NAME% --platform=win32 --arch=%ARCH% --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$" --no-tmpdir
+
+echo %TAG% electron-packager . "%APP_NAME%" --platform=win32 --arch=%ARCH% --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$" --no-tmpdir
+call electron-packager . "%APP_NAME%" --platform=win32 --arch=%ARCH% --electron-version=1.4.10 --ignore="node_modules/(grunt*|electron-rebuild)" --ignore=".git" --ignore="Service References" --ignore="docs" --ignore="obj" --ignore="tests/*" --ignore="www" --ignore="platforms" --ignore="-x64$" --ignore="-ia32$" --no-tmpdir
 
 echo %TAG% cd ../
 cd ../
