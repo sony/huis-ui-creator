@@ -73,6 +73,11 @@ module Garage {
             render(): View.LabelItem {
                 this.collection.each((item: Model.LabelItem, index: number) => {
                     this.$el.append($(this.labelItemTemplate_(item)));
+                    
+                    if (item.isBold()) {
+                        let $element = this.$el.children().last();
+                        $element.addClass(FontWeight.FONT_BOLD_CLASS);
+                    }
                 });
                 return this;
             }

@@ -17,10 +17,14 @@
 /// <reference path="../include/interfaces.d.ts" />
 
 module Garage {
-    export module Util {
+    export module Model {
         import Framework = CDP.Framework;
 
-        export class HuisConnectionChecker {
+        export namespace ConstValue {
+            export const HUIS_DISCONNECT_TRIGGER: string = "huisDisconnected";
+        };
+
+        export class HuisConnectionChecker extends Backbone.Model{
             static instance: HuisConnectionChecker = null;
 
             private _type: View.Dialog.UnconnectedDialogType;
@@ -35,7 +39,8 @@ module Garage {
             /**
              * call from only HuisConnectionChecker.getInstance()
              */
-            constructor(type: View.Dialog.UnconnectedDialogType) {
+            constructor(type: View.Dialog.UnconnectedDialogType, attributes?: any, options?: any) {
+                super(attributes, options);
                 this._type = type;
             }
 
@@ -77,6 +82,8 @@ module Garage {
                 if (this._isConnectedToHuis()) {
                     return;
                 }
+
+                this.trigger(ConstValue.HUIS_DISCONNECT_TRIGGER);
                 this.showConnectSuggetDialog();
             }
 

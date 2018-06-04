@@ -25,7 +25,6 @@
 /// <reference path="../Util/HuisDev.ts" />
 /// <reference path="../Util/MiscUtil.ts" />
 /// <reference path="../Util/ElectronDialog.ts" />
-/// <reference path="../Util/SelectRemotePageDialog.ts" />
 /// <reference path="../Util/JQueryUtils.ts" />
 /// <reference path="../Util/ButtonDeviceInfoCache.ts" />
 /// <reference path="../Util/ZipManager.ts" />

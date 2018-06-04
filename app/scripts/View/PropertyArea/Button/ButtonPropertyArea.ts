@@ -79,11 +79,6 @@ module Garage {
                 this.listenTo(this.getModel(), PropertyAreaEvents.Button.CHANGE_LABEL, this.render);
             }
 
-
-
-
-
-
             /////////////////////////////////////////////////////////////////////////////////////////
             ///// event method
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -96,10 +91,11 @@ module Garage {
                     changedImageFileName).replace(/\\/g, "/");
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
-                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
 
-                this._initLabelAndImage(targetState);
-                this._setDefaultImageToState(targetState, changedImageFileRelativePath);
+                for (let targetState of targetStates) {
+                    this._initLabelAndImage(targetState);
+                    this._setDefaultImageToState(targetState, changedImageFileRelativePath);
+                }
 
                 this._setStateMementoCommand(targetStates);
                 this.getModel().trigger(PropertyAreaEvents.Button.CHANGE_IMAGE);
@@ -124,38 +120,39 @@ module Garage {
                 let changedSize = (<StatePreviewWindow>this.previewWindow_).getTextSize();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
-                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
-                targetState.getDefaultLabel().size = changedSize;
 
-                this._setStateMementoCommand(targetStates);
+                for (let targetState of targetStates) {
+                    targetState.getDefaultLabel().size = changedSize;
+                    this._setStateMementoCommand(targetStates);
+                }
             }
 
             private _onTextColorPulldownChanged(event: Event) {
                 let changedColor = (<StatePreviewWindow>this.previewWindow_).getTextColor();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
-                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
-                targetState.getDefaultLabel().color = changedColor;
-
-                this._setStateMementoCommand(targetStates);
+                for (let targetState of targetStates) {
+                    targetState.getDefaultLabel().color = changedColor;
+                    this._setStateMementoCommand(targetStates);
+                }
             }
 
             private _onTextFieldChanged(event: Event) {
                 let changedText = (<StatePreviewWindow>this.previewWindow_).getText();
 
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
-                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
-                targetState.getDefaultLabel().text = changedText;
-
-                this._setStateMementoCommand(targetStates);
+                for (let targetState of targetStates) {
+                    targetState.getDefaultLabel().text = changedText;
+                    this._setStateMementoCommand(targetStates);
+                }
             }
 
             private _onChangeToTextBtn(event: Event) {
                 let targetStates: Model.ButtonState[] = this.getModel().cloneStates();
-                let targetState: Model.ButtonState = targetStates[this.getModel().getDefaultStateIndex()];
-                this._initLabelItem(targetState);
-
-                this._setStateMementoCommand(targetStates);
+                for (let targetState of targetStates) {
+                    this._initLabelItem(targetState);
+                    this._setStateMementoCommand(targetStates);
+                }
                 this.getModel().trigger(PropertyAreaEvents.Button.CHANGE_LABEL);
             }
 
@@ -1034,7 +1031,6 @@ module Garage {
                 return total;
             }
 
-
             /**
              * ページプルダウン各項目の表示/非表示を切り替える
              *
@@ -1057,7 +1053,6 @@ module Garage {
                     }
                 });
             }
-
 
             /**
              * ページプルダウンの選択項目を設定

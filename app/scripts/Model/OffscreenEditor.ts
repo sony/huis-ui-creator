@@ -70,6 +70,25 @@ module Garage {
             }
 
             /**
+             * ハッシュ化が必要かどうか判断する。
+             * ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
+             * もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
+             * Screensaver機能の場合はハッシュ化をしない
+             * TODO: editImageをもう少し汎用的にして、目的別にパラメータを変更して使うべき
+             *
+             * @param {string} dstPath 保存先のパス
+             * @param {string} imageSrc 保存元のパス
+             * @return {boolean} 
+             */
+            private static needHashName(dstPath: string, imageSrc: string): boolean {
+                if (Model.ScreensaverDialog.isScreenSaverImage(dstPath)) {
+                    return false;
+                }
+                let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
+                return imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1;
+            }
+
+            /**
              * 画像を編集し、編集した画像をファイル出力する
              * 
              * @param imageSrc {string} 編集する画像のパス
@@ -87,7 +106,6 @@ module Garage {
              */
             public static editImage(imageSrc: string, params: IImageEditParams): IPromise<string>;
 
-            // public methods:
             public static editImage(imageSrc: string, params: IImageEditParams, dstPath?: string): IPromise<IEditImageResults | string> {
                 let FUNCTION_NAME = TAG + "editImage : ";
                 var df = $.Deferred();
@@ -133,11 +151,7 @@ module Garage {
                         // 出力先のパスが指定されている場合は、ファイル出力を行う
                         if (dstPath) {
 
-                            let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
-
-                            //ユーザー画像を指定した画像と、commonパーツの画像のみ有効にするため。
-                            //もともとのパスがremoteImagesの00XXがdstのパスでない場合は、ハッシュ化。
-                            if (imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1) {
+                            if (OffscreenEditor.needHashName(dstPath, imageSrc)) {
                                 dstPath = this.getEncodedPath(dstPath);
                             }
 
