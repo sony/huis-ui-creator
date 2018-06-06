@@ -42,6 +42,9 @@ class FontWeight {
     public static FONT_BOLD: string = "bold";
     public static FONT_NORMAL: string = "normal";
 
+    public static FONT_BOLD_CLASS: string = "font-weight-bold";
+    public static FONT_NORMAL_IMPORTANT_CLASS: string = "font-weight-normal-important";
+
     public static exchangeStringToFontWeight(input: any): FontWeight {
         if (input == "normal") {
             return FontWeight.FONT_NORMAL;

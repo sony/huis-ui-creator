@@ -40,6 +40,7 @@
     "dialog": {
         "title": {
             "STR_DIALOG_TITLE_SELECT_JUMP": "移動先を選択",
+            "STR_DIALOG_TITLE_SCREENSAVER_SETTINGS": "お気に入り待受画面の設定",
             "STR_DIALOG_TITLE_SET_PROPERTIES": "詳細設定"
         },
         "message": {
@@ -97,7 +98,9 @@
             "STR_DIALOG_MESSAGE_SUCCEEDED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロックを解除します。\nUSBケーブルを一度抜いたあと、再度接続してアプリを起動してください。",
             "STR_DIALOG_MESSAGE_FAILED_STORAGE_UNLOCK": "HUIS-100RCへのストレージアクセスのブロック解除に失敗しました。もう一度お試しください。",
             "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY": "設定を適用中です。\nUSBケーブルを抜かないでください。",
-            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE": "設定を適用しました。"
+            "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE": "設定を適用しました。",
+            "STR_DIALOG_MESSAGE_SCREENSAVER_CHANGED_CONFIRMATION": "お気に入り待受画面の画像を変更しました。",
+            "STR_DIALOG_MESSAGE_SCREENSAVER_CHANGE_CANCEL": "お気に入り待受画面の変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",
@@ -107,7 +110,7 @@
             "STR_DIALOG_BUTTON_SAVE": "保存",
             "STR_DIALOG_BUTTON_NOT_SAVE": "保存しない",
             "STR_DIALOG_BUTTON_DELETE": "削除",
-            "STR_DIALOG_BUTTON_CHANGE_HOME_DEST": "変更する",
+            "STR_DIALOG_BUTTON_CHANGE": "変更する",
             "STR_DIALOG_BUTTON_STORAGE_UNLOCK": "解除",
             "STR_DIALOG_BUTTON_SET_DEFAULT": "デフォルトに戻す"
         },
@@ -205,6 +208,7 @@
         "STR_OPTION_MENU_SET_PROPERTIES": "詳細設定",
         "STR_OPTION_MENU_IMPORT_REMOTE": "リモコンをインポート",
         "STR_OPTION_MENU_EXPORT_REMOTE": "リモコンをエクスポート",
+        "STR_OPTION_MENU_SETTING_SCREENSAVER":  "お気に入り待受画面の設定",
         "STR_OPTION_MENU_DELTE_REMOTE": "リモコンを削除",
         "STR_OPTION_MENU_HELP": "ヘルプガイドを見る",
         "STR_OPTION_MENU_ABOUT": "HUIS UI CREATOR のバージョン情報"
@@ -1266,6 +1270,9 @@
             "STR_REMOTE_BTN_AV_MEMORY_3": "AV メモリー 3",
             "STR_REMOTE_BTN_AUTO_IRIS": "オートアイリス",
             "STR_REMOTE_BTN_WIND_DIRECTION": "風向",
+            "STR_REMOTE_BTN_UNEXT": "U-NEXT",
+            "STR_REMOTE_BTN_ABEMATV": "AbemaTV",
+            "STR_REMOTE_BTN_APPLICATION": "アプリ",
 
             "STR_REMOTE_BTN_LEARNED": " (このボタンに学習された信号)"
         }

@@ -125,6 +125,10 @@ module Garage {
                     }
 
                     this.$el.append($(this.buttonItemTemplate_(model)));
+                    if (model.isNormalText()) {
+                        let $item = this.$el.children().last().find(".state-label");
+                        $item.addClass(FontWeight.FONT_NORMAL_IMPORTANT_CLASS);
+                    }
                 });
                 return this;
             }

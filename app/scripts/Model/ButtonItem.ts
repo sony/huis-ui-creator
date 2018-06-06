@@ -443,6 +443,19 @@ module Garage {
             }
 
             /**
+             * @return {boolean} テキストのフォントウェイトがnormal設定のときtrueを返す。テキストがないときはfalseを返す。
+             */
+            isNormalText(): boolean {
+                try {
+                    let state: ButtonState = this.stateCollection_.getStateById(this.currentStateId);
+                    return state.isNormalText();
+                } catch (err) {
+                    console.log(err);
+                    return false; // button default font weight is bold, so return false
+                }
+            }
+
+            /**
              * コピー元の画像ディレクトリーが存在していたら、
              * state.image に指定されている画像を module ディレクトリーにコピーする。
              */
@@ -539,7 +552,6 @@ module Garage {
                 }
                 return false;
             }
-
         }
     }
 }

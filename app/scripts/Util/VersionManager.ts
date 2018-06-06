@@ -87,9 +87,9 @@ module Garage {
              */
             public static getHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
-                    return "A.0.1";
+                    return "A.2.1";
                 }
-                return "4.3.1";
+                return "4.5.1";
             }
 
             /**
@@ -98,9 +98,9 @@ module Garage {
              */
             public static getDisplayHuisRcRequiredVersion(): string {
                 if (Util.MiscUtil.isBz()) {
-                    return "A.1.0";
+                    return "A.3.0";
                 }
-                return "4.4.0";
+                return "4.6.0";
             }
         }
     }

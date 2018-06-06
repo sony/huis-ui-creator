@@ -243,7 +243,6 @@ module Garage {
             "garage.model.offscreeneditor",
             "garage.util.huisfiles",
             "garage.util.electrondialog",
-            "garage.util.selectremotepagedialog",
             "garage.util.miscutil",
             "garage.util.huisdev",
             "garage.util.jqutils",
@@ -308,7 +307,7 @@ module Garage {
 
     // 起動時のチェック
     var initCheck = (callback?: Function) => {
-        let connectionChecker: Util.HuisConnectionChecker = Util.HuisConnectionChecker.getInstance();
+        let connectionChecker: Model.HuisConnectionChecker = Model.HuisConnectionChecker.getInstance();
         connectionChecker.setUnconnectDialogType(View.Dialog.UnconnectedDialogType.BOOT);
         connectionChecker.checkConnection(callback);
         if (Util.MiscUtil.isDarwin() && Util.HuisDev.isConnectedToHuis()) {

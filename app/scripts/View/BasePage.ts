@@ -142,7 +142,7 @@ module Garage {
                     return false;
                 }, false);
 
-                Util.HuisConnectionChecker.getInstance().setUnconnectDialogType(this.getUncoonectDialogType());
+                Model.HuisConnectionChecker.getInstance().setUnconnectDialogType(this.getUncoonectDialogType());
             }
 
             /**
@@ -234,12 +234,10 @@ module Garage {
                 $("#dialog-about-message-container").html(text);
                 $("#about-version-number").text(APP_VERSION);
 
-
                 //エレクトロンのラインセンス情報を記載したファイルパス
                 let pathElectronLicensesFile = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/license/LICENSES.chromium.html"));
                 //licenses.txt上の リンクを有効なパスに更新する。
                 $("#link-electron-licenses-file").attr("href", pathElectronLicensesFile);
-
 
                 return;
             }
