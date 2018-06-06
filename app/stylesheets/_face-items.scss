@@ -163,12 +163,24 @@
     text-shadow: none;
 }
 
-.label-item {
+.font-weight-normal {
     font-family: $FONT_WEIGHT_LABEL_ITEM;
 }
 
-.state-label {
+.font-weight-normal-important {
+    font-family: $FONT_WEIGHT_LABEL_ITEM !important;
+}
+
+.font-weight-bold {
     font-family: $FONT_WEIGHT_BUTTON_ITEM;
+}
+
+.label-item {
+    @extend .font-weight-normal;
+}
+
+.state-label {
+    @extend .font-weight-bold;
 }
 
 .label-value,

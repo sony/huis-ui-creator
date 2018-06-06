@@ -431,7 +431,7 @@ module Garage {
                 if (huisFiles.init(HUIS_FILES_ROOT)) {
                     // 現在つながれている HUIS のファイルと PC 側の HUIS ファイルに差分があるかをチェック
                     Util.HuisDev.hasDiffAsync(HUIS_FILES_ROOT, HUIS_ROOT_PATH, null, (result: boolean) => {
-                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)
+                        // 同期を実行  (差分がある場合は常に(ダイアログ等での確認なしに)HUIS->PCへの上書きを行う)                            
                         this.doSync(true, callback);
                     });
                 } else {

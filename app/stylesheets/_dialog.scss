@@ -25,6 +25,113 @@ body {
         background-color: $COLOR_DIALOG_MASK;
     }
 
+    .gray {
+        -webkit-filter: grayscale(100%);
+        -moz-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+        -o-filter: grayscale(100%);
+        filter: grayscale(100%);
+    }
+
+    .separator {
+        border-top-style: solid;
+        border-top-width: $SIZE_DIALOG_HEADER_SEPARATOR_BORDER_WIDTH;
+        border-top-color: $COLOR_DIALOG_HEADER_SEPARATOR;
+        margin-left: 0;
+        margin-right: $SIZE_DIALOG_HEADER_SEPARATOR_MARGIN_RIGHT;
+    }
+
+    .submit-area {
+        height: $SIZE_BUTTON_HEIGHT;
+        padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
+        padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
+        padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
+        display: flex;
+        justify-content: flex-end;
+        
+        .button-ok {
+            margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
+        }
+    }
+
+    .dialog-area {
+        position: absolute;
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: $COLOR_COMMON_BACKGROUND;
+        font-family: $FONT_WEIGHT_DIALOG_TEXT;
+        width: $SIZE_DIALOG_WIDTH;
+        box-shadow: none;
+        -webkit-box-shadow: none;
+        text-shadow: none;
+        border-radius: 0;
+        height: $SIZE_ABOUT_DIALOG_HEIGHT;
+        border: $SIZE_ABOUT_DIALOG_TEXT_THICKNESS solid $COLOR_ABOUT_DIALOG_BORDER;
+        padding: $SIZE_DIALOG_AREA_MARGIN;
+
+        h3.title {
+                margin-top: $SIZE_DIALOG_TITLE_MARGIN_TOP;
+                margin-bottom: $SIZE_DIALOG_TITLE_MARGIN_BOTTOM;
+                margin-left: 0;
+                color: $COLOR_TEXT_MAIN;
+                font-size: $SIZE_DIALOG_TITLE_FONT;
+                font-family: $FONT_FAMILY_DESTINATION_DIALOG_REMOTE_TITLE;
+                line-height: $TEXT_HEIGHT_DEFAULT;
+                font-weight: normal;
+                text-shadow: none;
+        }
+
+        .description-text {
+            color: $COLOR_DIALOG_DESCRIPTION;
+            font-size: $FONT_SIZE_S;
+            margin: $SIZE_DIALOG_DESCRIPTION_TEXT_MARGIN;
+        }
+
+        .ui-btn {
+            font-family: $FONT_FAMILY_TEXT_BUTTON;
+            text-shadow: none;
+            margin: 0;
+            padding: 0;
+            border: none;
+            height: $SIZE_BUTTON_HEIGHT;
+            font-size: $FONT_SIZE_TEXT_BUTTON;
+            color: $COLOR_BUTTON_TEXT;
+            background-color: $COLOR_BUTTON_NORMAL;
+            box-shadow: none;
+            border-radius: 0;
+            width: 154px;
+            height: 32px;
+            
+            &:hover {
+                text-shadow: none;
+                background-color: $COLOR_BUTTON_HOVER;
+                font-family: $FONT_FAMILY_TEXT_BUTTON;
+                color: $COLOR_BUTTON_TEXT;
+                border: none;
+            }
+            
+            &:active {
+                text-shadow: none;
+                background-color: $COLOR_BUTTON_PRESED;
+                font-family: $FONT_FAMILY_TEXT_BUTTON;
+                color: $COLOR_BUTTON_TEXT;
+                box-shadow: none;
+                border: none;
+            }
+            
+            &:focus {
+                text-shadow: none;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    }
+
     .common-dialog {
         text-shadow: none;
         font-family: $FONT_WEIGHT_DIALOG_TEXT;
@@ -89,7 +196,6 @@ body {
         z-index: 3;
         background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
 
-
         #about-dialog-area {
             position: absolute;
             margin: auto;
@@ -99,7 +205,6 @@ body {
             right: 0;
             animation-name: popin;
             animation-duration: 350ms;
-
 
             .common-dialog {
                 height: 550px;
@@ -241,8 +346,6 @@ body {
         }
     }
 
-
-
     #information-dialog-area {
         -webkit-box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
         box-shadow: 0 0 $SIZE_INFORMATION_BOX_SHADOW_BLUR $COLOR_INFORMATION_BOX_SHADOW;
@@ -329,8 +432,6 @@ body {
         }
     }
 
-
-
     #remotelist-dialog-area {
         text-shadow: none;
         font-weight: normal;
@@ -380,7 +481,6 @@ body {
                 margin: 0 auto;
                 margin-top: $SIZE_SPLASH_MESSAGE_MARGIN_TOP;
             }
-
 
             #face-list-container {
                 overflow-x: overlay;
@@ -546,13 +646,6 @@ body {
             }
 
             .submit-area {
-                height: $SIZE_BUTTON_HEIGHT;
-                padding-top: $SIZE_DIALOG_SUBMIT_AREA_PADDING_TOP;
-                padding-bottom: $SIZE_DIALOG_SUBMIT_AREA_PADDING_BOTTOM;
-                padding-right: $SIZE_DIALOG_SUBMIT_MARGIN_RIGHT;
-                display: flex;
-                justify-content: flex-end;
-
                 #remotelist-label-selected-conainer {
                     color: $COLOR_DIALOG_SELECTED_REMOTE_LABEL;
                     font-size: $FONT_SIZE_DIALOG_SELECTED;
@@ -560,19 +653,20 @@ body {
                     text-align: right;
                     margin-right: $SIZE_DIALOG_SUBMIT_TEXT_MARGIN_RIGHT;
                 }
-
+                
                 .ui-btn {
                     width: $SIZE_DIALOG_BUTTON_WIDTH;
                     font-weight: normal;
                     text-shadow: none;
                 }
-
+                
                 #remotelist-button-ok {
                     margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
                 }
             }
         }
     }
+
     // 詳細設定ダイアログ
     #dialog-config-screen {
         text-shadow: none;
@@ -691,6 +785,123 @@ body {
                 #dialog-config-button-cancel {
                     margin-left: $SIZE_DETAIL_PROPERTY_CANCEL_BUTTON_MARGIN_LEFT;
                 }
+            }
+        }
+    }
+
+    #screensaver-dialog-area {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 3;
+        background-color: rgba(25, 25, 25, $OPACITY_DIALOG_MASK);
+
+        .separator {
+            width: 100%;
+        }
+
+        .dialog-area {
+            width: 700px;
+        }
+
+        .edit-area {
+            height: 400px;
+        }
+
+        .huis-background {
+            width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
+            margin: 10px auto;
+            padding: 6px 0 0 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .white_on_white {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_WHITE_ON_WHITE;}
+        
+        .black_on_white {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_BLACK_ON_WHITE;}
+        
+        .white_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_WHITE_ON_BLACK;}
+        
+        .black_on_black {background-image: $PATH_IMG_SCREENSAVER_BACKGROUND_BLACK_ON_BLACK;}
+
+        .huis-over {
+            width: $SCREENSAVER_PREVIEW_HUIS_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_HUIS_IMAGE_HEIGHT;
+            position: relative;
+            top: -406px;
+            margin: 10px auto;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .over_white {background-image: $PATH_IMG_SCREENSAVER_OVER_HUIS_WHITE;}
+        
+        .over_black {background-image: $PATH_IMG_SCREENSAVER_OVER_HUIS_BLACK;}
+
+        .image-button {
+            padding: 0;
+            cursor: pointer;
+            background: none;
+            border: 0;
+        }
+
+        .preview-button-area {
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT;
+            margin: 10px auto;
+        }
+
+        .preview-area {
+            width: $SCREENSAVER_PREVIEW_IMAGE_WIDTH;
+            height: $SCREENSAVER_PREVIEW_IMAGE_HEIGHT;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .preview {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            margin: auto;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            position: absolute;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .default-image {
+            background-image: url("../res/images/screensaver/default_screensaver.png");
+        }
+
+        .edit-btn-area {
+            top: -96px;
+            height: 0;
+            position:relative;
+        }
+
+        .edit-btn {
+            margin-left: auto;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+        }
+
+        #dialog-button-default {
+            margin-top: $SIZE_DIALOG_BUTTON_VERTICAL_MARGIN;
+        }
+
+        .submit-area {
+            margin-top: $SIZE_DIALOG_SUBMIT_AREA_MARGIN_TOP;
+            margin-right: $SIZE_DIALOG_BUTTON_MARGIN_RIGHT;
+            padding: 0;
+            
+            .button-ok {
+                margin-right: $SIZE_DIALOG_SUBMIT_BETWEEN_BTNS;
             }
         }
     }
