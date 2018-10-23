@@ -90,7 +90,7 @@ module Garage {
                 }
 
                 let appInfo: AppInfo = new AppInfo();
-                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
+                appInfo.load();
                 let nextRemoteId: RemoteId = new RemoteId(appInfo.next_remote_id);
                 return this.nextNewRemoteId(nextRemoteId);
             }
@@ -135,7 +135,7 @@ module Garage {
                 this.addRemoteId(newRemoteId);
 
                 let appInfo: AppInfo = new AppInfo();
-                appInfo.loadIniFile(appInfo.getDefaultAppInfoPath());
+                appInfo.load();
                 appInfo.updateLastRemoteId(newRemoteId.nextId());
 
                 return newRemoteId;

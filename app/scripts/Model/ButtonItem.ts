@@ -93,6 +93,10 @@ module Garage {
                     newButton.currentStateId = this.currentStateId;
                 }
 
+                if (this.group) {
+                    newButton.group = this.group;
+                }
+
                 newButton.state = [];
                 // button.state のコピー
                 for (let state of this.state) {
@@ -247,6 +251,9 @@ module Garage {
                 if (this.name != null) {
                     convertedButton.name = this.name;
                 }
+                if (this.group != null) {
+                    convertedButton.group = this.group;
+                }
 
                 return convertedButton;
             }
@@ -281,6 +288,14 @@ module Garage {
 
             set currentStateId(val: number) {
                 this.set("currentStateId", val);
+            }
+
+            get group(): IGroup {
+                return this.get("group"); 
+            }
+
+            set group(val: IGroup) {
+                this.set("group", val);
             }
 
             // TODO: change name, state to states
@@ -342,16 +357,14 @@ module Garage {
 
                     }
                 }
-                this._setStateItemsArea(this.area);
                 this.set("state", this.stateCollection_.models);
             }
-
 
             /**
              * 変更可能なプロパティーの一覧
              */
             get properties(): string[] {
-                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name", "version", "interval"];
+                return ["enabled", "area", "default", "currentStateId", "state", "deviceInfo", "name", "version", "interval", "group"];
             }
 
             // TODO: delete

@@ -1418,6 +1418,7 @@ module Garage {
                         case Dirs.BLACK_DIR:
                         case Dirs.WHITE_DIR:
                         case Model.ConstValue.SCREENSAVER_DIR_NAME:
+                        case Util.ThemeInstaller.getThemePathName():
                             return false;
 
                         default:

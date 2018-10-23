@@ -86,7 +86,6 @@ module Garage {
             function getRelPathesAsync(dirPath: string): CDP.IPromise<string[]> {
                 let df = $.Deferred<string[]>();
                 let promise = CDP.makePromise(df);
-                //debug
                 console.log("getRelPathesAsync: dirPath " + dirPath);
 
                 let dirs: string[] = [dirPath];
@@ -103,20 +102,39 @@ module Garage {
                             pathes[i] = p.replace(re, "");
                         });
                         df.resolve(pathes.reverse());
-                    } else {
-                        try {
-                            let dir = dirs.pop();
-                            let names = fs.readdirSync(dir);
+                        setTimeout(proc);
+                        return;
+                    }
 
-                            for (let i = 0, l = names.length; i < l; i++) {
-                                let filePath = Util.PathManager.join(dir, names[i]);
-                                if (fs.lstatSync(filePath).isDirectory()) {
-                                    dirs.push(filePath);
-                                }
-                                pathes.push(filePath);
+                    let dir = dirs.pop();
+                    while(!Util.PathManager.isSyncTarget(dir)) {
+                        // skip not sync target
+                        if (dir === undefined) {
+                            // no file
+                            setTimeout(proc);
+                            return;
+                        }
+                        dir = dirs.pop();
+                    }
+                    let names;
+                    try {
+                        names = fs.readdirSync(dir);
+                    } catch (err) {
+                        console.error("getRelPathes exception readdirSync: " + err);
+                        df.reject(err);
+                        setTimeout(proc);
+                        return;
+                    }
+
+                    for (let i = 0, l = names.length; i < l; i++) {
+                        try {
+                            let filePath = Util.PathManager.join(dir, names[i]);
+                            if (fs.lstatSync(filePath).isDirectory()) {
+                                dirs.push(filePath);
                             }
+                            pathes.push(filePath);
                         } catch (err) {
-                            console.error("getRelPathes exception: " + err);
+                            console.error("getRelPathes exception lstatsync: " + err);
                             df.reject(err);
                         }
                     }
@@ -302,7 +320,7 @@ module Garage {
                 private _isOpeningDialog(): boolean {
                     return this._getDialog()[0] != null;
                 }
-
+                
                 /**
                  * HUIS と PC のファイル同期を実行する
                  * 
@@ -339,7 +357,7 @@ module Garage {
                             if (this._isOpeningDialog()) {
                                 this._changeDialog(dialogTitle, dialogSrc);
                             } else {
-                                dialog = new CDP.UI.Dialog(dialogProps.id, {
+                                var dialog = new CDP.UI.Dialog(dialogProps.id, {
                                     src: dialogSrc,
                                     title: dialogTitle,
                                 });
@@ -448,22 +466,24 @@ module Garage {
 
                 }
 
-                private isSyncTarget(path: string): boolean {
-                    return path.match(/\.app($|\/)/) == null
-                        && path.match(/\.Trashes/) == null
-                        && path.match(/\.Spotlight/) == null;
-                }
-
                 /**
-                 * デフォルトのRemoteImagesを除去するフィルターを返す
+                 * 無視するファイルを除去するフィルターを返す
                  * @return {(path: string) => boolean} Default の RemoteImages ファイルを除去するフィルター
                  */
-                private getIgnoreDefaultRemoteImagesFilter(): (path: string) => boolean {
+                private getIgnoreFilesFilter(): (path: string) => boolean {
                     let filter = (path: string): boolean => {
-                        let isNeed: boolean = path.match(/remoteimages\/white/) == null
-                            && path.match(/remoteimages\/black/) == null
-                            && path.match(/remoteimages\/IMG*/) == null;
-                        return isNeed;
+                        // default remote images
+                        if (path.match(/remoteimages\/white/) != null
+                            || path.match(/remoteimages\/black/) != null
+                            || path.match(/remoteimages\/IMG*/) != null) {
+                            return false;
+                        }
+
+                        // theme dir
+                        if (path.match(/theme/) != null) {
+                            return false;
+                        }
+                        return true;
                     };
                     return filter;
                 }
@@ -474,7 +494,7 @@ module Garage {
                     let FUNCTION_NAME = TAG + "_syncHuisFiles : ";
 
                     let syncFileFilter = (path: string) => {
-                        if (this.isSyncTarget(path)) {
+                        if (Util.PathManager.isSyncTarget(path)) {
                             return true;
                         } else {
                             console.log("filtered from sync " + path);
@@ -490,7 +510,7 @@ module Garage {
                             // srcRootDirで追加されたファイルや更新されたファイル群を、destRootDirにコピー
                             var copyTargetFiles = diffInfo.diff;
                             copyTargetFiles = copyTargetFiles.concat(diffInfo.dir1Extra);
-                            let filterdTargetFiles: string[] = copyTargetFiles.filter(this.getIgnoreDefaultRemoteImagesFilter());
+                            let filterdTargetFiles: string[] = copyTargetFiles.filter(this.getIgnoreFilesFilter());
                             this._copyFiles(srcRootDir, destRootDir, filterdTargetFiles)
                                 .then(() => {
                                     df.resolve(diffInfo.dir2Extra);
@@ -582,27 +602,28 @@ module Garage {
                     let files = targetFiles.slice();
 
                     let proc = () => {
-                        let file: string;
                         if (files.length <= 0) {
                             df.resolve();
-                        } else {
-                            file = files.shift();
-                            try {
-                                this._checkCancel();
-                                let option: CopyOptions = {
-                                    preserveTimestamps: true,
-                                    // TODO: move filter logic out of this method
-                                    // ボタンデバイス情報のキャッシュファイルは本体に送らない
-                                    filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
-                                }
-                                console.log(FUNCITON_NAME + "copy file (" + file + ")");
-                                const srcAbstPath: string = getAbsPath(srcRootDir, file);
-                                const dstAbstPath: string = getAbsPath(dstRootDir, file);
-                                fs.copySync(srcAbstPath, dstAbstPath, option);
-                                setTimeout(proc);
-                            } catch (err) {
-                                df.reject(err);
+                            return;
+                        }
+
+                        let file: string;
+                        file = files.shift();
+                        try {
+                            this._checkCancel();
+                            let option: CopyOptions = {
+                                preserveTimestamps: true,
+                                // TODO: move filter logic out of this method
+                                // ボタンデバイス情報のキャッシュファイルは本体に送らない
+                                filter: (function (src) { return src.indexOf(Util.FILE_NAME_BUTTON_DEVICE_INFO_CACHE) == -1; })
                             }
+                            console.log(FUNCITON_NAME + "copy file (" + file + ")");
+                            const srcAbstPath: string = getAbsPath(srcRootDir, file);
+                            const dstAbstPath: string = getAbsPath(dstRootDir, file);
+                            fs.copySync(srcAbstPath, dstAbstPath, option);
+                            setTimeout(proc);
+                        } catch (err) {
+                            df.reject(err);
                         }
                     };
 
@@ -687,7 +708,7 @@ module Garage {
                 }
 
                 private _filterDefaultRemoteImages(files: string[]): string[] {
-                    return files.filter(this.getIgnoreDefaultRemoteImagesFilter());
+                    return files.filter(this.getIgnoreFilesFilter());
                 }
 
                 /**
@@ -810,8 +831,6 @@ module Garage {
                         });
                 });
             }
-
-
 
             /**
              * ふたつのディレクトリーに差分があるかチェック

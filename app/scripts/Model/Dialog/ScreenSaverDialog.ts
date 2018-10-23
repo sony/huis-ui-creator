@@ -48,7 +48,7 @@ module Garage {
              */
             constructor(attributes?: any, options?: any) {
                 super(attributes, options);
-                this.imagePath = Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
+                this.setDefault();
             }
 
             /**
@@ -116,6 +116,11 @@ module Garage {
             }
 
             private getDefaultImagePath(): string {
+                let theme: Theme = new Theme();
+                theme.load();
+                if (theme.useThemeScreensaver()) {
+                    return Util.PathManager.getThemeScreensaverPath();
+                }
                 return Util.PathManager.resolve(ConstValue.DEFAULT_IMAGE_PATH);
             }
 
@@ -142,26 +147,41 @@ module Garage {
              * @return {CDP.IPromise<string>} 成功時 コンバート後の絶対画像パスを返す。失敗時 nullを返す。
              */
             saveImage(): CDP.IPromise<void> {
-                let df = $.Deferred<void>();
-                let promise = CDP.makePromise(df);
-
                 let outputImagePath = this.getWorkingImagePath();
 
                 if (!this.isDefault()) {
-                    Model.OffscreenEditor.editImage(this.imagePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
-                        .done((editedImage) => {
-                            this.syncToHuis(df);
-                        }).fail((err) => {
-                            console.error("editImage calling failed : err : " + err);
-                        });
-                } else {
-                    // don't save image in HuisFiles when default not to copy file to HuisDevice
-                    setTimeout(() => {
-                        fs.removeSync(outputImagePath);
-                        this.syncToHuis(df);
-                    });
+                    return this.saveImageToHuis(outputImagePath);
                 }
 
+                let theme: Theme = new Theme();
+                theme.load();
+                if (theme.useThemeScreensaver()) {
+                    return this.saveImageToHuis(outputImagePath);
+                }
+
+                // when use default screensaver, remove screensaver file in HuisDev
+                return this.removeScreensaverInHuisDev(outputImagePath);
+            }
+
+            private removeScreensaverInHuisDev(outputImagePath: string): CDP.IPromise<void> {
+                let df: JQueryDeferred<void> = $.Deferred<void>();
+                setTimeout(() => {
+                    fs.removeSync(outputImagePath);
+                    this.syncToHuis(df);
+                });
+                let promise: CDP.IPromise<void> = CDP.makePromise(df);
+                return promise;
+            }
+
+            private saveImageToHuis(outputImagePath: string): CDP.IPromise<void> {
+                let df: JQueryDeferred<void> = $.Deferred<void>();
+                let promise: CDP.IPromise<void> = CDP.makePromise(df);
+                Model.OffscreenEditor.editImage(this.imagePath, ConstValue.SCREENSAVER_EDIT_IMAGE_PARAMS, outputImagePath)
+                    .done((editedImage) => {
+                        this.syncToHuis(df);
+                    }).fail((err) => {
+                        console.error("editImage calling failed : err : " + err);
+                    });
                 return promise;
             }
 

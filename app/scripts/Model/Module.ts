@@ -38,6 +38,14 @@ module Garage {
                 }
             }
 
+            /**
+             * attributeからモジュール名を設定する。
+             * ただし、remoteId, pageIndex は設定済みであること。
+             */
+            public updateName() {
+                this.name = this.remoteId + "_page_" + this.pageIndex;
+            }
+
             /*
              * このオブジェクトに対して各パラメータをセットする。
              * @param remoteId: string このModuleの所属するremoteId
@@ -46,8 +54,8 @@ module Garage {
              */
             public setInfo(remoteId: string, pageIndex: number, area?: IArea) {
                 this.remoteId = remoteId;
-                this.name = remoteId + "_page_" + pageIndex;
                 this.pageIndex = pageIndex;
+                this.updateName();
                 this.offsetY = 0;
                 this.button = [];
                 this.image = [];

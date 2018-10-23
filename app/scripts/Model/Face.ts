@@ -491,6 +491,15 @@ module Garage {
                 return ["remoteId", "name", "category", "modules"];
             }
 
+            /**
+             * is fullcustom category remote.
+             *
+             * @return {boolean} true if this is fullcustom remote
+             */
+            isFullCustom(): boolean {
+                return this.category == FACE_TYPE_FULL_CUSTOM;
+            }
+
         }
     }
 }

@@ -20,12 +20,11 @@ module Garage {
     export module Model {
         const TAG: string = "[Garage.Model.IniFile] ";
 
-        export class IniFile {
-            private file_path_ : string;
-
+        export abstract class IniFile {
             constructor() {
-                this.file_path_ = "";
             }
+
+            abstract getFilePath(): string;
 
             /**
              * subclass should define Interface for ini data.
@@ -33,30 +32,26 @@ module Garage {
              * @param {string} path ini file path
              * @return {any} parseed ini file data
              */
-            protected loadIniFile(path: string): any {
-                this.file_path_ = path;
+            protected loadIniFile(file_path: string): any {
                 let nodeIni = require("node-ini");
+                nodeIni.encoding = 'utf-8';
                 try {
-                    return nodeIni.parseSync(this.file_path_);
+                    return nodeIni.parseSync(path.resolve(file_path));
                 } catch (e) {
-                    console.warn(TAG + "failed to parse ini file: file_path=" + this.file_path_);
+                    console.warn(TAG + "failed to parse ini file: file_path=" + file_path);
                     return;
                 }
-            }
-
-            get section(): string {
-                return "section";
             }
 
             public saveAs(file_path: string) {
                 let nodeIni = require("ini");
 
                 console.log(TAG + " save file : " + file_path);
-                fs.writeFileSync(file_path, nodeIni.stringify(this, {section: this.section}));
+                fs.writeFileSync(file_path, nodeIni.stringify(this));
             }
 
             public save() {
-                this.saveAs(this.file_path_);
+                this.saveAs(this.getFilePath());
             }
         }
     }

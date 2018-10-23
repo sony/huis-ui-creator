@@ -33,6 +33,23 @@ module Garage {
             export const WHITE_RC_FRAME: string = "white-rc-frame";
         }
 
+        export namespace PropertyKey {
+            export const PROPERTY_TEXT: string = "text";
+            export const PROPERTY_SIZE: string = "size";
+            export const PROPERTY_COLOR: string = "color";
+            export const PROPERTY_PATH: string = "path";
+            export const PROPERTY_AREA: string = "area";
+            export const PROPERTY_RESIZE_ORIGINAL: string = "resizeOriginal";
+            export const PROPERTY_STATE: string = "state";
+            export const PROPERTY_RESIZE_RESOLVED_ORIGNAL_PATH: string = "resizeResolvedOriginalPath";
+            export const PROPERTY_RESOLVED_PATH: string = "resolved-path";
+
+            export const PROPERTY_LEFT_TOP: string = "left-top";
+            export const PROPERTY_LEFT_BOTTOM: string = "left-bottom";
+            export const PROPERTY_RIGHT_TOP: string = "right-top";
+            export const PROPERTY_RIGHT_BOTTOM: string = "right-bottom";
+        }
+
         /**
          * @class FullCustom
          * @brief FullCustom View class for Garage.
@@ -939,6 +956,12 @@ module Garage {
                 let functionCodeHash = huisFiles.getAllFunctionCodeMap(remoteId);
                 let bluetoothData = huisFiles.getMasterBluetoothData(remoteId);
                 let remoteName: string = huisFiles.getFace(remoteId).name;
+                let group: IGroup = {
+                    name: remoteName,
+                    original_remote_id: remoteId
+                };
+
+                buttonItem.group = group;
 
                 let deviceInfo: IButtonDeviceInfo = {
                     id: "",
@@ -961,6 +984,7 @@ module Garage {
                         action.deviceInfo = deviceInfo;
                     }
                 }
+                
                 return buttonItem;
             }
 
@@ -1423,7 +1447,7 @@ module Garage {
                     var newArea: IArea = $.extend(true, {}, baseArea);
 
                     switch (this.selectedResizer_) {
-                        case "left-top":
+                        case PropertyKey.PROPERTY_LEFT_TOP:
                             if (deltaX >= baseArea.w - this.minItemSize_) {
                                 newArea.w = this.minItemSize_;
                                 newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
@@ -1442,7 +1466,7 @@ module Garage {
 
                             break;
 
-                        case "right-top":
+                        case PropertyKey.PROPERTY_RIGHT_TOP:
                             if (-deltaX >= baseArea.w - this.minItemSize_) {
                                 newArea.w = this.minItemSize_;
                             } else {
@@ -1459,7 +1483,7 @@ module Garage {
 
                             break;
 
-                        case "right-bottom":
+                        case PropertyKey.PROPERTY_RIGHT_BOTTOM:
                             if (-deltaX >= baseArea.w - this.minItemSize_) {
                                 newArea.w = this.minItemSize_;
                             } else {
@@ -1473,7 +1497,7 @@ module Garage {
                             }
                             break;
 
-                        case "left-bottom":
+                        case PropertyKey.PROPERTY_LEFT_BOTTOM:
                             if (deltaX >= baseArea.w - this.minItemSize_) {
                                 newArea.w = this.minItemSize_;
                                 newArea.x += (baseArea.w > this.minItemSize_) ? baseArea.w - this.minItemSize_ : 0;
@@ -2405,17 +2429,17 @@ module Garage {
                     }
 
                     switch (key) {
-                        case "text":
+                        case PropertyKey.PROPERTY_TEXT:
                             $target.find(".label-value").text(value);
                             break;
 
-                        case "size":
+                        case PropertyKey.PROPERTY_SIZE:
                             if (targetModel instanceof Model.LabelItem) {
                                 $target.css("font-size", targetModel.sizeForRender + "pt");
                             }
                             break;
 
-                        case "color":
+                        case PropertyKey.PROPERTY_COLOR:
                             // 16階調グレースケールを RGB 変換して CSS に設定
                             let color = targetModel["color"];
                             if (color) {
@@ -2423,7 +2447,7 @@ module Garage {
                             }
                             break;
 
-                        case "path":
+                        case PropertyKey.PROPERTY_PATH:
                             {
                                 // 設定された background-image をリセットしておく
                                 $target.css("background-image", "none");
@@ -2446,7 +2470,7 @@ module Garage {
                             }
                             break;
 
-                        case "area":
+                        case PropertyKey.PROPERTY_AREA:
                             {
                                 // 座標とサイズを変更
                                 let cssParams: any = {
@@ -2467,7 +2491,7 @@ module Garage {
                             }
                             break;
 
-                        case "resizeOriginal":
+                        case PropertyKey.PROPERTY_RESIZE_ORIGINAL:
                             {
                                 let resolvedOriginalPath = targetModel["resizeResolvedOriginalPathCSS"];
 
@@ -2490,7 +2514,7 @@ module Garage {
                                 }
                             }
                             break;
-                        case "state": //ボタンの画像などを変更した際の、変更
+                        case PropertyKey.PROPERTY_STATE: //ボタンの画像などを変更した際の、変更
                             {
                                 if (itemType === "button") {
                                     let targetButton: Model.ButtonItem;
@@ -2645,8 +2669,8 @@ module Garage {
             private updateButtonOnCanvas(stateId: number, key: string, value: any, targetState: Model.ButtonState, $targetStateElem: JQuery, buttonAreaW: number, buttonAreaH: number) {
                 // canvas 上のスタイルと詳細エリアの更新
                 switch (key) {
-                    case "text":
-                    case "size":
+                    case PropertyKey.PROPERTY_TEXT:
+                    case PropertyKey.PROPERTY_SIZE:
                         {
                             let $labelElement = $targetStateElem.find(".state-label");
                             let label = targetState.label[0];
@@ -2666,7 +2690,7 @@ module Garage {
                         }
                         break;
 
-                    case "path":
+                    case PropertyKey.PROPERTY_PATH:
                         {
                             // 詳細エリアの画像パス名を更新
                             let $input = $(".refer-state-image[data-state-id=\"" + stateId + "\"]");
@@ -2674,8 +2698,8 @@ module Garage {
                         }
                         break;
 
-                    case "resizeResolvedOriginalPath":
-                    case "resolved-path":
+                    case PropertyKey.PROPERTY_RESIZE_RESOLVED_ORIGNAL_PATH:
+                    case PropertyKey.PROPERTY_RESOLVED_PATH:
                         {
                             let $imageElement = $targetStateElem.find(".state-image");
                             $imageElement.css({

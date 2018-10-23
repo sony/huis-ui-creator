@@ -207,15 +207,6 @@ module Garage {
 
             set area(val: IArea) {
                 this.set("area", val);
-                // state 内の model の area 更新
-                this.imageCollection_.forEach((imageModel) => {
-                    imageModel.area = {
-                        x: 0,
-                        y: 0,
-                        w: val.w,
-                        h: val.h
-                    };
-                });
             }
 
             // TODO: change name, image to images

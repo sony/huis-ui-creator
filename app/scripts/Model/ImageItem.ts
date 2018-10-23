@@ -217,6 +217,11 @@ module Garage {
 
                 let srcImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original, color);
                 let imageFileName = Util.PathManager.basename(this.garageExtensions.original);
+                if (sharedInfo.themeState) {
+                    // change name to avoid same name when theme changed
+                    // if no change, override before image
+                    imageFileName = sharedInfo.themeFileName + "-" + imageFileName;
+                }
                 this.garageExtensions.original = Util.PathManager.join(remoteId, imageFileName);
                 let dstImagePath = Util.PathManager.resolveImagePath(this.garageExtensions.original);
 
