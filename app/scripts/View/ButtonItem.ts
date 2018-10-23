@@ -100,6 +100,36 @@ module Garage {
                 };
             }
 
+            /**
+             * すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_data も jump もないボタンは無効（表示しない）。
+             *
+             * @param {IAction} action
+             * @return {boolean} return true if action is invalid, return false if action is valid
+             */
+            private _isInvalidAction(action: IAction): boolean {
+                if (action.code != null) {
+                    return false;
+                }
+
+                if (!(
+                    action.code_db == null
+                    || (action.code_db.brand === " " || action.code_db.brand === "")
+                    && (action.code_db.db_codeset === " " || action.code_db.db_codeset === "")
+                    && action.code_db.function !== "none")) {
+                    return false;
+                }
+
+                if (action.bluetooth_data != null) {
+                    return false;
+                }
+
+                if (action.jump != null) {
+                    return false;
+                }
+
+                return true;
+            }
+
             render(): View.ButtonItem {
                 this.collection.each((model: Model.ButtonItem) => {
                     this._modifyModel(model);
@@ -110,10 +140,7 @@ module Garage {
                         filtered_state = model.state.filter((s: Model.ButtonState, index: number, array: Model.ButtonState[]) => {
                             // 無効なaction
                             filtered_action = s.action.filter((a: IAction, i: number, arr: IAction[]) => {
-                                //すべてのActionでコードもない、ブランド名もコードセットもない function名が "" or "none" で bluetooth_dataもないボタンは表示しない。
-                                return (a.code == null &&
-                                    (a.code_db == null || (a.code_db.brand === " " || a.code_db.brand === "") && (a.code_db.db_codeset === " " || a.code_db.db_codeset === "") && a.code_db.function !== "none") &&
-                                    a.bluetooth_data == null);
+                                return this._isInvalidAction(a);
                             });
                             return (filtered_action.length >= s.action.length);
                         });

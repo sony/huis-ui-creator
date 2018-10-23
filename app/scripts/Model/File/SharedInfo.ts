@@ -37,21 +37,53 @@ module Garage {
          */
         export class SharedInfo {
 
+            // system
             private _version: string;
-            private _modelColor: string;
-            private _settingColor: string;
-            private _isBtoB: boolean;
             private _winRequiredVersion: string;
             private _macRequiredVersion: string;
+            private _isBtoB: boolean;
+
+            // color
+            private _modelColor: string;
+            private _settingColor: string;
+
+            // theme
+            private _theme_state: boolean;
+            private _theme_file_name: string;
+            private _theme_path: string;
+            private _theme_version: number;
 
             constructor(sharedInfo: ISharedInfo) {
-                this._version = sharedInfo.system.version;
-                this._modelColor = sharedInfo.color.model_color;
-                this._settingColor = sharedInfo.color.setting_color;
-                this._winRequiredVersion = sharedInfo.system.win_required_version;
-                this._macRequiredVersion = sharedInfo.system.mac_required_version;
+                try {
+                    this._version = sharedInfo.system.version;
+                    this._winRequiredVersion = sharedInfo.system.win_required_version;
+                    this._macRequiredVersion = sharedInfo.system.mac_required_version;
+                    this._isBtoB = (sharedInfo.system.is_btob != null);
 
-                this._isBtoB = (sharedInfo.system.is_btob != null);
+                    this._modelColor = sharedInfo.color.model_color;
+                    this._settingColor = sharedInfo.color.setting_color;
+
+                    this._theme_state = (sharedInfo.theme.theme_state === "true");
+                    this._theme_file_name = sharedInfo.theme.theme_file_name;
+                    this._theme_path = sharedInfo.theme.theme_path;
+                    this._theme_version = sharedInfo.theme.version;
+                } catch (error) {
+                    // set default value
+                    this._version = "0.0.0"
+                    this._winRequiredVersion = "0.0.0";
+                    this._macRequiredVersion = "0.0.0";
+                    this._isBtoB = false;
+
+                    this._modelColor = "white";
+                    this._settingColor = "white";
+
+                    this._theme_state = false;
+                    this._theme_file_name = "";
+                    this._theme_path = "";
+                    this._theme_version = 0;
+
+                    console.log("[sharedinfo] read error");
+                }
             }
 
             get version(): string {
@@ -88,6 +120,22 @@ module Garage {
 
             get requiredGarageVersion(): string {
                 return Util.MiscUtil.isDarwin() ? this._macRequiredVersion : this._winRequiredVersion;
+            }
+
+            get themeState(): boolean {
+                return this._theme_state;
+            }
+
+            get themeFileName(): string {
+                return this._theme_file_name;
+            }
+
+            get themePath(): string {
+                return this._theme_path;
+            }
+
+            get themeVersion(): number {
+                return this._theme_version;
             }
         }
     }

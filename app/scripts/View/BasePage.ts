@@ -580,6 +580,9 @@ module Garage {
              * @param masterFace{Model.Face}: エクスポートするリモコンのmasterFace用のモデル。いっしょにエクスポートする場合に入力。
              */
             protected exportRemote(face: Model.Face, masterFace: Model.Face = null) {
+                if (sharedInfo.themeState && !face.isFullCustom()) {
+                    AlertThemeExportDialog.show();
+                }
                 let exportManager: Util.ExportManager = new Util.ExportManager(face, masterFace);
                 exportManager.exec();
             }

@@ -220,6 +220,7 @@ module Garage {
                     } else if (pageIndex < moduleModel.pageIndex) {
                         // 削除対象の pageIndex を超えている場合は、pageIndex をデクリメントする
                         moduleModel.pageIndex--;
+                        moduleModel.updateName();
                         moduleModel.trigger(Module.PAGE_INDEX_CHANGED, moduleModel);
                     }
                 }

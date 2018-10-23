@@ -14,7 +14,7 @@ if not "%1"=="ia32" (
 
 set APP_NAME=HUIS UI CREATOR
 echo %TAG% set APP_NAME=%APP_NAME%
-set APP_VERSION=7.0.0
+set APP_VERSION=9.0.0
 echo %TAG% set APP_VERSION=%APP_VERSION%
 
 set MODE=""

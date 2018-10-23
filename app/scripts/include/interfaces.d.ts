@@ -80,10 +80,18 @@ interface IArea {
     h: number;
 }
 
+interface ISystemInfo {
+    next_remote_id: string;
+}
+
+interface IThemeInfo {
+    path: string;
+    version: number;
+}
+
 interface IAppInfo {
-    system: {
-        next_remote_id_: string;
-    }
+    system: ISystemInfo;
+    theme: IThemeInfo;
 }
 
 interface ISharedInfo {
@@ -96,6 +104,22 @@ interface ISharedInfo {
     color: {
         model_color: string;
         setting_color: string;
+    },
+    theme: {
+        theme_file_name: string;
+        theme_state: string;
+        theme_path: string;
+        version: number;
+    }
+}
+
+interface IThemeIni {
+    Theme: {
+        theme_id: string;
+        theme_name_jp: string;
+        theme_name_en: string;
+        has_favorite_screen: string;
+        version: number;
     }
 }
 
@@ -284,6 +308,10 @@ interface IButton {
      * ボタンの名前
      */
     name?: string;
+    /**
+     * カスタムリモコンの場合、元のリモコンの情報
+     */
+    group?: IGroup;
 }
 
 /**
@@ -402,7 +430,7 @@ interface IModule {
  */
 interface IGroup {
     name: string;
-    original_remote_id: number;
+    original_remote_id: string;
 }
 
 /**

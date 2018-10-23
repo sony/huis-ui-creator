@@ -18,6 +18,11 @@
 
 module Garage {
     export module View {
+
+        export namespace ConstValue {
+            export const DEFAULT_IMAGE_CLASS: string = "default-image";
+        }
+
         export class ScreensaverDialog extends BaseDialog<Model.ScreensaverDialog> {
             private changed_: boolean;
             static indexToAvoidCache: number = 0;
@@ -118,15 +123,28 @@ module Garage {
              */
             private updatePreview() {
                 let $image: JQuery = this.$el.find("#preview");
-                let defaultImageClass: string = "default-image";
-                if (this.model.isDefault()) {
-                    $image.attr("style", ""); // remove background-image style
-                    $image.addClass(defaultImageClass);
-                } else {
-                    let avoidCache: string = "?" + String(ScreensaverDialog.indexToAvoidCache++); // avoid cache problem which a picture don't change
-                    $image.attr("style", "background-image:url(\"" + this.model.getEncodedImagePath() + avoidCache + "\")");
-                    $image.removeClass(defaultImageClass);
+
+                if (!this.model.isDefault()) {
+                    this._updatePreview($image);
+                    return;
                 }
+
+                let theme: Model.Theme = new Model.Theme();
+                theme.load();
+                if (theme.useThemeScreensaver()) {
+                    this._updatePreview($image);
+                    return;
+                }
+
+                // no theme default
+                $image.attr("style", ""); // remove background-image style
+                $image.addClass(ConstValue.DEFAULT_IMAGE_CLASS);
+            }
+
+            private _updatePreview($image: JQuery) {
+                let avoidCache: string = "?" + String(ScreensaverDialog.indexToAvoidCache++); // avoid cache problem which a picture don't change
+                $image.attr("style", "background-image:url(\"" + this.model.getEncodedImagePath() + avoidCache + "\")");
+                $image.removeClass(ConstValue.DEFAULT_IMAGE_CLASS);
             }
 
             /**

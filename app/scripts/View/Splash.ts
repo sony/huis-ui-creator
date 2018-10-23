@@ -74,17 +74,17 @@ module Garage {
                 //ビジネス仕向けの場合、ストレージロックの解除判定をする。
                 if (Util.MiscUtil.isBz()) {
                     this.checkStorageLock().then(() => {
-                        this._MoveHomeBeforeSync();
+                        this._moveHomeAfterSync();
                     });
                 } else {
-                    this._MoveHomeBeforeSync();
+                    this._moveHomeAfterSync();
                 }
             }
 
             /*
              * 同期処理後、ホームへ移動する。
              */
-            private _MoveHomeBeforeSync() {
+            private _moveHomeAfterSync() {
 
                 sharedInfo = huisFiles.loadSharedInfo();
 
@@ -440,28 +440,52 @@ module Garage {
                 }
             }
 
+            /**
+             * HUISとPCのファイルの同期を行う。
+             * 実際は一方向の上書きである。
+             *
+             * @param {Boolean} direction true: HUIS->PC, false: PC->HUIS
+             * @param {Function} callback
+             */
             private doSync(direction: Boolean, callback?: Function) {
                 let syncTask = new Util.HuisDev.FileSyncTask();
-                // 同期処理の開始
-                // 実際は一方向の上書きである
-                // direction === true -> HUIS->PC
-                // direction === false -> PC->HUIS
                 let src = (direction) ? HUIS_ROOT_PATH : HUIS_FILES_ROOT; // HUIS_ROOT_PATH: HUISデバイスのルート, HUIS_FILES_ROOT: PC上の設定ファイルのルート
                 let dst = (direction) ? HUIS_FILES_ROOT : HUIS_ROOT_PATH;
 
-                syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err) => {
+                syncTask.exec(src, dst, false, DIALOG_PROPS_SYNC_FROM_HUIS_TO_PC, null, (err: Error) => {
                     if (err) {
                         this.showDialogNotConnectWithHuis(err);
-                    } else {//同期成功。
-                        // 同期後に改めて、HUIS ファイルの parse を行う
-                        huisFiles.init(HUIS_FILES_ROOT);
-                        console.log("Complete!!!");
-                        if (callback != null) {
-                            callback();
+                        return;
+                    }
+
+                    // 同期成功。
+                    if (direction) {
+                        // HUIS->PC の同期の際はテーマをインストールする
+                        let installer: Util.ThemeInstaller = new Util.ThemeInstaller();
+                        let promise: CDP.IPromise<void> = installer.installTheme();
+                        if (promise) {
+                            promise.then(() => {
+                                this._parseHuisFiles(callback);
+                            });
+                        } else {
+                            this._parseHuisFiles(callback);
                         }
+                    } else {
+                        this._parseHuisFiles(callback);
                     }
                 });
             };
+
+            /**
+             * HUIS ファイルの parse を行う
+             */
+            private _parseHuisFiles(callback?: Function) {
+                huisFiles.init(HUIS_FILES_ROOT);
+                console.log("Complete!!!");
+                if (callback != null) {
+                    callback();
+                }
+            }
 
             private showDialogNotConnectWithHuis(err) {
                 // エラーダイアログの表示

@@ -84,6 +84,9 @@ module Garage {
                 if (Model.ScreensaverDialog.isScreenSaverImage(dstPath)) {
                     return false;
                 }
+                if (Util.PathManager.isThemeImage(imageSrc)) {
+                    return false;
+                }
                 let facePath = Util.MiscUtil.getAppropriatePath(CDP.Framework.toUrl("/res/faces/common/"));
                 return imageSrc.indexOf(HUIS_REMOTEIMAGES_ROOT) === -1 && imageSrc.indexOf(facePath) === -1;
             }

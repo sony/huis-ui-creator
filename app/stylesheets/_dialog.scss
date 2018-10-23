@@ -840,10 +840,15 @@ body {
         .over_black {background-image: $PATH_IMG_SCREENSAVER_OVER_HUIS_BLACK;}
 
         .image-button {
-            padding: 0;
+            width: 195px;
+            height: 324px;
+            position: absolute;
+            top: 155px;
+            left: 270px;
             cursor: pointer;
             background: none;
             border: 0;
+            outline: none;
         }
 
         .preview-button-area {

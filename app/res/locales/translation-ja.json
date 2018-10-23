@@ -100,7 +100,8 @@
             "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY": "設定を適用中です。\nUSBケーブルを抜かないでください。",
             "STR_DIALOG_MESSAGE_SYNC_DETAIL_PROPERTY_DONE": "設定を適用しました。",
             "STR_DIALOG_MESSAGE_SCREENSAVER_CHANGED_CONFIRMATION": "お気に入り待受画面の画像を変更しました。",
-            "STR_DIALOG_MESSAGE_SCREENSAVER_CHANGE_CANCEL": "お気に入り待受画面の変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。"
+            "STR_DIALOG_MESSAGE_SCREENSAVER_CHANGE_CANCEL": "お気に入り待受画面の変更が保存されていません。\n保存してください。\n「保存しない」を選択した場合は変更が失われます。",
+            "STR_DIALOG_MESSAGE_THEME_EXPORT":  "エクスポートしたファイルにテーマは適用されません。ご了承ください。"
         },
         "button": {
             "STR_DIALOG_BUTTON_OK": "OK",

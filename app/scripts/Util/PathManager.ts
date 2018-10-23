@@ -37,20 +37,41 @@ module Garage {
                 return argPath.match(regExp) != null;
             }
 
+            private static _getColorSpecificDir(color?: string): string {
+                if (color == null) {
+                    return Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+                }
+                // For old exported remote support
+                return (color === Model.SettingColor.BLACK) ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
+            }
+
             static resolveImagePath(argPath: string, color?: string): string {
 
                 if (!PathManager.isRemoteDir(argPath)) {
-
-                    let colorSpecificDir;
-                    if (color == null) {
-                        colorSpecificDir = Util.MiscUtil.isSettingColorBlack() ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
-                    } else {
-                        // For old exported remote support
-                        colorSpecificDir = (color === Model.SettingColor.BLACK) ? Dirs.BLACK_DIR : Dirs.WHITE_DIR;
-                    }
+                    let colorSpecificDir = this._getColorSpecificDir(color);
+                    
                     argPath = PathManager.join(colorSpecificDir, argPath);
                 }
+                
+                if (sharedInfo.themeState) {
+                    let theme_image_path: string = Util.PathManager.resolveThemeImagePath(argPath);
+                    if (fs.existsSync(theme_image_path)) {
+                        return theme_image_path;
+                    }
+                }
                 return PathManager.joinAndResolve(HUIS_REMOTEIMAGES_ROOT, argPath);
+            }
+
+            static resolveThemeImagePath(imageFileName: string, color?: string): string {
+                return PathManager.joinAndResolve(PathManager.getThemeDirPath(), sharedInfo.themePath, "remoteimages", imageFileName);
+            }
+
+            static getThemeScreensaverPath(): string {
+                return PathManager.joinAndResolve(PathManager.getThemeDirPath(), sharedInfo.themePath, "standbydisplay", "SD0000.png");
+            }
+
+            static getThemeDirPath(): string {
+                return PathManager.joinAndResolve(HUIS_FILES_ROOT, Util.ThemeInstaller.getThemePathName());
             }
 
             static basename(argPath: string): string {
@@ -80,6 +101,18 @@ module Garage {
 
             static getRemoteImagesRootDir(): string {
                 return Util.PathManager.join(HUIS_FILES_ROOT, REMOTE_IMAGES_DIRECTORY_NAME);
+            }
+
+            static isThemeImage(imageSrc: string): boolean {
+                return imageSrc.indexOf(this.getThemeDirPath()) != -1;
+            }
+
+            static isSyncTarget(path: string): boolean {
+                if (path === undefined) {
+                    return false;
+                }
+                return path.match(/\.Trashes/) == null
+                    && path.match(/\.Spotlight/) == null; // cannot read in mac mojave
             }
         }
     }

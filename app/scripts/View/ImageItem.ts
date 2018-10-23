@@ -84,42 +84,62 @@ module Garage {
             render(): View.ImageItem {
                 this.collection.each((item: Model.ImageItem, index: number) => {
                     let image: Model.ImageItem = $.extend(true, {}, item);
-                    if (this.remoteId_ === "common") {
-                    } else {
-                        if (!image.resolvedPath && this.materialsRootPath_) {
-                            let imagePath = image.path;
-                            // 画像パスを PC 内のパス (絶対パス) に変更する
-                            imagePath = path.resolve(path.join(this.materialsRootPath_, this.remoteId_, "images", imagePath)).replace(/\\/g, "/");
-                            image.resolvedPath = imagePath;
-                        }
-                        if (!image.resizeResolvedOriginalPath) {
-                            let garageExtensions = image.garageExtensions;
-                            if (garageExtensions) {
-                                if (!garageExtensions.resolvedOriginalPath && this.materialsRootPath_) {
-                                    let originalPath = garageExtensions.original;
-                                    // 画像パスを PC 内のパス (絶対パス) に変更する
-                                    garageExtensions.resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
-                                }
-                                image.garageExtensions = garageExtensions;
-                            }
-                        }
+                    if (this.remoteId_ != "common") {
+                        this._updateRemoteImagePath(image);
                     }
-                    let $image = $(this.imageItemTemplate_(image));
-                    if (image.garageExtensions) {
-                        switch (image.garageExtensions.resizeMode) {
-                            case Model.ImageResizeMode.COVER:
-                                $image.addClass("image-cover");
-                                break;
-                            case Model.ImageResizeMode.STRETCH:
-                                $image.addClass("image-stretch");
-                                break;
-                            default:
-                                ;
-                        }
-                    }
+                    let $image: JQuery = this._generateImageJQuery(image);
                     this.$el.append($image);
                 });
                 return this;
+            }
+
+            /**
+             * リモコン用の画像パスを設定する
+             *
+             * @param {Model.ImageItem} image リモコン用の画像アイテム
+             */
+            private _updateRemoteImagePath(image: Model.ImageItem) {
+                if (!image.resolvedPath && this.materialsRootPath_) {
+                    let imagePath: string = image.path;
+                    // 画像パスを PC 内のパス (絶対パス) に変更する
+                    imagePath = path.resolve(path.join(this.materialsRootPath_, this.remoteId_, "images", imagePath)).replace(/\\/g, "/");
+                    image.resolvedPath = imagePath;
+                }
+                if (!image.resizeResolvedOriginalPath) {
+                    let garageExtensions = image.garageExtensions;
+                    if (garageExtensions) {
+                        if (!garageExtensions.resolvedOriginalPath && this.materialsRootPath_) {
+                            let originalPath = garageExtensions.original;
+                            // 画像パスを PC 内のパス (絶対パス) に変更する
+                            garageExtensions.resolvedOriginalPath = path.join(HUIS_REMOTEIMAGES_ROOT, originalPath).replace(/\\/g, "/");
+                        }
+                        image.garageExtensions = garageExtensions;
+                    }
+                }
+            }
+
+            /**
+             * Image の JQuery を生成する
+             *
+             * @param {Model.ImageItem} image もととなるImageItem
+             * @return {JQuery} image をもとに生成したもの
+             */
+            private _generateImageJQuery(image: Model.ImageItem): JQuery {
+                let $image = $(this.imageItemTemplate_(image));
+                if (!image.garageExtensions) {
+                    return $image;
+                }
+                switch (image.garageExtensions.resizeMode) {
+                    case Model.ImageResizeMode.COVER:
+                        $image.addClass("image-cover");
+                        break;
+                    case Model.ImageResizeMode.STRETCH:
+                        $image.addClass("image-stretch");
+                        break;
+                    default:
+                        ;
+                }
+                return $image;
             }
 
             /**
